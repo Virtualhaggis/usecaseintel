@@ -1832,6 +1832,58 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   background:var(--panel2);}
 .tech-cell.expanded{border-color:var(--accent);}
 
+/* ----- Threat Intel table -------------------------------------------- */
+.intel-types{display:flex; gap:4px; padding:3px;
+  background:var(--bg); border:1px solid var(--border); border-radius:var(--r-sm);}
+.intel-types button{
+  padding:5px 11px; background:transparent; border:none; border-radius:4px;
+  color:var(--muted); cursor:pointer; font-family:inherit; font-size:11.5px;
+  font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+  transition:all 0.12s;
+}
+.intel-types button.on{background:var(--accent); color:#04111d;}
+.intel-table-wrap{
+  overflow-x:auto; border:1px solid var(--border); border-radius:var(--r-md);
+  background:var(--panel);
+}
+.intel-table{width:100%; border-collapse:collapse; font-size:12.5px;}
+.intel-table thead th{
+  position:sticky; top:0; background:var(--panel-elev);
+  text-align:left; padding:10px 12px; border-bottom:1px solid var(--border);
+  font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--muted); font-weight:700;
+}
+.intel-table tbody tr{transition:background 0.12s;}
+.intel-table tbody tr:hover{background:rgba(95,182,255,0.04);}
+.intel-table tbody tr.dim{display:none;}
+.intel-table td{padding:9px 12px; border-bottom:1px solid var(--hairline); vertical-align:top;}
+.intel-table .ioc-val{
+  font-family:"JetBrains Mono",ui-monospace,monospace;
+  color:var(--accent-2); word-break:break-all;
+}
+.intel-table .type-pill, .intel-table .sev-pill{
+  font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase;
+  padding:2px 8px; border-radius:6px;
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--muted); display:inline-block;
+}
+.intel-table .type-pill.cve{color:var(--warn); border-color:#5a3b1f;}
+.intel-table .type-pill.ipv4{color:var(--accent); border-color:rgba(95,182,255,0.3);}
+.intel-table .type-pill.domain{color:var(--accent-3); border-color:rgba(54,224,192,0.3);}
+.intel-table .type-pill.sha256, .intel-table .type-pill.sha1, .intel-table .type-pill.md5{
+  color:var(--accent-2); border-color:rgba(180,141,255,0.3);
+}
+.intel-table .sev-pill.crit{color:var(--crit); border-color:rgba(255,50,96,0.55);}
+.intel-table .sev-pill.high{color:var(--bad); border-color:rgba(255,93,93,0.4);}
+.intel-table .sev-pill.med{color:var(--warn); border-color:rgba(255,176,96,0.4);}
+.intel-table .sev-pill.low{color:var(--good); border-color:rgba(92,216,122,0.4);}
+.intel-table .sources{display:flex; gap:4px; flex-wrap:wrap;}
+.intel-table .article-link{color:var(--accent); text-decoration:none;
+  display:inline-block; max-width:300px; overflow:hidden; text-overflow:ellipsis;
+  white-space:nowrap; vertical-align:bottom;}
+.intel-table .article-link:hover{text-decoration:underline;}
+.intel-empty{padding:40px; text-align:center; color:var(--muted-2);}
+
 /* Drawer (slide-in from right) */
 .drawer-bg{
   position:fixed; inset:0; z-index:60;
@@ -1926,6 +1978,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
     <div class="view-tabs" role="tablist">
       <button class="view-tab active" data-view="articles" role="tab">Articles</button>
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
+      <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
     </div>
     <span style="font-size:11px;color:var(--muted);margin-left:auto;">
       Generated __GENERATED_AT__ · Source:
@@ -1985,6 +2038,42 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
       </div>
     </div>
     <div class="matrix-grid" id="matrixGrid"></div>
+  </div>
+</div>
+
+<div id="view-intel" class="view">
+  <div class="matrix-wrap">
+    <div class="matrix-toolbar">
+      <input type="text" id="intelSearch" placeholder="Search IOC value, article title, or context" autocomplete="off">
+      <div class="intel-types" id="intelTypes">
+        <button class="on" data-type="">All</button>
+        <button data-type="cve">CVE</button>
+        <button data-type="ipv4">IP</button>
+        <button data-type="domain">Domain</button>
+        <button data-type="sha256">SHA256</button>
+        <button data-type="sha1">SHA1</button>
+        <button data-type="md5">MD5</button>
+      </div>
+      <div class="matrix-stats" id="intelStats"></div>
+    </div>
+    <div class="matrix-toolbar" style="margin-top:-6px;">
+      <span class="lg-label">Export</span>
+      <button class="src-chip" data-export="csv">📄 CSV</button>
+      <button class="src-chip" data-export="json">{ } JSON</button>
+      <button class="src-chip" data-export="stix">⚡ STIX 2.1</button>
+      <button class="src-chip" data-export="splunk">🔎 Splunk lookup</button>
+      <button class="src-chip" data-export="copy">📋 Copy CSV</button>
+      <span class="lg-note" style="margin-left:auto;">Exports always reflect current filters · raw files also live in /intel/ on the repo</span>
+    </div>
+    <div class="intel-table-wrap">
+      <table class="intel-table" id="intelTable">
+        <thead><tr>
+          <th>Value</th><th>Type</th><th>Sev</th>
+          <th>Sources</th><th>Article</th><th>First seen</th><th>Articles</th>
+        </tr></thead>
+        <tbody id="intelBody"></tbody>
+      </table>
+    </div>
   </div>
 </div>
 
@@ -2228,6 +2317,10 @@ function showView(name) {
     renderMatrix();
     window._matrixRendered = true;
   }
+  if (name === 'intel' && !window._intelRendered) {
+    renderIntel();
+    window._intelRendered = true;
+  }
 }
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
 
@@ -2452,6 +2545,205 @@ document.querySelectorAll('.ind.tech').forEach(pill => {
     e.preventDefault(); e.stopPropagation();
     openDrawerFor(tid);
   }, true);
+});
+
+// =================================================================
+// Threat Intel tab
+// =================================================================
+const INTEL = __INTEL_DATA__;
+let intelTypeFilter = '';
+let intelSearchQ = '';
+
+const SRC_CLASS = {
+  "The Hacker News":"thn", "BleepingComputer":"bc",
+  "Microsoft Security Blog":"ms", "CISA KEV":"kev"
+};
+
+function renderIntel() {
+  if (!INTEL || !INTEL.iocs) return;
+  const tbody = document.getElementById('intelBody');
+  if (INTEL.iocs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" class="intel-empty">No IOCs extracted from current article window.</td></tr>';
+    return;
+  }
+  const rows = INTEL.iocs.map((ioc, idx) => {
+    const sources = (ioc.sources || []).map(s =>
+      `<span class="source-badge ${SRC_CLASS[s] || ''}">${escapeHtml(s)}</span>`).join(' ');
+    const a0 = (ioc.articles && ioc.articles[0]) || {title:'', link:'', id:''};
+    const more = (ioc.articles || []).length > 1
+      ? ` <span style="color:var(--muted-2);font-size:10.5px;">+${ioc.articles.length-1} more</span>` : '';
+    return `<tr class="intel-row"
+        data-type="${ioc.type}"
+        data-search="${escapeHtml((ioc.value+' '+a0.title+' '+(ioc.sources||[]).join(' ')).toLowerCase())}">
+      <td><span class="ioc-val ${ioc.type}">${escapeHtml(ioc.value)}</span></td>
+      <td><span class="type-pill ${ioc.type}">${ioc.type}</span></td>
+      <td><span class="sev-pill ${ioc.severity}">${ioc.severity.toUpperCase()}</span></td>
+      <td><div class="sources">${sources}</div></td>
+      <td><a class="article-link" href="${escapeHtml(a0.link)}" target="_blank" rel="noopener" title="${escapeHtml(a0.title)}">${escapeHtml(a0.title)}</a>${more}</td>
+      <td>${escapeHtml((ioc.first_seen||'').slice(0,16))}</td>
+      <td><a class="article-link" href="#${a0.id}" data-jump="${a0.id}">view article</a></td>
+    </tr>`;
+  });
+  tbody.innerHTML = rows.join('');
+  applyIntelFilter();
+  // Wire jump-to-article links
+  tbody.querySelectorAll('a[data-jump]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      showView('articles');
+      setTimeout(() => document.getElementById(a.dataset.jump)?.scrollIntoView({behavior:'smooth'}), 100);
+    });
+  });
+}
+
+function applyIntelFilter() {
+  let visible = 0;
+  const counts = {cve:0, ipv4:0, domain:0, sha256:0, sha1:0, md5:0};
+  document.querySelectorAll('#intelBody tr.intel-row').forEach(r => {
+    const t = r.dataset.type;
+    const blob = r.dataset.search || '';
+    const matchType = !intelTypeFilter || t === intelTypeFilter;
+    const matchSearch = !intelSearchQ || blob.includes(intelSearchQ);
+    const show = matchType && matchSearch;
+    r.classList.toggle('dim', !show);
+    if (show) visible++;
+    if (matchSearch && (t in counts)) counts[t]++;
+  });
+  const total = INTEL.iocs ? INTEL.iocs.length : 0;
+  const stats = document.getElementById('intelStats');
+  stats.innerHTML =
+    `<span><b>${visible}</b> of ${total} IOCs</span>` +
+    `<span><b>${counts.cve}</b> CVEs</span>` +
+    `<span><b>${counts.ipv4}</b> IPs</span>` +
+    `<span><b>${counts.domain}</b> domains</span>` +
+    `<span><b>${counts.sha256+counts.sha1+counts.md5}</b> hashes</span>`;
+}
+
+document.getElementById('intelTypes')?.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  document.querySelectorAll('#intelTypes button').forEach(b => b.classList.toggle('on', b === btn));
+  intelTypeFilter = btn.dataset.type || '';
+  applyIntelFilter();
+});
+
+document.getElementById('intelSearch')?.addEventListener('input', e => {
+  intelSearchQ = e.target.value.trim().toLowerCase();
+  applyIntelFilter();
+});
+
+// ----- Exports -----
+function intelFiltered() {
+  return (INTEL.iocs || []).filter(ioc => {
+    if (intelTypeFilter && ioc.type !== intelTypeFilter) return false;
+    if (intelSearchQ) {
+      const blob = (ioc.value + ' ' + (ioc.articles?.[0]?.title || '') + ' ' + (ioc.sources||[]).join(' ')).toLowerCase();
+      if (!blob.includes(intelSearchQ)) return false;
+    }
+    return true;
+  });
+}
+
+function csvEscape(s) {
+  s = String(s ?? '');
+  return /[,"\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+}
+
+function iocsToCsv(iocs) {
+  const head = ['value','type','severity','sources','first_seen','article_titles','article_links','source_count','article_count'];
+  const lines = [head.join(',')];
+  for (const i of iocs) {
+    lines.push([
+      i.value, i.type, i.severity,
+      (i.sources||[]).join('; '),
+      i.first_seen || '',
+      (i.articles||[]).map(a => a.title).join('; '),
+      (i.articles||[]).map(a => a.link).join('; '),
+      (i.sources||[]).length,
+      (i.articles||[]).length,
+    ].map(csvEscape).join(','));
+  }
+  return lines.join('\n');
+}
+
+function iocsToSplunkLookup(iocs) {
+  const head = ['indicator','indicator_type','severity','first_seen','description','source_url'];
+  const lines = [head.join(',')];
+  for (const i of iocs) {
+    const a0 = i.articles?.[0] || {title:'', link:''};
+    lines.push([i.value, i.type, i.severity, i.first_seen || '', a0.title, a0.link].map(csvEscape).join(','));
+  }
+  return lines.join('\n');
+}
+
+function stixPattern(t, v) {
+  v = v.replace(/'/g,"\\'");
+  if (t==='ipv4') return `[ipv4-addr:value = '${v}']`;
+  if (t==='domain') return `[domain-name:value = '${v}']`;
+  if (t==='sha256') return `[file:hashes.'SHA-256' = '${v}']`;
+  if (t==='sha1') return `[file:hashes.'SHA-1' = '${v}']`;
+  if (t==='md5') return `[file:hashes.MD5 = '${v}']`;
+  if (t==='cve') return `[vulnerability:name = '${v}']`;
+  return `[x-custom:value = '${v}']`;
+}
+
+function uuid4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    const r = Math.random()*16|0;
+    return (c==='x' ? r : (r&0x3|0x8)).toString(16);
+  });
+}
+
+function iocsToStix(iocs) {
+  const ts = INTEL.generated || new Date().toISOString();
+  return {
+    type:'bundle', id:'bundle--'+uuid4(),
+    objects: iocs.map(i => ({
+      type:'indicator', spec_version:'2.1',
+      id:'indicator--'+uuid4(),
+      created:ts, modified:ts, valid_from:ts,
+      name: i.type.toUpperCase()+': '+i.value,
+      pattern: stixPattern(i.type, i.value), pattern_type:'stix',
+      labels:['malicious-activity'],
+      external_references: (i.articles||[]).slice(0,3).map(a => ({source_name:(a.title||'').slice(0,60), url:a.link})),
+      x_severity: i.severity,
+      x_sources: i.sources || [],
+    }))
+  };
+}
+
+function downloadFile(name, content, mime) {
+  const blob = new Blob([content], {type:mime||'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 300);
+}
+
+document.querySelectorAll('button[data-export]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const data = intelFiltered();
+    const stamp = new Date().toISOString().slice(0,10);
+    const kind = btn.dataset.export;
+    if (kind === 'csv') {
+      downloadFile(`iocs-${stamp}.csv`, iocsToCsv(data), 'text/csv');
+    } else if (kind === 'json') {
+      downloadFile(`iocs-${stamp}.json`,
+        JSON.stringify({generated: INTEL.generated, count: data.length, iocs: data}, null, 2),
+        'application/json');
+    } else if (kind === 'stix') {
+      downloadFile(`iocs-${stamp}.stix.json`, JSON.stringify(iocsToStix(data), null, 2), 'application/json');
+    } else if (kind === 'splunk') {
+      downloadFile(`splunk_lookup_iocs-${stamp}.csv`, iocsToSplunkLookup(data), 'text/csv');
+    } else if (kind === 'copy') {
+      navigator.clipboard.writeText(iocsToCsv(data)).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = orig, 1300);
+      });
+    }
+  });
 });
 </script>
 </body>
@@ -2844,6 +3136,216 @@ def build_matrix_data(articles_meta):
 
 
 # =============================================================================
+# IOC aggregation + threat intel exports (CSV / JSON / STIX 2.1 / Splunk lookup)
+# =============================================================================
+
+import csv as _csv
+import uuid as _uuid
+
+INTEL_DIR = Path(__file__).parent / "intel"
+CATALOG_DIR = Path(__file__).parent / "catalog"
+
+_SEV_RANK = {"crit": 4, "high": 3, "med": 2, "low": 1}
+
+
+def aggregate_iocs(articles_meta):
+    """Dedupe IOCs across articles, attaching source attribution + context."""
+    iocs = {}  # (type, value_lower) -> dict
+    type_buckets = [
+        ("cve", "cves"),
+        ("ipv4", "ips"),
+        ("domain", "domains"),
+        ("sha256", "sha256"),
+        ("sha1", "sha1"),
+        ("md5", "md5"),
+    ]
+    for a in articles_meta:
+        ind = a.get("ind") or {}
+        sev = a.get("sev", "low")
+        sources = a.get("sources") or []
+        article_ref = {
+            "id": a["id"],
+            "title": a["title"],
+            "link": a["link"],
+            "published": a.get("published", ""),
+            "sev": sev,
+        }
+        for ioc_type, ind_key in type_buckets:
+            for value in ind.get(ind_key, []) or []:
+                key = (ioc_type, str(value).lower())
+                ent = iocs.get(key)
+                if ent is None:
+                    iocs[key] = {
+                        "value": value,
+                        "type": ioc_type,
+                        "severity": sev,
+                        "sources": list(sources),
+                        "articles": [article_ref],
+                        "first_seen": article_ref["published"] or "",
+                    }
+                else:
+                    if article_ref not in ent["articles"]:
+                        ent["articles"].append(article_ref)
+                    for s in sources:
+                        if s not in ent["sources"]:
+                            ent["sources"].append(s)
+                    if _SEV_RANK.get(sev, 0) > _SEV_RANK.get(ent["severity"], 0):
+                        ent["severity"] = sev
+    out = list(iocs.values())
+    # Sort: severity desc, type, value
+    out.sort(key=lambda x: (-_SEV_RANK.get(x["severity"], 0), x["type"], x["value"].lower()))
+    return out
+
+
+def _iocs_to_csv_rows(iocs):
+    rows = [[
+        "value", "type", "severity", "sources", "first_seen",
+        "article_titles", "article_links", "source_count", "article_count"
+    ]]
+    for i in iocs:
+        rows.append([
+            i["value"], i["type"], i["severity"],
+            "; ".join(i["sources"]),
+            i.get("first_seen", ""),
+            "; ".join(a["title"] for a in i["articles"]),
+            "; ".join(a["link"] for a in i["articles"]),
+            str(len(i["sources"])), str(len(i["articles"])),
+        ])
+    return rows
+
+
+def _iocs_to_splunk_lookup_rows(iocs):
+    rows = [["indicator", "indicator_type", "severity", "first_seen", "description", "source_url"]]
+    for i in iocs:
+        first = i["articles"][0] if i["articles"] else {"title": "", "link": ""}
+        rows.append([
+            i["value"], i["type"], i["severity"],
+            i.get("first_seen", ""), first["title"], first["link"],
+        ])
+    return rows
+
+
+def _stix_pattern(ioc_type, value):
+    if ioc_type == "ipv4":
+        return f"[ipv4-addr:value = '{value}']"
+    if ioc_type == "domain":
+        return f"[domain-name:value = '{value}']"
+    if ioc_type == "sha256":
+        return f"[file:hashes.'SHA-256' = '{value}']"
+    if ioc_type == "sha1":
+        return f"[file:hashes.'SHA-1' = '{value}']"
+    if ioc_type == "md5":
+        return f"[file:hashes.MD5 = '{value}']"
+    if ioc_type == "cve":
+        return f"[vulnerability:name = '{value}']"
+    return f"[x-custom:value = '{value}']"
+
+
+def _iocs_to_stix(iocs, generated_iso):
+    bundle_id = f"bundle--{_uuid.uuid4()}"
+    objects = []
+    for i in iocs:
+        first_link = i["articles"][0]["link"] if i["articles"] else ""
+        first_title = i["articles"][0]["title"] if i["articles"] else ""
+        ioc_id = f"indicator--{_uuid.uuid4()}"
+        obj = {
+            "type": "indicator",
+            "spec_version": "2.1",
+            "id": ioc_id,
+            "created": generated_iso,
+            "modified": generated_iso,
+            "name": f"{i['type'].upper()}: {i['value']}",
+            "pattern": _stix_pattern(i["type"], i["value"]),
+            "pattern_type": "stix",
+            "valid_from": generated_iso,
+            "labels": ["malicious-activity"],
+            "external_references": (
+                [{"source_name": s["title"][:60], "url": s["link"]} for s in i["articles"][:3]]
+            ),
+            "x_severity": i["severity"],
+            "x_sources": i["sources"],
+        }
+        objects.append(obj)
+    return {"type": "bundle", "id": bundle_id, "objects": objects}
+
+
+def write_intel_files(iocs, generated_iso):
+    INTEL_DIR.mkdir(exist_ok=True)
+    # CSV
+    with (INTEL_DIR / "iocs.csv").open("w", encoding="utf-8", newline="") as f:
+        w = _csv.writer(f)
+        for row in _iocs_to_csv_rows(iocs):
+            w.writerow(row)
+    # JSON
+    payload = {"generated": generated_iso, "count": len(iocs), "iocs": iocs}
+    (INTEL_DIR / "iocs.json").write_text(
+        __import__("json").dumps(payload, indent=2, default=str),
+        encoding="utf-8",
+    )
+    # STIX 2.1 bundle
+    (INTEL_DIR / "iocs.stix.json").write_text(
+        __import__("json").dumps(_iocs_to_stix(iocs, generated_iso), indent=2),
+        encoding="utf-8",
+    )
+    # Splunk lookup CSV
+    with (INTEL_DIR / "splunk_lookup_iocs.csv").open("w", encoding="utf-8", newline="") as f:
+        w = _csv.writer(f)
+        for row in _iocs_to_splunk_lookup_rows(iocs):
+            w.writerow(row)
+
+
+def write_catalog_files(generated_iso):
+    """Emit catalog/ JSON exports of the use-case catalog for programmatic consumers."""
+    CATALOG_DIR.mkdir(exist_ok=True)
+    json_lib = __import__("json")
+    ucs_array = []
+    coverage = {}
+    if _LOADED_UCS:
+        for uc_id, uc in sorted(_LOADED_UCS.items()):
+            ucs_array.append({
+                "id": uc_id,
+                "title": uc.title,
+                "kill_chain": uc.kill_chain,
+                "confidence": uc.confidence,
+                "description": uc.description,
+                "implementations": [
+                    p for p, q in (("splunk", uc.splunk_spl), ("defender", uc.defender_kql)) if q
+                ],
+                "mitre_attack": [{"id": t, "name": n} for t, n in uc.techniques],
+                "data_models": uc.data_models,
+                "splunk_spl": uc.splunk_spl or None,
+                "defender_kql": uc.defender_kql or None,
+            })
+            for tid, _ in uc.techniques:
+                coverage.setdefault(tid, []).append(uc_id)
+    (CATALOG_DIR / "use_cases.json").write_text(
+        json_lib.dumps({"generated": generated_iso, "count": len(ucs_array), "use_cases": ucs_array},
+                       indent=2),
+        encoding="utf-8",
+    )
+    rules_array = []
+    if _LOADED_RULES:
+        for r in _LOADED_RULES:
+            rules_array.append({
+                "name": r.name,
+                "triggers": list(r.triggers),
+                "fires": [k for k, v in (_LOADED_UCS or {}).items() if v in r.use_cases],
+            })
+    (CATALOG_DIR / "rules.json").write_text(
+        json_lib.dumps({"generated": generated_iso, "count": len(rules_array), "rules": rules_array},
+                       indent=2),
+        encoding="utf-8",
+    )
+    (CATALOG_DIR / "attack_coverage.json").write_text(
+        json_lib.dumps({"generated": generated_iso,
+                        "tactics_count": len({uc.kill_chain for uc in (_LOADED_UCS or {}).values()}),
+                        "technique_to_use_cases": coverage},
+                       indent=2),
+        encoding="utf-8",
+    )
+
+
+# =============================================================================
 # Main
 # =============================================================================
 
@@ -3080,13 +3582,26 @@ def main():
             "title": a["title"],
             "link": a["link"],
             "sev": sev,
+            "sources": a.get("sources") or [a.get("source", "")],
+            "published": a.get("published", ""),
             "techs": merged_techs,
+            "ind": ind,
             "ucs": [(uc_var_map.get(id(uc), f"UC_{i}_{j}"), uc) for j, uc in enumerate(ucs)],
         })
         safe_title = a['title'][:55].encode('ascii', 'replace').decode('ascii')
         print(f"  [{i+1:02d}] {safe_title:55s} | sev={sev:4s} techs={len(techniques)} ucs={len(ucs)} kc-hit={len(hit)}")
 
     nav = render_nav(nav_meta)
+
+    # IOC aggregation across all articles
+    iocs = aggregate_iocs(articles_meta)
+    generated_iso = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    write_intel_files(iocs, generated_iso)
+    write_catalog_files(generated_iso)
+    print(f"[*] IOCs aggregated: {len(iocs)} unique  ->  intel/")
+    print(f"[*] Catalog exported: {len(_LOADED_UCS or {})} use cases  ->  catalog/")
+
+    intel_json = __import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str)
 
     # Source filter chips (Articles tab)
     src_class_map_chips = {
@@ -3133,6 +3648,7 @@ def main():
         .replace("__CARDS__", "\n".join(cards))
         .replace("__SOURCE_CHIPS__", source_chips_html)
         .replace("__MATRIX_DATA__", matrix_json)
+        .replace("__INTEL_DATA__", intel_json)
     )
     OUT_HTML.write_text(page, encoding="utf-8")
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")

@@ -1,0 +1,597 @@
+{
+  "generated": "2026-04-28T13:35:56Z",
+  "count": 23,
+  "use_cases": [
+    {
+      "id": "UC_BEACONING",
+      "title": "Beaconing \u2014 periodic outbound to small set of destinations",
+      "kill_chain": "c2",
+      "confidence": "Medium",
+      "description": "C2 channel detection via inter-beacon-time stddev / fan-out to single dest.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1071.001",
+          "name": "Web Protocols"
+        },
+        {
+          "id": "T1071.004",
+          "name": "DNS"
+        }
+      ],
+      "data_models": [
+        "Network_Traffic.All_Traffic",
+        "DeviceNetworkEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports\n    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.action=\"allowed\" AND All_Traffic.dest_category!=\"internal\"\n    by _time span=10s, All_Traffic.src, All_Traffic.dest\n| `drop_dm_object_name(All_Traffic)`\n| streamstats current=f last(_time) AS prev_time by src, dest\n| eval delta = _time - prev_time\n| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest\n| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600\n| sort - count",
+      "defender_kql": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP, RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc"
+    },
+    {
+      "id": "UC_BROWSER_EXT",
+      "title": "Suspicious browser extension installation",
+      "kill_chain": "install",
+      "confidence": "Medium",
+      "description": "Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1176",
+          "name": "Browser Extensions"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Registry",
+        "DeviceRegistryEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Registry\n    where (Registry.registry_path=\"*\\Software\\Google\\Chrome\\Extensions\\*\"\n        OR Registry.registry_path=\"*\\Software\\Microsoft\\Edge\\Extensions\\*\"\n        OR Registry.registry_path=\"*\\Software\\Mozilla\\Firefox\\Extensions\\*\")\n    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user\n| `drop_dm_object_name(Registry)`",
+      "defender_kql": "DeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where RegistryKey has_any (\"\\Software\\Google\\Chrome\\Extensions\\\",\"\\Software\\Microsoft\\Edge\\Extensions\\\",\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessAccountName"
+    },
+    {
+      "id": "UC_BROWSER_STEALER",
+      "title": "Infostealer \u2014 non-browser process accessing browser cookie/login DBs",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1539",
+          "name": "Steal Web Session Cookie"
+        },
+        {
+          "id": "T1555.003",
+          "name": "Credentials from Web Browsers"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Filesystem",
+        "DeviceFileEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Cookies*\"\n        OR Filesystem.file_path=\"*\\Microsoft\\Edge\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\logins.json*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite*\")\n      AND NOT Filesystem.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`",
+      "defender_kql": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Google\\Chrome\\User Data\\\",\"\\Microsoft\\Edge\\User Data\\\",\"\\Mozilla\\Firefox\\Profiles\\\")\n| where FileName in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType"
+    },
+    {
+      "id": "UC_CRYPTO_WALLET",
+      "title": "Crypto-wallet file/keystore access by non-wallet process",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1005",
+          "name": "Data from Local System"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Filesystem",
+        "DeviceFileEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Ethereum\\keystore\\*\"\n        OR Filesystem.file_path=\"*\\Bitcoin\\wallet.dat\"\n        OR Filesystem.file_path=\"*\\Exodus\\exodus.wallet*\"\n        OR Filesystem.file_path=\"*\\Electrum\\wallets\\*\"\n        OR Filesystem.file_path=\"*\\MetaMask\\*\"\n        OR Filesystem.file_path=\"*\\Phantom\\*\"\n        OR Filesystem.file_path=\"*\\Atomic\\Local Storage\\*\")\n      AND NOT Filesystem.process_name IN (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`",
+      "defender_kql": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Ethereum\\keystore\\\",\"\\Bitcoin\\\",\"\\Exodus\\\",\"\\Electrum\\wallets\\\",\"\\MetaMask\\\",\"\\Phantom\\\",\"\\Atomic\\Local Storage\\\")\n| where InitiatingProcessFileName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType"
+    },
+    {
+      "id": "UC_DNS_TUNNEL",
+      "title": "DNS tunneling / TXT-heavy domain queries",
+      "kill_chain": "c2",
+      "confidence": "Medium",
+      "description": "Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1071.004",
+          "name": "DNS"
+        },
+        {
+          "id": "T1048.003",
+          "name": "Exfiltration Over Unencrypted Non-C2 Protocol"
+        }
+      ],
+      "data_models": [
+        "Network_Resolution.DNS",
+        "DeviceNetworkEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count from datamodel=Network_Resolution.DNS\n    where DNS.message_type=\"QUERY\"\n    by DNS.src, DNS.query\n| `drop_dm_object_name(DNS)`\n| eval qlen=len(query)\n| where qlen > 50\n| rex field=query \"(?<second_level_domain>[\\w-]+\\.[\\w-]+)$\"\n| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label\n    by src, second_level_domain\n| where qcount > 100 AND unique_subs > 20\n| sort - qcount",
+      "defender_kql": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc"
+    },
+    {
+      "id": "UC_FAKECAPTCHA",
+      "title": "Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Browser-pasted PowerShell launched from explorer/Run dialog \u2014 ClickFix social engineering.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1204.004",
+          "name": "User Execution: Malicious Copy and Paste"
+        },
+        {
+          "id": "T1059.001",
+          "name": "PowerShell"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.parent_process_name IN (\"explorer.exe\",\"RuntimeBroker.exe\")\n      AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\")\n      AND (Processes.process=\"*iex*\" OR Processes.process=\"*Invoke-Expression*\"\n        OR Processes.process=\"*FromBase64*\" OR Processes.process=\"*DownloadString*\"\n        OR Processes.process=\"*hxxp*\" OR Processes.process=\"*curl*\" OR Processes.process=\"*wget*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"RuntimeBroker.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine"
+    },
+    {
+      "id": "UC_HASH_IOC",
+      "title": "File hash IOCs \u2014 endpoint file/process match",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1027",
+          "name": "Obfuscated Files or Information"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Filesystem",
+        "Endpoint.Processes",
+        "DeviceFileEvents",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.file_hash IN (__HASH_LIST__)\n    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash\n| `drop_dm_object_name(Filesystem)`\n| append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Processes\n        where Processes.process_hash IN (__HASH_LIST__)\n        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash\n     | `drop_dm_object_name(Processes)`]",
+      "defender_kql": "union DeviceFileEvents, DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine"
+    },
+    {
+      "id": "UC_LATERAL_PSEXEC",
+      "title": "Remote service execution \u2014 PsExec / SMB lateral movement",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "psexec / paexec / smbexec / wmic /node \u2014 service install over SMB from remote host.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1021.002",
+          "name": "SMB/Windows Admin Shares"
+        },
+        {
+          "id": "T1569.002",
+          "name": "Service Execution"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name IN (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n       OR (Processes.process_name=\"wmic.exe\" AND Processes.process=\"*/node:*\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n   or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine"
+    },
+    {
+      "id": "UC_LSASS",
+      "title": "LSASS process access / dump (credential theft)",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1003.001",
+          "name": "LSASS Memory"
+        },
+        {
+          "id": "T1003",
+          "name": "OS Credential Dumping"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where (Processes.process=\"*lsass*\" OR Processes.process=\"*sekurlsa*\"\n        OR Processes.process=\"*MiniDump*\" OR Processes.process=\"*comsvcs.dll*MiniDump*\"\n        OR Processes.process=\"*procdump*lsass*\")\n       OR (Processes.process_name=\"rundll32.exe\" AND Processes.process=\"*comsvcs*MiniDump*\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc"
+    },
+    {
+      "id": "UC_MFA_FATIGUE",
+      "title": "MFA fatigue / push-bombing",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Many MFA pushes to same user in short window \u2014 suggests adversary attempting approval-fatigue.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1621",
+          "name": "Multi-Factor Authentication Request Generation"
+        }
+      ],
+      "data_models": [
+        "Authentication.Authentication",
+        "AADSignInEventsBeta"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count from datamodel=Authentication.Authentication\n    where Authentication.action=\"failure\" AND Authentication.signature=\"*MFA*\"\n    by _time span=5m, Authentication.user, Authentication.src\n| `drop_dm_object_name(Authentication)`\n| where count > 10",
+      "defender_kql": "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc"
+    },
+    {
+      "id": "UC_NETWORK_IOC",
+      "title": "Network connections to article IPs / domains",
+      "kill_chain": "c2",
+      "confidence": "High",
+      "description": "Outbound traffic to attacker infrastructure named in the article.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1071",
+          "name": "Application Layer Protocol"
+        }
+      ],
+      "data_models": [
+        "Network_Traffic.All_Traffic",
+        "Web",
+        "Network_Resolution.DNS",
+        "DeviceNetworkEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.dest IN (__IP_LIST__)\n    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port\n| `drop_dm_object_name(All_Traffic)`\n| append\n    [| tstats `summariesonly` count from datamodel=Web\n        where Web.dest IN (__DOMAIN_LIST__)\n        by Web.src, Web.dest, Web.url, Web.user\n     | `drop_dm_object_name(Web)`]\n| append\n    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS\n        where DNS.query IN (__DOMAIN_LIST__)\n        by DNS.src, DNS.query, DNS.answer\n     | `drop_dm_object_name(DNS)`]",
+      "defender_kql": "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName, InitiatingProcessCommandLine"
+    },
+    {
+      "id": "UC_OAUTH_ABUSE",
+      "title": "OAuth consent / suspicious app grant",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Cloud identity abuse: app gets high-priv scopes, often via consent phishing.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1528",
+          "name": "Steal Application Access Token"
+        },
+        {
+          "id": "T1098.001",
+          "name": "Account Manipulation: Additional Cloud Credentials"
+        }
+      ],
+      "data_models": [
+        "Authentication.Authentication",
+        "CloudAppEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Authentication.Authentication\n    where Authentication.action=\"success\"\n      AND Authentication.signature IN (\n        \"Consent to application\",\n        \"Add app role assignment grant to user\",\n        \"Add OAuth2PermissionGrant\",\n        \"Add delegated permission grant\")\n    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature\n| `drop_dm_object_name(Authentication)`",
+      "defender_kql": "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent"
+    },
+    {
+      "id": "UC_OFFICE_CHILD",
+      "title": "Office app spawning script/LOLBin child process",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Classic macro/exploit pattern \u2014 Office app launching cmd/powershell/wmic/regsvr32.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1059.001",
+          "name": "PowerShell"
+        },
+        {
+          "id": "T1059.005",
+          "name": "Visual Basic"
+        },
+        {
+          "id": "T1218",
+          "name": "System Binary Proxy Execution"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\",\"mspub.exe\",\"visio.exe\")\n      AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\")\n    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process\n| `drop_dm_object_name(Processes)`\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\",\"mspub.exe\",\"visio.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine"
+    },
+    {
+      "id": "UC_PHISH_ATTACH",
+      "title": "Email attachment opened from external sender",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Attachment delivery + execution by recipient \u2014 most common malware initial access.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1566.001",
+          "name": "Spearphishing Attachment"
+        },
+        {
+          "id": "T1204.002",
+          "name": "User Execution: Malicious File"
+        }
+      ],
+      "data_models": [
+        "Email.All_Email",
+        "Endpoint.Processes",
+        "EmailAttachmentInfo",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count\n    from datamodel=Email.All_Email\n    where All_Email.file_name!=\"-\"\n    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject\n| rename All_Email.recipient as user\n| join type=inner user\n    [| tstats `summariesonly` count\n        from datamodel=Endpoint.Processes\n        where Processes.parent_process_name IN (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n          AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process\n     | rename Processes.user as user]",
+      "defender_kql": "let LookbackDays = 7d;\nlet MalAttachments = EmailAttachmentInfo\n    | where Timestamp > ago(LookbackDays)\n    | project NetworkMessageId, RecipientEmailAddress,\n              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n                      \"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,\n          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256"
+    },
+    {
+      "id": "UC_PHISH_LINK",
+      "title": "Suspicious URL click in email \u2014 phishing landing page",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "User followed a link from an external email to an uncategorized / young-domain page. Pivots from the Email DM onto the Web DM to flag the click-through chain that typically precedes credential theft.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1566.002",
+          "name": "Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        }
+      ],
+      "data_models": [
+        "Email.All_Email",
+        "Web",
+        "EmailEvents",
+        "EmailUrlInfo",
+        "UrlClickEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count\n    from datamodel=Email.All_Email\n    where All_Email.action=\"delivered\" AND All_Email.url!=\"-\"\n    by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject\n| rex field=All_Email.url \"https?://(?<email_domain>[^/]+)\"\n| join type=inner email_domain\n    [| tstats `summariesonly` count\n        from datamodel=Web\n        where Web.action=\"allowed\"\n        by Web.src, Web.dest, Web.url, Web.user\n     | rex field=Web.url \"https?://(?<email_domain>[^/]+)\"]\n| stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,\n        earliest(_time) as first_seen, latest(_time) as last_seen\n        by All_Email.recipient, email_domain",
+      "defender_kql": "let LookbackDays = 7d;\nlet DeliveredEmails = EmailEvents\n    | where Timestamp > ago(LookbackDays)\n    | where DeliveryAction == \"Delivered\"\n    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,\n              EmailTimestamp = Timestamp;\nEmailUrlInfo\n| where Timestamp > ago(LookbackDays)\n| join kind=inner DeliveredEmails on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType == \"ClickAllowed\"\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on Url\n| project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,\n          Subject, Url, UrlDomain, IPAddress\n| order by ClickTimestamp desc"
+    },
+    {
+      "id": "UC_PS_OBFUSCATED",
+      "title": "PowerShell encoded / obfuscated command",
+      "kill_chain": "exploit",
+      "confidence": "High",
+      "description": "Encoded or obfuscated PowerShell \u2014 common across loaders, recon, and post-exploitation.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1059.001",
+          "name": "PowerShell"
+        },
+        {
+          "id": "T1027",
+          "name": "Obfuscated Files or Information"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\")\n      AND (Processes.process=\"*-enc *\" OR Processes.process=\"*EncodedCommand*\"\n        OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*-nop*\"\n        OR Processes.process=\"*-w hidden*\" OR Processes.process=\"*Invoke-Expression*\"\n        OR Processes.process=\"*IEX(*\" OR Processes.process=\"*DownloadString*\"\n        OR Processes.process=\"*Net.WebClient*\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\\s+hidden|invoke-expression|iex\\s*\\(|downloadstring|net\\.webclient)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine"
+    },
+    {
+      "id": "UC_RANSOM_ENCRYPT",
+      "title": "Ransomware-style mass file rename / extension change",
+      "kill_chain": "actions",
+      "confidence": "Medium",
+      "description": "Threshold detection: many files renamed in short window, often with new extension.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1486",
+          "name": "Data Encrypted for Impact"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Filesystem",
+        "DeviceFileEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count, dc(Filesystem.file_name) AS files\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.action IN (\"modified\",\"renamed\")\n    by Filesystem.dest, Filesystem.user, _time span=1m\n| `drop_dm_object_name(Filesystem)`\n| where files > 200\n| sort - files",
+      "defender_kql": "DeviceFileEvents\n| where Timestamp > ago(1d)\n| where ActionType in (\"FileRenamed\",\"FileModified\")\n| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)\n| where files > 200\n| order by files desc"
+    },
+    {
+      "id": "UC_RMM_TOOLS",
+      "title": "RMM tool installed by non-IT user \u2014 remote-access utility for hands-on-keyboard",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1219",
+          "name": "Remote Access Software"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name IN (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\",\"kaseya*.exe\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\")\n   or FileName matches regex @\"(?i)kaseya.*\\.exe\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine"
+    },
+    {
+      "id": "UC_SCHEDULED_TASK",
+      "title": "Scheduled task created with suspicious image / encoded args",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1053.005",
+          "name": "Scheduled Task"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"schtasks.exe\" AND Processes.process=\"*/create*\"\n      AND (Processes.process=\"*powershell*\" OR Processes.process=\"*cmd.exe*\"\n        OR Processes.process=\"*rundll32*\" OR Processes.process=\"*-enc*\"\n        OR Processes.process=\"*FromBase64*\" OR Processes.process=\"*\\Users\\Public*\"\n        OR Processes.process=\"*\\AppData\\*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName"
+    },
+    {
+      "id": "UC_SERVICE_PERSIST",
+      "title": "Service install for persistence \u2014 sc.exe / new service registry write",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\\SYSTEM\\CurrentControlSet\\Services\\* writes).",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1543.003",
+          "name": "Windows Service"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "Endpoint.Registry",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"sc.exe\" AND Processes.process=\"*create*\"\n      AND (Processes.process=\"*\\Users\\*\" OR Processes.process=\"*\\AppData\\*\"\n        OR Processes.process=\"*\\ProgramData\\*\" OR Processes.process=\"*\\Temp\\*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n| append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Registry\n        where Registry.registry_path=\"*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\"\n          AND Registry.registry_value_name=\"ImagePath\"\n          AND (Registry.registry_value_data=\"*\\Users\\*\"\n            OR Registry.registry_value_data=\"*\\AppData\\*\"\n            OR Registry.registry_value_data=\"*\\Temp\\*\")\n        by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user\n     | `drop_dm_object_name(Registry)`]",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"sc.exe\" and ProcessCommandLine has \"create\"\n| where ProcessCommandLine matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName"
+    },
+    {
+      "id": "UC_SUPPLY_CHAIN",
+      "title": "Trusted vendor binary / installer launching unusual children",
+      "kill_chain": "exploit",
+      "confidence": "Medium",
+      "description": "Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1195.002",
+          "name": "Compromise Software Supply Chain"
+        }
+      ],
+      "data_models": [
+        "Endpoint.Processes",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.parent_process_name IN (__VENDOR_BINS__)\n      AND Processes.process_name IN (\"powershell.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"bitsadmin.exe\")\n    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process\n| `drop_dm_object_name(Processes)`",
+      "defender_kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (__VENDOR_BINS__)\n| where FileName in~ (\"powershell.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"bitsadmin.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine"
+    },
+    {
+      "id": "UC_TEAMS_VISHING",
+      "title": "Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "External Teams chat where displayName contains 'helpdesk' or 'IT support' \u2014 common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1566.004",
+          "name": "Phishing: Spearphishing Voice"
+        },
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        }
+      ],
+      "data_models": [
+        "CloudAppEvents"
+      ],
+      "splunk_spl": "`o365_management_activity`\n  Workload=MicrosoftTeams Operation=MessageSent\n  ExternalParticipants=*\n| where match(SenderDisplayName, \"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\")\n| stats count, earliest(_time) as firstTime, latest(_time) as lastTime\n    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId",
+      "defender_kql": "CloudAppEvents\n| where Timestamp > ago(7d)\n| where Application == \"Microsoft Teams\"\n| where ActionType == \"MessageSent\"\n| where RawEventData has \"ExternalParticipants\"\n| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)\n| where SenderDisplayName matches regex @\"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\"\n| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData"
+    },
+    {
+      "id": "UC_VULN_EXPOSURE",
+      "title": "Asset exposure \u2014 vulnerability matches article CVE(s)",
+      "kill_chain": "recon",
+      "confidence": "High",
+      "description": "Match vulnerability scanner output to the CVE(s) named in the article.",
+      "implementations": [
+        "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [
+        "Vulnerabilities",
+        "DeviceInfo",
+        "DeviceTvmSoftwareVulnerabilities"
+      ],
+      "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Vulnerabilities\n    where Vulnerabilities.signature IN (__CVE_LIST__)\n    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve\n| `drop_dm_object_name(Vulnerabilities)`\n| sort - severity",
+      "defender_kql": "DeviceTvmSoftwareVulnerabilities\n| where CveId in~ (__CVE_LIST__)\n| join kind=inner DeviceInfo on DeviceId\n| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate"
+    }
+  ]
+}

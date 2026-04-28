@@ -1,0 +1,340 @@
+{
+  "generated": "2026-04-28T13:35:56Z",
+  "count": 21,
+  "rules": [
+    {
+      "name": "Beaconing / C2",
+      "triggers": [
+        "c2 ",
+        "command and control",
+        "command-and-control",
+        "beacon",
+        "cobalt strike",
+        "sliver",
+        "brute ratel",
+        "havoc framework"
+      ],
+      "fires": [
+        "UC_BEACONING",
+        "UC_NETWORK_IOC"
+      ]
+    },
+    {
+      "name": "Browser extensions",
+      "triggers": [
+        "malicious extension",
+        "browser extension",
+        "fake wallet",
+        "fake extension",
+        "chrome extension",
+        "edge extension",
+        "rogue extension"
+      ],
+      "fires": [
+        "UC_BROWSER_STEALER",
+        "UC_BROWSER_EXT"
+      ]
+    },
+    {
+      "name": "Browser stealer / cookie theft",
+      "triggers": [
+        "infostealer",
+        "info stealer",
+        "stealer malware",
+        "redline stealer",
+        "lumma stealer",
+        "vidar stealer",
+        "atomic stealer",
+        "stealc",
+        "risepro",
+        "browser cookies",
+        "session cookie",
+        "session hijack",
+        "browser session"
+      ],
+      "fires": [
+        "UC_BROWSER_STEALER"
+      ]
+    },
+    {
+      "name": "Credential dumping / LSASS",
+      "triggers": [
+        "credential dumping",
+        "lsass",
+        "mimikatz",
+        "sekurlsa",
+        "comsvcs"
+      ],
+      "fires": [
+        "UC_LSASS"
+      ]
+    },
+    {
+      "name": "Crypto wallet",
+      "triggers": [
+        "crypto wallet",
+        "wallet drainer",
+        "metamask",
+        "phantom wallet",
+        "exodus wallet",
+        "fakewallet",
+        "fake wallet",
+        "cryptocurrency theft"
+      ],
+      "fires": [
+        "UC_BROWSER_STEALER",
+        "UC_CRYPTO_WALLET"
+      ]
+    },
+    {
+      "name": "CVE / vulnerability",
+      "triggers": [
+        "cve-",
+        "vulnerability",
+        "exploited flaw",
+        "kev catalog",
+        "patched flaw",
+        "rce ",
+        "remote code execution",
+        "exploit chain",
+        "zero-day",
+        "zero day",
+        "0-day"
+      ],
+      "fires": [
+        "UC_VULN_EXPOSURE"
+      ]
+    },
+    {
+      "name": "DNS C2 / tunneling",
+      "triggers": [
+        "dns tunneling",
+        "dns tunnel",
+        "dns-based c2",
+        "dns exfil"
+      ],
+      "fires": [
+        "UC_DNS_TUNNEL"
+      ]
+    },
+    {
+      "name": "Generic phishing \u2014 assume both modes",
+      "triggers": [
+        "phishing",
+        "phish "
+      ],
+      "fires": [
+        "UC_PHISH_ATTACH",
+        "UC_PHISH_LINK",
+        "UC_OFFICE_CHILD"
+      ]
+    },
+    {
+      "name": "Lateral movement",
+      "triggers": [
+        "lateral movement",
+        "psexec",
+        "smbexec",
+        "wmic /node",
+        "remote service"
+      ],
+      "fires": [
+        "UC_LATERAL_PSEXEC"
+      ]
+    },
+    {
+      "name": "MFA bombing",
+      "triggers": [
+        "mfa fatigue",
+        "mfa bombing",
+        "push bombing",
+        "push fatigue",
+        "mfa-bombing"
+      ],
+      "fires": [
+        "UC_MFA_FATIGUE"
+      ]
+    },
+    {
+      "name": "Microsoft Teams vishing / IT-helpdesk impersonation",
+      "triggers": [
+        "microsoft teams",
+        "teams chat",
+        "it help desk",
+        "it helpdesk",
+        "help desk impersonat",
+        "service desk impersonat",
+        "tech support impersonat",
+        "impersonating it"
+      ],
+      "fires": [
+        "UC_TEAMS_VISHING",
+        "UC_RMM_TOOLS"
+      ]
+    },
+    {
+      "name": "OAuth / consent abuse",
+      "triggers": [
+        "oauth",
+        "consent phishing",
+        "illicit consent",
+        "token theft",
+        "app registration"
+      ],
+      "fires": [
+        "UC_OAUTH_ABUSE"
+      ]
+    },
+    {
+      "name": "Office / macro",
+      "triggers": [
+        "macro",
+        "office document",
+        "word document",
+        "excel macro",
+        "office attachment"
+      ],
+      "fires": [
+        "UC_OFFICE_CHILD"
+      ]
+    },
+    {
+      "name": "Persistence \u2014 scheduled task",
+      "triggers": [
+        "scheduled task",
+        "schtasks",
+        "task scheduler"
+      ],
+      "fires": [
+        "UC_SCHEDULED_TASK"
+      ]
+    },
+    {
+      "name": "Persistence \u2014 service",
+      "triggers": [
+        "new service",
+        "service install",
+        "service registry"
+      ],
+      "fires": [
+        "UC_SERVICE_PERSIST"
+      ]
+    },
+    {
+      "name": "Phishing \u2014 attachment",
+      "triggers": [
+        "malicious attachment",
+        "weaponized document",
+        "weaponised document",
+        "macro-laden",
+        "vba macro",
+        "office macro",
+        "malicious doc"
+      ],
+      "fires": [
+        "UC_PHISH_ATTACH",
+        "UC_OFFICE_CHILD"
+      ]
+    },
+    {
+      "name": "Phishing \u2014 link",
+      "triggers": [
+        "phishing email",
+        "phishing link",
+        "spear-phishing",
+        "spearphishing",
+        "spear phishing",
+        "credential harvest",
+        "credential phishing",
+        "fake login",
+        "fake captcha",
+        "clickfix",
+        "click-fix",
+        "click fix"
+      ],
+      "fires": [
+        "UC_PHISH_LINK",
+        "UC_FAKECAPTCHA"
+      ]
+    },
+    {
+      "name": "PowerShell / scripting",
+      "triggers": [
+        "powershell",
+        "encoded command",
+        "obfuscated",
+        "iex",
+        "invoke-expression"
+      ],
+      "fires": [
+        "UC_PS_OBFUSCATED"
+      ]
+    },
+    {
+      "name": "Ransomware",
+      "triggers": [
+        "ransomware",
+        "encrypts files",
+        "ransom note",
+        "double extortion",
+        "lockbit",
+        "blackcat",
+        "alphv",
+        "akira",
+        "play ransomware",
+        "rhysida",
+        "ransomhub",
+        "qilin",
+        "8base",
+        "medusa ransomware",
+        "clop",
+        "cl0p",
+        "black basta",
+        "blackbasta"
+      ],
+      "fires": [
+        "UC_LATERAL_PSEXEC",
+        "UC_LSASS",
+        "UC_RANSOM_ENCRYPT"
+      ]
+    },
+    {
+      "name": "RMM abuse",
+      "triggers": [
+        "anydesk",
+        "teamviewer",
+        "screenconnect",
+        "connectwise",
+        "atera",
+        "splashtop",
+        "rustdesk",
+        "ninjarmm",
+        "ninjaone",
+        "kaseya",
+        "remote access tool",
+        "rmm tool",
+        "rmm software"
+      ],
+      "fires": [
+        "UC_RMM_TOOLS"
+      ]
+    },
+    {
+      "name": "Supply chain",
+      "triggers": [
+        "supply chain",
+        "supply-chain",
+        "trojanized installer",
+        "trojanised installer",
+        "compromised software",
+        "package compromise",
+        "trojanized sumatrapdf",
+        "trojanised sumatrapdf",
+        "weaponized installer"
+      ],
+      "fires": [
+        "UC_SUPPLY_CHAIN"
+      ]
+    }
+  ]
+}
