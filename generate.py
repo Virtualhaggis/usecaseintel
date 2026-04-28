@@ -1908,62 +1908,34 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .matrix-stats span{color:var(--muted);}
 .matrix-stats span b{color:var(--text); font-variant-numeric:tabular-nums;}
 
-/* ----- Use Case Catalogue panel (Matrix tab) ------------------------- */
-.uc-catalogue{
-  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
-  margin:0 0 16px 0; padding:14px 18px; box-shadow:var(--shadow-sm);
+/* ----- Drawer use-case list (paginated for large drawers) ------------ */
+.drawer-uc-toolbar{
+  display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;
 }
-.uc-catalogue summary{
-  list-style:none; cursor:pointer;
-  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+.drawer-uc-toolbar input{
+  flex:1; min-width:160px;
+  background:var(--panel-elev); border:1px solid var(--border); color:var(--text);
+  padding:6px 10px; border-radius:var(--r-md); font-size:12px; font-family:inherit;
 }
-.uc-catalogue summary::-webkit-details-marker{display:none;}
-.uc-catalogue summary::before{
-  content:""; width:10px; height:10px; border-right:2px solid var(--muted);
-  border-bottom:2px solid var(--muted); transform:rotate(-45deg);
-  transition:transform 0.2s ease; margin-right:4px;
+.drawer-uc-toolbar input:focus{border-color:var(--accent);}
+.drawer-uc-toolbar select{
+  background:var(--panel-elev); border:1px solid var(--border); color:var(--text);
+  padding:6px 10px; border-radius:var(--r-md); font-size:12px; font-family:inherit;
 }
-.uc-catalogue[open] summary::before{transform:rotate(45deg);}
-.uc-cat-title{font-size:14px; font-weight:600; color:var(--text);}
-.uc-cat-count{
-  font-size:11px; padding:3px 10px; border-radius:999px;
-  background:var(--panel2); color:var(--accent-3); font-variant-numeric:tabular-nums;
-  border:1px solid var(--border);
+.drawer-uc-pager{
+  margin-top:10px; padding:8px;
+  background:var(--panel); border:1px dashed var(--border); border-radius:var(--r-md);
+  text-align:center; font-size:11.5px; color:var(--muted);
+  cursor:pointer;
 }
-.uc-cat-hint{font-size:11.5px; color:var(--muted); margin-left:auto;}
-.uc-cat-grid{
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
-  gap:8px; margin-top:14px;
+.drawer-uc-pager:hover{border-color:var(--accent); color:var(--accent);}
+.uc-card-row .uc-src-pill{
+  font-size:9.5px; padding:1px 6px; border-radius:4px;
+  background:var(--panel2); color:var(--muted-2); margin-left:auto;
+  text-transform:uppercase; letter-spacing:0.06em; font-weight:600;
 }
-.uc-cat-card{
-  background:var(--panel-elev); border:1px solid var(--border);
-  border-radius:var(--r-md); padding:10px 12px; cursor:pointer;
-  transition:all 0.15s; display:flex; flex-direction:column; gap:4px;
-}
-.uc-cat-card:hover{border-color:var(--accent); transform:translateY(-1px);}
-.uc-cat-card.on{
-  border-color:var(--accent); background:rgba(95,182,255,0.10);
-  box-shadow:0 0 0 1px var(--accent) inset;
-}
-.uc-cat-card .uc-cat-name{
-  font-size:12.5px; font-weight:600; color:var(--text);
-  font-family:var(--font-mono); letter-spacing:-0.01em;
-}
-.uc-cat-card .uc-cat-meta{
-  font-size:10.5px; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;
-}
-.uc-cat-card .uc-cat-meta b{color:var(--accent-3); font-weight:600;}
-.uc-cat-card .uc-cat-techs{
-  font-size:10px; color:var(--muted-2); font-family:var(--font-mono);
-  margin-top:2px;
-}
-/* Highlight mapped technique cells when a UC is pinned */
-.tech-cell.uc-highlight{
-  outline:2px solid var(--accent);
-  outline-offset:-2px;
-  background:linear-gradient(180deg, rgba(95,182,255,0.22), rgba(95,182,255,0.08)) !important;
-  z-index:1;
-}
+.uc-card-row .uc-src-pill.escu{color:var(--accent-3);}
+.uc-card-row .uc-src-pill.internal{color:var(--accent);}
 .matrix-mode{display:flex; gap:4px;
   padding:3px; background:var(--bg); border:1px solid var(--border);
   border-radius:var(--r-sm);}
@@ -2308,14 +2280,6 @@ ul.intel-types-doc code{
         <span class="lg-note">click any cell for the full drawer</span>
       </div>
     </div>
-    <details class="uc-catalogue" id="ucCatalogue" open>
-      <summary>
-        <span class="uc-cat-title">Use Case Catalogue</span>
-        <span class="uc-cat-count" id="ucCatCount">0 use cases</span>
-        <span class="uc-cat-hint">Click a use case to highlight every technique it maps to. Click again to clear.</span>
-      </summary>
-      <div class="uc-cat-grid" id="ucCatGrid"></div>
-    </details>
     <div class="matrix-grid" id="matrixGrid"></div>
   </div>
 </div>
@@ -2820,62 +2784,6 @@ function renderMatrix() {
     `<span><b>${MATRIX.stats.total_subs}</b> sub-techniques</span>` +
     `<span><b>${MATRIX.stats.covered_techs}</b> covered</span>` +
     `<span><b>${MATRIX.stats.ucs}</b> use cases</span>`;
-
-  renderUcCatalogue();
-}
-
-// ----- Use Case Catalogue panel -------------------------------------
-let pinnedUcIdx = null;
-function renderUcCatalogue() {
-  const grid = document.getElementById('ucCatGrid');
-  const count = document.getElementById('ucCatCount');
-  if (!grid || !MATRIX) return;
-  count.textContent = `${MATRIX.ucs.length.toLocaleString()} use cases`;
-  // Sort: internal UCs first (alphabetical), then ESCU detections (alphabetical)
-  const ucs = MATRIX.ucs.slice().sort((a, b) => {
-    if (a.src !== b.src) return a.src === 'internal' ? -1 : 1;
-    return (a.t || a.n).localeCompare(b.t || b.n);
-  });
-  const html = ucs.map(uc => {
-    const techStr = (uc.techs || []).slice(0, 5).join(', ') +
-                    ((uc.techs || []).length > 5 ? ` (+${uc.techs.length - 5})` : '');
-    const srcLabel = uc.src === 'escu' ? 'Splunk ESCU' : 'Internal';
-    return `<div class="uc-cat-card" data-uc-idx="${uc.i}" title="${escapeHtml(uc.t)}">
-      <div class="uc-cat-name">${escapeHtml(uc.n)}</div>
-      <div class="uc-cat-meta">
-        <span><b>${uc.techs.length}</b> tech${uc.techs.length === 1 ? '' : 's'}</span>
-        <span>${escapeHtml(uc.ph || '-')}</span>
-        <span style="margin-left:auto;color:var(--muted-2);">${srcLabel}</span>
-      </div>
-      <div class="uc-cat-techs">${escapeHtml(techStr)}</div>
-    </div>`;
-  }).join('');
-  grid.innerHTML = html;
-  // Wire clicks: click to pin (highlight every mapped technique cell), click again to unpin
-  grid.querySelectorAll('.uc-cat-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const idx = parseInt(card.dataset.ucIdx, 10);
-      if (pinnedUcIdx === idx) {
-        // unpin
-        pinnedUcIdx = null;
-        grid.querySelectorAll('.uc-cat-card.on').forEach(c => c.classList.remove('on'));
-        document.querySelectorAll('#matrixGrid .uc-highlight').forEach(c => c.classList.remove('uc-highlight'));
-        return;
-      }
-      pinnedUcIdx = idx;
-      grid.querySelectorAll('.uc-cat-card.on').forEach(c => c.classList.remove('on'));
-      card.classList.add('on');
-      document.querySelectorAll('#matrixGrid .uc-highlight').forEach(c => c.classList.remove('uc-highlight'));
-      const uc = MATRIX.ucs[idx];
-      (uc.techs || []).forEach(tid => {
-        document.querySelectorAll(`#matrixGrid .tech-cell[data-tid="${tid}"]`)
-          .forEach(c => c.classList.add('uc-highlight'));
-      });
-      // scroll the first highlighted cell into view
-      const firstCell = document.querySelector('#matrixGrid .uc-highlight');
-      if (firstCell) firstCell.scrollIntoView({behavior:'smooth', block:'center'});
-    });
-  });
 }
 
 // Mode toggle
@@ -2951,24 +2859,30 @@ function openDrawerFor(tid) {
     }).join('');
     body += '</div></div>';
   }
-  // Mapped use cases
-  body += `<div class="drawer-section"><h4>Use cases mapped (${ucs.length})</h4><div class="drawer-list">`;
+  // Mapped use cases — paginated. With 2150 ESCU detections in the matrix,
+  // popular techniques can have hundreds of UCs. Show internal first, then
+  // page through ESCU. Search + source filter inside the drawer.
+  // Internal UCs come first, then ESCU sorted alphabetically.
+  const ucsSorted = ucs.slice().sort((a, b) => {
+    if (a.src !== b.src) return a.src === 'internal' ? -1 : 1;
+    return (a.t || '').localeCompare(b.t || '');
+  });
+  body += `<div class="drawer-section"><h4>Use cases mapped (${ucs.length})</h4>`;
   if (ucs.length) {
-    body += ucs.map(uc => {
-      const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
-      return `<div style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;">
-        <div style="font-weight:600;font-size:12.5px;">${escapeHtml(uc.t)}</div>
-        <div class="meta">
-          <span class="pill">${escapeHtml(uc.ph)}</span>
-          <span class="pill conf${uc.conf.toLowerCase()}">${escapeHtml(uc.conf)}</span>
-        </div>
-        ${artLinks ? '<div style="margin-top:6px;line-height:1.4;">' + artLinks + '</div>' : ''}
-      </div>`;
-    }).join('');
+    body += `<div class="drawer-uc-toolbar">
+      <input type="text" id="drawerUcSearch" placeholder="Filter use cases…" autocomplete="off">
+      <select id="drawerUcSrc">
+        <option value="">All sources</option>
+        <option value="internal">Internal only</option>
+        <option value="escu">Splunk ESCU only</option>
+      </select>
+    </div>
+    <div class="drawer-list" id="drawerUcList" data-all='${JSON.stringify(ucsSorted).replace(/'/g, "&#39;")}'></div>
+    <div class="drawer-uc-pager" id="drawerUcPager" style="display:none;"></div>`;
   } else {
-    body += '<div class="drawer-empty">No use cases reference this technique yet.</div>';
+    body += '<div class="drawer-list"><div class="drawer-empty">No use cases reference this technique yet.</div></div>';
   }
-  body += '</div></div>';
+  body += '</div>';
   // Articles citing
   body += `<div class="drawer-section"><h4>Articles citing this technique (${arts.length})</h4><div class="drawer-list">`;
   if (arts.length) {
@@ -2984,6 +2898,67 @@ function openDrawerFor(tid) {
   document.getElementById('techDrawer').classList.add('open');
   document.getElementById('drawerBg').classList.add('open');
   document.getElementById('techDrawer').setAttribute('aria-hidden','false');
+  initDrawerUcList();
+}
+
+// Render-on-demand UC list inside the drawer. Reads the JSON-encoded
+// data-all blob from #drawerUcList, renders 30 at a time with a "load more"
+// pager, and wires the search + source-filter inputs.
+function initDrawerUcList() {
+  const list = document.getElementById('drawerUcList');
+  const pager = document.getElementById('drawerUcPager');
+  const search = document.getElementById('drawerUcSearch');
+  const srcSel = document.getElementById('drawerUcSrc');
+  if (!list || !pager) return;
+  let allUcs = [];
+  try { allUcs = JSON.parse(list.dataset.all); } catch(e) { allUcs = []; }
+  let renderedCount = 0;
+  const PAGE = 30;
+  function ucCardHtml(uc) {
+    const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
+    const srcCls = uc.src === 'escu' ? 'escu' : 'internal';
+    const srcLabel = uc.src === 'escu' ? 'ESCU' : 'Internal';
+    return `<div class="uc-card-row" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(uc.t)}</div>
+        <span class="uc-src-pill ${srcCls}">${srcLabel}</span>
+      </div>
+      <div class="meta">
+        <span class="pill">${escapeHtml(uc.ph || '-')}</span>
+        <span class="pill conf${(uc.conf||'').toLowerCase()}">${escapeHtml(uc.conf || '-')}</span>
+        <span style="color:var(--muted-2);font-size:10.5px;">${escapeHtml(uc.n)}</span>
+      </div>
+      ${artLinks ? '<div style="margin-top:6px;line-height:1.4;">' + artLinks + '</div>' : ''}
+    </div>`;
+  }
+  function getFiltered() {
+    const q = (search?.value || '').trim().toLowerCase();
+    const srcF = srcSel?.value || '';
+    return allUcs.filter(uc => {
+      if (srcF && uc.src !== srcF) return false;
+      if (!q) return true;
+      const blob = ((uc.t || '') + ' ' + (uc.n || '') + ' ' + (uc.techs || []).join(' ')).toLowerCase();
+      return blob.includes(q);
+    });
+  }
+  function renderPage(reset) {
+    const filtered = getFiltered();
+    if (reset) { list.innerHTML = ''; renderedCount = 0; }
+    const slice = filtered.slice(renderedCount, renderedCount + PAGE);
+    list.insertAdjacentHTML('beforeend', slice.map(ucCardHtml).join(''));
+    renderedCount += slice.length;
+    const remaining = filtered.length - renderedCount;
+    if (remaining > 0) {
+      pager.style.display = 'block';
+      pager.textContent = `Show next ${Math.min(PAGE, remaining)} (of ${remaining} remaining)`;
+    } else {
+      pager.style.display = 'none';
+    }
+  }
+  pager.addEventListener('click', () => renderPage(false));
+  search?.addEventListener('input', () => renderPage(true));
+  srcSel?.addEventListener('change', () => renderPage(true));
+  renderPage(true);
 }
 
 function closeDrawer() {
