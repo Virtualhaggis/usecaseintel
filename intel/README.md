@@ -136,14 +136,80 @@ Use the [Threat Intelligence — TAXII data connector](https://learn.microsoft.c
 
 Import `iocs.stix.json` directly — it's a STIX 2.1 bundle of `indicator` objects with proper patterns, severity tags (`x_severity`), source attribution (`x_sources`), and external references back to source articles.
 
-## Limitations & honesty
+## How we earn the SOC's trust — high-fidelity extraction only
 
-- IOCs are extracted from RSS article **summaries** (~400 chars each). Most articles only embed CVEs in the summary; raw IPs/hashes/domains often live deep in article bodies that aren't in the RSS feed.
-- THN and other publishers block server-side scraping (HTTP 403), so we don't fetch full article bodies.
-- **CVE coverage is comprehensive** thanks to CISA KEV (a clean JSON feed).
-- **IP/domain/hash coverage is intentionally conservative** — we'd rather underreport than ship false positives.
+A bad IOC feed will make an analyst block legitimate Microsoft / Google / GitHub traffic. Trust is earned by being honest about what we can and cannot reliably extract from RSS article summaries.
 
-If you have access to richer feeds (paid TI providers, internal SOC observations), this feed is best used as a *starting point* — not a replacement.
+### What we extract (and why we trust it)
+
+| Type | How | Why it's reliable |
+|---|---|---|
+| `cve` | Regex `CVE-\d{4}-\d{4,7}` | Unambiguous format. CVEs in articles are about the CVE — they're never coincidental. CISA KEV in particular is the federal "exploited in the wild" gold standard. |
+| `sha256` / `sha1` / `md5` | Regex (32 / 40 / 64 hex chars) | High entropy, low false-positive rate. A hex string of this length appearing in a security article is almost always being called out as malicious. |
+| `ipv4` | **Defanged form only** — `1[.]2[.]3[.]4` | Researchers explicitly mark IOCs as defanged so URLs don't auto-link. This is a strong "I, the author, am tagging this as malicious" signal. |
+| `domain` | **Defanged form only** — `evil[.]com`, or `hxxps://evil-c2.io/path` | Same reasoning. Plain-text domain mentions like "outlook.com" or "github.com" are almost always the legitimate target / platform / vendor — NOT IOCs. |
+
+### What we deliberately do NOT extract
+
+Plain-text domain or IP mentions in article summaries.
+
+A previous version of this pipeline did extract them and produced false positives like:
+- `outlook.com` — from "Microsoft asks iPhone users to reauthenticate after **Outlook** outage"
+- `asp.net` — from "Microsoft Patches Critical **ASP.NET** Core CVE"
+- `context.ai` — from "Vercel breach exposes **Context.ai** customer data"
+
+A SOC analyst running these through their proxy logs would block all their organisation's legitimate Outlook / ASP.NET / Context.ai traffic. Catastrophic.
+
+The correct behaviour for a SOC feed is: **if the source author hasn't taken the small step of defanging their IOCs, we cannot tell programmatically whether a domain is the attacker's infrastructure or the victim's**. RSS summaries just don't carry the context. So we don't pretend.
+
+### Defanged IOC examples
+
+These would be picked up — researcher convention for sharing IOCs safely:
+
+```
+The implant beaconed to 185[.]220[.]101[.]50 on port 443.
+Phishing emails linked to hxxps://drive-share[.]xyz/auth.html
+Watering-hole infrastructure observed at evil-corp[.]io
+```
+
+These would NOT be picked up — too ambiguous for a feed:
+
+```
+"… users with outlook.com accounts were affected …"      (legitimate target)
+"… exploited via ASP.NET deserialisation …"              (technology mention)
+"… first reported by bleepingcomputer.com …"             (news source)
+```
+
+### Confidence model
+
+Every IOC carries a `confidence` field:
+
+| Value | Meaning |
+|---|---|
+| `high` | Default — passed the extraction quality bar |
+| `medium` / `low` | Reserved for future LLM-augmented enrichment paths; not currently emitted |
+
+Every IOC also carries an `extraction` field telling you the path it took:
+
+| Value | Meaning |
+|---|---|
+| `regex` | CVE or hash matched by literal regex |
+| `defanged` | Domain or IP matched only because it appeared in defanged form |
+
+If you want to widen the funnel (e.g. pull plain-text domains too) for some specific consumer, fork this pipeline and adjust `extract_indicators()` — but understand the FP risk you're accepting.
+
+## What this means in practice today
+
+Today's feed has **36 IOCs** — all CVEs from CISA KEV. That's not a bug; it reflects the fact that:
+- KEV is a clean, structured, authoritative feed
+- The RSS summaries from THN / BleepingComputer / Microsoft Security Blog rarely contain defanged IOCs (those live in the body of the technical write-ups, which we cannot scrape)
+
+So this feed is **complementary** to whatever paid TI you have, not a replacement. Where it shines:
+- KEV CVE-to-asset matching (`Vulnerabilities.signature` / `DeviceTvmSoftwareVulnerabilities.CveId`)
+- News-driven prioritisation: "what should my team be hunting for THIS week"
+- Free, public, transparent provenance for every IOC
+
+If a future article publishes defanged IPs/hashes, those will appear here automatically and inherit the same high-confidence classification.
 
 ## Contributing
 

@@ -1,5 +1,6 @@
 @echo off
-REM Daily run: validate, regenerate site, emit digest.
+REM Daily run: validate, regenerate, emit digest, auto-commit refreshed
+REM intel/ catalog/ daily_digest.md back to GitHub.
 setlocal
 cd /d "%~dp0"
 if not exist logs mkdir logs
@@ -19,5 +20,22 @@ if errorlevel 1 (
 py generate.py 1>>"%LOG%" 2>>&1
 >>"%LOG%" echo [digest]
 py digest.py 1>>"%LOG%" 2>>&1
+
+REM ---- Auto-commit refreshed exports to the repo ---------------------
+>>"%LOG%" echo [git] checking for refreshed intel/ catalog/ files
+git diff --quiet -- intel/ catalog/ daily_digest.md 1>>"%LOG%" 2>>&1
+if errorlevel 1 (
+  >>"%LOG%" echo [git] changes detected, committing and pushing
+  git add intel/ catalog/ daily_digest.md 1>>"%LOG%" 2>>&1
+  git commit -m "auto: refresh IOCs and catalog (%TS%)" 1>>"%LOG%" 2>>&1
+  git push 1>>"%LOG%" 2>>&1
+  if errorlevel 1 (
+    >>"%LOG%" echo [git] push failed - resolve manually.
+  ) else (
+    >>"%LOG%" echo [git] pushed.
+  )
+) else (
+  >>"%LOG%" echo [git] no changes to commit.
+)
 >>"%LOG%" echo [done]
 endlocal

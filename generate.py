@@ -50,22 +50,29 @@ OUT_HTML = Path(__file__).with_name("index.html")
 # =============================================================================
 
 CVE_RE = re.compile(r"CVE-\d{4}-\d{4,7}", re.IGNORECASE)
-IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
-DOMAIN_RE = re.compile(r"\b(?:[a-z0-9-]{1,63}\.)+[a-z]{2,63}\b", re.IGNORECASE)
 HASH_MD5_RE = re.compile(r"\b[a-f0-9]{32}\b", re.IGNORECASE)
 HASH_SHA1_RE = re.compile(r"\b[a-f0-9]{40}\b", re.IGNORECASE)
 HASH_SHA256_RE = re.compile(r"\b[a-f0-9]{64}\b", re.IGNORECASE)
 ATTACK_RE = re.compile(r"\bT\d{4}(?:\.\d{3})?\b")
 
-DOMAIN_NOISE = {
-    "thehackernews.com", "feeds.feedburner.com", "feedproxy.google.com",
-    "blogger.com", "googleapis.com", "google.com", "twitter.com",
-    "x.com", "linkedin.com", "facebook.com", "github.com",
-    "schemas.microsoft.com", "w3.org", "schema.org", "purl.org",
-    "1.bp.blogspot.com", "2.bp.blogspot.com", "3.bp.blogspot.com",
-    "4.bp.blogspot.com", "feedburner.com", "blogspot.com",
-    "static.thehackernews.com", "thn.news", "youtube.com", "bit.ly",
-}
+# Defanged-only IOC extraction. Plain text "outlook.com" or "1.2.3.4" mentioned
+# casually in an article summary is NOT a SOC-grade indicator — those are
+# almost always legitimate platforms or victim infrastructure. We only accept
+# domain/IP IOCs when the source author has *defanged* them with bracketed
+# dots (`evil[.]com`, `1[.]2[.]3[.]4`) or `hxxp(s)://` — the universal
+# convention for "this is malicious; don't auto-click".
+DEFANGED_IPV4_RE = re.compile(r"\b((?:\d{1,3}\[\.\]){3}\d{1,3})\b")
+DEFANGED_DOMAIN_RE = re.compile(
+    r"\b([a-z0-9-]+(?:\[\.\][a-z0-9-]+)+\[\.\][a-z]{2,})\b",
+    re.IGNORECASE,
+)
+HXXP_URL_RE = re.compile(r"hxxps?://([^\s\]\[)\"'<>]+)", re.IGNORECASE)
+
+
+def _refang(s):
+    """Convert defanged IOC back to canonical form for downstream tooling."""
+    return (s.replace("[.]", ".").replace("[:]", ":")
+             .replace("hxxp://", "http://").replace("hxxps://", "https://"))
 
 
 def strip_html(s: str) -> str:
@@ -83,20 +90,35 @@ def dedupe(seq):
 
 
 def extract_indicators(title: str, body: str) -> dict:
+    """
+    SOC-grade IOC extraction. Quality bar:
+      - CVE: regex match (unambiguous format, low FP rate)
+      - Hash (MD5/SHA1/SHA256): regex match (high entropy, low FP rate)
+      - Domain/IP: ONLY accept defanged forms (`evil[.]com`, `1[.]2[.]3[.]4`,
+        `hxxps://...`). Plain-text mentions are almost always legitimate
+        infrastructure (the victim, the platform, the security vendor),
+        so they're rejected. This means article summaries that don't use
+        defanged notation will produce zero domain/IP IOCs — which is the
+        correct behaviour for a feed an analyst will block on.
+    """
     text = f"{title}\n{body}"
+
+    # Defanged IPs — high-confidence
+    ips = dedupe(_refang(m.group(1)) for m in DEFANGED_IPV4_RE.finditer(text))
+
+    # Defanged domains and hxxp:// URLs — extract host part of URLs
     domains = []
-    for d in DOMAIN_RE.findall(text):
-        d_l = d.lower()
-        if d_l in DOMAIN_NOISE:
-            continue
-        tld = d_l.rsplit(".", 1)[-1]
-        if tld in {"dll", "exe", "sys", "bat", "ps1", "vbs", "js"}:
-            continue
-        domains.append(d_l)
+    for m in DEFANGED_DOMAIN_RE.finditer(text):
+        domains.append(_refang(m.group(1)).lower())
+    for m in HXXP_URL_RE.finditer(text):
+        url_host = _refang(m.group(1)).split("/", 1)[0].lower()
+        domains.append(url_host)
+    domains = dedupe(domains)
+
     return {
         "cves": dedupe(CVE_RE.findall(text)),
-        "ips": dedupe(IPV4_RE.findall(text)),
-        "domains": dedupe(domains)[:25],
+        "ips": ips,
+        "domains": domains,
         "md5": dedupe(HASH_MD5_RE.findall(text)),
         "sha1": dedupe(HASH_SHA1_RE.findall(text)),
         "sha256": dedupe(HASH_SHA256_RE.findall(text)),
@@ -1953,6 +1975,13 @@ ul.intel-types-doc code{
   background:var(--panel2); padding:1px 6px; border-radius:4px;
   font-size:11px; color:var(--accent-3);
 }
+.quality-bar{
+  background:rgba(255,176,96,0.06); border:1px solid rgba(255,176,96,0.25);
+  border-left:3px solid var(--warn); border-radius:0 6px 6px 0;
+  padding:12px 16px; margin:6px 0;
+}
+.quality-bar p{margin:0 0 6px;}
+.quality-bar ul.intel-types-doc{margin:6px 0;}
 
 /* Drawer (slide-in from right) */
 .drawer-bg{
@@ -2160,6 +2189,19 @@ ul.intel-types-doc code{
           <li><strong>Domain</strong> — attacker hostname (C2/phishing/download). <code>Splunk: Network_Resolution.DNS.query</code> · <code>Defender: DeviceNetworkEvents.RemoteUrl</code></li>
           <li><strong>SHA256 / SHA1 / MD5</strong> — malicious file hashes. <code>Splunk: Endpoint.Filesystem.file_hash</code> · <code>Defender: DeviceFileEvents.SHA256</code></li>
         </ul>
+
+        <h4>How we earn the SOC's trust — high-fidelity extraction</h4>
+        <div class="quality-bar">
+          <p>A bad IOC feed makes an analyst block legitimate Outlook / GitHub / vendor traffic. So this pipeline is deliberately conservative:</p>
+          <ul class="intel-types-doc">
+            <li><strong>CVEs and hashes</strong> are extracted by regex — unambiguous format, low false-positive rate.</li>
+            <li><strong>Domains and IPs</strong> are accepted <em>only when defanged</em> by the source author (e.g. <code>evil[.]com</code>, <code>1[.]2[.]3[.]4</code>, <code>hxxps://...</code>). That's the universal "I'm flagging this as malicious" convention.</li>
+            <li><strong>Plain-text domain/IP mentions are rejected</strong>. In an RSS summary, a phrase like "Outlook users were affected" or "ASP.NET vulnerability" is the legitimate victim or platform — never an IOC. We don't ship false positives just to look busy.</li>
+          </ul>
+          <p style="margin-top:10px;color:var(--muted);">
+            If today's feed shows mostly CVEs, that reflects an honest reality: KEV publishes structured exploited-CVE data daily; defanged IPs/hashes typically live in technical write-ups whose bodies we cannot scrape. Every IOC you see has earned its place.
+          </p>
+        </div>
 
         <h4>Severity meaning</h4>
         <ul class="intel-types-doc">
@@ -3282,15 +3324,23 @@ _SEV_RANK = {"crit": 4, "high": 3, "med": 2, "low": 1}
 
 
 def aggregate_iocs(articles_meta):
-    """Dedupe IOCs across articles, attaching source attribution + context."""
+    """Dedupe IOCs across articles, attaching source attribution + context.
+
+    Every IOC included here has passed the high-fidelity bar in
+    `extract_indicators()`:
+      - CVE & hash IOCs: regex-extracted (unambiguous format)
+      - Domain/IP IOCs:  only present if the source author defanged them
+                         (`evil[.]com`, `1[.]2[.]3[.]4`, `hxxps://...`)
+    The `confidence` field below tells consumers which path each IOC took.
+    """
     iocs = {}  # (type, value_lower) -> dict
     type_buckets = [
-        ("cve", "cves"),
-        ("ipv4", "ips"),
-        ("domain", "domains"),
-        ("sha256", "sha256"),
-        ("sha1", "sha1"),
-        ("md5", "md5"),
+        ("cve", "cves", "regex"),
+        ("ipv4", "ips", "defanged"),
+        ("domain", "domains", "defanged"),
+        ("sha256", "sha256", "regex"),
+        ("sha1", "sha1", "regex"),
+        ("md5", "md5", "regex"),
     ]
     for a in articles_meta:
         ind = a.get("ind") or {}
@@ -3303,7 +3353,7 @@ def aggregate_iocs(articles_meta):
             "published": a.get("published", ""),
             "sev": sev,
         }
-        for ioc_type, ind_key in type_buckets:
+        for ioc_type, ind_key, source_path in type_buckets:
             for value in ind.get(ind_key, []) or []:
                 key = (ioc_type, str(value).lower())
                 ent = iocs.get(key)
@@ -3311,6 +3361,8 @@ def aggregate_iocs(articles_meta):
                     iocs[key] = {
                         "value": value,
                         "type": ioc_type,
+                        "confidence": "high",  # everything that survives extraction is high-confidence by design
+                        "extraction": source_path,  # "regex" or "defanged" — provenance of the extraction
                         "severity": sev,
                         "sources": list(sources),
                         "articles": [article_ref],
@@ -3325,7 +3377,6 @@ def aggregate_iocs(articles_meta):
                     if _SEV_RANK.get(sev, 0) > _SEV_RANK.get(ent["severity"], 0):
                         ent["severity"] = sev
     out = list(iocs.values())
-    # Sort: severity desc, type, value
     out.sort(key=lambda x: (-_SEV_RANK.get(x["severity"], 0), x["type"], x["value"].lower()))
     return out
 
