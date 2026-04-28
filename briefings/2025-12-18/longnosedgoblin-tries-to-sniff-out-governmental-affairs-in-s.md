@@ -44,6 +44,7 @@ In 2024, ESET researchers noticed previously undocumented malware in the netw…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
+- **T1053.005** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
@@ -217,6 +218,55 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### Article-specific behavioural hunt — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
+
+`UC_252_8` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("oci.dll","mscorsvc.dll","sharedreg.dll","uevappmonitor.exe","sharedreg12.dll","pmp.exe","serv.dll","msi.dll","amsi.dll","tcoedge.exe","rtlwvern.exe","hpsmartadapter.exe","hputils.exe","igccsvc.exe","adobehelper.exe") OR Processes.process="*Invoke-Expression*" OR Processes.process_path="*E:\Csharp\SharpMisc\GetBrowserHistory\obj\Debug\GetBrowserHistory.pdb*" OR Processes.process_path="*C:\Windows\Microsoft.NET\Framework*" OR Processes.process_path="*E:\Csharp\Thomas\Server\ThomasOneDrive\obj\Release\OneDrive.pdb*" OR Processes.process_path="*C:\Users\Public\Libraries\thomas.log*" OR Processes.process_path="*C:\ProgramData\Microsoft\WDF\MDE.dat*")
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_path="*E:\Csharp\SharpMisc\GetBrowserHistory\obj\Debug\GetBrowserHistory.pdb*" OR Filesystem.file_path="*C:\Windows\Microsoft.NET\Framework*" OR Filesystem.file_path="*E:\Csharp\Thomas\Server\ThomasOneDrive\obj\Release\OneDrive.pdb*" OR Filesystem.file_path="*C:\Users\Public\Libraries\thomas.log*" OR Filesystem.file_path="*C:\ProgramData\Microsoft\WDF\MDE.dat*" OR Filesystem.file_path="*C:\ProgramData\Microsoft\WDF\pmp.exe*" OR Filesystem.file_path="*C:\ProgramData\Microsoft\WDF\mfd.dat*" OR Filesystem.file_path="*C:\Windows\Temp\TS_D418.tmp*" OR Filesystem.file_name IN ("oci.dll","mscorsvc.dll","sharedreg.dll","uevappmonitor.exe","sharedreg12.dll","pmp.exe","serv.dll","msi.dll","amsi.dll","tcoedge.exe","rtlwvern.exe","hpsmartadapter.exe","hputils.exe","igccsvc.exe","adobehelper.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("oci.dll", "mscorsvc.dll", "sharedreg.dll", "uevappmonitor.exe", "sharedreg12.dll", "pmp.exe", "serv.dll", "msi.dll", "amsi.dll", "tcoedge.exe", "rtlwvern.exe", "hpsmartadapter.exe", "hputils.exe", "igccsvc.exe", "adobehelper.exe") or ProcessCommandLine has_any ("Invoke-Expression") or FolderPath has_any ("E:\Csharp\SharpMisc\GetBrowserHistory\obj\Debug\GetBrowserHistory.pdb", "C:\Windows\Microsoft.NET\Framework", "E:\Csharp\Thomas\Server\ThomasOneDrive\obj\Release\OneDrive.pdb", "C:\Users\Public\Libraries\thomas.log", "C:\ProgramData\Microsoft\WDF\MDE.dat"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FolderPath has_any ("E:\Csharp\SharpMisc\GetBrowserHistory\obj\Debug\GetBrowserHistory.pdb", "C:\Windows\Microsoft.NET\Framework", "E:\Csharp\Thomas\Server\ThomasOneDrive\obj\Release\OneDrive.pdb", "C:\Users\Public\Libraries\thomas.log", "C:\ProgramData\Microsoft\WDF\MDE.dat", "C:\ProgramData\Microsoft\WDF\pmp.exe", "C:\ProgramData\Microsoft\WDF\mfd.dat", "C:\Windows\Temp\TS_D418.tmp") or FileName in~ ("oci.dll", "mscorsvc.dll", "sharedreg.dll", "uevappmonitor.exe", "sharedreg12.dll", "pmp.exe", "serv.dll", "msi.dll", "amsi.dll", "tcoedge.exe", "rtlwvern.exe", "hpsmartadapter.exe", "hputils.exe", "igccsvc.exe", "adobehelper.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -230,4 +280,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

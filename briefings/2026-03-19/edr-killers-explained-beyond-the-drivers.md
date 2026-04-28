@@ -36,6 +36,7 @@ In recent years, EDR killers have become one of the most commonly seen tools in 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1543.003** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
@@ -323,7 +324,56 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
+
+`UC_161_8` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — EDR killers explained: Beyond the drivers ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("aswarpot.sys","k7rkscan.sys","bdapiutil.sys","tfsysmon.sys","hwrwdrv.sys","throttlestop.sys","truesight.sys","enportv.sys","2gk8.exe","smuot.sys","edr-freeze.exe","killer.exe","edrgay.exe","susanoo.exe","vmtools.exe"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("aswarpot.sys","k7rkscan.sys","bdapiutil.sys","tfsysmon.sys","hwrwdrv.sys","throttlestop.sys","truesight.sys","enportv.sys","2gk8.exe","smuot.sys","edr-freeze.exe","killer.exe","edrgay.exe","susanoo.exe","vmtools.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — EDR killers explained: Beyond the drivers
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("aswarpot.sys", "k7rkscan.sys", "bdapiutil.sys", "tfsysmon.sys", "hwrwdrv.sys", "throttlestop.sys", "truesight.sys", "enportv.sys", "2gk8.exe", "smuot.sys", "edr-freeze.exe", "killer.exe", "edrgay.exe", "susanoo.exe", "vmtools.exe"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("aswarpot.sys", "k7rkscan.sys", "bdapiutil.sys", "tfsysmon.sys", "hwrwdrv.sys", "throttlestop.sys", "truesight.sys", "enportv.sys", "2gk8.exe", "smuot.sys", "edr-freeze.exe", "killer.exe", "edrgay.exe", "susanoo.exe", "vmtools.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

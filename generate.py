@@ -161,6 +161,371 @@ def extract_indicators(title: str, body: str) -> dict:
 
 
 # =============================================================================
+# Article-mechanic extraction — pulls specific binaries / paths / cmdline
+# fragments from the article body so we can emit a bespoke per-article UC
+# that hunts THIS attack instead of just keyword-matching to a generic
+# template. The output of extract_mechanics() drives _make_bespoke_uc().
+# =============================================================================
+
+# Binary names — limit to known-attacker-popular file extensions and reject
+# common false positives like file extensions in URLs ("...example.com/foo.exe?dl=1").
+_BINARY_RE = re.compile(
+    r"(?<![/\w])([A-Za-z0-9_.\-]{2,40}\.(?:exe|dll|sys|bat|cmd|ps1|vbs|js|jse|hta|"
+    r"scr|cpl|msi|msp|jar|py|sh|elf))(?![A-Za-z0-9])",
+    re.IGNORECASE,
+)
+# Windows file paths — `C:\...\file.ext` or `%APPDATA%\...`, `\Users\Public\...` etc.
+_WIN_PATH_RE = re.compile(
+    r"(?<![\w])("
+    r"(?:[A-Z]:\\|%[A-Za-z]+%\\|\\Users\\|\\Windows\\|\\ProgramData\\|"
+    r"\\AppData\\|\\Temp\\|\\inetpub\\|\\System32\\|\\SysWOW64\\)"
+    r"[A-Za-z0-9_.\-\\\\]{2,200}"
+    r")",
+)
+# Unix file paths — start with /, common security-relevant prefixes.
+_UNIX_PATH_RE = re.compile(
+    r"(?<![\w])("
+    r"/(?:tmp|var|etc|usr|opt|home|root|dev|Library|System|private)"
+    r"/[A-Za-z0-9_./\-]{2,200}"
+    r")",
+)
+# Registry keys (Run / RunOnce / Services / etc.).
+_REGISTRY_RE = re.compile(
+    r"(HK[LCU][MR]?\\[A-Za-z0-9_\\\\\.\-]{4,200})",
+)
+# Persistence container names commonly invoked verbatim.
+_PERSISTENCE_KEYWORDS = {
+    "scheduled task": "T1053.005",
+    "schtasks": "T1053.005",
+    "scheduled job": "T1053.005",
+    "launchagent": "T1543.001",
+    "launchdaemon": "T1543.004",
+    "startup folder": "T1547.001",
+    "run key": "T1547.001",
+    "runonce": "T1547.001",
+    "service create": "T1543.003",
+    "windows service": "T1543.003",
+    "wmi event": "T1546.003",
+    "image file execution": "T1546.012",
+}
+# PowerShell / cmd flag fragments that almost always mean "this was attacker-run".
+_CMDLINE_FRAGMENTS = [
+    "-EncodedCommand", "-enc ", "FromBase64String", "DownloadString",
+    "Invoke-Expression", "IEX(", "Net.WebClient", "-NoProfile -ExecutionPolicy Bypass",
+    "-WindowStyle Hidden", "iwr -useb", "certutil -urlcache",
+    "bitsadmin /transfer", "rundll32 javascript:", "regsvr32 /s /u /i:",
+    "mshta http", "mshta vbscript:", "wmic process call create",
+    "powershell -nop -w hidden", "wevtutil cl", "vssadmin delete shadows",
+    "wbadmin delete", "bcdedit /set", "fsutil usn deletejournal",
+    "/c Reg Add", "Add-MpPreference -ExclusionPath", "Set-MpPreference -DisableRealtime",
+]
+
+
+def extract_mechanics(title: str, body: str) -> dict:
+    """Pull article-specific *attack mechanics* (not IOCs).
+
+    What we collect:
+      - binaries:   "qakbot.exe", "rclone.exe", "wwlib.dll", ...
+      - win_paths:  "C:\\Users\\Public\\setup.exe", "%APPDATA%\\Microsoft\\..."
+      - unix_paths: "/tmp/.X11/.malware", "/Library/LaunchAgents/com.evil.plist"
+      - registry:   "HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\\..."
+      - persistence: list of (keyword, mitre_tid) pairs found in narrative
+      - cmdline_frags: which attacker-style flags / patterns were seen
+    """
+    text = f"{title}\n{body}"
+    text_lower = text.lower()
+
+    # Filter out binary noise (legit OS / utility binaries the article merely
+    # mentions — including in CONTEXT). These would ruin signal in a hunt.
+    NOISE_BINARIES = {
+        # Core Windows
+        "explorer.exe", "svchost.exe", "smss.exe", "csrss.exe", "wininit.exe",
+        "lsass.exe", "winlogon.exe", "services.exe", "dwm.exe", "spoolsv.exe",
+        "fontdrvhost.exe", "lsm.exe", "taskhostw.exe", "runtimebroker.exe",
+        # Universal scripting / built-in utilities (almost always used in cmd
+        # examples within an article — not a *named attacker tool*)
+        "cmd.exe", "powershell.exe", "pwsh.exe", "wscript.exe", "cscript.exe",
+        "rundll32.exe", "regsvr32.exe", "mshta.exe", "wmic.exe",
+        "certutil.exe", "bitsadmin.exe", "msiexec.exe", "regedit.exe",
+        "tasklist.exe", "taskkill.exe", "net.exe", "net1.exe", "whoami.exe",
+        "systeminfo.exe", "ipconfig.exe", "netsh.exe", "schtasks.exe",
+        "sc.exe", "reg.exe", "find.exe", "findstr.exe", "where.exe",
+        "ping.exe", "nslookup.exe", "tracert.exe", "ftp.exe", "tftp.exe",
+        # Browsers + Office (common contextual mentions)
+        "chrome.exe", "msedge.exe", "firefox.exe", "iexplore.exe", "opera.exe",
+        "brave.exe", "safari.exe", "outlook.exe", "winword.exe", "excel.exe",
+        "powerpnt.exe", "onenote.exe", "teams.exe", "ms-teams.exe",
+        # Common dev / sysadmin tools
+        "code.exe", "cursor.exe", "git.exe", "python.exe", "python3.exe",
+        "node.exe", "java.exe", "javaw.exe", "javac.exe", "go.exe",
+        # Media / OS chrome
+        "wmplayer.exe", "calc.exe", "notepad.exe", "mspaint.exe",
+        # Generic short-name files we already filter by length but call out
+        "setup.exe", "install.exe", "installer.exe", "update.exe", "uninstall.exe",
+    }
+    bins = [b.lower() for b in _BINARY_RE.findall(text)]
+    bins = [b for b in bins if b not in NOISE_BINARIES and len(b) >= 6
+              # Strip out doc-extension strings like "ftp.exe", which are
+              # rarely article-specific. Article-specific bins typically have
+              # a custom-looking stem (numbers, mixed case, underscores).
+              ]
+    bins = dedupe(bins)[:25]
+
+    # Generic Windows paths that appear in nearly every Windows-mentioning
+    # article. Hunting for "C:\Windows" alone is meaningless — every legit
+    # process runs from there. These get filtered out below.
+    NOISE_PATH_PREFIXES = (
+        "c:\\windows", "c:\\program files", "c:\\users\\", "c:\\programdata",
+        "c:\\users\\vagrant", "c:\\users\\analyst", "c:\\users\\sandbox",
+        "c:\\users\\malware", "c:\\users\\test", "c:\\users\\admin",
+        "c:\\users\\administrator", "c:\\users\\user",
+    )
+    GENERIC_WIN_PATHS = {
+        # Exact-match paths that are almost always non-IOC narrative mentions
+        "c:\\windows", "c:\\windows\\system32", "c:\\windows\\syswow64",
+        "c:\\users", "c:\\users\\public", "c:\\programdata",
+        "c:\\program files", "c:\\program files (x86)", "c:\\windows\\temp",
+    }
+
+    def _path_too_generic(p: str) -> bool:
+        pl = p.lower().rstrip("\\")
+        if pl in GENERIC_WIN_PATHS:
+            return True
+        # Researcher / VM artefact paths
+        if any(pl.startswith(pref) and len(pl) - len(pref) < 18 for pref in (
+            "c:\\users\\vagrant","c:\\users\\analyst","c:\\users\\sandbox",
+            "c:\\users\\malware","c:\\users\\test","c:\\users\\admin",
+            "c:\\users\\administrator","c:\\users\\user"
+        )):
+            return True
+        # Reject paths that are just a top-level dir with one or zero subdirs
+        depth = pl.count("\\")
+        if depth <= 1:
+            return True
+        return False
+
+    raw_win_paths = dedupe(p.replace("\\\\", "\\") for p in _WIN_PATH_RE.findall(text))
+    win_paths = [p for p in raw_win_paths if not _path_too_generic(p)][:15]
+    unix_paths = dedupe(_UNIX_PATH_RE.findall(text))[:15]
+    registry = dedupe(_REGISTRY_RE.findall(text))[:15]
+
+    persistence = []
+    for kw, tid in _PERSISTENCE_KEYWORDS.items():
+        if kw in text_lower:
+            persistence.append({"keyword": kw, "technique": tid})
+
+    cmdline_frags = []
+    for f in _CMDLINE_FRAGMENTS:
+        if f.lower() in text_lower:
+            cmdline_frags.append(f)
+
+    return {
+        "binaries": bins,
+        "win_paths": win_paths,
+        "unix_paths": unix_paths,
+        "registry": registry,
+        "persistence": persistence,
+        "cmdline_frags": cmdline_frags,
+    }
+
+
+def _make_bespoke_uc(article_title: str, mechanics: dict, ind: dict):
+    """Assemble a *per-article* UseCase from the extracted mechanics.
+
+    Returns None if there's not enough article-specific signal to build a
+    meaningful detection — better silence than a query that fires on every
+    `chrome.exe` execution. Threshold: at least one of (binary, win_path,
+    unix_path, registry, cmdline_frag) must be present.
+    """
+    bins = mechanics.get("binaries") or []
+    wpaths = mechanics.get("win_paths") or []
+    upaths = mechanics.get("unix_paths") or []
+    regs = mechanics.get("registry") or []
+    cmdfrags = mechanics.get("cmdline_frags") or []
+    persistence = mechanics.get("persistence") or []
+
+    # Require a real article-specific anchor — otherwise we'd be emitting a
+    # generic query that hunts on, e.g., the standard Run key alone, which is
+    # neither novel nor article-specific.
+    if not any([bins, wpaths, upaths, regs, cmdfrags]):
+        return None
+
+    safe_title = article_title[:80].strip()
+
+    # Build SPL — a process / filesystem hunt scoped to the article's mechanics.
+    spl_parts = []
+    spl_parts.append(f'``` Article-specific bespoke detection — {safe_title} ```')
+
+    proc_clauses = []
+    if bins:
+        bin_list = ",".join(f'"{b}"' for b in bins[:15])
+        proc_clauses.append(f"Processes.process_name IN ({bin_list})")
+    if cmdfrags:
+        for f in cmdfrags[:6]:
+            proc_clauses.append(f'Processes.process="*{f}*"')
+    if wpaths:
+        for p in wpaths[:5]:
+            esc = p.replace('"', '\\"')
+            proc_clauses.append(f'Processes.process_path="*{esc}*"')
+
+    if proc_clauses:
+        clauses = " OR ".join(proc_clauses)
+        spl_parts.append(
+            "| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime\n"
+            "    from datamodel=Endpoint.Processes\n"
+            f"    where ({clauses})\n"
+            "    by Processes.dest, Processes.user, Processes.process_name,\n"
+            "       Processes.process, Processes.parent_process_name, Processes.process_path\n"
+            "| `drop_dm_object_name(Processes)`\n"
+            "| `security_content_ctime(firstTime)`"
+        )
+
+    fs_clauses = []
+    if wpaths or upaths:
+        for p in (wpaths + upaths)[:8]:
+            esc = p.replace('"', '\\"')
+            fs_clauses.append(f'Filesystem.file_path="*{esc}*"')
+    if bins:
+        # Also surface filesystem-create events for the named binaries
+        bin_filenames = ",".join(f'"{b}"' for b in bins[:15])
+        fs_clauses.append(f"Filesystem.file_name IN ({bin_filenames})")
+    if fs_clauses:
+        clauses = " OR ".join(fs_clauses)
+        if proc_clauses:
+            spl_parts.append("| append [")
+        spl_parts.append(
+            "| tstats `summariesonly` count\n"
+            "    from datamodel=Endpoint.Filesystem\n"
+            f"    where Filesystem.action IN (\"created\",\"modified\")\n"
+            f"      AND ({clauses})\n"
+            "    by Filesystem.dest, Filesystem.user, Filesystem.process_name,\n"
+            "       Filesystem.file_path, Filesystem.file_name\n"
+            "| `drop_dm_object_name(Filesystem)`"
+        )
+        if proc_clauses:
+            spl_parts.append("]")
+
+    if regs:
+        reg_clauses = []
+        for r in regs[:6]:
+            esc = r.replace('"', '\\"').replace("\\", "\\\\")
+            reg_clauses.append(f'Registry.registry_path="*{esc}*"')
+        clauses = " OR ".join(reg_clauses)
+        spl_parts.append(
+            "| append [\n"
+            "  | tstats `summariesonly` count\n"
+            "      from datamodel=Endpoint.Registry\n"
+            f"      where Registry.action IN (\"created\",\"modified\")\n"
+            f"        AND ({clauses})\n"
+            "      by Registry.dest, Registry.process_name, Registry.registry_path,\n"
+            "         Registry.registry_value_name, Registry.registry_value_data\n"
+            "  | `drop_dm_object_name(Registry)`\n"
+            "]"
+        )
+
+    spl = "\n".join(spl_parts)
+
+    # Build KQL — same shape, Defender XDR tables.
+    kql_lines = [
+        f"// Article-specific bespoke detection — {safe_title}",
+        f"// Hunts the actual binaries / paths / commandline fragments named",
+        f"// in the article instead of a generic technique-class template.",
+    ]
+    proc_filters = []
+    if bins:
+        proc_filters.append(
+            "FileName in~ (" + ", ".join(f'"{b}"' for b in bins[:15]) + ")")
+    if cmdfrags:
+        cf = ", ".join(f'"{f}"' for f in cmdfrags[:6])
+        proc_filters.append(f"ProcessCommandLine has_any ({cf})")
+    if wpaths:
+        # KQL has_any expects no leading/trailing wildcards
+        wp = ", ".join(f'"{p}"' for p in wpaths[:5])
+        proc_filters.append(f"FolderPath has_any ({wp})")
+
+    if proc_filters:
+        kql_lines.append("DeviceProcessEvents")
+        kql_lines.append("| where Timestamp > ago(30d)")
+        kql_lines.append("| where (" + " or ".join(proc_filters) + ")")
+        kql_lines.append("| project Timestamp, DeviceName, AccountName, FileName,")
+        kql_lines.append("          FolderPath, ProcessCommandLine,")
+        kql_lines.append("          InitiatingProcessFileName, InitiatingProcessCommandLine")
+        kql_lines.append("| order by Timestamp desc")
+
+    fs_filters = []
+    if wpaths or upaths:
+        all_paths = (wpaths + upaths)[:8]
+        if all_paths:
+            fp = ", ".join(f'"{p}"' for p in all_paths)
+            fs_filters.append(f"FolderPath has_any ({fp})")
+    if bins:
+        bf = ", ".join(f'"{b}"' for b in bins[:15])
+        fs_filters.append(f"FileName in~ ({bf})")
+    if fs_filters:
+        kql_lines.append("\n// File-creation events for the named binaries / paths")
+        kql_lines.append("DeviceFileEvents")
+        kql_lines.append("| where Timestamp > ago(30d)")
+        kql_lines.append("| where ActionType in (\"FileCreated\",\"FileModified\")")
+        kql_lines.append("| where (" + " or ".join(fs_filters) + ")")
+        kql_lines.append("| project Timestamp, DeviceName, AccountName, FolderPath,")
+        kql_lines.append("          FileName, ActionType, InitiatingProcessFileName,")
+        kql_lines.append("          InitiatingProcessCommandLine")
+        kql_lines.append("| order by Timestamp desc")
+
+    if regs:
+        rkql = ", ".join(f'"{r}"' for r in regs[:6])
+        kql_lines.append("\n// Registry persistence locations named in the article")
+        kql_lines.append("DeviceRegistryEvents")
+        kql_lines.append("| where Timestamp > ago(30d)")
+        kql_lines.append("| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")")
+        kql_lines.append(f"| where RegistryKey has_any ({rkql})")
+        kql_lines.append("| project Timestamp, DeviceName, AccountName, RegistryKey,")
+        kql_lines.append("          RegistryValueName, RegistryValueData,")
+        kql_lines.append("          InitiatingProcessFileName, InitiatingProcessCommandLine")
+        kql_lines.append("| order by Timestamp desc")
+
+    kql = "\n".join(kql_lines)
+
+    # Pick a kill-chain phase and a representative technique.
+    if cmdfrags or bins:
+        ph = "exploit"
+    elif persistence:
+        ph = "install"
+    elif regs:
+        ph = "install"
+    elif wpaths or upaths:
+        ph = "install"
+    else:
+        ph = "actions"
+
+    techs = []
+    if cmdfrags:
+        techs.append(("T1059.001", "PowerShell"))
+        techs.append(("T1027", "Obfuscated Files or Information"))
+    if persistence:
+        for p in persistence[:3]:
+            techs.append((p["technique"], "Persistence (article-specific)"))
+    if not techs:
+        techs.append(("T1204.002", "User Execution: Malicious File"))
+
+    return UseCase(
+        title=f"Article-specific behavioural hunt — {safe_title}",
+        description=(
+            "Auto-generated detection targeting the specific binaries, "
+            "paths, registry locations and command-line fragments named in "
+            "this article. Fires on the article's actual attack mechanics, "
+            "not the technique-class template."
+        ),
+        kill_chain=ph,
+        techniques=techs,
+        data_models=["Endpoint.Processes", "Endpoint.Filesystem", "Endpoint.Registry"],
+        splunk_spl=spl,
+        defender_kql=kql,
+        confidence="High",
+    )
+
+
+# =============================================================================
 # Cyber Kill Chain (Lockheed Martin) phases
 # =============================================================================
 
@@ -1908,6 +2273,42 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .matrix-stats span{color:var(--muted);}
 .matrix-stats span b{color:var(--text); font-variant-numeric:tabular-nums;}
 
+/* ----- Workflow tab -------------------------------------------------- */
+.workflow-wrap{
+  max-width:1280px; padding:20px 28px 60px; line-height:1.65;
+}
+.wf-title{
+  font-size:24px; font-weight:700; letter-spacing:-0.012em;
+  margin:0 0 10px 0; color:var(--text);
+}
+.wf-lede{
+  color:var(--muted); font-size:14px; max-width:880px; margin:0 0 24px 0;
+}
+.wf-diagram{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:14px; margin:18px 0 28px 0; box-shadow:var(--shadow-sm);
+  overflow:auto;
+}
+.wf-diagram svg{display:block; width:100%; height:auto; min-width:1100px;}
+.wf-section-title{
+  font-size:16px; font-weight:700; letter-spacing:-0.005em;
+  color:var(--accent); margin:24px 0 8px 0;
+  padding-bottom:6px; border-bottom:1px solid var(--border);
+}
+.wf-step{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-md);
+  padding:14px 18px; margin-bottom:14px; font-size:13.5px; color:var(--text);
+  line-height:1.65;
+}
+.wf-step ul, .wf-step ol{padding-left:22px; margin:6px 0;}
+.wf-step li{margin-bottom:4px;}
+.wf-step code{
+  background:var(--panel-elev); padding:1px 6px; border-radius:4px;
+  font-size:12px; color:var(--accent-3);
+}
+.wf-step a{color:var(--accent); text-decoration:none;}
+.wf-step a:hover{text-decoration:underline;}
+
 /* ----- Drawer use-case list (paginated for large drawers) ------------ */
 .drawer-uc-toolbar{
   display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;
@@ -2222,6 +2623,7 @@ ul.intel-types-doc code{
       <button class="view-tab active" data-view="articles" role="tab">Articles</button>
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
+      <button class="view-tab" data-view="workflow" role="tab">Workflow</button>
     </div>
   </div>
 </header>
@@ -2421,6 +2823,215 @@ ul.intel-types-doc code{
   <div class="search-modal">
     <input type="text" id="searchInput" placeholder="Search by title, technique (T1566), CVE, malware name…" autocomplete="off">
     <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<div id="view-workflow" class="view">
+  <div class="workflow-wrap">
+    <h2 class="wf-title">From article to detection — the full pipeline</h2>
+    <p class="wf-lede">
+      How a fresh threat-intel article moves through this site: ingestion,
+      extraction, mapping, export. Diagram first, then the per-step detail —
+      including the actual prompts, regex, and heuristics behind each stage.
+    </p>
+
+    <!-- ============== DIAGRAM ============== -->
+    <div class="wf-diagram">
+      <svg viewBox="0 0 1280 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Pipeline workflow">
+        <defs>
+          <marker id="wfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5fb6ff"/>
+          </marker>
+          <linearGradient id="wfFill1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1a2840"/>
+            <stop offset="1" stop-color="#0f1a2c"/>
+          </linearGradient>
+          <linearGradient id="wfFill2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1f2a3f"/>
+            <stop offset="1" stop-color="#13202f"/>
+          </linearGradient>
+          <linearGradient id="wfFill3" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#1c2d2a"/>
+            <stop offset="1" stop-color="#0e1f1c"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Stage 1: Sources -->
+        <g class="wf-stage">
+          <rect x="20" y="40" width="180" height="200" rx="12" fill="url(#wfFill1)" stroke="#2a3f5e" stroke-width="1.4"/>
+          <text x="110" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">1. SOURCES</text>
+          <text x="35" y="100" fill="#cfd6e3" font-size="11">• The Hacker News</text>
+          <text x="35" y="122" fill="#cfd6e3" font-size="11">• BleepingComputer</text>
+          <text x="35" y="144" fill="#cfd6e3" font-size="11">• Microsoft Security Blog</text>
+          <text x="35" y="166" fill="#36e0c0" font-size="11">• Cisco Talos</text>
+          <text x="35" y="188" fill="#36e0c0" font-size="11">• Securelist (Kaspersky)</text>
+          <text x="35" y="210" fill="#36e0c0" font-size="11">• SentinelLabs</text>
+          <text x="35" y="232" fill="#36e0c0" font-size="11">• Unit 42 / ESET / KEV</text>
+        </g>
+
+        <!-- Stage 2: Ingest -->
+        <g class="wf-stage">
+          <rect x="240" y="40" width="200" height="200" rx="12" fill="url(#wfFill1)" stroke="#2a3f5e" stroke-width="1.4"/>
+          <text x="340" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">2. INGEST</text>
+          <text x="255" y="100" fill="#cfd6e3" font-size="11" font-weight="600">RSS / KEV JSON</text>
+          <text x="255" y="120" fill="#9aa3b2" font-size="10.5">→ feedparser pulls entries</text>
+          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 180-day rolling window</text>
+          <text x="255" y="160" fill="#cfd6e3" font-size="11" font-weight="600">Full body fetch</text>
+          <text x="255" y="180" fill="#9aa3b2" font-size="10.5">→ HTTPS GET with cache</text>
+          <text x="255" y="198" fill="#9aa3b2" font-size="10.5">→ HTML→text + noise strip</text>
+          <text x="255" y="216" fill="#cfd6e3" font-size="11" font-weight="600">Cross-source dedupe</text>
+          <text x="255" y="234" fill="#9aa3b2" font-size="10.5">→ Jaccard ≥ 0.55 on titles</text>
+        </g>
+
+        <!-- Stage 3: Extraction -->
+        <g class="wf-stage">
+          <rect x="480" y="40" width="220" height="200" rx="12" fill="url(#wfFill2)" stroke="#3a2a5a" stroke-width="1.4"/>
+          <text x="590" y="68" text-anchor="middle" fill="#b48dff" font-size="13" font-weight="700">3. EXTRACT</text>
+          <text x="495" y="100" fill="#cfd6e3" font-size="11" font-weight="600">High-fidelity IOCs</text>
+          <text x="495" y="120" fill="#9aa3b2" font-size="10.5">CVEs (regex)</text>
+          <text x="495" y="138" fill="#9aa3b2" font-size="10.5">Hashes MD5/SHA1/SHA256</text>
+          <text x="495" y="156" fill="#9aa3b2" font-size="10.5">Defanged IPs / domains</text>
+          <text x="495" y="174" fill="#9aa3b2" font-size="10.5">hxxps:// URLs</text>
+          <text x="495" y="196" fill="#cfd6e3" font-size="11" font-weight="600">Article mechanics</text>
+          <text x="495" y="214" fill="#9aa3b2" font-size="10.5">Binaries / paths / cmd flags</text>
+          <text x="495" y="230" fill="#9aa3b2" font-size="10.5">Registry / persistence keys</text>
+        </g>
+
+        <!-- Stage 4: Use cases -->
+        <g class="wf-stage">
+          <rect x="740" y="40" width="240" height="200" rx="12" fill="url(#wfFill2)" stroke="#3a2a5a" stroke-width="1.4"/>
+          <text x="860" y="68" text-anchor="middle" fill="#b48dff" font-size="13" font-weight="700">4. USE CASES</text>
+          <text x="755" y="100" fill="#cfd6e3" font-size="11" font-weight="600">Rule matching</text>
+          <text x="755" y="120" fill="#9aa3b2" font-size="10.5">→ keyword triggers fire UC</text>
+          <text x="755" y="142" fill="#cfd6e3" font-size="11" font-weight="600">Bespoke generation</text>
+          <text x="755" y="162" fill="#9aa3b2" font-size="10.5">→ SPL/KQL hunts THIS</text>
+          <text x="755" y="180" fill="#9aa3b2" font-size="10.5">  attack's specific bins/paths</text>
+          <text x="755" y="200" fill="#cfd6e3" font-size="11" font-weight="600">IOC-driven hunts</text>
+          <text x="755" y="220" fill="#9aa3b2" font-size="10.5">→ shared template + IOC list</text>
+        </g>
+
+        <!-- Stage 5: Outputs -->
+        <g class="wf-stage">
+          <rect x="1020" y="40" width="240" height="200" rx="12" fill="url(#wfFill3)" stroke="#2a5a4f" stroke-width="1.4"/>
+          <text x="1140" y="68" text-anchor="middle" fill="#36e0c0" font-size="13" font-weight="700">5. OUTPUTS</text>
+          <text x="1035" y="100" fill="#cfd6e3" font-size="11" font-weight="600">Articles tab</text>
+          <text x="1035" y="118" fill="#9aa3b2" font-size="10.5">→ per-article cards + briefings</text>
+          <text x="1035" y="138" fill="#cfd6e3" font-size="11" font-weight="600">ATT&amp;CK Matrix</text>
+          <text x="1035" y="156" fill="#9aa3b2" font-size="10.5">→ 691 techniques × 2,236 UCs</text>
+          <text x="1035" y="176" fill="#cfd6e3" font-size="11" font-weight="600">Threat Intel</text>
+          <text x="1035" y="194" fill="#9aa3b2" font-size="10.5">→ CSV / JSON / STIX / RSS</text>
+          <text x="1035" y="214" fill="#cfd6e3" font-size="11" font-weight="600">Briefings (markdown)</text>
+          <text x="1035" y="232" fill="#9aa3b2" font-size="10.5">→ analyst-curated overlays</text>
+        </g>
+
+        <!-- Connectors -->
+        <line x1="200" y1="140" x2="240" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
+        <line x1="440" y1="140" x2="480" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
+        <line x1="700" y1="140" x2="740" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
+        <line x1="980" y1="140" x2="1020" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
+
+        <!-- Bottom rail: analyst loop -->
+        <g class="wf-loop">
+          <rect x="20" y="320" width="1240" height="100" rx="12" fill="rgba(255,176,96,0.06)" stroke="#5a4a2a" stroke-width="1.4" stroke-dasharray="4 4"/>
+          <text x="640" y="350" text-anchor="middle" fill="#ffb060" font-size="13" font-weight="700">Analyst loop (continuous)</text>
+          <text x="100" y="378" fill="#cfd6e3" font-size="11">📖 Read article →</text>
+          <text x="280" y="378" fill="#cfd6e3" font-size="11">✏ Curate briefing &lt;!-- curated:true --&gt; →</text>
+          <text x="600" y="378" fill="#cfd6e3" font-size="11">🛠 Tune triggers / write new YAML UC →</text>
+          <text x="950" y="378" fill="#cfd6e3" font-size="11">💾 Commit → next pipeline run picks up</text>
+          <text x="640" y="402" text-anchor="middle" fill="#9aa3b2" font-size="10.5">Curated briefings get the &lt;!-- curated:true --&gt; marker and are preserved across runs.</text>
+        </g>
+
+        <line x1="640" y1="240" x2="640" y2="320" stroke="#ffb060" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#wfArrow)"/>
+      </svg>
+    </div>
+
+    <!-- ============== DETAILED STEPS ============== -->
+    <h3 class="wf-section-title">1. Sources</h3>
+    <div class="wf-step">
+      <p>The pipeline pulls from <strong>9 feeds</strong> on every run:</p>
+      <ul>
+        <li><strong>News</strong> — The Hacker News, BleepingComputer, Microsoft Security Blog. Broad coverage, light on technical IOC tables.</li>
+        <li><strong>IOC-rich vendor research</strong> — Cisco Talos, Securelist (Kaspersky), SentinelLabs, Unit 42 (Palo Alto), ESET WeLiveSecurity. Where the hash / IP / domain tables live.</li>
+        <li><strong>CISA KEV</strong> — authoritative exploited-vulnerability feed (JSON, not RSS).</li>
+      </ul>
+      <p>Adding a source is a 3-line entry in <code>SOURCES</code>. The fetcher detects RSS vs JSON automatically.</p>
+    </div>
+
+    <h3 class="wf-section-title">2. Ingest</h3>
+    <div class="wf-step">
+      <p>For each entry in the rolling <strong>180-day window</strong>:</p>
+      <ol>
+        <li><code>feedparser.parse()</code> reads the RSS preview.</li>
+        <li><code>_fetch_full_body(url)</code> issues an HTTPS GET with a polite <code>User-Agent</code>, caches the HTML to <code>intel/.article_cache/</code>, and converts to plain text. <strong>Without this step the IOC feed only has CVEs</strong> — RSS previews don't include hash tables.</li>
+        <li>Cross-source <strong>Jaccard dedupe</strong> on title token sets (threshold 0.55) merges "Chinese Silk Typhoon hacker extradited" (THN) with "Alleged Silk Typhoon hacker extradited" (BleepingComputer) into a single entry with two source attributions.</li>
+      </ol>
+    </div>
+
+    <h3 class="wf-section-title">3. Extract</h3>
+    <div class="wf-step">
+      <p>Two parallel extractors run on every article body:</p>
+      <p><strong>High-fidelity IOCs</strong> (<code>extract_indicators</code>):</p>
+      <ul>
+        <li>CVE — <code>CVE-\d{4}-\d{4,7}</code> regex.</li>
+        <li>SHA256 / SHA1 / MD5 — fixed-width hex regexes.</li>
+        <li>IPs / domains — <strong>defanged-only</strong>: <code>1[.]2[.]3[.]4</code>, <code>evil[.]com</code>, <code>hxxps://...</code>. Plain-text mentions are rejected because they're almost always the victim or platform, not the attacker.</li>
+      </ul>
+      <p><strong>Article mechanics</strong> (<code>extract_mechanics</code>):</p>
+      <ul>
+        <li>Binaries: regex on <code>*.exe / .dll / .sys / .ps1 / .vbs / ...</code> filtered through a noise list (chrome.exe, cmd.exe, etc.).</li>
+        <li>Windows paths: <code>C:\</code> / <code>%APPDATA%</code> / <code>\Users\</code> / <code>\System32\</code> patterns, generic top-level paths filtered out.</li>
+        <li>Unix paths: <code>/tmp</code>, <code>/var</code>, <code>/Library</code>, <code>/etc</code> patterns.</li>
+        <li>Registry keys: <code>HK[LCU][MR]?\...</code> patterns.</li>
+        <li>Persistence keywords ("scheduled task", "launchagent", "run key", etc.) → linked to MITRE technique IDs.</li>
+        <li>Command-line fragments — <code>-EncodedCommand</code>, <code>FromBase64String</code>, <code>vssadmin delete shadows</code>, etc.</li>
+      </ul>
+    </div>
+
+    <h3 class="wf-section-title">4. Use cases</h3>
+    <div class="wf-step">
+      <p>Three classes of use case fire per article:</p>
+      <p><strong>(a) Rule-fired generic UCs</strong> — <code>rules/*.yml</code> contain trigger keyword lists. If the article body matches any trigger, the rule's pre-built use case (in <code>use_cases/*.yml</code>) is added to the briefing. Example: any article mentioning "psexec" fires <code>UC_LATERAL_PSEXEC</code>.</p>
+      <p><strong>(b) Bespoke article-specific UCs</strong> — <em>new this session</em>. <code>extract_mechanics</code> output drives <code>_make_bespoke_uc</code>, which assembles a per-article SPL+KQL searching for the <strong>actual binaries / paths / commandline fragments</strong> named in the article. Threshold: at least one mechanic anchor must be present, otherwise no bespoke UC is emitted (silence beats noise).</p>
+      <p><strong>(c) IOC-substitution UCs</strong> — when the article has a CVE / IP / domain / hash, the matching boilerplate UC fires with the actual IOC list substituted in. Canonical SPL/KQL bodies live once in <a href="briefings/_TEMPLATES.md">briefings/_TEMPLATES.md</a>; the briefing inlines only the IOC values.</p>
+    </div>
+
+    <h3 class="wf-section-title">5. Outputs</h3>
+    <div class="wf-step">
+      <ul>
+        <li><strong>Articles tab</strong> — per-article cards (this <code>index.html</code>) + per-article markdown briefings under <code>briefings/&lt;date&gt;/</code>.</li>
+        <li><strong>ATT&amp;CK Matrix tab</strong> — 14 tactics × 691 techniques. Coverage drawn from 23 internal UCs + <strong>2,213 synced Splunk ESCU detections</strong>. Click any technique cell, then any UC card to expand it inline with full SPL/KQL — backed by <code>catalog/use_cases_full.js</code>.</li>
+        <li><strong>Threat Intel tab</strong> — IOC feed exports: CSV, JSON, STIX 2.1, RSS, Splunk lookup. Aggregated across every article in the window with source attribution.</li>
+      </ul>
+      <p>All outputs commit to <a href="https://github.com/Virtualhaggis/usecaseintel">github.com/Virtualhaggis/usecaseintel</a>; <code>run_daily.bat</code> runs validate → generate → digest → auto-commit on a schedule.</p>
+    </div>
+
+    <h3 class="wf-section-title">Analyst loop</h3>
+    <div class="wf-step">
+      <p>Curated briefings get a <code>&lt;!-- curated:true --&gt;</code> HTML comment as line 1. The briefing writer skips any file with that marker so analyst overlays are preserved across pipeline runs. The pattern:</p>
+      <ol>
+        <li>Pipeline emits an auto-generated briefing.</li>
+        <li>Analyst reads the article, rewrites the briefing with attribution / actor context / sector implications / bespoke detection logic, adds <code>&lt;!-- curated:true --&gt;</code>.</li>
+        <li>Commits. Future pipeline runs see the marker and leave the file alone.</li>
+      </ol>
+      <p>For new use cases the analyst writes a YAML file under <code>use_cases/&lt;phase&gt;/UC_X.yml</code>; the loader at module-load time auto-registers it and the matrix builder picks it up on the next run.</p>
+    </div>
+
+    <h3 class="wf-section-title">Commands cheat-sheet</h3>
+    <div class="wf-step">
+      <pre style="background:var(--panel-elev);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:12px;overflow:auto;">
+# Daily run (Windows)
+run_daily.bat                                   # validate → generate → digest → auto-commit
+
+# Manual one-shot
+python validate.py                              # YAML schema + SPL/KQL field checks
+python generate.py                              # rebuild index.html + intel/ + briefings/
+python digest.py                                # daily_digest.md summary
+
+# Disable body fetch (offline / debug)
+THN_FETCH_FULL_BODY=0 python generate.py        # IOC feed loses hash/IP/domain coverage
+THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sources)
+      </pre>
+    </div>
   </div>
 </div>
 
@@ -4825,11 +5436,28 @@ def main():
                   for obj in [getattr(__import__(__name__), name, None)]
                   if isinstance(obj, UseCase)}
 
+    bespoke_built = 0
     for i, a in enumerate(articles):
         text = f"{a['title']}\n{a['raw_body']}"
         ind = extract_indicators(a["title"], a["raw_body"])
         techniques = infer_techniques(text, ind["explicit_ttps"])
         ucs = select_use_cases(text, ind)
+        # Article-specific bespoke UC built from the actual mechanics named
+        # in this article. Augments rather than replaces the rule-fired UCs:
+        # the generic templates still cover the technique class; the bespoke
+        # UC adds detection logic targeting THIS attack's specific binaries
+        # and paths and command-line patterns. None when the article doesn't
+        # contain enough mechanic detail (e.g. RSS-only stub, opinion piece).
+        try:
+            mechanics = extract_mechanics(a["title"], a["raw_body"])
+            bespoke = _make_bespoke_uc(a["title"], mechanics, ind)
+            if bespoke is not None:
+                ucs.append(bespoke)
+                bespoke_built += 1
+                a["_bespoke_uc"] = bespoke
+                a["_mechanics"] = mechanics
+        except Exception as _e:
+            print(f"    [!] bespoke UC failed for article {i}: {_e}")
         narrative_hit, _ = detect_kill_chain(text)
         hit = narrative_hit | {uc.kill_chain for uc in ucs}
         inferred = set()
@@ -4945,6 +5573,7 @@ def main():
     OUT_HTML.write_text(page, encoding="utf-8")
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")
     print(f"    Severity: crit={sev_counts['crit']} high={sev_counts['high']} med={sev_counts['med']} low={sev_counts['low']}")
+    print(f"    Bespoke article-specific UCs built: {bespoke_built}")
 
 
 if __name__ == "__main__":

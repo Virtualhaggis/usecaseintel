@@ -35,6 +35,7 @@ Wind…
 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
+- **T1543.003** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
@@ -70,7 +71,56 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
+### Article-specific behavioural hunt — PhantomRPC: A new privilege escalation technique in Windows RPC
+
+`UC_41_1` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — PhantomRPC: A new privilege escalation technique in Windows RPC ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("gpupdate.exe","rpcrt4.dll","winsta.dll","w32tm.exe") OR Processes.process_path="*C:\Windows\System32\w32tm.exe*")
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_path="*C:\Windows\System32\w32tm.exe*" OR Filesystem.file_name IN ("gpupdate.exe","rpcrt4.dll","winsta.dll","w32tm.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — PhantomRPC: A new privilege escalation technique in Windows RPC
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("gpupdate.exe", "rpcrt4.dll", "winsta.dll", "w32tm.exe") or FolderPath has_any ("C:\Windows\System32\w32tm.exe"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FolderPath has_any ("C:\Windows\System32\w32tm.exe") or FileName in~ ("gpupdate.exe", "rpcrt4.dll", "winsta.dll", "w32tm.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,13 +11,9 @@ By Bill Toulas
 April 28, 2026
 05:25 PM
 0 
-
-
 Researchers are warning that the VECT 2.0 ransomware has a problem in the way it handles encryption nonces that leads to permanently destroying larger files rather than encrypt them.
-
-
 VECT has been advertised on one of the latest BreachForums iterations, inviting registered users to become affiliates, and distributing access keys via private messages  to those who showed interest.
-…
+At some p…
 
 ## Indicators of Compromise (high-fidelity only)
 
