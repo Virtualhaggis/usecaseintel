@@ -24,6 +24,9 @@ In March 2026, we discovered an active campaign promoting previously unknown m
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `webcrystal.lol`
+- **Domain (defanged):** `webcrystal.sbs`
+- **Domain (defanged):** `crystalxrat.top`
 - **MD5:** `47ACCB0ECFE8CCD466752DDE1864F3B0`
 - **MD5:** `2DBE6DE177241C144D06355C381B868C`
 - **MD5:** `49C74B302BFA32E45B7C1C5780DD0976`
@@ -167,6 +170,9 @@ DeviceFileEvents
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `webcrystal.lol`, `webcrystal.sbs`, `crystalxrat.top`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `47ACCB0ECFE8CCD466752DDE1864F3B0`, `2DBE6DE177241C144D06355C381B868C`, `49C74B302BFA32E45B7C1C5780DD0976`, `88C60DF2A1414CBF24430A74AE9836E0`, `E540E9797E3B814BFE0A82155DFE135D`, `1A68AE614FB2D8875CB0573E6A721B46`

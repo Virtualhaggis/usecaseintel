@@ -78,12 +78,29 @@ ATTACK_RE = re.compile(r"\bT\d{4}(?:\.\d{3})?\b")
 # domain/IP IOCs when the source author has *defanged* them with bracketed
 # dots (`evil[.]com`, `1[.]2[.]3[.]4`) or `hxxp(s)://` — the universal
 # convention for "this is malicious; don't auto-click".
-DEFANGED_IPV4_RE = re.compile(r"\b((?:\d{1,3}\[\.\]){3}\d{1,3})\b")
+# IPv4 forms: defanged ("1[.]2[.]3[.]4") and the variant with three defangs and
+# one literal dot (sometimes seen in vendor write-ups, e.g. "139.180.139[.]209")
+DEFANGED_IPV4_RE = re.compile(
+    r"\b("
+    r"(?:\d{1,3}\[\.\]){3}\d{1,3}"
+    r"|"
+    r"(?:\d{1,3}\.){2}\d{1,3}\[\.\]\d{1,3}"
+    r"|"
+    r"\d{1,3}\.\d{1,3}\[\.\]\d{1,3}\.\d{1,3}"
+    r"|"
+    r"\d{1,3}\[\.\]\d{1,3}\.\d{1,3}\.\d{1,3}"
+    r")\b"
+)
+# Domain: 2+ labels with at least one `[.]` separator, ending in 2+-char TLD.
 DEFANGED_DOMAIN_RE = re.compile(
-    r"\b([a-z0-9-]+(?:\[\.\][a-z0-9-]+)+\[\.\][a-z]{2,})\b",
+    r"\b([a-z0-9](?:[a-z0-9-]*[a-z0-9])?(?:(?:\[\.\]|\.)[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)*\[\.\][a-z]{2,})\b",
     re.IGNORECASE,
 )
-HXXP_URL_RE = re.compile(r"hxxps?://([^\s\]\[)\"'<>]+)", re.IGNORECASE)
+# hxxp(s):// URL — capture host+path. Critically, allow `[.]` (defang) inside.
+HXXP_URL_RE = re.compile(
+    r"hxxps?://([a-z0-9.\-]+(?:\[\.\][a-z0-9.\-]+)*\[\.\][a-z]{2,}(?:/[^\s\"'<>]*)?)",
+    re.IGNORECASE,
+)
 
 
 def _refang(s):

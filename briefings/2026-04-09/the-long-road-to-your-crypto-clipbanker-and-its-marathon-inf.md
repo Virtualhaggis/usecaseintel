@@ -17,7 +17,16 @@ By coincidence, Proxifier is …
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `maper.info`
+- **Domain (defanged):** `pastebin.com`
+- **Domain (defanged):** `snippet.host`
+- **Domain (defanged):** `chiaselinks.com`
+- **Domain (defanged):** `rlim.com`
+- **Domain (defanged):** `paste.kealper.com`
+- **Domain (defanged):** `git.parat.swiss`
 - **Domain (defanged):** `pinhole.rootcode.ru`
+- **Domain (defanged):** `github.com`
+- **Domain (defanged):** `gist.github.com`
 - **SHA1:** `d85cef60cdb9e8d0f3cb3546de6ab657f9498ac7`
 - **MD5:** `107484d66423cb601f418344cd648f12`
 - **MD5:** `34a0f70ab100c47caaba7a5c85448e3d`
@@ -158,7 +167,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `pinhole.rootcode.ru`
+  - IP / domain IOC(s): `maper.info`, `pastebin.com`, `snippet.host`, `chiaselinks.com`, `rlim.com`, `paste.kealper.com`, `git.parat.swiss`, `pinhole.rootcode.ru` _(+2 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `d85cef60cdb9e8d0f3cb3546de6ab657f9498ac7`, `107484d66423cb601f418344cd648f12`, `34a0f70ab100c47caaba7a5c85448e3d`, `7528bf597fd7764fcb7ec06512e073e0`, `8354223cd6198b05904337b5dff7772b`

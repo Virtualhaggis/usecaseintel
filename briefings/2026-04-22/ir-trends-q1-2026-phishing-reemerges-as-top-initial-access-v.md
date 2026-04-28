@@ -19,6 +19,7 @@ Public administration and health care tied as the most targeted indu…
 
 - **CVE:** `CVE-2025-20393`
 - **CVE:** `CVE-2023-20198`
+- **Domain (defanged):** `adobe.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -404,10 +405,13 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `adobe.com`
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-20393`, `CVE-2023-20198`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

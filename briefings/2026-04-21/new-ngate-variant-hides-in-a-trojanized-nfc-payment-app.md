@@ -18,7 +18,9 @@ ESET Research has discovered a new variant of the NGate malware family that abus
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `104.21.91.170`
+- **IPv4 (defanged):** `108.165.230.223`
+- **Domain (defanged):** `ao.online`
 
 ## MITRE ATT&CK Techniques
 
@@ -180,7 +182,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `104.21.91.170`, `108.165.230.223`, `ao.online`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

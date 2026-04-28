@@ -23,6 +23,9 @@ Tags: Audit …
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
+- **IPv4 (defanged):** `104.238.149.198`
+- **IPv4 (defanged):** `45.76.155.14`
+- **IPv4 (defanged):** `23.235.188.3`
 - **SHA256:** `05eac3663d47a29da0d32f67e10d161f831138e10958dcd88b9dc97038948f69`
 - **SHA256:** `7d2c9b4a3942f6029d2de7f73723b505b64caa8e1763e4eb1f134360465185d0`
 - **SHA256:** `bb470a803b6d7b12fb596d2e4a18ea9ca91f40fd34ded7f01a487eed9a1d814d`
@@ -441,6 +444,9 @@ DeviceProcessEvents
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `104.238.149.198`, `45.76.155.14`, `23.235.188.3`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`

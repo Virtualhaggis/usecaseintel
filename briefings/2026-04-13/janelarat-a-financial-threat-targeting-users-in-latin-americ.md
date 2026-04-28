@@ -27,6 +27,7 @@ JanelaRAT is a malware family that takes its name from the Portuguese word “ja
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `ciderurginsx.com`
 - **MD5:** `808c87015194c51d74356854dfb10d9e`
 - **MD5:** `d7a68749635604d6d7297e4fa2530eb6`
 
@@ -140,6 +141,9 @@ DeviceProcessEvents
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `ciderurginsx.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `808c87015194c51d74356854dfb10d9e`, `d7a68749635604d6d7297e4fa2530eb6`

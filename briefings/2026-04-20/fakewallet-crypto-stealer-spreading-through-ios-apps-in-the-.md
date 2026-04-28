@@ -22,31 +22,31 @@ In March 2026, we uncovered more than twenty phishing apps in the Apple App Stor
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `iosfc`
-- **Domain (defanged):** `xxx`
-- **Domain (defanged):** `www.gxzhrc`
-- **Domain (defanged):** `appstoreios`
-- **Domain (defanged):** `crypto-stroe`
-- **Domain (defanged):** `yjzhengruol`
-- **Domain (defanged):** `6688cf.jhxrpbgq`
-- **Domain (defanged):** `139.180.139`
-- **Domain (defanged):** `xz.apps-store`
-- **Domain (defanged):** `ntm0mdkzymy3n.oukwww`
-- **Domain (defanged):** `nziwytu5n.lahuafa`
-- **Domain (defanged):** `zdrhnmjjndu.ulbcl`
-- **Domain (defanged):** `api.npoint`
-- **Domain (defanged):** `mti4ywy4.lahuafa`
-- **Domain (defanged):** `mtjln.siyangoil`
-- **Domain (defanged):** `odm0.siyangoil`
-- **Domain (defanged):** `mgi1y.siyangoil`
-- **Domain (defanged):** `mziyytm5ytk.ahroar`
-- **Domain (defanged):** `ngy2yjq0otlj.ahroar`
-- **Domain (defanged):** `kkkhhhnnn`
-- **Domain (defanged):** `helllo2025`
-- **Domain (defanged):** `sxsfcc`
-- **Domain (defanged):** `nmu8n`
-- **Domain (defanged):** `zmx6f`
-- **Domain (defanged):** `api.dc1637`
+- **IPv4 (defanged):** `139.180.139.209`
+- **Domain (defanged):** `iosfc.com`
+- **Domain (defanged):** `xxx.com`
+- **Domain (defanged):** `www.gxzhrc.cn`
+- **Domain (defanged):** `appstoreios.com`
+- **Domain (defanged):** `crypto-stroe.cc`
+- **Domain (defanged):** `yjzhengruol.com`
+- **Domain (defanged):** `6688cf.jhxrpbgq.com`
+- **Domain (defanged):** `xz.apps-store.im`
+- **Domain (defanged):** `ntm0mdkzymy3n.oukwww.com`
+- **Domain (defanged):** `nziwytu5n.lahuafa.com`
+- **Domain (defanged):** `zdrhnmjjndu.ulbcl.com`
+- **Domain (defanged):** `api.npoint.io`
+- **Domain (defanged):** `mti4ywy4.lahuafa.com`
+- **Domain (defanged):** `mtjln.siyangoil.com`
+- **Domain (defanged):** `odm0.siyangoil.com`
+- **Domain (defanged):** `mgi1y.siyangoil.com`
+- **Domain (defanged):** `mziyytm5ytk.ahroar.com`
+- **Domain (defanged):** `ngy2yjq0otlj.ahroar.com`
+- **Domain (defanged):** `kkkhhhnnn.com`
+- **Domain (defanged):** `helllo2025.com`
+- **Domain (defanged):** `sxsfcc.com`
+- **Domain (defanged):** `nmu8n.com`
+- **Domain (defanged):** `zmx6f.com`
+- **Domain (defanged):** `api.dc1637.xyz`
 - **MD5:** `4126348d783393dd85ede3468e48405d`
 - **MD5:** `b639f7f81a8faca9c62fd227fef5e28c`
 - **MD5:** `d48b580718b0e1617afc1dec028e9059`
@@ -295,7 +295,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `iosfc`, `xxx`, `www.gxzhrc`, `appstoreios`, `crypto-stroe`, `yjzhengruol`, `6688cf.jhxrpbgq`, `139.180.139` _(+17 more)_
+  - IP / domain IOC(s): `139.180.139.209`, `iosfc.com`, `xxx.com`, `www.gxzhrc.cn`, `appstoreios.com`, `crypto-stroe.cc`, `yjzhengruol.com`, `6688cf.jhxrpbgq.com` _(+17 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `4126348d783393dd85ede3468e48405d`, `b639f7f81a8faca9c62fd227fef5e28c`, `d48b580718b0e1617afc1dec028e9059`, `bafba3d044a4f674fc9edc67ef6b8a6b`, `79fe383f0963ae741193989c12aefacc`, `8d45a67b648d2cb46292ff5041a5dd44`, `7e678ca2f01dc853e85d13924e6c8a45`, `be9e0d516f59ae57f5553bcc3cf296d1` _(+13 more)_

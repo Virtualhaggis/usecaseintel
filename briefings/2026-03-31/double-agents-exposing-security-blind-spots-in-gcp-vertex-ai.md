@@ -32,6 +32,9 @@ Artificial intelligence (AI) agents …
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
+- **Domain (defanged):** `gcp-sa-aiplatform-re.iam.gserviceaccount.com`
+- **Domain (defanged):** `metadata.google.internal`
+- **Domain (defanged):** `us-docker.pkg.dev`
 
 ## MITRE ATT&CK Techniques
 
@@ -46,6 +49,7 @@ Artificial intelligence (AI) agents …
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -237,7 +241,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `gcp-sa-aiplatform-re.iam.gserviceaccount.com`, `metadata.google.internal`, `us-docker.pkg.dev`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

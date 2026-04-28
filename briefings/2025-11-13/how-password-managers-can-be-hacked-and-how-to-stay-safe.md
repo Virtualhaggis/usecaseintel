@@ -11,7 +11,9 @@ However, t…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `the1password.com`
+- **Domain (defanged):** `app1password.com`
+- **Domain (defanged):** `appbitwarden.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -26,6 +28,7 @@ However, t…
 - **T1059.001** — PowerShell
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -190,7 +193,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `the1password.com`, `app1password.com`, `appbitwarden.com`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -19,6 +19,16 @@ In 2024, ESET researchers noticed previously undocumented malware in the netw…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `118.107.234.29`
+- **IPv4 (defanged):** `118.107.234.26`
+- **IPv4 (defanged):** `103.159.132.30`
+- **IPv4 (defanged):** `101.99.88.113`
+- **IPv4 (defanged):** `101.99.88.188`
+- **IPv4 (defanged):** `38.54.17.131`
+- **Domain (defanged):** `server.com`
+- **Domain (defanged):** `stub.com`
+- **Domain (defanged):** `newso.com`
+- **Domain (defanged):** `policy-my.com`
 - **SHA256:** `D53FCC01038E20193FBD51B7400075CF7C9C4402B73DA7B0DB836B000EBD8B1C`
 
 ## MITRE ATT&CK Techniques
@@ -211,6 +221,9 @@ DeviceProcessEvents
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `118.107.234.29`, `118.107.234.26`, `103.159.132.30`, `101.99.88.113`, `101.99.88.188`, `38.54.17.131`, `server.com`, `stub.com` _(+2 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `D53FCC01038E20193FBD51B7400075CF7C9C4402B73DA7B0DB836B000EBD8B1C`

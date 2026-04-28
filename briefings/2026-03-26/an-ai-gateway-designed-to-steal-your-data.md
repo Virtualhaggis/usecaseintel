@@ -20,6 +20,7 @@ A significant proportion of cyberincidents are linked to supply chain attacks, a
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `checkmarx.zone`
 - **Domain (defanged):** `models.litellm.cloud`
 - **MD5:** `85ED77A21B88CAE721F369FA6B7BBBA3`
 - **MD5:** `2E3A4412A7A487B32C5715167C755D08`
@@ -166,7 +167,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `models.litellm.cloud`
+  - IP / domain IOC(s): `checkmarx.zone`, `models.litellm.cloud`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `85ED77A21B88CAE721F369FA6B7BBBA3`, `2E3A4412A7A487B32C5715167C755D08`, `0FCCC8E3A03896F45726203074AE225D`, `F5560871F6002982A6A2CC0B3EE739F7`, `CDE4951BEE7E28AC8A29D33D34A41AE5`, `05BACBE163EF0393C2416CBD05E45E74`

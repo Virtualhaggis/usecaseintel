@@ -22,6 +22,27 @@ Tags: CVE…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
+- **IPv4 (defanged):** `23.142.184.129`
+- **IPv4 (defanged):** `45.148.10.212`
+- **IPv4 (defanged):** `63.251.162.11`
+- **IPv4 (defanged):** `83.142.209.11`
+- **IPv4 (defanged):** `83.142.209.203`
+- **IPv4 (defanged):** `195.5.171.242`
+- **IPv4 (defanged):** `209.34.235.18`
+- **IPv4 (defanged):** `212.71.124.188`
+- **Domain (defanged):** `scan.aquasecurtiy.org`
+- **Domain (defanged):** `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`
+- **Domain (defanged):** `checkmarx.zone`
+- **Domain (defanged):** `models.litellm.cloud`
+- **Domain (defanged):** `championships-peoples-point-cassette.trycloudflare.com`
+- **Domain (defanged):** `create-sensitivity-grad-sequence.trycloudflare.com`
+- **Domain (defanged):** `investigation-launches-hearings-copying.trycloudflare.com`
+- **Domain (defanged):** `plug-tab-protective-relay.trycloudflare.com`
+- **Domain (defanged):** `souls-entire-defined-routes.trycloudflare.com`
+- **Domain (defanged):** `kamikaze.sh`
+- **Domain (defanged):** `kube.py`
+- **Domain (defanged):** `prop.py`
+- **Domain (defanged):** `tpcp.tar.gz`
 - **SHA256:** `30015DD1E2CF4DBD49FFF9DDEF2AD4622DA2E60E5C0B6228595325532E948F14`
 - **SHA256:** `41C4F2F37C0B257D1E20FE167F2098DA9D2E0A939B09ED3F63BC4FE010F8365C`
 - **SHA256:** `D8CAF4581C9F0000C7568D78FB7D2E595AB36134E2346297D78615942CBBD727`
@@ -401,6 +422,9 @@ DeviceProcessEvents
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `23.142.184.129`, `45.148.10.212`, `63.251.162.11`, `83.142.209.11`, `83.142.209.203`, `195.5.171.242`, `209.34.235.18`, `212.71.124.188` _(+13 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`

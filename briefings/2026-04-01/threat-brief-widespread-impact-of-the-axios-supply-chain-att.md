@@ -28,7 +28,10 @@ Executive Summar…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
-- **Domain (defanged):** `sfrclak`
+- **IPv4 (defanged):** `142.11.206.73`
+- **Domain (defanged):** `sfrclak.com`
+- **Domain (defanged):** `packages.npm.org`
+- **Domain (defanged):** `callnrwise.com`
 - **SHA256:** `ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7`
 - **SHA256:** `fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf`
 - **SHA256:** `cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa`
@@ -317,7 +320,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `sfrclak`
+  - IP / domain IOC(s): `142.11.206.73`, `sfrclak.com`, `packages.npm.org`, `callnrwise.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`
