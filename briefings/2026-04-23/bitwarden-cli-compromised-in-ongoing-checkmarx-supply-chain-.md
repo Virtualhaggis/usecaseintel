@@ -1,51 +1,92 @@
+<!-- curated:true -->
 # [MED] Bitwarden CLI Compromised in Ongoing Checkmarx Supply Chain Campaign
 
 **Source:** The Hacker News
 **Published:** 2026-04-23
 **Article:** https://thehackernews.com/2026/04/bitwarden-cli-compromised-in-ongoing.html
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
 
-Bitwarden CLI, the command-line interface for the password manager Bitwarden, has reportedly been compromised as part of a newly discovered and ongoing Checkmarx supply chain campaign, according to findings from JFrog and Socket. "The affected package version appears to be @bitwarden/cli@2026.4.0, and the malicious code was published in 'bw1.js,' a file included in the package contents," the
+The npm-distributed Bitwarden CLI was **trojanised** as part of a wider Checkmarx-tracked supply-chain campaign. Bitwarden CLI is what users and CI/CD systems run to fetch secrets from a Bitwarden vault — i.e., it has **direct access to every credential in the vault**. A trojanised version that exfiltrates secrets is **catastrophic** for any team using it.
 
-## Indicators of Compromise (high-fidelity only)
+This isn't a CVE — it's a **package compromise**. The malicious version was distributed through the official npm registry. Detection is therefore not "patch the vuln," it's "find every host that pulled the bad version."
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+## Indicators of Compromise
 
-## MITRE ATT&CK Techniques
+- _Specific malicious version + hash should be in the article body / Checkmarx report; pull from there once the post-incident IOC list lands._
+- Suspect any host that ran `npm install` for `@bitwarden/cli` (or similar) during the affected window.
+
+## MITRE ATT&CK (analyst-validated)
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1552.001** — Credentials In Files (the Bitwarden vault is the high-value target)
+- **T1555** — Credentials from Password Stores
+- **T1041** — Exfiltration Over C2 Channel (where the stolen secrets go)
 
-## Kill chain phases observed
+## Recommended SOC actions (priority-ordered)
 
-_(none detected from narrative keywords)_
+1. **Inventory every host that has Bitwarden CLI installed.** Look for `bw` binary or `@bitwarden/cli` in npm package lists. Include developer laptops, CI runners, build agents.
+2. **Rotate every secret accessed by Bitwarden CLI** during the affected window. If you can't determine the exact window, rotate everything that's been touched in the last 30 days.
+3. **Block the affected versions** in your npm registry / SBOM tooling.
+4. **Hunt for outbound traffic** from any host running `bw` to anywhere not on your allowlist.
 
-## Recommended hunts
+## Splunk SPL — Bitwarden CLI process activity
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+| tstats `summariesonly` count min(_time) AS firstTime max(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where (Processes.process_name IN ("bw","bw.exe","node.exe","node")
+           AND (Processes.process="*bitwarden*"
+                OR Processes.process="*@bitwarden/cli*"))
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process,
+       Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
 ```
 
-**Defender KQL:**
+## Splunk SPL — outbound from build / CI hosts
+
+```spl
+| tstats `summariesonly` count earliest(_time) AS first_seen latest(_time) AS last_seen
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.src_category IN ("ci","build","developer","jenkins","gitlab-runner")
+      AND All_Traffic.action="allowed"
+      AND All_Traffic.dest_category!="internal"
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| stats sum(count) AS sessions, dc(dest) AS unique_dests, max(last_seen) AS last_seen by src
+| where unique_dests > 5
+| sort - sessions
+```
+
+## Defender KQL — Bitwarden CLI process executions
+
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where Timestamp > ago(30d)
+| where FileName in~ ("bw.exe","bw","node.exe","node")
+| where ProcessCommandLine has_any ("bitwarden","@bitwarden/cli")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
+## Defender KQL — outbound network from build hosts
 
-## Why this matters
+```kql
+let buildHosts = dynamic(["jenkins-01","gitlab-runner-01","ci-runner-02"]);  // adapt
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where DeviceName in (buildHosts)
+| where RemoteIPType == "Public"
+| where ActionType == "ConnectionSuccess"
+| where InitiatingProcessFileName in~ ("bw.exe","node.exe","node")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+## Why this matters for your SOC
+
+A compromised secret manager CLI is a **credential firehose** — every `bw get password ...` call routes a plaintext secret through the trojaned binary. The exfiltration window may have started days before the bad package was discovered. **The remediation isn't "remove the bad version" — it's "rotate every secret the affected hosts touched."** That's a project, not a patch. Engage your secret-rotation playbook today; treat the npm package removal as the easy part.

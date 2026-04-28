@@ -1,50 +1,103 @@
-# [LOW] Google Patches Antigravity IDE Flaw Enabling Prompt Injection Code Execution
+<!-- curated:true -->
+# [MED] Google Patches Antigravity IDE Flaw Enabling Prompt Injection Code Execution
 
 **Source:** The Hacker News
 **Published:** 2026-04-21
 **Article:** https://thehackernews.com/2026/04/google-patches-antigravity-ide-flaw.html
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
 
-Cybersecurity researchers have discovered a vulnerability in Google's agentic integrated development environment (IDE), Antigravity, that could be exploited to achieve code execution. The flaw, since patched, combines Antigravity's permitted file-creation capabilities with an insufficient input sanitization in Antigravity's native file-searching tool, find_by_name, to bypass the program's Strict
+Researchers found a code-execution flaw in **Google Antigravity**, an agentic AI IDE. The attack chain combines:
+- Antigravity's permitted **file-creation** capability (an agent can write files into the workspace),
+- with insufficient input sanitisation in the native `find_by_name` tool,
+- to bypass **Strict mode** and achieve **arbitrary code execution** on the developer's host.
 
-## Indicators of Compromise (high-fidelity only)
+The route is **prompt-injection-via-content** — feed the IDE agent a doc/repo with carefully crafted text and it will silently execute code on your machine. Google has patched it.
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+This is the third "agentic IDE / sandbox → host RCE" story in two weeks (LeRobot, Cohere Terrarium, now Antigravity). The pattern is clear: **agentic tools that can write files + read the filesystem are 1-2 prompt-injection bugs away from RCE on every developer who uses them**.
 
-## MITRE ATT&CK Techniques
+## Indicators of Compromise
 
-- **T1190** — Exploit Public-Facing Application
+- No CVE assigned in the article excerpt — see Google security advisory or researcher write-up for the version range.
+- Affected: Google Antigravity (versions prior to the patch).
 
-## Kill chain phases observed
+## MITRE ATT&CK (analyst-validated)
 
-_(none detected from narrative keywords)_
+- **T1059** — Command and Scripting Interpreter (the prompt-injection-driven exec)
+- **T1204.002** — User Execution: Malicious File (developer opens / interacts with malicious content)
+- **T1059.006** — Python (Antigravity tooling typically Python-driven)
+- **T1027** — Obfuscated Files or Information (the injection payload typically encoded in benign-looking docs)
 
-## Recommended hunts
+## Recommended SOC actions (priority-ordered)
 
-### Asset exposure — vulnerability matches article CVE(s)
+1. **Inventory developer workstations with Antigravity installed** (or any agentic IDE — Cursor, Continue, Aider, Cline, etc.). Most SOCs have no idea which dev tools are in use.
+2. **Force update to the patched Antigravity build.**
+3. **Disable agent file-creation capability** in dev IDEs handling untrusted content (third-party repos, open-source PRs, customer-submitted code).
+4. **Hunt developer endpoints for unexpected agent-spawned processes** — Python/Node spawning shells from a project workspace.
+5. **Brief the dev community on prompt-injection-via-content.** Many devs paste long docs / repo files into agentic tools without realising the agent will *act* on the content.
 
-`_uc` · phase: **recon** · confidence: **High**
+## Splunk SPL — agentic-IDE child process anomaly on dev hosts
 
-**Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("-")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where (Processes.parent_process_name IN ("antigravity","antigravity.exe","python","python.exe",
+                                                "node","node.exe","cursor","cursor.exe","aider")
+        OR Processes.process_path="*\\antigravity\\*"
+        OR Processes.process_path="*\\Cursor\\*")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","bash","sh","curl","curl.exe",
+                                       "wget","wget.exe","nc","ncat","certutil.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name,
+       Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
 ```
 
-**Defender KQL:**
+## Splunk SPL — file writes into project-workspace executables
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action="created"
+      AND (Filesystem.file_name="*.sh" OR Filesystem.file_name="*.ps1"
+        OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.cmd"
+        OR Filesystem.file_name="*.py")
+      AND Filesystem.process_name IN ("antigravity","antigravity.exe","python","node",
+                                        "cursor","cursor.exe","aider")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+## Defender KQL — agentic IDE child-process anomaly
+
 ```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("-")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where InitiatingProcessFileName in~ ("antigravity.exe","antigravity","cursor.exe",
+                                         "python.exe","python","node.exe","node")
+   or InitiatingProcessFolderPath has_any ("\\antigravity\\","\\Cursor\\","\\Continue\\")
+| where FileName in~ ("cmd.exe","powershell.exe","bash","sh","curl.exe","wget.exe",
+                       "nc.exe","certutil.exe","bitsadmin.exe","mshta.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
 ```
 
+## Defender KQL — file writes by agentic IDE outside dev-typical paths
 
-## Why this matters
+```kql
+DeviceFileEvents
+| where Timestamp > ago(60d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName in~ ("antigravity.exe","cursor.exe","python.exe","node.exe","aider")
+| where FileName endswith ".sh" or FileName endswith ".ps1"
+     or FileName endswith ".bat" or FileName endswith ".cmd"
+| where FolderPath !has_any ("\\Projects\\",".venv\\","\\node_modules\\","\\test\\","\\tests\\")
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
-Severity classified as **LOW** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+## Why this matters for your SOC
+
+Agentic IDEs sit on **the most privileged endpoint your company owns**: a developer workstation with cloud creds, signing keys, source-tree write access, and direct production deploy paths. A prompt-injection RCE on a dev box isn't "we lost a laptop" — it's "the attacker is now committing code with valid signatures." The Antigravity flaw is patched, but the **pattern (capability tool + insufficient sanitisation = exec)** will recur across every agentic IDE for the foreseeable future. Build the detection logic now using the queries above; the next agentic-IDE RCE is a matter of weeks, not years.
