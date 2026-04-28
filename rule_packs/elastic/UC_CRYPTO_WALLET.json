@@ -1,0 +1,47 @@
+{
+  "name": "Crypto-wallet file/keystore access by non-wallet process",
+  "description": "Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1005",
+          "name": "Data from Local System",
+          "reference": "https://attack.mitre.org/techniques/T1005/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Ethereum\\keystore\\\",\"\\Bitcoin\\\",\"\\Exodus\\\",\"\\Electrum\\wallets\\\",\"\\MetaMask\\\",\"\\Phantom\\\",\"\\Atomic\\Local Storage\\\")\n| where InitiatingProcessFileName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_CRYPTO_WALLET.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

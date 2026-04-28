@@ -1,0 +1,34 @@
+title: LSASS process access / dump (credential theft)
+id: UC_LSASS
+status: experimental
+description: Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LSASS.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.hunting
+  - usecaseintel.kill_chain.actions
+  - attack.t1003_001
+  - attack.t1003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'rundll32.exe'
+      - 'OpenProcessApiCall'
+      - 'lsass.exe'
+      - 'MsSense.exe'
+      - 'MsMpEng.exe'
+      - 'csrss.exe'
+      - 'svchost.exe'
+      - 'wininit.exe'
+      - 'services.exe'
+      - 'lsm.exe'
+      - 'SearchProtocolHost.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: low

@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_BROWSER_STEALER')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Infostealer \u2014 non-browser process accessing browser cookie/login DBs",
+        "description": "Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Google\\Chrome\\User Data\\\",\"\\Microsoft\\Edge\\User Data\\\",\"\\Mozilla\\Firefox\\Profiles\\\")\n| where FileName in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1539",
+          "T1555.003"
+        ],
+        "alertRuleTemplateName": "UC_BROWSER_STEALER",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_BROWSER_STEALER.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

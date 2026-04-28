@@ -1,0 +1,38 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_MFA_FATIGUE')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "MFA fatigue / push-bombing",
+        "description": "Many MFA pushes to same user in short window \u2014 suggests adversary attempting approval-fatigue.",
+        "severity": "High",
+        "enabled": false,
+        "query": "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1621"
+        ],
+        "alertRuleTemplateName": "UC_MFA_FATIGUE",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_MFA_FATIGUE.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

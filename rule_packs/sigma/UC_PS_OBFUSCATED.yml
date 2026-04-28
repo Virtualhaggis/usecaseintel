@@ -1,0 +1,25 @@
+title: PowerShell encoded / obfuscated command
+id: UC_PS_OBFUSCATED
+status: experimental
+description: Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_PS_OBFUSCATED.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1059_001
+  - attack.t1027
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'powershell.exe'
+      - 'pwsh.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

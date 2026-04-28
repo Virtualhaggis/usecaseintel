@@ -1,0 +1,25 @@
+title: Service install for persistence — sc.exe / new service registry write
+id: UC_SERVICE_PERSIST
+status: experimental
+description: Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\SYSTEM\CurrentControlSet\Services\* writes).
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_SERVICE_PERSIST.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.hunting
+  - usecaseintel.kill_chain.install
+  - attack.t1543_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'sc.exe'
+      - 'ImagePath'
+      - 'create'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: low

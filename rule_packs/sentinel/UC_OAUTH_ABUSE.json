@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_OAUTH_ABUSE')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "OAuth consent / suspicious app grant",
+        "description": "Cloud identity abuse: app gets high-priv scopes, often via consent phishing.",
+        "severity": "High",
+        "enabled": false,
+        "query": "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1528",
+          "T1098.001"
+        ],
+        "alertRuleTemplateName": "UC_OAUTH_ABUSE",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_OAUTH_ABUSE.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

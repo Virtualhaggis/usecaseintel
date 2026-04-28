@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_PHISH_ATTACH')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Email attachment opened from external sender",
+        "description": "Attachment delivery + execution by recipient \u2014 most common malware initial access.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet MalAttachments = EmailAttachmentInfo\n    | where Timestamp > ago(LookbackDays)\n    | project NetworkMessageId, RecipientEmailAddress,\n              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n                      \"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,\n          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1566.001",
+          "T1204.002"
+        ],
+        "alertRuleTemplateName": "UC_PHISH_ATTACH",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_ATTACH.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

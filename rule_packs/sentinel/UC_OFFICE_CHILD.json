@@ -1,0 +1,40 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_OFFICE_CHILD')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Office app spawning script/LOLBin child process",
+        "description": "Classic macro/exploit pattern \u2014 Office app launching cmd/powershell/wmic/regsvr32.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\",\"mspub.exe\",\"visio.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1059.001",
+          "T1059.005",
+          "T1218"
+        ],
+        "alertRuleTemplateName": "UC_OFFICE_CHILD",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_OFFICE_CHILD.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

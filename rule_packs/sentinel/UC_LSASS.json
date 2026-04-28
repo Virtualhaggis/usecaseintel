@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_LSASS')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "LSASS process access / dump (credential theft)",
+        "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
+        "severity": "Low",
+        "enabled": false,
+        "query": "DeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc",
+        "queryFrequency": "PT1D",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1003.001",
+          "T1003"
+        ],
+        "alertRuleTemplateName": "UC_LSASS",
+        "customDetails": {
+          "tier": "hunting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LSASS.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

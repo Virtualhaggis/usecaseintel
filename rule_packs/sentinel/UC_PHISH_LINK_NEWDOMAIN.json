@@ -1,0 +1,40 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_PHISH_LINK_NEWDOMAIN')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Click on URL whose host doesn't match the sender domain",
+        "description": "User clicked an inbound-email URL where the URL host is unrelated to\nthe sender's authenticated domain. Most legitimate B2B / B2C senders\nuse links on their own domain, their CDN, or a small number of\nmarketing trackers. A click on a sender-mismatched URL \u2014 especially\nto a cheap-TLD throwaway (.sbs, .top, .icu, .cyou) \u2014 is a moderate\nphishing-class signal. Pair with UC_PHISH_LINK (exec correlation)\nfor the higher-confidence variant.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// Click on inbound-email URL where url-domain != sender-domain.\n// The sender-domain root and url-domain root are extracted then\n// compared; a mismatch on a cheap-TLD url-domain is the high-signal\n// case. Tune the legit-marketer allowlist to your environment to\n// suppress the residual newsletter / vendor-tracker noise.\nlet LookbackDays = 7d;\nlet LegitTrackers = dynamic([\"mailchimp.com\",\"sendgrid.net\",\"sendgrid.com\",\n    \"constantcontact.com\",\"hubspotlinks.com\",\"hubspot.com\",\"mktoresp.com\",\n    \"marketo.com\",\"pardot.com\",\"exacttarget.com\",\"klaviyomail.com\",\n    \"list-manage.com\",\"createsend1.com\",\"createsend.com\",\"sg.actblue.com\",\n    \"ml-attach.com\",\"emltrk.com\",\"amazonses.com\",\"amazon.com\",\"sndarsffrt.com\",\n    \"salesforce.com\",\"force.com\",\"docusign.net\",\"echosign.com\",\n    \"office365.com\",\"microsoft.com\",\"onmicrosoft.com\",\"linkedin.com\",\n    \"github.com\",\"githubusercontent.com\",\"atlassian.net\",\"jira.com\"]);\nlet CheapTlds = dynamic([\"sbs\",\"life\",\"top\",\"icu\",\"cyou\",\"gdn\",\"click\",\"loan\",\n    \"rest\",\"monster\",\"work\",\"cn\",\"ru\",\"tk\",\"ml\",\"cf\",\"ga\"]);\nEmailEvents\n| where Timestamp > ago(LookbackDays)\n| where DeliveryAction == \"Delivered\" and EmailDirection == \"Inbound\"\n| extend SenderRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, tolower(SenderFromDomain))\n| join kind=inner (\n    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n  ) on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ClickAllowed\",\"ClickedThrough\")\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on Url\n| extend UrlDomLower = tolower(UrlDomain)\n| extend UrlRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, UrlDomLower)\n| extend UrlTld = extract(@\"\\.([a-zA-Z]+)$\", 1, UrlDomLower)\n| where UrlRoot != SenderRoot\n   and UrlRoot !in (LegitTrackers)\n   and UrlDomLower !endswith \".microsoft.com\"\n   and UrlDomLower !endswith \".office.com\"\n   and UrlDomLower !endswith \".sharepoint.com\"\n| extend RiskScore = case(UrlTld in (CheapTlds), 3,\n                          UrlRoot endswith \".ru\" or UrlRoot endswith \".cn\", 2,\n                          1)\n| where RiskScore >= 2\n| project ClickTimestamp, AccountUpn, IPAddress, RecipientEmailAddress,\n          SenderFromAddress, SenderRoot, UrlDomain, UrlRoot, UrlTld,\n          RiskScore, Subject, Url\n| order by RiskScore desc, ClickTimestamp desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1566.002",
+          "T1204.001",
+          "T1583.001"
+        ],
+        "alertRuleTemplateName": "UC_PHISH_LINK_NEWDOMAIN",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_NEWDOMAIN.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

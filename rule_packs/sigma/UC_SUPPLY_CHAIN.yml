@@ -1,0 +1,31 @@
+title: Trusted vendor binary / installer launching unusual children
+id: UC_SUPPLY_CHAIN
+status: experimental
+description: Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_SUPPLY_CHAIN.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1195_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'powershell.exe'
+      - 'cmd.exe'
+      - 'rundll32.exe'
+      - 'regsvr32.exe'
+      - 'mshta.exe'
+      - 'wscript.exe'
+      - 'cscript.exe'
+      - 'wmic.exe'
+      - 'bitsadmin.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

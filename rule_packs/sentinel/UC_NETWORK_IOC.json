@@ -1,0 +1,38 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_NETWORK_IOC')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Network connections to article IPs / domains",
+        "description": "Outbound traffic to attacker infrastructure named in the article.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName, InitiatingProcessCommandLine",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1071"
+        ],
+        "alertRuleTemplateName": "UC_NETWORK_IOC",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_NETWORK_IOC.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

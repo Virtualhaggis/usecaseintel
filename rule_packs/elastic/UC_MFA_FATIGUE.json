@@ -1,0 +1,47 @@
+{
+  "name": "MFA fatigue / push-bombing",
+  "description": "Many MFA pushes to same user in short window \u2014 suggests adversary attempting approval-fatigue.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1621",
+          "name": "Multi-Factor Authentication Request Generation",
+          "reference": "https://attack.mitre.org/techniques/T1621/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nAADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_MFA_FATIGUE.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

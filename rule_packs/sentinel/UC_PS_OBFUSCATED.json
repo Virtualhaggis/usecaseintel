@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_PS_OBFUSCATED')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "PowerShell encoded / obfuscated command",
+        "description": "Encoded or obfuscated PowerShell \u2014 common across loaders, recon, and post-exploitation.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\\s+hidden|invoke-expression|iex\\s*\\(|downloadstring|net\\.webclient)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1059.001",
+          "T1027"
+        ],
+        "alertRuleTemplateName": "UC_PS_OBFUSCATED",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_PS_OBFUSCATED.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

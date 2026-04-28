@@ -1,0 +1,47 @@
+{
+  "name": "Service install for persistence \u2014 sc.exe / new service registry write",
+  "description": "Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\\SYSTEM\\CurrentControlSet\\Services\\* writes).",
+  "risk_score": 21,
+  "severity": "low",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "24h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1543.003",
+          "name": "Windows Service",
+          "reference": "https://attack.mitre.org/techniques/T1543.003/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:hunting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"sc.exe\" and ProcessCommandLine has \"create\"\n| where ProcessCommandLine matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_SERVICE_PERSIST.yml"
+  ],
+  "meta": {
+    "tier": "hunting",
+    "fp_rate_estimate": "unknown"
+  }
+}

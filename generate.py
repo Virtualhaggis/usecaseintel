@@ -681,6 +681,17 @@ class UseCase:
     # Default to hunting to keep the bar conservative — opt UCs into
     # alerting only when the logic clearly meets that bar.
     tier: str = "hunting"
+    # Estimated false-positive rate. One of:
+    #   "low"     — <1 fire per week per 10K endpoints in a tuned environment
+    #   "medium"  — 1-10 fires per week (still actionable)
+    #   "high"    — >10 fires per week (hunt only, do not alert)
+    #   "unknown" — not yet measured (default; bias toward hunting)
+    fp_rate_estimate: str = "unknown"
+    # Required telemetry — UC will return zero rows without these data sources.
+    # Helps SOC triage whether they have coverage before deploying. Free-form
+    # list of strings, e.g. ["Sysmon EID 1", "Defender DeviceProcessEvents",
+    # "EDR process telemetry", "M365 EmailEvents"].
+    required_telemetry: list = field(default_factory=list)
 
 
 def _infer_tier_from_query(spl: str, kql: str, confidence: str) -> str:
@@ -752,6 +763,12 @@ def _load_uc_from_yaml(path):
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
     if tier not in ("alerting", "hunting"):
         tier = "hunting"
+    fp_rate = (doc.get("fp_rate_estimate") or "unknown").strip().lower()
+    if fp_rate not in ("low", "medium", "high", "unknown"):
+        fp_rate = "unknown"
+    req_telemetry = doc.get("required_telemetry") or []
+    if not isinstance(req_telemetry, list):
+        req_telemetry = [str(req_telemetry)]
     return UseCase(
         title=doc.get("title", ""),
         description=(doc.get("description") or "").strip(),
@@ -762,6 +779,8 @@ def _load_uc_from_yaml(path):
         defender_kql=kql,
         confidence=confidence,
         tier=tier,
+        fp_rate_estimate=fp_rate,
+        required_telemetry=[str(t) for t in req_telemetry],
     )
 
 
@@ -3793,6 +3812,21 @@ function initDrawerUcList() {
     if (detail.description) {
       html += `<div style="font-size:12px;color:var(--text);opacity:0.92;line-height:1.55;margin-bottom:10px;">${escapeHtml(detail.description)}</div>`;
     }
+    // FP-rate + required-telemetry annotations help the SOC decide whether
+    // a UC fits their telemetry coverage and noise budget before deploying.
+    const fpr = detail.fp_rate_estimate || 'unknown';
+    const reqTelem = detail.required_telemetry || [];
+    if (fpr !== 'unknown' || reqTelem.length) {
+      html += `<div style="display:flex;flex-wrap:wrap;gap:8px;font-size:11px;margin-bottom:10px;">`;
+      if (fpr !== 'unknown') {
+        const fprColor = {low:'var(--good)', medium:'var(--warn)', high:'var(--bad)'}[fpr] || 'var(--muted)';
+        html += `<span style="padding:3px 10px;border-radius:4px;background:var(--panel2);color:${fprColor};border:1px solid var(--border);"><b>FP rate:</b> ${escapeHtml(fpr)}</span>`;
+      }
+      reqTelem.slice(0, 6).forEach(t => {
+        html += `<span style="padding:3px 10px;border-radius:4px;background:var(--panel2);color:var(--muted);border:1px solid var(--border);"><b>Needs:</b> ${escapeHtml(t)}</span>`;
+      });
+      html += `</div>`;
+    }
     if (techPills || phPill || dms) {
       html += `<div class="meta" style="margin-bottom:10px;">${phPill}${techPills}${dms}</div>`;
     }
@@ -4873,6 +4907,8 @@ def write_catalog_files(generated_iso):
                 "kill_chain": uc.kill_chain,
                 "confidence": uc.confidence,
                 "tier": getattr(uc, "tier", "hunting"),
+                "fp_rate_estimate": getattr(uc, "fp_rate_estimate", "unknown"),
+                "required_telemetry": list(getattr(uc, "required_telemetry", []) or []),
                 "techniques": [{"id": t, "name": n} for t, n in uc.techniques],
                 "data_models": list(uc.data_models or []),
                 "splunk_spl": uc.splunk_spl or "",
@@ -4919,6 +4955,225 @@ def write_catalog_files(generated_iso):
         encoding="utf-8",
     )
     print(f"[*] Use case detail sidecar: {len(full)} entries  ->  catalog/use_cases_full.js")
+    # Per-platform rule packs (SIEM-native exports)
+    _write_rule_packs(generated_iso)
+
+
+def _write_rule_packs(generated_iso):
+    """Emit per-platform rule packs for direct SIEM consumption.
+
+    Outputs go to rule_packs/:
+      - splunk/savedsearches.conf       — drop-in for Splunk app
+      - sentinel/<uc>.json              — Sentinel analytics rule (ARM template)
+      - elastic/<uc>.json               — Elastic detection rule
+      - sigma/<uc>.yml                  — Sigma format (multi-vendor interchange)
+
+    Only internal UCs are exported (not the 2150 ESCU detections — those
+    already exist in their native Splunk Security Content repo).
+    """
+    if not _LOADED_UCS:
+        return
+    json_lib = __import__("json")
+    rp_dir = Path(__file__).parent / "rule_packs"
+    rp_dir.mkdir(exist_ok=True)
+    splunk_dir = rp_dir / "splunk"; splunk_dir.mkdir(exist_ok=True)
+    sentinel_dir = rp_dir / "sentinel"; sentinel_dir.mkdir(exist_ok=True)
+    elastic_dir = rp_dir / "elastic"; elastic_dir.mkdir(exist_ok=True)
+    sigma_dir = rp_dir / "sigma"; sigma_dir.mkdir(exist_ok=True)
+
+    splunk_lines = [
+        "# Splunk savedsearches.conf — auto-generated by usecaseintel",
+        f"# Generated: {generated_iso}",
+        f"# {len(_LOADED_UCS)} use cases. Drop into a Splunk app's local/",
+        "# folder. Each saved search is disabled by default — enable per",
+        "# environment after a 7-day backfill review.",
+        "",
+    ]
+
+    for uc_id, uc in sorted(_LOADED_UCS.items()):
+        tier = getattr(uc, "tier", "hunting")
+        cron = "0 */6 * * *" if tier == "alerting" else "0 8 * * *"  # alerting hourly-ish, hunting daily
+        # ---- Splunk savedsearches.conf stanza ----
+        if uc.splunk_spl:
+            splunk_lines.append(f"[usecaseintel - {uc.title}]")
+            splunk_lines.append(f"description = {(uc.description or '').splitlines()[0] if uc.description else ''}")
+            splunk_lines.append(f"search = {uc.splunk_spl.strip().splitlines()[0] if uc.splunk_spl else ''}")  # 1-line preview
+            splunk_lines.append(f"# (full multi-line search below)")
+            for line in uc.splunk_spl.strip().splitlines():
+                splunk_lines.append(f"#   {line}")
+            splunk_lines.append(f"cron_schedule = {cron}")
+            splunk_lines.append(f"dispatch.earliest_time = -24h@h")
+            splunk_lines.append(f"dispatch.latest_time = now")
+            splunk_lines.append(f"enableSched = 0  # ENABLE AFTER REVIEW (tier={tier})")
+            splunk_lines.append(f"action.notable = {1 if tier == 'alerting' else 0}")
+            splunk_lines.append(f"action.notable.param.severity = high")
+            splunk_lines.append(f"action.notable.param.security_domain = endpoint")
+            techs = ",".join(t for t, _ in uc.techniques)
+            splunk_lines.append(f"action.correlationsearch.annotations = {{\"mitre_attack\":[{techs}]}}")
+            splunk_lines.append(f"# usecaseintel.tier = {tier}")
+            splunk_lines.append(f"# usecaseintel.fp_rate = {getattr(uc, 'fp_rate_estimate', 'unknown')}")
+            splunk_lines.append("")
+
+        # ---- Sentinel analytics rule (Microsoft.SecurityInsights JSON) ----
+        if uc.defender_kql:
+            sentinel_rule = {
+                "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "resources": [{
+                    "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+                    "apiVersion": "2022-12-01-preview",
+                    "name": f"[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/{uc_id}')]",
+                    "kind": "Scheduled",
+                    "properties": {
+                        "displayName": uc.title,
+                        "description": uc.description or uc.title,
+                        "severity": "High" if tier == "alerting" else "Low",
+                        "enabled": False,  # ALWAYS off until reviewed
+                        "query": uc.defender_kql,
+                        "queryFrequency": "PT1H" if tier == "alerting" else "PT1D",
+                        "queryPeriod": "PT24H",
+                        "triggerOperator": "GreaterThan",
+                        "triggerThreshold": 0,
+                        "tactics": [],  # filled below
+                        "techniques": [t for t, _ in uc.techniques],
+                        "alertRuleTemplateName": uc_id,
+                        "customDetails": {
+                            "tier": tier,
+                            "fp_rate_estimate": getattr(uc, "fp_rate_estimate", "unknown"),
+                            "source_url": f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+                        },
+                    },
+                }],
+                "parameters": {
+                    "workspaceName": {"type": "string"}
+                }
+            }
+            (sentinel_dir / f"{uc_id}.json").write_text(
+                json_lib.dumps(sentinel_rule, indent=2), encoding="utf-8")
+
+        # ---- Elastic detection rule ----
+        if uc.defender_kql or uc.splunk_spl:
+            # Elastic accepts EQL / KQL — Defender KQL is closer in shape.
+            elastic_rule = {
+                "name": uc.title,
+                "description": uc.description or uc.title,
+                "risk_score": 73 if tier == "alerting" else 21,
+                "severity": "high" if tier == "alerting" else "low",
+                "type": "query",
+                "language": "kuery",
+                "enabled": False,  # OFF until reviewed
+                "interval": "1h" if tier == "alerting" else "24h",
+                "from": "now-24h",
+                "index": ["logs-*", "winlogbeat-*", "endgame-*"],
+                "query": "event.action:* AND _exists_:host.name",  # placeholder — analyst port-over needed
+                "threat": [{
+                    "framework": "MITRE ATT&CK",
+                    "tactic": {"id": "", "name": uc.kill_chain, "reference": ""},
+                    "technique": [{"id": t, "name": n, "reference": f"https://attack.mitre.org/techniques/{t}/"}
+                                  for t, n in uc.techniques[:3]],
+                }],
+                "tags": ["usecaseintel", f"tier:{tier}", uc.kill_chain],
+                "note": (
+                    "**Auto-generated from usecaseintel — analyst port-over required.** "
+                    "Original Splunk SPL / Defender KQL bodies preserved in the "
+                    "`reference` URL. Translate the source query to Elastic's "
+                    "ECS / EQL syntax before enabling.\n\n"
+                    f"### Source query (Defender KQL)\n```\n{uc.defender_kql or '(none)'}\n```"
+                ),
+                "references": [
+                    f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+                ],
+                "meta": {
+                    "tier": tier,
+                    "fp_rate_estimate": getattr(uc, "fp_rate_estimate", "unknown"),
+                },
+            }
+            (elastic_dir / f"{uc_id}.json").write_text(
+                json_lib.dumps(elastic_rule, indent=2), encoding="utf-8")
+
+        # ---- Sigma rule (universal interchange) ----
+        sigma_yaml = _emit_sigma(uc_id, uc, tier)
+        if sigma_yaml:
+            (sigma_dir / f"{uc_id}.yml").write_text(sigma_yaml, encoding="utf-8")
+
+    (splunk_dir / "savedsearches.conf").write_text("\n".join(splunk_lines), encoding="utf-8")
+
+    # README for the rule_packs/ directory
+    readme = f"""# Rule packs — auto-generated SIEM-native exports
+
+Generated: {generated_iso}
+
+This directory contains per-platform versions of every internal use case
+in the catalogue. Drop-in for the named SIEM, but **always disabled by
+default** — review each rule against your environment before enabling.
+
+| Directory | Format | Notes |
+|---|---|---|
+| `splunk/savedsearches.conf` | Splunk app config | Stanzas with full SPL embedded as comments. Enable per environment. |
+| `sentinel/<uc>.json` | ARM template | Microsoft Sentinel analytics rule. Deploy with `az deployment group create`. |
+| `elastic/<uc>.json` | Elastic detection rule | Translation TODO — KQL bodies need port to ECS/EQL. |
+| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect. |
+
+Tier-aware defaults:
+- `alerting` UCs schedule hourly, severity High
+- `hunting` UCs schedule daily, severity Low
+
+All exports include `tier`, `fp_rate_estimate`, `mitre_attack` annotations.
+"""
+    (rp_dir / "README.md").write_text(readme, encoding="utf-8")
+    print(f"[*] Rule packs: {len(_LOADED_UCS)} UCs  ->  rule_packs/{{splunk,sentinel,elastic,sigma}}/")
+
+
+def _emit_sigma(uc_id, uc, tier):
+    """Emit a Sigma rule. Sigma is multi-vendor — pretty-prints fields and
+    leaves the heavy logic translation to sigma-cli on the consumer side.
+    The `detection.condition` is intentionally simple — analysts run sigma-cli
+    against their backend SIEM to expand the patterns we put in `keywords`."""
+    techs = [t for t, _ in uc.techniques]
+    # Pull a few discriminating tokens from the SPL/KQL to seed Sigma keywords.
+    blob = (uc.splunk_spl or "") + " " + (uc.defender_kql or "")
+    tokens = []
+    for m in re.finditer(r'"([A-Za-z0-9_.\\\-\/]{3,80})"', blob):
+        tokens.append(m.group(1))
+    tokens = list(dict.fromkeys(tokens))[:25]
+    if not tokens:
+        return ""
+    yaml_lines = [
+        f"title: {uc.title}",
+        f"id: {uc_id}",
+        f"status: experimental",
+        f"description: {(uc.description or uc.title).splitlines()[0]}",
+        f"references:",
+        f"  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+        f"author: usecaseintel auto-generator",
+        f"tags:",
+        f"  - usecaseintel.tier.{tier}",
+        f"  - usecaseintel.kill_chain.{uc.kill_chain}",
+    ]
+    for t in techs:
+        yaml_lines.append(f"  - attack.{t.lower().replace('.','_')}")
+    yaml_lines.extend([
+        f"logsource:",
+        f"  category: process_creation",
+        f"  product: windows",
+        f"detection:",
+        f"  selection:",
+        f"    Image|contains:",
+    ])
+    for tok in tokens[:15]:
+        # Sigma quoting — escape backslashes
+        esc = tok.replace("\\", "\\\\")
+        yaml_lines.append(f"      - '{esc}'")
+    yaml_lines.extend([
+        f"  condition: selection",
+    ])
+    yaml_lines.extend([
+        f"falsepositives:",
+        f"  - Legitimate use of any of the above strings on dev / admin hosts",
+        f"  - Tune via known-good allowlist before alerting",
+        f"level: {'high' if tier == 'alerting' else 'low'}",
+    ])
+    return "\n".join(yaml_lines) + "\n"
 
 
 # =============================================================================

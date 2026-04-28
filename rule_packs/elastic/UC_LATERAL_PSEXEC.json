@@ -1,0 +1,52 @@
+{
+  "name": "Remote service execution \u2014 PsExec / SMB lateral movement",
+  "description": "psexec / paexec / smbexec / wmic /node \u2014 service install over SMB from remote host.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1021.002",
+          "name": "SMB/Windows Admin Shares",
+          "reference": "https://attack.mitre.org/techniques/T1021.002/"
+        },
+        {
+          "id": "T1569.002",
+          "name": "Service Execution",
+          "reference": "https://attack.mitre.org/techniques/T1569.002/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n   or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LATERAL_PSEXEC.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

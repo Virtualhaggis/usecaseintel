@@ -1,0 +1,24 @@
+title: DNS tunneling / TXT-heavy domain queries
+id: UC_DNS_TUNNEL
+status: experimental
+description: Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_DNS_TUNNEL.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.c2
+  - attack.t1071_004
+  - attack.t1048_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'QUERY'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,38 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_SCHEDULED_TASK')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Scheduled task created with suspicious image / encoded args",
+        "description": "schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.",
+        "severity": "Low",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName",
+        "queryFrequency": "PT1D",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1053.005"
+        ],
+        "alertRuleTemplateName": "UC_SCHEDULED_TASK",
+        "customDetails": {
+          "tier": "hunting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_SCHEDULED_TASK.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

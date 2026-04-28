@@ -1,0 +1,52 @@
+{
+  "name": "LSASS process access / dump (credential theft)",
+  "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
+  "risk_score": 21,
+  "severity": "low",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "24h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1003.001",
+          "name": "LSASS Memory",
+          "reference": "https://attack.mitre.org/techniques/T1003.001/"
+        },
+        {
+          "id": "T1003",
+          "name": "OS Credential Dumping",
+          "reference": "https://attack.mitre.org/techniques/T1003/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:hunting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LSASS.yml"
+  ],
+  "meta": {
+    "tier": "hunting",
+    "fp_rate_estimate": "unknown"
+  }
+}

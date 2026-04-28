@@ -1,0 +1,52 @@
+{
+  "name": "DNS tunneling / TXT-heavy domain queries",
+  "description": "Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "c2",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1071.004",
+          "name": "DNS",
+          "reference": "https://attack.mitre.org/techniques/T1071.004/"
+        },
+        {
+          "id": "T1048.003",
+          "name": "Exfiltration Over Unencrypted Non-C2 Protocol",
+          "reference": "https://attack.mitre.org/techniques/T1048.003/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "c2"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_DNS_TUNNEL.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

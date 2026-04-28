@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_FAKECAPTCHA')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)",
+        "description": "Browser-pasted PowerShell launched from explorer/Run dialog \u2014 ClickFix social engineering.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"RuntimeBroker.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1204.004",
+          "T1059.001"
+        ],
+        "alertRuleTemplateName": "UC_FAKECAPTCHA",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_FAKECAPTCHA.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

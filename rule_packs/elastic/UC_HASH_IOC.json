@@ -1,0 +1,47 @@
+{
+  "name": "File hash IOCs \u2014 endpoint file/process match",
+  "description": "Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1027",
+          "name": "Obfuscated Files or Information",
+          "reference": "https://attack.mitre.org/techniques/T1027/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nunion DeviceFileEvents, DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_HASH_IOC.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

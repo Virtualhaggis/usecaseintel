@@ -1,0 +1,24 @@
+title: User clicked through a Safe Links warning page
+id: UC_PHISH_LINK_BYPASS
+status: experimental
+description: Microsoft Safe Links rendered a warning page for a URL and the user
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_BYPASS.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.hunting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1566_002
+  - attack.t1204_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'ClickedThrough'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: low

@@ -1,0 +1,39 @@
+title: Click on URL whose host doesn't match the sender domain
+id: UC_PHISH_LINK_NEWDOMAIN
+status: experimental
+description: User clicked an inbound-email URL where the URL host is unrelated to
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_NEWDOMAIN.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1566_002
+  - attack.t1204_001
+  - attack.t1583_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'mailchimp.com'
+      - 'sendgrid.net'
+      - 'sendgrid.com'
+      - 'constantcontact.com'
+      - 'hubspotlinks.com'
+      - 'hubspot.com'
+      - 'mktoresp.com'
+      - 'marketo.com'
+      - 'pardot.com'
+      - 'exacttarget.com'
+      - 'klaviyomail.com'
+      - 'list-manage.com'
+      - 'createsend1.com'
+      - 'createsend.com'
+      - 'sg.actblue.com'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

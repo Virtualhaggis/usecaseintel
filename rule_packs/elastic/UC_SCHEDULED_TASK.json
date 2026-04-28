@@ -1,0 +1,47 @@
+{
+  "name": "Scheduled task created with suspicious image / encoded args",
+  "description": "schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.",
+  "risk_score": 21,
+  "severity": "low",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "24h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1053.005",
+          "name": "Scheduled Task",
+          "reference": "https://attack.mitre.org/techniques/T1053.005/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:hunting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_SCHEDULED_TASK.yml"
+  ],
+  "meta": {
+    "tier": "hunting",
+    "fp_rate_estimate": "unknown"
+  }
+}

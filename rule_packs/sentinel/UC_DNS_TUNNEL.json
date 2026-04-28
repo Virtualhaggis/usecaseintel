@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_DNS_TUNNEL')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "DNS tunneling / TXT-heavy domain queries",
+        "description": "Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1071.004",
+          "T1048.003"
+        ],
+        "alertRuleTemplateName": "UC_DNS_TUNNEL",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_DNS_TUNNEL.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

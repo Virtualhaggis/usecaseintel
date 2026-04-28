@@ -1,0 +1,47 @@
+{
+  "name": "RMM tool installed by non-IT user \u2014 remote-access utility for hands-on-keyboard",
+  "description": "ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1219",
+          "name": "Remote Access Software",
+          "reference": "https://attack.mitre.org/techniques/T1219/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\")\n   or FileName matches regex @\"(?i)kaseya.*\\.exe\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_RMM_TOOLS.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

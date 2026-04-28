@@ -1,0 +1,52 @@
+{
+  "name": "User clicked through a Safe Links warning page",
+  "description": "Microsoft Safe Links rendered a warning page for a URL and the user\nclicked past it anyway (ActionType=ClickedThrough). This is an\nexplicit user-override of a defender control \u2014 by definition rare and\nhigh-signal. Investigate every hit; the URL was flagged for a reason.",
+  "risk_score": 21,
+  "severity": "low",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "24h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "delivery",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1566.002",
+          "name": "Spearphishing Link",
+          "reference": "https://attack.mitre.org/techniques/T1566.002/"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link",
+          "reference": "https://attack.mitre.org/techniques/T1204.001/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:hunting",
+    "delivery"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\n// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare \u2014\n// every hit deserves analyst review.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_BYPASS.yml"
+  ],
+  "meta": {
+    "tier": "hunting",
+    "fp_rate_estimate": "unknown"
+  }
+}

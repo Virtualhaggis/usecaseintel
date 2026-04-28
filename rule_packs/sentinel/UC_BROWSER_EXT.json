@@ -1,0 +1,38 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_BROWSER_EXT')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Suspicious browser extension installation",
+        "description": "Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.",
+        "severity": "Low",
+        "enabled": false,
+        "query": "DeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where RegistryKey has_any (\"\\Software\\Google\\Chrome\\Extensions\\\",\"\\Software\\Microsoft\\Edge\\Extensions\\\",\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessAccountName",
+        "queryFrequency": "PT1D",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1176"
+        ],
+        "alertRuleTemplateName": "UC_BROWSER_EXT",
+        "customDetails": {
+          "tier": "hunting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_BROWSER_EXT.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

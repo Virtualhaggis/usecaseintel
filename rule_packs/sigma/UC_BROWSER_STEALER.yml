@@ -1,0 +1,32 @@
+title: Infostealer — non-browser process accessing browser cookie/login DBs
+id: UC_BROWSER_STEALER
+status: experimental
+description: Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_BROWSER_STEALER.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1539
+  - attack.t1555_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'chrome.exe'
+      - 'msedge.exe'
+      - 'firefox.exe'
+      - 'brave.exe'
+      - 'opera.exe'
+      - '\\Mozilla\\Firefox\\Profiles\\'
+      - 'Cookies'
+      - 'logins.json'
+      - 'cookies.sqlite'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

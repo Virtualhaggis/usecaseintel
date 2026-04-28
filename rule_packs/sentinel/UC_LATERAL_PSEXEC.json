@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_LATERAL_PSEXEC')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Remote service execution \u2014 PsExec / SMB lateral movement",
+        "description": "psexec / paexec / smbexec / wmic /node \u2014 service install over SMB from remote host.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n   or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1021.002",
+          "T1569.002"
+        ],
+        "alertRuleTemplateName": "UC_LATERAL_PSEXEC",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LATERAL_PSEXEC.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

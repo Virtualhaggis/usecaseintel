@@ -1,0 +1,31 @@
+title: RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+id: UC_RMM_TOOLS
+status: experimental
+description: ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_RMM_TOOLS.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1219
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'AnyDesk.exe'
+      - 'TeamViewer.exe'
+      - 'TeamViewer_Service.exe'
+      - 'ScreenConnect.ClientService.exe'
+      - 'ConnectWiseControl.ClientService.exe'
+      - 'atera_agent.exe'
+      - 'SplashtopStreamer.exe'
+      - 'RustDesk.exe'
+      - 'NinjaOne.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,25 @@
+title: Suspicious browser extension installation
+id: UC_BROWSER_EXT
+status: experimental
+description: Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_BROWSER_EXT.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.hunting
+  - usecaseintel.kill_chain.install
+  - attack.t1176
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - '\\Software\\Google\\Chrome\\Extensions\\'
+      - '\\Software\\Microsoft\\Edge\\Extensions\\'
+      - '\\Software\\Mozilla\\Firefox\\Extensions\\'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: low

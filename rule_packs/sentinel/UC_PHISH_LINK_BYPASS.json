@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_PHISH_LINK_BYPASS')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "User clicked through a Safe Links warning page",
+        "description": "Microsoft Safe Links rendered a warning page for a URL and the user\nclicked past it anyway (ActionType=ClickedThrough). This is an\nexplicit user-override of a defender control \u2014 by definition rare and\nhigh-signal. Investigate every hit; the URL was flagged for a reason.",
+        "severity": "Low",
+        "enabled": false,
+        "query": "// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare \u2014\n// every hit deserves analyst review.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc",
+        "queryFrequency": "PT1D",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1566.002",
+          "T1204.001"
+        ],
+        "alertRuleTemplateName": "UC_PHISH_LINK_BYPASS",
+        "customDetails": {
+          "tier": "hunting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_BYPASS.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

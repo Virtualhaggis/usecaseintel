@@ -1,0 +1,34 @@
+title: Email attachment opened from external sender
+id: UC_PHISH_ATTACH
+status: experimental
+description: Attachment delivery + execution by recipient — most common malware initial access.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_ATTACH.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1566_001
+  - attack.t1204_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'OUTLOOK.EXE'
+      - 'winword.exe'
+      - 'excel.exe'
+      - 'powerpnt.exe'
+      - 'cmd.exe'
+      - 'powershell.exe'
+      - 'wscript.exe'
+      - 'cscript.exe'
+      - 'mshta.exe'
+      - 'rundll32.exe'
+      - 'regsvr32.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

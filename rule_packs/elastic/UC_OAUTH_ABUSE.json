@@ -1,0 +1,52 @@
+{
+  "name": "OAuth consent / suspicious app grant",
+  "description": "Cloud identity abuse: app gets high-priv scopes, often via consent phishing.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1528",
+          "name": "Steal Application Access Token",
+          "reference": "https://attack.mitre.org/techniques/T1528/"
+        },
+        {
+          "id": "T1098.001",
+          "name": "Account Manipulation: Additional Cloud Credentials",
+          "reference": "https://attack.mitre.org/techniques/T1098.001/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nCloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_OAUTH_ABUSE.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "unknown"
+  }
+}

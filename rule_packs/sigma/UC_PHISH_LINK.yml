@@ -1,0 +1,39 @@
+title: Phishing-link click correlated to endpoint execution
+id: UC_PHISH_LINK
+status: experimental
+description: User received an external email containing a URL, clicked it, and within
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1566_002
+  - attack.t1204_001
+  - attack.t1059_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'allowed'
+      - 'delivered'
+      - 'true'
+      - 'chrome.exe'
+      - 'msedge.exe'
+      - 'firefox.exe'
+      - 'outlook.exe'
+      - 'brave.exe'
+      - 'arc.exe'
+      - 'powershell.exe'
+      - 'pwsh.exe'
+      - 'cmd.exe'
+      - 'mshta.exe'
+      - 'rundll32.exe'
+      - 'regsvr32.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

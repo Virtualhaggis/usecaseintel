@@ -1,0 +1,28 @@
+title: Remote service execution — PsExec / SMB lateral movement
+id: UC_LATERAL_PSEXEC
+status: experimental
+description: psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LATERAL_PSEXEC.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1021_002
+  - attack.t1569_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'psexec.exe'
+      - 'psexesvc.exe'
+      - 'paexec.exe'
+      - 'smbexec.py'
+      - 'wmic.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

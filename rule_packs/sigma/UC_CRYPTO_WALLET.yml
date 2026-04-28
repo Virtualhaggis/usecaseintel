@@ -1,0 +1,34 @@
+title: Crypto-wallet file/keystore access by non-wallet process
+id: UC_CRYPTO_WALLET
+status: experimental
+description: Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_CRYPTO_WALLET.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1005
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'MetaMask.exe'
+      - 'Exodus.exe'
+      - 'Atomic.exe'
+      - 'electrum.exe'
+      - 'Bitcoin.exe'
+      - 'Phantom.exe'
+      - '\\Ethereum\\keystore\\'
+      - '\\Bitcoin\\'
+      - '\\Exodus\\'
+      - '\\Electrum\\wallets\\'
+      - '\\MetaMask\\'
+      - '\\Phantom\\'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,39 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_BEACONING')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Beaconing \u2014 periodic outbound to small set of destinations",
+        "description": "C2 channel detection via inter-beacon-time stddev / fan-out to single dest.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP, RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1071.001",
+          "T1071.004"
+        ],
+        "alertRuleTemplateName": "UC_BEACONING",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_BEACONING.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

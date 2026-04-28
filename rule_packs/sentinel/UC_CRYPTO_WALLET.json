@@ -1,0 +1,38 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_CRYPTO_WALLET')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "Crypto-wallet file/keystore access by non-wallet process",
+        "description": "Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.",
+        "severity": "High",
+        "enabled": false,
+        "query": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Ethereum\\keystore\\\",\"\\Bitcoin\\\",\"\\Exodus\\\",\"\\Electrum\\wallets\\\",\"\\MetaMask\\\",\"\\Phantom\\\",\"\\Atomic\\Local Storage\\\")\n| where InitiatingProcessFileName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1005"
+        ],
+        "alertRuleTemplateName": "UC_CRYPTO_WALLET",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "unknown",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_CRYPTO_WALLET.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

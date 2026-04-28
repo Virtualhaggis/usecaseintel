@@ -1,0 +1,26 @@
+title: Ransomware-style mass file rename / extension change
+id: UC_RANSOM_ENCRYPT
+status: experimental
+description: Threshold detection: many files renamed in short window, often with new extension.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_RANSOM_ENCRYPT.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1486
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'modified'
+      - 'renamed'
+      - 'FileRenamed'
+      - 'FileModified'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high
