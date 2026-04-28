@@ -1884,6 +1884,76 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .intel-table .article-link:hover{text-decoration:underline;}
 .intel-empty{padding:40px; text-align:center; color:var(--muted-2);}
 
+/* ----- Intel "About this feed" expandable panel ---------------------- */
+details.intel-about{
+  background:linear-gradient(135deg, rgba(95,182,255,0.06), rgba(180,141,255,0.04));
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  margin-bottom:14px;
+  overflow:hidden;
+}
+details.intel-about[open]{
+  border-color:rgba(95,182,255,0.3);
+  background:var(--panel);
+}
+details.intel-about summary{
+  padding:14px 18px; cursor:pointer; list-style:none;
+  display:flex; align-items:center; gap:14px;
+}
+details.intel-about summary::-webkit-details-marker{display:none;}
+details.intel-about summary::after{
+  content:"▾"; color:var(--muted); font-size:14px; margin-left:auto;
+  transition:transform 0.2s;
+}
+details.intel-about[open] summary::after{transform:rotate(180deg);}
+.intel-about-title{font-weight:700; font-size:14px; color:var(--text);}
+.intel-about-sub{color:var(--muted); font-size:12px;}
+.intel-about-body{padding:0 24px 22px; line-height:1.55;}
+.intel-about-body h4{
+  margin:18px 0 8px; font-size:11px;
+  text-transform:uppercase; letter-spacing:0.08em; color:var(--accent-2);
+}
+.intel-mission{
+  margin:6px 0 18px;
+  padding:12px 16px;
+  border-left:3px solid var(--accent);
+  background:rgba(95,182,255,0.04);
+  border-radius:0 6px 6px 0;
+}
+.intel-sources{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:8px;}
+.intel-urls{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+  gap:6px; margin:8px 0 14px;}
+.intel-urls code{
+  display:block; padding:8px 10px;
+  background:var(--code-bg); border:1px solid var(--border); border-radius:6px;
+  font-size:11.5px; word-break:break-all;
+}
+.intel-urls code a{color:var(--accent); text-decoration:none;}
+.intel-urls code a:hover{text-decoration:underline;}
+table.intel-cols-doc{
+  width:100%; border-collapse:collapse; font-size:12px; margin-top:6px;
+}
+table.intel-cols-doc th{
+  text-align:left; padding:8px 10px;
+  background:var(--panel2); border-bottom:1px solid var(--border);
+  font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--muted);
+}
+table.intel-cols-doc td{
+  padding:8px 10px; border-bottom:1px solid var(--hairline);
+  vertical-align:top;
+}
+table.intel-cols-doc code{
+  background:var(--panel2); padding:2px 6px; border-radius:4px;
+  font-size:11px; color:var(--accent-3);
+}
+ul.intel-types-doc{padding-left:20px; margin:8px 0; font-size:13px;}
+ul.intel-types-doc li{margin:6px 0; line-height:1.55;}
+ul.intel-types-doc code{
+  background:var(--panel2); padding:1px 6px; border-radius:4px;
+  font-size:11px; color:var(--accent-3);
+}
+
 /* Drawer (slide-in from right) */
 .drawer-bg{
   position:fixed; inset:0; z-index:60;
@@ -2043,6 +2113,69 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 
 <div id="view-intel" class="view">
   <div class="matrix-wrap">
+    <details class="intel-about" id="intelAbout">
+      <summary>
+        <span class="intel-about-title">📡 About the Intel Feed</span>
+        <span class="intel-about-sub">Real intel from the best threat articles · click to expand</span>
+      </summary>
+      <div class="intel-about-body">
+        <p class="intel-mission">
+          <strong>Mission:</strong> Provide actionable, contextualised threat intelligence drawn from the day's
+          best security reporting — not a generic IOC firehose. Every indicator below has a story attached:
+          who reported it, when, and which malware/actor/campaign it relates to.
+        </p>
+
+        <h4>Sources</h4>
+        <div class="intel-sources">
+          <span class="source-badge thn">The Hacker News</span>
+          <span class="source-badge bc">BleepingComputer</span>
+          <span class="source-badge ms">Microsoft Security Blog</span>
+          <span class="source-badge kev">CISA KEV</span>
+          <span class="lg-note">refreshed daily · deduplicated across publications</span>
+        </div>
+
+        <h4>Pull the feed (always current)</h4>
+        <div class="intel-urls">
+          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.csv" target="_blank">intel/iocs.csv</a></code>
+          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.json" target="_blank">intel/iocs.json</a></code>
+          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.stix.json" target="_blank">intel/iocs.stix.json</a></code>
+          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/splunk_lookup_iocs.csv" target="_blank">splunk_lookup_iocs.csv</a></code>
+        </div>
+
+        <h4>What each column tells you</h4>
+        <table class="intel-cols-doc">
+          <tr><th>Column</th><th>What it means</th><th>What to do with it</th></tr>
+          <tr><td><code>value</code></td><td>The actual indicator (CVE-ID, IP, domain, hash)</td><td>Search your telemetry for matches</td></tr>
+          <tr><td><code>type</code></td><td><code>cve</code> · <code>ipv4</code> · <code>domain</code> · <code>sha256</code> · <code>sha1</code> · <code>md5</code></td><td>Routes you to the right SIEM data model / Defender table</td></tr>
+          <tr><td><code>severity</code></td><td><code>crit</code> / <code>high</code> / <code>med</code> / <code>low</code> — inherited from the article</td><td>Triage priority. <code>crit</code>+<code>high</code> get hunted today</td></tr>
+          <tr><td><code>sources</code></td><td>Publication(s) that reported the IOC</td><td>2+ sources = stronger consensus</td></tr>
+          <tr><td><code>first_seen</code></td><td>Earliest article publication date</td><td>Bounds your hunt window</td></tr>
+          <tr><td><code>article</code> link</td><td>Direct URL to the source article</td><td>Click for full context — TTPs, additional IOCs</td></tr>
+        </table>
+
+        <h4>What you're looking at — by IOC type</h4>
+        <ul class="intel-types-doc">
+          <li><strong>CVE</strong> — a vulnerability identifier; match against your scanner output. <code>Splunk: Vulnerabilities.signature</code> · <code>Defender: DeviceTvmSoftwareVulnerabilities.CveId</code></li>
+          <li><strong>IPv4</strong> — attacker-controlled C2/scanner IP. <code>Splunk: Network_Traffic.All_Traffic.dest</code> · <code>Defender: DeviceNetworkEvents.RemoteIP</code></li>
+          <li><strong>Domain</strong> — attacker hostname (C2/phishing/download). <code>Splunk: Network_Resolution.DNS.query</code> · <code>Defender: DeviceNetworkEvents.RemoteUrl</code></li>
+          <li><strong>SHA256 / SHA1 / MD5</strong> — malicious file hashes. <code>Splunk: Endpoint.Filesystem.file_hash</code> · <code>Defender: DeviceFileEvents.SHA256</code></li>
+        </ul>
+
+        <h4>Severity meaning</h4>
+        <ul class="intel-types-doc">
+          <li><span class="sev-pill crit">CRIT</span> — multiple sources + zero-day + active exploitation → page on-call</li>
+          <li><span class="sev-pill high">HIGH</span> — confirmed exploitation, named threat actor, or CISA KEV → hunt this shift</li>
+          <li><span class="sev-pill med">MED</span> — reported activity, malware family identified → weekly hunt queue</li>
+          <li><span class="sev-pill low">LOW</span> — background reporting → context only</li>
+        </ul>
+
+        <p class="lg-note" style="margin-top:14px;">
+          Full docs and integration examples (Splunk, Defender, MISP, OpenCTI, Sentinel TAXII): see
+          <a href="https://github.com/Virtualhaggis/usecaseintel/blob/main/intel/README.md" target="_blank" style="color:var(--accent);">intel/README.md on GitHub</a>.
+        </p>
+      </div>
+    </details>
+
     <div class="matrix-toolbar">
       <input type="text" id="intelSearch" placeholder="Search IOC value, article title, or context" autocomplete="off">
       <div class="intel-types" id="intelTypes">
