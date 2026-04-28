@@ -280,6 +280,9 @@ if _LOADED_UCS:
     # builder, validator, and renderer continue to work as before.
     for _uc_id, _uc in _LOADED_UCS.items():
         globals()[_uc_id] = _uc
+    # Drop the loop variables — otherwise the leftover `_uc` lingers in
+    # module globals and the matrix builder picks it up as an extra UseCase.
+    del _uc_id, _uc
     print(f"[*] Loaded {len(_LOADED_UCS)} use cases from {USE_CASES_DIR}")
     print(f"[*] Loaded {len(_LOADED_RULES)} rules from {RULES_DIR}")
 
@@ -1093,6 +1096,7 @@ RULES = [
 if _LOADED_UCS:
     for _uc_id, _uc in _LOADED_UCS.items():
         globals()[_uc_id] = _uc
+    del _uc_id, _uc
     if _LOADED_RULES:
         RULES = list(_LOADED_RULES)
 
@@ -1526,6 +1530,10 @@ article.card{
   font-size:15px; line-height:1.6;
   position:relative;
   box-shadow:var(--shadow-md);
+  /* Sticky header is ~90-110px tall (brand row + tabs row). Without this,
+     anchor jumps from the sidebar TOC scroll the article's top under the
+     header and crop the title / severity ribbon. */
+  scroll-margin-top:120px;
   transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
   transform-style:preserve-3d;
 }
@@ -1899,6 +1907,63 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .matrix-stats{display:flex; gap:18px; font-size:12px;}
 .matrix-stats span{color:var(--muted);}
 .matrix-stats span b{color:var(--text); font-variant-numeric:tabular-nums;}
+
+/* ----- Use Case Catalogue panel (Matrix tab) ------------------------- */
+.uc-catalogue{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
+  margin:0 0 16px 0; padding:14px 18px; box-shadow:var(--shadow-sm);
+}
+.uc-catalogue summary{
+  list-style:none; cursor:pointer;
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+}
+.uc-catalogue summary::-webkit-details-marker{display:none;}
+.uc-catalogue summary::before{
+  content:""; width:10px; height:10px; border-right:2px solid var(--muted);
+  border-bottom:2px solid var(--muted); transform:rotate(-45deg);
+  transition:transform 0.2s ease; margin-right:4px;
+}
+.uc-catalogue[open] summary::before{transform:rotate(45deg);}
+.uc-cat-title{font-size:14px; font-weight:600; color:var(--text);}
+.uc-cat-count{
+  font-size:11px; padding:3px 10px; border-radius:999px;
+  background:var(--panel2); color:var(--accent-3); font-variant-numeric:tabular-nums;
+  border:1px solid var(--border);
+}
+.uc-cat-hint{font-size:11.5px; color:var(--muted); margin-left:auto;}
+.uc-cat-grid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr));
+  gap:8px; margin-top:14px;
+}
+.uc-cat-card{
+  background:var(--panel-elev); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:10px 12px; cursor:pointer;
+  transition:all 0.15s; display:flex; flex-direction:column; gap:4px;
+}
+.uc-cat-card:hover{border-color:var(--accent); transform:translateY(-1px);}
+.uc-cat-card.on{
+  border-color:var(--accent); background:rgba(95,182,255,0.10);
+  box-shadow:0 0 0 1px var(--accent) inset;
+}
+.uc-cat-card .uc-cat-name{
+  font-size:12.5px; font-weight:600; color:var(--text);
+  font-family:var(--font-mono); letter-spacing:-0.01em;
+}
+.uc-cat-card .uc-cat-meta{
+  font-size:10.5px; color:var(--muted); display:flex; gap:8px; flex-wrap:wrap;
+}
+.uc-cat-card .uc-cat-meta b{color:var(--accent-3); font-weight:600;}
+.uc-cat-card .uc-cat-techs{
+  font-size:10px; color:var(--muted-2); font-family:var(--font-mono);
+  margin-top:2px;
+}
+/* Highlight mapped technique cells when a UC is pinned */
+.tech-cell.uc-highlight{
+  outline:2px solid var(--accent);
+  outline-offset:-2px;
+  background:linear-gradient(180deg, rgba(95,182,255,0.22), rgba(95,182,255,0.08)) !important;
+  z-index:1;
+}
 .matrix-mode{display:flex; gap:4px;
   padding:3px; background:var(--bg); border:1px solid var(--border);
   border-radius:var(--r-sm);}
@@ -2243,6 +2308,14 @@ ul.intel-types-doc code{
         <span class="lg-note">click any cell for the full drawer</span>
       </div>
     </div>
+    <details class="uc-catalogue" id="ucCatalogue" open>
+      <summary>
+        <span class="uc-cat-title">Use Case Catalogue</span>
+        <span class="uc-cat-count" id="ucCatCount">0 use cases</span>
+        <span class="uc-cat-hint">Click a use case to highlight every technique it maps to. Click again to clear.</span>
+      </summary>
+      <div class="uc-cat-grid" id="ucCatGrid"></div>
+    </details>
     <div class="matrix-grid" id="matrixGrid"></div>
   </div>
 </div>
@@ -2438,7 +2511,13 @@ document.addEventListener('click', e => {
 // ----- Active nav highlighting on scroll ------------------------------
 const navItems = document.querySelectorAll('#navlist .nav-item');
 const cards = document.querySelectorAll('article.card');
+// During programmatic scroll (nav click) the IntersectionObserver fires for
+// every article the viewport passes through, which lands the "active" state
+// on the next short card. Suspend the observer briefly during click-driven
+// scrolls so the explicit click always wins.
+let scrollLockUntil = 0;
 const observer = new IntersectionObserver(entries => {
+  if (Date.now() < scrollLockUntil) return;
   entries.forEach(en => {
     if (en.isIntersecting) {
       navItems.forEach(n => n.classList.remove('active'));
@@ -2453,7 +2532,14 @@ cards.forEach(c => observer.observe(c));
 navItems.forEach(item => {
   item.addEventListener('click', () => {
     const id = item.dataset.jump;
-    document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+    const target = document.getElementById(id);
+    if (!target) return;
+    // Set the active state immediately and lock the observer for ~700ms
+    // so the smooth-scroll animation can't re-flip it to the next card.
+    navItems.forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    scrollLockUntil = Date.now() + 700;
+    target.scrollIntoView({behavior:'smooth', block:'start'});
   });
 });
 
@@ -2734,6 +2820,62 @@ function renderMatrix() {
     `<span><b>${MATRIX.stats.total_subs}</b> sub-techniques</span>` +
     `<span><b>${MATRIX.stats.covered_techs}</b> covered</span>` +
     `<span><b>${MATRIX.stats.ucs}</b> use cases</span>`;
+
+  renderUcCatalogue();
+}
+
+// ----- Use Case Catalogue panel -------------------------------------
+let pinnedUcIdx = null;
+function renderUcCatalogue() {
+  const grid = document.getElementById('ucCatGrid');
+  const count = document.getElementById('ucCatCount');
+  if (!grid || !MATRIX) return;
+  count.textContent = `${MATRIX.ucs.length.toLocaleString()} use cases`;
+  // Sort: internal UCs first (alphabetical), then ESCU detections (alphabetical)
+  const ucs = MATRIX.ucs.slice().sort((a, b) => {
+    if (a.src !== b.src) return a.src === 'internal' ? -1 : 1;
+    return (a.t || a.n).localeCompare(b.t || b.n);
+  });
+  const html = ucs.map(uc => {
+    const techStr = (uc.techs || []).slice(0, 5).join(', ') +
+                    ((uc.techs || []).length > 5 ? ` (+${uc.techs.length - 5})` : '');
+    const srcLabel = uc.src === 'escu' ? 'Splunk ESCU' : 'Internal';
+    return `<div class="uc-cat-card" data-uc-idx="${uc.i}" title="${escapeHtml(uc.t)}">
+      <div class="uc-cat-name">${escapeHtml(uc.n)}</div>
+      <div class="uc-cat-meta">
+        <span><b>${uc.techs.length}</b> tech${uc.techs.length === 1 ? '' : 's'}</span>
+        <span>${escapeHtml(uc.ph || '-')}</span>
+        <span style="margin-left:auto;color:var(--muted-2);">${srcLabel}</span>
+      </div>
+      <div class="uc-cat-techs">${escapeHtml(techStr)}</div>
+    </div>`;
+  }).join('');
+  grid.innerHTML = html;
+  // Wire clicks: click to pin (highlight every mapped technique cell), click again to unpin
+  grid.querySelectorAll('.uc-cat-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const idx = parseInt(card.dataset.ucIdx, 10);
+      if (pinnedUcIdx === idx) {
+        // unpin
+        pinnedUcIdx = null;
+        grid.querySelectorAll('.uc-cat-card.on').forEach(c => c.classList.remove('on'));
+        document.querySelectorAll('#matrixGrid .uc-highlight').forEach(c => c.classList.remove('uc-highlight'));
+        return;
+      }
+      pinnedUcIdx = idx;
+      grid.querySelectorAll('.uc-cat-card.on').forEach(c => c.classList.remove('on'));
+      card.classList.add('on');
+      document.querySelectorAll('#matrixGrid .uc-highlight').forEach(c => c.classList.remove('uc-highlight'));
+      const uc = MATRIX.ucs[idx];
+      (uc.techs || []).forEach(tid => {
+        document.querySelectorAll(`#matrixGrid .tech-cell[data-tid="${tid}"]`)
+          .forEach(c => c.classList.add('uc-highlight'));
+      });
+      // scroll the first highlighted cell into view
+      const firstCell = document.querySelector('#matrixGrid .uc-highlight');
+      if (firstCell) firstCell.scrollIntoView({behavior:'smooth', block:'center'});
+    });
+  });
 }
 
 // Mode toggle
@@ -3426,12 +3568,58 @@ def build_matrix_data(articles_meta):
             "t": uc.title,
             "conf": uc.confidence,
             "ph": uc.kill_chain,
+            "src": "internal",
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
         })
         for tid in uc_techs:
             if tid in technique_view:
                 tech_ucs.setdefault(tid, []).append(idx)
+
+    # 2b. Pull synced ESCU detections (Splunk Security Content) into the matrix.
+    #     Each is a use case mapped to MITRE techniques. This brings the matrix
+    #     from ~24 hand-built UCs to thousands of reference detections.
+    escu_list = reg.get("escu_detections") or []
+    escu_added = 0
+    for det in escu_list:
+        tech_ids = []
+        for t in (det.get("techniques") or []):
+            tid = t.get("id") if isinstance(t, dict) else t
+            if tid and tid in technique_view:
+                tech_ids.append(tid)
+        if not tech_ids:
+            continue
+        idx = len(uc_records)
+        det_id = det.get("id") or f"escu_{idx}"
+        # First kill_chain_phase if available (Splunk uses MITRE phase names)
+        phases = det.get("kill_chain_phases") or []
+        ph = phases[0] if phases else ""
+        # Map MITRE phase short-names to our 7-stage kill-chain buckets
+        ph_map = {
+            "reconnaissance":"recon", "resource-development":"recon",
+            "initial-access":"delivery", "execution":"exploit",
+            "persistence":"install", "privilege-escalation":"install",
+            "defense-evasion":"install", "credential-access":"actions",
+            "discovery":"actions", "lateral-movement":"actions",
+            "collection":"actions", "exfiltration":"actions",
+            "command-and-control":"c2", "impact":"actions",
+        }
+        ph_short = ph_map.get(ph.lower() if ph else "", "actions")
+        uc_records.append({
+            "i": idx,
+            "n": det_id[:36],
+            "t": det.get("name", det_id)[:140],
+            "conf": det.get("type", "Detection"),
+            "ph": ph_short,
+            "src": "escu",
+            "techs": tech_ids,
+            "arts": [],
+        })
+        for tid in tech_ids:
+            tech_ucs.setdefault(tid, []).append(idx)
+        escu_added += 1
+    if escu_added:
+        print(f"[*] Matrix: added {escu_added} ESCU detections from registry")
 
     # Walk current articles, register article->technique and article->UC links
     for a in articles_meta:
