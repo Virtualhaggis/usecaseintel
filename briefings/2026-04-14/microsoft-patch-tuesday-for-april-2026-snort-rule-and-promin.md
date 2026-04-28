@@ -1,0 +1,87 @@
+# [HIGH] Microsoft Patch Tuesday for April 2026 - Snort Rule and Prominent Vulnerabilities
+
+**Source:** Cisco Talos
+**Published:** 2026-04-14
+**Article:** https://blog.talosintelligence.com/microsoft-patch-tuesday-april-2026/
+
+## Threat Profile
+
+Microsoft Patch Tuesday for April 2026 - Snort Rule and Prominent Vulnerabilities 
+By 
+Nick Biasini 
+Tuesday, April 14, 2026 16:27
+Patch Tuesday
+Microsoft has released its monthly security update for April 2026, which includes 165 vulnerabilities affecting a wide range of products, including eight Microsoft marked as “critical.” 
+CVE-2026-23666 is a critical Denial of Service (DoS) vulnerability that affects the .NET framework. Successful exploitation could allow the attacker to deny service ove…
+
+## Indicators of Compromise (high-fidelity only)
+
+- **CVE:** `CVE-2026-23666`
+- **CVE:** `CVE-2026-32157`
+- **CVE:** `CVE-2026-32190`
+- **CVE:** `CVE-2026-33114`
+- **CVE:** `CVE-2026-33115`
+- **CVE:** `CVE-2026-33824`
+- **CVE:** `CVE-2026-33826`
+- **CVE:** `CVE-2026-33827`
+- **CVE:** `CVE-2026-32201`
+- **CVE:** `CVE-2026-0390`
+- **CVE:** `CVE-2026-26151`
+- **CVE:** `CVE-2026-26169`
+- **CVE:** `CVE-2026-26173`
+- **CVE:** `CVE-2026-26177`
+- **CVE:** `CVE-2026-26182`
+- **CVE:** `CVE-2026-27906`
+- **CVE:** `CVE-2026-27908`
+- **CVE:** `CVE-2026-27909`
+- **CVE:** `CVE-2026-27913`
+- **CVE:** `CVE-2026-27914`
+- **CVE:** `CVE-2026-27921`
+- **CVE:** `CVE-2026-27922`
+- **CVE:** `CVE-2026-32070`
+- **CVE:** `CVE-2026-32075`
+- **CVE:** `CVE-2026-32093`
+- **CVE:** `CVE-2026-32152`
+- **CVE:** `CVE-2026-32154`
+- **CVE:** `CVE-2026-32155`
+- **CVE:** `CVE-2026-32162`
+- **CVE:** `CVE-2026-32202`
+- **CVE:** `CVE-2026-32225`
+- **CVE:** `CVE-2026-33825`
+
+## MITRE ATT&CK Techniques
+
+- **T1190** — Exploit Public-Facing Application
+
+## Kill chain phases observed
+
+_(none detected from narrative keywords)_
+
+## Recommended hunts
+
+### Asset exposure — vulnerability matches article CVE(s)
+
+`_uc` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN ("CVE-2026-23666", "CVE-2026-32157", "CVE-2026-32190", "CVE-2026-33114", "CVE-2026-33115", "CVE-2026-33824", "CVE-2026-33826", "CVE-2026-33827", "CVE-2026-32201", "CVE-2026-0390", "CVE-2026-26151", "CVE-2026-26169", "CVE-2026-26173", "CVE-2026-26177", "CVE-2026-26182", "CVE-2026-27906", "CVE-2026-27908", "CVE-2026-27909", "CVE-2026-27913", "CVE-2026-27914", "CVE-2026-27921", "CVE-2026-27922", "CVE-2026-32070", "CVE-2026-32075", "CVE-2026-32093", "CVE-2026-32152", "CVE-2026-32154", "CVE-2026-32155", "CVE-2026-32162", "CVE-2026-32202", "CVE-2026-32225", "CVE-2026-33825")
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ ("CVE-2026-23666", "CVE-2026-32157", "CVE-2026-32190", "CVE-2026-33114", "CVE-2026-33115", "CVE-2026-33824", "CVE-2026-33826", "CVE-2026-33827", "CVE-2026-32201", "CVE-2026-0390", "CVE-2026-26151", "CVE-2026-26169", "CVE-2026-26173", "CVE-2026-26177", "CVE-2026-26182", "CVE-2026-27906", "CVE-2026-27908", "CVE-2026-27909", "CVE-2026-27913", "CVE-2026-27914", "CVE-2026-27921", "CVE-2026-27922", "CVE-2026-32070", "CVE-2026-32075", "CVE-2026-32093", "CVE-2026-32152", "CVE-2026-32154", "CVE-2026-32155", "CVE-2026-32162", "CVE-2026-32202", "CVE-2026-32225", "CVE-2026-33825")
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+```
+
+
+## Why this matters
+
+Severity classified as **HIGH** based on: CVE present, 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

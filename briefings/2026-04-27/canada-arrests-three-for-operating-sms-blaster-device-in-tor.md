@@ -1,4 +1,4 @@
-# [MED] Canada arrests three for operating “SMS blaster” device in Toronto
+# [HIGH] Canada arrests three for operating “SMS blaster” device in Toronto
 
 **Source:** BleepingComputer
 **Published:** 2026-04-27
@@ -6,7 +6,14 @@
 
 ## Threat Profile
 
-Canadian authorities have arrested three men for operating an "SMS blaster" device that pretends to be a cellular tower to send phishing texts to nearby phones. [...]
+Canada arrests three for operating “SMS blaster” device in Toronto 
+By Bill Toulas 
+April 27, 2026
+04:00 PM
+0 
+Canadian authorities have arrested three men for operating an "SMS blaster" device that pretends to be a cellular tower to send phishing texts to nearby phones.
+Such tools trick devices into connecting to them by emitting signals that mimic a legitimate tower. Mobile phones in its range automatically link to them as there is stronger reception.
+Once the connection is established, the op…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -14,6 +21,7 @@ Canadian authorities have arrested three men for operating an "SMS blaster" devi
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1566.001** — Spearphishing Attachment
@@ -27,6 +35,28 @@ Canadian authorities have arrested three men for operating an "SMS blaster" devi
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Asset exposure — vulnerability matches article CVE(s)
+
+`_uc` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN ("-")
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ ("-")
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+```
 
 ### Suspicious URL click in email — phishing landing page
 
@@ -136,4 +166,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

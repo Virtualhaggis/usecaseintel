@@ -1,4 +1,4 @@
-# [LOW] Webinar: Spotting cyberattacks before they begin
+# [MED] Webinar: Spotting cyberattacks before they begin
 
 **Source:** BleepingComputer
 **Published:** 2026-04-27
@@ -6,7 +6,14 @@
 
 ## Threat Profile
 
-On Thursday, April 30 at 2:00 PM ET, BleepingComputer will host a live webinar with threat intelligence company Flare and threat intelligence researcher Tammy Harper, exploring how security teams can identify early warning signs of attacks before they escalate into incidents. [...]
+Webinar: Spotting cyberattacks before they begin 
+By BleepingComputer 
+April 27, 2026
+10:25 AM
+0 
+Many cyberattacks don’t start with exploitation, they start with signals that are commonly overlooked.
+On Thursday, April 30 at 2:00 PM ET , BleepingComputer will host a live webinar with cybersecurity company Flare and threat intelligence researcher Tammy Harper, exploring how security teams can identify early warning signs of attacks before they escalate into incidents.
+Threat actors may sometimes…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -14,7 +21,7 @@ On Thursday, April 30 at 2:00 PM ET, BleepingComputer will host a live webinar w
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -22,9 +29,29 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### Asset exposure — vulnerability matches article CVE(s)
+
+`_uc` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN ("-")
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ ("-")
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+```
 
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

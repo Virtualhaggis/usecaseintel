@@ -1,4 +1,4 @@
-# [LOW] Medtronic confirms breach after hackers claim 9 million records theft
+# [MED] Medtronic confirms breach after hackers claim 9 million records theft
 
 **Source:** BleepingComputer
 **Published:** 2026-04-27
@@ -6,7 +6,14 @@
 
 ## Threat Profile
 
-Medical device giant Medtronic disclosed last week that hackers breached its network and accessed data in "certain corporate IT systems." [...]
+Medtronic confirms breach after hackers claim 9 million records theft 
+By Bill Toulas 
+April 27, 2026
+09:50 AM
+0 
+Medical device giant Medtronic disclosed last week that hackers breached its network and accessed data in “certain corporate IT systems.”
+The confirmation comes after the infamous data extortion group ‘ShinyHunters’ claimed the intrusion and the theft of more than 9 million records from the company.
+Medtronic is an international medical equipment giant with 90,000 employees and opera…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -14,7 +21,7 @@ Medical device giant Medtronic disclosed last week that hackers breached its net
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -22,9 +29,29 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### Asset exposure — vulnerability matches article CVE(s)
+
+`_uc` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN ("-")
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ ("-")
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+```
 
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

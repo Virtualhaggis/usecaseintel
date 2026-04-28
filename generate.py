@@ -16,9 +16,12 @@ Output: a single self-contained `index.html`.
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import html
+import os
 import re
 import sys
+import time
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -29,12 +32,26 @@ LOOKBACK_DAYS = 180       # 6-month rolling window
 MAX_PER_SOURCE = 500      # safety cap per source per run
 
 SOURCES = [
+    # News-style sources — broad coverage, light on IOC tables.
     {"name": "The Hacker News",        "kind": "rss",
      "url":  "https://feeds.feedburner.com/TheHackersNews"},
     {"name": "BleepingComputer",        "kind": "rss",
      "url":  "https://www.bleepingcomputer.com/feed/"},
     {"name": "Microsoft Security Blog", "kind": "rss",
      "url":  "https://www.microsoft.com/en-us/security/blog/feed/"},
+    # Vendor research blogs — heavy IOC content (hashes, defanged IPs, domains
+    # in the article body). These are the primary feeders of the IOC export.
+    {"name": "Cisco Talos",             "kind": "rss",
+     "url":  "https://blog.talosintelligence.com/rss/"},
+    {"name": "Securelist (Kaspersky)",  "kind": "rss",
+     "url":  "https://securelist.com/feed/"},
+    {"name": "SentinelLabs",            "kind": "rss",
+     "url":  "https://www.sentinelone.com/labs/feed/"},
+    {"name": "Unit 42 (Palo Alto)",     "kind": "rss",
+     "url":  "https://unit42.paloaltonetworks.com/feed/"},
+    {"name": "ESET WeLiveSecurity",     "kind": "rss",
+     "url":  "https://www.welivesecurity.com/en/rss/feed/"},
+    # Authoritative exploited-vuln feed.
     {"name": "CISA KEV",                "kind": "kev",
      "url":  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"},
 ]
@@ -3801,9 +3818,13 @@ Severity classified as **{sev.upper()}** based on: {('CVE present, ' if ind.get(
 """
 
 
+CURATED_MARKER = "<!-- curated:true -->"
+
+
 def write_briefings(articles_meta, articles_raw_index):
     BRIEFINGS_DIR.mkdir(exist_ok=True)
     written = []
+    skipped_curated = 0
     for am in articles_meta:
         a = articles_raw_index.get(am["id"])
         if not a:
@@ -3816,6 +3837,17 @@ def write_briefings(articles_meta, articles_raw_index):
         day_dir.mkdir(parents=True, exist_ok=True)
         slug = _slug(am["title"])
         path = day_dir / f"{slug}.md"
+
+        # If the briefing exists and is marked curated by an analyst, leave it alone.
+        if path.exists():
+            try:
+                head = path.read_text(encoding="utf-8")[:500]
+                if CURATED_MARKER in head:
+                    skipped_curated += 1
+                    written.append(path)
+                    continue
+            except Exception:
+                pass
 
         if (am.get("sources") or [a.get("source", "")])[0] == "CISA KEV":
             md = _kev_briefing(a, ind, [u for _, u in am.get("ucs", [])])
@@ -3842,6 +3874,8 @@ def write_briefings(articles_meta, articles_raw_index):
         for p in sorted(by_day[day]):
             idx_lines.append(f"- [{p.stem.replace('-', ' ')}](./{day}/{p.name})")
     (BRIEFINGS_DIR / "INDEX.md").write_text("\n".join(idx_lines), encoding="utf-8")
+    if skipped_curated:
+        print(f"    {skipped_curated} curated briefings preserved (analyst-edited)")
     return written
 
 
@@ -3868,24 +3902,172 @@ def _parse_published(entry):
         return None
 
 
+# --- Full article body fetching (so IOC extraction sees more than the RSS preview) ---
+ARTICLE_CACHE_DIR = Path(__file__).parent / "intel" / ".article_cache"
+FETCH_FULL_BODY = os.environ.get("THN_FETCH_FULL_BODY", "1") not in ("0", "false", "no", "")
+FETCH_DELAY_SEC = float(os.environ.get("THN_FETCH_DELAY", "1.2"))
+FETCH_TIMEOUT_SEC = 25
+FETCH_USER_AGENT = (
+    "Mozilla/5.0 (compatible; usecaseintel-bot/1.0; "
+    "+https://github.com/Virtualhaggis/usecaseintel) IOC-extractor"
+)
+
+# Tags whose content is noise for IOC extraction. Stripped before regex matching.
+_NOISE_TAG_RE = re.compile(
+    r"<(script|style|nav|header|footer|aside|form|button|svg|noscript)\b[^>]*>"
+    r".*?</\1>",
+    re.IGNORECASE | re.DOTALL,
+)
+# Inline elements / class hints that frame ads, comments, related-stories blocks.
+_NOISE_BLOCK_RE = re.compile(
+    r"<(div|section|aside)\b[^>]*"
+    r"class=\"[^\"]*"
+    r"(comment|related|advert|sidebar|share|social|newsletter|subscribe|popup|modal|cookie)"
+    r"[^\"]*\"[^>]*>.*?</\1>",
+    re.IGNORECASE | re.DOTALL,
+)
+
+
+def _cache_path_for(url: str) -> Path:
+    h = hashlib.sha1(url.encode("utf-8", errors="replace")).hexdigest()
+    return ARTICLE_CACHE_DIR / f"{h[:2]}" / f"{h}.html"
+
+
+def _extract_main_html(html_doc: str) -> str:
+    """Find the most-likely article-body region.
+
+    Heuristic order — pick the LONGEST candidate above the threshold so
+    sites that wrap only their header in <article> (Microsoft Security
+    Blog) don't lose the body. Falls through to the whole doc if no
+    container is large enough — IOC extraction is conservative anyway
+    (regex-only or defanged-only), so noise tolerance is acceptable.
+    """
+    if not html_doc:
+        return ""
+    THRESHOLD = 2000
+    candidates = []
+    # 1. <article> tags — collect ALL, not just first.
+    for m in re.finditer(r"<article\b[^>]*>(.*?)</article>", html_doc, re.IGNORECASE | re.DOTALL):
+        candidates.append(m.group(1))
+    # 2. common article-body class / id hints (THN, BC, Microsoft, etc.)
+    body_class_re = re.compile(
+        r"<(div|section|main)\b[^>]*"
+        r"(?:class|id)=\"[^\"]*"
+        r"(post-body|entry-content|articleBody|article-body|article__body|post__content|"
+        r"post-content|article-content|story-content|content-body|articletext|"
+        r"single-article|single-post|main-content|story-body|c-richtext|"
+        r"rich-text|blog-post-content|wp-block-post-content)"
+        r"[^\"]*\"[^>]*>(.*?)</\1>",
+        re.IGNORECASE | re.DOTALL,
+    )
+    for m in body_class_re.finditer(html_doc):
+        candidates.append(m.group(3))
+    # 3. <main>
+    m = re.search(r"<main\b[^>]*>(.*?)</main>", html_doc, re.IGNORECASE | re.DOTALL)
+    if m:
+        candidates.append(m.group(1))
+    # Pick the longest candidate above threshold; otherwise fall back to whole doc.
+    candidates = [c for c in candidates if len(c) > THRESHOLD]
+    if candidates:
+        return max(candidates, key=len)
+    return html_doc
+
+
+def _html_to_text_for_iocs(html_doc: str) -> str:
+    """Convert article HTML to plain text suitable for IOC extraction.
+
+    Preserves the textual content of <code>, <pre>, and table cells (where
+    hashes / IPs / domains typically live in vendor write-ups) and strips
+    obvious noise tags first.
+    """
+    if not html_doc:
+        return ""
+    body = _extract_main_html(html_doc)
+    body = _NOISE_TAG_RE.sub(" ", body)
+    body = _NOISE_BLOCK_RE.sub(" ", body)
+    # <br> and </p> -> newline so multi-line IOCs aren't merged into one giant blob
+    body = re.sub(r"<br\s*/?>", "\n", body, flags=re.IGNORECASE)
+    body = re.sub(r"</p>", "\n", body, flags=re.IGNORECASE)
+    body = re.sub(r"</li>", "\n", body, flags=re.IGNORECASE)
+    body = re.sub(r"</tr>", "\n", body, flags=re.IGNORECASE)
+    body = strip_html(body)
+    body = html.unescape(body)
+    body = re.sub(r"[ \t]+", " ", body)
+    body = re.sub(r"\n[ \n]+", "\n", body)
+    return body.strip()
+
+
+def _fetch_full_body(url: str, fallback: str = "") -> str:
+    """Fetch and clean an article body. Cached to disk; falls back on error."""
+    if not FETCH_FULL_BODY or not url or not url.lower().startswith(("http://", "https://")):
+        return fallback
+    cache = _cache_path_for(url)
+    html_doc = ""
+    if cache.exists():
+        try:
+            html_doc = cache.read_text(encoding="utf-8", errors="replace")
+        except Exception:
+            html_doc = ""
+    if not html_doc:
+        try:
+            import requests
+            time.sleep(FETCH_DELAY_SEC)
+            r = requests.get(
+                url,
+                headers={"User-Agent": FETCH_USER_AGENT, "Accept": "text/html,*/*"},
+                timeout=FETCH_TIMEOUT_SEC,
+                allow_redirects=True,
+            )
+            if r.status_code == 200 and r.text:
+                html_doc = r.text
+                cache.parent.mkdir(parents=True, exist_ok=True)
+                try:
+                    cache.write_text(html_doc, encoding="utf-8", errors="replace")
+                except Exception:
+                    pass
+            else:
+                return fallback
+        except Exception as e:
+            safe_err = str(e).encode("ascii", "replace").decode("ascii")
+            print(f"    [!] body fetch failed for {url[:80]}: {safe_err}")
+            return fallback
+    text = _html_to_text_for_iocs(html_doc)
+    if len(text) < 200:
+        # extraction looks broken — better to keep the RSS summary than ship rubbish
+        return fallback
+    return text
+
+
 def _fetch_rss(source, since):
     feed = feedparser.parse(source["url"])
     out = []
+    fetched = 0
     for e in feed.entries[:MAX_PER_SOURCE]:
         pub = _parse_published(e)
         if since and pub and pub < since:
             continue
-        body = strip_html(e.get("summary", "") or e.get("description", "") or "")
-        body = re.sub(r"\s+", " ", body).strip()
+        rss_summary = strip_html(e.get("summary", "") or e.get("description", "") or "")
+        rss_summary = re.sub(r"\s+", " ", rss_summary).strip()
+        link = e.get("link", "")
+
+        # Pull the full article body so IOC extraction sees hashes / defanged
+        # IPs / domains that live below the RSS preview.
+        full_body = _fetch_full_body(link, fallback=rss_summary)
+        if full_body and full_body != rss_summary:
+            fetched += 1
+
         out.append({
             "source": source["name"],
             "title": e.get("title", "(untitled)").strip(),
-            "link": e.get("link", ""),
+            "link": link,
             "published": e.get("published", ""),
             "published_dt": pub,
-            "summary": (body[:600] + "…") if len(body) > 600 else body,
-            "raw_body": body,
+            # Display preview stays short; raw_body holds full text for IOC extraction.
+            "summary": (rss_summary[:600] + "…") if len(rss_summary) > 600 else rss_summary,
+            "raw_body": full_body or rss_summary,
         })
+    if fetched:
+        print(f"    -> fetched {fetched} full article bodies")
     return out
 
 

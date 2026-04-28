@@ -1,4 +1,4 @@
-# [LOW] Simplifying AWS defense with Microsoft Sentinel UEBA
+# [HIGH] Simplifying AWS defense with Microsoft Sentinel UEBA
 
 **Source:** Microsoft Security Blog
 **Published:** 2026-04-28
@@ -6,7 +6,16 @@
 
 ## Threat Profile
 
-Learn how Microsoft Sentinel UEBA helps defenders distinguish benign AWS activity from attacker behavior by enriching raw CloudTrail logs with clear, binary behavioral signals derived from baseline user, peer, and device behavior patterns. The post Simplifying AWS defense with Microsoft Sentinel UEBA appeared first on Microsoft Security Blog .
+Tags 
+AWS 
+Content types 
+Research 
+Products and services 
+Microsoft Sentinel 
+Topics 
+Actionable threat insights 
+Detection and protection success stories 
+With the expansion of Microsoft Sentinel UEBA (User and Entity Behavior Analytics) into new data sources , spanning multi-cloud (AWS, GCP), identity providers (Okta), and authentication logs (Microsoft Defender for Endpoint DeviceLogon, Microsoft Entra ID Managed Identity, Service Principal sign-ins), defenders can now detect behavioral anom…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -14,7 +23,14 @@ Learn how Microsoft Sentinel UEBA helps defenders distinguish benign AWS activit
 
 ## MITRE ATT&CK Techniques
 
-- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1566.004** — Phishing: Spearphishing Voice
+- **T1566** — Phishing
+- **T1219** — Remote Access Software
 
 ## Kill chain phases observed
 
@@ -22,9 +38,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-_No actionable hunts can be derived from the RSS summary alone. The article may still warrant manual review — open the source link for actor attribution, IOCs in the body, and TTP detail._
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Asset exposure — vulnerability matches article CVE(s)
+
+`_uc` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN ("-")
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ ("-")
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+```
+
+### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
+
+`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity`
+  Workload=MicrosoftTeams Operation=MessageSent
+  ExternalParticipants=*
+| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
+| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
+    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Microsoft Teams"
+| where ActionType == "MessageSent"
+| where RawEventData has "ExternalParticipants"
+| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
+| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
+| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
+```
+
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+```
 
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
