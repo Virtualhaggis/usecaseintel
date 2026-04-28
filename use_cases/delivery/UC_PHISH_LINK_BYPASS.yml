@@ -1,0 +1,38 @@
+# Schema: see use_cases/SCHEMA.md
+id: UC_PHISH_LINK_BYPASS
+title: User clicked through a Safe Links warning page
+kill_chain: delivery
+confidence: High
+description: |-
+  Microsoft Safe Links rendered a warning page for a URL and the user
+  clicked past it anyway (ActionType=ClickedThrough). This is an
+  explicit user-override of a defender control — by definition rare and
+  high-signal. Investigate every hit; the URL was flagged for a reason.
+implementations:
+- defender
+mitre_attack:
+- id: T1566.002
+  name: Spearphishing Link
+- id: T1204.001
+  name: 'User Execution: Malicious Link'
+data_models:
+  defender:
+  - UrlClickEvents
+  - EmailEvents
+defender_kql: |-
+  // Safe Links assessed the URL as risky, showed a warning page, and the
+  // user proceeded anyway. ClickedThrough events are inherently rare —
+  // every hit deserves analyst review.
+  UrlClickEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "ClickedThrough"
+  | join kind=leftouter (
+      EmailEvents
+      | where Timestamp > ago(30d)
+      | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                RecipientEmailAddress, EmailDirection
+    ) on NetworkMessageId
+  | project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+            EmailDirection, SenderFromAddress, SenderFromDomain,
+            RecipientEmailAddress, Subject, Workload
+  | order by Timestamp desc

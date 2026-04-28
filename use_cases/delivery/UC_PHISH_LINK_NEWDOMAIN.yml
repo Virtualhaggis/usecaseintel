@@ -1,0 +1,73 @@
+# Schema: see use_cases/SCHEMA.md
+id: UC_PHISH_LINK_NEWDOMAIN
+title: Click on URL whose host doesn't match the sender domain
+kill_chain: delivery
+confidence: Medium
+description: |-
+  User clicked an inbound-email URL where the URL host is unrelated to
+  the sender's authenticated domain. Most legitimate B2B / B2C senders
+  use links on their own domain, their CDN, or a small number of
+  marketing trackers. A click on a sender-mismatched URL — especially
+  to a cheap-TLD throwaway (.sbs, .top, .icu, .cyou) — is a moderate
+  phishing-class signal. Pair with UC_PHISH_LINK (exec correlation)
+  for the higher-confidence variant.
+implementations:
+- defender
+mitre_attack:
+- id: T1566.002
+  name: Spearphishing Link
+- id: T1204.001
+  name: 'User Execution: Malicious Link'
+- id: T1583.001
+  name: 'Acquire Infrastructure: Domains'
+data_models:
+  defender:
+  - UrlClickEvents
+  - EmailEvents
+  - EmailUrlInfo
+defender_kql: |-
+  // Click on inbound-email URL where url-domain != sender-domain.
+  // The sender-domain root and url-domain root are extracted then
+  // compared; a mismatch on a cheap-TLD url-domain is the high-signal
+  // case. Tune the legit-marketer allowlist to your environment to
+  // suppress the residual newsletter / vendor-tracker noise.
+  let LookbackDays = 7d;
+  let LegitTrackers = dynamic(["mailchimp.com","sendgrid.net","sendgrid.com",
+      "constantcontact.com","hubspotlinks.com","hubspot.com","mktoresp.com",
+      "marketo.com","pardot.com","exacttarget.com","klaviyomail.com",
+      "list-manage.com","createsend1.com","createsend.com","sg.actblue.com",
+      "ml-attach.com","emltrk.com","amazonses.com","amazon.com","sndarsffrt.com",
+      "salesforce.com","force.com","docusign.net","echosign.com",
+      "office365.com","microsoft.com","onmicrosoft.com","linkedin.com",
+      "github.com","githubusercontent.com","atlassian.net","jira.com"]);
+  let CheapTlds = dynamic(["sbs","life","top","icu","cyou","gdn","click","loan",
+      "rest","monster","work","cn","ru","tk","ml","cf","ga"]);
+  EmailEvents
+  | where Timestamp > ago(LookbackDays)
+  | where DeliveryAction == "Delivered" and EmailDirection == "Inbound"
+  | extend SenderRoot = extract(@"([^.]+\.[a-zA-Z]+)$", 1, tolower(SenderFromDomain))
+  | join kind=inner (
+      EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+    ) on NetworkMessageId
+  | join kind=inner (
+      UrlClickEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType in ("ClickAllowed","ClickedThrough")
+      | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress
+    ) on Url
+  | extend UrlDomLower = tolower(UrlDomain)
+  | extend UrlRoot = extract(@"([^.]+\.[a-zA-Z]+)$", 1, UrlDomLower)
+  | extend UrlTld = extract(@"\.([a-zA-Z]+)$", 1, UrlDomLower)
+  | where UrlRoot != SenderRoot
+     and UrlRoot !in (LegitTrackers)
+     and UrlDomLower !endswith ".microsoft.com"
+     and UrlDomLower !endswith ".office.com"
+     and UrlDomLower !endswith ".sharepoint.com"
+  | extend RiskScore = case(UrlTld in (CheapTlds), 3,
+                            UrlRoot endswith ".ru" or UrlRoot endswith ".cn", 2,
+                            1)
+  | where RiskScore >= 2
+  | project ClickTimestamp, AccountUpn, IPAddress, RecipientEmailAddress,
+            SenderFromAddress, SenderRoot, UrlDomain, UrlRoot, UrlTld,
+            RiskScore, Subject, Url
+  | order by RiskScore desc, ClickTimestamp desc

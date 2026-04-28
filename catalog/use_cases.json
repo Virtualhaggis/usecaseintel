@@ -1,6 +1,6 @@
 {
-  "generated": "2026-04-28T20:43:47Z",
-  "count": 23,
+  "generated": "2026-04-28T21:42:57Z",
+  "count": 25,
   "use_cases": [
     {
       "id": "UC_BEACONING",
@@ -372,12 +372,47 @@
     },
     {
       "id": "UC_PHISH_LINK",
-      "title": "Suspicious URL click in email \u2014 phishing landing page",
+      "title": "Phishing-link click correlated to endpoint execution",
       "kill_chain": "delivery",
       "confidence": "High",
-      "description": "User followed a link from an external email to an uncategorized / young-domain page. Pivots from the Email DM onto the Web DM to flag the click-through chain that typically precedes credential theft.",
+      "description": "User received an external email containing a URL, clicked it, and within\n60 seconds the recipient's endpoint spawned a scripting interpreter or\nnetwork downloader (PowerShell / cmd / mshta / curl / certutil / bitsadmin).\nThis is the high-fidelity shape \u2014 a raw \"user clicked an emailed URL\"\nquery is too noisy to alert on because every Microsoft 365 tenant\ngenerates thousands of legitimate clicks per day. The exec-correlation\nstep suppresses the noise to roughly the rate at which a click actually\ndrives onto-host execution, which is the actionable signal.\nPair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN\nfor orthogonal high-fidelity variants.",
       "implementations": [
         "splunk",
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1566.002",
+          "name": "Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        },
+        {
+          "id": "T1059.001",
+          "name": "PowerShell"
+        }
+      ],
+      "data_models": [
+        "Email.All_Email",
+        "Web",
+        "Endpoint.Processes",
+        "EmailEvents",
+        "EmailUrlInfo",
+        "UrlClickEvents",
+        "DeviceProcessEvents"
+      ],
+      "splunk_spl": "``` Phishing-link click that drives endpoint execution within 60s ```\n| tstats `summariesonly` earliest(_time) AS click_time\n    from datamodel=Web\n    where Web.action=\"allowed\"\n    by Web.src, Web.user, Web.dest, Web.url\n| `drop_dm_object_name(Web)`\n| rename user AS recipient, dest AS clicked_domain, url AS clicked_url\n| join type=inner recipient\n    [| tstats `summariesonly` count\n         from datamodel=Email.All_Email\n         where All_Email.action=\"delivered\" AND All_Email.url!=\"-\"\n           AND All_Email.is_internal!=\"true\"\n         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject\n     | `drop_dm_object_name(All_Email)`\n     | rex field=url \"https?://(?<email_domain>[^/]+)\"\n     | rename recipient AS recipient]\n| join type=inner src\n    [| tstats `summariesonly` earliest(_time) AS exec_time\n         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc\n         from datamodel=Endpoint.Processes\n         where Processes.parent_process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\n                                                   \"outlook.exe\",\"brave.exe\",\"arc.exe\")\n           AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\n                                            \"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\n                                            \"cscript.exe\",\"bitsadmin.exe\",\"certutil.exe\",\n                                            \"curl.exe\",\"wget.exe\")\n         by Processes.dest, Processes.user\n     | `drop_dm_object_name(Processes)`\n     | rename dest AS src]\n| eval delta_sec = exec_time - click_time\n| where delta_sec >= 0 AND delta_sec <= 60\n| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,\n        clicked_domain, clicked_url, exec_proc, exec_cmd\n| sort - click_time",
+      "defender_kql": "// Phishing-link click that drives endpoint execution within 60s.\n// Far higher fidelity than \"every clicked URL\" \u2014 most legitimate clicks\n// never spawn a non-browser child process, so the join eliminates the\n// 99% of noise that makes a raw click query unactionable.\nlet LookbackDays = 7d;\nlet SuspectClicks = UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ClickAllowed\",\"ClickedThrough\")\n    | join kind=inner (\n        EmailEvents\n        | where Timestamp > ago(LookbackDays)\n        | where DeliveryAction == \"Delivered\"\n        | where EmailDirection == \"Inbound\"\n        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n                  RecipientEmailAddress, EmailTimestamp = Timestamp\n      ) on NetworkMessageId\n    | join kind=leftouter (\n        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n      ) on NetworkMessageId, Url\n    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,\n              ActionType;\n// Correlate to a non-browser child process spawned within 60 seconds on\n// the recipient's device.\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\n                                         \"outlook.exe\",\"brave.exe\",\"arc.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\n                        \"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\n                        \"bitsadmin.exe\",\"certutil.exe\",\"curl.exe\",\"wget.exe\")\n| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn\n| where Timestamp between (ClickTime .. ClickTime + 60s)\n| project ClickTime, ProcessTime = Timestamp,\n          DelaySec = datetime_diff('second', Timestamp, ClickTime),\n          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,\n          Subject, Url, UrlDomain, ActionType,\n          FileName, ProcessCommandLine, InitiatingProcessFileName\n| order by ClickTime desc"
+    },
+    {
+      "id": "UC_PHISH_LINK_BYPASS",
+      "title": "User clicked through a Safe Links warning page",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Microsoft Safe Links rendered a warning page for a URL and the user\nclicked past it anyway (ActionType=ClickedThrough). This is an\nexplicit user-override of a defender control \u2014 by definition rare and\nhigh-signal. Investigate every hit; the URL was flagged for a reason.",
+      "implementations": [
         "defender"
       ],
       "mitre_attack": [
@@ -391,14 +426,42 @@
         }
       ],
       "data_models": [
-        "Email.All_Email",
-        "Web",
-        "EmailEvents",
-        "EmailUrlInfo",
-        "UrlClickEvents"
+        "UrlClickEvents",
+        "EmailEvents"
       ],
-      "splunk_spl": "| tstats `summariesonly` count\n    from datamodel=Email.All_Email\n    where All_Email.action=\"delivered\" AND All_Email.url!=\"-\"\n    by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject\n| rex field=All_Email.url \"https?://(?<email_domain>[^/]+)\"\n| join type=inner email_domain\n    [| tstats `summariesonly` count\n        from datamodel=Web\n        where Web.action=\"allowed\"\n        by Web.src, Web.dest, Web.url, Web.user\n     | rex field=Web.url \"https?://(?<email_domain>[^/]+)\"]\n| stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,\n        earliest(_time) as first_seen, latest(_time) as last_seen\n        by All_Email.recipient, email_domain",
-      "defender_kql": "let LookbackDays = 7d;\nlet DeliveredEmails = EmailEvents\n    | where Timestamp > ago(LookbackDays)\n    | where DeliveryAction == \"Delivered\"\n    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,\n              EmailTimestamp = Timestamp;\nEmailUrlInfo\n| where Timestamp > ago(LookbackDays)\n| join kind=inner DeliveredEmails on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType == \"ClickAllowed\"\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on Url\n| project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,\n          Subject, Url, UrlDomain, IPAddress\n| order by ClickTimestamp desc"
+      "splunk_spl": null,
+      "defender_kql": "// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare \u2014\n// every hit deserves analyst review.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc"
+    },
+    {
+      "id": "UC_PHISH_LINK_NEWDOMAIN",
+      "title": "Click on URL whose host doesn't match the sender domain",
+      "kill_chain": "delivery",
+      "confidence": "Medium",
+      "description": "User clicked an inbound-email URL where the URL host is unrelated to\nthe sender's authenticated domain. Most legitimate B2B / B2C senders\nuse links on their own domain, their CDN, or a small number of\nmarketing trackers. A click on a sender-mismatched URL \u2014 especially\nto a cheap-TLD throwaway (.sbs, .top, .icu, .cyou) \u2014 is a moderate\nphishing-class signal. Pair with UC_PHISH_LINK (exec correlation)\nfor the higher-confidence variant.",
+      "implementations": [
+        "defender"
+      ],
+      "mitre_attack": [
+        {
+          "id": "T1566.002",
+          "name": "Spearphishing Link"
+        },
+        {
+          "id": "T1204.001",
+          "name": "User Execution: Malicious Link"
+        },
+        {
+          "id": "T1583.001",
+          "name": "Acquire Infrastructure: Domains"
+        }
+      ],
+      "data_models": [
+        "UrlClickEvents",
+        "EmailEvents",
+        "EmailUrlInfo"
+      ],
+      "splunk_spl": null,
+      "defender_kql": "// Click on inbound-email URL where url-domain != sender-domain.\n// The sender-domain root and url-domain root are extracted then\n// compared; a mismatch on a cheap-TLD url-domain is the high-signal\n// case. Tune the legit-marketer allowlist to your environment to\n// suppress the residual newsletter / vendor-tracker noise.\nlet LookbackDays = 7d;\nlet LegitTrackers = dynamic([\"mailchimp.com\",\"sendgrid.net\",\"sendgrid.com\",\n    \"constantcontact.com\",\"hubspotlinks.com\",\"hubspot.com\",\"mktoresp.com\",\n    \"marketo.com\",\"pardot.com\",\"exacttarget.com\",\"klaviyomail.com\",\n    \"list-manage.com\",\"createsend1.com\",\"createsend.com\",\"sg.actblue.com\",\n    \"ml-attach.com\",\"emltrk.com\",\"amazonses.com\",\"amazon.com\",\"sndarsffrt.com\",\n    \"salesforce.com\",\"force.com\",\"docusign.net\",\"echosign.com\",\n    \"office365.com\",\"microsoft.com\",\"onmicrosoft.com\",\"linkedin.com\",\n    \"github.com\",\"githubusercontent.com\",\"atlassian.net\",\"jira.com\"]);\nlet CheapTlds = dynamic([\"sbs\",\"life\",\"top\",\"icu\",\"cyou\",\"gdn\",\"click\",\"loan\",\n    \"rest\",\"monster\",\"work\",\"cn\",\"ru\",\"tk\",\"ml\",\"cf\",\"ga\"]);\nEmailEvents\n| where Timestamp > ago(LookbackDays)\n| where DeliveryAction == \"Delivered\" and EmailDirection == \"Inbound\"\n| extend SenderRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, tolower(SenderFromDomain))\n| join kind=inner (\n    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n  ) on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ClickAllowed\",\"ClickedThrough\")\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on Url\n| extend UrlDomLower = tolower(UrlDomain)\n| extend UrlRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, UrlDomLower)\n| extend UrlTld = extract(@\"\\.([a-zA-Z]+)$\", 1, UrlDomLower)\n| where UrlRoot != SenderRoot\n   and UrlRoot !in (LegitTrackers)\n   and UrlDomLower !endswith \".microsoft.com\"\n   and UrlDomLower !endswith \".office.com\"\n   and UrlDomLower !endswith \".sharepoint.com\"\n| extend RiskScore = case(UrlTld in (CheapTlds), 3,\n                          UrlRoot endswith \".ru\" or UrlRoot endswith \".cn\", 2,\n                          1)\n| where RiskScore >= 2\n| project ClickTimestamp, AccountUpn, IPAddress, RecipientEmailAddress,\n          SenderFromAddress, SenderRoot, UrlDomain, UrlRoot, UrlTld,\n          RiskScore, Subject, Url\n| order by RiskScore desc, ClickTimestamp desc"
     },
     {
       "id": "UC_PS_OBFUSCATED",

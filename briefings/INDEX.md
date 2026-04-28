@@ -11,10 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
+- [broken vect 2 0 ransomware acts as a data wiper for large fi](./2026-04-28/broken-vect-2-0-ransomware-acts-as-a-data-wiper-for-large-fi.md)
 - [checkmarx confirms lapsus hackers leaked its stolen github d](./2026-04-28/checkmarx-confirms-lapsus-hackers-leaked-its-stolen-github-d.md)
 - [chinese silk typhoon hacker extradited to u s over covid res](./2026-04-28/chinese-silk-typhoon-hacker-extradited-to-u-s-over-covid-res.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
+- [hackers are exploiting a critical litellm pre auth sqli flaw](./2026-04-28/hackers-are-exploiting-a-critical-litellm-pre-auth-sqli-flaw.md)
 - [inside an opsec playbook how threat actors evade detection](./2026-04-28/inside-an-opsec-playbook-how-threat-actors-evade-detection.md)
 - [microsoft asks iphone users to reauthenticate after outlook ](./2026-04-28/microsoft-asks-iphone-users-to-reauthenticate-after-outlook-.md)
 - [microsoft confirms active exploitation of windows shell cve ](./2026-04-28/microsoft-confirms-active-exploitation-of-windows-shell-cve-.md)
@@ -35,13 +37,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake captcha irsf scam and 120 keitaro campaigns drive globa](./2026-04-27/fake-captcha-irsf-scam-and-120-keitaro-campaigns-drive-globa.md)
 - [ftc americans lost over 2 1 billion to social media scams in](./2026-04-27/ftc-americans-lost-over-2-1-billion-to-social-media-scams-in.md)
 - [glassworm malware attacks return via 73 openvsx sleeper exte](./2026-04-27/glassworm-malware-attacks-return-via-73-openvsx-sleeper-exte.md)
-- [home security giant adt data breach affects 5 5 million peop](./2026-04-27/home-security-giant-adt-data-breach-affects-5-5-million-peop.md)
 - [mythos changed the math on vulnerability discovery most team](./2026-04-27/mythos-changed-the-math-on-vulnerability-discovery-most-team.md)
 - [phantomcore exploits trueconf vulnerabilities to breach russ](./2026-04-27/phantomcore-exploits-trueconf-vulnerabilities-to-breach-russ.md)
 - [pypi package with 1 1m monthly downloads hacked to push info](./2026-04-27/pypi-package-with-1-1m-monthly-downloads-hacked-to-push-info.md)
 - [researchers uncover 73 fake vs code extensions delivering gl](./2026-04-27/researchers-uncover-73-fake-vs-code-extensions-delivering-gl.md)
 - [robinhood account creation flaw abused to send phishing emai](./2026-04-27/robinhood-account-creation-flaw-abused-to-send-phishing-emai.md)
-- [webinar spotting cyberattacks before they begin](./2026-04-27/webinar-spotting-cyberattacks-before-they-begin.md)
 - [weekly recap fast16 malware xchat launch federal backdoor ai](./2026-04-27/weekly-recap-fast16-malware-xchat-launch-federal-backdoor-ai.md)
 
 ## 2026-04-25

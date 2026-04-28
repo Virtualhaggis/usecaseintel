@@ -26,9 +26,9 @@ Cybersecurity researchers have discovered a new iteration of an Android malware 
 - **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
+- **T1059.001** — PowerShell
 - **T1566.001** — Spearphishing Attachment
 - **T1204.002** — User Execution: Malicious File
-- **T1059.001** — PowerShell
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
@@ -127,48 +127,89 @@ DeviceFileEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### Suspicious URL click in email — phishing landing page
+### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.action="delivered" AND All_Email.url!="-"
-    by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject
-| rex field=All_Email.url "https?://(?<email_domain>[^/]+)"
-| join type=inner email_domain
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
     [| tstats `summariesonly` count
-        from datamodel=Web
-        where Web.action="allowed"
-        by Web.src, Web.dest, Web.url, Web.user
-     | rex field=Web.url "https?://(?<email_domain>[^/]+)"]
-| stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,
-        earliest(_time) as first_seen, latest(_time) as last_seen
-        by All_Email.recipient, email_domain
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+           AND All_Email.is_internal!="true"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
 ```
 
 **Defender KQL:**
 ```kql
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
 let LookbackDays = 7d;
-let DeliveredEmails = EmailEvents
+let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
-    | where DeliveryAction == "Delivered"
-    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,
-              EmailTimestamp = Timestamp;
-EmailUrlInfo
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
 | where Timestamp > ago(LookbackDays)
-| join kind=inner DeliveredEmails on NetworkMessageId
-| join kind=inner (
-    UrlClickEvents
-    | where Timestamp > ago(LookbackDays)
-    | where ActionType == "ClickAllowed"
-    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress
-  ) on Url
-| project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,
-          Subject, Url, UrlDomain, IPAddress
-| order by ClickTimestamp desc
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
 ```
 
 ### Email attachment opened from external sender
