@@ -440,6 +440,170 @@ def extract_mechanics(title: str, body: str) -> dict:
     }
 
 
+# =============================================================================
+# LLM-driven bespoke UC generation (opt-in via ANTHROPIC_API_KEY)
+# =============================================================================
+# Reads the article body with an LLM and emits structured detection content
+# specific to the attack described — not a regex-extracted template. Called
+# alongside _make_bespoke_uc() (regex). Both run; the LLM output is treated
+# as a higher-confidence bespoke UC tier.
+#
+# Cost note: ~3-6K input tokens + ~1.5K output tokens per article. With
+# claude-haiku-4-5 (cheapest current Claude) that's ~$0.005-0.01 per article,
+# so ~$2-3 for a 300-article 180-day pipeline run. Cached per article URL
+# so re-runs of the same articles are free.
+LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
+LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-haiku-4-5-20251001")
+LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
+
+
+_LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce 1-3 high-quality detection use cases that hunt the SPECIFIC attack described — NOT a generic technique template.
+
+Output STRICT JSON matching this schema (no markdown fences, no prose, just one JSON object):
+
+{
+  "ucs": [
+    {
+      "title": "<concise behavioural title; e.g. 'Mustang Panda DLL side-load via signed Acrobat Reader' — under 100 chars>",
+      "description": "<2-3 sentence operational summary; what this hunts and why it's article-specific>",
+      "kill_chain": "<one of: recon, weapon, delivery, exploit, install, c2, actions>",
+      "tier": "<alerting OR hunting — alerting only when query has named binaries / hashes / threshold / temporal correlation; default hunting>",
+      "confidence": "<High, Medium, Low>",
+      "fp_rate_estimate": "<low, medium, high, unknown>",
+      "required_telemetry": ["<list of data sources e.g. 'Sysmon EID 1', 'Defender DeviceProcessEvents'>"],
+      "techniques": [{"id":"T####.###","name":"<technique name>"}],
+      "data_models": ["<Splunk CIM dataset names e.g. Endpoint.Processes, Network_Traffic.All_Traffic>"],
+      "splunk_spl": "<full Splunk SPL using CIM tstats syntax. Reference SPECIFIC binaries/paths/cmdline strings from the article. Use macros like `summariesonly` and `drop_dm_object_name(<DM>)`.>",
+      "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings.>",
+      "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>"
+    }
+  ]
+}
+
+Hard rules:
+- Use ACTUAL binaries / paths / hashes / cmdline patterns / domains named in the article. Do not invent or hallucinate.
+- If the article describes the attack in narrative only (no specific strings), output {"ucs":[]} — silence beats a generic template.
+- Splunk SPL must be CIM-conformant (tstats from datamodel=...).
+- Defender KQL must be Advanced Hunting (real table + column names).
+- Don't generate the same logic that would already be matched by these existing rules: phishing-link click+exec, LSASS access, PsExec lateral movement, Office spawning scripts, encoded PowerShell. Add ONLY genuinely article-specific detections.
+- Maximum 3 UCs per article.
+
+Article title: {title}
+Article URL: {url}
+Article body:
+\"\"\"
+{body}
+\"\"\"
+
+Pre-extracted IOCs from the article (use these in your queries where appropriate):
+{ioc_summary}
+"""
+
+
+def _llm_generate_ucs(article: dict, ind: dict):
+    """Call the Anthropic API with the article body and parse a list of UseCase
+    objects from the JSON response. Cached on disk by article URL hash. Returns
+    [] if no API key is present, the call fails, or the response is malformed."""
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not api_key:
+        return []
+    url = article.get("link", "")
+    if not url:
+        return []
+    LLM_UC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    cache_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
+    cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    if cache_path.exists():
+        try:
+            data = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+            return [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
+        except Exception:
+            pass
+    body = (article.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
+    if len(body) < 400:
+        return []  # not enough content
+    ioc_summary = []
+    for k, label in [("cves","CVEs"),("ips","IPs"),("domains","Domains"),
+                     ("sha256","SHA256"),("sha1","SHA1"),("md5","MD5")]:
+        if ind.get(k):
+            ioc_summary.append(f"  {label}: {', '.join(ind[k][:8])}")
+    prompt = _LLM_UC_PROMPT.format(
+        title=article.get("title","")[:200],
+        url=url[:200],
+        body=body,
+        ioc_summary="\n".join(ioc_summary) or "  (none)",
+    )
+    try:
+        import anthropic
+        client = anthropic.Anthropic(api_key=api_key)
+        msg = client.messages.create(
+            model=LLM_UC_MODEL,
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = "".join(block.text for block in msg.content if hasattr(block, "text"))
+    except ImportError:
+        print("    [!] anthropic library not installed — pip install anthropic")
+        return []
+    except Exception as e:
+        safe = str(e).encode("ascii","replace").decode("ascii")[:80]
+        print(f"    [!] LLM call failed for {url[:60]}: {safe}")
+        return []
+    raw = raw.strip()
+    # Strip code-fence wrappers if the model added them
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```\s*$", "", raw)
+    try:
+        data = __import__("json").loads(raw)
+    except Exception as e:
+        print(f"    [!] LLM output JSON-parse failed: {str(e)[:60]}")
+        return []
+    cache_path.write_text(__import__("json").dumps(data, indent=2), encoding="utf-8")
+    return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+
+
+def _uc_from_llm_dict(d: dict):
+    """Validate + coerce an LLM-emitted UC dict into a UseCase object."""
+    if not isinstance(d, dict): return None
+    title = (d.get("title") or "").strip()
+    spl = d.get("splunk_spl") or ""
+    kql = d.get("defender_kql") or ""
+    if not title or not (spl or kql):
+        return None
+    techs = []
+    for t in (d.get("techniques") or []):
+        tid = (t or {}).get("id") if isinstance(t, dict) else t
+        tname = (t or {}).get("name", "") if isinstance(t, dict) else ""
+        if tid and re.match(r"^T\d{4}(\.\d{3})?$", str(tid)):
+            techs.append((tid, tname or ""))
+    tier = (d.get("tier") or "hunting").lower()
+    if tier not in ("alerting", "hunting"):
+        tier = "hunting"
+    fp_rate = (d.get("fp_rate_estimate") or "unknown").lower()
+    if fp_rate not in ("low", "medium", "high", "unknown"):
+        fp_rate = "unknown"
+    req_telem = d.get("required_telemetry") or []
+    if not isinstance(req_telem, list):
+        req_telem = [str(req_telem)]
+    return UseCase(
+        title=f"[LLM] {title[:140]}",
+        description=(d.get("description") or "").strip()
+            + (("\n\nRationale: " + (d.get("rationale") or "").strip())
+                if d.get("rationale") else ""),
+        kill_chain=(d.get("kill_chain") or "actions"),
+        techniques=techs,
+        data_models=list(d.get("data_models") or []),
+        splunk_spl=spl,
+        defender_kql=kql,
+        confidence=(d.get("confidence") or "Medium"),
+        tier=tier,
+        fp_rate_estimate=fp_rate,
+        required_telemetry=[str(t) for t in req_telem][:8],
+    )
+
+
 def _make_bespoke_uc(article_title: str, mechanics: dict, ind: dict):
     """Assemble a *per-article* UseCase from the extracted mechanics.
 
@@ -3212,6 +3376,37 @@ ul.intel-types-doc code{
       <p>All outputs commit to <a href="https://github.com/Virtualhaggis/usecaseintel">github.com/Virtualhaggis/usecaseintel</a>; <code>run_daily.bat</code> runs validate → generate → digest → auto-commit on a schedule.</p>
     </div>
 
+    <h3 class="wf-section-title">LLM-driven UC generation (opt-in)</h3>
+    <div class="wf-step">
+      <p>When <code>ANTHROPIC_API_KEY</code> is set in the environment, the pipeline sends each article body to an LLM with a structured detection-engineer prompt, parses the response as JSON, validates the techniques (<code>T####.###</code> format) + tier (alerting/hunting) + KQL/SPL fields, and emits the resulting UseCase objects alongside the regex bespoke UCs.</p>
+      <p>The LLM is told: use the actual binaries/paths/cmdlines named in the article, not invented ones; if the article describes the attack only narratively, return no UCs. Output is cached per article URL hash so repeat runs cost nothing.</p>
+      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). 300-article 180-day run ≈ $2-3.</p>
+      <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
+    </div>
+
+    <h3 class="wf-section-title">IOC enrichment</h3>
+    <div class="wf-step">
+      <p>Every IOC in <code>intel/iocs.csv</code> is now cross-referenced against:</p>
+      <ul>
+        <li><strong>ThreatFox (abuse.ch)</strong> — malware family attribution + first-seen + reporter for IPs / domains / hashes / CVEs / URLs. Free, no key.</li>
+        <li><strong>URLhaus (abuse.ch)</strong> — URL counts + blacklist memberships for hosts. Free, no key.</li>
+      </ul>
+      <p>New CSV columns: <code>threatfox_malware</code>, <code>threatfox_threat_type</code>, <code>urlhaus_url_count</code>, <code>urlhaus_blacklists</code>, <code>enrichment_url</code>. Disable with <code>USECASEINTEL_ENRICH=0</code>; cache lives in <code>intel/.enrich_cache/</code>.</p>
+      <p>Practical impact: an IOC the SOC sees in our feed is now flanked by "is this on abuse.ch's known-bad list and what malware family is it linked to?" — turning a list of values into intel with attribution.</p>
+    </div>
+
+    <h3 class="wf-section-title">Per-platform rule packs</h3>
+    <div class="wf-step">
+      <p>Every internal UC is now exported to multiple SIEM-native formats under <code>rule_packs/</code>:</p>
+      <ul>
+        <li><code>splunk/savedsearches.conf</code> — drop-in Splunk app config. Each saved search is <code>enableSched = 0</code> by default — review-then-enable.</li>
+        <li><code>sentinel/&lt;uc&gt;.json</code> — Microsoft Sentinel ARM analytics rule template.</li>
+        <li><code>elastic/&lt;uc&gt;.json</code> — Elastic detection rule (KQL embedded in note for analyst port-over to ECS/EQL).</li>
+        <li><code>sigma/&lt;uc&gt;.yml</code> — Sigma format. Convert with <code>sigma-cli</code> to your SIEM dialect.</li>
+      </ul>
+      <p>All exports tier-aware: alerting runs hourly, hunting runs daily; severity high vs low; tier + fp_rate + MITRE attached to custom-details.</p>
+    </div>
+
     <h3 class="wf-section-title">Quality gates — tier &amp; IOC allowlist</h3>
     <div class="wf-step">
       <p>Two filters keep the output honest:</p>
@@ -4661,15 +4856,105 @@ def aggregate_iocs(articles_meta):
                         ent["severity"] = sev
     out = list(iocs.values())
     out.sort(key=lambda x: (-_SEV_RANK.get(x["severity"], 0), x["type"], x["value"].lower()))
+    # Enrich each IOC with public-feed cross-references (ThreatFox / URLhaus).
+    # Free, no API key, rate-limited but generous. Toggle off with
+    # USECASEINTEL_ENRICH=0 if running offline.
+    if os.environ.get("USECASEINTEL_ENRICH", "1") not in ("0", "false", "no", ""):
+        _enrich_iocs(out)
     return out
+
+
+# ----- IOC enrichment via free public threat-intel APIs ----------------
+# ThreatFox (abuse.ch) — JSON API, free, no key. Returns malware family +
+# first-seen + reporter for any IOC type. URLhaus is a sibling for URLs.
+# We keep the call rate gentle (<= 1 req per 0.4s) and cache results to
+# disk so re-runs reuse prior enrichment.
+ENRICH_CACHE_DIR = Path(__file__).parent / "intel" / ".enrich_cache"
+THREATFOX_API = "https://threatfox-api.abuse.ch/api/v1/"
+URLHAUS_API   = "https://urlhaus-api.abuse.ch/v1/"
+
+
+def _enrich_one(value, ioc_type, cache_dir):
+    """Look up a single IOC in ThreatFox + URLhaus. Returns dict or {}."""
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    safe = re.sub(r"[^a-zA-Z0-9._-]+", "_", str(value))[:60]
+    cache_path = cache_dir / f"{ioc_type}_{safe}.json"
+    if cache_path.exists():
+        try:
+            return __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    out = {}
+    try:
+        import requests as _req
+        time.sleep(0.4)  # courtesy throttle
+        # ThreatFox supports CVE / hash / domain / ip / url
+        tf_query_type = {
+            "cve":"cve","ipv4":"ip","domain":"domain","md5":"md5",
+            "sha1":"sha1","sha256":"sha256","url":"url",
+        }.get(ioc_type)
+        if tf_query_type:
+            r = _req.post(THREATFOX_API,
+                          json={"query": "search_ioc", "search_term": value},
+                          headers={"User-Agent": FETCH_USER_AGENT},
+                          timeout=15)
+            if r.status_code == 200:
+                d = r.json()
+                if d.get("query_status") == "ok":
+                    items = d.get("data") or []
+                    if items:
+                        first = items[0]
+                        out["threatfox_malware"] = first.get("malware_printable") or first.get("malware") or ""
+                        out["threatfox_threat_type"] = first.get("threat_type") or ""
+                        out["threatfox_first_seen"] = first.get("first_seen") or ""
+                        out["threatfox_reporter"] = first.get("reporter") or ""
+                        out["threatfox_url"] = f"https://threatfox.abuse.ch/ioc/{first.get('id','')}"
+                        out["threatfox_hits"] = len(items)
+        # URLhaus supports domain / ip / url
+        if ioc_type in ("domain","ipv4"):
+            time.sleep(0.4)
+            field = "host"
+            r = _req.post(URLHAUS_API + "host/",
+                          data={field: value},
+                          headers={"User-Agent": FETCH_USER_AGENT},
+                          timeout=15)
+            if r.status_code == 200:
+                d = r.json()
+                if d.get("query_status") == "ok":
+                    out["urlhaus_url_count"] = d.get("url_count") or 0
+                    out["urlhaus_first_seen"] = d.get("firstseen") or ""
+                    out["urlhaus_blacklists"] = ", ".join((d.get("blacklists") or {}).keys())
+                    out["urlhaus_url"] = d.get("urlhaus_reference") or ""
+    except Exception as e:
+        out["enrich_error"] = str(e)[:80]
+    try:
+        cache_path.write_text(__import__("json").dumps(out), encoding="utf-8")
+    except Exception:
+        pass
+    return out
+
+
+def _enrich_iocs(iocs):
+    """Annotate each IOC dict with ThreatFox / URLhaus enrichment in-place."""
+    enriched = 0
+    for i in iocs:
+        meta = _enrich_one(i["value"], i["type"], ENRICH_CACHE_DIR)
+        if meta:
+            i["enrichment"] = meta
+            if meta.get("threatfox_malware") or meta.get("urlhaus_url_count"):
+                enriched += 1
+    print(f"[*] IOC enrichment: {enriched} IOCs cross-referenced via ThreatFox/URLhaus")
 
 
 def _iocs_to_csv_rows(iocs):
     rows = [[
         "value", "type", "severity", "sources", "first_seen",
-        "article_titles", "article_links", "source_count", "article_count"
+        "article_titles", "article_links", "source_count", "article_count",
+        "threatfox_malware", "threatfox_threat_type", "urlhaus_url_count",
+        "urlhaus_blacklists", "enrichment_url"
     ]]
     for i in iocs:
+        e = i.get("enrichment") or {}
         rows.append([
             i["value"], i["type"], i["severity"],
             "; ".join(i["sources"]),
@@ -4677,6 +4962,11 @@ def _iocs_to_csv_rows(iocs):
             "; ".join(a["title"] for a in i["articles"]),
             "; ".join(a["link"] for a in i["articles"]),
             str(len(i["sources"])), str(len(i["articles"])),
+            e.get("threatfox_malware",""),
+            e.get("threatfox_threat_type",""),
+            str(e.get("urlhaus_url_count","")),
+            e.get("urlhaus_blacklists",""),
+            e.get("threatfox_url") or e.get("urlhaus_url") or "",
         ])
     return rows
 
@@ -5956,6 +6246,18 @@ def main():
                 a["_mechanics"] = mechanics
         except Exception as _e:
             print(f"    [!] bespoke UC failed for article {i}: {_e}")
+        # LLM-driven bespoke UCs — opt-in via ANTHROPIC_API_KEY env var.
+        # Reads the article and emits per-attack SPL/KQL targeting the
+        # specific binaries / domains / chain described, qualitatively
+        # better than regex extraction. Cached per article URL.
+        try:
+            llm_ucs = _llm_generate_ucs(a, ind)
+            for u in llm_ucs:
+                if u is None: continue
+                ucs.append(u)
+                bespoke_built += 1
+        except Exception as _e:
+            print(f"    [!] LLM UC failed for article {i}: {_e}")
         narrative_hit, _ = detect_kill_chain(text)
         hit = narrative_hit | {uc.kill_chain for uc in ucs}
         inferred = set()
