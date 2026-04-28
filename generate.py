@@ -2175,7 +2175,13 @@ ul.intel-types-doc code{
           <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.json" target="_blank">intel/iocs.json</a></code>
           <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.stix.json" target="_blank">intel/iocs.stix.json</a></code>
           <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/splunk_lookup_iocs.csv" target="_blank">splunk_lookup_iocs.csv</a></code>
+          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml" target="_blank">📡 iocs.rss.xml (RSS 2.0)</a></code>
         </div>
+        <p class="lg-note" style="margin-top:6px;">
+          Drop the RSS URL into Feedly, Inoreader, Slack RSS, or your TIP's RSS connector to get
+          notified the moment a new high-fidelity IOC lands. The feed shows the latest 100 items,
+          newest first, with severity, source attribution and a click-through to the source article.
+        </p>
 
         <h4>What each column tells you</h4>
         <table class="intel-cols-doc">
@@ -2244,7 +2250,12 @@ ul.intel-types-doc code{
       <button class="src-chip" data-export="stix">⚡ STIX 2.1</button>
       <button class="src-chip" data-export="splunk">🔎 Splunk lookup</button>
       <button class="src-chip" data-export="copy">📋 Copy CSV</button>
-      <span class="lg-note" style="margin-left:auto;">Exports always reflect current filters · raw files also live in /intel/ on the repo</span>
+      <a class="src-chip" target="_blank" rel="noopener"
+         href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml"
+         style="text-decoration:none;color:var(--warn);border-color:rgba(255,176,96,0.4);">
+        📡 Subscribe via RSS
+      </a>
+      <span class="lg-note" style="margin-left:auto;">Exports reflect current filters · RSS feed auto-refreshes daily</span>
     </div>
     <div class="intel-table-wrap">
       <table class="intel-table" id="intelTable">
@@ -3468,6 +3479,84 @@ def _iocs_to_stix(iocs, generated_iso):
     return {"type": "bundle", "id": bundle_id, "objects": objects}
 
 
+def _xml_escape(s):
+    return (str(s).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+                  .replace('"', "&quot;").replace("'", "&apos;"))
+
+
+def _iocs_to_rss(iocs, generated_iso, repo_url="https://github.com/Virtualhaggis/usecaseintel"):
+    """RSS 2.0 feed of IOCs — newest-first, last 100 items."""
+    sorted_iocs = sorted(
+        iocs,
+        key=lambda x: (x.get("first_seen") or "", x.get("type"), x.get("value", "").lower()),
+        reverse=True,
+    )[:100]
+
+    def to_rfc2822(iso_date):
+        try:
+            d = dt.datetime.fromisoformat(iso_date + "T00:00:00+00:00") if len(iso_date) == 10 \
+                else dt.datetime.fromisoformat(iso_date.replace("Z", "+00:00"))
+            return d.strftime("%a, %d %b %Y %H:%M:%S +0000")
+        except Exception:
+            return ""
+
+    items_xml = []
+    for ioc in sorted_iocs:
+        first_art = (ioc.get("articles") or [{}])[0]
+        link = first_art.get("link") or repo_url
+        title = f"[{ioc['type'].upper()}/{ioc['severity'].upper()}] {ioc['value']}"
+        desc_html = (
+            f"<p><strong>{_xml_escape(ioc['type'].upper())}:</strong> "
+            f"<code>{_xml_escape(ioc['value'])}</code></p>"
+            f"<p>Severity: <strong>{_xml_escape(ioc['severity'])}</strong> · "
+            f"First seen: {_xml_escape(ioc.get('first_seen',''))} · "
+            f"Sources: {_xml_escape(', '.join(ioc.get('sources', [])) or '—')}</p>"
+            f"<p>Context: {_xml_escape(first_art.get('title',''))}</p>"
+        )
+        guid = f"usecaseintel:{ioc['type']}:{ioc['value']}"
+        cats = "".join(
+            f"\n      <category>{_xml_escape(s)}</category>"
+            for s in ioc.get("sources", [])
+        )
+        items_xml.append(
+            "    <item>\n"
+            f"      <title>{_xml_escape(title)}</title>\n"
+            f"      <link>{_xml_escape(link)}</link>\n"
+            f"      <description>{_xml_escape(desc_html)}</description>\n"
+            f"      <guid isPermaLink=\"false\">{_xml_escape(guid)}</guid>\n"
+            f"      <pubDate>{to_rfc2822(ioc.get('first_seen',''))}</pubDate>"
+            f"{cats}\n"
+            "    </item>"
+        )
+
+    chan_pub = ""
+    try:
+        chan_pub = dt.datetime.fromisoformat(
+            generated_iso.replace("Z", "+00:00")
+        ).strftime("%a, %d %b %Y %H:%M:%S +0000")
+    except Exception:
+        pass
+    self_url = f"https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml"
+    return (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
+        '  <channel>\n'
+        '    <title>Use Case Intel — Threat Intel Feed</title>\n'
+        '    <description>High-fidelity IOCs aggregated from The Hacker News, BleepingComputer, '
+        'Microsoft Security Blog and CISA KEV. Refreshed daily. CVEs/hashes via regex; '
+        'domains/IPs only when defanged by the source author.</description>\n'
+        f'    <link>{repo_url}</link>\n'
+        f'    <atom:link href="{self_url}" rel="self" type="application/rss+xml" />\n'
+        '    <language>en-us</language>\n'
+        f'    <pubDate>{chan_pub}</pubDate>\n'
+        f'    <lastBuildDate>{chan_pub}</lastBuildDate>\n'
+        '    <generator>usecaseintel/generate.py</generator>\n'
+        + "\n".join(items_xml) +
+        '\n  </channel>\n'
+        '</rss>\n'
+    )
+
+
 def write_intel_files(iocs, generated_iso):
     INTEL_DIR.mkdir(exist_ok=True)
     # CSV
@@ -3491,6 +3580,11 @@ def write_intel_files(iocs, generated_iso):
         w = _csv.writer(f)
         for row in _iocs_to_splunk_lookup_rows(iocs):
             w.writerow(row)
+    # RSS 2.0
+    (INTEL_DIR / "iocs.rss.xml").write_text(
+        _iocs_to_rss(iocs, generated_iso),
+        encoding="utf-8",
+    )
 
 
 def write_catalog_files(generated_iso):

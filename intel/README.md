@@ -29,6 +29,7 @@ Sources are deduplicated: if THN and BleepingComputer both cover the same incide
 | **JSON** | [`intel/iocs.json`](https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.json) | Scripts, APIs, programmatic ingestion |
 | **STIX 2.1** | [`intel/iocs.stix.json`](https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.stix.json) | Threat Intelligence Platforms (MISP, OpenCTI, Anomali, ThreatConnect) |
 | **Splunk lookup** | [`intel/splunk_lookup_iocs.csv`](https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/splunk_lookup_iocs.csv) | Splunk Enterprise `inputlookup` |
+| **RSS 2.0** | [`intel/iocs.rss.xml`](https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml) | Feedly / Inoreader / Slack RSS / TIP feed connectors |
 
 Pull the latest at any time:
 
