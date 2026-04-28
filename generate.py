@@ -2755,7 +2755,7 @@ function renderIntel() {
       <td><span class="sev-pill ${ioc.severity}">${ioc.severity.toUpperCase()}</span></td>
       <td><div class="sources">${sources}</div></td>
       <td><a class="article-link" href="${escapeHtml(a0.link)}" target="_blank" rel="noopener" title="${escapeHtml(a0.title)}">${escapeHtml(a0.title)}</a>${more}</td>
-      <td>${escapeHtml((ioc.first_seen||'').slice(0,16))}</td>
+      <td>${escapeHtml(ioc.first_seen||'')}</td>
       <td><a class="article-link" href="#${a0.id}" data-jump="${a0.id}">view article</a></td>
     </tr>`;
   });
@@ -3698,8 +3698,16 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
         else:
             deduped.append(a)
 
+    # Normalise `published` for every survivor to ISO YYYY-MM-DD (UTC). Mixed
+    # RFC-2822 vs ISO is exactly the kind of inconsistency that ends up in
+    # downstream CSV/JSON exports and confuses analysts.
     for a in deduped:
         a.pop("_tokens", None)
+        if a.get("published_dt"):
+            try:
+                a["published"] = a["published_dt"].astimezone(dt.timezone.utc).strftime("%Y-%m-%d")
+            except Exception:
+                pass
     articles = deduped
     articles.sort(
         key=lambda a: a.get("published_dt") or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
@@ -3761,6 +3769,7 @@ def main():
                 if tid not in seen_t:
                     merged_techs.append((tid, tname))
                     seen_t.add(tid)
+        # `published` was normalised to ISO YYYY-MM-DD by fetch_articles().
         articles_meta.append({
             "id": f"art-{i:02d}",
             "title": a["title"],
