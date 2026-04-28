@@ -2004,6 +2004,15 @@ HTML_HEAD = r"""<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Clankerusecase — Splunk &amp; Defender Use Cases from threat-intel articles</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<meta name="description" content="Threat-intel-driven Splunk and Defender use cases, mapped to MITRE ATT&amp;CK with tier-tagged alerting and hunting detections.">
+<meta property="og:title" content="Clankerusecase — Threat-Intel-Driven Detection Catalogue">
+<meta property="og:description" content="2,175 use cases · 596 IOCs · 392/691 ATT&CK techniques covered. Splunk SPL + Defender KQL, tier-tagged.">
+<meta property="og:image" content="logo.png">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="logo.png">
 <style>
 /* ----- Theme ---------------------------------------------------------- */
 :root {
@@ -2048,25 +2057,29 @@ body{
   margin:0; padding:14px 28px;
   display:flex; gap:24px; align-items:center; flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:14px;font-weight:700;font-size:18px;letter-spacing:-0.01em;}
+.brand{display:flex;align-items:center;gap:16px;font-weight:700;font-size:20px;letter-spacing:-0.012em;}
 .brand .logo{
-  width:44px; height:44px; border-radius:10px;
+  width:64px; height:64px; border-radius:14px;
   display:flex; align-items:center; justify-content:center;
   position:relative; overflow:hidden;
-  background:linear-gradient(135deg, rgba(95,182,255,0.08), rgba(180,141,255,0.05));
+  background:radial-gradient(circle at 30% 30%, rgba(255,140,180,0.15), rgba(95,182,255,0.06) 60%, transparent);
   box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.10);
+  transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1);
 }
-/* logo.png — sized to fit nicely in the 44×44 logo slot regardless of
-   the source PNG aspect ratio. Object-contain keeps the image whole. */
+.brand:hover .logo{transform:rotate(-4deg) scale(1.04);}
+/* logo.png — Clanker the mascot. Sized to fit nicely in the 64×64
+   logo slot regardless of source aspect; object-contain keeps the
+   image whole, padding gives it a touch of breathing room. */
 .brand .logo .logo-img{
   display:block; width:100%; height:100%;
-  object-fit:contain; padding:3px;
+  object-fit:contain; padding:2px;
   position:relative; z-index:1;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35));
 }
-.brand .logo svg{width:22px;height:22px;color:var(--accent);position:relative;z-index:1;}
+.brand .logo svg{width:32px;height:32px;color:var(--accent);position:relative;z-index:1;}
 .brand-text{display:flex;flex-direction:column;line-height:1.15;}
-.brand-text > span:first-child{font-size:18px;}
-.brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;}
+.brand-text > span:first-child{font-size:21px; letter-spacing:-0.02em;}
+.brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
 
 .stats{
   display:flex; gap:16px; flex-wrap:wrap; flex:1; justify-content:center;
