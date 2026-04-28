@@ -23,11 +23,11 @@ py digest.py 1>>"%LOG%" 2>>&1
 
 REM ---- Auto-commit refreshed exports to the repo ---------------------
 >>"%LOG%" echo [git] checking for refreshed intel/ catalog/ files
-git diff --quiet -- intel/ catalog/ daily_digest.md 1>>"%LOG%" 2>>&1
+git diff --quiet -- intel/ catalog/ briefings/ daily_digest.md 1>>"%LOG%" 2>>&1
 if errorlevel 1 (
   >>"%LOG%" echo [git] changes detected, committing and pushing
-  git add intel/ catalog/ daily_digest.md 1>>"%LOG%" 2>>&1
-  git commit -m "auto: refresh IOCs and catalog (%TS%)" 1>>"%LOG%" 2>>&1
+  git add intel/ catalog/ briefings/ daily_digest.md 1>>"%LOG%" 2>>&1
+  git commit -m "auto: refresh IOCs, catalog, and briefings (%TS%)" 1>>"%LOG%" 2>>&1
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [git] push failed - resolve manually.

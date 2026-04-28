@@ -25,8 +25,8 @@ from pathlib import Path
 import feedparser
 
 # Sources & lookback configuration -------------------------------------------
-LOOKBACK_DAYS = 30
-MAX_PER_SOURCE = 200      # safety cap per source per run
+LOOKBACK_DAYS = 180       # 6-month rolling window
+MAX_PER_SOURCE = 500      # safety cap per source per run
 
 SOURCES = [
     {"name": "The Hacker News",        "kind": "rss",
@@ -1216,8 +1216,9 @@ def select_use_cases(article_text: str, ind: dict) -> list:
     if (ind["sha256"] or ind["sha1"] or ind["md5"]) and UC_HASH_IOC.title not in seen_titles:
         activated.append(UC_HASH_IOC)
         seen_titles.add(UC_HASH_IOC.title)
-    if not activated:
-        activated.append(UC_NETWORK_IOC)
+    # No fallback: if no rules fired AND no IOC types apply, return empty.
+    # Better to say "no actionable hunts" than to ship a UC_NETWORK_IOC SPL
+    # with placeholder values like "0.0.0.0" and "example.invalid".
     return activated
 
 
@@ -3639,6 +3640,212 @@ def write_catalog_files(generated_iso):
 
 
 # =============================================================================
+# Per-article briefings — Markdown files committed to briefings/YYYY-MM-DD/
+# =============================================================================
+
+BRIEFINGS_DIR = Path(__file__).parent / "briefings"
+
+
+def _slug(s: str) -> str:
+    s = re.sub(r"[^a-z0-9]+", "-", s.lower()).strip("-")
+    return s[:60] or "untitled"
+
+
+def _kev_briefing(article, ind, ucs):
+    cves = ind.get("cves", []) or []
+    cve = cves[0] if cves else "CVE-UNKNOWN"
+    title = article["title"]
+    sev = article.get("sev", "high")
+    src = ", ".join(article.get("sources", []) or [article.get("source", "")])
+    pub = article.get("published", "")
+    body = article.get("raw_body", "")
+    vendor = ""
+    if "—" in title:
+        rest = title.split("—", 1)[1].strip()
+        vendor = rest.rsplit(" Vulnerability", 1)[0].strip() if " Vulnerability" in rest else rest
+
+    return f"""# [{sev.upper()}] {title}
+
+**Source:** {src}
+**Published:** {pub}
+**Article:** {article.get('link', '')}
+
+## Threat Profile
+
+CISA KEV entry. The U.S. federal "Known Exploited Vulnerabilities" catalog only adds CVEs that have been **observed exploited in the wild**. Federal civilian agencies are required to remediate by the published due date; the same prioritisation logic applies to any sensible enterprise SOC.
+
+{('Vendor / Product: **' + vendor + '**') if vendor else ''}
+
+## Indicators of Compromise
+
+- {cve} — match against your vulnerability scanner
+
+## MITRE ATT&CK
+
+- **T1190 — Exploit Public-Facing Application** (KEV implies active exploitation against exposed assets)
+
+## Recommended hunts
+
+### Splunk SPL — asset exposure
+
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature="{cve}"
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+### Defender KQL — asset exposure
+
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId =~ "{cve}"
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc
+```
+
+## Why this matters
+
+Anything in CISA KEV is *currently* being exploited. Even if your scanners say "not vulnerable" because of patches, it's worth one quick check across your fleet — patch lag is the silent killer. Federal due-date dates also frequently match the timing your organisation will be asked about by auditors / regulators.
+
+## Source body
+
+{body[:600]}{'…' if len(body) > 600 else ''}
+"""
+
+
+def _news_briefing(article, ind, ucs_pairs, techs, hit, sev):
+    title = article["title"]
+    src = ", ".join(article.get("sources", []) or [article.get("source", "")])
+    pub = article.get("published", "")
+    body = article.get("raw_body", "")
+    link = article.get("link", "")
+
+    ioc_lines = []
+    for cve in ind.get("cves", []) or []:
+        ioc_lines.append(f"- **CVE:** `{cve}`")
+    for ip in ind.get("ips", []) or []:
+        ioc_lines.append(f"- **IPv4 (defanged):** `{ip}`")
+    for d in ind.get("domains", []) or []:
+        ioc_lines.append(f"- **Domain (defanged):** `{d}`")
+    for h in ind.get("sha256", []) or []:
+        ioc_lines.append(f"- **SHA256:** `{h}`")
+    for h in ind.get("sha1", []) or []:
+        ioc_lines.append(f"- **SHA1:** `{h}`")
+    for h in ind.get("md5", []) or []:
+        ioc_lines.append(f"- **MD5:** `{h}`")
+    if not ioc_lines:
+        ioc_lines.append(
+            "- _No high-fidelity IOCs in the RSS summary._ "
+            "If the source publishes a technical write-up with defanged IOCs in the body, "
+            "those would be picked up automatically on the next pipeline run."
+        )
+
+    tech_lines = []
+    for tid, name in techs:
+        tech_lines.append(f"- **{tid}**" + (f" — {name}" if name else ""))
+    if not tech_lines:
+        tech_lines.append("- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._")
+
+    uc_blocks = []
+    for uc_var, uc in ucs_pairs:
+        spl = parameterize(uc.splunk_spl, ind) if uc.splunk_spl else ""
+        kql = parameterize(uc.defender_kql, ind) if uc.defender_kql else ""
+        block = f"""### {uc.title}
+
+`{uc_var}` · phase: **{uc.kill_chain}** · confidence: **{uc.confidence}**
+"""
+        if spl:
+            block += f"\n**Splunk SPL (CIM):**\n```spl\n{spl.strip()}\n```\n"
+        if kql:
+            block += f"\n**Defender KQL:**\n```kql\n{kql.strip()}\n```\n"
+        uc_blocks.append(block)
+    uc_section = "\n".join(uc_blocks) if uc_blocks else (
+        "_No actionable hunts can be derived from the RSS summary alone. "
+        "The article may still warrant manual review — open the source link "
+        "for actor attribution, IOCs in the body, and TTP detail._\n"
+    )
+
+    return f"""# [{sev.upper()}] {title}
+
+**Source:** {src}
+**Published:** {pub}
+**Article:** {link}
+
+## Threat Profile
+
+{(body[:500] + ('…' if len(body) > 500 else '')) if body else '_(no summary)_'}
+
+## Indicators of Compromise (high-fidelity only)
+
+{chr(10).join(ioc_lines)}
+
+## MITRE ATT&CK Techniques
+
+{chr(10).join(tech_lines)}
+
+## Kill chain phases observed
+
+{', '.join(sorted(hit)) or '_(none detected from narrative keywords)_'}
+
+## Recommended hunts
+
+{uc_section}
+
+## Why this matters
+
+Severity classified as **{sev.upper()}** based on: {('CVE present, ' if ind.get('cves') else '')}{'IOCs present, ' if any(ind.get(k) for k in ('ips','domains','sha256','sha1','md5')) else ''}{len(ucs_pairs)} use case(s) fired, {len(techs)} technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+"""
+
+
+def write_briefings(articles_meta, articles_raw_index):
+    BRIEFINGS_DIR.mkdir(exist_ok=True)
+    written = []
+    for am in articles_meta:
+        a = articles_raw_index.get(am["id"])
+        if not a:
+            continue
+        a["sev"] = am.get("sev", "low")
+        a["sources"] = am.get("sources") or [a.get("source", "")]
+        ind = am.get("ind") or {}
+        pub = am.get("published") or "undated"
+        day_dir = BRIEFINGS_DIR / (pub if re.match(r"^\d{4}-\d{2}-\d{2}$", pub) else "undated")
+        day_dir.mkdir(parents=True, exist_ok=True)
+        slug = _slug(am["title"])
+        path = day_dir / f"{slug}.md"
+
+        if (am.get("sources") or [a.get("source", "")])[0] == "CISA KEV":
+            md = _kev_briefing(a, ind, [u for _, u in am.get("ucs", [])])
+        else:
+            ucs_pairs = am.get("ucs", []) or []
+            techs = []
+            for _uc_var, uc in ucs_pairs:
+                for tid, tname in uc.techniques:
+                    if (tid, tname) not in techs:
+                        techs.append((tid, tname))
+            md = _news_briefing(a, ind, ucs_pairs, techs, set(), am.get("sev", "low"))
+        path.write_text(md, encoding="utf-8")
+        written.append(path)
+
+    idx_lines = [
+        "# Briefings — full archive\n",
+        f"_{len(written)} per-article briefings — auto-generated from articles in the rolling {LOOKBACK_DAYS}-day window._\n",
+    ]
+    by_day = {}
+    for p in written:
+        by_day.setdefault(p.parent.name, []).append(p)
+    for day in sorted(by_day.keys(), reverse=True):
+        idx_lines.append(f"\n## {day}")
+        for p in sorted(by_day[day]):
+            idx_lines.append(f"- [{p.stem.replace('-', ' ')}](./{day}/{p.name})")
+    (BRIEFINGS_DIR / "INDEX.md").write_text("\n".join(idx_lines), encoding="utf-8")
+    return written
+
+
+# =============================================================================
 # Main
 # =============================================================================
 
@@ -3902,6 +4109,12 @@ def main():
     write_catalog_files(generated_iso)
     print(f"[*] IOCs aggregated: {len(iocs)} unique  ->  intel/")
     print(f"[*] Catalog exported: {len(_LOADED_UCS or {})} use cases  ->  catalog/")
+
+    # Per-article briefings — committed to the repo so anyone pulling sees
+    # operational content, not just aggregate exports
+    raw_index = {f"art-{i:02d}": a for i, a in enumerate(articles)}
+    briefing_paths = write_briefings(articles_meta, raw_index)
+    print(f"[*] Briefings written: {len(briefing_paths)}  ->  briefings/")
 
     intel_json = __import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str)
 
