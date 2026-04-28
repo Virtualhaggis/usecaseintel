@@ -2070,18 +2070,21 @@ body{
 
 .stats{
   display:flex; gap:16px; flex-wrap:wrap; flex:1; justify-content:center;
-  /* Visible only when the Articles tab is active. The view-tab handler
-     toggles a body class to hide the stats bar on Matrix / Intel /
-     Workflow tabs since the numbers are article-specific. */
+  /* One stats bar per tab — shown only when its tab is active. Toggled
+     via body classes set by showView(). All three sit in the header
+     and animate in/out as the user navigates so the stats they see at
+     a glance always match the tab they're on. */
   transition:opacity 0.25s ease, max-height 0.3s ease, transform 0.25s ease;
-}
-body.view-articles-active .stats{
-  opacity:1; max-height:80px; transform:translateY(0); pointer-events:auto;
-}
-body:not(.view-articles-active) .stats{
   opacity:0; max-height:0; transform:translateY(-8px);
   pointer-events:none; overflow:hidden;
 }
+body.view-articles-active .stats-articles,
+body.view-matrix-active   .stats-matrix,
+body.view-intel-active    .stats-intel{
+  opacity:1; max-height:80px; transform:translateY(0); pointer-events:auto;
+  overflow:visible;
+}
+/* Workflow tab: no stats bar — purposeful blank space, the diagram speaks */
 .stat{
   display:flex; flex-direction:column; align-items:center;
   padding:6px 12px; min-width:64px;
@@ -3012,13 +3015,15 @@ ul.intel-types-doc code{
         <span class="sub">Splunk · Defender · Kill Chain</span>
       </div>
     </div>
-    <div class="stats" id="topStats">
+    <div class="stats stats-articles" id="topStats">
       <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
       <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
       <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
       <div class="stat"><div class="v">__CVE_COUNT__</div><div class="l">CVEs</div></div>
       <div class="stat"><div class="v">__CRIT_COUNT__</div><div class="l">Critical</div></div>
     </div>
+    <div class="stats stats-matrix" id="topStatsMatrix"></div>
+    <div class="stats stats-intel" id="topStatsIntel"></div>
     <div class="search-trigger" id="searchTrigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
       <span class="search-placeholder">Search articles, techniques, CVEs</span>
@@ -3784,9 +3789,11 @@ const views = document.querySelectorAll('.view');
 function showView(name) {
   viewTabs.forEach(b => b.classList.toggle('active', b.dataset.view === name));
   views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
-  // Hide the top stats bar (article counts) on every tab except Articles.
-  // The numbers don't apply to ATT&CK matrix / Intel / Workflow views.
+  // Each tab has its own top-bar stats area. Body class drives the
+  // CSS visibility transition; only the active tab's stats are shown.
   document.body.classList.toggle('view-articles-active', name === 'articles');
+  document.body.classList.toggle('view-matrix-active',   name === 'matrix');
+  document.body.classList.toggle('view-intel-active',    name === 'intel');
   if (name === 'matrix' && !window._matrixRendered) {
     renderMatrix();
     window._matrixRendered = true;
@@ -3863,11 +3870,21 @@ function renderMatrix() {
   }).join('');
   grid.innerHTML = cols;
 
-  document.getElementById('matrixStats').innerHTML =
-    `<span><b>${MATRIX.stats.total_techs}</b> techniques</span>` +
-    `<span><b>${MATRIX.stats.total_subs}</b> sub-techniques</span>` +
-    `<span><b>${MATRIX.stats.covered_techs}</b> covered</span>` +
-    `<span><b>${MATRIX.stats.ucs}</b> use cases</span>`;
+  // Mirror the matrix counts into the top-bar slot so the stats float
+  // up next to the brand the same way the Articles bar does. Same DOM
+  // shape as #topStats so the .stat / .v / .l styling kicks in.
+  const topMatrix = document.getElementById('topStatsMatrix');
+  if (topMatrix) {
+    topMatrix.innerHTML =
+      `<div class="stat"><div class="v">${MATRIX.stats.total_techs.toLocaleString()}</div><div class="l">Techniques</div></div>` +
+      `<div class="stat"><div class="v">${MATRIX.stats.total_subs.toLocaleString()}</div><div class="l">Sub-Techniques</div></div>` +
+      `<div class="stat"><div class="v">${MATRIX.stats.covered_techs.toLocaleString()}</div><div class="l">Covered</div></div>` +
+      `<div class="stat"><div class="v">${MATRIX.stats.ucs.toLocaleString()}</div><div class="l">Use Cases</div></div>`;
+  }
+  // Hide the in-tab matrix-stats element since the same numbers now
+  // live in the top-bar; redundant on screen.
+  const inTabStats = document.getElementById('matrixStats');
+  if (inTabStats) inTabStats.style.display = 'none';
 }
 
 // Mode toggle
@@ -4248,13 +4265,29 @@ function applyIntelFilter() {
     if (matchSearch && (t in counts)) counts[t]++;
   });
   const total = INTEL.iocs ? INTEL.iocs.length : 0;
+  // In-tab stats — kept hidden because the same numbers are now in the
+  // top bar. Left in the DOM in case any other code references it.
   const stats = document.getElementById('intelStats');
-  stats.innerHTML =
-    `<span><b>${visible}</b> of ${total} IOCs</span>` +
-    `<span><b>${counts.cve}</b> CVEs</span>` +
-    `<span><b>${counts.ipv4}</b> IPs</span>` +
-    `<span><b>${counts.domain}</b> domains</span>` +
-    `<span><b>${counts.sha256+counts.sha1+counts.md5}</b> hashes</span>`;
+  if (stats) {
+    stats.innerHTML =
+      `<span><b>${visible}</b> of ${total} IOCs</span>` +
+      `<span><b>${counts.cve}</b> CVEs</span>` +
+      `<span><b>${counts.ipv4}</b> IPs</span>` +
+      `<span><b>${counts.domain}</b> domains</span>` +
+      `<span><b>${counts.sha256+counts.sha1+counts.md5}</b> hashes</span>`;
+    stats.style.display = 'none';
+  }
+  // Top-bar mirror — same shape as #topStats so the .stat styling kicks in.
+  const topIntel = document.getElementById('topStatsIntel');
+  if (topIntel) {
+    topIntel.innerHTML =
+      `<div class="stat"><div class="v">${visible.toLocaleString()}</div><div class="l">Showing</div></div>` +
+      `<div class="stat"><div class="v">${total.toLocaleString()}</div><div class="l">Total IOCs</div></div>` +
+      `<div class="stat"><div class="v">${counts.cve.toLocaleString()}</div><div class="l">CVEs</div></div>` +
+      `<div class="stat"><div class="v">${counts.ipv4.toLocaleString()}</div><div class="l">IPs</div></div>` +
+      `<div class="stat"><div class="v">${counts.domain.toLocaleString()}</div><div class="l">Domains</div></div>` +
+      `<div class="stat"><div class="v">${(counts.sha256+counts.sha1+counts.md5).toLocaleString()}</div><div class="l">Hashes</div></div>`;
+  }
 }
 
 document.getElementById('intelTypes')?.addEventListener('click', e => {
