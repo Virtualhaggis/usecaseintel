@@ -1378,9 +1378,10 @@ body{
 
 /* ----- Main layout --------------------------------------------------- */
 main{
-  max-width:1380px; margin:0 auto; padding:18px 28px 28px;
-  display:grid; grid-template-columns:300px 1fr; gap:24px;
+  max-width:1840px; margin:0 auto; padding:18px 28px 28px;
+  display:grid; grid-template-columns:260px 1fr; gap:20px;
 }
+@media(max-width:1280px){main{grid-template-columns:240px 1fr; gap:16px;}}
 @media(max-width:980px){main{grid-template-columns:1fr;padding:18px;}}
 
 nav.toc{
