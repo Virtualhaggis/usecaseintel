@@ -1,6 +1,19 @@
 @echo off
 REM Daily run: validate, regenerate, emit digest, auto-commit refreshed
 REM intel/ catalog/ daily_digest.md back to GitHub.
+REM
+REM Pipeline coverage (must remain wired into every run):
+REM   1. SOURCES (in generate.py):
+REM        - The Hacker News, BleepingComputer, Microsoft Security Blog
+REM        - IOC-rich research feeds: Cisco Talos, Securelist (Kaspersky),
+REM          SentinelLabs, Unit 42 (Palo Alto), ESET WeLiveSecurity
+REM        - CISA KEV (authoritative exploited-vuln feed)
+REM   2. Full article-body fetch (FETCH_FULL_BODY=1 default) so IOC
+REM      extraction sees hashes / defanged IPs / domains in the body, not
+REM      just the truncated RSS preview. Cache lives at
+REM      intel/.article_cache/ (gitignored).
+REM   3. requirements.txt: feedparser, requests, pyyaml.
+REM Set THN_FETCH_FULL_BODY=0 to disable body fetch (debug / offline only).
 setlocal
 cd /d "%~dp0"
 if not exist logs mkdir logs
