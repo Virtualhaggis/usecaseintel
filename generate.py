@@ -1307,7 +1307,7 @@ body{
   border-bottom:1px solid var(--hairline);
 }
 .topbar-inner{
-  max-width:1380px; margin:0 auto; padding:14px 28px;
+  margin:0; padding:14px 28px;
   display:flex; gap:24px; align-items:center; flex-wrap:wrap;
 }
 .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;letter-spacing:-0.01em;}
@@ -1354,7 +1354,7 @@ body{
 
 /* ----- Filter bar ---------------------------------------------------- */
 .filter-row{
-  max-width:1380px; margin:0 auto; padding:14px 28px 0;
+  margin:0; padding:14px 28px 0;
   display:flex; gap:8px; flex-wrap:wrap; align-items:center;
 }
 .filter-label{font-size:11px; color:var(--muted); text-transform:uppercase;
@@ -1378,7 +1378,7 @@ body{
 
 /* ----- Main layout --------------------------------------------------- */
 main{
-  max-width:1840px; margin:0 auto; padding:18px 28px 28px;
+  margin:0; padding:18px 28px 28px;
   display:grid; grid-template-columns:260px 1fr; gap:20px;
 }
 @media(max-width:1280px){main{grid-template-columns:240px 1fr; gap:16px;}}

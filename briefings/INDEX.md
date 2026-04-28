@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
+- [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
 - [checkmarx confirms lapsus hackers leaked its stolen github d](./2026-04-28/checkmarx-confirms-lapsus-hackers-leaked-its-stolen-github-d.md)
 - [chinese silk typhoon hacker extradited to u s over covid res](./2026-04-28/chinese-silk-typhoon-hacker-extradited-to-u-s-over-covid-res.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
@@ -20,9 +21,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft new remote desktop warnings may display incorrectl](./2026-04-28/microsoft-new-remote-desktop-warnings-may-display-incorrectl.md)
 - [microsoft patches entra id role flaw that enabled service pr](./2026-04-28/microsoft-patches-entra-id-role-flaw-that-enabled-service-pr.md)
 - [microsoft to deprecate legacy tls in exchange online startin](./2026-04-28/microsoft-to-deprecate-legacy-tls-in-exchange-online-startin.md)
+- [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
 - [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)
 - [us reportedly charges scattered spider hacker arrested in fi](./2026-04-28/us-reportedly-charges-scattered-spider-hacker-arrested-in-fi.md)
 - [vect 2 0 ransomware irreversibly destroys files over 131kb o](./2026-04-28/vect-2-0-ransomware-irreversibly-destroys-files-over-131kb-o.md)
+- [video service vimeo confirms anodot breach exposed user data](./2026-04-28/video-service-vimeo-confirms-anodot-breach-exposed-user-data.md)
 - [why secure data movement is the zero trust bottleneck nobody](./2026-04-28/why-secure-data-movement-is-the-zero-trust-bottleneck-nobody.md)
 
 ## 2026-04-27
@@ -33,7 +36,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ftc americans lost over 2 1 billion to social media scams in](./2026-04-27/ftc-americans-lost-over-2-1-billion-to-social-media-scams-in.md)
 - [glassworm malware attacks return via 73 openvsx sleeper exte](./2026-04-27/glassworm-malware-attacks-return-via-73-openvsx-sleeper-exte.md)
 - [home security giant adt data breach affects 5 5 million peop](./2026-04-27/home-security-giant-adt-data-breach-affects-5-5-million-peop.md)
-- [medtronic confirms breach after hackers claim 9 million reco](./2026-04-27/medtronic-confirms-breach-after-hackers-claim-9-million-reco.md)
 - [mythos changed the math on vulnerability discovery most team](./2026-04-27/mythos-changed-the-math-on-vulnerability-discovery-most-team.md)
 - [phantomcore exploits trueconf vulnerabilities to breach russ](./2026-04-27/phantomcore-exploits-trueconf-vulnerabilities-to-breach-russ.md)
 - [pypi package with 1 1m monthly downloads hacked to push info](./2026-04-27/pypi-package-with-1-1m-monthly-downloads-hacked-to-push-info.md)
@@ -48,8 +50,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-24
 - [26 fakewallet apps found on apple app store targeting crypto](./2026-04-24/26-fakewallet-apps-found-on-apple-app-store-targeting-crypto.md)
 - [bridging the ai agent authority gap continuous observability](./2026-04-24/bridging-the-ai-agent-authority-gap-continuous-observability.md)
+- [cisa kev cve 2024 1708 connectwise screenconnect path traver](./2026-04-24/cisa-kev-cve-2024-1708-connectwise-screenconnect-path-traver.md)
 - [cisa kev cve 2024 57726 simplehelp missing authorization vul](./2026-04-24/cisa-kev-cve-2024-57726-simplehelp-missing-authorization-vul.md)
-- [cisa kev cve 2024 57728 simplehelp path traversal vulnerabil](./2026-04-24/cisa-kev-cve-2024-57728-simplehelp-path-traversal-vulnerabil.md)
 - [cisa kev cve 2024 7399 samsung magicinfo 9 server path trave](./2026-04-24/cisa-kev-cve-2024-7399-samsung-magicinfo-9-server-path-trave.md)
 - [cisa kev cve 2025 29635 d link dir 823x command injection vu](./2026-04-24/cisa-kev-cve-2025-29635-d-link-dir-823x-command-injection-vu.md)
 - [firestarter backdoor hit federal cisco firepower device surv](./2026-04-24/firestarter-backdoor-hit-federal-cisco-firepower-device-surv.md)
@@ -109,7 +111,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [systembc c2 server reveals 1 570 victims in the gentlemen ra](./2026-04-21/systembc-c2-server-reveals-1-570-victims-in-the-gentlemen-ra.md)
 
 ## 2026-04-20
-- [anthropic mcp design vulnerability enables rce threatening a](./2026-04-20/anthropic-mcp-design-vulnerability-enables-rce-threatening-a.md)
 - [cisa kev cve 2023 27351 papercut ng mf improper authenticati](./2026-04-20/cisa-kev-cve-2023-27351-papercut-ng-mf-improper-authenticati.md)
 - [cisa kev cve 2024 27199 jetbrains teamcity relative path tra](./2026-04-20/cisa-kev-cve-2024-27199-jetbrains-teamcity-relative-path-tra.md)
 - [cisa kev cve 2025 32975 quest kace systems management applia](./2026-04-20/cisa-kev-cve-2025-32975-quest-kace-systems-management-applia.md)
@@ -119,7 +120,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fakewallet crypto stealer spreading through ios apps in the ](./2026-04-20/fakewallet-crypto-stealer-spreading-through-ios-apps-in-the-.md)
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
 - [making opportunistic cyberattacks harder by design](./2026-04-20/making-opportunistic-cyberattacks-harder-by-design.md)
-- [researchers detect zionsiphon malware targeting israeli wate](./2026-04-20/researchers-detect-zionsiphon-malware-targeting-israeli-wate.md)
 - [sglang cve 2026 5760 cvss 9 8 enables rce via malicious gguf](./2026-04-20/sglang-cve-2026-5760-cvss-9-8-enables-rce-via-malicious-gguf.md)
 - [weekly recap vercel hack push fraud qemu abused new android ](./2026-04-20/weekly-recap-vercel-hack-push-fraud-qemu-abused-new-android-.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
@@ -316,11 +316,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [naming and shaming how ransomware groups tighten the screws ](./2026-02-12/naming-and-shaming-how-ransomware-groups-tighten-the-screws-.md)
 
 ## 2026-02-10
-- [cisa kev cve 2026 21513 microsoft mshtml framework protectio](./2026-02-10/cisa-kev-cve-2026-21513-microsoft-mshtml-framework-protectio.md)
 - [cisa kev cve 2026 21514 microsoft office word reliance on un](./2026-02-10/cisa-kev-cve-2026-21514-microsoft-office-word-reliance-on-un.md)
 - [cisa kev cve 2026 21519 microsoft windows type confusion vul](./2026-02-10/cisa-kev-cve-2026-21519-microsoft-windows-type-confusion-vul.md)
 - [cisa kev cve 2026 21525 microsoft windows null pointer deref](./2026-02-10/cisa-kev-cve-2026-21525-microsoft-windows-null-pointer-deref.md)
 - [cisa kev cve 2026 21533 microsoft windows improper privilege](./2026-02-10/cisa-kev-cve-2026-21533-microsoft-windows-improper-privilege.md)
+- [cisa kev cve 2026 32202 microsoft windows protection mechani](./2026-02-10/cisa-kev-cve-2026-32202-microsoft-windows-protection-mechani.md)
 - [taxing times top irs scams to look out for in 2026](./2026-02-10/taxing-times-top-irs-scams-to-look-out-for-in-2026.md)
 
 ## 2026-02-05
