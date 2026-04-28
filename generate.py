@@ -1397,12 +1397,48 @@ body{
 .fchip.on .dot{background:var(--accent);}
 
 /* ----- Main layout --------------------------------------------------- */
+/* Width-mode is user-selectable via the toolbar in #articles. Default is
+   "wide" so the article column uses most of the viewport on large monitors
+   without sprawling on ultrawides. localStorage key: usecaseintel:width. */
 main{
   margin:0; padding:18px 28px 28px;
-  display:grid; grid-template-columns:260px minmax(0, 1380px); gap:20px;
+  display:grid; gap:20px;
 }
-@media(max-width:1280px){main{grid-template-columns:240px minmax(0, 1fr); gap:16px;}}
-@media(max-width:980px){main{grid-template-columns:1fr;padding:18px;}}
+main.width-compact{grid-template-columns:260px minmax(0, 1180px);}
+main.width-wide   {grid-template-columns:260px minmax(0, 1700px);}
+main.width-full   {grid-template-columns:260px minmax(0, 1fr);}
+main:not(.width-compact):not(.width-wide):not(.width-full){
+  /* fallback if JS hasn't applied a class yet */
+  grid-template-columns:260px minmax(0, 1700px);
+}
+@media(max-width:1280px){
+  main, main.width-compact, main.width-wide, main.width-full{
+    grid-template-columns:240px minmax(0, 1fr); gap:16px;
+  }
+}
+@media(max-width:980px){
+  main, main.width-compact, main.width-wide, main.width-full{
+    grid-template-columns:1fr; padding:18px;
+  }
+}
+
+/* Width toolbar (sits in the article-list filter bar) */
+.width-toggle{
+  display:inline-flex; gap:4px; margin-left:auto;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:3px;
+}
+.width-toggle button{
+  background:transparent; border:0; color:var(--muted);
+  padding:4px 10px; border-radius:calc(var(--r-md) - 3px);
+  font-size:11px; font-family:inherit; font-weight:600;
+  text-transform:uppercase; letter-spacing:0.06em;
+  cursor:pointer; transition:all 0.15s;
+}
+.width-toggle button:hover{color:var(--text);}
+.width-toggle button.on{
+  background:var(--accent); color:#04111d;
+}
 
 nav.toc{
   background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
@@ -1468,6 +1504,11 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
 .src-chip.active.bc{background:rgba(255,93,93,0.18); border-color:var(--bad); color:var(--bad);}
 .src-chip.active.ms{background:rgba(180,141,255,0.18); border-color:var(--accent-2); color:var(--accent-2);}
 .src-chip.active.kev{background:rgba(255,176,96,0.18); border-color:var(--warn); color:var(--warn);}
+.src-chip.active.talos{background:rgba(54,224,192,0.18); border-color:var(--accent-3); color:var(--accent-3);}
+.src-chip.active.securelist{background:rgba(46,213,99,0.18); border-color:var(--good); color:var(--good);}
+.src-chip.active.sentinel{background:rgba(180,141,255,0.18); border-color:var(--accent-2); color:var(--accent-2);}
+.src-chip.active.unit42{background:rgba(255,176,96,0.18); border-color:var(--warn); color:var(--warn);}
+.src-chip.active.eset{background:rgba(95,182,255,0.18); border-color:var(--accent); color:var(--accent);}
 .src-chip .cnt{
   font-variant-numeric:tabular-nums; opacity:0.7;
   background:rgba(0,0,0,0.25); padding:1px 6px; border-radius:999px;
@@ -2146,13 +2187,20 @@ ul.intel-types-doc code{
 </header>
 
 <div id="view-articles" class="view active">
-<main>
+<main class="width-wide">
   <nav class="toc">
     <h3>Articles</h3>
     <div id="navlist">__NAV__</div>
   </nav>
   <section id="articles">
-    <div class="src-filter-bar" id="srcFilter">__SOURCE_CHIPS__</div>
+    <div class="src-filter-bar" id="srcFilter">
+      __SOURCE_CHIPS__
+      <div class="width-toggle" id="widthToggle" title="Article column width">
+        <button data-width="compact">Compact</button>
+        <button data-width="wide" class="on">Wide</button>
+        <button data-width="full">Full</button>
+      </div>
+    </div>
     __CARDS__
   </section>
 </main>
@@ -2527,28 +2575,68 @@ function renderSel() {
 input.addEventListener('input', () => renderResults(input.value));
 
 // =================================================================
-// Source filter (Articles tab)
+// Source filter (Articles tab) — multi-select
 // =================================================================
+// Click a source chip to toggle its filter on/off. Multiple chips can be
+// active at once; a card is shown if it matches ANY active source.
+// "All" deselects every other chip and shows everything.
+function applySourceFilter() {
+  const activeChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all)');
+  const activeSources = Array.from(activeChips).map(c => c.dataset.source).filter(Boolean);
+  const cards = document.querySelectorAll('#view-articles article.card');
+  cards.forEach(card => {
+    const sources = (card.dataset.sources || '').split('|');
+    const show = activeSources.length === 0
+                 || activeSources.some(s => sources.includes(s));
+    card.classList.toggle('src-hidden', !show);
+  });
+  document.querySelectorAll('#navlist .nav-item').forEach(n => {
+    const card = document.getElementById(n.dataset.jump);
+    n.style.display = card && card.classList.contains('src-hidden') ? 'none' : '';
+  });
+  // Keep the "All" chip's active state in sync (active iff no other source picked)
+  const allChip = document.querySelector('#srcFilter .src-chip.all');
+  if (allChip) allChip.classList.toggle('active', activeSources.length === 0);
+}
 document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
   chip.addEventListener('click', () => {
-    document.querySelectorAll('#srcFilter .src-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    const src = chip.dataset.source || '';
-    const cards = document.querySelectorAll('#view-articles article.card');
-    let visible = 0;
-    cards.forEach(card => {
-      const sources = (card.dataset.sources || '').split('|');
-      const show = !src || sources.includes(src);
-      card.classList.toggle('src-hidden', !show);
-      if (show) visible++;
-    });
-    // Sync sidebar nav so hidden cards drop out of navigation too
-    document.querySelectorAll('#navlist .nav-item').forEach(n => {
-      const card = document.getElementById(n.dataset.jump);
-      n.style.display = card && card.classList.contains('src-hidden') ? 'none' : '';
-    });
+    if (chip.classList.contains('all')) {
+      // "All" clears every other chip
+      document.querySelectorAll('#srcFilter .src-chip').forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+    } else {
+      chip.classList.toggle('active');
+      // any non-All click means "All" is no longer the implicit selection
+      document.querySelector('#srcFilter .src-chip.all')?.classList.remove('active');
+    }
+    applySourceFilter();
   });
 });
+
+// =================================================================
+// Width toggle (Articles tab)
+// =================================================================
+(function(){
+  const STORAGE_KEY = 'usecaseintel:width';
+  const main = document.querySelector('#view-articles main');
+  const toggle = document.getElementById('widthToggle');
+  if (!main || !toggle) return;
+  function setWidth(mode) {
+    main.classList.remove('width-compact','width-wide','width-full');
+    main.classList.add('width-' + mode);
+    toggle.querySelectorAll('button').forEach(b => {
+      b.classList.toggle('on', b.dataset.width === mode);
+    });
+    try { localStorage.setItem(STORAGE_KEY, mode); } catch(e) {}
+  }
+  // Restore saved preference (default = 'wide', applied via class on <main>)
+  let saved = null;
+  try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+  if (saved && ['compact','wide','full'].includes(saved)) setWidth(saved);
+  toggle.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => setWidth(btn.dataset.width));
+  });
+})();
 
 // =================================================================
 // Platform-aware shortcut hint (Cmd on Mac, Ctrl elsewhere)
@@ -4517,6 +4605,11 @@ def main():
         "BleepingComputer": "bc",
         "Microsoft Security Blog": "ms",
         "CISA KEV": "kev",
+        "Cisco Talos": "talos",
+        "Securelist (Kaspersky)": "securelist",
+        "SentinelLabs": "sentinel",
+        "Unit 42 (Palo Alto)": "unit42",
+        "ESET WeLiveSecurity": "eset",
     }
     src_counts = {}
     for a in articles:
@@ -4531,7 +4624,10 @@ def main():
         if cnt == 0: continue
         cls = src_class_map_chips.get(src, "")
         label = {"The Hacker News":"THN","BleepingComputer":"BleepingComputer",
-                 "Microsoft Security Blog":"Microsoft","CISA KEV":"CISA KEV"}.get(src, src)
+                 "Microsoft Security Blog":"Microsoft","CISA KEV":"CISA KEV",
+                 "Cisco Talos":"Talos","Securelist (Kaspersky)":"Securelist",
+                 "SentinelLabs":"SentinelLabs","Unit 42 (Palo Alto)":"Unit 42",
+                 "ESET WeLiveSecurity":"ESET"}.get(src, src)
         chip_html.append(
             f'<button class="src-chip {cls}" data-source="{html.escape(src)}">'
             f'{html.escape(label)} <span class="cnt">{cnt}</span></button>')
