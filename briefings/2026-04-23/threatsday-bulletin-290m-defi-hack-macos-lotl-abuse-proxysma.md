@@ -1,51 +1,141 @@
-# [MED] ThreatsDay Bulletin: $290M DeFi Hack, macOS LotL Abuse, ProxySmart SIM Farms +25 New Stories
+<!-- curated:true -->
+# [MED] ThreatsDay Bulletin: $290M DeFi Hack, macOS LotL Abuse, ProxySmart SIM Farms + 25 More
 
 **Source:** The Hacker News
 **Published:** 2026-04-23
 **Article:** https://thehackernews.com/2026/04/threatsday-bulletin-290m-defi-hack.html
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
 
-You scroll past one incident and see another that feels familiar, like it should have been fixed years ago, but it still works with small changes. Same bugs. Same mistakes. The supply chain is messy. Packages you did not check are stealing data, adding backdoors, and spreading. Attacking the systems behind apps is easier than breaking the apps themselves. The exploits are simple but still work
+A weekly digest piece — themes worth tagging:
 
-## Indicators of Compromise (high-fidelity only)
+1. **$290M DeFi hack** — yet another smart-contract / bridge / oracle exploit; mostly relevant to crypto-native orgs.
+2. **macOS Living-off-the-Land (LotL) abuse** — adversaries chaining built-in macOS binaries (`osascript`, `curl`, `softwareupdate`, `nscurl`, `mdfind`) instead of dropping malware. **High SOC value** — most macOS detection is built around malicious-binary signatures, missing LotL chains entirely.
+3. **ProxySmart SIM farms** — telephony fraud at scale; relevant to anti-fraud teams more than enterprise SOC.
+4. **+25 supporting stories** — the detection backlog is shaped by repeating themes (supply-chain compromise, package compromise, edge-device exploitation).
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+For SOC operations, the **macOS LotL** thread is the actionable take. We've kept severity **MED** because the digest format is broad rather than specific, but flagged macOS LotL detection as the single most-leveraged item.
 
-## MITRE ATT&CK Techniques
+## Indicators of Compromise
 
+- _Cross-reference to specific stories — most have their own briefings or will._
+- macOS LotL fingerprints (more durable than per-incident IOCs):
+  - `osascript -e` running `curl` / `do shell script` / multi-line AppleScript with reverse-shell pattern.
+  - `softwareupdate --list` / `--install` from non-`launchd` parents.
+  - `mdfind` / `find` enumerating broad filesystem paths from non-Spotlight contexts.
+  - `nscurl` (rare; native HTTP fetcher) with non-Apple destinations.
+
+## MITRE ATT&CK (analyst-validated)
+
+- **T1059.002** — AppleScript (osascript)
+- **T1059.004** — Unix Shell (bash, sh, zsh)
+- **T1218** — System Binary Proxy Execution (LotL category)
+- **T1083** — File and Directory Discovery (mdfind / find / locate)
 - **T1195.002** — Compromise Software Supply Chain
+- **T1657** — Financial Theft (the DeFi-hack thread)
 
-## Kill chain phases observed
+## Recommended SOC actions (priority-ordered)
 
-_(none detected from narrative keywords)_
+1. **Build macOS LotL detection** — see queries below. This is the single highest-leverage macOS detection investment for the year.
+2. **Audit your macOS endpoint coverage.** If you don't have process-event telemetry from your Mac fleet, build that integration first; LotL detection is impossible without it.
+3. **Run the `osascript -e` hunt** with content patterns matching reverse-shell / network-fetch — high-fidelity for malicious AppleScript.
+4. **Cross-reference to per-story briefings** — DeFi / SIM-farm / supply-chain stories have dedicated detection content elsewhere.
 
-## Recommended hunts
+## Splunk SPL — macOS osascript with shell / network content
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+| tstats `summariesonly` count
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where Processes.process_name="osascript"
+      AND (Processes.process="*do shell script*"
+        OR Processes.process="*do JavaScript*"
+        OR Processes.process="*curl*"
+        OR Processes.process="*wget*"
+        OR Processes.process="*nc*"
+        OR Processes.process="*bash -i*"
+        OR Processes.process="*/dev/tcp/*"
+        OR Processes.process="*tell application*"
+        OR Processes.process="*exec*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process,
+       Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
 
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+## Splunk SPL — macOS softwareupdate from non-system parent
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="softwareupdate"
+      AND Processes.parent_process_name!="launchd"
+      AND Processes.parent_process_name!="systemstats"
+      AND Processes.parent_process_name!="System Preferences"
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process,
+       Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
+## Splunk SPL — macOS broad mdfind / find enumeration
 
-## Why this matters
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name="mdfind"
+        OR Processes.process_name="find")
+      AND (Processes.process="* / *"
+        OR Processes.process="*/Users*"
+        OR Processes.process="*kMDItemKind*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process,
+       Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+## Defender KQL — macOS osascript with shell content
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where FileName == "osascript"
+| where ProcessCommandLine has_any (
+    "do shell script", "do JavaScript", "curl ", "wget ", " nc ",
+    "bash -i", "/dev/tcp/", "tell application", "exec ")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Defender KQL — macOS softwareupdate from non-system parent
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where FileName == "softwareupdate"
+| where InitiatingProcessFileName !in~ ("launchd","systemstats","System Preferences")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Defender KQL — macOS Spotlight enumeration from non-Spotlight contexts
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where FileName in~ ("mdfind","find")
+| where ProcessCommandLine has_any (" / ", "/Users", "kMDItemKind")
+| where InitiatingProcessFileName !in~ ("Spotlight","mds","mdworker","Finder")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Why this matters for your SOC
+
+Digest articles are best read as a **scope-broadening exercise**: do my detections cover the full picture? The macOS LotL thread is the most actionable item in this week's bulletin because:
+
+1. It's a generalised TTP class (not one actor's tooling).
+2. Most enterprise SOCs have weak macOS LotL coverage.
+3. The detections are simple, high-fidelity, and easy to baseline.
+
+Run the `osascript` hunt this week as a self-audit. If you have *any* hits where `osascript` is invoking shell or network commands from non-developer endpoints, you have macOS adversary tradecraft on your fleet. Most likely it's adware or commodity stealer; occasionally it's APT.
