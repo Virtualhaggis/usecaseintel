@@ -1481,7 +1481,8 @@ article.card{
   background:linear-gradient(180deg, var(--panel-elev) 0%, var(--panel) 100%);
   border:1px solid var(--border);
   border-radius:var(--r-lg);
-  padding:24px;
+  padding:28px;
+  font-size:15px; line-height:1.6;
   position:relative;
   box-shadow:var(--shadow-md);
   transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
@@ -1508,14 +1509,14 @@ article.card .sev-ribbon.crit{
   color:#fff;
   box-shadow:var(--shadow-sm), 0 0 16px rgba(255,50,96,0.5);
 }
-article.card h2{margin:14px 0 6px 0;font-size:20px;line-height:1.3;letter-spacing:-0.012em;font-weight:700;}
+article.card h2{margin:16px 0 8px 0;font-size:22px;line-height:1.3;letter-spacing:-0.012em;font-weight:700;}
 article.card h2 a{color:var(--text);text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
   background-size:0% 1.5px;background-repeat:no-repeat;background-position:0 100%;
   transition:background-size 0.2s ease;}
 article.card h2 a:hover{background-size:100% 1.5px;color:var(--accent);}
-article.card .pubmeta{color:var(--muted);font-size:11.5px;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap;}
+article.card .pubmeta{color:var(--muted);font-size:12.5px;margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap;}
 article.card .pubmeta span:not(:first-child)::before{content:"•";margin-right:14px;color:var(--muted-2);}
-article.card p.summary{color:var(--text);opacity:0.88;margin:8px 0 16px 0;font-size:13.5px;}
+article.card p.summary{color:var(--text);opacity:0.9;margin:10px 0 18px 0;font-size:14.5px;line-height:1.6;}
 
 .action-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px 0;align-items:center;}
 .btn{
