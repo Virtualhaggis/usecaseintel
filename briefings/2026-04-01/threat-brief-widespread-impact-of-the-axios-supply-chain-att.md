@@ -1,10 +1,24 @@
+<!-- curated:true -->
 # [CRIT] Threat Brief: Widespread Impact of the Axios Supply Chain Attack
 
 **Source:** Unit 42 (Palo Alto)
 **Published:** 2026-04-01
 **Article:** https://unit42.paloaltonetworks.com/axios-supply-chain-attack/
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
+
+Unit 42's executive-summary brief on the **Axios npm package supply-chain attack** — Axios is one of the most-installed JavaScript HTTP clients (**~50M weekly downloads**, present in nearly every Node.js / browser project of meaningful size). The compromised release shipped a **trojanised post-install hook** that:
+- Beaconed to attacker C2 (`sfrclak[.]com`, `callnrwise[.]com`).
+- Pulled stage-2 from a typosquatted CDN (`packages.npm[.]org` — note: legitimate npm registry is `registry.npmjs.org`, the typosquat is `packages.npm.org`).
+- Exfiltrated `.npmrc` / `.env` / cloud credentials.
+
+The blast radius is **every CI runner, container build, and developer workstation** that ran `npm install` against the affected version range. We've kept severity **CRIT** for three reasons:
+1. Axios is in the dependency graph of nearly every modern JS app — the affected population is huge.
+2. The malicious package leaked **build-time secrets** (npm tokens, AWS keys, GitHub PATs, signing keys), which can be re-used long after package removal.
+3. **CVE-2025-55182** is referenced — Meta React Server Components, often pinned alongside axios — exploited downstream in this campaign.
+
+This briefing carries **27 Unit 42 IOCs** (1 IP, 3 domains, 23 SHA256 hashes) — vendor-attributed, ready to block.
 
 Threat Research Center 
 High Profile Threats 
@@ -75,9 +89,18 @@ Executive Summar…
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 
+## Recommended SOC actions (priority-ordered)
+
+1. **Block the 4 Axios IOCs at egress** today (`142.11.206.73`, `sfrclak.com`, `callnrwise.com`, `packages.npm.org`). The fourth is critical — it's a typosquat for `registry.npmjs.org` so legitimate npm traffic is unaffected.
+2. **Inventory affected `axios` versions** across container images, CI configs, package-lock files. Pull from your SBOM tooling or `npm ls axios` across repos.
+3. **Rotate every secret an affected CI runner / dev workstation could have touched** — npm tokens, AWS keys, GitHub PATs, signing keys, cloud-warehouse creds. Even if the install was on a now-decommissioned runner, the secret was harvested.
+4. **Hash-match the 23 SHA256 stage-2 binaries** against `DeviceFileEvents` / `DeviceProcessEvents` (template below).
+5. **Hunt outbound from `node.exe` / `npm.exe` to non-registry destinations** for the affected window.
+6. **Pin to digest, not tag, going forward** for npm packages where supported (`overrides` + lockfile integrity hashes).
+
 ## Kill chain phases observed
 
-_(none detected from narrative keywords)_
+_(none detected from narrative keywords — manual mapping above)_
 
 ## Recommended hunts
 

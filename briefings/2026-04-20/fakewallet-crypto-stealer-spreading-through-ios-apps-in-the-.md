@@ -1,305 +1,176 @@
-# [CRIT] FakeWallet crypto stealer spreading through iOS apps in the App Store
+<!-- curated:true -->
+# [HIGH] FakeWallet Crypto Stealer Spreading Through iOS Apps in the App Store
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-04-20
 **Article:** https://securelist.com/fakewallet-cryptostealer-ios-app-store/119474/
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
 
-Table of Contents
-Technical details 
-Background 
-Malicious modules for hot wallets 
-The Ledger wallet malicious module 
-Other distribution channels, platforms, and the SparkKitty link 
-Victims 
-Attribution 
-Conclusion 
-Indicators of compromise 
-Authors
-Sergey Puzan 
-In March 2026, we uncovered more than twenty phishing apps in the Apple App Store masquerading as popular crypto wallets. Once launched, these apps redirect users to browser pages designed to look similar to the App Store and distrib…
+Kaspersky's Securelist team identified **20+ phishing apps in the Apple App Store** masquerading as legitimate crypto wallets (Trust Wallet, MetaMask, Phantom, Ledger, Exodus). Once launched, the apps **redirect users to lookalike "App Store" pages** that distribute trojanised wallet builds — bypassing Apple's review by fronting an innocent-looking app and switching content server-side post-install.
+
+The campaign — **FakeWallet** — links to the broader **SparkKitty** infrastructure tracked by Kaspersky and is **multi-stage**:
+1. Victim downloads the lookalike wallet app from the App Store.
+2. The app redirects to attacker infrastructure that hands them a trojanised wallet binary (out-of-store sideload via configuration profile, or a fresh App Store app with the malicious config).
+3. The trojanised wallet **collects mnemonic seed phrases / private keys** when the user "imports their wallet" or "creates a new one."
+4. Keys are exfiltrated to attacker C2 over HTTPS (`hxxps://iosfc[.]com/ledger/ios/Rsakeycatch.php` etc.).
+
+For enterprise SOCs, this isn't only a consumer-mobile issue:
+- **Crypto-aware enterprise users** (treasury, finance ops, custody desks, crypto-services teams) are direct targets.
+- **Personal-device-on-corporate-Wi-Fi** and **BYOD-MAM-managed** scenarios — the C2 traffic flows over your network even if the device isn't fully managed.
+- The **lookalike-app-store / config-profile** pattern is **transferable** — same TTPs hit B2B fintech and corporate-banking apps.
+
+We've kept severity **HIGH** because the **45 IOCs (1 IP + 24 domains + 21 MD5 hashes)** are immediately operational at the network layer.
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `139.180.139.209`
-- **Domain (defanged):** `iosfc.com`
-- **Domain (defanged):** `xxx.com`
-- **Domain (defanged):** `www.gxzhrc.cn`
-- **Domain (defanged):** `appstoreios.com`
-- **Domain (defanged):** `crypto-stroe.cc`
-- **Domain (defanged):** `yjzhengruol.com`
-- **Domain (defanged):** `6688cf.jhxrpbgq.com`
-- **Domain (defanged):** `xz.apps-store.im`
-- **Domain (defanged):** `ntm0mdkzymy3n.oukwww.com`
-- **Domain (defanged):** `nziwytu5n.lahuafa.com`
-- **Domain (defanged):** `zdrhnmjjndu.ulbcl.com`
-- **Domain (defanged):** `api.npoint.io`
-- **Domain (defanged):** `mti4ywy4.lahuafa.com`
-- **Domain (defanged):** `mtjln.siyangoil.com`
-- **Domain (defanged):** `odm0.siyangoil.com`
-- **Domain (defanged):** `mgi1y.siyangoil.com`
-- **Domain (defanged):** `mziyytm5ytk.ahroar.com`
-- **Domain (defanged):** `ngy2yjq0otlj.ahroar.com`
-- **Domain (defanged):** `kkkhhhnnn.com`
-- **Domain (defanged):** `helllo2025.com`
-- **Domain (defanged):** `sxsfcc.com`
-- **Domain (defanged):** `nmu8n.com`
-- **Domain (defanged):** `zmx6f.com`
-- **Domain (defanged):** `api.dc1637.xyz`
-- **MD5:** `4126348d783393dd85ede3468e48405d`
-- **MD5:** `b639f7f81a8faca9c62fd227fef5e28c`
-- **MD5:** `d48b580718b0e1617afc1dec028e9059`
-- **MD5:** `bafba3d044a4f674fc9edc67ef6b8a6b`
-- **MD5:** `79fe383f0963ae741193989c12aefacc`
-- **MD5:** `8d45a67b648d2cb46292ff5041a5dd44`
-- **MD5:** `7e678ca2f01dc853e85d13924e6c8a45`
-- **MD5:** `be9e0d516f59ae57f5553bcc3cf296d1`
-- **MD5:** `fd0dc5d4bba740c7b4cc78c4b19a5840`
-- **MD5:** `7b4c61ff418f6fe80cf8adb474278311`
-- **MD5:** `8cbd34393d1d54a90be3c2b53d8fc17a`
-- **MD5:** `d138a63436b4dd8c5a55d184e025ef99`
-- **MD5:** `5bdae6cb778d002c806bb7ed130985f3`
-- **MD5:** `84c81a5e49291fe60eb9f5c1e2ac184b`
-- **MD5:** `19733e0dfa804e3676f97eff90f2e467`
-- **MD5:** `8f51f82393c6467f9392fb9eb46f9301`
-- **MD5:** `114721fbc23ff9d188535bd736a0d30e`
-- **MD5:** `686989d97cf0d70346cbde2031207cbf`
-- **MD5:** `0565364633b5acdd24a498a6a9ab4eca`
-- **MD5:** `417ae7f384c49de8c672aec86d5a2860`
-- **MD5:** `31d25ddf2697b9e13ee883fff328b22f`
+- **IPv4:** `139.180.139.209`
+- **24 defanged domains** including:
+  - C2: `iosfc.com`, `appstoreios.com`, `crypto-stroe.cc`, `yjzhengruol.com`, `6688cf.jhxrpbgq.com`, `xz.apps-store.im`, `api.dc1637.xyz`
+  - Subdomain-on-throwaway: `*.lahuafa.com`, `*.siyangoil.com`, `*.ahroar.com`, `*.oukwww.com`, `*.ulbcl.com`
+  - Generic burner: `kkkhhhnnn.com`, `helllo2025.com`, `sxsfcc.com`, `nmu8n.com`, `zmx6f.com`
+- **21 MD5 hashes** — see `intel/iocs.csv` (filter `sources=Securelist (Kaspersky)`).
 
-## MITRE ATT&CK Techniques
+## MITRE ATT&CK (analyst-validated)
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
-- **T1005** — Data from Local System
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
-- **T1566.002** — Spearphishing Link
-- **T1204.001** — User Execution: Malicious Link
-- **T1566.001** — Spearphishing Attachment
-- **T1204.002** — User Execution: Malicious File
-- **T1059.001** — PowerShell
-- **T1059.005** — Visual Basic
-- **T1218** — System Binary Proxy Execution
-- **T1027** — Obfuscated Files or Information
+- **T1656** — Impersonation (lookalike App Store / wallet brands)
+- **T1583.001** — Acquire Infrastructure: Domains (cheap-TLD throwaways: `.cc`, `.xyz`, `.im`)
+- **T1204.001 / T1204.002** — User Execution (malicious link / file)
+- **T1071.001** — Application Layer Protocol: Web Protocols (HTTPS C2)
+- **T1555** — Credentials from Password Stores (the wallet seeds)
+- **T1657** — Financial Theft (cryptocurrency drainer endgame)
+- **T1056.001** — Input Capture: Keylogging (in some FakeWallet variants)
 
-## Kill chain phases observed
+## Recommended SOC actions (priority-ordered)
 
-_(none detected from narrative keywords)_
+1. **Add the 24 domains + 1 IP to your DNS / proxy block list** today. Highest-leverage immediate action.
+2. **Hunt 60 days of network logs** for any of these IOCs. Even a single resolution = potential personal compromise → pivot risk.
+3. **Brief crypto-handling teams** (treasury, finance ops, custody, blockchain-engineering) — they're the targeted demographic. "Never re-enter your seed phrase into a wallet app you just downloaded."
+4. **Block the lookalike-domain TLD pattern** (`*.cc`, `*.im`, `*.xyz` family) at egress for high-risk users where business-justifiable.
+5. **MDM policy review** — if your iOS fleet allows arbitrary App Store installs, that's the dominant exposure surface; for high-risk roles, restrict to a curated app catalogue.
+6. **Mobile-device-traffic visibility**: if BYOD doesn't route through corporate inspection, add corporate VPN or DNS-filter (Cloudflare Gateway / Cisco Umbrella) to extend coverage.
 
-## Recommended hunts
+## Splunk SPL — DNS / web hits to FakeWallet IOCs
 
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.query IN (
+        "iosfc.com","appstoreios.com","crypto-stroe.cc","yjzhengruol.com",
+        "6688cf.jhxrpbgq.com","xz.apps-store.im","api.dc1637.xyz",
+        "kkkhhhnnn.com","helllo2025.com","sxsfcc.com","nmu8n.com","zmx6f.com",
+        "ntm0mdkzymy3n.oukwww.com","nziwytu5n.lahuafa.com","zdrhnmjjndu.ulbcl.com",
+        "mti4ywy4.lahuafa.com","mtjln.siyangoil.com","odm0.siyangoil.com",
+        "mgi1y.siyangoil.com","mziyytm5ytk.ahroar.com","ngy2yjq0otlj.ahroar.com",
+        "api.npoint.io","www.gxzhrc.cn")
+       OR DNS.query="*.lahuafa.com"
+       OR DNS.query="*.siyangoil.com"
+       OR DNS.query="*.ahroar.com"
+       OR DNS.query="*.oukwww.com"
+    by DNS.src, DNS.query, DNS.answer
+| `drop_dm_object_name(DNS)`
 | sort - count
 ```
 
-**Defender KQL:**
+## Splunk SPL — outbound to FakeWallet IP/domains (Web datamodel)
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Web
+    where Web.dest IN (
+        "iosfc.com","appstoreios.com","crypto-stroe.cc","yjzhengruol.com",
+        "api.dc1637.xyz","139.180.139.209")
+       OR Web.url="*\.lahuafa\.com*"
+       OR Web.url="*\.siyangoil\.com*"
+       OR Web.url="*\.ahroar\.com*"
+    by Web.src, Web.dest, Web.url, Web.user
+| `drop_dm_object_name(Web)`
+```
+
+## Splunk SPL — file hash IOCs on managed endpoints
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (
+        "4126348d783393dd85ede3468e48405d","b639f7f81a8faca9c62fd227fef5e28c",
+        "d48b580718b0e1617afc1dec028e9059","bafba3d044a4f674fc9edc67ef6b8a6b",
+        "79fe383f0963ae741193989c12aefacc","8d45a67b648d2cb46292ff5041a5dd44",
+        "7e678ca2f01dc853e85d13924e6c8a45","be9e0d516f59ae57f5553bcc3cf296d1",
+        "fd0dc5d4bba740c7b4cc78c4b19a5840","7b4c61ff418f6fe80cf8adb474278311",
+        "8cbd34393d1d54a90be3c2b53d8fc17a","d138a63436b4dd8c5a55d184e025ef99",
+        "5bdae6cb778d002c806bb7ed130985f3","84c81a5e49291fe60eb9f5c1e2ac184b",
+        "19733e0dfa804e3676f97eff90f2e467","8f51f82393c6467f9392fb9eb46f9301",
+        "114721fbc23ff9d188535bd736a0d30e","686989d97cf0d70346cbde2031207cbf",
+        "0565364633b5acdd24a498a6a9ab4eca","417ae7f384c49de8c672aec86d5a2860",
+        "31d25ddf2697b9e13ee883fff328b22f")
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+```
+
+## Defender KQL — DNS / network IOCs
+
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
+| where Timestamp > ago(60d)
+| where RemoteIP =~ "139.180.139.209"
+   or RemoteUrl has_any (
+        "iosfc.com","appstoreios.com","crypto-stroe.cc","yjzhengruol.com",
+        "api.dc1637.xyz","jhxrpbgq.com","apps-store.im","kkkhhhnnn.com",
+        "helllo2025.com","sxsfcc.com","nmu8n.com","zmx6f.com",
+        "lahuafa.com","siyangoil.com","ahroar.com","oukwww.com","ulbcl.com",
+        "gxzhrc.cn","npoint.io")
+| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
-### Crypto-wallet file/keystore access by non-wallet process
+## Defender KQL — file-hash match (managed endpoints)
 
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
+```kql
+let fakewalletHashes = dynamic([
+    "4126348d783393dd85ede3468e48405d","b639f7f81a8faca9c62fd227fef5e28c",
+    "d48b580718b0e1617afc1dec028e9059","bafba3d044a4f674fc9edc67ef6b8a6b",
+    "79fe383f0963ae741193989c12aefacc","8d45a67b648d2cb46292ff5041a5dd44",
+    "7e678ca2f01dc853e85d13924e6c8a45","be9e0d516f59ae57f5553bcc3cf296d1",
+    "fd0dc5d4bba740c7b4cc78c4b19a5840","7b4c61ff418f6fe80cf8adb474278311",
+    "8cbd34393d1d54a90be3c2b53d8fc17a","d138a63436b4dd8c5a55d184e025ef99",
+    "5bdae6cb778d002c806bb7ed130985f3","84c81a5e49291fe60eb9f5c1e2ac184b",
+    "19733e0dfa804e3676f97eff90f2e467","8f51f82393c6467f9392fb9eb46f9301",
+    "114721fbc23ff9d188535bd736a0d30e","686989d97cf0d70346cbde2031207cbf",
+    "0565364633b5acdd24a498a6a9ab4eca","417ae7f384c49de8c672aec86d5a2860",
+    "31d25ddf2697b9e13ee883fff328b22f"]);
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where MD5 in~ (fakewalletHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, MD5, ProcessCommandLine
+| order by Timestamp desc
 ```
 
-**Defender KQL:**
+## Defender KQL — crypto-wallet path access on Windows
+
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| where Timestamp > ago(60d)
+| where FolderPath has_any (
+    "\\Exodus\\","\\Electrum\\","\\Atomic\\","\\MetaMask\\","\\Phantom\\",
+    "\\Bitcoin\\","\\Ledger Live\\","\\Trust Wallet\\")
+| where InitiatingProcessFileName !in~ (
+    "Exodus.exe","Electrum.exe","Atomic.exe","MetaMask.exe","Phantom.exe",
+    "bitcoin-qt.exe","Bitcoin Core.exe","Ledger Live.exe","Trust Wallet.exe")
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
-### Infostealer — non-browser process accessing browser cookie/login DBs
+## Why this matters for your SOC
 
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+FakeWallet is the latest worked example of a pattern that's now **endemic on iOS**: lookalike-app-as-redirector. Apple's review process catches the obvious; it doesn't catch apps that **appear benign at submission and switch content server-side post-install**. That cat-and-mouse game won't end soon.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
+For enterprise SOCs, three takeaways:
+1. **Block the 24 domains + 1 IP at egress today.** Operational, vendor-attributed, free intel.
+2. **The crypto-treasury / fintech corporate role profile is the target** — train and watch this user segment.
+3. **Personal device traffic on corp infrastructure is your detection window** — the lookalike-app traffic flows over the same Wi-Fi as legitimate apps. DNS-layer visibility (Umbrella / Cloudflare Gateway / Quad9) extends your reach beyond MDM.
 
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Suspicious URL click in email — phishing landing page
-
-`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.action="delivered" AND All_Email.url!="-"
-    by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject
-| rex field=All_Email.url "https?://(?<email_domain>[^/]+)"
-| join type=inner email_domain
-    [| tstats `summariesonly` count
-        from datamodel=Web
-        where Web.action="allowed"
-        by Web.src, Web.dest, Web.url, Web.user
-     | rex field=Web.url "https?://(?<email_domain>[^/]+)"]
-| stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,
-        earliest(_time) as first_seen, latest(_time) as last_seen
-        by All_Email.recipient, email_domain
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 7d;
-let DeliveredEmails = EmailEvents
-    | where Timestamp > ago(LookbackDays)
-    | where DeliveryAction == "Delivered"
-    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,
-              EmailTimestamp = Timestamp;
-EmailUrlInfo
-| where Timestamp > ago(LookbackDays)
-| join kind=inner DeliveredEmails on NetworkMessageId
-| join kind=inner (
-    UrlClickEvents
-    | where Timestamp > ago(LookbackDays)
-    | where ActionType == "ClickAllowed"
-    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress
-  ) on Url
-| project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,
-          Subject, Url, UrlDomain, IPAddress
-| order by ClickTimestamp desc
-```
-
-### Email attachment opened from external sender
-
-`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!="-"
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats `summariesonly` count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
-          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 7d;
-let MalAttachments = EmailAttachmentInfo
-    | where Timestamp > ago(LookbackDays)
-    | project NetworkMessageId, RecipientEmailAddress,
-              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
-DeviceProcessEvents
-| where Timestamp > ago(LookbackDays)
-| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
-                      "mshta.exe","rundll32.exe","regsvr32.exe")
-| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
-```
-
-### Office app spawning script/LOLBin child process
-
-`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
-      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `139.180.139.209`, `iosfc.com`, `xxx.com`, `www.gxzhrc.cn`, `appstoreios.com`, `crypto-stroe.cc`, `yjzhengruol.com`, `6688cf.jhxrpbgq.com` _(+17 more)_
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `4126348d783393dd85ede3468e48405d`, `b639f7f81a8faca9c62fd227fef5e28c`, `d48b580718b0e1617afc1dec028e9059`, `bafba3d044a4f674fc9edc67ef6b8a6b`, `79fe383f0963ae741193989c12aefacc`, `8d45a67b648d2cb46292ff5041a5dd44`, `7e678ca2f01dc853e85d13924e6c8a45`, `be9e0d516f59ae57f5553bcc3cf296d1` _(+13 more)_
-
-
-## Why this matters
-
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Pull the full IOC bundle from `intel/iocs.csv` (filter `sources=Securelist (Kaspersky)`) for the canonical list including hashes.

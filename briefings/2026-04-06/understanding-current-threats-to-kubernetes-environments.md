@@ -1,10 +1,144 @@
-# [CRIT] Understanding Current Threats to Kubernetes Environments
+<!-- curated:true -->
+# [HIGH] Understanding Current Threats to Kubernetes Environments
 
 **Source:** Unit 42 (Palo Alto)
 **Published:** 2026-04-06
 **Article:** https://unit42.paloaltonetworks.com/modern-kubernetes-threats/
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
+
+Unit 42's 20-minute deep-dive on modern Kubernetes attack patterns, drawn from incident-response engagements across 2024-2026. Themes:
+
+1. **Misconfigured kubelet API (TCP/10250)** still the most-prevalent initial-access vector — Internet-exposed kubelets allow `kubectl exec`-equivalent without auth.
+2. **Service-account token theft + replay** — pods with overly-permissive `automountServiceAccountToken: true` leak tokens that grant cluster-wide RBAC.
+3. **Compromised container images / typosquatted Helm charts** — supply chain on the cluster's pull path.
+4. **Cryptojacking-as-canary** — opportunistic miners deploy as the canary in the K8s coal mine; behind every miner is the underlying weakness an APT could escalate.
+5. **etcd / control-plane exposure** — direct etcd port (TCP/2379) externally accessible in some deployments; full cluster-state read.
+
+The article is also a good mapping reference for **MITRE ATT&CK for Containers** (T1610, T1611, T1612, T1613) which most enterprise SOCs don't have well-tuned detections for.
+
+We've kept severity **HIGH** because the IOCs (3 IPs + multiple SHA256 hashes) are vendor-attributed and immediately operational, AND the K8s detection backlog is universally underbuilt.
+
+## Indicators of Compromise (high-fidelity only)
+
+- **CVE:** `CVE-2025-55182`
+- **IPv4:** `104.238.149.198`, `45.76.155.14`, `23.235.188.3`
+- **SHA256 hashes** (cryptojackers / post-exploit binaries): see `intel/iocs.csv` (filter `sources=Unit 42 (Palo Alto)`).
+
+## MITRE ATT&CK (analyst-validated)
+
+- **T1190** — Exploit Public-Facing Application (kubelet, etcd, dashboard)
+- **T1610** — Deploy Container (post-compromise pod / DaemonSet drop)
+- **T1611** — Escape to Host (privileged container → node)
+- **T1612** — Build Image on Host (live-patching containers)
+- **T1613** — Container and Resource Discovery
+- **T1078.004** — Valid Accounts: Cloud Accounts (service-account token replay)
+- **T1552.005** — Credentials in CI/CD Variables / SA tokens
+- **T1496** — Resource Hijacking (cryptojacking)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.004** — Unix Shell
+
+## Recommended SOC actions (priority-ordered)
+
+1. **External-attack-surface scan** for exposed kubelet (TCP/10250, /10255), etcd (TCP/2379, /2380), Kubernetes API (TCP/6443), Dashboard (varies). If anything you own appears on Shodan / Censys, off the Internet by Friday.
+2. **Audit `automountServiceAccountToken`** across your cluster — set to `false` by default in the namespace, opt in per-Pod where needed.
+3. **Block the 3 Unit 42 IPs at egress** today.
+4. **Hash-match the SHA256 list** against your container-runtime telemetry (Sysdig / Falco / Defender for Containers).
+5. **Falco / runtime-detection** for `T1611` escape patterns: `mount`/`unshare`/`/proc/*/root` access from inside containers, `nsenter` use, privileged container creation.
+6. **Hunt cryptojacker indicators** — XMRig / kdevtmpfsi / kinsing process names; outbound to mining pools (`pool.minexmr.com` family).
+
+## Splunk SPL — kubelet / etcd / K8s API on public IP
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where (All_Traffic.dest_port IN (10250,10255,2379,2380,6443)
+        OR All_Traffic.src_port IN (10250,10255,2379,2380,6443))
+      AND (All_Traffic.src_category="dmz" OR All_Traffic.dest_category="external")
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port,
+       All_Traffic.src_category, All_Traffic.dest_category
+| `drop_dm_object_name(All_Traffic)`
+| sort - count
+```
+
+## Splunk SPL — outbound to Unit 42 K8s threat IOCs
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN ("104.238.149.198","45.76.155.14","23.235.188.3")
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port,
+       All_Traffic.src_category
+| `drop_dm_object_name(All_Traffic)`
+```
+
+## Splunk SPL — cryptojacker process patterns
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("xmrig","xmrig.exe","kdevtmpfsi","kinsing",
+                                       "kthreaddi","kthreaddk","cpuminer","minerd")
+       OR Processes.process="*pool.minexmr.com*"
+       OR Processes.process="*xmr-asia.nanopool.org*"
+       OR Processes.process="*--cpu-priority*"
+       OR Processes.process="*stratum+tcp://*"
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process,
+       Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+## Defender KQL — outbound to Unit 42 K8s IOCs
+
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteIP in ("104.238.149.198","45.76.155.14","23.235.188.3")
+| project Timestamp, DeviceName, AccountName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Defender KQL — cryptojacker / suspicious miner activity
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where FileName in~ ("xmrig","xmrig.exe","kdevtmpfsi","kinsing","kthreaddi",
+                       "kthreaddk","cpuminer","minerd")
+   or ProcessCommandLine has_any ("pool.minexmr.com","xmr-asia.nanopool.org",
+                                    "stratum+tcp://","--cpu-priority")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Defender KQL — privileged-container or escape-pattern indicator
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where InitiatingProcessFileName in~ ("dockerd","containerd","containerd-shim",
+                                         "kubelet","crio","runc")
+| where ProcessCommandLine has_any (
+    "--privileged","mount /dev","unshare","/proc/1/root","/proc/self/root",
+    "nsenter","capsh","cap_sys_admin","setcap")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+          ProcessCommandLine
+| order by Timestamp desc
+```
+
+## Why this matters for your SOC
+
+Kubernetes is **the largest under-defended surface** in most enterprise estates because:
+- Cluster admins live on the platform-engineering team, not the SOC.
+- Container runtime events are often not in the SIEM.
+- ATT&CK for Containers (T1610-T1613) is newer; many detection content libraries don't cover it.
+
+Unit 42's article is the industry's clearest current public catalogue. Pair it with **Falco** (or Defender for Containers / Sysdig / etc.) for runtime detection, and pair runtime-detection with **CSPM** (Wiz / Prisma Cloud / Defender for Cloud) for posture findings. The combination is what gives you Kubernetes coverage approximating Windows-EDR coverage.
+
+Block the 3 IPs and the SHA256 list now. Schedule the K8s detection-engineering work for next quarter.
 
 Threat Research Center 
 Threat Research 

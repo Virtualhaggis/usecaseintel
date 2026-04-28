@@ -1,10 +1,137 @@
-# [CRIT] The n8n n8mare: How threat actors are misusing AI workflow automation
+<!-- curated:true -->
+# [HIGH] The n8n n8mare: How Threat Actors Are Misusing AI Workflow Automation
 
 **Source:** Cisco Talos
 **Published:** 2026-04-15
 **Article:** https://blog.talosintelligence.com/the-n8n-n8mare/
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
+
+Talos identified increased phishing-and-malware abuse of **n8n**, an open-source AI-workflow / automation platform similar to Zapier and Make. Activity tracked **October 2025 — March 2026**. The pattern:
+
+- Attackers spin up free / low-cost **n8n cloud workspaces** (`<tenant>.app.n8n.cloud`) — visually-credible URLs that pass casual inspection.
+- Phishing emails contain n8n-cloud links that **execute attacker-controlled workflow** (URL redirects, credential harvest, file delivery).
+- The n8n-cloud subdomain inherits **TLS, sender-domain reputation, and corporate-allowlist trust** that an attacker's own domain wouldn't have.
+- Some workflows chain n8n → another legitimate platform (Zoho, OneDrive impersonation) for further trust laundering.
+
+This is the **continuation of the SaaS-trust-laundering pattern** also seen with Vercel, Square, Cloudflare Pages, and (per other briefings this month) Cursor / VS Code Tunnels. It works because **defenders allowlist `*.app.n8n.cloud`**, so the malicious workflow runs in trusted territory.
+
+We've kept severity **HIGH** because:
+- n8n / Zapier / Make are increasingly common in enterprise — your users **already use them legitimately**, so blocking the entire domain is unrealistic.
+- The detection has to be at the **link-content** layer (where does the n8n workflow ultimately redirect / fetch from), not the **destination-domain** layer.
+
+## Indicators of Compromise (high-fidelity only)
+
+- **Domains (defanged):**
+  - n8n-cloud workspaces used by attackers: `tti.app.n8n.cloud`, `pagepoinnc.app.n8n.cloud`, `monicasue.app.n8n.cloud`
+  - Trust-laundering hops: `centrastage.net`, `onedrivedownload.zoholandingpage.com`, `majormetalcsorp.com`
+- **SHA256 hashes** (stage-2 binaries):
+  - `93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a`
+  - `7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0`
+
+## MITRE ATT&CK (analyst-validated)
+
+- **T1566.002** — Spearphishing Link
+- **T1583.006** — Acquire Infrastructure: Web Services (free n8n cloud tenant)
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1102.002** — Web Service: Bidirectional Communication (the workflow itself is the C2)
+- **T1656** — Impersonation (legitimate-platform branding)
+- **T1071.001** — Web Protocols
+- **T1027** — Obfuscated Files or Information
+- **T1204.001** — User Execution: Malicious Link
+
+## Recommended SOC actions (priority-ordered)
+
+1. **Hunt URL clicks to `*.app.n8n.cloud`** in your email-click telemetry for the past 90 days. Most legitimate enterprise n8n usage is from a small set of internal users — anomalous external click events stand out.
+2. **Block the 6 specific domains** at egress. The n8n-cloud subdomains can be added as exact-match blocks without breaking legitimate `app.n8n.cloud` use.
+3. **Hash-match the 2 SHA256** stage-2 binaries against EDR file/process events.
+4. **Tune your email gateway** to inspect n8n-cloud / make.com / zapier.com URLs more deeply — these are now equivalent in risk to direct attacker domains.
+5. **Audit n8n-cloud usage internally**: if you sanction n8n, document which users / workflows; surface unsanctioned usage.
+6. **Apply this lesson broadly**: every "AI workflow / automation platform" your users adopt is a candidate trust-laundering channel. Make.com, Zapier, Pipedream, Lindy, Tray.io — same pattern, same defensive posture.
+
+## Splunk SPL — URL clicks to n8n-cloud (and similar SaaS automation)
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.action="delivered"
+      AND (All_Email.url="*.app.n8n.cloud*"
+        OR All_Email.url="*.make.com*"
+        OR All_Email.url="*.zapier.com*"
+        OR All_Email.url="*.pipedream.com*")
+    by All_Email.recipient, All_Email.url, All_Email.subject, All_Email.src_user
+| sort - count
+```
+
+## Splunk SPL — direct hits to article IOC domains
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Web
+    where Web.url="*tti.app.n8n.cloud*"
+       OR Web.url="*pagepoinnc.app.n8n.cloud*"
+       OR Web.url="*monicasue.app.n8n.cloud*"
+       OR Web.dest IN ("centrastage.net","onedrivedownload.zoholandingpage.com","majormetalcsorp.com")
+    by Web.src, Web.dest, Web.url, Web.user
+| `drop_dm_object_name(Web)`
+```
+
+## Defender KQL — URL clicks to SaaS automation (with click-then-process correlation)
+
+```kql
+let LookbackDays = 90d;
+let SaasAutomationClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "ClickAllowed"
+    | where Url has_any (".app.n8n.cloud","make.com","zapier.com","pipedream.com",
+                          "tray.io","lindy.ai","retool.com")
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url;
+SaasAutomationClicks
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(LookbackDays)
+    | where FileName in~ ("powershell.exe","cmd.exe","mshta.exe")
+    | project DeviceName, AccountName, ExecTime = Timestamp, ProcessCommandLine
+  ) on $left.AccountUpn == $right.AccountName
+| where ExecTime between (ClickTime .. ClickTime + 60m)
+| project ClickTime, AccountUpn, Url, ExecTime, DeviceName, ProcessCommandLine
+| order by ClickTime desc
+```
+
+## Defender KQL — direct IOC hits
+
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (
+    "tti.app.n8n.cloud","pagepoinnc.app.n8n.cloud","monicasue.app.n8n.cloud",
+    "centrastage.net","onedrivedownload.zoholandingpage.com","majormetalcsorp.com")
+| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+## Defender KQL — hash match (managed endpoints)
+
+```kql
+let n8nMareHashes = dynamic([
+    "93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a",
+    "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0"]);
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where SHA256 in~ (n8nMareHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
+| order by Timestamp desc
+```
+
+## Why this matters for your SOC
+
+n8n abuse is **another data point on the SaaS-trust-laundering trend** — a generic problem your defender stack is structurally weak against. Talos's 2025-2026 telemetry confirms it's not theoretical; attackers are running real campaigns on `*.app.n8n.cloud` today.
+
+The strategic answer is **link-content inspection**, not domain blocking — your URL-rewrite / sandbox / safe-link tooling has to actually visit the n8n workflow URL and follow the chain to the eventual payload. That's a vendor-tooling configuration question (Microsoft Defender for Office 365 Safe Links, Proofpoint URL Defense, etc.). If your gateway just allowlists `*.app.n8n.cloud` and lets the click through, the attacker wins on first contact.
+
+The 6 domains + 2 hashes are an immediate IOC drop. Block them today; audit your URL-rewrite policy this quarter.
 
 The n8n n8mare: How threat actors are misusing AI workflow automation 
 By 
