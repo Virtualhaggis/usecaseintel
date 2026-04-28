@@ -149,6 +149,15 @@ def extract_indicators(title: str, body: str) -> dict:
         domains.append(url_host)
     domains = dedupe(domains)
 
+    # ---- Quality filter: drop legitimate-platform / reserved IOCs ----
+    # No SOC wants `google.com` or `8.8.8.8` blocked. These domains/IPs
+    # appear in articles as legitimate context (the platform an attack
+    # abused, the example DNS the malware queried, the victim site, etc.)
+    # and should never make it to the IOC feed. Keep this list narrow:
+    # only domains/IPs that are universally trusted infrastructure.
+    domains = [d for d in domains if not _ioc_is_known_safe(d, kind="domain")]
+    ips = [i for i in ips if not _ioc_is_known_safe(i, kind="ipv4")]
+
     return {
         "cves": dedupe(CVE_RE.findall(text)),
         "ips": ips,
@@ -158,6 +167,108 @@ def extract_indicators(title: str, body: str) -> dict:
         "sha256": dedupe(HASH_SHA256_RE.findall(text)),
         "explicit_ttps": dedupe(ATTACK_RE.findall(text)),
     }
+
+
+# Curated allowlist of legitimate-platform infrastructure. An article that
+# mentions "the malware downloaded a file from google.com" doesn't mean we
+# should ship google.com as an IOC — it's the dispenser, not the threat.
+# Keep this list as small as possible; over-blocking risks dropping a real
+# typosquat. Only include domains that NO real adversary would register.
+_IOC_DOMAIN_ALLOWLIST = {
+    # Mainstream user platforms
+    "google.com", "www.google.com", "gmail.com", "youtube.com", "blogspot.com",
+    "microsoft.com", "www.microsoft.com", "live.com", "outlook.com", "office.com",
+    "office365.com", "onmicrosoft.com", "msn.com", "bing.com", "msftauth.net",
+    "azure.com", "azurewebsites.net", "windows.net", "sharepoint.com",
+    "apple.com", "icloud.com", "me.com", "mac.com", "appstoreios.apple.com",
+    "amazon.com", "aws.amazon.com", "amazonaws.com", "amazonses.com",
+    "cloudflare.com", "cloudflare-dns.com", "cdnjs.cloudflare.com",
+    "facebook.com", "fb.com", "instagram.com", "whatsapp.com", "twitter.com",
+    "x.com", "linkedin.com", "reddit.com", "pinterest.com", "tiktok.com",
+    # Dev / package ecosystems
+    "github.com", "raw.githubusercontent.com", "githubusercontent.com",
+    "gist.github.com", "objects.githubusercontent.com",
+    "gitlab.com", "bitbucket.org", "atlassian.net", "atlassian.com",
+    "npmjs.org", "registry.npmjs.org", "yarnpkg.com", "pnpm.io",
+    "pypi.org", "pythonhosted.org", "anaconda.org", "conda.anaconda.org",
+    "rubygems.org", "crates.io", "packagist.org", "nuget.org",
+    "docker.io", "hub.docker.com", "gcr.io", "ghcr.io", "quay.io", "mcr.microsoft.com",
+    # Open-source / docs / standards
+    "wikipedia.org", "stackoverflow.com", "stackexchange.com",
+    "medium.com", "dev.to", "hackernoon.com",
+    "rfc-editor.org", "ietf.org", "w3.org", "iana.org",
+    "mozilla.org", "owasp.org",
+    # Security-research / vendor reference (shouldn't be IOCs even when cited)
+    "mitre.org", "attack.mitre.org", "cve.mitre.org", "nvd.nist.gov", "cisa.gov",
+    "thehackernews.com", "bleepingcomputer.com", "krebsonsecurity.com",
+    "talosintelligence.com", "blog.talosintelligence.com",
+    "securelist.com", "sentinelone.com", "unit42.paloaltonetworks.com",
+    "welivesecurity.com", "checkmarx.com", "snyk.io", "socket.dev",
+    "virustotal.com", "abuse.ch", "urlhaus.abuse.ch", "threatfox.abuse.ch",
+    # Common legit dispensers (ARTICLE-CONTEXT only — these CAN be abused as
+    # dead-drops by malware. We drop them from the IOC feed because alerting
+    # on every pastebin URL would drown the SOC; analysts hunt these manually.)
+    "pastebin.com", "ghostbin.com", "rentry.co", "snippet.host",
+    # Generic test / example
+    "example.com", "example.net", "example.org", "example.invalid",
+    "localhost", "test.com", "yourorganisation.com",
+    # Sample-data junk we've seen previously extracted
+    "xxx.com", "appstoreios", "iosfc",
+}
+
+# Block IPv4s that are universally trusted, reserved, or non-routable.
+def _is_reserved_or_safe_ipv4(ip: str) -> bool:
+    try:
+        a, b, c, d = (int(x) for x in ip.split("."))
+    except Exception:
+        return True  # malformed → treat as safe (drop)
+    if a == 0:        return True   # 0.0.0.0/8
+    if a == 10:       return True   # RFC1918
+    if a == 127:      return True   # loopback
+    if a == 169 and b == 254: return True  # link-local
+    if a == 172 and 16 <= b <= 31: return True  # RFC1918
+    if a == 192 and b == 168: return True  # RFC1918
+    if a == 192 and b == 0 and c == 2: return True  # TEST-NET
+    if a == 198 and (b == 18 or b == 19): return True
+    if a == 198 and b == 51 and c == 100: return True  # TEST-NET
+    if a == 203 and b == 0 and c == 113: return True  # TEST-NET
+    if a >= 224:      return True   # multicast / reserved
+    return False
+
+_IOC_IPV4_ALLOWLIST = {
+    # Public DNS providers — frequently cited in articles, never an IOC.
+    "8.8.8.8", "8.8.4.4", "1.1.1.1", "1.0.0.1", "9.9.9.9", "149.112.112.112",
+    "208.67.222.222", "208.67.220.220",
+    # Microsoft / Cloudflare / Google sample IPs
+    "20.20.20.20", "13.107.6.152",
+}
+
+
+def _ioc_is_known_safe(value: str, kind: str) -> bool:
+    """Return True if the IOC should be dropped from the feed because it's
+    known-good infrastructure. Used by extract_indicators() and the
+    aggregator to keep `google.com` / `8.8.8.8` etc. out of intel/iocs.csv."""
+    if not value:
+        return True
+    v = value.lower().strip()
+    if kind == "domain":
+        if v in _IOC_DOMAIN_ALLOWLIST:
+            return True
+        # Match subdomains of the allowlist (e.g. `cdn.cloudflare.com`)
+        for safe in _IOC_DOMAIN_ALLOWLIST:
+            if v == safe or v.endswith("." + safe):
+                return True
+        # Drop bare TLDs / single-label "domains" that slipped through
+        if "." not in v:
+            return True
+        return False
+    if kind == "ipv4":
+        if v in _IOC_IPV4_ALLOWLIST:
+            return True
+        if _is_reserved_or_safe_ipv4(v):
+            return True
+        return False
+    return False
 
 
 # =============================================================================
@@ -508,13 +619,18 @@ def _make_bespoke_uc(article_title: str, mechanics: dict, ind: dict):
     if not techs:
         techs.append(("T1204.002", "User Execution: Malicious File"))
 
+    # Tier: bespoke article UCs are HUNTING by default — they list rows
+    # matching strings extracted from the article body. They lack
+    # environment baselining (legit binary allowlist) and false-positive
+    # suppression. An analyst should run them as hunts, then promote to
+    # alerting after tuning + adding suppression.
     return UseCase(
         title=f"Article-specific behavioural hunt — {safe_title}",
         description=(
-            "Auto-generated detection targeting the specific binaries, "
-            "paths, registry locations and command-line fragments named in "
-            "this article. Fires on the article's actual attack mechanics, "
-            "not the technique-class template."
+            "Auto-generated hunt targeting the specific binaries, paths, "
+            "registry locations and command-line fragments named in this "
+            "article. Hunting tier — needs analyst review and environment "
+            "tuning before promotion to alerting."
         ),
         kill_chain=ph,
         techniques=techs,
@@ -522,6 +638,7 @@ def _make_bespoke_uc(article_title: str, mechanics: dict, ind: dict):
         splunk_spl=spl,
         defender_kql=kql,
         confidence="High",
+        tier="hunting",
     )
 
 
@@ -555,6 +672,47 @@ class UseCase:
     splunk_spl: str
     defender_kql: str
     confidence: str = "Medium"
+    # Tier classification:
+    #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
+    #                or temporal correlation, statistically anomalous. Safe
+    #                to wire to a SIEM rule with normal triage SLA.
+    #   "hunting"  — starter content. Returns rows that need analyst review;
+    #                will produce false positives without environment tuning.
+    # Default to hunting to keep the bar conservative — opt UCs into
+    # alerting only when the logic clearly meets that bar.
+    tier: str = "hunting"
+
+
+def _infer_tier_from_query(spl: str, kql: str, confidence: str) -> str:
+    """Heuristic tier classifier for UCs that don't set tier explicitly.
+
+    Returns "alerting" if the query has any of: temporal correlation
+    (between (T1 .. T1+Ns)), threshold (count > N / dcount > N), specific
+    binary list, hash/IOC IN-list, or anomaly-detection language. Otherwise
+    "hunting" — return-rows queries that need an analyst to triage.
+    """
+    blob = (spl or "") + "\n" + (kql or "")
+    blob_l = blob.lower()
+    alerting_signals = [
+        # Temporal correlation
+        " between (", "datetime_diff(", "earliest(_time)", "latest(_time)",
+        # Thresholds
+        "count > ", "count>=", "count >=", " sum(count) >",
+        "dcount(", "dc(", "files > ", "events > ", "uniq",
+        # Anomaly statistics
+        "stdev(", "stdev_delta", "avg(delta", "avg_delta",
+        # Specific IOC substitution slots (UC fires only when IOCs present)
+        "__cve_list__", "__ip_list__", "__domain_list__", "__hash_list__",
+        # Specific named-binary hunts
+        " in (\"", " in~ (\"", "filename in~", "process_name in (",
+        # MFA / brute-force rate
+        "attempts > ", "logoncount", "mfaprompts >",
+    ]
+    if any(s in blob_l for s in alerting_signals):
+        return "alerting"
+    if (confidence or "").lower() == "high" and "data_models=endpoint.processes" in blob_l.replace(" ",""):
+        return "alerting"
+    return "hunting"
 
 
 @dataclass
@@ -587,15 +745,23 @@ def _load_uc_from_yaml(path):
     defender_tables = dms.get("defender") or []
     flat_dms = list(splunk_dms) + [t for t in defender_tables if t not in splunk_dms]
     techs = [(t["id"], t["name"]) for t in (doc.get("mitre_attack") or [])]
+    spl = (doc.get("splunk_spl") or "") if "splunk" in impls else ""
+    kql = (doc.get("defender_kql") or "") if "defender" in impls else ""
+    confidence = doc.get("confidence", "Medium")
+    # Tier: explicit field wins; otherwise infer from query shape.
+    tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
+    if tier not in ("alerting", "hunting"):
+        tier = "hunting"
     return UseCase(
         title=doc.get("title", ""),
         description=(doc.get("description") or "").strip(),
         kill_chain=doc.get("kill_chain", "actions"),
         techniques=techs,
         data_models=flat_dms,
-        splunk_spl=(doc.get("splunk_spl") or "") if "splunk" in impls else "",
-        defender_kql=(doc.get("defender_kql") or "") if "defender" in impls else "",
-        confidence=doc.get("confidence", "Medium"),
+        splunk_spl=spl,
+        defender_kql=kql,
+        confidence=confidence,
+        tier=tier,
     )
 
 
@@ -2337,6 +2503,28 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 }
 .uc-card-row .uc-src-pill.escu{color:var(--accent-3);}
 .uc-card-row .uc-src-pill.internal{color:var(--accent);}
+/* Tier pills: alerting (production-ready) vs hunting (needs tuning).
+   Alerting has a strong colour stop so high-fidelity content stands out
+   in a long drawer list; hunting is muted to signal "needs review". */
+.uc-card-row .uc-tier-pill{
+  font-size:9.5px; padding:1px 7px; border-radius:4px;
+  text-transform:uppercase; letter-spacing:0.06em; font-weight:700;
+  flex:0 0 auto;
+}
+.uc-card-row .uc-tier-pill.alerting{
+  background:rgba(46,213,99,0.18); color:var(--good);
+  border:1px solid rgba(46,213,99,0.4);
+}
+.uc-card-row .uc-tier-pill.hunting{
+  background:rgba(255,176,96,0.10); color:var(--warn);
+  border:1px solid rgba(255,176,96,0.3);
+}
+.uc-card-row.tier-alerting{
+  border-left:3px solid rgba(46,213,99,0.55);
+}
+.uc-card-row.tier-hunting{
+  border-left:3px solid rgba(255,176,96,0.45);
+}
 .uc-card-row{transition:border-color 0.15s, background 0.15s;}
 .uc-card-row:hover{border-color:var(--accent); background:var(--panel-elev);}
 .uc-card-row .uc-card-chev{transition:transform 0.15s ease;}
@@ -3005,6 +3193,28 @@ ul.intel-types-doc code{
       <p>All outputs commit to <a href="https://github.com/Virtualhaggis/usecaseintel">github.com/Virtualhaggis/usecaseintel</a>; <code>run_daily.bat</code> runs validate → generate → digest → auto-commit on a schedule.</p>
     </div>
 
+    <h3 class="wf-section-title">Quality gates — tier &amp; IOC allowlist</h3>
+    <div class="wf-step">
+      <p>Two filters keep the output honest:</p>
+      <p><strong>UC tier — alerting vs hunting.</strong> Every use case is tagged:</p>
+      <ul>
+        <li><strong style="color:var(--good);">ALERTING</strong> — high-fidelity. Specific IOCs, threshold or temporal correlation (<code>between (T .. T+60s)</code>), named-binary hunt, anomaly logic. Safe to wire to a SIEM rule with normal triage SLA.</li>
+        <li><strong style="color:var(--warn);">HUNTING</strong> — starter content. Returns rows that need analyst review; will produce false positives without environment tuning. Use as a hunt query first; promote to alerting after baselining + adding suppression for legitimate use.</li>
+      </ul>
+      <p>How it's set: explicit <code>tier:</code> field in the UC YAML wins. Otherwise <code>_infer_tier_from_query()</code> looks for alerting signals (temporal joins, thresholds, named-binary <code>IN</code>-lists, anomaly stats) and defaults to hunting if none are present. Splunk ESCU detections inherit tier from the upstream <code>type</code> — TTP/Correlation → alerting, Anomaly/Hunting → hunting. Bespoke article-generated UCs default to hunting.</p>
+      <p>Filter the drawer by tier (Alerting / Hunting) using the dropdown in the Use cases mapped section.</p>
+
+      <p style="margin-top:14px;"><strong>IOC allowlist — drop platform / reserved infrastructure.</strong> No SOC wants <code>google.com</code> or <code>192.168.0.1</code> in their block list. <code>_ioc_is_known_safe()</code> drops:</p>
+      <ul>
+        <li>Mainstream platform domains (Google, Microsoft, Apple, Amazon, Cloudflare, GitHub, npm, PyPI, Docker Hub, Wikipedia, Stack Overflow, social platforms).</li>
+        <li>Security-vendor self-references (THN, BleepingComputer, Talos, Securelist, etc.).</li>
+        <li>Common dead-drop dispensers (pastebin, ghostbin) — which CAN be abused but should be hunted manually rather than block-listed.</li>
+        <li>Reserved IPv4 ranges: RFC1918 (<code>10/8</code>, <code>172.16/12</code>, <code>192.168/16</code>), loopback (<code>127/8</code>), link-local (<code>169.254/16</code>), TEST-NETs, multicast.</li>
+        <li>Public DNS providers (<code>8.8.8.8</code>, <code>1.1.1.1</code>, etc.).</li>
+      </ul>
+      <p>Internal IPs aren't useless — they're just useless <em>standalone</em>. A bespoke UC describing lateral movement <em>can</em> reference them as part of a broader chain, but they don't belong in the IOC feed where the value is "block this on the perimeter".</p>
+    </div>
+
     <h3 class="wf-section-title">Analyst loop</h3>
     <div class="wf-step">
       <p>Curated briefings get a <code>&lt;!-- curated:true --&gt;</code> HTML comment as line 1. The briefing writer skips any file with that marker so analyst overlays are preserved across pipeline runs. The pattern:</p>
@@ -3495,6 +3705,11 @@ function openDrawerFor(tid) {
         <option value="internal">Internal only</option>
         <option value="escu">Splunk ESCU only</option>
       </select>
+      <select id="drawerUcTier">
+        <option value="">All tiers</option>
+        <option value="alerting">Alerting (high-fidelity)</option>
+        <option value="hunting">Hunting (needs tuning)</option>
+      </select>
     </div>
     <div class="drawer-list" id="drawerUcList" data-all='${JSON.stringify(ucsSorted).replace(/'/g, "&#39;")}'></div>
     <div class="drawer-uc-pager" id="drawerUcPager" style="display:none;"></div>`;
@@ -3537,9 +3752,12 @@ function initDrawerUcList() {
     const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
     const srcCls = uc.src === 'escu' ? 'escu' : 'internal';
     const srcLabel = uc.src === 'escu' ? 'ESCU' : 'Internal';
-    return `<div class="uc-card-row" data-uc-key="${escapeHtml(uc.n)}" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;cursor:pointer;">
+    const tier = (uc.tier || 'hunting');
+    const tierLabel = tier === 'alerting' ? 'ALERTING' : 'HUNTING';
+    return `<div class="uc-card-row tier-${tier}" data-uc-key="${escapeHtml(uc.n)}" data-tier="${tier}" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;cursor:pointer;">
       <div style="display:flex;align-items:center;gap:8px;">
         <div class="uc-card-title" style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(uc.t)}</div>
+        <span class="uc-tier-pill ${tier}" title="${tier === 'alerting' ? 'High-fidelity — safe to alert on' : 'Hunting — needs analyst review and tuning'}">${tierLabel}</span>
         <span class="uc-src-pill ${srcCls}">${srcLabel}</span>
         <span class="uc-card-chev" style="color:var(--muted);font-size:11px;">▸</span>
       </div>
@@ -3564,6 +3782,14 @@ function initDrawerUcList() {
     const dms = (detail.data_models || []).map(d => `<span class="pill">${escapeHtml(d)}</span>`).join(' ');
     const phPill = detail.kill_chain ? `<span class="pill">${escapeHtml(detail.kill_chain)}</span>` : '';
     let html = `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">`;
+    // Tier banner explains alerting vs hunting up-front. Honest framing
+    // beats the alternative of users assuming every UC is alert-grade.
+    const dt = (detail.tier || 'hunting');
+    if (dt === 'alerting') {
+      html += `<div style="background:rgba(46,213,99,0.08);border:1px solid rgba(46,213,99,0.35);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:11.5px;line-height:1.5;"><b style="color:var(--good);">ALERTING TIER</b> — high-fidelity logic. Specific IOCs, threshold or temporal correlation, or named-binary hunt. Safe to wire to a SIEM rule with normal triage SLA. Still validate with a 7-day backfill in your environment first.</div>`;
+    } else {
+      html += `<div style="background:rgba(255,176,96,0.08);border:1px solid rgba(255,176,96,0.35);border-radius:6px;padding:8px 12px;margin-bottom:10px;font-size:11.5px;line-height:1.5;"><b style="color:var(--warn);">HUNTING TIER</b> — starter content. Returns rows that need analyst review; will produce false positives without environment tuning. Use as a hunt query first; promote to alerting after baselining + adding suppression for legitimate use.</div>`;
+    }
     if (detail.description) {
       html += `<div style="font-size:12px;color:var(--text);opacity:0.92;line-height:1.55;margin-bottom:10px;">${escapeHtml(detail.description)}</div>`;
     }
@@ -3588,8 +3814,10 @@ function initDrawerUcList() {
   function getFiltered() {
     const q = (search?.value || '').trim().toLowerCase();
     const srcF = srcSel?.value || '';
+    const tierF = (document.getElementById('drawerUcTier')?.value || '');
     return allUcs.filter(uc => {
       if (srcF && uc.src !== srcF) return false;
+      if (tierF && (uc.tier || 'hunting') !== tierF) return false;
       if (!q) return true;
       const blob = ((uc.t || '') + ' ' + (uc.n || '') + ' ' + (uc.techs || []).join(' ')).toLowerCase();
       return blob.includes(q);
@@ -3612,6 +3840,7 @@ function initDrawerUcList() {
   pager.addEventListener('click', () => renderPage(false));
   search?.addEventListener('input', () => renderPage(true));
   srcSel?.addEventListener('change', () => renderPage(true));
+  document.getElementById('drawerUcTier')?.addEventListener('change', () => renderPage(true));
   // Click a UC card to expand inline with full SPL/KQL detail.
   list.addEventListener('click', e => {
     // Don't trigger expansion when clicking an embedded link or pill jump
@@ -4224,6 +4453,7 @@ def build_matrix_data(articles_meta):
             "conf": uc.confidence,
             "ph": uc.kill_chain,
             "src": "internal",
+            "tier": getattr(uc, "tier", "hunting"),
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
         })
@@ -4260,6 +4490,14 @@ def build_matrix_data(articles_meta):
             "command-and-control":"c2", "impact":"actions",
         }
         ph_short = ph_map.get(ph.lower() if ph else "", "actions")
+        # ESCU detection types map to tiers as follows:
+        #   TTP / Correlation       -> alerting (specific behaviour, deployable)
+        #   Anomaly / Hunting       -> hunting  (needs tuning per environment)
+        det_type = (det.get("type") or "").lower()
+        if det_type in ("ttp", "correlation"):
+            tier = "alerting"
+        else:
+            tier = "hunting"
         uc_records.append({
             "i": idx,
             "n": det_id[:36],
@@ -4267,6 +4505,7 @@ def build_matrix_data(articles_meta):
             "conf": det.get("type", "Detection"),
             "ph": ph_short,
             "src": "escu",
+            "tier": tier,
             "techs": tech_ids,
             "arts": [],
         })
@@ -4633,6 +4872,7 @@ def write_catalog_files(generated_iso):
                 "description": uc.description,
                 "kill_chain": uc.kill_chain,
                 "confidence": uc.confidence,
+                "tier": getattr(uc, "tier", "hunting"),
                 "techniques": [{"id": t, "name": n} for t, n in uc.techniques],
                 "data_models": list(uc.data_models or []),
                 "splunk_spl": uc.splunk_spl or "",
@@ -4648,11 +4888,14 @@ def write_catalog_files(generated_iso):
             if not det_id: continue
             # Trim id used as JS key to first 36 chars to match matrix builder
             key = det_id[:36]
+            det_type_lower = (det.get("type") or "").lower()
+            tier = "alerting" if det_type_lower in ("ttp", "correlation") else "hunting"
             full[key] = {
                 "name": det.get("name", ""),
                 "description": det.get("description", ""),
                 "kill_chain": (det.get("kill_chain_phases") or [""])[0],
                 "confidence": det.get("type", "Detection"),
+                "tier": tier,
                 "techniques": det.get("techniques") or [],
                 "data_models": det.get("data_models") or [],
                 "splunk_spl": det.get("search", ""),

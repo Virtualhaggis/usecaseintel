@@ -29,10 +29,6 @@ When researching the boundaries of cloud services, two of the main asp…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
-- **IPv4 (defanged):** `169.254.169.254`
-- **Domain (defanged):** `bucket.s3.region.amazonaws.com`
-- **Domain (defanged):** `s3.us-east-1.amazonaws.com`
-- **Domain (defanged):** `google.com`
 - **Domain (defanged):** `dnshook.site`
 - **Domain (defanged):** `my-secret.dnshook.site`
 
@@ -322,7 +318,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `169.254.169.254`, `bucket.s3.region.amazonaws.com`, `s3.us-east-1.amazonaws.com`, `google.com`, `dnshook.site`, `my-secret.dnshook.site`
+  - IP / domain IOC(s): `dnshook.site`, `my-secret.dnshook.site`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`
