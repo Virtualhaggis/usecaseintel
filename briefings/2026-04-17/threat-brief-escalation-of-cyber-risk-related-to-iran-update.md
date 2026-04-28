@@ -113,28 +113,6 @@ DeviceFileEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2023-33538", "CVE-2025-55182")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2023-33538", "CVE-2025-55182")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
-
 ### Suspicious URL click in email — phishing landing page
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -397,37 +375,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Network connections to article IPs / domains
+### IOC-driven hunts (use shared templates)
 
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("emirates-post.racunari-bl.com", "dubai-polices.ae-finesquery.com", "alpha.filehost36.sbs", "www.shirideitch.com", "api.ra-backup.com", "iran.drproxy.pro", "iran2.drproxy.pro", "iran11.drproxy.pro", "iran14.drproxy.pro", "iran15.drproxy.pro")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("emirates-post.racunari-bl.com", "dubai-polices.ae-finesquery.com", "alpha.filehost36.sbs", "www.shirideitch.com", "api.ra-backup.com", "iran.drproxy.pro", "iran2.drproxy.pro", "iran11.drproxy.pro", "iran14.drproxy.pro", "iran15.drproxy.pro")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2023-33538`, `CVE-2025-55182`
 
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("emirates-post.racunari-bl.com", "dubai-polices.ae-finesquery.com", "alpha.filehost36.sbs", "www.shirideitch.com", "api.ra-backup.com", "iran.drproxy.pro", "iran2.drproxy.pro", "iran11.drproxy.pro", "iran14.drproxy.pro", "iran15.drproxy.pro")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `emirates-post.racunari-bl.com`, `dubai-polices.ae-finesquery.com`, `alpha.filehost36.sbs`, `www.shirideitch.com`, `api.ra-backup.com`, `iran.drproxy.pro`, `iran2.drproxy.pro`, `iran11.drproxy.pro` _(+23 more)_
 
 
 ## Why this matters

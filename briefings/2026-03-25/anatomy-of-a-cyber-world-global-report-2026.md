@@ -67,28 +67,6 @@ DeviceEvents
 | order by Timestamp desc
 ```
 
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("-")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("-")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
-
 ### Remote service execution — PsExec / SMB lateral movement
 
 `UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**

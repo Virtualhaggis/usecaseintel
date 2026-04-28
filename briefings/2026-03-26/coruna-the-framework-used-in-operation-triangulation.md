@@ -34,27 +34,12 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Asset exposure — vulnerability matches article CVE(s)
+### IOC-driven hunts (use shared templates)
 
-`_uc` · phase: **recon** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2023-32434", "CVE-2023-38606")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2023-32434", "CVE-2023-38606")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2023-32434`, `CVE-2023-38606`
 
 
 ## Why this matters

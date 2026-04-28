@@ -91,38 +91,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Network connections to article IPs / domains
-
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("example.invalid")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("example.invalid")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("example.invalid")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -149,28 +117,6 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2025-55182")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2025-55182")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 ```
 
 ### Suspicious URL click in email — phishing landing page
@@ -295,31 +241,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d", "18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb", "167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad", "bc544f455d7c06c8a1f3446160a6d9a4a8236b11")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d", "18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb", "167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad", "bc544f455d7c06c8a1f3446160a6d9a4a8236b11")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-55182`
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d", "18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb", "167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad", "bc544f455d7c06c8a1f3446160a6d9a4a8236b11") or SHA1 in~ ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d", "18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb", "167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad", "bc544f455d7c06c8a1f3446160a6d9a4a8236b11") or MD5 in~ ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d", "18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb", "167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad", "bc544f455d7c06c8a1f3446160a6d9a4a8236b11")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`, `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`, `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`, `bc544f455d7c06c8a1f3446160a6d9a4a8236b11`
 
 
 ## Why this matters

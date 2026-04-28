@@ -59,27 +59,12 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Asset exposure — vulnerability matches article CVE(s)
+### IOC-driven hunts (use shared templates)
 
-`_uc` · phase: **recon** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2026-23666", "CVE-2026-32157", "CVE-2026-32190", "CVE-2026-33114", "CVE-2026-33115", "CVE-2026-33824", "CVE-2026-33826", "CVE-2026-33827", "CVE-2026-32201", "CVE-2026-0390", "CVE-2026-26151", "CVE-2026-26169", "CVE-2026-26173", "CVE-2026-26177", "CVE-2026-26182", "CVE-2026-27906", "CVE-2026-27908", "CVE-2026-27909", "CVE-2026-27913", "CVE-2026-27914", "CVE-2026-27921", "CVE-2026-27922", "CVE-2026-32070", "CVE-2026-32075", "CVE-2026-32093", "CVE-2026-32152", "CVE-2026-32154", "CVE-2026-32155", "CVE-2026-32162", "CVE-2026-32202", "CVE-2026-32225", "CVE-2026-33825")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2026-23666", "CVE-2026-32157", "CVE-2026-32190", "CVE-2026-33114", "CVE-2026-33115", "CVE-2026-33824", "CVE-2026-33826", "CVE-2026-33827", "CVE-2026-32201", "CVE-2026-0390", "CVE-2026-26151", "CVE-2026-26169", "CVE-2026-26173", "CVE-2026-26177", "CVE-2026-26182", "CVE-2026-27906", "CVE-2026-27908", "CVE-2026-27909", "CVE-2026-27913", "CVE-2026-27914", "CVE-2026-27921", "CVE-2026-27922", "CVE-2026-32070", "CVE-2026-32075", "CVE-2026-32093", "CVE-2026-32152", "CVE-2026-32154", "CVE-2026-32155", "CVE-2026-32162", "CVE-2026-32202", "CVE-2026-32225", "CVE-2026-33825")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-23666`, `CVE-2026-32157`, `CVE-2026-32190`, `CVE-2026-33114`, `CVE-2026-33115`, `CVE-2026-33824`, `CVE-2026-33826`, `CVE-2026-33827` _(+24 more)_
 
 
 ## Why this matters

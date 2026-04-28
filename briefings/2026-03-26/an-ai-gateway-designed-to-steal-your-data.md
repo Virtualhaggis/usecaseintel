@@ -81,38 +81,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Network connections to article IPs / domains
-
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("models.litellm.cloud")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("models.litellm.cloud")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("models.litellm.cloud")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Crypto-wallet file/keystore access by non-wallet process
 
 `UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
@@ -170,28 +138,6 @@ DeviceFileEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("-")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("-")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -215,31 +161,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("85ED77A21B88CAE721F369FA6B7BBBA3", "2E3A4412A7A487B32C5715167C755D08", "0FCCC8E3A03896F45726203074AE225D", "F5560871F6002982A6A2CC0B3EE739F7", "CDE4951BEE7E28AC8A29D33D34A41AE5", "05BACBE163EF0393C2416CBD05E45E74")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("85ED77A21B88CAE721F369FA6B7BBBA3", "2E3A4412A7A487B32C5715167C755D08", "0FCCC8E3A03896F45726203074AE225D", "F5560871F6002982A6A2CC0B3EE739F7", "CDE4951BEE7E28AC8A29D33D34A41AE5", "05BACBE163EF0393C2416CBD05E45E74")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `models.litellm.cloud`
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("85ED77A21B88CAE721F369FA6B7BBBA3", "2E3A4412A7A487B32C5715167C755D08", "0FCCC8E3A03896F45726203074AE225D", "F5560871F6002982A6A2CC0B3EE739F7", "CDE4951BEE7E28AC8A29D33D34A41AE5", "05BACBE163EF0393C2416CBD05E45E74") or SHA1 in~ ("85ED77A21B88CAE721F369FA6B7BBBA3", "2E3A4412A7A487B32C5715167C755D08", "0FCCC8E3A03896F45726203074AE225D", "F5560871F6002982A6A2CC0B3EE739F7", "CDE4951BEE7E28AC8A29D33D34A41AE5", "05BACBE163EF0393C2416CBD05E45E74") or MD5 in~ ("85ED77A21B88CAE721F369FA6B7BBBA3", "2E3A4412A7A487B32C5715167C755D08", "0FCCC8E3A03896F45726203074AE225D", "F5560871F6002982A6A2CC0B3EE739F7", "CDE4951BEE7E28AC8A29D33D34A41AE5", "05BACBE163EF0393C2416CBD05E45E74")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `85ED77A21B88CAE721F369FA6B7BBBA3`, `2E3A4412A7A487B32C5715167C755D08`, `0FCCC8E3A03896F45726203074AE225D`, `F5560871F6002982A6A2CC0B3EE739F7`, `CDE4951BEE7E28AC8A29D33D34A41AE5`, `05BACBE163EF0393C2416CBD05E45E74`
 
 
 ## Why this matters

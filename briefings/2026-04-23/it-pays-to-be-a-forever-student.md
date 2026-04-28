@@ -54,28 +54,6 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2025-20333", "CVE-2025-20362")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2025-20333", "CVE-2025-20362")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
-
 ### Suspicious URL click in email — phishing landing page
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -313,31 +291,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974", "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59", "5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe", "3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc", "2915b3f8b703eb744fc54c81f4a9c67f", "aac3165ece2959f39ff98334618d10d9", "c2efb2dcacba6d3ccc175b6ce1b7ed0a", "a2cf85d22a54e26794cbc7be16840bb1", "d749e0f8f2cd4e14178a787571534121")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974", "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59", "5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe", "3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc", "2915b3f8b703eb744fc54c81f4a9c67f", "aac3165ece2959f39ff98334618d10d9", "c2efb2dcacba6d3ccc175b6ce1b7ed0a", "a2cf85d22a54e26794cbc7be16840bb1", "d749e0f8f2cd4e14178a787571534121")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-20333`, `CVE-2025-20362`
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974", "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59", "5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe", "3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc", "2915b3f8b703eb744fc54c81f4a9c67f", "aac3165ece2959f39ff98334618d10d9", "c2efb2dcacba6d3ccc175b6ce1b7ed0a", "a2cf85d22a54e26794cbc7be16840bb1", "d749e0f8f2cd4e14178a787571534121") or SHA1 in~ ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974", "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59", "5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe", "3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc", "2915b3f8b703eb744fc54c81f4a9c67f", "aac3165ece2959f39ff98334618d10d9", "c2efb2dcacba6d3ccc175b6ce1b7ed0a", "a2cf85d22a54e26794cbc7be16840bb1", "d749e0f8f2cd4e14178a787571534121") or MD5 in~ ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974", "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59", "5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe", "3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc", "2915b3f8b703eb744fc54c81f4a9c67f", "aac3165ece2959f39ff98334618d10d9", "c2efb2dcacba6d3ccc175b6ce1b7ed0a", "a2cf85d22a54e26794cbc7be16840bb1", "d749e0f8f2cd4e14178a787571534121")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507`, `96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974`, `90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59`, `5e6060df7e8114cb7b412260870efd1dc05979454bd907d8750c669ae6fcbcfe`, `3c1dbc3f56e91cc79f0014850e773a7f12bbfef06680f08f883b2bf12873eccc`, `2915b3f8b703eb744fc54c81f4a9c67f`, `aac3165ece2959f39ff98334618d10d9`, `c2efb2dcacba6d3ccc175b6ce1b7ed0a` _(+2 more)_
 
 
 ## Why this matters

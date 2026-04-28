@@ -3,6 +3,11 @@
 _305 per-article briefings — auto-generated from articles in the rolling 180-day window._
 
 
+**Shared detection templates:** generic IOC-substitution hunts 
+(asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
+instead of being repeated on every briefing. Each briefing links to the relevant template.
+
+
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [checkmarx confirms lapsus hackers leaked its stolen github d](./2026-04-28/checkmarx-confirms-lapsus-hackers-leaked-its-stolen-github-d.md)

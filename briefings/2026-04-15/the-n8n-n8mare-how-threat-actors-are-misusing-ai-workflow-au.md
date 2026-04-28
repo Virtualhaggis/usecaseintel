@@ -81,60 +81,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Network connections to article IPs / domains
-
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("onedrivedownload.zoholandingpage.com", "pagepoinnc.app.n8n.cloud", "monicasue.app.n8n.cloud")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("onedrivedownload.zoholandingpage.com", "pagepoinnc.app.n8n.cloud", "monicasue.app.n8n.cloud")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("onedrivedownload.zoholandingpage.com", "pagepoinnc.app.n8n.cloud", "monicasue.app.n8n.cloud")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("-")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("-")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-```
-
 ### Suspicious URL click in email — phishing landing page
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -321,31 +267,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a", "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a", "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `onedrivedownload.zoholandingpage.com`, `pagepoinnc.app.n8n.cloud`, `monicasue.app.n8n.cloud`
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a", "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0") or SHA1 in~ ("93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a", "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0") or MD5 in~ ("93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a", "7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `93a09e54e607930dfc068fcbc7ea2c2ea776c504aa20a8ca12100a28cfdcc75a`, `7f30259d72eb7432b2454c07be83365ecfa835188185b35b30d11654aadf86a0`
 
 
 ## Why this matters

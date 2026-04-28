@@ -128,38 +128,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Network connections to article IPs / domains
-
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("iosfc", "xxx", "www.gxzhrc", "appstoreios", "crypto-stroe", "yjzhengruol", "6688cf.jhxrpbgq", "139.180.139", "xz.apps-store", "ntm0mdkzymy3n.oukwww")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("iosfc", "xxx", "www.gxzhrc", "appstoreios", "crypto-stroe", "yjzhengruol", "6688cf.jhxrpbgq", "139.180.139", "xz.apps-store", "ntm0mdkzymy3n.oukwww")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("iosfc", "xxx", "www.gxzhrc", "appstoreios", "crypto-stroe", "yjzhengruol", "6688cf.jhxrpbgq", "139.180.139", "xz.apps-store", "ntm0mdkzymy3n.oukwww")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Crypto-wallet file/keystore access by non-wallet process
 
 `UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
@@ -215,28 +183,6 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("-")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("-")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 ```
 
 ### Suspicious URL click in email — phishing landing page
@@ -344,31 +290,15 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("4126348d783393dd85ede3468e48405d", "b639f7f81a8faca9c62fd227fef5e28c", "d48b580718b0e1617afc1dec028e9059", "bafba3d044a4f674fc9edc67ef6b8a6b", "79fe383f0963ae741193989c12aefacc", "8d45a67b648d2cb46292ff5041a5dd44", "7e678ca2f01dc853e85d13924e6c8a45", "be9e0d516f59ae57f5553bcc3cf296d1", "fd0dc5d4bba740c7b4cc78c4b19a5840", "7b4c61ff418f6fe80cf8adb474278311", "8cbd34393d1d54a90be3c2b53d8fc17a", "d138a63436b4dd8c5a55d184e025ef99", "5bdae6cb778d002c806bb7ed130985f3", "84c81a5e49291fe60eb9f5c1e2ac184b", "19733e0dfa804e3676f97eff90f2e467", "8f51f82393c6467f9392fb9eb46f9301", "114721fbc23ff9d188535bd736a0d30e", "686989d97cf0d70346cbde2031207cbf", "0565364633b5acdd24a498a6a9ab4eca", "417ae7f384c49de8c672aec86d5a2860", "31d25ddf2697b9e13ee883fff328b22f")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("4126348d783393dd85ede3468e48405d", "b639f7f81a8faca9c62fd227fef5e28c", "d48b580718b0e1617afc1dec028e9059", "bafba3d044a4f674fc9edc67ef6b8a6b", "79fe383f0963ae741193989c12aefacc", "8d45a67b648d2cb46292ff5041a5dd44", "7e678ca2f01dc853e85d13924e6c8a45", "be9e0d516f59ae57f5553bcc3cf296d1", "fd0dc5d4bba740c7b4cc78c4b19a5840", "7b4c61ff418f6fe80cf8adb474278311", "8cbd34393d1d54a90be3c2b53d8fc17a", "d138a63436b4dd8c5a55d184e025ef99", "5bdae6cb778d002c806bb7ed130985f3", "84c81a5e49291fe60eb9f5c1e2ac184b", "19733e0dfa804e3676f97eff90f2e467", "8f51f82393c6467f9392fb9eb46f9301", "114721fbc23ff9d188535bd736a0d30e", "686989d97cf0d70346cbde2031207cbf", "0565364633b5acdd24a498a6a9ab4eca", "417ae7f384c49de8c672aec86d5a2860", "31d25ddf2697b9e13ee883fff328b22f")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `iosfc`, `xxx`, `www.gxzhrc`, `appstoreios`, `crypto-stroe`, `yjzhengruol`, `6688cf.jhxrpbgq`, `139.180.139` _(+17 more)_
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("4126348d783393dd85ede3468e48405d", "b639f7f81a8faca9c62fd227fef5e28c", "d48b580718b0e1617afc1dec028e9059", "bafba3d044a4f674fc9edc67ef6b8a6b", "79fe383f0963ae741193989c12aefacc", "8d45a67b648d2cb46292ff5041a5dd44", "7e678ca2f01dc853e85d13924e6c8a45", "be9e0d516f59ae57f5553bcc3cf296d1", "fd0dc5d4bba740c7b4cc78c4b19a5840", "7b4c61ff418f6fe80cf8adb474278311", "8cbd34393d1d54a90be3c2b53d8fc17a", "d138a63436b4dd8c5a55d184e025ef99", "5bdae6cb778d002c806bb7ed130985f3", "84c81a5e49291fe60eb9f5c1e2ac184b", "19733e0dfa804e3676f97eff90f2e467", "8f51f82393c6467f9392fb9eb46f9301", "114721fbc23ff9d188535bd736a0d30e", "686989d97cf0d70346cbde2031207cbf", "0565364633b5acdd24a498a6a9ab4eca", "417ae7f384c49de8c672aec86d5a2860", "31d25ddf2697b9e13ee883fff328b22f") or SHA1 in~ ("4126348d783393dd85ede3468e48405d", "b639f7f81a8faca9c62fd227fef5e28c", "d48b580718b0e1617afc1dec028e9059", "bafba3d044a4f674fc9edc67ef6b8a6b", "79fe383f0963ae741193989c12aefacc", "8d45a67b648d2cb46292ff5041a5dd44", "7e678ca2f01dc853e85d13924e6c8a45", "be9e0d516f59ae57f5553bcc3cf296d1", "fd0dc5d4bba740c7b4cc78c4b19a5840", "7b4c61ff418f6fe80cf8adb474278311", "8cbd34393d1d54a90be3c2b53d8fc17a", "d138a63436b4dd8c5a55d184e025ef99", "5bdae6cb778d002c806bb7ed130985f3", "84c81a5e49291fe60eb9f5c1e2ac184b", "19733e0dfa804e3676f97eff90f2e467", "8f51f82393c6467f9392fb9eb46f9301", "114721fbc23ff9d188535bd736a0d30e", "686989d97cf0d70346cbde2031207cbf", "0565364633b5acdd24a498a6a9ab4eca", "417ae7f384c49de8c672aec86d5a2860", "31d25ddf2697b9e13ee883fff328b22f") or MD5 in~ ("4126348d783393dd85ede3468e48405d", "b639f7f81a8faca9c62fd227fef5e28c", "d48b580718b0e1617afc1dec028e9059", "bafba3d044a4f674fc9edc67ef6b8a6b", "79fe383f0963ae741193989c12aefacc", "8d45a67b648d2cb46292ff5041a5dd44", "7e678ca2f01dc853e85d13924e6c8a45", "be9e0d516f59ae57f5553bcc3cf296d1", "fd0dc5d4bba740c7b4cc78c4b19a5840", "7b4c61ff418f6fe80cf8adb474278311", "8cbd34393d1d54a90be3c2b53d8fc17a", "d138a63436b4dd8c5a55d184e025ef99", "5bdae6cb778d002c806bb7ed130985f3", "84c81a5e49291fe60eb9f5c1e2ac184b", "19733e0dfa804e3676f97eff90f2e467", "8f51f82393c6467f9392fb9eb46f9301", "114721fbc23ff9d188535bd736a0d30e", "686989d97cf0d70346cbde2031207cbf", "0565364633b5acdd24a498a6a9ab4eca", "417ae7f384c49de8c672aec86d5a2860", "31d25ddf2697b9e13ee883fff328b22f")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `4126348d783393dd85ede3468e48405d`, `b639f7f81a8faca9c62fd227fef5e28c`, `d48b580718b0e1617afc1dec028e9059`, `bafba3d044a4f674fc9edc67ef6b8a6b`, `79fe383f0963ae741193989c12aefacc`, `8d45a67b648d2cb46292ff5041a5dd44`, `7e678ca2f01dc853e85d13924e6c8a45`, `be9e0d516f59ae57f5553bcc3cf296d1` _(+13 more)_
 
 
 ## Why this matters

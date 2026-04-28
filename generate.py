@@ -3703,26 +3703,11 @@ CISA KEV entry. The U.S. federal "Known Exploited Vulnerabilities" catalog only 
 
 ## Recommended hunts
 
-### Splunk SPL — asset exposure
+Standard asset-exposure hunt — the canonical Splunk SPL and Defender KQL
+live once in [`../_TEMPLATES.md#asset-exposure`](../_TEMPLATES.md#asset-exposure).
+Substitute this CVE wherever the template references `<CVE>`:
 
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature="{cve}"
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-### Defender KQL — asset exposure
-
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId =~ "{cve}"
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc
-```
+- **CVE:** `{cve}`
 
 ## Why this matters
 
@@ -3767,8 +3752,30 @@ def _news_briefing(article, ind, ucs_pairs, techs, hit, sev):
     if not tech_lines:
         tech_lines.append("- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._")
 
+    # Compact rendering for the three IOC-substitution use cases. The full
+    # SPL/KQL bodies are identical across hundreds of briefings — only the IOC
+    # list differs. Inlining the full body on every briefing was redundant
+    # noise. We emit a one-paragraph entry with the IOC list and link to the
+    # canonical SPL/KQL in `briefings/_TEMPLATES.md`.
+    BOILERPLATE_TITLES = {
+        UC_VULN_EXPOSURE.title: ("asset-exposure", "cves",   "CVE(s)"),
+        UC_NETWORK_IOC.title:   ("network-ioc",    "ipdom",  "IP / domain IOC(s)"),
+        UC_HASH_IOC.title:      ("hash-ioc",       "hashes", "file hash IOC(s)"),
+    }
+
     uc_blocks = []
+    boilerplate_seen = []
     for uc_var, uc in ucs_pairs:
+        if uc.title in BOILERPLATE_TITLES:
+            anchor, kind, label = BOILERPLATE_TITLES[uc.title]
+            if kind == "cves":
+                items = ind.get("cves", []) or []
+            elif kind == "ipdom":
+                items = (ind.get("ips", []) or []) + (ind.get("domains", []) or [])
+            else:
+                items = (ind.get("sha256", []) or []) + (ind.get("sha1", []) or []) + (ind.get("md5", []) or [])
+            boilerplate_seen.append((uc, anchor, label, items))
+            continue
         spl = parameterize(uc.splunk_spl, ind) if uc.splunk_spl else ""
         kql = parameterize(uc.defender_kql, ind) if uc.defender_kql else ""
         block = f"""### {uc.title}
@@ -3780,6 +3787,26 @@ def _news_briefing(article, ind, ucs_pairs, techs, hit, sev):
         if kql:
             block += f"\n**Defender KQL:**\n```kql\n{kql.strip()}\n```\n"
         uc_blocks.append(block)
+
+    boilerplate_seen = [bs for bs in boilerplate_seen if bs[3]]
+    if boilerplate_seen:
+        compact_lines = ["### IOC-driven hunts (use shared templates)\n"]
+        compact_lines.append(
+            "These are standard IOC-substitution hunts — the canonical SPL "
+            "and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we "
+            "don't repeat the same boilerplate on every CVE / hash / "
+            "network-IOC briefing.\n"
+        )
+        for uc, anchor, label, items in boilerplate_seen:
+            ioc_inline = ", ".join(f"`{i}`" for i in items[:8])
+            more = f" _(+{len(items) - 8} more)_" if len(items) > 8 else ""
+            compact_lines.append(
+                f"- **{uc.title}** ([template](../_TEMPLATES.md#{anchor}))"
+                f" — phase: **{uc.kill_chain}**, confidence: **{uc.confidence}**\n"
+                f"  - {label}: {ioc_inline}{more}\n"
+            )
+        uc_blocks.append("\n".join(compact_lines))
+
     uc_section = "\n".join(uc_blocks) if uc_blocks else (
         "_No actionable hunts can be derived from the RSS summary alone. "
         "The article may still warrant manual review — open the source link "
@@ -3819,6 +3846,149 @@ Severity classified as **{sev.upper()}** based on: {('CVE present, ' if ind.get(
 
 
 CURATED_MARKER = "<!-- curated:true -->"
+
+
+def _write_briefing_templates():
+    """Emit the canonical SPL/KQL for the three IOC-substitution use cases.
+
+    These hunts are identical across hundreds of briefings — only the IOC
+    list changes. Centralising them here keeps individual briefings focused
+    on what's *unique* about each story (actor attribution, TTP detail,
+    sector context) instead of repeating boilerplate.
+    """
+    md = """# Shared Detection Templates
+
+Generic IOC-substitution hunts referenced from per-article briefings. Each
+briefing lists the IOC values that fired (CVEs, defanged IPs / domains,
+file hashes); the queries below are the canonical SPL / KQL bodies you'd
+substitute those values into.
+
+---
+
+<a id="asset-exposure"></a>
+## Asset Exposure — Vulnerability Matches Article CVE(s)
+
+**Phase:** recon · **Confidence:** High · **Technique:** T1190 — Exploit Public-Facing Application
+
+**When to use:** an article names one or more CVEs and you want to know
+whether your estate has unpatched assets that match.
+
+### Splunk SPL (CIM `Vulnerabilities`)
+
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (<CVE_LIST>)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+```
+
+### Defender KQL (`DeviceTvmSoftwareVulnerabilities`)
+
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ (<CVE_LIST>)
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc
+```
+
+---
+
+<a id="network-ioc"></a>
+## Network Connections to Article IPs / Domains
+
+**Phase:** c2 · **Confidence:** High · **Technique:** T1071 — Application Layer Protocol
+
+**When to use:** an article publishes defanged IPs or domains as
+attacker C2 / staging infrastructure.
+
+### Splunk SPL (CIM `Network_Traffic` / `Web` / `Network_Resolution`)
+
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (<IP_LIST>)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (<DOMAIN_LIST>)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (<DOMAIN_LIST>)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]
+```
+
+### Defender KQL (`DeviceNetworkEvents`)
+
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP in (<IP_LIST>) or RemoteUrl has_any (<DOMAIN_LIST>)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
+---
+
+<a id="hash-ioc"></a>
+## File Hash IOCs — Endpoint File / Process Match
+
+**Phase:** install · **Confidence:** High · **Technique:** T1027 — Obfuscated Files or Information
+
+**When to use:** an article publishes SHA256 / SHA1 / MD5 hashes for
+malicious binaries.
+
+### Splunk SPL (CIM `Endpoint.Filesystem` + `Endpoint.Processes`)
+
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (<HASH_LIST>)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (<HASH_LIST>)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash]
+```
+
+### Defender KQL (`DeviceFileEvents` + `DeviceProcessEvents`)
+
+```kql
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where SHA256 in~ (<HASH_LIST>) or SHA1 in~ (<HASH_LIST>) or MD5 in~ (<HASH_LIST>)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
+```
+
+---
+
+## Why these are split out
+
+These three hunts fire on **most** briefings — every article that names
+a CVE, an IP/domain, or a hash triggers one of them. The SPL / KQL bodies
+don't change between articles; only the IOC list does.
+
+Inlining the same boilerplate on every briefing was redundant noise that
+made it harder to spot the *article-specific* detection content. Now
+each briefing renders the IOC list inline (so you can copy-paste the
+values straight into your search) and links here for the body once.
+
+For machine consumption, the same IOC list is also exported to:
+
+- `intel/iocs.csv` (one row per IOC with source attribution)
+- `intel/splunk_lookup_iocs.csv` (Splunk lookup format)
+- `intel/iocs.json` (JSON)
+- `intel/iocs.stix.json` (STIX 2.1 bundle)
+- `intel/iocs.rss.xml` (RSS feed)
+"""
+    (BRIEFINGS_DIR / "_TEMPLATES.md").write_text(md, encoding="utf-8")
 
 
 def write_briefings(articles_meta, articles_raw_index):
@@ -3865,6 +4035,11 @@ def write_briefings(articles_meta, articles_raw_index):
     idx_lines = [
         "# Briefings — full archive\n",
         f"_{len(written)} per-article briefings — auto-generated from articles in the rolling {LOOKBACK_DAYS}-day window._\n",
+        "",
+        "**Shared detection templates:** generic IOC-substitution hunts ",
+        "(asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) ",
+        "instead of being repeated on every briefing. Each briefing links to the relevant template.",
+        "",
     ]
     by_day = {}
     for p in written:
@@ -3874,6 +4049,7 @@ def write_briefings(articles_meta, articles_raw_index):
         for p in sorted(by_day[day]):
             idx_lines.append(f"- [{p.stem.replace('-', ' ')}](./{day}/{p.name})")
     (BRIEFINGS_DIR / "INDEX.md").write_text("\n".join(idx_lines), encoding="utf-8")
+    _write_briefing_templates()
     if skipped_curated:
         print(f"    {skipped_curated} curated briefings preserved (analyst-edited)")
     return written

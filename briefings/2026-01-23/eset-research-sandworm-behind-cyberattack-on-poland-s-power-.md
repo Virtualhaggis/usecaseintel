@@ -31,31 +31,12 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6") or SHA1 in~ ("4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6") or MD5 in~ ("4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6`
 
 
 ## Why this matters

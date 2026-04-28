@@ -113,38 +113,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Network connections to article IPs / domains
-
-`UC_NETWORK_IOC` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN ("0.0.0.0")
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN ("sfrclak")
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN ("sfrclak")
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in ("0.0.0.0") or RemoteUrl has_any ("sfrclak")
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -171,28 +139,6 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Asset exposure — vulnerability matches article CVE(s)
-
-`_uc` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN ("CVE-2025-55182")
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in~ ("CVE-2025-55182")
-| join kind=inner DeviceInfo on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 ```
 
 ### Remote service execution — PsExec / SMB lateral movement
@@ -366,31 +312,18 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### File hash IOCs — endpoint file/process match
+### IOC-driven hunts (use shared templates)
 
-`UC_HASH_IOC` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN ("ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7", "fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf", "cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa", "8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10", "01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624", "7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695", "526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699", "a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a", "0d83030ab8bfba675fc1661f0756b6770be7dd80b1b718de3d68a01f2e79a5f4", "92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a", "58401c195fe0a6204b42f5f90995ece5fab74ce7c69c67a24c61a057325af668", "e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09", "f7d335205b8d7b20208fb3ef93ee6dc817905dc3ae0c10a0b164f4e7d07121cd", "617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101", "e49c2732fb9861548208a78e72996b9c3c470b6b562576924bcc3a9fb75bf9ff", "506690fcbd10fbe6f2b85b49a1fffa9d984c376c25ef6b73f764f670e932cab4", "4465bdeaddc8c049a67a3d5ec105b2f07dae72fa080166e51b8f487516eb8d07", "5bb67e88846096f1f8d42a0f0350c9c46260591567612ff9af46f98d1b7571cd", "59336a964f110c25c112bcc5adca7090296b54ab33fa95c0744b94f8a0d80c0f", "a224dd73b7ed33e0bf6a2ea340c8f8859dfa9ec5736afa8baea6225bf066b248", "5e2ab672c3f98f21925bd26d9a9bba036b67d84fde0dfdbe2cf9b85b170cab71", "20df0909a3a0ef26d74ae139763a380e49f77207aa1108d4640d8b6f14cab8ca", "5b5fbc627502c5797d97b206b6dcf537889e6bea6d4e81a835e103e311690e22", "9c64f1c7eba080b4e5ff17369ddcd00b9fe2d47dacdc61444b4cbfebb23a166c")
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN ("ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7", "fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf", "cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa", "8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10", "01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624", "7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695", "526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699", "a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a", "0d83030ab8bfba675fc1661f0756b6770be7dd80b1b718de3d68a01f2e79a5f4", "92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a", "58401c195fe0a6204b42f5f90995ece5fab74ce7c69c67a24c61a057325af668", "e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09", "f7d335205b8d7b20208fb3ef93ee6dc817905dc3ae0c10a0b164f4e7d07121cd", "617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101", "e49c2732fb9861548208a78e72996b9c3c470b6b562576924bcc3a9fb75bf9ff", "506690fcbd10fbe6f2b85b49a1fffa9d984c376c25ef6b73f764f670e932cab4", "4465bdeaddc8c049a67a3d5ec105b2f07dae72fa080166e51b8f487516eb8d07", "5bb67e88846096f1f8d42a0f0350c9c46260591567612ff9af46f98d1b7571cd", "59336a964f110c25c112bcc5adca7090296b54ab33fa95c0744b94f8a0d80c0f", "a224dd73b7ed33e0bf6a2ea340c8f8859dfa9ec5736afa8baea6225bf066b248", "5e2ab672c3f98f21925bd26d9a9bba036b67d84fde0dfdbe2cf9b85b170cab71", "20df0909a3a0ef26d74ae139763a380e49f77207aa1108d4640d8b6f14cab8ca", "5b5fbc627502c5797d97b206b6dcf537889e6bea6d4e81a835e103e311690e22", "9c64f1c7eba080b4e5ff17369ddcd00b9fe2d47dacdc61444b4cbfebb23a166c")
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]
-```
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `sfrclak`
 
-**Defender KQL:**
-```kql
-union DeviceFileEvents, DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in~ ("ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7", "fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf", "cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa", "8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10", "01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624", "7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695", "526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699", "a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a", "0d83030ab8bfba675fc1661f0756b6770be7dd80b1b718de3d68a01f2e79a5f4", "92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a", "58401c195fe0a6204b42f5f90995ece5fab74ce7c69c67a24c61a057325af668", "e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09", "f7d335205b8d7b20208fb3ef93ee6dc817905dc3ae0c10a0b164f4e7d07121cd", "617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101", "e49c2732fb9861548208a78e72996b9c3c470b6b562576924bcc3a9fb75bf9ff", "506690fcbd10fbe6f2b85b49a1fffa9d984c376c25ef6b73f764f670e932cab4", "4465bdeaddc8c049a67a3d5ec105b2f07dae72fa080166e51b8f487516eb8d07", "5bb67e88846096f1f8d42a0f0350c9c46260591567612ff9af46f98d1b7571cd", "59336a964f110c25c112bcc5adca7090296b54ab33fa95c0744b94f8a0d80c0f", "a224dd73b7ed33e0bf6a2ea340c8f8859dfa9ec5736afa8baea6225bf066b248", "5e2ab672c3f98f21925bd26d9a9bba036b67d84fde0dfdbe2cf9b85b170cab71", "20df0909a3a0ef26d74ae139763a380e49f77207aa1108d4640d8b6f14cab8ca", "5b5fbc627502c5797d97b206b6dcf537889e6bea6d4e81a835e103e311690e22", "9c64f1c7eba080b4e5ff17369ddcd00b9fe2d47dacdc61444b4cbfebb23a166c") or SHA1 in~ ("ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7", "fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf", "cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa", "8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10", "01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624", "7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695", "526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699", "a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a", "0d83030ab8bfba675fc1661f0756b6770be7dd80b1b718de3d68a01f2e79a5f4", "92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a", "58401c195fe0a6204b42f5f90995ece5fab74ce7c69c67a24c61a057325af668", "e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09", "f7d335205b8d7b20208fb3ef93ee6dc817905dc3ae0c10a0b164f4e7d07121cd", "617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101", "e49c2732fb9861548208a78e72996b9c3c470b6b562576924bcc3a9fb75bf9ff", "506690fcbd10fbe6f2b85b49a1fffa9d984c376c25ef6b73f764f670e932cab4", "4465bdeaddc8c049a67a3d5ec105b2f07dae72fa080166e51b8f487516eb8d07", "5bb67e88846096f1f8d42a0f0350c9c46260591567612ff9af46f98d1b7571cd", "59336a964f110c25c112bcc5adca7090296b54ab33fa95c0744b94f8a0d80c0f", "a224dd73b7ed33e0bf6a2ea340c8f8859dfa9ec5736afa8baea6225bf066b248", "5e2ab672c3f98f21925bd26d9a9bba036b67d84fde0dfdbe2cf9b85b170cab71", "20df0909a3a0ef26d74ae139763a380e49f77207aa1108d4640d8b6f14cab8ca", "5b5fbc627502c5797d97b206b6dcf537889e6bea6d4e81a835e103e311690e22", "9c64f1c7eba080b4e5ff17369ddcd00b9fe2d47dacdc61444b4cbfebb23a166c") or MD5 in~ ("ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7", "fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf", "cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa", "8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10", "01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624", "7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695", "526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699", "a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a", "0d83030ab8bfba675fc1661f0756b6770be7dd80b1b718de3d68a01f2e79a5f4", "92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a", "58401c195fe0a6204b42f5f90995ece5fab74ce7c69c67a24c61a057325af668", "e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09", "f7d335205b8d7b20208fb3ef93ee6dc817905dc3ae0c10a0b164f4e7d07121cd", "617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101", "e49c2732fb9861548208a78e72996b9c3c470b6b562576924bcc3a9fb75bf9ff", "506690fcbd10fbe6f2b85b49a1fffa9d984c376c25ef6b73f764f670e932cab4", "4465bdeaddc8c049a67a3d5ec105b2f07dae72fa080166e51b8f487516eb8d07", "5bb67e88846096f1f8d42a0f0350c9c46260591567612ff9af46f98d1b7571cd", "59336a964f110c25c112bcc5adca7090296b54ab33fa95c0744b94f8a0d80c0f", "a224dd73b7ed33e0bf6a2ea340c8f8859dfa9ec5736afa8baea6225bf066b248", "5e2ab672c3f98f21925bd26d9a9bba036b67d84fde0dfdbe2cf9b85b170cab71", "20df0909a3a0ef26d74ae139763a380e49f77207aa1108d4640d8b6f14cab8ca", "5b5fbc627502c5797d97b206b6dcf537889e6bea6d4e81a835e103e311690e22", "9c64f1c7eba080b4e5ff17369ddcd00b9fe2d47dacdc61444b4cbfebb23a166c")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-55182`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ad8ba560ae5c4af4758bc68cc6dcf43bae0e0bbf9da680a8dc60a9ef78e22ff7`, `fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf`, `cdc05cd30eb53315dadb081a7b942bb876f0d252d20e8ed4d2f36be79ee691fa`, `8449341ddc3f7fcc2547639e21e704400ca6a8a6841ae74e57c04445b1276a10`, `01c9484abc948daa525516464785009d1e7a63ffd6012b9e85b56477acc3e624`, `7b47ed28e84437aee64ffe9770d315c1b984135105f7f608a8b9579517bc0695`, `526ab39d1f56732e4e926715aaa797feb13b1ae86882ec570a4d292e7fdc3699`, `a98e04dec3a7fe507eb30c72da808bad60bc14d9d80f9770ec99c438faa85a1a` _(+16 more)_
 
 
 ## Why this matters
