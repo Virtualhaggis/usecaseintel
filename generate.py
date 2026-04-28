@@ -1931,11 +1931,14 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .drawer-uc-pager:hover{border-color:var(--accent); color:var(--accent);}
 .uc-card-row .uc-src-pill{
   font-size:9.5px; padding:1px 6px; border-radius:4px;
-  background:var(--panel2); color:var(--muted-2); margin-left:auto;
+  background:var(--panel2); color:var(--muted-2);
   text-transform:uppercase; letter-spacing:0.06em; font-weight:600;
 }
 .uc-card-row .uc-src-pill.escu{color:var(--accent-3);}
 .uc-card-row .uc-src-pill.internal{color:var(--accent);}
+.uc-card-row{transition:border-color 0.15s, background 0.15s;}
+.uc-card-row:hover{border-color:var(--accent); background:var(--panel-elev);}
+.uc-card-row .uc-card-chev{transition:transform 0.15s ease;}
 .matrix-mode{display:flex; gap:4px;
   padding:3px; background:var(--bg); border:1px solid var(--border);
   border-radius:var(--r-sm);}
@@ -2430,6 +2433,11 @@ ul.intel-types-doc code{
   Kill chain follows the Lockheed Martin 7-phase model.
 </footer>
 
+<!-- Per-UC detail sidecar. Sets window.__UC_DETAILS__ = { ucId: {...} }
+     so clicking a UC card in the matrix drawer can render full SPL/KQL.
+     Loaded async; the drawer code handles the case where it hasn't arrived. -->
+<script src="catalog/use_cases_full.js" async></script>
+
 <script>
 // ----- Tab switching --------------------------------------------------
 document.addEventListener('click', e => {
@@ -2918,10 +2926,11 @@ function initDrawerUcList() {
     const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
     const srcCls = uc.src === 'escu' ? 'escu' : 'internal';
     const srcLabel = uc.src === 'escu' ? 'ESCU' : 'Internal';
-    return `<div class="uc-card-row" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;">
+    return `<div class="uc-card-row" data-uc-key="${escapeHtml(uc.n)}" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;cursor:pointer;">
       <div style="display:flex;align-items:center;gap:8px;">
-        <div style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(uc.t)}</div>
+        <div class="uc-card-title" style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(uc.t)}</div>
         <span class="uc-src-pill ${srcCls}">${srcLabel}</span>
+        <span class="uc-card-chev" style="color:var(--muted);font-size:11px;">▸</span>
       </div>
       <div class="meta">
         <span class="pill">${escapeHtml(uc.ph || '-')}</span>
@@ -2929,7 +2938,41 @@ function initDrawerUcList() {
         <span style="color:var(--muted-2);font-size:10.5px;">${escapeHtml(uc.n)}</span>
       </div>
       ${artLinks ? '<div style="margin-top:6px;line-height:1.4;">' + artLinks + '</div>' : ''}
+      <div class="uc-card-detail" style="display:none;"></div>
     </div>`;
+  }
+  function renderUcDetail(detail) {
+    if (!detail) {
+      return '<div style="padding:10px;color:var(--muted);font-size:11.5px;">Detection logic not available — sidecar (catalog/use_cases_full.js) is still loading or this UC is missing from it.</div>';
+    }
+    const techPills = (detail.techniques || []).map(t => {
+      const tid = (t && t.id) || t;
+      const tname = (t && t.name) || (MATRIX.techniques[tid] && MATRIX.techniques[tid].name) || '';
+      return `<span class="pill" style="cursor:pointer;" data-jump-tid="${escapeHtml(tid)}">${escapeHtml(tid)}${tname ? ' ' + escapeHtml(tname) : ''}</span>`;
+    }).join(' ');
+    const dms = (detail.data_models || []).map(d => `<span class="pill">${escapeHtml(d)}</span>`).join(' ');
+    const phPill = detail.kill_chain ? `<span class="pill">${escapeHtml(detail.kill_chain)}</span>` : '';
+    let html = `<div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">`;
+    if (detail.description) {
+      html += `<div style="font-size:12px;color:var(--text);opacity:0.92;line-height:1.55;margin-bottom:10px;">${escapeHtml(detail.description)}</div>`;
+    }
+    if (techPills || phPill || dms) {
+      html += `<div class="meta" style="margin-bottom:10px;">${phPill}${techPills}${dms}</div>`;
+    }
+    if (detail.splunk_spl) {
+      html += `<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin:8px 0 4px 0;">Splunk SPL</div>`;
+      html += `<pre style="background:var(--panel-elev);border:1px solid var(--border);border-radius:4px;padding:8px 10px;overflow:auto;font-size:11px;line-height:1.5;color:var(--text);max-height:340px;"><code>${escapeHtml(detail.splunk_spl)}</code></pre>`;
+    }
+    if (detail.defender_kql) {
+      html += `<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin:8px 0 4px 0;">Defender KQL</div>`;
+      html += `<pre style="background:var(--panel-elev);border:1px solid var(--border);border-radius:4px;padding:8px 10px;overflow:auto;font-size:11px;line-height:1.5;color:var(--text);max-height:340px;"><code>${escapeHtml(detail.defender_kql)}</code></pre>`;
+    }
+    if (detail.source_url) {
+      const src = detail.source === 'splunk_escu' ? 'Splunk Security Content (GitHub)' : 'usecaseintel (GitHub)';
+      html += `<a href="${escapeHtml(detail.source_url)}" target="_blank" rel="noopener" style="color:var(--accent);font-size:11px;">↗ View source — ${escapeHtml(src)}</a>`;
+    }
+    html += `</div>`;
+    return html;
   }
   function getFiltered() {
     const q = (search?.value || '').trim().toLowerCase();
@@ -2958,6 +3001,32 @@ function initDrawerUcList() {
   pager.addEventListener('click', () => renderPage(false));
   search?.addEventListener('input', () => renderPage(true));
   srcSel?.addEventListener('change', () => renderPage(true));
+  // Click a UC card to expand inline with full SPL/KQL detail.
+  list.addEventListener('click', e => {
+    // Don't trigger expansion when clicking an embedded link or pill jump
+    if (e.target.closest('a, [data-jump-tid]')) return;
+    const card = e.target.closest('.uc-card-row');
+    if (!card) return;
+    const detail = card.querySelector('.uc-card-detail');
+    const chev = card.querySelector('.uc-card-chev');
+    if (detail.style.display === 'none' || !detail.style.display) {
+      const key = card.dataset.ucKey;
+      const data = (window.__UC_DETAILS__ || {})[key];
+      detail.innerHTML = renderUcDetail(data);
+      detail.style.display = '';
+      if (chev) chev.textContent = '▾';
+      // Wire technique-pill clicks to navigate
+      detail.querySelectorAll('[data-jump-tid]').forEach(p => {
+        p.addEventListener('click', ev => {
+          ev.stopPropagation();
+          openDrawerFor(p.dataset.jumpTid);
+        });
+      });
+    } else {
+      detail.style.display = 'none';
+      if (chev) chev.textContent = '▸';
+    }
+  });
   renderPage(true);
 }
 
@@ -3940,6 +4009,62 @@ def write_catalog_files(generated_iso):
                        indent=2),
         encoding="utf-8",
     )
+    # Full per-UC detail sidecar (loaded by index.html via <script src=...>).
+    # This is the body of every detection — internal SPL+KQL plus the synced
+    # Splunk ESCU search bodies. Kept out of the main HTML so the page weight
+    # stays manageable and the browser can cache the heavy payload separately.
+    full = {}
+    # Internal UCs (full SPL + KQL from YAML)
+    if _LOADED_UCS:
+        for uc_id, uc in _LOADED_UCS.items():
+            full[uc_id] = {
+                "name": uc.title,
+                "description": uc.description,
+                "kill_chain": uc.kill_chain,
+                "confidence": uc.confidence,
+                "techniques": [{"id": t, "name": n} for t, n in uc.techniques],
+                "data_models": list(uc.data_models or []),
+                "splunk_spl": uc.splunk_spl or "",
+                "defender_kql": uc.defender_kql or "",
+                "source": "internal",
+                "source_url": f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+            }
+    # ESCU detections (Splunk Security Content)
+    try:
+        reg = json_lib.loads(REGISTRY_PATH_FOR_MATRIX.read_text(encoding="utf-8"))
+        for det in (reg.get("escu_detections") or []):
+            det_id = det.get("id") or ""
+            if not det_id: continue
+            # Trim id used as JS key to first 36 chars to match matrix builder
+            key = det_id[:36]
+            full[key] = {
+                "name": det.get("name", ""),
+                "description": det.get("description", ""),
+                "kill_chain": (det.get("kill_chain_phases") or [""])[0],
+                "confidence": det.get("type", "Detection"),
+                "techniques": det.get("techniques") or [],
+                "data_models": det.get("data_models") or [],
+                "splunk_spl": det.get("search", ""),
+                "defender_kql": "",
+                "source": "splunk_escu",
+                "source_url": f"https://github.com/splunk/security_content/search?q={det_id}",
+            }
+    except Exception as _e:
+        print(f"[!] Failed to embed ESCU details: {_e}")
+    # Emit as JS so a plain <script src=...> include works for file:// + http
+    js_payload = json_lib.dumps(full, separators=(",", ":"))
+    (CATALOG_DIR / "use_cases_full.js").write_text(
+        "/* auto-generated; do not edit by hand */\n"
+        "window.__UC_DETAILS__ = " + js_payload + ";\n",
+        encoding="utf-8",
+    )
+    # Also emit JSON for non-browser consumers
+    (CATALOG_DIR / "use_cases_full.json").write_text(
+        json_lib.dumps({"generated": generated_iso, "count": len(full),
+                        "details": full}, separators=(",", ":")),
+        encoding="utf-8",
+    )
+    print(f"[*] Use case detail sidecar: {len(full)} entries  ->  catalog/use_cases_full.js")
 
 
 # =============================================================================
