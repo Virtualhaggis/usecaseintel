@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_LSASS
 title: LSASS process access / dump (credential theft)
 kill_chain: actions
@@ -18,24 +16,11 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Endpoint.Processes
-      where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-          OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-          OR Processes.process="*procdump*lsass*")
-         OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-      by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-  | `drop_dm_object_name(Processes)`
-defender_kql: |-
-  DeviceEvents
-  | where Timestamp > ago(7d)
-  | where ActionType == "OpenProcessApiCall"
-  | where FileName =~ "lsass.exe"
-  | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                            "svchost.exe","wininit.exe","services.exe",
-                                            "lsm.exe","SearchProtocolHost.exe")
-  | project Timestamp, DeviceName, ActionType, FileName,
-            InitiatingProcessFileName, InitiatingProcessCommandLine,
-            InitiatingProcessFolderPath, AccountName
-  | order by Timestamp desc
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where (Processes.process=\"*lsass*\" OR Processes.process=\"*sekurlsa*\"\n        OR Processes.process=\"*MiniDump*\" OR Processes.process=\"*comsvcs.dll*MiniDump*\"\n        OR Processes.process=\"*procdump*lsass*\")\n       OR (Processes.process_name=\"rundll32.exe\" AND Processes.process=\"*comsvcs*MiniDump*\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`"
+defender_kql: "DeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc"
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- Sysmon EID 10 (ProcessAccess)
+- Defender DeviceEvents (OpenProcessApiCall)
+- EDR LSASS-access telemetry

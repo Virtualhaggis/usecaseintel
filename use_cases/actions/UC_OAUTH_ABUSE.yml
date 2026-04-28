@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_OAUTH_ABUSE
 title: OAuth consent / suspicious app grant
 kill_chain: actions
@@ -18,20 +16,10 @@ data_models:
   - Authentication.Authentication
   defender:
   - CloudAppEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Authentication.Authentication
-      where Authentication.action="success"
-        AND Authentication.signature IN (
-          "Consent to application",
-          "Add app role assignment grant to user",
-          "Add OAuth2PermissionGrant",
-          "Add delegated permission grant")
-      by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-  | `drop_dm_object_name(Authentication)`
-defender_kql: |-
-  CloudAppEvents
-  | where Timestamp > ago(7d)
-  | where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-  | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-            ActivityObjects, IPAddress, UserAgent
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Authentication.Authentication\n    where Authentication.action=\"success\"\n      AND Authentication.signature IN (\n        \"Consent to application\",\n        \"Add app role assignment grant to user\",\n        \"Add OAuth2PermissionGrant\",\n        \"Add delegated permission grant\")\n    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature\n| `drop_dm_object_name(Authentication)`"
+defender_kql: "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent"
+tier: alerting
+fp_rate_estimate: medium
+required_telemetry:
+- Entra ID audit logs
+- CloudAppEvents (Consent to application)

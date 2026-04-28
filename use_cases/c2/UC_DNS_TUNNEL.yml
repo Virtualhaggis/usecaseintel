@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_DNS_TUNNEL
 title: DNS tunneling / TXT-heavy domain queries
 kill_chain: c2
@@ -18,26 +16,10 @@ data_models:
   - Network_Resolution.DNS
   defender:
   - DeviceNetworkEvents
-splunk_spl: |-
-  | tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-      where DNS.message_type="QUERY"
-      by DNS.src, DNS.query
-  | `drop_dm_object_name(DNS)`
-  | eval qlen=len(query)
-  | where qlen > 50
-  | rex field=query "(?<second_level_domain>[\w-]+\.[\w-]+)$"
-  | stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-      by src, second_level_domain
-  | where qcount > 100 AND unique_subs > 20
-  | sort - qcount
-defender_kql: |-
-  DeviceNetworkEvents
-  | where Timestamp > ago(1d)
-  | where RemotePort == 53 and isnotempty(RemoteUrl)
-  | extend qlen = strlen(RemoteUrl)
-  | where qlen > 50
-  | extend SecondLevelDomain = extract(@"([\w-]+\.[a-zA-Z]{2,})$", 1, RemoteUrl)
-  | summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
-      by DeviceName, SecondLevelDomain
-  | where qcount > 100 and uniqueSubs > 20
-  | order by qcount desc
+splunk_spl: "| tstats `summariesonly` count from datamodel=Network_Resolution.DNS\n    where DNS.message_type=\"QUERY\"\n    by DNS.src, DNS.query\n| `drop_dm_object_name(DNS)`\n| eval qlen=len(query)\n| where qlen > 50\n| rex field=query \"(?<second_level_domain>[\\w-]+\\.[\\w-]+)$\"\n| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label\n    by src, second_level_domain\n| where qcount > 100 AND unique_subs > 20\n| sort - qcount"
+defender_kql: "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc"
+tier: hunting
+fp_rate_estimate: medium
+required_telemetry:
+- DNS logs (CIM Network_Resolution)
+- Defender DeviceNetworkEvents

@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_CRYPTO_WALLET
 title: Crypto-wallet file/keystore access by non-wallet process
 kill_chain: actions
@@ -16,22 +14,18 @@ data_models:
   - Endpoint.Filesystem
   defender:
   - DeviceFileEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Endpoint.Filesystem
-      where (Filesystem.file_path="*\Ethereum\keystore\*"
-          OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-          OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-          OR Filesystem.file_path="*\Electrum\wallets\*"
-          OR Filesystem.file_path="*\MetaMask\*"
-          OR Filesystem.file_path="*\Phantom\*"
-          OR Filesystem.file_path="*\Atomic\Local Storage\*")
-        AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-      by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-  | `drop_dm_object_name(Filesystem)`
-defender_kql: |-
-  DeviceFileEvents
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Ethereum\\keystore\\*\"\n        OR Filesystem.file_path=\"*\\Bitcoin\\wallet.dat\"\n        OR Filesystem.file_path=\"*\\Exodus\\exodus.wallet*\"\n        OR Filesystem.file_path=\"*\\Electrum\\wallets\\*\"\n        OR Filesystem.file_path=\"*\\MetaMask\\*\"\n        OR Filesystem.file_path=\"*\\Phantom\\*\"\n        OR Filesystem.file_path=\"*\\Atomic\\Local Storage\\*\")\n      AND NOT Filesystem.process_name IN (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`"
+defender_kql: 'DeviceFileEvents
+
   | where Timestamp > ago(7d)
+
   | where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+
   | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType'
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- Sysmon EID 11
+- Defender DeviceFileEvents

@@ -1,13 +1,14 @@
-# Schema: see use_cases/SCHEMA.md
 id: UC_PHISH_LINK_BYPASS
 title: User clicked through a Safe Links warning page
 kill_chain: delivery
 confidence: High
-description: |-
-  Microsoft Safe Links rendered a warning page for a URL and the user
+description: 'Microsoft Safe Links rendered a warning page for a URL and the user
+
   clicked past it anyway (ActionType=ClickedThrough). This is an
+
   explicit user-override of a defender control — by definition rare and
-  high-signal. Investigate every hit; the URL was flagged for a reason.
+
+  high-signal. Investigate every hit; the URL was flagged for a reason.'
 implementations:
 - defender
 mitre_attack:
@@ -19,20 +20,9 @@ data_models:
   defender:
   - UrlClickEvents
   - EmailEvents
-defender_kql: |-
-  // Safe Links assessed the URL as risky, showed a warning page, and the
-  // user proceeded anyway. ClickedThrough events are inherently rare —
-  // every hit deserves analyst review.
-  UrlClickEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "ClickedThrough"
-  | join kind=leftouter (
-      EmailEvents
-      | where Timestamp > ago(30d)
-      | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
-                RecipientEmailAddress, EmailDirection
-    ) on NetworkMessageId
-  | project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
-            EmailDirection, SenderFromAddress, SenderFromDomain,
-            RecipientEmailAddress, Subject, Workload
-  | order by Timestamp desc
+defender_kql: "// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare —\n// every hit deserves analyst review.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc"
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- UrlClickEvents (ClickedThrough)
+- Microsoft Defender for Office 365 Safe Links

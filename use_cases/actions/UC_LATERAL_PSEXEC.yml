@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_LATERAL_PSEXEC
 title: Remote service execution — PsExec / SMB lateral movement
 kill_chain: actions
@@ -18,16 +16,11 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceProcessEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Endpoint.Processes
-      where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-         OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-      by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-  | `drop_dm_object_name(Processes)`
-defender_kql: |-
-  DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-     or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name IN (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n       OR (Processes.process_name=\"wmic.exe\" AND Processes.process=\"*/node:*\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`"
+defender_kql: "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n   or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine"
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- Sysmon EID 1
+- Defender DeviceProcessEvents
+- Windows Event ID 7045 (service install)

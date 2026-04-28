@@ -3384,15 +3384,15 @@ ul.intel-types-doc code{
       <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
     </div>
 
-    <h3 class="wf-section-title">IOC enrichment</h3>
+    <h3 class="wf-section-title">IOC enrichment (opt-in)</h3>
     <div class="wf-step">
-      <p>Every IOC in <code>intel/iocs.csv</code> is now cross-referenced against:</p>
+      <p>When <code>ABUSECH_API_KEY</code> is set, every IOC in <code>intel/iocs.csv</code> is cross-referenced against:</p>
       <ul>
-        <li><strong>ThreatFox (abuse.ch)</strong> — malware family attribution + first-seen + reporter for IPs / domains / hashes / CVEs / URLs. Free, no key.</li>
-        <li><strong>URLhaus (abuse.ch)</strong> — URL counts + blacklist memberships for hosts. Free, no key.</li>
+        <li><strong>ThreatFox (abuse.ch)</strong> — malware family attribution + first-seen + reporter for IPs / domains / hashes / CVEs / URLs.</li>
+        <li><strong>URLhaus (abuse.ch)</strong> — URL counts + blacklist memberships for hosts.</li>
       </ul>
-      <p>New CSV columns: <code>threatfox_malware</code>, <code>threatfox_threat_type</code>, <code>urlhaus_url_count</code>, <code>urlhaus_blacklists</code>, <code>enrichment_url</code>. Disable with <code>USECASEINTEL_ENRICH=0</code>; cache lives in <code>intel/.enrich_cache/</code>.</p>
-      <p>Practical impact: an IOC the SOC sees in our feed is now flanked by "is this on abuse.ch's known-bad list and what malware family is it linked to?" — turning a list of values into intel with attribution.</p>
+      <p>Free auth keys at <a href="https://auth.abuse.ch/" target="_blank" rel="noopener">auth.abuse.ch</a> — abuse.ch added auth in 2024-2025 to control abuse. New CSV columns: <code>threatfox_malware</code>, <code>threatfox_threat_type</code>, <code>urlhaus_url_count</code>, <code>urlhaus_blacklists</code>, <code>enrichment_url</code>. Cache lives in <code>intel/.enrich_cache/</code>; if no key is set the columns stay blank and the pipeline runs unchanged.</p>
+      <p>Practical impact when enabled: an IOC the SOC sees in our feed is flanked by "is this on abuse.ch's known-bad list and what malware family is it linked to?" — turning a list of values into intel with attribution.</p>
     </div>
 
     <h3 class="wf-section-title">Per-platform rule packs</h3>
@@ -4874,8 +4874,13 @@ THREATFOX_API = "https://threatfox-api.abuse.ch/api/v1/"
 URLHAUS_API   = "https://urlhaus-api.abuse.ch/v1/"
 
 
-def _enrich_one(value, ioc_type, cache_dir):
-    """Look up a single IOC in ThreatFox + URLhaus. Returns dict or {}."""
+def _enrich_one(value, ioc_type, cache_dir, auth_key):
+    """Look up a single IOC in ThreatFox + URLhaus. Returns dict or {}.
+
+    abuse.ch APIs (ThreatFox + URLhaus) require an Auth-Key header as of
+    2024-2025. If no key is supplied we never even call them — the
+    enrichment columns just stay blank. Free auth keys are available at
+    https://auth.abuse.ch/ — register and set ABUSECH_API_KEY."""
     cache_dir.mkdir(parents=True, exist_ok=True)
     safe = re.sub(r"[^a-zA-Z0-9._-]+", "_", str(value))[:60]
     cache_path = cache_dir / f"{ioc_type}_{safe}.json"
@@ -4884,11 +4889,16 @@ def _enrich_one(value, ioc_type, cache_dir):
             return __import__("json").loads(cache_path.read_text(encoding="utf-8"))
         except Exception:
             pass
+    if not auth_key:
+        return {}
     out = {}
+    headers = {
+        "User-Agent": FETCH_USER_AGENT,
+        "Auth-Key": auth_key,
+    }
     try:
         import requests as _req
-        time.sleep(0.4)  # courtesy throttle
-        # ThreatFox supports CVE / hash / domain / ip / url
+        time.sleep(0.4)
         tf_query_type = {
             "cve":"cve","ipv4":"ip","domain":"domain","md5":"md5",
             "sha1":"sha1","sha256":"sha256","url":"url",
@@ -4896,8 +4906,7 @@ def _enrich_one(value, ioc_type, cache_dir):
         if tf_query_type:
             r = _req.post(THREATFOX_API,
                           json={"query": "search_ioc", "search_term": value},
-                          headers={"User-Agent": FETCH_USER_AGENT},
-                          timeout=15)
+                          headers=headers, timeout=15)
             if r.status_code == 200:
                 d = r.json()
                 if d.get("query_status") == "ok":
@@ -4910,14 +4919,13 @@ def _enrich_one(value, ioc_type, cache_dir):
                         out["threatfox_reporter"] = first.get("reporter") or ""
                         out["threatfox_url"] = f"https://threatfox.abuse.ch/ioc/{first.get('id','')}"
                         out["threatfox_hits"] = len(items)
-        # URLhaus supports domain / ip / url
+            elif r.status_code == 401:
+                out["enrich_error"] = "ThreatFox: 401 unauthorized (set ABUSECH_API_KEY)"
         if ioc_type in ("domain","ipv4"):
             time.sleep(0.4)
-            field = "host"
             r = _req.post(URLHAUS_API + "host/",
-                          data={field: value},
-                          headers={"User-Agent": FETCH_USER_AGENT},
-                          timeout=15)
+                          data={"host": value},
+                          headers=headers, timeout=15)
             if r.status_code == 200:
                 d = r.json()
                 if d.get("query_status") == "ok":
@@ -4925,6 +4933,8 @@ def _enrich_one(value, ioc_type, cache_dir):
                     out["urlhaus_first_seen"] = d.get("firstseen") or ""
                     out["urlhaus_blacklists"] = ", ".join((d.get("blacklists") or {}).keys())
                     out["urlhaus_url"] = d.get("urlhaus_reference") or ""
+            elif r.status_code == 401:
+                out["enrich_error"] = "URLhaus: 401 unauthorized (set ABUSECH_API_KEY)"
     except Exception as e:
         out["enrich_error"] = str(e)[:80]
     try:
@@ -4936,13 +4946,23 @@ def _enrich_one(value, ioc_type, cache_dir):
 
 def _enrich_iocs(iocs):
     """Annotate each IOC dict with ThreatFox / URLhaus enrichment in-place."""
-    enriched = 0
+    auth_key = os.environ.get("ABUSECH_API_KEY", "").strip()
+    if not auth_key:
+        # Don't even try — abuse.ch APIs require auth as of 2024-2025.
+        # Log once so the user knows enrichment is disabled, then bail.
+        print("[*] IOC enrichment skipped: set ABUSECH_API_KEY (free at https://auth.abuse.ch/) to enable ThreatFox/URLhaus cross-reference")
+        return
+    enriched = 0; auth_err = 0
     for i in iocs:
-        meta = _enrich_one(i["value"], i["type"], ENRICH_CACHE_DIR)
+        meta = _enrich_one(i["value"], i["type"], ENRICH_CACHE_DIR, auth_key)
         if meta:
             i["enrichment"] = meta
             if meta.get("threatfox_malware") or meta.get("urlhaus_url_count"):
                 enriched += 1
+            elif "401" in (meta.get("enrich_error") or ""):
+                auth_err += 1
+    if auth_err:
+        print(f"[!] IOC enrichment: {auth_err} 401-unauth responses — verify ABUSECH_API_KEY is correct")
     print(f"[*] IOC enrichment: {enriched} IOCs cross-referenced via ThreatFox/URLhaus")
 
 

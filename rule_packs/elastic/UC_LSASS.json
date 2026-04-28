@@ -1,12 +1,12 @@
 {
   "name": "LSASS process access / dump (credential theft)",
   "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
-  "risk_score": 21,
-  "severity": "low",
+  "risk_score": 73,
+  "severity": "high",
   "type": "query",
   "language": "kuery",
   "enabled": false,
-  "interval": "24h",
+  "interval": "1h",
   "from": "now-24h",
   "index": [
     "logs-*",
@@ -38,7 +38,7 @@
   ],
   "tags": [
     "usecaseintel",
-    "tier:hunting",
+    "tier:alerting",
     "actions"
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc\n```",
@@ -46,7 +46,7 @@
     "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LSASS.yml"
   ],
   "meta": {
-    "tier": "hunting",
-    "fp_rate_estimate": "unknown"
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
   }
 }

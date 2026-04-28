@@ -10,10 +10,10 @@
       "properties": {
         "displayName": "Trusted vendor binary / installer launching unusual children",
         "description": "Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.",
-        "severity": "High",
+        "severity": "Low",
         "enabled": false,
         "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (__VENDOR_BINS__)\n| where FileName in~ (\"powershell.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"bitsadmin.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine",
-        "queryFrequency": "PT1H",
+        "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",
         "triggerThreshold": 0,
@@ -23,8 +23,8 @@
         ],
         "alertRuleTemplateName": "UC_SUPPLY_CHAIN",
         "customDetails": {
-          "tier": "alerting",
-          "fp_rate_estimate": "unknown",
+          "tier": "hunting",
+          "fp_rate_estimate": "medium",
           "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_SUPPLY_CHAIN.yml"
         }
       }

@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_BROWSER_STEALER
 title: Infostealer — non-browser process accessing browser cookie/login DBs
 kill_chain: actions
@@ -18,21 +16,21 @@ data_models:
   - Endpoint.Filesystem
   defender:
   - DeviceFileEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Endpoint.Filesystem
-      where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-          OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-          OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-          OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-          OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-        AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-      by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-  | `drop_dm_object_name(Filesystem)`
-defender_kql: |-
-  DeviceFileEvents
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Cookies*\"\n        OR Filesystem.file_path=\"*\\Microsoft\\Edge\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\logins.json*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite*\")\n      AND NOT Filesystem.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`"
+defender_kql: 'DeviceFileEvents
+
   | where Timestamp > ago(7d)
+
   | where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+
   | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+
   | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType'
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- Sysmon EID 11 (FileCreate)
+- Defender DeviceFileEvents
+- EDR file-access telemetry

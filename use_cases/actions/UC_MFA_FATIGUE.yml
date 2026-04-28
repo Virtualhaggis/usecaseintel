@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_MFA_FATIGUE
 title: MFA fatigue / push-bombing
 kill_chain: actions
@@ -16,19 +14,10 @@ data_models:
   - Authentication.Authentication
   defender:
   - AADSignInEventsBeta
-splunk_spl: |-
-  | tstats `summariesonly` count from datamodel=Authentication.Authentication
-      where Authentication.action="failure" AND Authentication.signature="*MFA*"
-      by _time span=5m, Authentication.user, Authentication.src
-  | `drop_dm_object_name(Authentication)`
-  | where count > 10
-defender_kql: |-
-  AADSignInEventsBeta
-  | where Timestamp > ago(1d)
-  | where ErrorCode in (50074, 50076, 50158, 50125, 50097)
-  | extend MfaPrompt = AuthenticationRequirement == "multiFactorAuthentication"
-  | where MfaPrompt
-  | summarize attempts = count(), distinct_ips = dcount(IPAddress)
-      by AccountUpn, bin(Timestamp, 5m)
-  | where attempts > 10
-  | order by attempts desc
+splunk_spl: "| tstats `summariesonly` count from datamodel=Authentication.Authentication\n    where Authentication.action=\"failure\" AND Authentication.signature=\"*MFA*\"\n    by _time span=5m, Authentication.user, Authentication.src\n| `drop_dm_object_name(Authentication)`\n| where count > 10"
+defender_kql: "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc"
+tier: alerting
+fp_rate_estimate: medium
+required_telemetry:
+- AADSignInEventsBeta
+- Microsoft 365 sign-in logs

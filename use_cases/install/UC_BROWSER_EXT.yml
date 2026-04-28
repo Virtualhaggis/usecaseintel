@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_BROWSER_EXT
 title: Suspicious browser extension installation
 kill_chain: install
@@ -16,17 +14,10 @@ data_models:
   - Endpoint.Registry
   defender:
   - DeviceRegistryEvents
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Endpoint.Registry
-      where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
-          OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
-          OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
-      by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
-  | `drop_dm_object_name(Registry)`
-defender_kql: |-
-  DeviceRegistryEvents
-  | where Timestamp > ago(7d)
-  | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
-  | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
-            InitiatingProcessFileName, InitiatingProcessAccountName
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Registry\n    where (Registry.registry_path=\"*\\Software\\Google\\Chrome\\Extensions\\*\"\n        OR Registry.registry_path=\"*\\Software\\Microsoft\\Edge\\Extensions\\*\"\n        OR Registry.registry_path=\"*\\Software\\Mozilla\\Firefox\\Extensions\\*\")\n    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user\n| `drop_dm_object_name(Registry)`"
+defender_kql: "DeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where RegistryKey has_any (\"\\Software\\Google\\Chrome\\Extensions\\\",\"\\Software\\Microsoft\\Edge\\Extensions\\\",\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessAccountName"
+tier: hunting
+fp_rate_estimate: high
+required_telemetry:
+- Sysmon EID 13 (RegistryValueSet)
+- Defender DeviceRegistryEvents

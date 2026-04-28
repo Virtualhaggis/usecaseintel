@@ -1,12 +1,12 @@
 {
   "name": "Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator",
   "description": "External Teams chat where displayName contains 'helpdesk' or 'IT support' \u2014 common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.",
-  "risk_score": 73,
-  "severity": "high",
+  "risk_score": 21,
+  "severity": "low",
   "type": "query",
   "language": "kuery",
   "enabled": false,
-  "interval": "1h",
+  "interval": "24h",
   "from": "now-24h",
   "index": [
     "logs-*",
@@ -38,7 +38,7 @@
   ],
   "tags": [
     "usecaseintel",
-    "tier:alerting",
+    "tier:hunting",
     "delivery"
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nCloudAppEvents\n| where Timestamp > ago(7d)\n| where Application == \"Microsoft Teams\"\n| where ActionType == \"MessageSent\"\n| where RawEventData has \"ExternalParticipants\"\n| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)\n| where SenderDisplayName matches regex @\"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\"\n| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData\n```",
@@ -46,7 +46,7 @@
     "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_TEAMS_VISHING.yml"
   ],
   "meta": {
-    "tier": "alerting",
-    "fp_rate_estimate": "unknown"
+    "tier": "hunting",
+    "fp_rate_estimate": "medium"
   }
 }

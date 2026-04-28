@@ -1,5 +1,3 @@
-# Auto-extracted from generate.py — edit this file directly going forward.
-# Schema: see use_cases/SCHEMA.md
 id: UC_VULN_EXPOSURE
 title: Asset exposure — vulnerability matches article CVE(s)
 kill_chain: recon
@@ -17,15 +15,16 @@ data_models:
   defender:
   - DeviceInfo
   - DeviceTvmSoftwareVulnerabilities
-splunk_spl: |-
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-      from datamodel=Vulnerabilities
-      where Vulnerabilities.signature IN (__CVE_LIST__)
-      by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-  | `drop_dm_object_name(Vulnerabilities)`
-  | sort - severity
-defender_kql: |-
-  DeviceTvmSoftwareVulnerabilities
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Vulnerabilities\n    where Vulnerabilities.signature IN (__CVE_LIST__)\n    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve\n| `drop_dm_object_name(Vulnerabilities)`\n| sort - severity"
+defender_kql: 'DeviceTvmSoftwareVulnerabilities
+
   | where CveId in~ (__CVE_LIST__)
+
   | join kind=inner DeviceInfo on DeviceId
-  | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+
+  | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate'
+tier: alerting
+fp_rate_estimate: low
+required_telemetry:
+- Tenable / Qualys / Rapid7 (CIM Vulnerabilities)
+- Defender TVM (DeviceTvmSoftwareVulnerabilities)

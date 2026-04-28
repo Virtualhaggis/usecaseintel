@@ -10,10 +10,10 @@
       "properties": {
         "displayName": "LSASS process access / dump (credential theft)",
         "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
-        "severity": "Low",
+        "severity": "High",
         "enabled": false,
         "query": "DeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc",
-        "queryFrequency": "PT1D",
+        "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",
         "triggerThreshold": 0,
@@ -24,8 +24,8 @@
         ],
         "alertRuleTemplateName": "UC_LSASS",
         "customDetails": {
-          "tier": "hunting",
-          "fp_rate_estimate": "unknown",
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
           "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_LSASS.yml"
         }
       }
