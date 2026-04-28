@@ -30,7 +30,6 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 - **T1071** — Application Layer Protocol
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1190** — Exploit Public-Facing Application
 - **T1053.005** — Scheduled Task
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
@@ -247,4 +246,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

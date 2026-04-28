@@ -1,4 +1,4 @@
-# [HIGH] Cloud workload security: Mind the gaps
+# [MED] Cloud workload security: Mind the gaps
 
 **Source:** ESET WeLiveSecurity
 **Published:** 2026-03-24
@@ -15,7 +15,6 @@ The ease with which some cloud assets, notably virtual ma…
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
@@ -78,4 +77,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

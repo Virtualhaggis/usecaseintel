@@ -23,7 +23,6 @@ Kaspersky Security Services provide a comprehensive cybersecurity ecosystem, tak
 
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1190** — Exploit Public-Facing Application
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1059.001** — PowerShell
@@ -147,4 +146,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,4 +1,4 @@
-# [HIGH] Microsoft asks iPhone users to reauthenticate after Outlook outage
+# [MED] Microsoft asks iPhone users to reauthenticate after Outlook outage
 
 **Source:** BleepingComputer
 **Published:** 2026-04-28
@@ -20,7 +20,6 @@ Microsoft confirmed the incident yesterday morning, saying that customers were e
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
@@ -86,4 +85,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

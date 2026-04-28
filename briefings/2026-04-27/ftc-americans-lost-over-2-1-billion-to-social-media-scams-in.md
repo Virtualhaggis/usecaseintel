@@ -21,7 +21,7 @@ Repo…
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
+- _Narrative-keyword inference returned no technique mappings; review article for ATT&CK relevance manually._
 
 ## Kill chain phases observed
 
@@ -34,4 +34,4 @@ _No actionable hunts can be derived from the RSS summary alone. The article may 
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

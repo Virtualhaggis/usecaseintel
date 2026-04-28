@@ -1219,14 +1219,23 @@ def fmt_list(values, sep=", ", quote='"'):
 
 
 def parameterize(text: str, ind: dict) -> str:
+    """Substitute IOC placeholders. Returns empty string if the query
+    references an IOC class the article doesn't have — caller-side
+    suppression is preferred (see select_use_cases) but this is a
+    safety net so we never ship `IN ("-")` placeholder queries."""
     cves = ind["cves"]
     ips = ind["ips"]
     domains = ind["domains"][:10]
     hashes = ind["sha256"] + ind["sha1"] + ind["md5"]
-    text = text.replace("__CVE_LIST__", fmt_list(cves) if cves else '"-"')
-    text = text.replace("__IP_LIST__", fmt_list(ips) if ips else '"0.0.0.0"')
-    text = text.replace("__DOMAIN_LIST__", fmt_list(domains) if domains else '"example.invalid"')
-    text = text.replace("__HASH_LIST__", fmt_list(hashes) if hashes else '"-"')
+    if "__CVE_LIST__" in text and not cves: return ""
+    if "__IP_LIST__" in text and not ips and "__DOMAIN_LIST__" not in text: return ""
+    if "__DOMAIN_LIST__" in text and not domains and "__IP_LIST__" not in text: return ""
+    if "__IP_LIST__" in text and "__DOMAIN_LIST__" in text and not (ips or domains): return ""
+    if "__HASH_LIST__" in text and not hashes: return ""
+    text = text.replace("__CVE_LIST__", fmt_list(cves))
+    text = text.replace("__IP_LIST__", fmt_list(ips) if ips else '""')
+    text = text.replace("__DOMAIN_LIST__", fmt_list(domains) if domains else '""')
+    text = text.replace("__HASH_LIST__", fmt_list(hashes))
     text = text.replace("__VENDOR_BINS__", '"setup.exe","installer.exe","update.exe"')
     return text
 
@@ -1235,24 +1244,35 @@ def select_use_cases(article_text: str, ind: dict) -> list:
     activated = []
     seen_titles = set()
     text_l = article_text.lower()
+    has_cve = bool(ind.get("cves"))
+    has_netioc = bool(ind.get("ips") or ind.get("domains"))
+    has_hash = bool(ind.get("sha256") or ind.get("sha1") or ind.get("md5"))
+    # Rule-fired UCs only get added when their target IOC class is actually
+    # present. We never want to ship a vuln-exposure / network-IOC / hash-IOC
+    # use case with placeholder values like "-" or "0.0.0.0" — better to say
+    # "no actionable hunt for this category" by leaving the UC out entirely.
+    iocless_titles = {
+        UC_VULN_EXPOSURE.title: has_cve,
+        UC_NETWORK_IOC.title:   has_netioc,
+        UC_HASH_IOC.title:      has_hash,
+    }
     for rule in RULES:
         if any(t in text_l for t in rule.triggers):
             for uc in rule.use_cases:
+                if uc.title in iocless_titles and not iocless_titles[uc.title]:
+                    continue  # would render placeholder query — skip
                 if uc.title not in seen_titles:
                     activated.append(uc)
                     seen_titles.add(uc.title)
-    if ind["cves"] and UC_VULN_EXPOSURE.title not in seen_titles:
+    if has_cve and UC_VULN_EXPOSURE.title not in seen_titles:
         activated.append(UC_VULN_EXPOSURE)
         seen_titles.add(UC_VULN_EXPOSURE.title)
-    if (ind["ips"] or ind["domains"]) and UC_NETWORK_IOC.title not in seen_titles:
+    if has_netioc and UC_NETWORK_IOC.title not in seen_titles:
         activated.append(UC_NETWORK_IOC)
         seen_titles.add(UC_NETWORK_IOC.title)
-    if (ind["sha256"] or ind["sha1"] or ind["md5"]) and UC_HASH_IOC.title not in seen_titles:
+    if has_hash and UC_HASH_IOC.title not in seen_titles:
         activated.append(UC_HASH_IOC)
         seen_titles.add(UC_HASH_IOC.title)
-    # No fallback: if no rules fired AND no IOC types apply, return empty.
-    # Better to say "no actionable hunts" than to ship a UC_NETWORK_IOC SPL
-    # with placeholder values like "0.0.0.0" and "example.invalid".
     return activated
 
 
@@ -1379,9 +1399,9 @@ body{
 /* ----- Main layout --------------------------------------------------- */
 main{
   margin:0; padding:18px 28px 28px;
-  display:grid; grid-template-columns:260px 1fr; gap:20px;
+  display:grid; grid-template-columns:260px minmax(0, 1380px); gap:20px;
 }
-@media(max-width:1280px){main{grid-template-columns:240px 1fr; gap:16px;}}
+@media(max-width:1280px){main{grid-template-columns:240px minmax(0, 1fr); gap:16px;}}
 @media(max-width:980px){main{grid-template-columns:1fr;padding:18px;}}
 
 nav.toc{
@@ -2121,10 +2141,6 @@ ul.intel-types-doc code{
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
     </div>
-    <span style="font-size:11px;color:var(--muted);margin-left:auto;">
-      Generated __GENERATED_AT__ · Source:
-      <a href="https://thehackernews.com/" style="color:var(--accent);">thehackernews.com</a>
-    </span>
   </div>
 </header>
 

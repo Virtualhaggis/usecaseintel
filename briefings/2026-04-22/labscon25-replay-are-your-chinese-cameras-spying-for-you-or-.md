@@ -20,7 +20,6 @@ Marc, who assisted the FCC Enforcement Bureau in its investigations, and Sil…
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
@@ -55,4 +54,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
