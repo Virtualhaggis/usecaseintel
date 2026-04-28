@@ -1309,9 +1309,12 @@ body{
   min-width:240px; font-family:inherit; font-size:13px;
 }
 .search-trigger:hover{border-color:var(--border-2);color:var(--text);}
+.search-placeholder{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.search-shortcut{display:inline-flex; gap:4px; flex-shrink:0; margin-left:14px;}
 .search-trigger kbd{
-  margin-left:auto; padding:2px 6px; font-size:10.5px; font-family:inherit;
+  padding:2px 7px; font-size:10.5px; font-family:inherit; line-height:1;
   background:var(--panel2); border:1px solid var(--border-2); border-radius:4px;
+  color:var(--muted); font-weight:600;
 }
 
 /* ----- Filter bar ---------------------------------------------------- */
@@ -1468,6 +1471,9 @@ article.card p.summary{color:var(--text);opacity:0.88;margin:8px 0 16px 0;font-s
 }
 .btn:hover{background:var(--border);border-color:var(--border-2);transform:translateY(-1px);}
 .btn:active{transform:translateY(0);}
+.btn-kc{display:inline-flex;align-items:center;gap:6px;}
+.kc-chev{transition:transform 0.2s ease;flex-shrink:0;opacity:0.85;}
+.btn-kc.primary .kc-chev{transform:rotate(180deg);}
 .btn.primary{
   background:linear-gradient(135deg, var(--accent) 0%, #4a98e0 100%);
   color:#04111d; border-color:transparent; font-weight:600;
@@ -2069,8 +2075,8 @@ ul.intel-types-doc code{
     </div>
     <div class="search-trigger" id="searchTrigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
-      Search articles, techniques, CVEs…
-      <kbd>⌘K</kbd>
+      <span class="search-placeholder">Search articles, techniques, CVEs</span>
+      <span class="search-shortcut"><kbd id="searchShortcutKey">Ctrl</kbd><kbd>K</kbd></span>
     </div>
   </div>
   <div class="topbar-inner" style="padding-top:0; gap:14px;">
@@ -2298,8 +2304,8 @@ document.querySelectorAll('.btn[data-target]').forEach(btn => {
     if (!target) return;
     target.classList.toggle('active');
     btn.classList.toggle('primary');
-    btn.firstChild && btn.firstChild.nodeType === 3
-      && (btn.firstChild.nodeValue = target.classList.contains('active') ? '⌃ Hide kill chain' : '⌄ Show kill chain');
+    const lbl = btn.querySelector('.kc-label');
+    if (lbl) lbl.textContent = target.classList.contains('active') ? 'Hide kill chain' : 'Show kill chain';
   });
 });
 
@@ -2479,6 +2485,15 @@ document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
     });
   });
 });
+
+// =================================================================
+// Platform-aware shortcut hint (Cmd on Mac, Ctrl elsewhere)
+// =================================================================
+(function () {
+  const isMac = /Mac|iPhone|iPad|iPod/.test(navigator.platform || navigator.userAgent || '');
+  const el = document.getElementById('searchShortcutKey');
+  if (el) el.textContent = isMac ? '\u2318' : 'Ctrl';   // ⌘ on Mac
+})();
 
 // =================================================================
 // View tab switching (Articles / ATT&CK Matrix)
@@ -3101,8 +3116,8 @@ def render_card(idx: int, article: dict, ind: dict,
   <p class="summary">{summary}</p>
   {indicators_html}
   <div class="action-row">
-    <button class="btn" data-target="{aid}-kc"><span style="display:inline-block;width:0">⌄</span>Show kill chain</button>
-    <span class="btn-meta">Click ATT&amp;CK pills to filter · ⌘K to search</span>
+    <button class="btn btn-kc" data-target="{aid}-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
   {killchain_html}
   <div class="usecases">{uc_html}</div>
