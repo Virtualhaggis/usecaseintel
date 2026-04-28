@@ -1,10 +1,146 @@
-# [HIGH] The long road to your crypto: ClipBanker and its marathon infection chain
+<!-- curated:true -->
+# [HIGH] The Long Road to Your Crypto: ClipBanker and Its Marathon Infection Chain
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-04-09
 **Article:** https://securelist.com/clipbanker-malware-distributed-via-trojanized-proxifier/119341/
+**Curated:** Analyst-reviewed 2026-04-28
 
-## Threat Profile
+## Threat profile
+
+Kaspersky tracks **ClipBanker** delivered via **trojanised Proxifier** — a legitimate proxy-tunnelling tool popular with developers working in secured / segmented network environments. The infection chain is **deliberately long** (~6 stages) to evade sandboxing and signature detection:
+
+1. SEO-poisoned search results for "Proxifier download" lead users to fake mirror sites.
+2. Trojanised Proxifier installer (`maper.info`, `chiaselinks.com`, `rlim.com`).
+3. Dropper fetches stage-2 from **dead-drop dispensers** (pastebin / GitHub gists / snippet hosts) — the malware reads attacker config from a public paste rather than calling out to attacker-owned C2.
+4. Stage-2 deploys ClipBanker — **clipboard-watching cryptocurrency-address swapper**: when the user copies a wallet address (BTC, ETH, etc.), the malware silently replaces it with the attacker's address before paste.
+5. Victim sends crypto to attacker. Defender sees a normal "user copy-paste" event.
+
+For enterprise SOCs, the developer-tool vector matters:
+- **Proxifier is heavily used in regulated/segmented dev environments** — exactly the privileged-access workstations that handle API keys, signing keys, and crypto operations (treasury, custody, blockchain-engineering).
+- The **dead-drop pattern** (legitimate platforms as C2) means traditional **destination-domain blocking is useless** — pastebin/github/gist are universally allowlisted.
+- ClipBanker is **silent until the moment of theft**; there's no encryption / no obvious behavioural giveaway.
+
+## Indicators of Compromise (high-fidelity only)
+
+- **Attacker-controlled distribution domains** (block these):
+  - `maper.info`, `chiaselinks.com`, `rlim.com`, `paste.kealper.com`, `git.parat.swiss`, `pinhole.rootcode.ru`
+- **Dead-drop dispensers used by ClipBanker** (do NOT block — they're legitimate):
+  - `pastebin.com`, `snippet.host`, `github.com`, `gist.github.com`
+  - Hunt for **specific paste / gist URIs** referenced in the campaign (in the Securelist write-up body).
+- **Hashes** (mix of SHA1 + MD5):
+  - SHA1: `d85cef60cdb9e8d0f3cb3546de6ab657f9498ac7`
+  - MD5: `107484d66423cb601f418344cd648f12`, `34a0f70ab100c47caaba7a5c85448e3d`, `7528bf597fd7764fcb7ec06512e073e0`, `8354223cd6198b05904337b5dff7772b`
+
+## MITRE ATT&CK (analyst-validated)
+
+- **T1583.008** — Acquire Infrastructure: Malvertising / SEO poisoning
+- **T1204.002** — User Execution: Malicious File (the trojanised installer)
+- **T1102.001** — Web Service: Dead Drop Resolver (pastebin / gist for stage-2 config)
+- **T1115** — Clipboard Data (the core technique — clipboard monitor/swap)
+- **T1657** — Financial Theft (cryptocurrency)
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+
+## Recommended SOC actions (priority-ordered)
+
+1. **Block the 6 attacker-controlled distribution domains** at egress today.
+2. **Hash-match the SHA1 + 4 MD5** against EDR file/process events.
+3. **Hunt for Proxifier installs originating from non-vendor sources** — see queries below. Legitimate Proxifier comes from `proxifier.com`; anything else is suspect.
+4. **Brief crypto-handling and dev users**: SEO-poisoning is the entry vector. The fix is "always download dev tools from the vendor's primary domain, never a Google-search top result."
+5. **Audit clipboard-monitoring telemetry** — your EDR may not surface clipboard-swap behaviour by default. ClipBanker requires opt-in clipboard auditing on most stacks.
+6. **Treasury / crypto-ops process control**: enforce **address-confirmation step** in your wallet-send workflow. Even if clipboard is silently swapped, the step that requires manually re-entering or confirming the address visually catches the swap.
+
+## Splunk SPL — Proxifier install from non-vendor source
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name="Proxifier*" OR Processes.process="*Proxifier*setup*"
+        OR Processes.process="*Proxifier*.msi*")
+      AND NOT Processes.process_path="*Program Files\\Proxifier*"
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process_path,
+       Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+## Splunk SPL — outbound to attacker distribution domains
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Web
+    where Web.dest IN ("maper.info","chiaselinks.com","rlim.com","paste.kealper.com",
+                        "git.parat.swiss","pinhole.rootcode.ru")
+       OR Web.url="*maper.info*"
+       OR Web.url="*paste.kealper.com*"
+       OR Web.url="*pinhole.rootcode.ru*"
+    by Web.src, Web.dest, Web.url, Web.user
+| `drop_dm_object_name(Web)`
+```
+
+## Splunk SPL — file-hash IOC match
+
+```spl
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (
+        "d85cef60cdb9e8d0f3cb3546de6ab657f9498ac7",
+        "107484d66423cb601f418344cd648f12","34a0f70ab100c47caaba7a5c85448e3d",
+        "7528bf597fd7764fcb7ec06512e073e0","8354223cd6198b05904337b5dff7772b")
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path,
+       Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+```
+
+## Defender KQL — Proxifier install path anomaly
+
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where FileName has "Proxifier" or ProcessCommandLine has "Proxifier"
+| where FolderPath !startswith "C:\\Program Files\\Proxifier"
+   and FolderPath !startswith "C:\\Program Files (x86)\\Proxifier"
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName,
+          ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+## Defender KQL — outbound to ClipBanker distribution IOCs
+
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (
+    "maper.info","chiaselinks.com","rlim.com","paste.kealper.com",
+    "git.parat.swiss","pinhole.rootcode.ru")
+| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+## Defender KQL — hash match
+
+```kql
+let clipbankerHashes = dynamic([
+    "d85cef60cdb9e8d0f3cb3546de6ab657f9498ac7",
+    "107484d66423cb601f418344cd648f12","34a0f70ab100c47caaba7a5c85448e3d",
+    "7528bf597fd7764fcb7ec06512e073e0","8354223cd6198b05904337b5dff7772b"]);
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where SHA1 in~ (clipbankerHashes) or MD5 in~ (clipbankerHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, MD5, SHA1, ProcessCommandLine
+| order by Timestamp desc
+```
+
+## Why this matters for your SOC
+
+ClipBanker is the **2026 commodity-malware version of "live-off-the-clipboard"** — it's been around for 5+ years across many families, but Kaspersky's writeup makes the **dead-drop infection chain** explicit. Two takeaways:
+
+1. **The dev-tool-via-SEO-poisoning vector is permanent.** Train your dev community to bookmark vendor domains and never trust Google's first result for a dev-tool download. Cohere Talos / Kaspersky / etc. publish updated SEO-poisoning IOCs every month — subscribe to those feeds.
+
+2. **Pastebin / GitHub / gist as C2 dispenser** is the harder problem to solve at the network layer. The defence is at the **endpoint behaviour layer**: the malicious downloader is still a process making HTTPS requests from non-browser parents to legitimate dispensers. That's a different signal than blocking the destination — and it generalises to dozens of other malware families using the same pattern.
+
+The 6 attacker domains + 5 hashes are operational today. The behavioural-detection investment is the medium-term work.
 
 Table of Contents
 Victims 

@@ -1,5 +1,7 @@
-# [CRIT] The npm Threat Landscape: Attack Surface and Mitigations
+<!-- curated:true -->
+# [HIGH] The npm Threat Landscape: Attack Surface and Mitigations
 
+**Curated:** Analyst-reviewed 2026-04-28
 **Source:** Unit 42 (Palo Alto)
 **Published:** 2026-04-24
 **Article:** https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/
@@ -30,13 +32,14 @@ The security of…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-55182`
-- **IPv4 (defanged):** `94.154.172.43`
-- **IPv4 (defanged):** `91.195.240.123`
-- **Domain (defanged):** `audit.checkmarx.cx`
-- **Domain (defanged):** `github.com`
-- **Domain (defanged):** `registry.npmjs.org`
-- **Domain (defanged):** `example.com`
-- **Domain (defanged):** `checkmarx.cx`
+- **Attacker-controlled IPs (block):**
+  - `94.154.172.43`
+  - `91.195.240.123`
+- **Attacker-controlled domains (block):**
+  - `audit.checkmarx.cx` — typosquat of `checkmarx.com`
+  - `checkmarx.cx`
+- **Legitimate domains referenced in the article (DO NOT block):**
+  - `github.com`, `registry.npmjs.org`, `example.com` — picked up by the auto-extractor because they appeared in defanged form in the article body for illustration; they are genuine infrastructure, not IOCs.
 - **Domain (defanged):** `proton.me`
 - **SHA256:** `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`
 - **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`

@@ -1,8 +1,10 @@
-# [CRIT] JanelaRAT: a financial threat targeting users in Latin America
+<!-- curated:true -->
+# [HIGH] JanelaRAT: A Financial Threat Targeting Users in Latin America
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-04-13
 **Article:** https://securelist.com/janelarat-financial-threat-in-latin-america/119332/
+**Curated:** Analyst-reviewed 2026-04-28
 
 ## Threat Profile
 
@@ -40,6 +42,21 @@ JanelaRAT is a malware family that takes its name from the Portuguese word “ja
 - **T1555.003** — Credentials from Web Browsers
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
+
+## Threat profile (analyst overlay)
+
+Kaspersky GReAT's profile of **JanelaRAT** ("janela" = window in Portuguese) — a banking trojan targeting **LATAM financial institutions** with overlay-based credential theft. The TTPs are commodity-LATAM-banker (overlay screens, anti-analysis tricks, registry-based persistence) but **transferable** to any bank with significant LATAM customer base.
+
+For SOCs outside Brazil/Mexico/Argentina, the value is the **3 IOCs** (1 domain + 2 MD5 hashes) and the recognition of the **overlay-based phishing-on-the-host pattern** that recurs across regions (Grandoreiro, Mekotio, Casbaneiro, BoletoMaker, BlackGuard variants).
+
+<!-- curated:true -->
+
+## Recommended SOC actions (priority-ordered)
+
+1. **Block `ciderurginsx.com` at egress** today.
+2. **Hash-match the 2 MD5** against EDR file/process events.
+3. **Brief LATAM-region staff and customers** if you have LATAM exposure.
+4. **Hunt for window-overlay / credential-form-spoof patterns** on managed Windows endpoints — RDP / banking-app foreground checks combined with newly-rendered transparent windows.
 
 ## Kill chain phases observed
 
