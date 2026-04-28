@@ -2003,7 +2003,7 @@ HTML_HEAD = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>THN Threat Atlas — Splunk &amp; Defender Use Cases</title>
+<title>Clankerusecase — Splunk &amp; Defender Use Cases from threat-intel articles</title>
 <style>
 /* ----- Theme ---------------------------------------------------------- */
 :root {
@@ -2048,23 +2048,40 @@ body{
   margin:0; padding:14px 28px;
   display:flex; gap:24px; align-items:center; flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;letter-spacing:-0.01em;}
+.brand{display:flex;align-items:center;gap:14px;font-weight:700;font-size:18px;letter-spacing:-0.01em;}
 .brand .logo{
-  width:32px; height:32px; border-radius:8px;
-  background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  width:44px; height:44px; border-radius:10px;
   display:flex; align-items:center; justify-content:center;
-  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.25);
   position:relative; overflow:hidden;
+  background:linear-gradient(135deg, rgba(95,182,255,0.08), rgba(180,141,255,0.05));
+  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.10);
 }
-.brand .logo::after{
-  content:"";position:absolute;inset:0;
-  background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 50%);
+/* logo.png — sized to fit nicely in the 44×44 logo slot regardless of
+   the source PNG aspect ratio. Object-contain keeps the image whole. */
+.brand .logo .logo-img{
+  display:block; width:100%; height:100%;
+  object-fit:contain; padding:3px;
+  position:relative; z-index:1;
 }
-.brand .logo svg{width:18px;height:18px;color:#0b1118;position:relative;z-index:1;}
+.brand .logo svg{width:22px;height:22px;color:var(--accent);position:relative;z-index:1;}
 .brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text > span:first-child{font-size:18px;}
 .brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;}
 
-.stats{display:flex;gap:16px;flex-wrap:wrap;flex:1;justify-content:center;}
+.stats{
+  display:flex; gap:16px; flex-wrap:wrap; flex:1; justify-content:center;
+  /* Visible only when the Articles tab is active. The view-tab handler
+     toggles a body class to hide the stats bar on Matrix / Intel /
+     Workflow tabs since the numbers are article-specific. */
+  transition:opacity 0.25s ease, max-height 0.3s ease, transform 0.25s ease;
+}
+body.view-articles-active .stats{
+  opacity:1; max-height:80px; transform:translateY(0); pointer-events:auto;
+}
+body:not(.view-articles-active) .stats{
+  opacity:0; max-height:0; transform:translateY(-8px);
+  pointer-events:none; overflow:hidden;
+}
 .stat{
   display:flex; flex-direction:column; align-items:center;
   padding:6px 12px; min-width:64px;
@@ -2899,20 +2916,36 @@ ul.intel-types-doc code{
 .quality-bar p{margin:0 0 6px;}
 .quality-bar ul.intel-types-doc{margin:6px 0;}
 
-/* Drawer (slide-in from right) */
+/* Drawer — centred modal covering most of the screen */
 .drawer-bg{
   position:fixed; inset:0; z-index:60;
-  background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);
+  background:rgba(0,0,0,0.65); backdrop-filter:blur(6px);
   display:none;
 }
 .drawer-bg.open{display:block; animation:fadeIn 0.15s;}
 .drawer{
-  position:fixed; top:0; right:0; bottom:0; width:min(420px, 92%);
-  background:var(--panel-elev); border-left:1px solid var(--border-2);
-  z-index:61; transform:translateX(110%); transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1);
-  display:flex; flex-direction:column; box-shadow:-12px 0 32px rgba(0,0,0,0.5);
+  position:fixed;
+  top:50%; left:50%;
+  /* Centred at ~78% of viewport, capped so it never sprawls. */
+  width:min(1200px, 78vw);
+  height:min(880px, 86vh);
+  transform:translate(-50%, -50%) scale(0.96);
+  background:var(--panel-elev);
+  border:1px solid var(--border-2); border-radius:14px;
+  z-index:61;
+  opacity:0; pointer-events:none;
+  transition:transform 0.22s cubic-bezier(0.2,0.8,0.2,1), opacity 0.18s ease;
+  display:flex; flex-direction:column;
+  box-shadow:0 32px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04) inset;
+  overflow:hidden;
 }
-.drawer.open{transform:translateX(0);}
+.drawer.open{
+  transform:translate(-50%, -50%) scale(1);
+  opacity:1; pointer-events:auto;
+}
+@media(max-width:768px){
+  .drawer{ width:96vw; height:94vh; }
+}
 .drawer-head{padding:18px 20px; border-bottom:1px solid var(--hairline);}
 .drawer-head .tid{color:var(--accent); font-family:ui-monospace,monospace; font-size:13px;
   font-weight:700; letter-spacing:0.02em;}
@@ -2966,17 +2999,20 @@ ul.intel-types-doc code{
   <div class="topbar-inner">
     <div class="brand">
       <div class="logo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+        <!-- logo.png in repo root → SVG fallback if file missing -->
+        <img src="logo.png" alt="Clankerusecase" class="logo-img"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
           <path d="M12 2 L4 6 v6 c0 5 3.5 8 8 10 4.5-2 8-5 8-10 V6z"/>
           <path d="M9 12 l2 2 l4-4"/>
         </svg>
       </div>
       <div class="brand-text">
-        <span>Threat Atlas</span>
+        <span>Clankerusecase</span>
         <span class="sub">Splunk · Defender · Kill Chain</span>
       </div>
     </div>
-    <div class="stats">
+    <div class="stats" id="topStats">
       <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
       <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
       <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
@@ -3748,6 +3784,9 @@ const views = document.querySelectorAll('.view');
 function showView(name) {
   viewTabs.forEach(b => b.classList.toggle('active', b.dataset.view === name));
   views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  // Hide the top stats bar (article counts) on every tab except Articles.
+  // The numbers don't apply to ATT&CK matrix / Intel / Workflow views.
+  document.body.classList.toggle('view-articles-active', name === 'articles');
   if (name === 'matrix' && !window._matrixRendered) {
     renderMatrix();
     window._matrixRendered = true;
@@ -3757,6 +3796,8 @@ function showView(name) {
     window._intelRendered = true;
   }
 }
+// Apply default state on page load — Articles tab starts active.
+document.body.classList.add('view-articles-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
 
 // =================================================================
