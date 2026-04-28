@@ -1,0 +1,41 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_LSASS
+title: LSASS process access / dump (credential theft)
+kill_chain: actions
+confidence: High
+description: Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1003.001
+  name: LSASS Memory
+- id: T1003
+  name: OS Credential Dumping
+data_models:
+  splunk:
+  - Endpoint.Processes
+  defender:
+  - DeviceEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Processes
+      where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+          OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+          OR Processes.process="*procdump*lsass*")
+         OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+      by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+  | `drop_dm_object_name(Processes)`
+defender_kql: |-
+  DeviceEvents
+  | where Timestamp > ago(7d)
+  | where ActionType == "OpenProcessApiCall"
+  | where FileName =~ "lsass.exe"
+  | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                            "svchost.exe","wininit.exe","services.exe",
+                                            "lsm.exe","SearchProtocolHost.exe")
+  | project Timestamp, DeviceName, ActionType, FileName,
+            InitiatingProcessFileName, InitiatingProcessCommandLine,
+            InitiatingProcessFolderPath, AccountName
+  | order by Timestamp desc

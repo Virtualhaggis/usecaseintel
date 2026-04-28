@@ -1,0 +1,45 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_BEACONING
+title: Beaconing — periodic outbound to small set of destinations
+kill_chain: c2
+confidence: Medium
+description: C2 channel detection via inter-beacon-time stddev / fan-out to single dest.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1071.001
+  name: Web Protocols
+- id: T1071.004
+  name: DNS
+data_models:
+  splunk:
+  - Network_Traffic.All_Traffic
+  defender:
+  - DeviceNetworkEvents
+splunk_spl: |-
+  | tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+      from datamodel=Network_Traffic.All_Traffic
+      where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+      by _time span=10s, All_Traffic.src, All_Traffic.dest
+  | `drop_dm_object_name(All_Traffic)`
+  | streamstats current=f last(_time) AS prev_time by src, dest
+  | eval delta = _time - prev_time
+  | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+  | where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+  | sort - count
+defender_kql: |-
+  DeviceNetworkEvents
+  | where Timestamp > ago(1d)
+  | where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+  | project DeviceName, RemoteIP, RemotePort, Timestamp
+  | sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+  | extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+           prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+  | where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+  | extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+  | summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+      by DeviceName, RemoteIP, RemotePort
+  | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+  | order by conn_count desc

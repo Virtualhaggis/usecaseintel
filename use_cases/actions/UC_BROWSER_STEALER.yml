@@ -1,0 +1,38 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_BROWSER_STEALER
+title: Infostealer — non-browser process accessing browser cookie/login DBs
+kill_chain: actions
+confidence: High
+description: Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1539
+  name: Steal Web Session Cookie
+- id: T1555.003
+  name: Credentials from Web Browsers
+data_models:
+  splunk:
+  - Endpoint.Filesystem
+  defender:
+  - DeviceFileEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Filesystem
+      where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+          OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+          OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+          OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+          OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+        AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+      by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+  | `drop_dm_object_name(Filesystem)`
+defender_kql: |-
+  DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+  | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+  | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType

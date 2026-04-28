@@ -1,0 +1,49 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_PHISH_ATTACH
+title: Email attachment opened from external sender
+kill_chain: delivery
+confidence: High
+description: Attachment delivery + execution by recipient — most common malware initial access.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1566.001
+  name: Spearphishing Attachment
+- id: T1204.002
+  name: 'User Execution: Malicious File'
+data_models:
+  splunk:
+  - Email.All_Email
+  - Endpoint.Processes
+  defender:
+  - EmailAttachmentInfo
+  - DeviceProcessEvents
+splunk_spl: |-
+  | tstats `summariesonly` count
+      from datamodel=Email.All_Email
+      where All_Email.file_name!="-"
+      by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+  | rename All_Email.recipient as user
+  | join type=inner user
+      [| tstats `summariesonly` count
+          from datamodel=Endpoint.Processes
+          where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+            AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+          by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+       | rename Processes.user as user]
+defender_kql: |-
+  let LookbackDays = 7d;
+  let MalAttachments = EmailAttachmentInfo
+      | where Timestamp > ago(LookbackDays)
+      | project NetworkMessageId, RecipientEmailAddress,
+                AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+  DeviceProcessEvents
+  | where Timestamp > ago(LookbackDays)
+  | where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+  | where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                        "mshta.exe","rundll32.exe","regsvr32.exe")
+  | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+            InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256

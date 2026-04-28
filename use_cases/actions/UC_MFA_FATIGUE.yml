@@ -1,0 +1,34 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_MFA_FATIGUE
+title: MFA fatigue / push-bombing
+kill_chain: actions
+confidence: High
+description: Many MFA pushes to same user in short window — suggests adversary attempting approval-fatigue.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1621
+  name: Multi-Factor Authentication Request Generation
+data_models:
+  splunk:
+  - Authentication.Authentication
+  defender:
+  - AADSignInEventsBeta
+splunk_spl: |-
+  | tstats `summariesonly` count from datamodel=Authentication.Authentication
+      where Authentication.action="failure" AND Authentication.signature="*MFA*"
+      by _time span=5m, Authentication.user, Authentication.src
+  | `drop_dm_object_name(Authentication)`
+  | where count > 10
+defender_kql: |-
+  AADSignInEventsBeta
+  | where Timestamp > ago(1d)
+  | where ErrorCode in (50074, 50076, 50158, 50125, 50097)
+  | extend MfaPrompt = AuthenticationRequirement == "multiFactorAuthentication"
+  | where MfaPrompt
+  | summarize attempts = count(), distinct_ips = dcount(IPAddress)
+      by AccountUpn, bin(Timestamp, 5m)
+  | where attempts > 10
+  | order by attempts desc

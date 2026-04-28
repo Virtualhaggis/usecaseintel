@@ -1,0 +1,3143 @@
+"""
+Hacker News -> Splunk (CIM) + Microsoft Defender (KQL) use case generator.
+
+Deeper analysis edition:
+  - Rule engine maps article narrative to real attack patterns
+  - Each pattern emits one or more UseCases with:
+      * Splunk CIM `tstats` query against the right data model
+      * Defender Advanced Hunting KQL against the right table
+      * MITRE ATT&CK techniques + kill chain phase
+      * "Why this fires" reasoning specific to the article
+  - Per-article kill chain visualization (Lockheed 7 phases)
+  - Inferred follow-on phases (attackers rarely stop at one stage)
+
+Output: a single self-contained `index.html`.
+"""
+from __future__ import annotations
+
+import datetime as dt
+import html
+import re
+import sys
+from dataclasses import dataclass, field
+from pathlib import Path
+
+import feedparser
+
+# Sources & lookback configuration -------------------------------------------
+LOOKBACK_DAYS = 30
+MAX_PER_SOURCE = 200      # safety cap per source per run
+
+SOURCES = [
+    {"name": "The Hacker News",        "kind": "rss",
+     "url":  "https://feeds.feedburner.com/TheHackersNews"},
+    {"name": "BleepingComputer",        "kind": "rss",
+     "url":  "https://www.bleepingcomputer.com/feed/"},
+    {"name": "Microsoft Security Blog", "kind": "rss",
+     "url":  "https://www.microsoft.com/en-us/security/blog/feed/"},
+    {"name": "CISA KEV",                "kind": "kev",
+     "url":  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"},
+]
+
+# Legacy (kept for callers using the old API)
+RSS_URL = SOURCES[0]["url"]
+ARTICLE_LIMIT = 10
+OUT_HTML = Path(__file__).with_name("index.html")
+
+
+# =============================================================================
+# Indicator extraction (atomic IOCs from the limited RSS summary)
+# =============================================================================
+
+CVE_RE = re.compile(r"CVE-\d{4}-\d{4,7}", re.IGNORECASE)
+IPV4_RE = re.compile(r"\b(?:\d{1,3}\.){3}\d{1,3}\b")
+DOMAIN_RE = re.compile(r"\b(?:[a-z0-9-]{1,63}\.)+[a-z]{2,63}\b", re.IGNORECASE)
+HASH_MD5_RE = re.compile(r"\b[a-f0-9]{32}\b", re.IGNORECASE)
+HASH_SHA1_RE = re.compile(r"\b[a-f0-9]{40}\b", re.IGNORECASE)
+HASH_SHA256_RE = re.compile(r"\b[a-f0-9]{64}\b", re.IGNORECASE)
+ATTACK_RE = re.compile(r"\bT\d{4}(?:\.\d{3})?\b")
+
+DOMAIN_NOISE = {
+    "thehackernews.com", "feeds.feedburner.com", "feedproxy.google.com",
+    "blogger.com", "googleapis.com", "google.com", "twitter.com",
+    "x.com", "linkedin.com", "facebook.com", "github.com",
+    "schemas.microsoft.com", "w3.org", "schema.org", "purl.org",
+    "1.bp.blogspot.com", "2.bp.blogspot.com", "3.bp.blogspot.com",
+    "4.bp.blogspot.com", "feedburner.com", "blogspot.com",
+    "static.thehackernews.com", "thn.news", "youtube.com", "bit.ly",
+}
+
+
+def strip_html(s: str) -> str:
+    return re.sub(r"<[^>]+>", " ", s or "")
+
+
+def dedupe(seq):
+    seen, out = set(), []
+    for x in seq:
+        k = x.lower() if isinstance(x, str) else x
+        if k not in seen:
+            seen.add(k)
+            out.append(x)
+    return out
+
+
+def extract_indicators(title: str, body: str) -> dict:
+    text = f"{title}\n{body}"
+    domains = []
+    for d in DOMAIN_RE.findall(text):
+        d_l = d.lower()
+        if d_l in DOMAIN_NOISE:
+            continue
+        tld = d_l.rsplit(".", 1)[-1]
+        if tld in {"dll", "exe", "sys", "bat", "ps1", "vbs", "js"}:
+            continue
+        domains.append(d_l)
+    return {
+        "cves": dedupe(CVE_RE.findall(text)),
+        "ips": dedupe(IPV4_RE.findall(text)),
+        "domains": dedupe(domains)[:25],
+        "md5": dedupe(HASH_MD5_RE.findall(text)),
+        "sha1": dedupe(HASH_SHA1_RE.findall(text)),
+        "sha256": dedupe(HASH_SHA256_RE.findall(text)),
+        "explicit_ttps": dedupe(ATTACK_RE.findall(text)),
+    }
+
+
+# =============================================================================
+# Cyber Kill Chain (Lockheed Martin) phases
+# =============================================================================
+
+KILL_CHAIN_PHASES = [
+    ("recon", "Reconnaissance", "Attacker researches the target — OSINT, scanning, enumeration."),
+    ("weapon", "Weaponization", "Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer)."),
+    ("delivery", "Delivery", "Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad)."),
+    ("exploit", "Exploitation", "Triggering the exploit — vulnerability/macro/trust abuse to execute code."),
+    ("install", "Installation", "Establishing persistence on the host — backdoor, service, scheduled task, registry key."),
+    ("c2", "Command & Control", "Beacon to attacker infrastructure for control and tasking."),
+    ("actions", "Actions on Objectives", "Lateral movement, credential dumping, data theft, ransomware, sabotage."),
+]
+PHASE_IDS = {p[0] for p in KILL_CHAIN_PHASES}
+
+
+# =============================================================================
+# UseCase + Rule data model
+# =============================================================================
+
+@dataclass
+class UseCase:
+    title: str
+    description: str
+    kill_chain: str
+    techniques: list  # [(id, name)]
+    data_models: list  # ["Endpoint.Processes", "Network_Traffic"]
+    splunk_spl: str
+    defender_kql: str
+    confidence: str = "Medium"
+
+
+@dataclass
+class Rule:
+    name: str
+    triggers: list  # list of substrings (case-insensitive). ANY-match.
+    use_cases: list  # callables or dicts producing UseCase(s)
+
+
+def _tech(*pairs):
+    return [(t.split("|")[0], t.split("|")[1]) for t in pairs]
+
+
+# =============================================================================
+# Use case + rule loader — reads YAML files from use_cases/ and rules/
+# =============================================================================
+
+USE_CASES_DIR = Path(__file__).parent / "use_cases"
+RULES_DIR = Path(__file__).parent / "rules"
+
+
+def _load_uc_from_yaml(path):
+    import yaml as _yaml
+    doc = _yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not doc or not isinstance(doc, dict):
+        return None
+    impls = doc.get("implementations") or []
+    dms = doc.get("data_models") or {}
+    splunk_dms = dms.get("splunk") or []
+    defender_tables = dms.get("defender") or []
+    flat_dms = list(splunk_dms) + [t for t in defender_tables if t not in splunk_dms]
+    techs = [(t["id"], t["name"]) for t in (doc.get("mitre_attack") or [])]
+    return UseCase(
+        title=doc.get("title", ""),
+        description=(doc.get("description") or "").strip(),
+        kill_chain=doc.get("kill_chain", "actions"),
+        techniques=techs,
+        data_models=flat_dms,
+        splunk_spl=(doc.get("splunk_spl") or "") if "splunk" in impls else "",
+        defender_kql=(doc.get("defender_kql") or "") if "defender" in impls else "",
+        confidence=doc.get("confidence", "Medium"),
+    )
+
+
+def _load_rule_from_yaml(path, uc_lookup):
+    import yaml as _yaml
+    doc = _yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not doc:
+        return None
+    fires = []
+    for uc_id in doc.get("fires") or []:
+        uc = uc_lookup.get(uc_id)
+        if uc:
+            fires.append(uc)
+    return Rule(
+        name=doc.get("name", path.stem),
+        triggers=list(doc.get("triggers") or []),
+        use_cases=fires,
+    )
+
+
+def _load_catalog():
+    """Load all UseCases and Rules from YAML, expose them at module level."""
+    if not USE_CASES_DIR.exists():
+        print(f"[!] {USE_CASES_DIR} not found — using inline catalog (legacy mode)")
+        return None, None
+    use_cases = {}
+    for path in sorted(USE_CASES_DIR.rglob("*.yml")):
+        if path.name.startswith("_") or path.name == "SCHEMA.md":
+            continue
+        uc = _load_uc_from_yaml(path)
+        if uc is None:
+            continue
+        uc_id = path.stem  # filename = id
+        use_cases[uc_id] = uc
+    rules = []
+    if RULES_DIR.exists():
+        for path in sorted(RULES_DIR.glob("*.yml")):
+            r = _load_rule_from_yaml(path, use_cases)
+            if r and r.use_cases:
+                rules.append(r)
+    return use_cases, rules
+
+
+_LOADED_UCS, _LOADED_RULES = _load_catalog()
+if _LOADED_UCS:
+    # Expose every loaded use case as a module-level variable so the matrix
+    # builder, validator, and renderer continue to work as before.
+    for _uc_id, _uc in _LOADED_UCS.items():
+        globals()[_uc_id] = _uc
+    print(f"[*] Loaded {len(_LOADED_UCS)} use cases from {USE_CASES_DIR}")
+    print(f"[*] Loaded {len(_LOADED_RULES)} rules from {RULES_DIR}")
+
+
+# =============================================================================
+# Inline use case templates (legacy) — these get OVERRIDDEN at the end of the
+# rules block by the YAML-loaded versions. Will be deleted entirely once we're
+# fully on YAML and have git-committed the use_cases/ tree.
+# =============================================================================
+
+UC_PHISH_LINK = UseCase(
+    title="Suspicious URL click in email — phishing landing page",
+    description=(
+        "User followed a link from an external email to an uncategorized / "
+        "young-domain page. Pivots from the Email DM onto the Web DM to flag the "
+        "click-through chain that typically precedes credential theft."
+    ),
+    kill_chain="delivery",
+    techniques=_tech("T1566.002|Spearphishing Link", "T1204.001|User Execution: Malicious Link"),
+    data_models=["Email.All_Email", "Web"],
+    splunk_spl="""\
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.action="delivered" AND All_Email.url!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject
+| rex field=All_Email.url "https?://(?<email_domain>[^/]+)"
+| join type=inner email_domain
+    [| tstats `summariesonly` count
+        from datamodel=Web
+        where Web.action="allowed"
+        by Web.src, Web.dest, Web.url, Web.user
+     | rex field=Web.url "https?://(?<email_domain>[^/]+)"]
+| stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,
+        earliest(_time) as first_seen, latest(_time) as last_seen
+        by All_Email.recipient, email_domain
+""",
+    defender_kql="""\
+let LookbackDays = 7d;
+let DeliveredEmails = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where DeliveryAction == "Delivered"
+    | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,
+              EmailTimestamp = Timestamp;
+EmailUrlInfo
+| where Timestamp > ago(LookbackDays)
+| join kind=inner DeliveredEmails on NetworkMessageId
+| join kind=inner (
+    UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "ClickAllowed"
+    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress
+  ) on Url
+| project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, IPAddress
+| order by ClickTimestamp desc
+""",
+    confidence="High",
+)
+
+UC_PHISH_ATTACH = UseCase(
+    title="Email attachment opened from external sender",
+    description="Attachment delivery + execution by recipient — most common malware initial access.",
+    kill_chain="delivery",
+    techniques=_tech("T1566.001|Spearphishing Attachment", "T1204.002|User Execution: Malicious File"),
+    data_models=["Email.All_Email", "Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]
+""",
+    defender_kql="""\
+let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                      "mshta.exe","rundll32.exe","regsvr32.exe")
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
+""",
+    confidence="High",
+)
+
+UC_OFFICE_CHILD = UseCase(
+    title="Office app spawning script/LOLBin child process",
+    description="Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.",
+    kill_chain="exploit",
+    techniques=_tech("T1059.001|PowerShell", "T1059.005|Visual Basic", "T1218|System Binary Proxy Execution"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_PS_OBFUSCATED = UseCase(
+    title="PowerShell encoded / obfuscated command",
+    description="Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.",
+    kill_chain="exploit",
+    techniques=_tech("T1059.001|PowerShell", "T1027|Obfuscated Files or Information"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_LSASS = UseCase(
+    title="LSASS process access / dump (credential theft)",
+    description="Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
+    kill_chain="actions",
+    techniques=_tech("T1003.001|LSASS Memory", "T1003|OS Credential Dumping"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+""",
+    confidence="High",
+)
+
+UC_BEACONING = UseCase(
+    title="Beaconing — periodic outbound to small set of destinations",
+    description="C2 channel detection via inter-beacon-time stddev / fan-out to single dest.",
+    kill_chain="c2",
+    techniques=_tech("T1071.001|Web Protocols", "T1071.004|DNS"),
+    data_models=["Network_Traffic.All_Traffic"],
+    splunk_spl="""\
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
+""",
+    defender_kql="""\
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
+""",
+    confidence="Medium",
+)
+
+UC_DNS_TUNNEL = UseCase(
+    title="DNS tunneling / TXT-heavy domain queries",
+    description="Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.",
+    kill_chain="c2",
+    techniques=_tech("T1071.004|DNS", "T1048.003|Exfiltration Over Unencrypted Non-C2 Protocol"),
+    data_models=["Network_Resolution.DNS"],
+    splunk_spl="""\
+| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+    where DNS.message_type="QUERY"
+    by DNS.src, DNS.query
+| `drop_dm_object_name(DNS)`
+| eval qlen=len(query)
+| where qlen > 50
+| rex field=query "(?<second_level_domain>[\\w-]+\\.[\\w-]+)$"
+| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
+    by src, second_level_domain
+| where qcount > 100 AND unique_subs > 20
+| sort - qcount
+""",
+    defender_kql="""\
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemotePort == 53 and isnotempty(RemoteUrl)
+| extend qlen = strlen(RemoteUrl)
+| where qlen > 50
+| extend SecondLevelDomain = extract(@"([\w-]+\.[a-zA-Z]{2,})$", 1, RemoteUrl)
+| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
+    by DeviceName, SecondLevelDomain
+| where qcount > 100 and uniqueSubs > 20
+| order by qcount desc
+""",
+    confidence="Medium",
+)
+
+UC_SCHEDULED_TASK = UseCase(
+    title="Scheduled task created with suspicious image / encoded args",
+    description="schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.",
+    kill_chain="install",
+    techniques=_tech("T1053.005|Scheduled Task"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\\Users\\Public*"
+        OR Processes.process="*\\AppData\\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\\Users\\Public","\\AppData\\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+""",
+    confidence="High",
+)
+
+UC_SERVICE_PERSIST = UseCase(
+    title="Service install for persistence — sc.exe / new service registry write",
+    description=(
+        "Service install with binPath pointing to user-writeable path or LOLBin. "
+        "Detects via process telemetry (sc.exe create) and registry "
+        "(HKLM\\SYSTEM\\CurrentControlSet\\Services\\* writes)."
+    ),
+    kill_chain="install",
+    techniques=_tech("T1543.003|Windows Service"),
+    data_models=["Endpoint.Processes", "Endpoint.Registry"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="sc.exe" AND Processes.process="*create*"
+      AND (Processes.process="*\\Users\\*" OR Processes.process="*\\AppData\\*"
+        OR Processes.process="*\\ProgramData\\*" OR Processes.process="*\\Temp\\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Registry
+        where Registry.registry_path="*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*"
+          AND Registry.registry_value_name="ImagePath"
+          AND (Registry.registry_value_data="*\\Users\\*"
+            OR Registry.registry_value_data="*\\AppData\\*"
+            OR Registry.registry_value_data="*\\Temp\\*")
+        by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user
+     | `drop_dm_object_name(Registry)`]
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "sc.exe" and ProcessCommandLine has "create"
+| where ProcessCommandLine matches regex @"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+""",
+    confidence="High",
+)
+
+UC_VULN_EXPOSURE = UseCase(
+    title="Asset exposure — vulnerability matches article CVE(s)",
+    description="Match vulnerability scanner output to the CVE(s) named in the article.",
+    kill_chain="recon",
+    techniques=_tech("T1190|Exploit Public-Facing Application"),
+    data_models=["Vulnerabilities"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (__CVE_LIST__)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity
+""",
+    defender_kql="""\
+DeviceTvmSoftwareVulnerabilities
+| where CveId in~ (__CVE_LIST__)
+| join kind=inner DeviceInfo on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+""",
+    confidence="High",
+)
+
+UC_NETWORK_IOC = UseCase(
+    title="Network connections to article IPs / domains",
+    description="Outbound traffic to attacker infrastructure named in the article.",
+    kill_chain="c2",
+    techniques=_tech("T1071|Application Layer Protocol"),
+    data_models=["Network_Traffic.All_Traffic", "Web", "Network_Resolution.DNS"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (__IP_LIST__)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (__DOMAIN_LIST__)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (__DOMAIN_LIST__)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]
+""",
+    defender_kql="""\
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_HASH_IOC = UseCase(
+    title="File hash IOCs — endpoint file/process match",
+    description="Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.",
+    kill_chain="install",
+    techniques=_tech("T1027|Obfuscated Files or Information"),
+    data_models=["Endpoint.Filesystem", "Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (__HASH_LIST__)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (__HASH_LIST__)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]
+""",
+    defender_kql="""\
+union DeviceFileEvents, DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_RANSOM_ENCRYPT = UseCase(
+    title="Ransomware-style mass file rename / extension change",
+    description="Threshold detection: many files renamed in short window, often with new extension.",
+    kill_chain="actions",
+    techniques=_tech("T1486|Data Encrypted for Impact"),
+    data_models=["Endpoint.Filesystem"],
+    splunk_spl="""\
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+""",
+    defender_kql="""\
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
+| where files > 200
+| order by files desc
+""",
+    confidence="Medium",
+)
+
+UC_LATERAL_PSEXEC = UseCase(
+    title="Remote service execution — PsExec / SMB lateral movement",
+    description="psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.",
+    kill_chain="actions",
+    techniques=_tech("T1021.002|SMB/Windows Admin Shares", "T1569.002|Service Execution"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_OAUTH_ABUSE = UseCase(
+    title="OAuth consent / suspicious app grant",
+    description="Cloud identity abuse: app gets high-priv scopes, often via consent phishing.",
+    kill_chain="actions",
+    techniques=_tech("T1528|Steal Application Access Token", "T1098.001|Account Manipulation: Additional Cloud Credentials"),
+    data_models=["Authentication.Authentication"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
+""",
+    defender_kql="""\
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
+""",
+    confidence="High",
+)
+
+UC_MFA_FATIGUE = UseCase(
+    title="MFA fatigue / push-bombing",
+    description="Many MFA pushes to same user in short window — suggests adversary attempting approval-fatigue.",
+    kill_chain="actions",
+    techniques=_tech("T1621|Multi-Factor Authentication Request Generation"),
+    data_models=["Authentication.Authentication"],
+    splunk_spl="""\
+| tstats `summariesonly` count from datamodel=Authentication.Authentication
+    where Authentication.action="failure" AND Authentication.signature="*MFA*"
+    by _time span=5m, Authentication.user, Authentication.src
+| `drop_dm_object_name(Authentication)`
+| where count > 10
+""",
+    defender_kql="""\
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode in (50074, 50076, 50158, 50125, 50097)
+| extend MfaPrompt = AuthenticationRequirement == "multiFactorAuthentication"
+| where MfaPrompt
+| summarize attempts = count(), distinct_ips = dcount(IPAddress)
+    by AccountUpn, bin(Timestamp, 5m)
+| where attempts > 10
+| order by attempts desc
+""",
+    confidence="High",
+)
+
+UC_SUPPLY_CHAIN = UseCase(
+    title="Trusted vendor binary / installer launching unusual children",
+    description="Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.",
+    kill_chain="exploit",
+    techniques=_tech("T1195.002|Compromise Software Supply Chain"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (__VENDOR_BINS__)
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (__VENDOR_BINS__)
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+""",
+    confidence="Medium",
+)
+
+UC_FAKECAPTCHA = UseCase(
+    title="Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)",
+    description="Browser-pasted PowerShell launched from explorer/Run dialog — ClickFix social engineering.",
+    kill_chain="exploit",
+    techniques=_tech("T1204.004|User Execution: Malicious Copy and Paste", "T1059.001|PowerShell"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_BROWSER_STEALER = UseCase(
+    title="Infostealer — non-browser process accessing browser cookie/login DBs",
+    description="Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.",
+    kill_chain="actions",
+    techniques=_tech("T1539|Steal Web Session Cookie", "T1555.003|Credentials from Web Browsers"),
+    data_models=["Endpoint.Filesystem"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Login Data*"
+        OR Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Cookies*"
+        OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data\\*\\Login Data*"
+        OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles\\*\\logins.json*"
+        OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+""",
+    defender_kql="""\
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any ("\\Google\\Chrome\\User Data\\","\\Microsoft\\Edge\\User Data\\","\\Mozilla\\Firefox\\Profiles\\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+""",
+    confidence="High",
+)
+
+UC_TEAMS_VISHING = UseCase(
+    title="Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator",
+    description="External Teams chat where displayName contains 'helpdesk' or 'IT support' — common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.",
+    kill_chain="delivery",
+    techniques=_tech("T1566.004|Phishing: Spearphishing Voice", "T1566|Phishing"),
+    data_models=["O365 audit (raw)"],
+    splunk_spl="""\
+`o365_management_activity`
+  Workload=MicrosoftTeams Operation=MessageSent
+  ExternalParticipants=*
+| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
+| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
+    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+""",
+    defender_kql="""\
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Microsoft Teams"
+| where ActionType == "MessageSent"
+| where RawEventData has "ExternalParticipants"
+| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
+| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
+| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
+""",
+    confidence="High",
+)
+
+UC_RMM_TOOLS = UseCase(
+    title="RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard",
+    description="ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.",
+    kill_chain="install",
+    techniques=_tech("T1219|Remote Access Software"),
+    data_models=["Endpoint.Processes"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+""",
+    defender_kql="""\
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+""",
+    confidence="High",
+)
+
+UC_BROWSER_EXT = UseCase(
+    title="Suspicious browser extension installation",
+    description="Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.",
+    kill_chain="install",
+    techniques=_tech("T1176|Browser Extensions"),
+    data_models=["Endpoint.Registry"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\\Software\\Google\\Chrome\\Extensions\\*"
+        OR Registry.registry_path="*\\Software\\Microsoft\\Edge\\Extensions\\*"
+        OR Registry.registry_path="*\\Software\\Mozilla\\Firefox\\Extensions\\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+""",
+    defender_kql="""\
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where RegistryKey has_any ("\\Software\\Google\\Chrome\\Extensions\\","\\Software\\Microsoft\\Edge\\Extensions\\","\\Software\\Mozilla\\Firefox\\Extensions\\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+""",
+    confidence="Medium",
+)
+
+UC_CRYPTO_WALLET = UseCase(
+    title="Crypto-wallet file/keystore access by non-wallet process",
+    description="Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.",
+    kill_chain="actions",
+    techniques=_tech("T1005|Data from Local System"),
+    data_models=["Endpoint.Filesystem"],
+    splunk_spl="""\
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\\Ethereum\\keystore\\*"
+        OR Filesystem.file_path="*\\Bitcoin\\wallet.dat"
+        OR Filesystem.file_path="*\\Exodus\\exodus.wallet*"
+        OR Filesystem.file_path="*\\Electrum\\wallets\\*"
+        OR Filesystem.file_path="*\\MetaMask\\*"
+        OR Filesystem.file_path="*\\Phantom\\*"
+        OR Filesystem.file_path="*\\Atomic\\Local Storage\\*")
+      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+""",
+    defender_kql="""\
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any ("\\Ethereum\\keystore\\","\\Bitcoin\\","\\Exodus\\","\\Electrum\\wallets\\","\\MetaMask\\","\\Phantom\\","\\Atomic\\Local Storage\\")
+| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+""",
+    confidence="High",
+)
+
+
+# =============================================================================
+# Rules — link narrative phrases to use cases
+# =============================================================================
+
+RULES = [
+    Rule("Phishing — link",
+         ["phishing email", "phishing link", "spear-phishing", "spearphishing", "spear phishing",
+          "credential harvest", "credential phishing", "fake login", "fake captcha",
+          "clickfix", "click-fix", "click fix"],
+         [UC_PHISH_LINK, UC_FAKECAPTCHA]),
+
+    Rule("Phishing — attachment",
+         ["malicious attachment", "weaponized document", "weaponised document",
+          "macro-laden", "vba macro", "office macro", "malicious doc"],
+         [UC_PHISH_ATTACH, UC_OFFICE_CHILD]),
+
+    Rule("Generic phishing — assume both modes",
+         ["phishing", "phish "],
+         [UC_PHISH_LINK, UC_PHISH_ATTACH, UC_OFFICE_CHILD]),
+
+    Rule("PowerShell / scripting",
+         ["powershell", "encoded command", "obfuscated", "iex", "invoke-expression"],
+         [UC_PS_OBFUSCATED]),
+
+    Rule("Office / macro",
+         ["macro", "office document", "word document", "excel macro", "office attachment"],
+         [UC_OFFICE_CHILD]),
+
+    Rule("Credential dumping / LSASS",
+         ["credential dumping", "lsass", "mimikatz", "sekurlsa", "comsvcs"],
+         [UC_LSASS]),
+
+    Rule("Beaconing / C2",
+         ["c2 ", "command and control", "command-and-control", "beacon", "cobalt strike",
+          "sliver", "brute ratel", "havoc framework"],
+         [UC_BEACONING, UC_NETWORK_IOC]),
+
+    Rule("DNS C2 / tunneling",
+         ["dns tunneling", "dns tunnel", "dns-based c2", "dns exfil"],
+         [UC_DNS_TUNNEL]),
+
+    Rule("Persistence — scheduled task",
+         ["scheduled task", "schtasks", "task scheduler"],
+         [UC_SCHEDULED_TASK]),
+
+    Rule("Persistence — service",
+         ["new service", "service install", "service registry"],
+         [UC_SERVICE_PERSIST]),
+
+    Rule("CVE / vulnerability",
+         ["cve-", "vulnerability", "exploited flaw", "kev catalog", "patched flaw",
+          "rce ", "remote code execution", "exploit chain", "zero-day", "zero day", "0-day"],
+         [UC_VULN_EXPOSURE]),
+
+    Rule("Ransomware",
+         ["ransomware", "encrypts files", "ransom note", "double extortion",
+          "lockbit", "blackcat", "alphv", "akira", "play ransomware", "rhysida",
+          "ransomhub", "qilin", "8base", "medusa ransomware", "clop", "cl0p",
+          "black basta", "blackbasta"],
+         [UC_RANSOM_ENCRYPT, UC_LSASS, UC_LATERAL_PSEXEC]),
+
+    Rule("Lateral movement",
+         ["lateral movement", "psexec", "smbexec", "wmic /node", "remote service"],
+         [UC_LATERAL_PSEXEC]),
+
+    Rule("OAuth / consent abuse",
+         ["oauth", "consent phishing", "illicit consent", "token theft", "app registration"],
+         [UC_OAUTH_ABUSE]),
+
+    Rule("MFA bombing",
+         ["mfa fatigue", "mfa bombing", "push bombing", "push fatigue", "mfa-bombing"],
+         [UC_MFA_FATIGUE]),
+
+    Rule("Supply chain",
+         ["supply chain", "supply-chain", "trojanized installer", "trojanised installer",
+          "compromised software", "package compromise", "trojanized sumatrapdf",
+          "trojanised sumatrapdf", "weaponized installer"],
+         [UC_SUPPLY_CHAIN]),
+
+    Rule("Browser stealer / cookie theft",
+         ["infostealer", "info stealer", "stealer malware", "redline stealer",
+          "lumma stealer", "vidar stealer", "atomic stealer", "stealc", "risepro",
+          "browser cookies", "session cookie", "session hijack", "browser session"],
+         [UC_BROWSER_STEALER]),
+
+    Rule("Microsoft Teams vishing / IT-helpdesk impersonation",
+         ["microsoft teams", "teams chat", "it help desk", "it helpdesk",
+          "help desk impersonat", "service desk impersonat", "tech support impersonat",
+          "impersonating it"],
+         [UC_TEAMS_VISHING, UC_RMM_TOOLS]),
+
+    Rule("RMM abuse",
+         ["anydesk", "teamviewer", "screenconnect", "connectwise", "atera",
+          "splashtop", "rustdesk", "ninjarmm", "ninjaone", "kaseya", "remote access tool",
+          "rmm tool", "rmm software"],
+         [UC_RMM_TOOLS]),
+
+    Rule("Browser extensions",
+         ["malicious extension", "browser extension", "fake wallet", "fake extension",
+          "chrome extension", "edge extension", "rogue extension"],
+         [UC_BROWSER_EXT, UC_BROWSER_STEALER]),
+
+    Rule("Crypto wallet",
+         ["crypto wallet", "wallet drainer", "metamask", "phantom wallet",
+          "exodus wallet", "fakewallet", "fake wallet", "cryptocurrency theft"],
+         [UC_CRYPTO_WALLET, UC_BROWSER_STEALER]),
+]
+
+# --- YAML override --------------------------------------------------------
+# If use_cases/ and rules/ YAML are present, they win over the inline
+# definitions above. Going forward, edit YAML files only — the inline block
+# is kept as a runtime fallback / git-blame reference.
+if _LOADED_UCS:
+    for _uc_id, _uc in _LOADED_UCS.items():
+        globals()[_uc_id] = _uc
+    if _LOADED_RULES:
+        RULES = list(_LOADED_RULES)
+
+
+# =============================================================================
+# Article narrative inference
+# =============================================================================
+
+NARRATIVE_KILLCHAIN = [
+    # text -> set of phases
+    (re.compile(r"\bphishing|spear-?phish|email|smis?hing|vishing\b", re.I), {"delivery"}),
+    (re.compile(r"\bsupply.?chain|trojanized|trojanised|installer\b", re.I), {"delivery", "exploit"}),
+    (re.compile(r"\bcve-|exploit|0-?day|zero-?day|rce|public-?facing\b", re.I), {"exploit"}),
+    (re.compile(r"\bmacro|office\s+(?:doc|file)|vbs\b", re.I), {"exploit"}),
+    (re.compile(r"\bdll|rundll32|regsvr32|mshta|powershell|cmd\.exe\b", re.I), {"exploit"}),
+    (re.compile(r"\bscheduled\s+task|service\s+install|registry\s+run|persistence\b", re.I), {"install"}),
+    (re.compile(r"\bbackdoor|implant|rat\b|remote\s+access\s+trojan", re.I), {"install", "c2"}),
+    (re.compile(r"\bbeacon|c2|command\s*and\s*control|callback\b", re.I), {"c2"}),
+    (re.compile(r"\bcredential|lsass|mimikatz|kerberos|ntds\b", re.I), {"actions"}),
+    (re.compile(r"\blateral\s*movement|psexec|smb\s*exec|wmi\b", re.I), {"actions"}),
+    (re.compile(r"\bransom|encrypt(?:s|ed)?\s*files\b", re.I), {"actions"}),
+    (re.compile(r"\bdata\s*theft|exfiltrat|stealer\b", re.I), {"actions"}),
+    (re.compile(r"\brecon|scan|enumerat\b", re.I), {"recon"}),
+    (re.compile(r"\bweaponized|weaponised|weaponi[sz]ation\b", re.I), {"weapon"}),
+]
+
+# Common attacker chain implication: if Initial Access (delivery) is detected,
+# attackers will typically execute, install, beacon, and act on objectives.
+INFER_FROM_PHASE = {
+    "delivery": {"exploit", "install", "c2"},
+    "exploit": {"install", "c2"},
+    "install": {"c2", "actions"},
+    "c2": {"actions"},
+}
+
+
+def detect_kill_chain(text: str):
+    text_l = text.lower()
+    found = set()
+    for rx, phases in NARRATIVE_KILLCHAIN:
+        if rx.search(text):
+            found |= phases
+    inferred = set()
+    for ph in list(found):
+        inferred |= INFER_FROM_PHASE.get(ph, set())
+    return found, inferred - found
+
+
+# =============================================================================
+# Threat profile — pulls together a richer summary per article
+# =============================================================================
+
+ATTACK_KEYWORD_TO_TID = {
+    "powershell": ("T1059.001", "PowerShell"),
+    "cmd.exe": ("T1059.003", "Windows Command Shell"),
+    "wmi": ("T1047", "Windows Management Instrumentation"),
+    "scheduled task": ("T1053.005", "Scheduled Task"),
+    "lsass": ("T1003.001", "LSASS Memory"),
+    "ntds": ("T1003.003", "NTDS"),
+    "kerberoast": ("T1558.003", "Kerberoasting"),
+    "kerberos": ("T1558", "Steal or Forge Kerberos Tickets"),
+    "pass-the-hash": ("T1550.002", "Pass the Hash"),
+    "pass-the-ticket": ("T1550.003", "Pass the Ticket"),
+    "rdp": ("T1021.001", "Remote Desktop Protocol"),
+    "smb": ("T1021.002", "SMB/Windows Admin Shares"),
+    "winrm": ("T1021.006", "Windows Remote Management"),
+    "psexec": ("T1021.002", "SMB/Windows Admin Shares"),
+    "registry run key": ("T1547.001", "Registry Run Keys / Startup Folder"),
+    "dll sideloading": ("T1574.002", "DLL Side-Loading"),
+    "rundll32": ("T1218.011", "Rundll32"),
+    "regsvr32": ("T1218.010", "Regsvr32"),
+    "mshta": ("T1218.005", "Mshta"),
+    "office macro": ("T1059.005", "Visual Basic"),
+    "phishing email": ("T1566.001", "Spearphishing Attachment"),
+    "phishing link": ("T1566.002", "Spearphishing Link"),
+    "phishing": ("T1566", "Phishing"),
+    "spearphishing": ("T1566.002", "Spearphishing Link"),
+    "credential dumping": ("T1003", "OS Credential Dumping"),
+    "ransomware": ("T1486", "Data Encrypted for Impact"),
+    "supply chain": ("T1195.002", "Compromise Software Supply Chain"),
+    "browser cookies": ("T1539", "Steal Web Session Cookie"),
+    "session cookie": ("T1539", "Steal Web Session Cookie"),
+    "ad cs": ("T1649", "Steal or Forge Authentication Certificates"),
+    "service install": ("T1543.003", "Windows Service"),
+    "rce": ("T1190", "Exploit Public-Facing Application"),
+    "remote code execution": ("T1190", "Exploit Public-Facing Application"),
+    "exploit public-facing": ("T1190", "Exploit Public-Facing Application"),
+    "encoded command": ("T1027", "Obfuscated Files or Information"),
+    "obfuscat": ("T1027", "Obfuscated Files or Information"),
+    "mfa fatigue": ("T1621", "Multi-Factor Authentication Request Generation"),
+    "consent phishing": ("T1528", "Steal Application Access Token"),
+    "oauth": ("T1528", "Steal Application Access Token"),
+    "infostealer": ("T1555.003", "Credentials from Web Browsers"),
+    "stealer": ("T1555.003", "Credentials from Web Browsers"),
+    "anydesk": ("T1219", "Remote Access Software"),
+    "teamviewer": ("T1219", "Remote Access Software"),
+    "screenconnect": ("T1219", "Remote Access Software"),
+    "rmm tool": ("T1219", "Remote Access Software"),
+    "browser extension": ("T1176", "Browser Extensions"),
+    "fake captcha": ("T1204.004", "User Execution: Malicious Copy and Paste"),
+    "clickfix": ("T1204.004", "User Execution: Malicious Copy and Paste"),
+    "smishing": ("T1660", "Phishing"),
+    "trojan": ("T1204.002", "Malicious File"),
+}
+
+
+def infer_techniques(text: str, explicit: list) -> list:
+    found = {}  # id -> name
+    for tid in explicit:
+        found[tid] = tid
+    text_l = text.lower()
+    for kw, (tid, name) in ATTACK_KEYWORD_TO_TID.items():
+        if kw in text_l:
+            found[tid] = name
+    return sorted(found.items())
+
+
+# =============================================================================
+# Render: substitute placeholders in templated SPL/KQL
+# =============================================================================
+
+def fmt_list(values, sep=", ", quote='"'):
+    return sep.join(f"{quote}{v}{quote}" for v in values)
+
+
+def parameterize(text: str, ind: dict) -> str:
+    cves = ind["cves"]
+    ips = ind["ips"]
+    domains = ind["domains"][:10]
+    hashes = ind["sha256"] + ind["sha1"] + ind["md5"]
+    text = text.replace("__CVE_LIST__", fmt_list(cves) if cves else '"-"')
+    text = text.replace("__IP_LIST__", fmt_list(ips) if ips else '"0.0.0.0"')
+    text = text.replace("__DOMAIN_LIST__", fmt_list(domains) if domains else '"example.invalid"')
+    text = text.replace("__HASH_LIST__", fmt_list(hashes) if hashes else '"-"')
+    text = text.replace("__VENDOR_BINS__", '"setup.exe","installer.exe","update.exe"')
+    return text
+
+
+def select_use_cases(article_text: str, ind: dict) -> list:
+    activated = []
+    seen_titles = set()
+    text_l = article_text.lower()
+    for rule in RULES:
+        if any(t in text_l for t in rule.triggers):
+            for uc in rule.use_cases:
+                if uc.title not in seen_titles:
+                    activated.append(uc)
+                    seen_titles.add(uc.title)
+    if ind["cves"] and UC_VULN_EXPOSURE.title not in seen_titles:
+        activated.append(UC_VULN_EXPOSURE)
+        seen_titles.add(UC_VULN_EXPOSURE.title)
+    if (ind["ips"] or ind["domains"]) and UC_NETWORK_IOC.title not in seen_titles:
+        activated.append(UC_NETWORK_IOC)
+        seen_titles.add(UC_NETWORK_IOC.title)
+    if (ind["sha256"] or ind["sha1"] or ind["md5"]) and UC_HASH_IOC.title not in seen_titles:
+        activated.append(UC_HASH_IOC)
+        seen_titles.add(UC_HASH_IOC.title)
+    if not activated:
+        activated.append(UC_NETWORK_IOC)
+    return activated
+
+
+# =============================================================================
+# HTML render
+# =============================================================================
+
+HTML_HEAD = r"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>THN Threat Atlas — Splunk &amp; Defender Use Cases</title>
+<style>
+/* ----- Theme ---------------------------------------------------------- */
+:root {
+  --bg:#070a10; --bg-grad-1:#0c1320; --bg-grad-2:#06080d;
+  --panel:#10161f; --panel-elev:#161e2a; --panel2:#1c2533;
+  --text:#e8eef5; --muted:#8b96a5; --muted-2:#5d6877;
+  --accent:#5fb6ff; --accent-2:#b48dff; --accent-3:#36e0c0;
+  --border:#222b39; --border-2:#2c384a; --hairline:rgba(255,255,255,0.06);
+  --good:#5cd87a; --warn:#ffb060; --bad:#ff5d5d; --crit:#ff3260;
+  --code-bg:#040608;
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.4);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.45),0 2px 4px rgba(0,0,0,0.4);
+  --shadow-lg:0 24px 64px rgba(0,0,0,0.55),0 6px 16px rgba(0,0,0,0.5);
+  --shadow-glow:0 0 0 1px rgba(95,182,255,0.4),0 0 24px rgba(95,182,255,0.18);
+  --r-sm:6px; --r-md:10px; --r-lg:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  background:
+    radial-gradient(1200px 600px at 100% -10%, rgba(95,182,255,0.07), transparent 60%),
+    radial-gradient(900px 600px at -10% 110%, rgba(180,141,255,0.06), transparent 60%),
+    linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg) 60%, var(--bg-grad-2) 100%);
+  background-attachment:fixed;
+  color:var(--text);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:14px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  letter-spacing:-0.005em;
+}
+::selection{background:rgba(95,182,255,0.32);color:#fff;}
+
+/* ----- Header / Top bar ---------------------------------------------- */
+.topbar{
+  position:sticky; top:0; z-index:50;
+  background:rgba(10,14,21,0.78);
+  backdrop-filter:blur(14px) saturate(140%);
+  -webkit-backdrop-filter:blur(14px) saturate(140%);
+  border-bottom:1px solid var(--hairline);
+}
+.topbar-inner{
+  max-width:1380px; margin:0 auto; padding:14px 28px;
+  display:flex; gap:24px; align-items:center; flex-wrap:wrap;
+}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:16px;letter-spacing:-0.01em;}
+.brand .logo{
+  width:32px; height:32px; border-radius:8px;
+  background:linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 100%);
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.25);
+  position:relative; overflow:hidden;
+}
+.brand .logo::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 50%);
+}
+.brand .logo svg{width:18px;height:18px;color:#0b1118;position:relative;z-index:1;}
+.brand-text{display:flex;flex-direction:column;line-height:1.15;}
+.brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase;}
+
+.stats{display:flex;gap:16px;flex-wrap:wrap;flex:1;justify-content:center;}
+.stat{
+  display:flex; flex-direction:column; align-items:center;
+  padding:6px 12px; min-width:64px;
+}
+.stat .v{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;
+  background:linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;}
+
+.search-trigger{
+  display:flex; align-items:center; gap:10px;
+  background:var(--panel); border:1px solid var(--border);
+  padding:8px 14px; border-radius:var(--r-md);
+  color:var(--muted); cursor:pointer; transition:all 0.15s;
+  min-width:240px; font-family:inherit; font-size:13px;
+}
+.search-trigger:hover{border-color:var(--border-2);color:var(--text);}
+.search-trigger kbd{
+  margin-left:auto; padding:2px 6px; font-size:10.5px; font-family:inherit;
+  background:var(--panel2); border:1px solid var(--border-2); border-radius:4px;
+}
+
+/* ----- Filter bar ---------------------------------------------------- */
+.filter-row{
+  max-width:1380px; margin:0 auto; padding:14px 28px 0;
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+}
+.filter-label{font-size:11px; color:var(--muted); text-transform:uppercase;
+  letter-spacing:0.08em; margin-right:6px; font-weight:600;}
+.fchip{
+  background:var(--panel); border:1px solid var(--border);
+  padding:5px 12px; border-radius:999px; font-size:12px; cursor:pointer;
+  color:var(--muted); transition:all 0.15s; font-family:inherit;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.fchip:hover{color:var(--text);border-color:var(--border-2);}
+.fchip.on{
+  color:var(--text); border-color:transparent;
+  background:linear-gradient(135deg, rgba(95,182,255,0.25), rgba(180,141,255,0.18));
+  box-shadow:0 0 0 1px rgba(95,182,255,0.4) inset;
+}
+.fchip .x{display:none;font-size:14px;line-height:1;opacity:0.6;}
+.fchip.on .x{display:inline;}
+.fchip .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);}
+.fchip.on .dot{background:var(--accent);}
+
+/* ----- Main layout --------------------------------------------------- */
+main{
+  max-width:1380px; margin:0 auto; padding:18px 28px 28px;
+  display:grid; grid-template-columns:300px 1fr; gap:24px;
+}
+@media(max-width:980px){main{grid-template-columns:1fr;padding:18px;}}
+
+nav.toc{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:10px; position:sticky; top:90px; max-height:calc(100vh - 110px);
+  overflow:auto; box-shadow:var(--shadow-sm);
+}
+nav.toc::-webkit-scrollbar{width:6px;}
+nav.toc::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px;}
+nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;
+  margin:6px 10px 8px;font-weight:600;}
+.nav-item{
+  display:flex; gap:10px; padding:9px 10px; border-radius:var(--r-md);
+  color:var(--text); text-decoration:none; font-size:12.5px; line-height:1.35;
+  margin-bottom:2px; align-items:flex-start; cursor:pointer;
+  transition:all 0.12s ease;
+  position:relative;
+}
+.nav-item:hover{background:var(--panel2);}
+.nav-item.active{
+  background:linear-gradient(90deg, rgba(95,182,255,0.16), rgba(95,182,255,0.04));
+  box-shadow:inset 3px 0 0 var(--accent);
+}
+.nav-item .num{
+  flex:0 0 24px; font-variant-numeric:tabular-nums; color:var(--muted);
+  font-weight:600; font-size:11px;
+}
+.nav-item .ttl{flex:1;}
+.nav-item .sev{
+  flex:0 0 10px; height:10px; border-radius:50%; margin-top:5px;
+  background:var(--good); box-shadow:0 0 8px currentColor;
+}
+.nav-item .sev.med{background:var(--warn);}
+.nav-item .sev.high{background:var(--bad);}
+.nav-item .sev.crit{
+  background:var(--crit);
+  animation:pulse-crit 1.6s ease-in-out infinite;
+}
+@keyframes pulse-crit{
+  0%,100%{box-shadow:0 0 6px var(--crit);}
+  50%{box-shadow:0 0 14px var(--crit), 0 0 24px rgba(255,50,96,0.5);}
+}
+
+/* ----- Source filter bar (Articles tab) ------------------------------ */
+.src-filter-bar{
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+  padding:10px 14px; margin-bottom:8px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md);
+}
+.src-filter-bar .lg-label{flex:0 0 auto; min-width:72px;}
+.src-chip{
+  padding:6px 12px; border-radius:999px;
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--muted); cursor:pointer; font-family:inherit; font-size:12px;
+  font-weight:600; letter-spacing:-0.005em; transition:all 0.12s;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.src-chip:hover{color:var(--text); border-color:var(--border-2);}
+.src-chip.active{color:var(--text); transform:translateY(-1px);}
+.src-chip.active.all{background:linear-gradient(135deg, rgba(95,182,255,0.25), rgba(180,141,255,0.18));
+  border-color:transparent; box-shadow:0 0 0 1px rgba(95,182,255,0.4) inset;}
+.src-chip.active.thn{background:rgba(95,182,255,0.18); border-color:var(--accent); color:var(--accent);}
+.src-chip.active.bc{background:rgba(255,93,93,0.18); border-color:var(--bad); color:var(--bad);}
+.src-chip.active.ms{background:rgba(180,141,255,0.18); border-color:var(--accent-2); color:var(--accent-2);}
+.src-chip.active.kev{background:rgba(255,176,96,0.18); border-color:var(--warn); color:var(--warn);}
+.src-chip .cnt{
+  font-variant-numeric:tabular-nums; opacity:0.7;
+  background:rgba(0,0,0,0.25); padding:1px 6px; border-radius:999px;
+  font-size:10.5px;
+}
+article.card.src-hidden{display:none;}
+
+/* ----- Article cards ------------------------------------------------- */
+section#articles{display:flex; flex-direction:column; gap:24px;}
+article.card{
+  background:linear-gradient(180deg, var(--panel-elev) 0%, var(--panel) 100%);
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  padding:24px;
+  position:relative;
+  box-shadow:var(--shadow-md);
+  transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
+  transform-style:preserve-3d;
+}
+article.card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow-lg);
+  border-color:var(--border-2);
+}
+article.card.hidden{display:none;}
+article.card .sev-ribbon{
+  position:absolute; top:0; left:24px; padding:4px 12px 5px;
+  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;
+  border-radius:0 0 8px 8px;
+  background:linear-gradient(180deg, var(--good), #2fa84a);
+  color:#04130a;
+  box-shadow:var(--shadow-sm);
+}
+article.card .sev-ribbon.med{background:linear-gradient(180deg, var(--warn), #e08a37);color:#1a0c00;}
+article.card .sev-ribbon.high{background:linear-gradient(180deg, var(--bad), #c93a3a);color:#fff;}
+article.card .sev-ribbon.crit{
+  background:linear-gradient(180deg, var(--crit), #c40044);
+  color:#fff;
+  box-shadow:var(--shadow-sm), 0 0 16px rgba(255,50,96,0.5);
+}
+article.card h2{margin:14px 0 6px 0;font-size:20px;line-height:1.3;letter-spacing:-0.012em;font-weight:700;}
+article.card h2 a{color:var(--text);text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
+  background-size:0% 1.5px;background-repeat:no-repeat;background-position:0 100%;
+  transition:background-size 0.2s ease;}
+article.card h2 a:hover{background-size:100% 1.5px;color:var(--accent);}
+article.card .pubmeta{color:var(--muted);font-size:11.5px;margin-bottom:14px;display:flex;gap:14px;flex-wrap:wrap;}
+article.card .pubmeta span:not(:first-child)::before{content:"•";margin-right:14px;color:var(--muted-2);}
+article.card p.summary{color:var(--text);opacity:0.88;margin:8px 0 16px 0;font-size:13.5px;}
+
+.action-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px 0;align-items:center;}
+.btn{
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--text); padding:8px 14px; border-radius:var(--r-md);
+  font-size:12px; cursor:pointer; font-family:inherit; font-weight:500;
+  display:inline-flex; align-items:center; gap:6px;
+  transition:all 0.15s;
+}
+.btn:hover{background:var(--border);border-color:var(--border-2);transform:translateY(-1px);}
+.btn:active{transform:translateY(0);}
+.btn.primary{
+  background:linear-gradient(135deg, var(--accent) 0%, #4a98e0 100%);
+  color:#04111d; border-color:transparent; font-weight:600;
+  box-shadow:0 2px 8px rgba(95,182,255,0.25);
+}
+.btn.primary:hover{
+  background:linear-gradient(135deg, #79c2ff 0%, #5fb6ff 100%);
+  box-shadow:0 4px 14px rgba(95,182,255,0.4);
+}
+.btn-meta{color:var(--muted);font-size:11.5px;margin-left:auto;}
+
+/* ----- Indicator pills ----------------------------------------------- */
+.ind-group{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;align-items:center;}
+.ind-label{color:var(--muted);font-size:10.5px;text-transform:uppercase;letter-spacing:0.08em;
+  margin-right:6px;font-weight:600;}
+.ind{
+  background:var(--panel2); border:1px solid var(--border); border-radius:6px;
+  padding:3px 9px; font-size:11.5px; font-family:"JetBrains Mono",ui-monospace,monospace;
+  color:var(--accent-2); transition:all 0.15s; cursor:default;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,0.02), var(--shadow-sm);
+}
+.ind.cve{color:var(--warn);border-color:#5a3b1f;}
+.source-badges{display:flex; gap:6px; flex-wrap:wrap; margin:6px 0 2px;}
+.source-badge{
+  font-size:10px; font-weight:700; letter-spacing:0.06em;
+  padding:3px 9px; border-radius:10px;
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--muted); display:inline-flex; align-items:center; gap:4px;
+}
+.source-badge.thn{background:rgba(95,182,255,0.10); border-color:rgba(95,182,255,0.30); color:var(--accent);}
+.source-badge.bc{background:rgba(255,93,93,0.10); border-color:rgba(255,93,93,0.30); color:var(--bad);}
+.source-badge.ms{background:rgba(180,141,255,0.10); border-color:rgba(180,141,255,0.30); color:var(--accent-2);}
+.source-badge.kev{background:rgba(255,176,96,0.10); border-color:rgba(255,176,96,0.30); color:var(--warn);}
+.ind.tech{color:var(--accent-3);border-color:#1d4f43;cursor:pointer;}
+.ind.tech:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(54,224,192,0.18), var(--shadow-sm);
+  border-color:var(--accent-3);}
+.ind.malware{color:var(--bad);border-color:#5a1f1f;}
+
+/* ----- 3D Kill Chain ------------------------------------------------- */
+.killchain{
+  display:none; padding:20px; margin:14px 0 20px 0;
+  background:linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.05));
+  border:1px solid var(--border);
+  border-radius:var(--r-lg);
+  perspective:1400px;
+  animation:fadeUp 0.35s cubic-bezier(0.2,0.8,0.2,1);
+}
+.killchain.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+
+.kc3d{
+  display:grid; grid-template-columns:repeat(7, minmax(0,1fr));
+  gap:10px; transform-style:preserve-3d;
+  transform:rotateX(8deg);
+  margin:6px 0 22px 0;
+}
+.kc3d .kc-cell{
+  position:relative; padding:14px 10px 12px;
+  border-radius:10px;
+  background:linear-gradient(180deg, #1a2230 0%, #0e1420 100%);
+  border:1px solid #2a3445;
+  text-align:center; min-height:96px;
+  display:flex; flex-direction:column; justify-content:center; align-items:center;
+  transform-style:preserve-3d; transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1);
+  box-shadow:0 6px 14px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.kc3d .kc-cell:hover{transform:translateZ(12px) rotateX(-4deg);}
+.kc3d .kc-cell::before{
+  content:""; position:absolute; inset:1px; border-radius:9px; pointer-events:none;
+  background:linear-gradient(180deg, rgba(255,255,255,0.04), transparent 30%);
+}
+.kc3d .kc-cell .num{
+  font-size:9.5px; color:var(--muted); font-weight:700;
+  letter-spacing:0.12em; text-transform:uppercase;
+}
+.kc3d .kc-cell .name{
+  font-size:12px; font-weight:700; margin-top:4px; letter-spacing:-0.01em;
+}
+.kc3d .kc-cell .marker{
+  font-size:9.5px; color:var(--muted-2); margin-top:6px;
+  text-transform:uppercase; letter-spacing:0.1em; font-weight:700;
+}
+.kc3d .kc-cell.hit{
+  background:linear-gradient(180deg, #3a1820 0%, #20111a 100%);
+  border-color:#ff5d6d;
+  box-shadow:
+    0 8px 22px rgba(255,93,109,0.32),
+    0 0 0 1px rgba(255,93,109,0.45) inset,
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  animation:hit-glow 2.4s ease-in-out infinite;
+}
+@keyframes hit-glow{
+  0%,100%{box-shadow:0 8px 22px rgba(255,93,109,0.28),0 0 0 1px rgba(255,93,109,0.4) inset, inset 0 1px 0 rgba(255,255,255,0.06);}
+  50%{box-shadow:0 8px 32px rgba(255,93,109,0.5),0 0 0 1px rgba(255,93,109,0.7) inset, inset 0 1px 0 rgba(255,255,255,0.08);}
+}
+.kc3d .kc-cell.hit .marker{color:var(--bad);}
+.kc3d .kc-cell.inferred{
+  background:linear-gradient(180deg, #322218 0%, #1a1410 100%);
+  border-color:#cc8a4d;
+  box-shadow:0 6px 18px rgba(255,176,96,0.18), 0 0 0 1px rgba(255,176,96,0.35) inset,
+    inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.kc3d .kc-cell.inferred .marker{color:var(--warn);}
+
+.kc-detail{font-size:12.5px;color:var(--muted);}
+.kc-detail .phase-line{
+  margin:6px 0; padding:8px 12px; border-radius:8px;
+  background:rgba(255,255,255,0.015); border:1px solid var(--hairline);
+}
+.kc-detail .phase-line strong{color:var(--text);font-weight:700;}
+.kc-detail .phase-line.hit{
+  background:linear-gradient(90deg, rgba(255,93,109,0.08), transparent);
+  border-color:rgba(255,93,109,0.3);
+}
+.kc-detail .phase-line.hit strong{color:var(--bad);}
+.kc-detail .phase-line.inferred{
+  background:linear-gradient(90deg, rgba(255,176,96,0.06), transparent);
+  border-color:rgba(255,176,96,0.25);
+}
+.kc-detail .phase-line.inferred strong{color:var(--warn);}
+.kc-detail .phase-line em{color:var(--accent-2);font-style:normal;font-size:11.5px;}
+
+/* ----- Use case accordion ------------------------------------------- */
+.usecases{display:flex;flex-direction:column;gap:12px;}
+details.uc{
+  background:var(--panel-elev); border:1px solid var(--border);
+  border-radius:var(--r-md); transition:border-color 0.15s, box-shadow 0.15s;
+  overflow:hidden;
+}
+details.uc[open]{border-color:var(--border-2);box-shadow:var(--shadow-sm);}
+details.uc summary{
+  cursor:pointer; padding:14px 16px; list-style:none;
+  display:flex; flex-wrap:wrap; align-items:center; gap:10px;
+  transition:background 0.12s;
+}
+details.uc summary:hover{background:rgba(255,255,255,0.02);}
+details.uc summary::-webkit-details-marker{display:none;}
+details.uc summary::before{
+  content:"›"; color:var(--muted); font-size:18px; line-height:1;
+  margin-right:4px; transition:transform 0.18s; display:inline-block;
+}
+details.uc[open] summary::before{transform:rotate(90deg);}
+.uc-title{font-weight:700; font-size:13.5px; flex:1; min-width:200px;letter-spacing:-0.01em;}
+.uc-phase, .uc-conf, .uc-dm{
+  font-size:10px; text-transform:uppercase; letter-spacing:0.1em;
+  padding:3px 9px; border-radius:999px; font-weight:700;
+  background:var(--panel2); border:1px solid var(--border);
+}
+.uc-phase{color:var(--accent-2); background:rgba(180,141,255,0.1); border-color:rgba(180,141,255,0.2);}
+.uc-conf.high{color:var(--good);background:rgba(92,216,122,0.1);border-color:rgba(92,216,122,0.25);}
+.uc-conf.medium{color:var(--warn);background:rgba(255,176,96,0.1);border-color:rgba(255,176,96,0.25);}
+.uc-conf.low{color:var(--muted);}
+.uc-body{padding:0 16px 16px 16px;}
+.uc-desc{color:var(--text);opacity:0.88;font-size:12.8px;margin:6px 0 12px 0;line-height:1.6;}
+.uc-meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}
+
+.tabs{
+  display:flex; gap:0; padding:4px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md); margin:12px 0 0 0; width:fit-content;
+}
+.tab-btn{
+  padding:7px 14px; background:transparent; border:none; border-radius:6px;
+  color:var(--muted); cursor:pointer; font-family:inherit; font-size:12px;
+  font-weight:600; transition:all 0.15s; letter-spacing:-0.005em;
+}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active{
+  color:var(--text);
+  background:linear-gradient(180deg, var(--panel2), var(--panel-elev));
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.tab-content{display:none;}
+.tab-content.active{display:block;animation:fadeIn 0.2s ease;}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+
+pre{
+  background:var(--code-bg); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:14px 16px; overflow:auto;
+  font-size:12px; font-family:"JetBrains Mono","Fira Code",ui-monospace,monospace;
+  line-height:1.6; margin:10px 0;
+  position:relative;
+}
+pre::-webkit-scrollbar{height:8px;width:8px;}
+pre::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px;}
+pre code{color:var(--text);white-space:pre;}
+.copy-btn{
+  position:absolute; top:8px; right:8px;
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--text); padding:4px 12px; border-radius:6px;
+  font-size:10.5px; font-weight:600; cursor:pointer; font-family:inherit;
+  transition:all 0.15s; opacity:0.7; letter-spacing:0.04em;
+}
+pre:hover .copy-btn{opacity:1;}
+.copy-btn:hover{background:var(--accent);color:#04111d;border-color:transparent;}
+.copy-btn.copied{background:var(--good);color:#04130a;border-color:transparent;}
+
+/* ----- Search overlay (Cmd/Ctrl+K) ----------------------------------- */
+.search-overlay{
+  display:none; position:fixed; inset:0; z-index:200;
+  background:rgba(4,7,12,0.78); backdrop-filter:blur(8px);
+  align-items:flex-start; justify-content:center; padding-top:14vh;
+  animation:fadeIn 0.15s ease;
+}
+.search-overlay.open{display:flex;}
+.search-modal{
+  width:min(620px, 90%);
+  background:var(--panel-elev); border:1px solid var(--border-2);
+  border-radius:var(--r-lg); box-shadow:var(--shadow-lg);
+  overflow:hidden;
+}
+.search-modal input{
+  width:100%; padding:18px 22px; background:transparent; border:none;
+  border-bottom:1px solid var(--hairline); color:var(--text);
+  font-size:16px; font-family:inherit; outline:none;
+}
+.search-modal input::placeholder{color:var(--muted-2);}
+.search-results{max-height:50vh;overflow:auto;padding:8px;}
+.search-results::-webkit-scrollbar{width:6px;}
+.search-results::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px;}
+.search-result{
+  padding:10px 14px; border-radius:var(--r-md); cursor:pointer;
+  display:flex; gap:10px; align-items:flex-start; transition:background 0.1s;
+}
+.search-result:hover, .search-result.sel{background:var(--panel2);}
+.search-result .sr-num{color:var(--muted);font-variant-numeric:tabular-nums;
+  font-size:11px;font-weight:700;flex:0 0 24px;margin-top:2px;}
+.search-result .sr-title{font-weight:600;font-size:13.5px;margin-bottom:2px;}
+.search-result .sr-meta{color:var(--muted);font-size:11.5px;}
+.search-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px;}
+
+/* ----- Footer -------------------------------------------------------- */
+footer{
+  padding:32px 28px; text-align:center;
+  color:var(--muted); font-size:11.5px;
+  border-top:1px solid var(--hairline);
+  margin-top:24px;
+}
+footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size:11px;}
+
+/* ----- View tabs (Articles / ATT&CK Matrix) -------------------------- */
+.view-tabs{
+  display:flex; gap:4px; padding:4px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md); width:fit-content;
+}
+.view-tab{
+  padding:8px 18px; background:transparent; border:none; border-radius:6px;
+  color:var(--muted); cursor:pointer; font-family:inherit; font-size:13px;
+  font-weight:600; transition:all 0.15s; letter-spacing:-0.005em;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.view-tab:hover{color:var(--text);}
+.view-tab.active{
+  color:var(--text);
+  background:linear-gradient(180deg, var(--panel2), var(--panel-elev));
+  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.04);
+}
+.view{display:none;}
+.view.active{display:block;}
+
+/* ----- ATT&CK Matrix view ------------------------------------------- */
+.matrix-wrap{max-width:none; padding:18px 28px 28px;}
+.matrix-toolbar{
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  margin-bottom:14px; padding:12px 14px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md);
+}
+.matrix-toolbar input{
+  flex:1; min-width:240px; padding:8px 12px;
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r-sm); color:var(--text);
+  font-family:inherit; font-size:13px; outline:none;
+}
+.matrix-toolbar input:focus{border-color:var(--accent);}
+.matrix-toolbar select{
+  min-width:240px; max-width:340px; padding:8px 10px;
+  background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r-sm); color:var(--text);
+  font-family:inherit; font-size:12.5px; outline:none;
+  cursor:pointer;
+}
+.matrix-toolbar select:focus,
+.matrix-toolbar select:hover{border-color:var(--accent);}
+.matrix-toolbar select option{background:var(--panel-elev); color:var(--text);}
+.matrix-legend{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:10px 14px; margin-bottom:14px;
+  display:flex; flex-direction:column; gap:8px;
+}
+.lg-row{display:flex; flex-wrap:wrap; gap:8px; align-items:center;
+  font-size:11.5px; line-height:1.4;}
+.lg-label{
+  flex:0 0 auto; min-width:108px;
+  font-size:10px; font-weight:700; letter-spacing:0.08em;
+  color:var(--muted); text-transform:uppercase;
+}
+.lg-swatch{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:4px 10px; border-radius:6px;
+  font-size:11px; font-weight:600;
+  background:var(--panel2); border:1px solid var(--border);
+  color:var(--text);
+}
+.lg-swatch.cov-0{background:var(--panel2); color:var(--muted-2);}
+.lg-swatch.cov-1{background:linear-gradient(180deg, rgba(54,224,192,0.10), rgba(54,224,192,0.02));}
+.lg-swatch.cov-2{background:linear-gradient(180deg, rgba(54,224,192,0.18), rgba(54,224,192,0.04));}
+.lg-swatch.cov-3{background:linear-gradient(180deg, rgba(54,224,192,0.30), rgba(54,224,192,0.06));
+  border-color:rgba(54,224,192,0.35);}
+.lg-swatch.cov-4{background:linear-gradient(180deg, rgba(54,224,192,0.45), rgba(54,224,192,0.10));
+  border-color:rgba(54,224,192,0.55);}
+.lg-swatch.heat-1{background:linear-gradient(180deg, rgba(255,176,96,0.10), rgba(255,176,96,0.02));}
+.lg-swatch.heat-2{background:linear-gradient(180deg, rgba(255,93,93,0.18), rgba(255,93,93,0.04));
+  border-color:rgba(255,93,93,0.4);}
+.lg-swatch.heat-3{background:linear-gradient(180deg, rgba(255,50,96,0.30), rgba(255,50,96,0.06));
+  border-color:rgba(255,50,96,0.55);}
+.lg-chip{
+  padding:3px 9px; background:var(--panel2); border:1px solid var(--border);
+  border-radius:6px; font-size:11px; color:var(--text);
+}
+.lg-note{
+  margin-left:auto; color:var(--muted-2); font-size:10.5px; font-style:italic;
+}
+.matrix-stats{display:flex; gap:18px; font-size:12px;}
+.matrix-stats span{color:var(--muted);}
+.matrix-stats span b{color:var(--text); font-variant-numeric:tabular-nums;}
+.matrix-mode{display:flex; gap:4px;
+  padding:3px; background:var(--bg); border:1px solid var(--border);
+  border-radius:var(--r-sm);}
+.matrix-mode button{
+  padding:5px 12px; background:transparent; border:none; border-radius:4px;
+  color:var(--muted); cursor:pointer; font-family:inherit; font-size:11.5px;
+  font-weight:600; letter-spacing:0.04em; text-transform:uppercase;
+  transition:all 0.12s;
+}
+.matrix-mode button.on{background:var(--accent); color:#04111d;}
+
+.matrix-grid{
+  display:grid; grid-template-columns:repeat(14, minmax(150px, 1fr));
+  gap:8px;
+  overflow-x:auto; padding-bottom:24px;
+}
+.tactic-col{display:flex; flex-direction:column; min-width:150px;}
+.tactic-header{
+  position:sticky; top:0; z-index:5;
+  background:var(--panel-elev); border:1px solid var(--border);
+  border-radius:6px 6px 0 0;
+  padding:9px 8px 7px; text-align:center;
+  font-size:11px; font-weight:700; letter-spacing:0.02em;
+}
+.tactic-header .tactic-name{color:var(--text); display:block; line-height:1.25;}
+.tactic-header .tactic-count{color:var(--muted); font-size:10px; font-weight:500;}
+.tactic-techs{display:flex; flex-direction:column; gap:2px; padding-top:2px;}
+.tech-cell{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:0; padding:5px 7px;
+  font-size:11px; line-height:1.3; cursor:pointer;
+  position:relative; transition:all 0.1s;
+  display:flex; flex-direction:column; gap:2px;
+}
+.tech-cell:hover{border-color:var(--accent); transform:translateY(-1px);
+  box-shadow:0 4px 10px rgba(0,0,0,0.4); z-index:2;}
+.tech-cell .tech-name{color:var(--text); white-space:nowrap; overflow:hidden;
+  text-overflow:ellipsis; font-weight:500;}
+.tech-cell .tech-meta{display:flex; gap:6px; align-items:center; font-size:9.5px;
+  color:var(--muted-2); font-variant-numeric:tabular-nums;}
+.tech-cell .sub-marker{color:var(--accent-2); font-size:9px; font-weight:700;}
+.tech-cell .uc-count{color:var(--accent-3); font-weight:700;}
+.tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
+.tech-cell.cov-1{background:linear-gradient(180deg, rgba(54,224,192,0.10), rgba(54,224,192,0.02));}
+.tech-cell.cov-2{background:linear-gradient(180deg, rgba(54,224,192,0.18), rgba(54,224,192,0.04));}
+.tech-cell.cov-3{background:linear-gradient(180deg, rgba(54,224,192,0.30), rgba(54,224,192,0.06));
+  border-color:rgba(54,224,192,0.35);}
+.tech-cell.cov-4{background:linear-gradient(180deg, rgba(54,224,192,0.45), rgba(54,224,192,0.10));
+  border-color:rgba(54,224,192,0.55);}
+.tech-cell.heat-1{background:linear-gradient(180deg, rgba(255,176,96,0.10), rgba(255,176,96,0.02));}
+.tech-cell.heat-2{background:linear-gradient(180deg, rgba(255,93,93,0.15), rgba(255,93,93,0.04));
+  border-color:rgba(255,93,93,0.4);}
+.tech-cell.heat-3{background:linear-gradient(180deg, rgba(255,50,96,0.30), rgba(255,50,96,0.05));
+  border-color:rgba(255,50,96,0.55);}
+.tech-cell.dim{opacity:0.35;}
+.tech-cell.is-sub{padding-left:14px; border-left:2px solid var(--accent-2);
+  background:var(--panel2);}
+.tech-cell.expanded{border-color:var(--accent);}
+
+/* Drawer (slide-in from right) */
+.drawer-bg{
+  position:fixed; inset:0; z-index:60;
+  background:rgba(0,0,0,0.5); backdrop-filter:blur(4px);
+  display:none;
+}
+.drawer-bg.open{display:block; animation:fadeIn 0.15s;}
+.drawer{
+  position:fixed; top:0; right:0; bottom:0; width:min(420px, 92%);
+  background:var(--panel-elev); border-left:1px solid var(--border-2);
+  z-index:61; transform:translateX(110%); transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1);
+  display:flex; flex-direction:column; box-shadow:-12px 0 32px rgba(0,0,0,0.5);
+}
+.drawer.open{transform:translateX(0);}
+.drawer-head{padding:18px 20px; border-bottom:1px solid var(--hairline);}
+.drawer-head .tid{color:var(--accent); font-family:ui-monospace,monospace; font-size:13px;
+  font-weight:700; letter-spacing:0.02em;}
+.drawer-head h3{margin:6px 0 4px; font-size:18px; font-weight:700; line-height:1.25;}
+.drawer-head .tactics{display:flex; flex-wrap:wrap; gap:5px; margin-top:8px;}
+.drawer-head .tactic-pill{font-size:10px; padding:2px 8px; border-radius:10px;
+  background:rgba(180,141,255,0.12); color:var(--accent-2);
+  border:1px solid rgba(180,141,255,0.3); text-transform:uppercase;
+  letter-spacing:0.04em; font-weight:700;}
+.drawer-head .ext-link{display:inline-flex; align-items:center; gap:4px;
+  color:var(--accent); text-decoration:none; font-size:12px; margin-top:8px;}
+.drawer-head .ext-link:hover{text-decoration:underline;}
+.drawer-close{position:absolute; top:14px; right:14px;
+  background:transparent; border:none; color:var(--muted);
+  font-size:22px; cursor:pointer; line-height:1; padding:4px 8px;
+  border-radius:4px;}
+.drawer-close:hover{background:var(--panel2); color:var(--text);}
+.drawer-body{flex:1; overflow-y:auto; padding:14px 20px 20px;}
+.drawer-body::-webkit-scrollbar{width:6px;}
+.drawer-body::-webkit-scrollbar-thumb{background:var(--border-2); border-radius:3px;}
+.drawer-section{margin-bottom:18px;}
+.drawer-section h4{font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--muted); margin:0 0 8px 0; font-weight:700;}
+.drawer-list{display:flex; flex-direction:column; gap:6px;}
+.drawer-list a{
+  display:block; padding:8px 10px; background:var(--panel); border:1px solid var(--border);
+  border-radius:6px; color:var(--text); text-decoration:none;
+  font-size:12.5px; line-height:1.3; transition:all 0.12s;
+}
+.drawer-list a:hover{border-color:var(--accent); transform:translateX(2px);}
+.drawer-list .meta{display:flex; gap:6px; margin-top:4px; font-size:10px; color:var(--muted-2);
+  text-transform:uppercase; letter-spacing:0.04em; font-weight:600;}
+.drawer-list .pill{padding:1px 7px; border-radius:8px;
+  background:var(--panel2); border:1px solid var(--border);}
+.drawer-list .pill.high{color:var(--bad); border-color:rgba(255,93,93,0.4);}
+.drawer-list .pill.crit{color:var(--crit); border-color:rgba(255,50,96,0.55);}
+.drawer-list .pill.med{color:var(--warn); border-color:rgba(255,176,96,0.4);}
+.drawer-list .pill.low{color:var(--good); border-color:rgba(92,216,122,0.4);}
+.drawer-list .pill.confhigh{color:var(--good);}
+.drawer-list .pill.confmedium{color:var(--warn);}
+.drawer-empty{color:var(--muted-2); font-size:12px; font-style:italic; padding:8px 0;}
+
+/* ----- Reduced motion ------------------------------------------------ */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important;}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="brand">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 L4 6 v6 c0 5 3.5 8 8 10 4.5-2 8-5 8-10 V6z"/>
+          <path d="M9 12 l2 2 l4-4"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span>Threat Atlas</span>
+        <span class="sub">Splunk · Defender · Kill Chain</span>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
+      <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
+      <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
+      <div class="stat"><div class="v">__CVE_COUNT__</div><div class="l">CVEs</div></div>
+      <div class="stat"><div class="v">__CRIT_COUNT__</div><div class="l">Critical</div></div>
+    </div>
+    <div class="search-trigger" id="searchTrigger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
+      Search articles, techniques, CVEs…
+      <kbd>⌘K</kbd>
+    </div>
+  </div>
+  <div class="topbar-inner" style="padding-top:0; gap:14px;">
+    <div class="view-tabs" role="tablist">
+      <button class="view-tab active" data-view="articles" role="tab">Articles</button>
+      <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
+    </div>
+    <span style="font-size:11px;color:var(--muted);margin-left:auto;">
+      Generated __GENERATED_AT__ · Source:
+      <a href="https://thehackernews.com/" style="color:var(--accent);">thehackernews.com</a>
+    </span>
+  </div>
+</header>
+
+<div id="view-articles" class="view active">
+<main>
+  <nav class="toc">
+    <h3>Articles</h3>
+    <div id="navlist">__NAV__</div>
+  </nav>
+  <section id="articles">
+    <div class="src-filter-bar" id="srcFilter">__SOURCE_CHIPS__</div>
+    __CARDS__
+  </section>
+</main>
+</div>
+
+<div id="view-matrix" class="view">
+  <div class="matrix-wrap">
+    <div class="matrix-toolbar">
+      <input type="text" id="matrixSearch" placeholder="Filter by technique name or T-ID" autocomplete="off">
+      <div class="matrix-mode" id="matrixModes">
+        <button class="on" data-mode="coverage">Coverage</button>
+        <button data-mode="heat">Heat</button>
+        <button data-mode="all">All</button>
+      </div>
+      <div class="matrix-stats" id="matrixStats"></div>
+    </div>
+    <div class="matrix-legend" id="matrixLegend">
+      <div class="lg-row">
+        <span class="lg-label">Coverage mode</span>
+        <span class="lg-swatch cov-0">none</span>
+        <span class="lg-swatch cov-1">1 UC</span>
+        <span class="lg-swatch cov-2">2 UCs</span>
+        <span class="lg-swatch cov-3">3 UCs</span>
+        <span class="lg-swatch cov-4">4+ UCs</span>
+        <span class="lg-note">how many of our use cases map to that technique</span>
+      </div>
+      <div class="lg-row">
+        <span class="lg-label">Heat mode</span>
+        <span class="lg-swatch cov-0">none</span>
+        <span class="lg-swatch heat-1">1 article</span>
+        <span class="lg-swatch heat-2">2 articles</span>
+        <span class="lg-swatch heat-3">3+ articles</span>
+        <span class="lg-note">how many current articles cite that technique</span>
+      </div>
+      <div class="lg-row">
+        <span class="lg-label">Cell badges</span>
+        <span class="lg-chip"><b style="color:var(--accent-2);">▾4</b> = 4 sub-techniques</span>
+        <span class="lg-chip"><b style="color:var(--accent-3);">3 UC</b> = 3 use cases mapped</span>
+        <span class="lg-chip"><b style="color:var(--warn);">8 art</b> = 8 articles cite it</span>
+        <span class="lg-note">click any cell for the full drawer</span>
+      </div>
+    </div>
+    <div class="matrix-grid" id="matrixGrid"></div>
+  </div>
+</div>
+
+<div class="drawer-bg" id="drawerBg"></div>
+<aside class="drawer" id="techDrawer" aria-hidden="true">
+  <button class="drawer-close" id="drawerClose" aria-label="Close">×</button>
+  <div class="drawer-head" id="drawerHead"></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-modal">
+    <input type="text" id="searchInput" placeholder="Search by title, technique (T1566), CVE, malware name…" autocomplete="off">
+    <div class="search-results" id="searchResults"></div>
+  </div>
+</div>
+
+<footer>
+  Splunk SPL conforms to the <a href="https://help.splunk.com/en/data-management/common-information-model/8.5/introduction/overview-of-the-splunk-common-information-model" style="color:var(--accent);" target="_blank">Splunk Common Information Model (CIM)</a> — uses
+  <code>tstats</code> against accelerated data models with the canonical <code>Processes.dest</code>,
+  <code>All_Email.recipient</code>, <code>All_Traffic.dest</code> field paths.
+  Macros: <code>`summariesonly`</code> · <code>`drop_dm_object_name()`</code> · <code>`security_content_ctime()`</code> ship with Splunk ESCU.
+  <br>Defender KQL targets <a href="https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-schema-tables" style="color:var(--accent);" target="_blank">Advanced Hunting schema</a>.
+  Kill chain follows the Lockheed Martin 7-phase model.
+</footer>
+
+<script>
+// ----- Tab switching --------------------------------------------------
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  const parent = btn.closest('.uc-body, .killchain, article.card');
+  if (!parent) return;
+  parent.querySelectorAll(':scope > .tabs > .tab-btn, :scope .tabs > .tab-btn').forEach(b => {
+    if (b.closest('.uc-body, .killchain, article.card') === parent) b.classList.remove('active');
+  });
+  parent.querySelectorAll(':scope > .tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  const tgt = parent.querySelector('#' + btn.dataset.target);
+  if (tgt) tgt.classList.add('active');
+});
+
+// ----- Toggle kill chain ----------------------------------------------
+document.querySelectorAll('.btn[data-target]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.target);
+    if (!target) return;
+    target.classList.toggle('active');
+    btn.classList.toggle('primary');
+    btn.firstChild && btn.firstChild.nodeType === 3
+      && (btn.firstChild.nodeValue = target.classList.contains('active') ? '⌃ Hide kill chain' : '⌄ Show kill chain');
+  });
+});
+
+// ----- Copy code block ------------------------------------------------
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.copy-btn');
+  if (!btn) return;
+  e.stopPropagation();
+  const code = btn.parentElement.querySelector('code').innerText;
+  navigator.clipboard.writeText(code).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1300);
+  });
+});
+
+// ----- Active nav highlighting on scroll ------------------------------
+const navItems = document.querySelectorAll('#navlist .nav-item');
+const cards = document.querySelectorAll('article.card');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      navItems.forEach(n => n.classList.remove('active'));
+      const el = document.querySelector(`#navlist .nav-item[data-jump="${en.target.id}"]`);
+      if (el) el.classList.add('active');
+    }
+  });
+}, { rootMargin: '-30% 0px -55% 0px' });
+cards.forEach(c => observer.observe(c));
+
+// ----- Nav click jumps -----------------------------------------------
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const id = item.dataset.jump;
+    document.getElementById(id)?.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+});
+
+// ----- Filter chips: phase, severity ----------------------------------
+const activeFilters = { phase: null, sev: null, tech: null };
+function applyFilters() {
+  cards.forEach(c => {
+    const phases = (c.dataset.phases || '').split(',');
+    const sev = c.dataset.sev || '';
+    const techs = (c.dataset.techs || '').split(',');
+    let show = true;
+    if (activeFilters.phase && !phases.includes(activeFilters.phase)) show = false;
+    if (activeFilters.sev && sev !== activeFilters.sev) show = false;
+    if (activeFilters.tech && !techs.includes(activeFilters.tech)) show = false;
+    c.classList.toggle('hidden', !show);
+    const navEl = document.querySelector(`#navlist .nav-item[data-jump="${c.id}"]`);
+    if (navEl) navEl.style.display = show ? '' : 'none';
+  });
+}
+document.querySelectorAll('.fchip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    const k = chip.dataset.key;
+    const v = chip.dataset.val;
+    if (activeFilters[k] === v) {
+      activeFilters[k] = null;
+      chip.classList.remove('on');
+    } else {
+      document.querySelectorAll(`.fchip[data-key="${k}"]`).forEach(c => c.classList.remove('on'));
+      activeFilters[k] = v;
+      chip.classList.add('on');
+    }
+    applyFilters();
+  });
+});
+
+// ----- Click ATT&CK technique pill to filter -------------------------
+document.addEventListener('click', e => {
+  const t = e.target.closest('.ind.tech');
+  if (!t) return;
+  const tid = t.textContent.trim();
+  if (activeFilters.tech === tid) {
+    activeFilters.tech = null;
+  } else {
+    activeFilters.tech = tid;
+  }
+  applyFilters();
+  // Highlight active filter visually:
+  document.querySelectorAll('.ind.tech').forEach(el => {
+    el.style.outline = (activeFilters.tech && el.textContent.trim() === activeFilters.tech) ? '2px solid var(--accent-3)' : 'none';
+  });
+});
+
+// ----- Search overlay -------------------------------------------------
+const overlay = document.getElementById('searchOverlay');
+const input = document.getElementById('searchInput');
+const results = document.getElementById('searchResults');
+const trigger = document.getElementById('searchTrigger');
+let resultEls = [];
+let selIndex = 0;
+
+function openSearch() {
+  overlay.classList.add('open');
+  input.value = '';
+  renderResults('');
+  setTimeout(() => input.focus(), 30);
+}
+function closeSearch() { overlay.classList.remove('open'); }
+trigger.addEventListener('click', openSearch);
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault(); openSearch();
+  } else if (e.key === 'Escape' && overlay.classList.contains('open')) {
+    closeSearch();
+  } else if (overlay.classList.contains('open')) {
+    if (e.key === 'ArrowDown') { e.preventDefault(); selIndex = Math.min(selIndex+1, resultEls.length-1); renderSel(); }
+    if (e.key === 'ArrowUp')   { e.preventDefault(); selIndex = Math.max(selIndex-1, 0); renderSel(); }
+    if (e.key === 'Enter' && resultEls[selIndex]) { resultEls[selIndex].click(); }
+  }
+});
+overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
+
+function renderResults(q) {
+  q = q.toLowerCase().trim();
+  results.innerHTML = '';
+  resultEls = [];
+  selIndex = 0;
+  let count = 0;
+  cards.forEach(c => {
+    const blob = (c.dataset.search || '').toLowerCase();
+    if (q && !blob.includes(q)) return;
+    const id = c.id;
+    const title = c.querySelector('h2 a')?.innerText || id;
+    const num = parseInt(id.replace('art-','')) + 1;
+    const techs = c.dataset.techs || '';
+    const sev = c.dataset.sev || '';
+    const div = document.createElement('div');
+    div.className = 'search-result' + (count === 0 ? ' sel' : '');
+    div.innerHTML = `<div class="sr-num">${String(num).padStart(2,'0')}</div>
+      <div><div class="sr-title">${title}</div><div class="sr-meta">${sev.toUpperCase()} · ${techs.split(',').slice(0,3).join(', ')}</div></div>`;
+    div.addEventListener('click', () => {
+      closeSearch();
+      document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+    });
+    results.appendChild(div);
+    resultEls.push(div);
+    count++;
+  });
+  if (count === 0) {
+    const e = document.createElement('div');
+    e.className = 'search-empty';
+    e.textContent = q ? `No matches for "${q}"` : 'Type to search…';
+    results.appendChild(e);
+  }
+}
+function renderSel() {
+  resultEls.forEach((el,i) => el.classList.toggle('sel', i === selIndex));
+  resultEls[selIndex]?.scrollIntoView({block:'nearest'});
+}
+input.addEventListener('input', () => renderResults(input.value));
+
+// =================================================================
+// Source filter (Articles tab)
+// =================================================================
+document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('#srcFilter .src-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    const src = chip.dataset.source || '';
+    const cards = document.querySelectorAll('#view-articles article.card');
+    let visible = 0;
+    cards.forEach(card => {
+      const sources = (card.dataset.sources || '').split('|');
+      const show = !src || sources.includes(src);
+      card.classList.toggle('src-hidden', !show);
+      if (show) visible++;
+    });
+    // Sync sidebar nav so hidden cards drop out of navigation too
+    document.querySelectorAll('#navlist .nav-item').forEach(n => {
+      const card = document.getElementById(n.dataset.jump);
+      n.style.display = card && card.classList.contains('src-hidden') ? 'none' : '';
+    });
+  });
+});
+
+// =================================================================
+// View tab switching (Articles / ATT&CK Matrix)
+// =================================================================
+const viewTabs = document.querySelectorAll('.view-tab');
+const views = document.querySelectorAll('.view');
+function showView(name) {
+  viewTabs.forEach(b => b.classList.toggle('active', b.dataset.view === name));
+  views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  if (name === 'matrix' && !window._matrixRendered) {
+    renderMatrix();
+    window._matrixRendered = true;
+  }
+}
+viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+// =================================================================
+// ATT&CK Matrix
+// =================================================================
+const MATRIX = __MATRIX_DATA__;
+let matrixMode = 'coverage';
+
+function covClassFor(n) {
+  if (!n) return '';
+  if (n >= 4) return 'cov-4';
+  if (n >= 3) return 'cov-3';
+  if (n >= 2) return 'cov-2';
+  return 'cov-1';
+}
+function heatClassFor(n) {
+  if (!n) return '';
+  if (n >= 3) return 'heat-3';
+  if (n >= 2) return 'heat-2';
+  return 'heat-1';
+}
+
+function tidCellHtml(tid, isSub) {
+  const tinfo = MATRIX.techniques[tid];
+  if (!tinfo) return '';
+  const ucs = MATRIX.tech_ucs[tid] || [];
+  const arts = MATRIX.tech_arts[tid] || [];
+  const subCount = (tinfo.subs || []).length;
+  let cls = 'tech-cell';
+  if (isSub) cls += ' is-sub';
+  if (matrixMode === 'coverage') cls += ' ' + covClassFor(ucs.length);
+  else if (matrixMode === 'heat') cls += ' ' + heatClassFor(arts.length);
+  return `<div class="${cls}" data-tid="${tid}" tabindex="0">
+    <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
+    <div class="tech-meta">
+      <span style="color:var(--muted)">${tid}</span>
+      ${subCount ? `<span class="sub-marker">▾${subCount}</span>` : ''}
+      ${ucs.length ? `<span class="uc-count">${ucs.length} UC</span>` : ''}
+      ${arts.length ? `<span style="color:var(--warn)">${arts.length} art</span>` : ''}
+    </div>
+  </div>`;
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+
+function renderMatrix() {
+  if (!MATRIX) {
+    document.getElementById('matrixGrid').innerHTML =
+      '<div style="padding:40px;color:var(--muted);">Matrix data not available — run sync.py to fetch ATT&CK.</div>';
+    return;
+  }
+  const grid = document.getElementById('matrixGrid');
+  const cols = MATRIX.tactics.map(tac => {
+    const cellsHtml = tac.tids.map(tid => tidCellHtml(tid, false)).join('');
+    return `<div class="tactic-col" data-tactic="${tac.short}">
+      <div class="tactic-header">
+        <span class="tactic-name">${escapeHtml(tac.name)}</span>
+        <span class="tactic-count">${tac.tids.length} techniques</span>
+      </div>
+      <div class="tactic-techs" data-techs>${cellsHtml}</div>
+    </div>`;
+  }).join('');
+  grid.innerHTML = cols;
+
+  document.getElementById('matrixStats').innerHTML =
+    `<span><b>${MATRIX.stats.total_techs}</b> techniques</span>` +
+    `<span><b>${MATRIX.stats.total_subs}</b> sub-techniques</span>` +
+    `<span><b>${MATRIX.stats.covered_techs}</b> covered</span>` +
+    `<span><b>${MATRIX.stats.ucs}</b> use cases</span>`;
+}
+
+// Mode toggle
+document.getElementById('matrixModes').addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  matrixMode = btn.dataset.mode;
+  document.querySelectorAll('#matrixModes button').forEach(b => b.classList.toggle('on', b === btn));
+  document.querySelectorAll('#matrixGrid .tech-cell').forEach(cell => {
+    const tid = cell.dataset.tid;
+    const tinfo = MATRIX.techniques[tid];
+    cell.classList.remove('cov-1','cov-2','cov-3','cov-4','heat-1','heat-2','heat-3');
+    const ucs = MATRIX.tech_ucs[tid] || [];
+    const arts = MATRIX.tech_arts[tid] || [];
+    if (matrixMode === 'coverage' && ucs.length) cell.classList.add(covClassFor(ucs.length));
+    else if (matrixMode === 'heat' && arts.length) cell.classList.add(heatClassFor(arts.length));
+  });
+});
+
+// Search filter
+document.getElementById('matrixSearch')?.addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll('#matrixGrid .tech-cell').forEach(cell => {
+    if (!q) { cell.classList.remove('dim'); return; }
+    const tid = cell.dataset.tid;
+    const tinfo = MATRIX.techniques[tid];
+    const match = tid.toLowerCase().includes(q) || tinfo.name.toLowerCase().includes(q);
+    cell.classList.toggle('dim', !match);
+  });
+});
+
+// Cell click → drawer
+document.addEventListener('click', e => {
+  const cell = e.target.closest('.tech-cell');
+  if (!cell) return;
+  openDrawerFor(cell.dataset.tid);
+});
+
+function openDrawerFor(tid) {
+  if (!MATRIX || !MATRIX.techniques[tid]) return;
+  // Switch to matrix view if we're not already there
+  if (!document.getElementById('view-matrix').classList.contains('active')) {
+    showView('matrix');
+  }
+  const tinfo = MATRIX.techniques[tid];
+  const ucs = (MATRIX.tech_ucs[tid] || []).map(i => MATRIX.ucs[i]);
+  const arts = (MATRIX.tech_arts[tid] || []).map(i => MATRIX.arts[i]);
+  const tactics = (tinfo.tactics || []).map(t => `<span class="tactic-pill">${escapeHtml(t.replace(/-/g,' '))}</span>`).join('');
+  const parent = tinfo.parent;
+  const parentBlock = parent && MATRIX.techniques[parent]
+    ? `<div style="margin-top:10px;font-size:12px;color:var(--muted)">Sub-technique of <a href="#" data-tid="${parent}" class="parent-link" style="color:var(--accent)">${parent} ${escapeHtml(MATRIX.techniques[parent].name)}</a></div>`
+    : '';
+  document.getElementById('drawerHead').innerHTML = `
+    <span class="tid">${tid}</span>
+    <h3>${escapeHtml(tinfo.name)}</h3>
+    <div class="tactics">${tactics}</div>
+    <a class="ext-link" href="https://attack.mitre.org/techniques/${tid.replace('.', '/')}/" target="_blank" rel="noopener">
+      View on attack.mitre.org →
+    </a>
+    ${parentBlock}
+  `;
+  let body = '';
+  // Sub-techniques
+  if (tinfo.subs && tinfo.subs.length) {
+    body += `<div class="drawer-section"><h4>Sub-techniques (${tinfo.subs.length})</h4><div class="drawer-list">`;
+    body += tinfo.subs.map(stid => {
+      const stinfo = MATRIX.techniques[stid];
+      const stUCs = (MATRIX.tech_ucs[stid] || []).length;
+      return `<a href="#" data-tid="${stid}" class="sub-link">
+        <div><b>${stid}</b> ${escapeHtml(stinfo.name)}</div>
+        <div class="meta">${stUCs ? '<span class="pill">' + stUCs + ' UC</span>' : '<span style="color:var(--muted-2)">no use case</span>'}</div>
+      </a>`;
+    }).join('');
+    body += '</div></div>';
+  }
+  // Mapped use cases
+  body += `<div class="drawer-section"><h4>Use cases mapped (${ucs.length})</h4><div class="drawer-list">`;
+  if (ucs.length) {
+    body += ucs.map(uc => {
+      const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
+      return `<div style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;">
+        <div style="font-weight:600;font-size:12.5px;">${escapeHtml(uc.t)}</div>
+        <div class="meta">
+          <span class="pill">${escapeHtml(uc.ph)}</span>
+          <span class="pill conf${uc.conf.toLowerCase()}">${escapeHtml(uc.conf)}</span>
+        </div>
+        ${artLinks ? '<div style="margin-top:6px;line-height:1.4;">' + artLinks + '</div>' : ''}
+      </div>`;
+    }).join('');
+  } else {
+    body += '<div class="drawer-empty">No use cases reference this technique yet.</div>';
+  }
+  body += '</div></div>';
+  // Articles citing
+  body += `<div class="drawer-section"><h4>Articles citing this technique (${arts.length})</h4><div class="drawer-list">`;
+  if (arts.length) {
+    body += arts.map(art => `<a href="#${art.id}" data-jump="${art.id}" class="art-jump">
+      <div>${escapeHtml(art.title)}</div>
+      <div class="meta"><span class="pill ${art.sev}">${art.sev.toUpperCase()}</span></div>
+    </a>`).join('');
+  } else {
+    body += '<div class="drawer-empty">No current articles mention this technique.</div>';
+  }
+  body += '</div></div>';
+  document.getElementById('drawerBody').innerHTML = body;
+  document.getElementById('techDrawer').classList.add('open');
+  document.getElementById('drawerBg').classList.add('open');
+  document.getElementById('techDrawer').setAttribute('aria-hidden','false');
+}
+
+function closeDrawer() {
+  document.getElementById('techDrawer').classList.remove('open');
+  document.getElementById('drawerBg').classList.remove('open');
+  document.getElementById('techDrawer').setAttribute('aria-hidden','true');
+}
+document.getElementById('drawerClose')?.addEventListener('click', closeDrawer);
+document.getElementById('drawerBg')?.addEventListener('click', closeDrawer);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('techDrawer').classList.contains('open')) {
+    closeDrawer();
+  }
+});
+
+// Sub-technique / parent click in drawer
+document.getElementById('drawerBody').addEventListener('click', e => {
+  const link = e.target.closest('a.sub-link, a.art-jump');
+  if (!link) return;
+  e.preventDefault();
+  const subTid = link.dataset.tid;
+  if (subTid) { openDrawerFor(subTid); return; }
+  const jump = link.dataset.jump;
+  if (jump) {
+    closeDrawer();
+    showView('articles');
+    setTimeout(() => document.getElementById(jump)?.scrollIntoView({behavior:'smooth', block:'start'}), 150);
+  }
+});
+document.getElementById('drawerHead').addEventListener('click', e => {
+  const link = e.target.closest('a.parent-link');
+  if (!link) return;
+  e.preventDefault();
+  openDrawerFor(link.dataset.tid);
+});
+
+// Make ATT&CK pills in articles deep-link to matrix drawer
+document.querySelectorAll('.ind.tech').forEach(pill => {
+  const tid = pill.textContent.trim();
+  pill.style.cursor = 'pointer';
+  pill.title = 'Click to open in ATT&CK Matrix';
+  pill.addEventListener('click', e => {
+    e.preventDefault(); e.stopPropagation();
+    openDrawerFor(tid);
+  }, true);
+});
+</script>
+</body>
+</html>
+"""
+
+
+def compute_severity(article_text: str, ind: dict, ucs: list, techs: list) -> str:
+    """Return 'crit' | 'high' | 'med' | 'low' based on signals."""
+    t = article_text.lower()
+    score = 0
+    if ind["cves"]:
+        score += 2
+    if any(k in t for k in ("zero-day", "0-day", "zero day", "actively exploited",
+                              "kev", "in the wild", "supply chain", "supply-chain",
+                              "ransomware", "wiper", "rce", "remote code execution")):
+        score += 3
+    if any(k in t for k in ("apt", "lazarus", "kimsuky", "fin7", "scattered spider",
+                              "volt typhoon", "salt typhoon", "tropic trooper",
+                              "muddywater", "fancy bear", "cozy bear", "cobalt strike",
+                              "lockbit", "blackcat", "alphv", "akira", "rhysida",
+                              "ransomhub", "qilin", "play ransomware")):
+        score += 2
+    score += min(len(ucs), 3)
+    score += min(len(techs) // 3, 2)
+
+    if score >= 9: return "crit"
+    if score >= 6: return "high"
+    if score >= 3: return "med"
+    return "low"
+
+
+SEV_LABEL = {"crit": "Critical", "high": "High", "med": "Medium", "low": "Low"}
+
+
+def render_indicators(ind: dict, techniques: list) -> str:
+    out = []
+    def block(label, items, cls=""):
+        if not items: return ""
+        chips = " ".join(f'<span class="ind {cls}">{html.escape(str(i))}</span>' for i in items)
+        return f'<div class="ind-group"><span class="ind-label">{label}</span>{chips}</div>'
+
+    out.append(block("CVEs", ind["cves"], "cve"))
+    if techniques:
+        chips = " ".join(
+            f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
+            for tid, name in techniques[:14]
+        )
+        out.append(f'<div class="ind-group"><span class="ind-label">ATT&amp;CK</span>{chips}</div>')
+    out.append(block("Domains", ind["domains"][:10]))
+    out.append(block("IPs", ind["ips"]))
+    if ind["sha256"]: out.append(block("SHA256", [h[:16] + "…" for h in ind["sha256"][:5]]))
+    if ind["sha1"]: out.append(block("SHA1", [h[:16] + "…" for h in ind["sha1"][:5]]))
+    if ind["md5"]: out.append(block("MD5", [h[:16] + "…" for h in ind["md5"][:5]]))
+    return "\n".join(b for b in out if b)
+
+
+def render_killchain(art_id: str, hit: set, inferred: set,
+                     uc_by_phase: dict) -> str:
+    cells = []
+    detail_lines = []
+    for i, (pid, name, descr) in enumerate(KILL_CHAIN_PHASES):
+        cls, marker = "", "—"
+        if pid in hit:
+            cls, marker = "hit", "Detected"
+        elif pid in inferred:
+            cls, marker = "inferred", "Likely"
+        cells.append(f'''<div class="kc-cell {cls}">
+  <div class="num">Phase {i+1}</div>
+  <div class="name">{html.escape(name)}</div>
+  <div class="marker">{marker}</div>
+</div>''')
+        ucs_here = uc_by_phase.get(pid, [])
+        line_cls = "hit" if pid in hit else ("inferred" if pid in inferred else "")
+        descr_html = html.escape(descr)
+        if ucs_here:
+            uc_titles = " · ".join(html.escape(u.title) for u in ucs_here)
+            descr_html += f' <em>→ {uc_titles}</em>'
+        detail_lines.append(
+            f'<div class="phase-line {line_cls}"><strong>{html.escape(name)}.</strong> {descr_html}</div>'
+        )
+    track = "\n".join(cells)
+    detail = "\n".join(detail_lines)
+    return f"""
+<div class="killchain" id="{art_id}-kc">
+  <div class="kc3d">{track}</div>
+  <div class="kc-detail">{detail}</div>
+</div>
+""".strip()
+
+
+def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
+    spl = parameterize(uc.splunk_spl, ind)
+    kql = parameterize(uc.defender_kql, ind)
+    techs = " ".join(
+        f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
+        for tid, name in uc.techniques
+    )
+    dms = " ".join(
+        f'<span class="ind">{html.escape(d)}</span>' for d in uc.data_models
+    )
+    uid = f"{art_id}-uc{idx}"
+    phase_name = next((n for p, n, _ in KILL_CHAIN_PHASES if p == uc.kill_chain), uc.kill_chain)
+    conf_cls = uc.confidence.lower()
+    return f"""
+<details class="uc"{ ' open' if idx == 0 else '' }>
+  <summary>
+    <span class="uc-title">{html.escape(uc.title)}</span>
+    <span class="uc-phase">{html.escape(phase_name)}</span>
+    <span class="uc-conf {conf_cls}">{html.escape(uc.confidence)}</span>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">{html.escape(uc.description)}</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span>{techs}</div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span>{dms}</div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="{uid}-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="{uid}-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="{uid}-kql">
+      <pre><button class="copy-btn">COPY</button><code>{html.escape(kql)}</code></pre>
+    </div>
+    <div class="tab-content" id="{uid}-spl">
+      <pre><button class="copy-btn">COPY</button><code>{html.escape(spl)}</code></pre>
+    </div>
+  </div>
+</details>
+""".strip()
+
+
+def render_card(idx: int, article: dict, ind: dict,
+                techniques: list, hit: set, inferred: set,
+                use_cases: list, severity: str) -> str:
+    aid = f"art-{idx:02d}"
+    pubmeta = html.escape(article.get("published", ""))
+    summary = html.escape(article.get("summary", ""))
+    indicators_html = render_indicators(ind, techniques)
+    uc_by_phase = {}
+    for uc in use_cases:
+        uc_by_phase.setdefault(uc.kill_chain, []).append(uc)
+    killchain_html = render_killchain(aid, hit, inferred, uc_by_phase)
+    uc_html = "\n".join(render_use_case(aid, i, uc, ind) for i, uc in enumerate(use_cases))
+
+    phases_attr = ",".join(sorted(hit | inferred))
+    techs_attr = ",".join(t for t, _ in techniques)
+    search_blob = " ".join([
+        article["title"], article.get("summary", ""),
+        " ".join(ind["cves"]),
+        " ".join(t for t, _ in techniques),
+        " ".join(uc.title for uc in use_cases),
+    ])
+
+    src_class_map = {
+        "The Hacker News": "thn",
+        "BleepingComputer": "bc",
+        "Microsoft Security Blog": "ms",
+        "CISA KEV": "kev",
+    }
+    sources = article.get("sources") or [article.get("source", "")]
+    source_html = "".join(
+        f'<span class="source-badge {src_class_map.get(s, "")}">{html.escape(s)}</span>'
+        for s in sources if s
+    )
+    sources_attr = "|".join(sources)
+    return f"""
+<article class="card" id="{aid}"
+  data-phases="{phases_attr}" data-sev="{severity}"
+  data-techs="{html.escape(techs_attr)}"
+  data-sources="{html.escape(sources_attr)}"
+  data-search="{html.escape(search_blob)}">
+  <div class="sev-ribbon {severity}">{SEV_LABEL[severity]}</div>
+  <h2><a href="{html.escape(article['link'])}" target="_blank" rel="noopener">{html.escape(article['title'])}</a></h2>
+  <div class="source-badges">{source_html}</div>
+  <div class="pubmeta">
+    <span>{pubmeta}</span>
+    <span>{len(use_cases)} use case{'s' if len(use_cases)!=1 else ''}</span>
+    <span>{len(techniques)} technique{'s' if len(techniques)!=1 else ''}</span>
+    <span>{len(hit)} kill-chain phase{'s' if len(hit)!=1 else ''} detected</span>
+  </div>
+  <p class="summary">{summary}</p>
+  {indicators_html}
+  <div class="action-row">
+    <button class="btn" data-target="{aid}-kc"><span style="display:inline-block;width:0">⌄</span>Show kill chain</button>
+    <span class="btn-meta">Click ATT&amp;CK pills to filter · ⌘K to search</span>
+  </div>
+  {killchain_html}
+  <div class="usecases">{uc_html}</div>
+</article>
+""".strip()
+
+
+def render_nav(articles_meta):
+    items = []
+    for i, m in enumerate(articles_meta, start=1):
+        aid = f"art-{i-1:02d}"
+        title = html.escape(m["title"])
+        sev = m["sev"]
+        items.append(
+            f'<div class="nav-item" data-jump="{aid}">'
+            f'<span class="num">{i:02d}</span>'
+            f'<span class="ttl">{title}</span>'
+            f'<span class="sev {sev}"></span>'
+            f'</div>'
+        )
+    return "\n".join(items)
+
+
+def render_filter_chips() -> str:
+    chips = []
+    for sev_key, sev_lbl in [("crit", "Critical"), ("high", "High"), ("med", "Medium"), ("low", "Low")]:
+        chips.append(f'<button class="fchip" data-key="sev" data-val="{sev_key}"><span class="dot"></span>{sev_lbl}<span class="x">×</span></button>')
+    chips.append('<span style="width:1px;height:18px;background:var(--border);margin:0 6px;"></span>')
+    for pid, name, _ in KILL_CHAIN_PHASES:
+        chips.append(f'<button class="fchip" data-key="phase" data-val="{pid}">{html.escape(name)}<span class="x">×</span></button>')
+    return "\n".join(chips)
+
+
+# =============================================================================
+# ATT&CK Matrix data — designed for 10,000+ use cases (lean refs, no inline)
+# =============================================================================
+
+# Canonical ATT&CK Enterprise tactic order (left-to-right)
+TACTIC_ORDER = [
+    "reconnaissance", "resource-development", "initial-access", "execution",
+    "persistence", "privilege-escalation", "defense-evasion", "credential-access",
+    "discovery", "lateral-movement", "collection", "command-and-control",
+    "exfiltration", "impact",
+]
+TACTIC_DISPLAY = {
+    "reconnaissance": "Reconnaissance",
+    "resource-development": "Resource Development",
+    "initial-access": "Initial Access",
+    "execution": "Execution",
+    "persistence": "Persistence",
+    "privilege-escalation": "Privilege Escalation",
+    "defense-evasion": "Defense Evasion",
+    "credential-access": "Credential Access",
+    "discovery": "Discovery",
+    "lateral-movement": "Lateral Movement",
+    "collection": "Collection",
+    "command-and-control": "Command and Control",
+    "exfiltration": "Exfiltration",
+    "impact": "Impact",
+}
+
+REGISTRY_PATH_FOR_MATRIX = Path(__file__).parent / "data_sources" / "registry.json"
+
+
+def _load_attack_data():
+    """Read MITRE ATT&CK techniques + tactics from registry.json."""
+    if not REGISTRY_PATH_FOR_MATRIX.exists():
+        return None
+    try:
+        return __import__("json").loads(REGISTRY_PATH_FOR_MATRIX.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+
+
+def build_matrix_data(articles_meta):
+    """
+    Build the compact data structure embedded into the matrix view.
+
+    articles_meta is a list of {id, title, sev, link, ucs:[(name, UseCase),...], techs:[(tid, name)]}.
+
+    Output structure (everything lean — IDs/refs, not full inline objects so
+    the matrix can scale to 10K+ use cases without bloating the HTML):
+
+      tactics:    [{short, name, tids:[...]}, ...]   ordered for matrix columns
+      techniques: {tid: {name, parent, subs:[...], tactics:[...]}}
+      ucs:        [{i:int, n:str, t:str, conf:str, ph:str, techs:[tid,...]}]
+      arts:       [{i:int, id:str, title:str, sev:str, techs:[tid,...]}]
+      tech_ucs:   {tid: [uc_index, ...]}
+      tech_arts:  {tid: [art_index, ...]}
+    """
+    reg = _load_attack_data()
+    if not reg:
+        return None
+    techs = reg.get("attack_techniques", {})
+    if not techs:
+        return None
+
+    # 1. Walk every technique, build hierarchy + tactic membership
+    by_tactic = {t: [] for t in TACTIC_ORDER}
+    technique_view = {}
+    for tid, info in techs.items():
+        if info.get("deprecated"):
+            continue
+        parent = tid.rsplit(".", 1)[0] if "." in tid else None
+        is_sub = parent is not None
+        tactics_for = [t for t in (info.get("kill_chain_phases") or []) if t in by_tactic]
+        technique_view[tid] = {
+            "name": info.get("name", tid),
+            "parent": parent,
+            "subs": [],
+            "tactics": tactics_for,
+            "is_sub": is_sub,
+        }
+        if not is_sub:
+            for tac in tactics_for:
+                by_tactic[tac].append(tid)
+    # Wire sub-techniques to their parents
+    for tid, view in technique_view.items():
+        if view["parent"] and view["parent"] in technique_view:
+            technique_view[view["parent"]]["subs"].append(tid)
+
+    # Sort techniques alphabetically per tactic (mirrors attack.mitre.org)
+    for tac in by_tactic:
+        by_tactic[tac].sort(key=lambda t: technique_view[t]["name"].lower())
+    for tid, view in technique_view.items():
+        view["subs"].sort(key=lambda t: technique_view[t]["name"].lower())
+
+    # 2. Enumerate the entire UseCase catalog defined in this module —
+    #    not just the ones today's articles triggered. The matrix is the
+    #    canonical use-case-to-technique mapping; today's articles add
+    #    article references to whatever use cases happened to fire.
+    import sys as _sys
+    this_module = _sys.modules[__name__]
+    all_use_cases = []
+    for name in dir(this_module):
+        obj = getattr(this_module, name, None)
+        if isinstance(obj, UseCase):
+            all_use_cases.append((name, obj))
+    all_use_cases.sort(key=lambda x: x[0])
+
+    uc_records = []
+    art_records = []
+    tech_ucs = {}     # tid -> [uc_idx]
+    tech_arts = {}    # tid -> [art_idx]
+    seen_uc_ids = {}
+
+    for name, uc in all_use_cases:
+        idx = len(uc_records)
+        seen_uc_ids[name] = idx
+        uc_techs = [t for t, _ in uc.techniques]
+        uc_records.append({
+            "i": idx,
+            "n": name,
+            "t": uc.title,
+            "conf": uc.confidence,
+            "ph": uc.kill_chain,
+            "techs": uc_techs,
+            "arts": [],  # populated when articles cite this UC below
+        })
+        for tid in uc_techs:
+            if tid in technique_view:
+                tech_ucs.setdefault(tid, []).append(idx)
+
+    # Walk current articles, register article->technique and article->UC links
+    for a in articles_meta:
+        a_idx = len(art_records)
+        art_techs = sorted({t for t, _ in a["techs"]})
+        art_records.append({
+            "i": a_idx,
+            "id": a["id"],
+            "title": a["title"][:140],
+            "sev": a["sev"],
+            "techs": art_techs,
+        })
+        for tid in art_techs:
+            if tid in technique_view:
+                tech_arts.setdefault(tid, []).append(a_idx)
+        for uc_var, _uc in a["ucs"]:
+            if uc_var in seen_uc_ids:
+                uc_records[seen_uc_ids[uc_var]]["arts"].append(a_idx)
+
+    # 3. Compose tactics array in canonical order
+    tactics_out = []
+    for short in TACTIC_ORDER:
+        tactics_out.append({
+            "short": short,
+            "name": TACTIC_DISPLAY[short],
+            "tids": by_tactic.get(short, []),
+        })
+
+    return {
+        "tactics": tactics_out,
+        "techniques": technique_view,
+        "ucs": uc_records,
+        "arts": art_records,
+        "tech_ucs": tech_ucs,
+        "tech_arts": tech_arts,
+        "stats": {
+            "total_techs": sum(1 for t, v in technique_view.items() if not v["is_sub"]),
+            "total_subs": sum(1 for t, v in technique_view.items() if v["is_sub"]),
+            "covered_techs": len(set(tech_ucs.keys()) | set(tech_arts.keys())),
+            "ucs": len(uc_records),
+            "arts": len(art_records),
+        },
+    }
+
+
+# =============================================================================
+# Main
+# =============================================================================
+
+def _parse_published(entry):
+    if hasattr(entry, "published_parsed") and entry.published_parsed:
+        try:
+            return dt.datetime(*entry.published_parsed[:6], tzinfo=dt.timezone.utc)
+        except Exception:
+            pass
+    s = entry.get("published") or entry.get("updated") or ""
+    if not s:
+        return None
+    try:
+        from email.utils import parsedate_to_datetime
+        d = parsedate_to_datetime(s)
+        if d.tzinfo is None:
+            d = d.replace(tzinfo=dt.timezone.utc)
+        return d
+    except Exception:
+        return None
+
+
+def _fetch_rss(source, since):
+    feed = feedparser.parse(source["url"])
+    out = []
+    for e in feed.entries[:MAX_PER_SOURCE]:
+        pub = _parse_published(e)
+        if since and pub and pub < since:
+            continue
+        body = strip_html(e.get("summary", "") or e.get("description", "") or "")
+        body = re.sub(r"\s+", " ", body).strip()
+        out.append({
+            "source": source["name"],
+            "title": e.get("title", "(untitled)").strip(),
+            "link": e.get("link", ""),
+            "published": e.get("published", ""),
+            "published_dt": pub,
+            "summary": (body[:600] + "…") if len(body) > 600 else body,
+            "raw_body": body,
+        })
+    return out
+
+
+def _fetch_kev(source, since):
+    import urllib.request as _ur
+    req = _ur.Request(source["url"],
+                      headers={"User-Agent": "Mozilla/5.0 (compatible; thn-usecases/1.0)"})
+    try:
+        with _ur.urlopen(req, timeout=30) as r:
+            data = __import__("json").loads(r.read())
+    except Exception as e:
+        print(f"    [!] CISA KEV fetch failed: {e}")
+        return []
+    out = []
+    for v in data.get("vulnerabilities", []):
+        date_added = v.get("dateAdded", "")
+        try:
+            pub = dt.datetime.fromisoformat(date_added).replace(tzinfo=dt.timezone.utc)
+        except Exception:
+            pub = None
+        if since and pub and pub < since:
+            continue
+        if len(out) >= MAX_PER_SOURCE:
+            break
+        cve = v.get("cveID", "") or ""
+        vname = v.get("vulnerabilityName", "") or ""
+        vendor = v.get("vendorProject", "") or ""
+        product = v.get("product", "") or ""
+        title = f"CISA KEV: {cve} — {vname}" if vname else f"CISA KEV: {cve}"
+        bits = []
+        if v.get("shortDescription"):
+            bits.append(v["shortDescription"])
+        if vendor or product:
+            bits.append(f"Vendor: {vendor}, Product: {product}.")
+        if v.get("knownRansomwareCampaignUse") and v["knownRansomwareCampaignUse"].lower() != "unknown":
+            bits.append(f"Known ransomware use: {v['knownRansomwareCampaignUse']}.")
+        if v.get("dueDate"):
+            bits.append(f"Federal patch due: {v['dueDate']}.")
+        body = " ".join(bits)
+        out.append({
+            "source": "CISA KEV",
+            "title": title,
+            "link": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+            "published": date_added,
+            "published_dt": pub,
+            "summary": body,
+            "raw_body": body + " " + cve,
+        })
+    return out
+
+
+_DEDUPE_STOPWORDS = {
+    "the", "a", "an", "and", "or", "of", "in", "on", "to", "for", "with",
+    "by", "as", "at", "from", "is", "was", "be", "been", "are", "this", "that",
+    "after", "over", "via", "new", "amid", "into", "out", "up", "than",
+}
+
+def _title_tokens(title: str):
+    """Lowercase, alphanumeric-only token set, minus stopwords + 1-char fragments."""
+    return {t for t in re.findall(r"[a-z0-9]+", title.lower())
+            if t not in _DEDUPE_STOPWORDS and len(t) > 1}
+
+
+def _looks_same_story(a, b, threshold=0.55):
+    """Jaccard similarity of significant title tokens."""
+    if not a or not b:
+        return False
+    inter = a & b
+    if not inter:
+        return False
+    union = a | b
+    return (len(inter) / len(union)) >= threshold
+
+
+def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
+    """
+    Pull articles from every configured source, filter to a rolling window
+    of `days`, dedupe by normalised title (preserving multi-source attribution),
+    and return newest first.
+    """
+    since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days)
+    print(f"[*] Lookback window: {days} days (since {since.strftime('%Y-%m-%d')})")
+    raw = []
+    for src in SOURCES:
+        try:
+            print(f"[*] {src['name']}…")
+            if src["kind"] == "rss":
+                items = _fetch_rss(src, since)
+            elif src["kind"] == "kev":
+                items = _fetch_kev(src, since)
+            else:
+                items = []
+        except Exception as e:
+            safe_err = str(e).encode('ascii','replace').decode('ascii')
+            print(f"    [!] failed: {safe_err}")
+            items = []
+        print(f"    -> {len(items)} articles in window")
+        raw.extend(items)
+
+    # Pre-tokenize titles for word-set Jaccard dedupe across sources.
+    for a in raw:
+        a["_tokens"] = _title_tokens(a["title"])
+
+    deduped = []
+    for a in raw:
+        a["sources"] = [a["source"]]
+        match = None
+        for existing in deduped:
+            if _looks_same_story(a["_tokens"], existing["_tokens"]):
+                match = existing
+                break
+        if match:
+            for s in a["sources"]:
+                if s not in match["sources"]:
+                    match["sources"].append(s)
+            # Prefer the earliest publication time
+            if (a.get("published_dt")
+                and (not match.get("published_dt")
+                     or a["published_dt"] < match["published_dt"])):
+                match["published_dt"] = a["published_dt"]
+                match["published"] = a["published"]
+            # Prefer the longest summary
+            if len(a.get("raw_body","")) > len(match.get("raw_body","")):
+                match["summary"] = a["summary"]
+                match["raw_body"] = a["raw_body"]
+        else:
+            deduped.append(a)
+
+    for a in deduped:
+        a.pop("_tokens", None)
+    articles = deduped
+    articles.sort(
+        key=lambda a: a.get("published_dt") or dt.datetime.min.replace(tzinfo=dt.timezone.utc),
+        reverse=True,
+    )
+    print(f"[*] After dedupe: {len(articles)} unique articles ({len(raw) - len(articles)} duplicates merged)")
+    if limit:
+        articles = articles[:limit]
+    return articles
+
+
+def main():
+    articles = fetch_articles()
+    if not articles:
+        sys.exit("[!] No articles returned from any source.")
+    print(f"[*] {len(articles)} articles total. Building deep analysis…")
+
+    cards = []
+    nav_meta = []
+    articles_meta = []
+    total_ucs = 0
+    total_techs = set()
+    total_cves = set()
+    sev_counts = {"crit":0,"high":0,"med":0,"low":0}
+
+    # Need a stable mapping from UseCase object -> python variable name (so
+    # the matrix can dedupe across articles that share the same UC instance).
+    uc_var_map = {id(obj): name
+                  for name in dir(__import__(__name__))
+                  for obj in [getattr(__import__(__name__), name, None)]
+                  if isinstance(obj, UseCase)}
+
+    for i, a in enumerate(articles):
+        text = f"{a['title']}\n{a['raw_body']}"
+        ind = extract_indicators(a["title"], a["raw_body"])
+        techniques = infer_techniques(text, ind["explicit_ttps"])
+        ucs = select_use_cases(text, ind)
+        narrative_hit, _ = detect_kill_chain(text)
+        hit = narrative_hit | {uc.kill_chain for uc in ucs}
+        inferred = set()
+        for ph in list(hit):
+            inferred |= INFER_FROM_PHASE.get(ph, set())
+        inferred -= hit
+        sev = compute_severity(text, ind, ucs, techniques)
+        sev_counts[sev] += 1
+        total_ucs += len(ucs)
+        for tid, _ in techniques: total_techs.add(tid)
+        for c in ind["cves"]: total_cves.add(c)
+        cards.append(render_card(i, a, ind, techniques, hit, inferred, ucs, sev))
+        nav_meta.append({"title": a["title"], "sev": sev})
+        # For the matrix view: combine narrative-inferred techniques with the
+        # techniques covered by any use case fired for this article. Otherwise
+        # ~70% of articles look "uncovered" on the matrix purely because the
+        # short RSS summary didn't trip the keyword-inference map.
+        merged_techs = list(techniques)
+        seen_t = {t for t, _ in techniques}
+        for uc in ucs:
+            for tid, tname in uc.techniques:
+                if tid not in seen_t:
+                    merged_techs.append((tid, tname))
+                    seen_t.add(tid)
+        articles_meta.append({
+            "id": f"art-{i:02d}",
+            "title": a["title"],
+            "link": a["link"],
+            "sev": sev,
+            "techs": merged_techs,
+            "ucs": [(uc_var_map.get(id(uc), f"UC_{i}_{j}"), uc) for j, uc in enumerate(ucs)],
+        })
+        safe_title = a['title'][:55].encode('ascii', 'replace').decode('ascii')
+        print(f"  [{i+1:02d}] {safe_title:55s} | sev={sev:4s} techs={len(techniques)} ucs={len(ucs)} kc-hit={len(hit)}")
+
+    nav = render_nav(nav_meta)
+
+    # Source filter chips (Articles tab)
+    src_class_map_chips = {
+        "The Hacker News": "thn",
+        "BleepingComputer": "bc",
+        "Microsoft Security Blog": "ms",
+        "CISA KEV": "kev",
+    }
+    src_counts = {}
+    for a in articles:
+        for s in (a.get("sources") or [a.get("source", "")]):
+            src_counts[s] = src_counts.get(s, 0) + 1
+    chip_html = [
+        f'<span class="lg-label">Source</span>',
+        f'<button class="src-chip all active" data-source="">All <span class="cnt">{len(articles)}</span></button>',
+    ]
+    for src in [s["name"] for s in SOURCES]:
+        cnt = src_counts.get(src, 0)
+        if cnt == 0: continue
+        cls = src_class_map_chips.get(src, "")
+        label = {"The Hacker News":"THN","BleepingComputer":"BleepingComputer",
+                 "Microsoft Security Blog":"Microsoft","CISA KEV":"CISA KEV"}.get(src, src)
+        chip_html.append(
+            f'<button class="src-chip {cls}" data-source="{html.escape(src)}">'
+            f'{html.escape(label)} <span class="cnt">{cnt}</span></button>')
+    source_chips_html = "\n".join(chip_html)
+
+    matrix_data = build_matrix_data(articles_meta)
+    if matrix_data:
+        print(f"[*] Matrix: {matrix_data['stats']['total_techs']} techniques, "
+              f"{matrix_data['stats']['total_subs']} sub-techniques, "
+              f"{matrix_data['stats']['covered_techs']} with use-case or article coverage")
+    matrix_json = __import__("json").dumps(matrix_data) if matrix_data else "null"
+
+    page = (
+        HTML_HEAD
+        .replace("__GENERATED_AT__", dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
+        .replace("__ARTICLE_COUNT__", str(len(articles)))
+        .replace("__USECASE_COUNT__", str(total_ucs))
+        .replace("__TECH_COUNT__", str(len(total_techs)))
+        .replace("__CVE_COUNT__", str(len(total_cves)))
+        .replace("__CRIT_COUNT__", str(sev_counts["crit"] + sev_counts["high"]))
+        .replace("__NAV__", nav)
+        .replace("__CARDS__", "\n".join(cards))
+        .replace("__SOURCE_CHIPS__", source_chips_html)
+        .replace("__MATRIX_DATA__", matrix_json)
+    )
+    OUT_HTML.write_text(page, encoding="utf-8")
+    print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")
+    print(f"    Severity: crit={sev_counts['crit']} high={sev_counts['high']} med={sev_counts['med']} low={sev_counts['low']}")
+
+
+if __name__ == "__main__":
+    main()

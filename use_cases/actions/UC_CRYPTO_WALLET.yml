@@ -1,0 +1,37 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_CRYPTO_WALLET
+title: Crypto-wallet file/keystore access by non-wallet process
+kill_chain: actions
+confidence: High
+description: Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1005
+  name: Data from Local System
+data_models:
+  splunk:
+  - Endpoint.Filesystem
+  defender:
+  - DeviceFileEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Filesystem
+      where (Filesystem.file_path="*\Ethereum\keystore\*"
+          OR Filesystem.file_path="*\Bitcoin\wallet.dat"
+          OR Filesystem.file_path="*\Exodus\exodus.wallet*"
+          OR Filesystem.file_path="*\Electrum\wallets\*"
+          OR Filesystem.file_path="*\MetaMask\*"
+          OR Filesystem.file_path="*\Phantom\*"
+          OR Filesystem.file_path="*\Atomic\Local Storage\*")
+        AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+      by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+  | `drop_dm_object_name(Filesystem)`
+defender_kql: |-
+  DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+  | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType

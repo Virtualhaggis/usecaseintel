@@ -1,0 +1,37 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_OAUTH_ABUSE
+title: OAuth consent / suspicious app grant
+kill_chain: actions
+confidence: High
+description: 'Cloud identity abuse: app gets high-priv scopes, often via consent phishing.'
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1528
+  name: Steal Application Access Token
+- id: T1098.001
+  name: 'Account Manipulation: Additional Cloud Credentials'
+data_models:
+  splunk:
+  - Authentication.Authentication
+  defender:
+  - CloudAppEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Authentication.Authentication
+      where Authentication.action="success"
+        AND Authentication.signature IN (
+          "Consent to application",
+          "Add app role assignment grant to user",
+          "Add OAuth2PermissionGrant",
+          "Add delegated permission grant")
+      by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+  | `drop_dm_object_name(Authentication)`
+defender_kql: |-
+  CloudAppEvents
+  | where Timestamp > ago(7d)
+  | where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+  | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+            ActivityObjects, IPAddress, UserAgent

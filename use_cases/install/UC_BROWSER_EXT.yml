@@ -1,0 +1,32 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_BROWSER_EXT
+title: Suspicious browser extension installation
+kill_chain: install
+confidence: Medium
+description: Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1176
+  name: Browser Extensions
+data_models:
+  splunk:
+  - Endpoint.Registry
+  defender:
+  - DeviceRegistryEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Registry
+      where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+          OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+          OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+      by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+  | `drop_dm_object_name(Registry)`
+defender_kql: |-
+  DeviceRegistryEvents
+  | where Timestamp > ago(7d)
+  | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+  | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+            InitiatingProcessFileName, InitiatingProcessAccountName

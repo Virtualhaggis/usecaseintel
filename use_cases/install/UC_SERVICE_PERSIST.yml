@@ -1,0 +1,43 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_SERVICE_PERSIST
+title: Service install for persistence — sc.exe / new service registry write
+kill_chain: install
+confidence: High
+description: Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe
+  create) and registry (HKLM\SYSTEM\CurrentControlSet\Services\* writes).
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1543.003
+  name: Windows Service
+data_models:
+  splunk:
+  - Endpoint.Processes
+  - Endpoint.Registry
+  defender:
+  - DeviceProcessEvents
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Processes
+      where Processes.process_name="sc.exe" AND Processes.process="*create*"
+        AND (Processes.process="*\Users\*" OR Processes.process="*\AppData\*"
+          OR Processes.process="*\ProgramData\*" OR Processes.process="*\Temp\*")
+      by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+  | `drop_dm_object_name(Processes)`
+  | append
+      [| tstats `summariesonly` count from datamodel=Endpoint.Registry
+          where Registry.registry_path="*\\SYSTEM\\CurrentControlSet\\Services\\*"
+            AND Registry.registry_value_name="ImagePath"
+            AND (Registry.registry_value_data="*\Users\*"
+              OR Registry.registry_value_data="*\AppData\*"
+              OR Registry.registry_value_data="*\Temp\*")
+          by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.user
+       | `drop_dm_object_name(Registry)`]
+defender_kql: |-
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where FileName =~ "sc.exe" and ProcessCommandLine has "create"
+  | where ProcessCommandLine matches regex @"(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)"
+  | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName

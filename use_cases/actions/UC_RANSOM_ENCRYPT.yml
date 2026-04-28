@@ -1,0 +1,33 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_RANSOM_ENCRYPT
+title: Ransomware-style mass file rename / extension change
+kill_chain: actions
+confidence: Medium
+description: 'Threshold detection: many files renamed in short window, often with new extension.'
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1486
+  name: Data Encrypted for Impact
+data_models:
+  splunk:
+  - Endpoint.Filesystem
+  defender:
+  - DeviceFileEvents
+splunk_spl: |-
+  | tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+      from datamodel=Endpoint.Filesystem
+      where Filesystem.action IN ("modified","renamed")
+      by Filesystem.dest, Filesystem.user, _time span=1m
+  | `drop_dm_object_name(Filesystem)`
+  | where files > 200
+  | sort - files
+defender_kql: |-
+  DeviceFileEvents
+  | where Timestamp > ago(1d)
+  | where ActionType in ("FileRenamed","FileModified")
+  | summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
+  | where files > 200
+  | order by files desc

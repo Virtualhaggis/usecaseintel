@@ -1,0 +1,58 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_PHISH_LINK
+title: Suspicious URL click in email — phishing landing page
+kill_chain: delivery
+confidence: High
+description: User followed a link from an external email to an uncategorized / young-domain page. Pivots from the Email DM
+  onto the Web DM to flag the click-through chain that typically precedes credential theft.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1566.002
+  name: Spearphishing Link
+- id: T1204.001
+  name: 'User Execution: Malicious Link'
+data_models:
+  splunk:
+  - Email.All_Email
+  - Web
+  defender:
+  - EmailEvents
+  - EmailUrlInfo
+  - UrlClickEvents
+splunk_spl: |-
+  | tstats `summariesonly` count
+      from datamodel=Email.All_Email
+      where All_Email.action="delivered" AND All_Email.url!="-"
+      by All_Email.src_user, All_Email.recipient, All_Email.url, All_Email.subject
+  | rex field=All_Email.url "https?://(?<email_domain>[^/]+)"
+  | join type=inner email_domain
+      [| tstats `summariesonly` count
+          from datamodel=Web
+          where Web.action="allowed"
+          by Web.src, Web.dest, Web.url, Web.user
+       | rex field=Web.url "https?://(?<email_domain>[^/]+)"]
+  | stats values(All_Email.subject) as subject, values(Web.url) as clicked_url,
+          earliest(_time) as first_seen, latest(_time) as last_seen
+          by All_Email.recipient, email_domain
+defender_kql: |-
+  let LookbackDays = 7d;
+  let DeliveredEmails = EmailEvents
+      | where Timestamp > ago(LookbackDays)
+      | where DeliveryAction == "Delivered"
+      | project NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress,
+                EmailTimestamp = Timestamp;
+  EmailUrlInfo
+  | where Timestamp > ago(LookbackDays)
+  | join kind=inner DeliveredEmails on NetworkMessageId
+  | join kind=inner (
+      UrlClickEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType == "ClickAllowed"
+      | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress
+    ) on Url
+  | project ClickTimestamp, RecipientEmailAddress, SenderFromAddress,
+            Subject, Url, UrlDomain, IPAddress
+  | order by ClickTimestamp desc

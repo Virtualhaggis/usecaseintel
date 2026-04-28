@@ -1,0 +1,45 @@
+name: Validate use cases
+
+on:
+  pull_request:
+    paths:
+      - 'use_cases/**'
+      - 'rules/**'
+      - 'generate.py'
+      - 'validate.py'
+      - 'data_sources/cim_spec_fields.json'
+      - 'data_sources/defender_spec_tables.json'
+  push:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyyaml feedparser requests
+
+      - name: Sync upstream registries (Splunk ESCU + ATT&CK + Defender)
+        run: python sync.py
+
+      - name: Validate catalog
+        run: python validate.py
+
+      - name: Smoke-build site (no commit)
+        run: python generate.py
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: validation-report
+          path: data_sources/validation_report.json

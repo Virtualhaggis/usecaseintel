@@ -1,0 +1,36 @@
+# Auto-extracted from generate.py — edit this file directly going forward.
+# Schema: see use_cases/SCHEMA.md
+id: UC_TEAMS_VISHING
+title: Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
+kill_chain: delivery
+confidence: High
+description: External Teams chat where displayName contains 'helpdesk' or 'IT support' — common 2024+ vishing pattern (Storm-1811,
+  Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.
+implementations:
+- splunk
+- defender
+mitre_attack:
+- id: T1566.004
+  name: 'Phishing: Spearphishing Voice'
+- id: T1566
+  name: Phishing
+data_models:
+  splunk: []
+  defender:
+  - CloudAppEvents
+splunk_spl: |-
+  `o365_management_activity`
+    Workload=MicrosoftTeams Operation=MessageSent
+    ExternalParticipants=*
+  | where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
+  | stats count, earliest(_time) as firstTime, latest(_time) as lastTime
+      by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
+defender_kql: |-
+  CloudAppEvents
+  | where Timestamp > ago(7d)
+  | where Application == "Microsoft Teams"
+  | where ActionType == "MessageSent"
+  | where RawEventData has "ExternalParticipants"
+  | extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
+  | where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
+  | project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
