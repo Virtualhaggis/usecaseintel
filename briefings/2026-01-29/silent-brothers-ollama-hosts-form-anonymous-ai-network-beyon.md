@@ -27,6 +27,14 @@ A joint research project between SentinelLABS and Censys reveals that open-sourc
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1133** — External Remote Services
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1190** — Exploit Public-Facing Application
+- **T1059** — Command and Scripting Interpreter
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567** — Exfiltration Over Web Service
+- **T1496** — Resource Hijacking
+- **T1090** — Proxy
 
 ## Kill chain phases observed
 
@@ -180,7 +188,64 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] Ollama service started bound to public interface (OLLAMA_HOST=0.0.0.0 / 11434)
+
+`UC_220_3` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="ollama" OR Processes.process_name="ollama.exe" OR Processes.process_name="ollama-runner" OR Processes.original_file_name="ollama") AND (Processes.process="*OLLAMA_HOST=0.0.0.0*" OR Processes.process="*OLLAMA_HOST=:11434*" OR Processes.process="*--host 0.0.0.0*" OR Processes.process="*--host=0.0.0.0*" OR Processes.process="*serve*0.0.0.0:11434*" OR Processes.process="*serve*:11434*") by Processes.dest Processes.user Processes.process_name Processes.process_id host | `drop_dm_object_name(Processes)` | `ctime(firstTime)` | `ctime(lastTime)` | eval risk_note="Ollama bound to public interface — exposed API on 11434 with no auth by default"
+```
+
+**Defender KQL:**
+```kql
+// UC1a: process launch with public binding
+let OllamaProc = DeviceProcessEvents
+| where FileName in~ ("ollama","ollama.exe","ollama-runner","ollama-runner.exe") or ProcessVersionInfoOriginalFileName =~ "ollama"
+| where ProcessCommandLine has_any ("OLLAMA_HOST=0.0.0.0","OLLAMA_HOST=:11434","--host 0.0.0.0","--host=0.0.0.0","0.0.0.0:11434",":11434")
+      or (ProcessCommandLine has "serve" and ProcessCommandLine has_any ("0.0.0.0",":11434"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+// UC1b: persistent env var via setx / SYSTEM env registry
+let OllamaEnv = DeviceRegistryEvents
+| where RegistryKey has_any (@"\Environment",@"\Session Manager\Environment")
+| where RegistryValueName =~ "OLLAMA_HOST"
+| where RegistryValueData has_any ("0.0.0.0",":11434") and RegistryValueData !startswith "127."
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union OllamaProc, OllamaEnv
+```
+
+### [LLM] Corporate endpoint reaching out to public Ollama API (TCP/11434) — Silent Brothers abuse
+
+`UC_220_4` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in dc(All_Traffic.dest) as dest_count values(All_Traffic.dest) as dests values(All_Traffic.app) as apps min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=11434 AND All_Traffic.transport="tcp" AND NOT (All_Traffic.dest IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8","169.254.0.0/16","100.64.0.0/10")) AND NOT All_Traffic.dest_category="internal" by All_Traffic.src All_Traffic.user All_Traffic.src_category host | `drop_dm_object_name(All_Traffic)` | where bytes_out > 1024 OR count >= 3 | `ctime(firstTime)` | `ctime(lastTime)` | eval note="Outbound to public Ollama 11434 — likely use of unsanctioned exposed LLM endpoint" ```
+``` ```appendpipe [ | tstats summariesonly=true count values(Web.url) as urls values(Web.http_method) as methods from datamodel=Web where Web.dest_port=11434 OR (Web.url="*/api/generate*" OR Web.url="*/api/chat*" OR Web.url="*/api/embeddings*" OR Web.url="*/api/tags*" OR Web.url="*/api/show*" OR Web.url="*/api/ps*") by Web.src Web.dest Web.user host | `drop_dm_object_name(Web)` | eval note="Web telemetry confirmed Ollama API call to external dest" ]
+```
+
+**Defender KQL:**
+```kql
+let internalRanges = dynamic(["10.","172.16.","172.17.","172.18.","172.19.","172.2","172.30.","172.31.","192.168.","127.","169.254.","100.64."]);
+DeviceNetworkEvents
+| where RemotePort == 11434 and Protocol =~ "Tcp"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where not(RemoteIP startswith_any (internalRanges))
+| where ipv4_is_private(RemoteIP) == false
+| summarize ConnAttempts=count(),
+            BytesOutTotal=sumif(toint(InitiatingProcessFileSize),true), // placeholder – swap for proxy bytes if available
+            FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            RemoteIPs=make_set(RemoteIP, 25),
+            URLs=make_set(RemoteUrl, 25),
+            Procs=make_set(InitiatingProcessFileName, 10),
+            CmdLines=make_set(InitiatingProcessCommandLine, 10)
+        by DeviceName, AccountName=InitiatingProcessAccountName
+| where ConnAttempts >= 2
+| extend Note="Internal host calling out to exposed public Ollama (11434) — possible Silent Brothers abuse / shadow-AI / exfil-via-prompt"
+| order by ConnAttempts desc
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

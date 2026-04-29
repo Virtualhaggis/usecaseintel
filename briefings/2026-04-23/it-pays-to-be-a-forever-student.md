@@ -47,6 +47,16 @@ If I haven’t said it in a newsletter before, I'll say it now: If you want 
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1056.003** — Input Capture: Web Portal Capture
+- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555.006** — Credentials from Password Stores: Cloud Secrets Management Stores
+- **T1083** — File and Directory Discovery
+- **T1588.002** — Obtain Capabilities: Tool
+- **T1133** — External Remote Services
+- **T1542.005** — Pre-OS Boot: TFTP Boot
+- **T1205** — Traffic Signaling
 
 ## Kill chain phases observed
 
@@ -381,6 +391,106 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] Access to Softr-hosted credential-harvesting page mimicking OWA/Exchange
+
+`UC_60_11` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*softr.app*" OR Web.url="*softr.io*" OR Web.site="*.softr.app" OR Web.site="*.softr.io") by Web.src Web.user Web.dest Web.site
+| `drop_dm_object_name(Web)`
+| eval suspicious=if(match(urls,"(?i)(login|sign[-_]?in|owa|outlook|exchange|auth|verify|mail)") OR match(methods,"POST"),1,0)
+| where suspicious=1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let softrDomains = dynamic(["softr.app","softr.io","softr.dev"]);
+let softrHits = DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (softrDomains)
+| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP;
+let emailDelivery = EmailUrlInfo
+| where Url has_any (softrDomains)
+| join kind=inner EmailEvents on NetworkMessageId
+| project NetworkMessageId, Url, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction;
+softrHits
+| join kind=leftouter emailDelivery on $left.RemoteUrl == $right.Url
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction
+| order by Timestamp desc
+```
+
+### [LLM] Adversarial TruffleHog execution scanning for cloud / repo secrets
+
+`UC_60_12` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog.exe" OR Processes.process_name="trufflehog" OR Processes.process="*trufflehog *" OR Processes.original_file_name="trufflehog*") by Processes.dest Processes.user Processes.process_name
+| `drop_dm_object_name(Processes)`
+| eval scan_target=case(match(cmdline,"(?i) filesystem "),"filesystem", match(cmdline,"(?i) (github|gitlab|git) "),"repo", match(cmdline,"(?i) (s3|gcs|azure) "),"cloud-bucket", match(cmdline,"(?i) docker "),"docker", true(),"other")
+| where scan_target!="other" OR match(cmdline,"(?i)(--no-verification|--results|--json)")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "trufflehog.exe" or FileName =~ "trufflehog"
+      or ProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
+      or InitiatingProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
+| extend ScanTarget = case(
+    ProcessCommandLine has_cs " filesystem ", "filesystem",
+    ProcessCommandLine has_any (" github ", " gitlab ", " git "), "repo",
+    ProcessCommandLine has_any (" s3 ", " gcs ", " azure "), "cloud-bucket",
+    ProcessCommandLine has " docker ", "docker",
+    ProcessCommandLine has_any ("--no-verification","--results","--json"), "flagged",
+    "other")
+| where ScanTarget != "other"
+| where not(InitiatingProcessFolderPath has_any ("\\agent\\","\\runners\\","\\jenkins\\","\\azure-pipelines\\"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, ScanTarget
+| order by Timestamp desc
+```
+
+### [LLM] UAT-4356 FIRESTARTER exploitation of Cisco ASA/Firepower WebVPN (CVE-2025-20333 / CVE-2025-20362)
+
+`UC_60_13` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_content_type) as content_types from datamodel=Web where (Web.url="*/+CSCOE+/*" OR Web.url="*/+webvpn+/*" OR Web.url="*/+CSCOE+/logon.html*" OR Web.url="*/+CSCOE+/saml/sp/acs*" OR Web.url="*/+webvpn+/index.html*") AND Web.http_method="POST" by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| eval external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),0,1)
+| where external_src=1
+| eval cve=case(match(urls,"(?i)logon\.html|saml|webvpn/index"),"CVE-2025-20333/20362-candidate", true(),"unknown")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Defender Advanced Hunting has no native Cisco ASA telemetry; this looks for internal hosts pivoting to ASA WebVPN URIs (post-compromise lateral) and for Cisco-flagged file artifacts referenced by Talos. Pair with Sentinel CommonSecurityLog for true exploit-traffic visibility.
+let asaUriIndicators = dynamic(["+CSCOE+","+webvpn+","/+CSCOE+/","/+webvpn+/","+CSCOE+/logon.html","+CSCOE+/saml"]);
+let known_firestarter_hashes = dynamic([
+    "9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507",
+    "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974",
+    "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (asaUriIndicators)
+| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| union (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (known_firestarter_hashes)
+    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -394,4 +504,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

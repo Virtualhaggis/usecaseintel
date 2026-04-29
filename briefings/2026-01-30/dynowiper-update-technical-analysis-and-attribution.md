@@ -38,6 +38,14 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1485** — Data Destruction
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1570** — Lateral Tool Transfer
+- **T1090.001** — Proxy: Internal Proxy
+- **T1572** — Protocol Tunneling
+- **T1105** — Ingress Tool Transfer
+- **T1484.001** — Domain Policy Modification: Group Policy Modification
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
 
 ## Kill chain phases observed
 
@@ -286,6 +294,84 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] DynoWiper staging: execution of schtask.exe / *_update.exe from C:\inetpub\pub\
+
+`UC_219_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_path="*\\inetpub\\pub\\*" OR Processes.process_path="*\\inetpub\\pub\\*") AND (Processes.process_name IN ("schtask.exe","schtask2.exe") OR Processes.process_name="*_update.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where FolderPath has @"\inetpub\pub\"
+| where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, MD5
+| join kind=leftouter (DeviceFileEvents | where FolderPath has @"\inetpub\pub\" | where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe" | project DropSHA256=SHA256, DropDevice=DeviceName, DropTime=Timestamp, DropFile=FileName) on $left.SHA256 == $right.DropSHA256
+| sort by Timestamp asc
+```
+
+### [LLM] Sandworm rsocx reverse SOCKS5 to compromised progamevl[.]ru host (31.172.71.5:8008)
+
+`UC_219_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="* -r 31.172.71.5:8008*" OR Processes.process="*31.172.71[.]5:8008*" OR (Processes.process_name="r.exe" AND Processes.process_path="*\\Downloads\\*" AND Processes.process="* -r *")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="31.172.71.5" AND All_Traffic.dest_port=8008 by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let c2_ip = "31.172.71.5";
+let c2_port = 8008;
+DeviceProcessEvents
+| where (ProcessCommandLine has c2_ip and ProcessCommandLine has " -r ")
+   or (FileName =~ "r.exe" and FolderPath has @"\Downloads\" and ProcessCommandLine has " -r " and ProcessCommandLine has tostring(c2_port))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName
+| union (
+DeviceNetworkEvents
+| where RemoteIP == c2_ip and RemotePort == c2_port
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+)
+| sort by Timestamp asc
+```
+
+### [LLM] GPO-staged scheduled task launching wiper from \\*\inetpub\pub\ across domain
+
+`UC_219_11` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as users dc(Processes.dest) as host_count from datamodel=Endpoint.Processes where (Processes.process="*\\\\*\\inetpub\\pub\\*" OR Processes.process="*\\inetpub\\pub\\*.exe*" OR Processes.parent_process="*schtasks*\\inetpub\\pub*") by Processes.process_name Processes.process_path | where host_count >= 3 | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ search index=wineventlog (EventCode=4698 OR EventCode=4688) (TaskContent="*inetpub\\pub*" OR CommandLine="*New-GPO*" OR CommandLine="*Set-GPLink*" OR CommandLine="*Register-ScheduledTask*inetpub*") | stats count min(_time) as firstTime values(CommandLine) as cmd by host User TaskName ]
+```
+
+**Defender KQL:**
+```kql
+let suspectShare = @"\inetpub\pub\";
+let wiper_exec =
+DeviceProcessEvents
+| where ProcessCommandLine has suspectShare or FolderPath has suspectShare
+| where FileName endswith ".exe"
+| summarize hosts=dcount(DeviceName), users=make_set(AccountName,10), files=make_set(FileName,10), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by FileName
+| where hosts >= 3;
+let gpo_or_sched =
+union
+  (DeviceProcessEvents
+   | where (ProcessCommandLine has_any ("New-GPO","Set-GPLink","Register-ScheduledTask","schtasks /create")
+            and ProcessCommandLine has "inetpub\\pub")
+   | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine),
+  (DeviceEvents
+   | where ActionType == "ScheduledTaskCreated"
+   | where AdditionalFields has "inetpub\\pub"
+   | project Timestamp, DeviceName, AccountName, AdditionalFields);
+wiper_exec
+| extend Source="endpoint_exec"
+| union (gpo_or_sched | extend Source="gpo_or_schedtask")
+| sort by Timestamp asc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -296,4 +382,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

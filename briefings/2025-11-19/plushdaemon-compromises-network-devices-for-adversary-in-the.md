@@ -34,6 +34,15 @@ ESET researchers provide insights into how PlushDaemon performs adversary-in-the
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1659** — Content Injection
+- **T1557** — Adversary-in-the-Middle
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1105** — Ingress Tool Transfer
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1583.002** — Acquire Infrastructure: DNS Server
+- **T1583.004** — Acquire Infrastructure: Server
 
 ## Kill chain phases observed
 
@@ -176,6 +185,66 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] PlushDaemon DaemonicLogistics update-hijack URI pattern (Sogou/Baidu)
+
+`UC_287_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user_agent) as ua values(Web.src) as src values(Web.dest) as dest from datamodel=Web.Web where (Web.url IN ("*ime.sogou.com/update/updateInfo.bzp*","*mobads.baidu.com/update/updateInfo.bzp*","*ime.sogou.com/update/latest/new_version?tp=*","*ime.sogou.com/update/file6.bdat*","*ime.sogou.com/update/file2.bdat*") OR (Web.dest="119.136.153.0" AND Web.url="*/update/updateInfo.bzp*")) by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any ("ime.sogou.com/update/updateInfo.bzp","mobads.baidu.com/update/updateInfo.bzp","ime.sogou.com/update/file6.bdat","ime.sogou.com/update/file2.bdat") or RemoteUrl matches regex @"ime\.sogou\.com/update/latest/new_version\?tp=\d+" or (RemoteIP == "119.136.153.0" and RemoteUrl has "/update/updateInfo.bzp"))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| sort by Timestamp desc
+```
+
+### [LLM] DaemonicLogistics drops payload as logo.gif under masqueraded Tencent QQUpdateMgr path
+
+`UC_287_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process values(Filesystem.process_path) as proc_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\ProgramData\\Tencent\\QQUpdateMgr\\UpdateFiles\\logo.gif" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(60d)
+| where FolderPath endswith @"\ProgramData\Tencent\QQUpdateMgr\UpdateFiles\logo.gif"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| sort by Timestamp desc
+```
+
+### [LLM] PlushDaemon C2/hijack node contact: wcsset.com or known IPs
+
+`UC_287_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer values(DNS.query) as query from datamodel=Network_Resolution.DNS where (DNS.query="*wcsset.com" OR DNS.answer IN ("47.242.198.250","8.212.132.120")) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("47.242.198.250","8.212.132.120") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceNetworkEvents
+  | where Timestamp > ago(90d)
+  | where RemoteIP in ("47.242.198.250","8.212.132.120") or RemoteUrl has "wcsset.com"
+  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort ),
+( DeviceEvents
+  | where Timestamp > ago(90d)
+  | where ActionType == "DnsQueryResponse"
+  | where AdditionalFields has "wcsset.com"
+  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, AdditionalFields )
+| sort by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -186,4 +255,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -45,6 +45,16 @@ Public administration and health care tied as the most targeted indu…
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1056.003** — Input Capture: Web Portal Capture
+- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1528** — Steal Application Access Token
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1530** — Data from Cloud Storage
+- **T1593** — Search Open Websites/Domains
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1090** — Proxy
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
 
 ## Kill chain phases observed
 
@@ -492,6 +502,100 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] Softr-hosted credential harvesting page mimicking OWA/Exchange login
+
+`UC_79_15` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_referrer) as referrers values(Web.user) as users from datamodel=Web where (Web.url="*softr.app*" OR Web.url="*softr.io*" OR Web.dest="*.softr.app" OR Web.dest="*.softr.io") by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | eval suspicious_path=if(match(urls,"(?i)(owa|outlook|exchange|webmail|signin|login|mfa|verify|microsoft|m365|o365)"),1,0) | where suspicious_path=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let softrHosts = dynamic([".softr.app",".softr.io"]);
+let kw = @"(?i)(owa|outlook|exchange|webmail|signin|login|mfa|verify|microsoft|m365|o365|adfs)";
+union isfuzzy=true
+  (DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteUrl has_any (softrHosts) or RemoteUrl matches regex @"https?://[^/]*\.softr\.(app|io)/"
+    | where RemoteUrl matches regex kw
+    | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, RemoteIP),
+  (UrlClickEvents
+    | where Timestamp > ago(14d)
+    | where Url has_any (softrHosts)
+    | where Url matches regex kw
+    | project Timestamp, AccountUpn, Url, ActionType, NetworkMessageId, ThreatTypes),
+  (EmailUrlInfo
+    | where Timestamp > ago(14d)
+    | where Url has_any (softrHosts)
+    | where Url matches regex kw
+    | project Timestamp, NetworkMessageId, Url, UrlDomain)
+```
+
+### [LLM] Crimson Collective: TruffleHog secret-scanning followed by Microsoft Graph data exfiltration
+
+`UC_79_16` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as ua from datamodel=Authentication where (Authentication.user_agent="*TruffleHog*" OR Authentication.user_agent="*trufflehog*" OR Authentication.signature="*trufflehog*") by Authentication.user Authentication.app | `drop_dm_object_name(Authentication)` | join type=inner user [ | tstats summariesonly=true count as graph_calls values(Authentication.app) as graph_apps from datamodel=Authentication where Authentication.app IN ("Microsoft Graph","graph.microsoft.com") Authentication.action=success by Authentication.user _time span=1h | `drop_dm_object_name(Authentication)` | where graph_calls > 50 ] | table firstTime lastTime user src ua graph_apps graph_calls
+```
+
+**Defender KQL:**
+```kql
+let trufflehogActors =
+  union isfuzzy=true
+    (CloudAppEvents
+      | where Timestamp > ago(30d)
+      | where UserAgent has "trufflehog" or RawEventData has "TruffleHog"
+      | extend Actor = tostring(AccountId)
+      | project Timestamp, Actor, Application, ActionType, IPAddress, UserAgent),
+    (AADSignInEventsBeta
+      | where Timestamp > ago(30d)
+      | where UserAgent has "trufflehog"
+      | extend Actor = AccountUpn
+      | project Timestamp, Actor, Application=AppDisplayName, ActionType=ErrorCode, IPAddress, UserAgent);
+trufflehogActors
+| join kind=inner (
+    CloudAppEvents
+    | where Timestamp > ago(30d)
+    | where Application in ("Microsoft Graph","Office 365","Azure Storage","Azure Blob Storage")
+    | where ActionType has_any ("FileDownloaded","FileAccessed","ListContainers","ListBlobs","GetBlob")
+    | summarize graphOps=count(), distinctOps=dcount(ActionType), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by Actor=tostring(AccountId), IP=IPAddress
+    | where graphOps > 50
+) on Actor
+| project firstSeen, lastSeen, Actor, IP, IPAddress, UserAgent, graphOps, distinctOps
+```
+
+### [LLM] MeowBackConn proxy DLL load (meow_*.dll) on Gootloader-infected hosts
+
+`UC_79_17` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process="*meow_*.dll*" OR Processes.process_name IN ("rundll32.exe","regsvr32.exe","schtasks.exe") AND Processes.process="*meow_*") by Processes.dest Processes.process_name Processes.process_id | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name="meow_*.dll" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let meowPattern = @"(?i)\\meow_[a-z0-9]{1,12}\.dll";
+union isfuzzy=true
+  (DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where FileName matches regex @"(?i)^meow_[a-z0-9]{1,12}\.dll$" or FolderPath matches regex meowPattern
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256),
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName matches regex @"(?i)^meow_[a-z0-9]{1,12}\.dll$"
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256),
+  (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where ProcessCommandLine matches regex meowPattern
+          or (FileName in~ ("rundll32.exe","regsvr32.exe","schtasks.exe") and ProcessCommandLine has "meow_")
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -505,4 +609,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

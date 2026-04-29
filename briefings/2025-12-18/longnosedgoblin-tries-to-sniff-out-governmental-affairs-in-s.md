@@ -45,6 +45,13 @@ In 2024, ESET researchers noticed previously undocumented malware in the netw…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1574.014** — Hijack Execution Flow: AppDomainManager
+- **T1218** — System Binary Proxy Execution
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1547** — Boot or Logon Autostart Execution
 
 ## Kill chain phases observed
 
@@ -267,6 +274,48 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] NosyDoor Stage-2: UevAppMonitor.exe AppDomainManager injection from Microsoft.NET\Framework
+
+`UC_253_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="UevAppMonitor.exe" AND Processes.process_path="*\\Windows\\Microsoft.NET\\Framework*" AND NOT Processes.process_path IN ("*\\System32\\*","*\\SysWOW64\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | join type=left dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name="UevAppMonitor.exe.config" AND Filesystem.file_path="*\\Microsoft.NET\\Framework*" by Filesystem.dest | `drop_dm_object_name(Filesystem)` | rename count as config_drops] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let ConfigDrops = DeviceFileEvents | where FileName =~ "UevAppMonitor.exe.config" | where FolderPath has @"\Microsoft.NET\Framework" | distinct DeviceId, DeviceName; DeviceProcessEvents | where FileName =~ "UevAppMonitor.exe" | where FolderPath has @"\Microsoft.NET\Framework" | where FolderPath !has @"\System32\" and FolderPath !has @"\SysWOW64\" | join kind=leftouter (ConfigDrops) on DeviceId | project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+```
+
+### [LLM] NosyDoor staging artifacts dropped to C:\Windows\Microsoft.NET\Framework
+
+`UC_253_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Windows\\Microsoft.NET\\Framework*" AND Filesystem.file_name IN ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | eval distinct_files=mvcount(files) | where distinct_files >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents | where FolderPath has @"\Microsoft.NET\Framework" | where FileName in~ ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") | summarize FileSet=make_set(FileName), Procs=make_set(InitiatingProcessFileName), Cmds=make_set(InitiatingProcessCommandLine), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName | where array_length(FileSet) >= 2
+```
+
+### [LLM] NosyDoor persistence: 'OneDrive Reporting Task-S-1-5-21-*' scheduled task creation
+
+`UC_253_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") AND Processes.process="*OneDrive Reporting Task-S-1-5-21*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true (DeviceProcessEvents | where (FileName =~ "schtasks.exe" or FileName =~ "powershell.exe" or FileName =~ "pwsh.exe") | where ProcessCommandLine has "OneDrive Reporting Task-S-1-5-21" | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine), (DeviceEvents | where ActionType == "ScheduledTaskCreated" | where AdditionalFields has "OneDrive Reporting Task-S-1-5-21" or AdditionalFields has @"\Microsoft\OneDrive Reporting Task" | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, AdditionalFields, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -280,4 +329,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

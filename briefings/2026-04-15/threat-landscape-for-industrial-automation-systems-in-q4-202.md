@@ -41,6 +41,11 @@ The percentage of ICS computers on which malicious objects were blocked has been
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1571** — Non-Standard Port
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms / DDNS
+- **T1091** — Replication Through Removable Media
 
 ## Kill chain phases observed
 
@@ -349,7 +354,73 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### [LLM] Curriculum-vitae-catalina XWorm dropper executed from email/download paths
+
+`UC_118_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="Curriculum Vitae-Catalina.exe" OR Processes.process_name="Curriculum*Vitae*Catalina*.exe" OR (match(Processes.process_name,"(?i)^(curriculum.?vitae|cv|resume|attached.?resume).{0,40}\.exe$") AND (Processes.parent_process_name IN ("OUTLOOK.EXE","winrar.exe","7zg.exe","7zfm.exe","explorer.exe","chrome.exe","msedge.exe") OR match(Processes.process_path,"(?i)(\\\\INetCache\\\\Content\.Outlook\\\\|\\\\Downloads\\\\|\\\\Temp\\\\)")))) by Processes.dest Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "Curriculum Vitae-Catalina.exe"
+   or (FileName matches regex @"(?i)^(curriculum.?vitae|cv|resume|attached.?resume).{0,40}\.exe$"
+        and (InitiatingProcessFileName in~ ("OUTLOOK.EXE","winrar.exe","7zg.exe","7zfm.exe","explorer.exe","chrome.exe","msedge.exe")
+             or FolderPath has_any (@"\INetCache\Content.Outlook\", @"\Downloads\", @"\AppData\Local\Temp\")))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+```
+
+### [LLM] XWorm C2 beacon to known DDNS hosts on non-standard ports (6000/7000)
+
+`UC_118_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("abuwire123.ddns.net","ziadonfire.work.gd","berlin101.com","45.145.43.244","89.116.164.56") OR All_Traffic.dest_port IN (6000,7000)) AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("abuwire123.ddns.net","ziadonfire.work.gd","berlin101.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let xworm_hosts = dynamic(["abuwire123.ddns.net","ziadonfire.work.gd","berlin101.com"]);
+let xworm_ips   = dynamic(["45.145.43.244","89.116.164.56"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (xworm_hosts)
+   or RemoteIP in (xworm_ips)
+   or (RemotePort in (6000,7000) and ActionType == "ConnectionSuccess" and RemoteIPType == "Public")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
+| join kind=leftouter (DeviceProcessEvents | where Timestamp > ago(30d) | project DeviceName, InitiatingProcessFileName, ProcessSHA=SHA256) on DeviceName, InitiatingProcessFileName
+```
+
+### [LLM] Resume-themed PE written to removable media (XWorm USB propagation on ICS hosts)
+
+`UC_118_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND match(Filesystem.file_name,"(?i)^(curriculum.?vitae|cv|resume|attached.?resume).{0,40}\.exe$") AND NOT match(Filesystem.file_path,"(?i)^[CD]:\\\\(Windows|Program Files)") AND match(Filesystem.file_path,"(?i)^[E-Z]:\\\\") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName matches regex @"(?i)^(curriculum.?vitae|cv|resume|attached.?resume).{0,40}\.exe$"
+   or FileName =~ "Curriculum Vitae-Catalina.exe"
+| join kind=leftouter (
+    DeviceInfo | summarize arg_max(Timestamp, DeviceType) by DeviceId
+) on DeviceId
+| where FolderPath matches regex @"(?i)^[E-Z]:\\"
+   or FolderPath has_any (@"\Removable", @"\USB")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, RequestAccountName
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

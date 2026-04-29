@@ -45,6 +45,10 @@ WiFi encryp…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1557** — Adversary-in-the-Middle
+- **T1040** — Network Sniffing
+- **T1200** — Hardware Additions
+- **T1588.002** — Obtain Capabilities: Tool
 
 ## Kill chain phases observed
 
@@ -243,6 +247,52 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] AirSnitch Wi-Fi client-isolation bypass tool execution on Linux endpoint
+
+`UC_80_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.os IN ("Linux","linux") AND (Processes.process="*airsnitch.py*" OR (Processes.process="*--no-ssid-check*" AND (Processes.process="*--c2c-port-steal*" OR Processes.process="*--c2c-port-steal-uplink*" OR Processes.process="*--c2c-broadcast*" OR Processes.process="*--c2c-ip*" OR Processes.process="*--check-gtk-shared*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where DeviceOS in~ ("Linux","macOS")
+| where FileName in~ ("python","python3","sudo","bash","sh") or FileName endswith "airsnitch.py"
+| where ProcessCommandLine has "airsnitch.py"
+   or (ProcessCommandLine has "--no-ssid-check" and ProcessCommandLine has_any ("--c2c-port-steal","--c2c-port-steal-uplink","--c2c-broadcast","--c2c-ip","--check-gtk-shared"))
+| project Timestamp, DeviceName, DeviceId, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+```
+
+### [LLM] Drop of AirSnitch repo artefacts (modified wpa_supplicant configs) on internal host
+
+`UC_80_7` · phase: **weapon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf") OR Filesystem.file_path="*/airsnitch/*" OR (Filesystem.file_name="eap.conf" AND Filesystem.file_path="*/airsnitch*")) by Filesystem.dest Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf")
+   or FolderPath has "/airsnitch/"
+| project Timestamp, DeviceName, DeviceId, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, RequestAccountName, SHA256
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessCommandLine has_any ("git clone","wget","curl")
+    | where InitiatingProcessCommandLine has "airsnitch"
+    | project DeviceId, CloneCmd=InitiatingProcessCommandLine, CloneTime=Timestamp
+) on DeviceId
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -253,4 +303,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

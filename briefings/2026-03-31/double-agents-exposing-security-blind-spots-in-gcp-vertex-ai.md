@@ -50,6 +50,13 @@ Artificial intelligence (AI) agents …
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1648** — Serverless Execution
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1530** — Data from Cloud Storage
+- **T1213.003** — Data from Information Repositories: Code Repositories
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -275,6 +282,73 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] Vertex AI Agent Engine deployment with python stdlib names embedded in package extras
+
+`UC_145_8` · phase: **weapon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where Change.object_category=cloud_resource (Change.object="*reasoningEngines*" OR Change.command="*ReasoningEngineService*" OR Change.command="*agent_engines*") (Change.command="*google-cloud-aiplatform[*subprocess*" OR Change.command="*google-cloud-aiplatform[*socket*" OR Change.command="*google-cloud-aiplatform[*\"os\"*" OR Change.command="*,os,*" OR Change.command="*,subprocess,*") by Change.user Change.src Change.object Change.command Change.action Change.result | `drop_dm_object_name(Change)` | search command IN ("*subprocess*","*socket*","*,os,*") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application == "Google Cloud Platform"
+| where ActionType has_any ("CreateReasoningEngine","UpdateReasoningEngine","google.cloud.aiplatform.v1beta1.ReasoningEngineService","agent_engines.create")
+| extend raw = tostring(RawEventData)
+| where raw has "google-cloud-aiplatform[" and raw has_any ("subprocess","socket",",os,",",os]")
+| extend principal = tostring(RawEventData.protoPayload.authenticationInfo.principalEmail)
+| extend resource = tostring(RawEventData.protoPayload.resourceName)
+| project Timestamp, principal, ActionType, resource, raw, AccountObjectId, IPAddress
+```
+
+### [LLM] Vertex AI Reasoning Engine P4SA (gcp-sa-aiplatform-re) acting on consumer GCS or cross-project Artifact Registry
+
+`UC_145_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count values(Change.object) as objects values(Change.command) as methods dc(Change.object) as bucket_count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where Change.user="service-*@gcp-sa-aiplatform-re.iam.gserviceaccount.com" (Change.command IN ("storage.buckets.list","storage.objects.list","storage.objects.get","storage.buckets.get","artifactregistry.repositories.list","artifactregistry.packages.list","artifactregistry.versions.list")) by Change.user Change.src Change.dest | `drop_dm_object_name(Change)` | where bucket_count > 3 OR like(methods,"%artifactregistry%") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let suspicious_methods = dynamic(["storage.buckets.list","storage.objects.list","storage.objects.get","storage.buckets.get","artifactregistry.repositories.list","artifactregistry.packages.list","artifactregistry.versions.list"]);
+CloudAppEvents
+| where Application == "Google Cloud Platform"
+| extend principal = tostring(RawEventData.protoPayload.authenticationInfo.principalEmail)
+| extend method   = tostring(RawEventData.protoPayload.methodName)
+| extend resource = tostring(RawEventData.protoPayload.resourceName)
+| where principal matches regex @"^service-[0-9]+@gcp-sa-aiplatform-re\.iam\.gserviceaccount\.com$"
+| where method in (suspicious_methods) or resource has "cloud-aiplatform-private"
+| summarize hits=count(), bucket_count=dcount(resource), methods=make_set(method,20), resources=make_set(resource,20) by principal, bin(Timestamp,1h)
+| where bucket_count > 3 or methods has_any ("artifactregistry.repositories.list","artifactregistry.packages.list")
+```
+
+### [LLM] Outbound pulls to Google-internal Vertex AI private artifact registry path cloud-aiplatform-private
+
+`UC_145_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("docker.exe","docker","crane","crane.exe","gcloud","gcloud.cmd","podman","skopeo") OR Processes.process IN ("*artifacts docker images*","*pull*")) (Processes.process="*cloud-aiplatform-private*" OR Processes.process="*reasoning-engine-py310*" OR Processes.process="*us-docker.pkg.dev/cloud-aiplatform-private*") by Processes.user Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=t count from datamodel=Web.Web where (Web.url="*cloud-aiplatform-private*" OR Web.url="*reasoning-engine-py310*") by Web.user Web.src Web.dest Web.url | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceProcessEvents
+  | where ProcessCommandLine has_any ("cloud-aiplatform-private","reasoning-engine-py310","us-docker.pkg.dev/cloud-aiplatform-private")
+  | where InitiatingProcessFileName in~ ("docker.exe","crane.exe","gcloud.cmd","podman.exe","skopeo.exe","powershell.exe","pwsh.exe","python.exe","bash","sh")
+     or FileName in~ ("docker.exe","crane.exe","gcloud.cmd","podman.exe","skopeo.exe")
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName ),
+( DeviceNetworkEvents
+  | where RemoteUrl has_any ("cloud-aiplatform-private","reasoning-engine-py310")
+     or (RemoteUrl has "us-docker.pkg.dev" and RemoteUrl has "cloud-aiplatform-private")
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP )
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -288,4 +362,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -30,6 +30,10 @@ At some p…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1485** — Data Destruction
+- **T1083** — File and Directory Discovery
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -163,7 +167,50 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] VECT 2.0 ransomware binary execution and .vect artifact creation (Windows/Linux/ESXi)
+
+`UC_16_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_name IN ("svc_host_update.exe","enc_esxi.elf") OR Processes.process_hash IN ("9c745f95a09b37bc0486bf0f92aad4a3d5548a939c086b93d6235d34648e683f","8ee4ec425bc0d8db050d13bbff98f483fff020050d49f40c5055ca2b9f6b1c4d","58e17dd61d4d55fa77c7f2dd28dd51875b0ce900c1e43b368b349e65f27d6fdd")) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.vect" OR Filesystem.file_name IN ("!!!READ_ME!!!.txt","VECT_RECOVERY_GUIDE.txt","README_VECT.html")) by Filesystem.dest Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let vect_hashes = dynamic(["9c745f95a09b37bc0486bf0f92aad4a3d5548a939c086b93d6235d34648e683f","8ee4ec425bc0d8db050d13bbff98f483fff020050d49f40c5055ca2b9f6b1c4d","58e17dd61d4d55fa77c7f2dd28dd51875b0ce900c1e43b368b349e65f27d6fdd"]);
+let vect_notes = dynamic(["!!!READ_ME!!!.txt","VECT_RECOVERY_GUIDE.txt","README_VECT.html"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("svc_host_update.exe","enc_esxi.elf") or SHA256 in (vect_hashes) or InitiatingProcessSHA256 in (vect_hashes)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName
+| union (
+  DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FileName endswith ".vect" or FileName in~ (vect_notes)
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName
+)
+```
+
+### [LLM] VECT 2.0 / TeamPCP C2 callback to 158.94.210.11:8000
+
+`UC_16_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.src_ip) as src_ip values(All_Traffic.app) as app sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="158.94.210.11" AND All_Traffic.dest_port=8000 by All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "158.94.210.11" and RemotePort == 8000
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), BytesSent=sum(toint(coalesce(tostring(parse_json(AdditionalFields).bytes_out),"0"))) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessAccountName, RemoteIP, RemotePort, Protocol
+| order by LastSeen desc
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

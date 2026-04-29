@@ -47,6 +47,11 @@ When researching the boundaries of cloud services, two of the main asp…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1611** — Escape to Host (sandbox escape)
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1580** — Cloud Infrastructure Discovery
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
@@ -313,6 +318,57 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] AWS AgentCore Code Interpreter DNS tunneling to dnshook.site / high-entropy subdomains
+
+`UC_136_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answers values(DNS.src) as src from datamodel=Network_Resolution where (DNS.src_category="aws_agentcore" OR DNS.src="169.254.169.253" OR DNS.vendor_product="AWS Route53 Resolver") AND (DNS.query="*.dnshook.site" OR (len(DNS.query)>60 AND DNS.query!="*.amazonaws.com" AND DNS.query!="*.aws.dev" AND DNS.query!="*.amazon.com")) by DNS.query DNS.src DNS.record_type | `drop_dm_object_name(DNS)` | eval label=mvindex(split(query,"."),0) | eval label_len=len(label) | where label_len>=20 AND match(label,"^[A-Za-z0-9+/=_-]+$") | sort - count
+```
+
+**Defender KQL:**
+```kql
+// Requires AWS Route53/VPC DNS logs ingested via Sentinel AWS connector or CloudAppEvents
+let agentcoreSources = dynamic(["AmazonBedrock-AgentCore","AgentCore-CodeInterpreter","AgentCore-Runtime"]);
+CloudAppEvents
+| where Application has_any ("AWS","Amazon Web Services")
+| where ActionType in ("DnsQuery","Route53ResolverQuery")
+| extend query = tostring(RawEventData.queryName), src = tostring(RawEventData.srcIds)
+| where src has_any (agentcoreSources) or RawEventData.vpcEndpointId has "agentcore"
+| extend firstLabel = tostring(split(query, ".")[0])
+| where query endswith "dnshook.site"
+   or (strlen(firstLabel) >= 20 and firstLabel matches regex @"^[A-Za-z0-9+/=_-]+$"
+       and not(query endswith ".amazonaws.com") and not(query endswith ".amazon.com") and not(query endswith ".aws.dev"))
+| summarize Queries=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), sample=any(query) by src, RawEventData.queryName
+| sort by Queries desc
+```
+
+### [LLM] AgentCore microVM MMDS access to undocumented aws_presigned-log-url / kms-key tag paths
+
+`UC_136_10` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as ua values(Web.src) as src from datamodel=Web where Web.dest="169.254.169.254" AND (Web.url="*tags/instance/aws_presigned-log-url*" OR Web.url="*tags/instance/aws_presigned-log-kms-key*" OR Web.url="*latest/meta-data/tags/instance/*") by Web.src Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | eval mmds_v1_no_token=if(http_method="GET" AND NOT match(http_user_agent,"(?i)x-aws-ec2-metadata-token"),1,0) | where mmds_v1_no_token=1 OR match(url,"aws_presigned-log")
+```
+
+**Defender KQL:**
+```kql
+// On hosts running AgentCore SDK / Strands locally, OR via Defender for Cloud cloud-workload telemetry
+let mmdsPaths = dynamic(["/latest/meta-data/tags/instance/aws_presigned-log-url","/latest/meta-data/tags/instance/aws_presigned-log-kms-key","/latest/meta-data/tags/instance/"]);
+union isfuzzy=true
+(DeviceNetworkEvents
+| where RemoteIP == "169.254.169.254"
+| where RequestUrl has_any (mmdsPaths) or RequestUrl has "aws_presigned-log"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RequestUrl, RemoteIP),
+(DeviceProcessEvents
+| where (ProcessCommandLine has "169.254.169.254" and ProcessCommandLine has_any ("aws_presigned-log-url","aws_presigned-log-kms-key","tags/instance"))
+  or (InitiatingProcessCommandLine has_any ("socket.gethostbyname_ex","dnshook.site") and ProcessCommandLine has "python")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| sort by Timestamp desc
+```
+
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
@@ -326,4 +382,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

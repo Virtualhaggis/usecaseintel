@@ -27,6 +27,14 @@ Using stolen credentials ob…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1567.002** — Exfiltration to Cloud Storage / Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Supply Chain
+- **T1610** — Deploy Container
+- **T1554** — Compromise Host Software Binary
+- **T1567** — Exfiltration Over Web Service
+- **T1213.003** — Data from Information Repositories: Code Repositories
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -118,7 +126,86 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### [LLM] TeamPCP/LAPSUS$ exfil to checkmarx[.]zone / audit.checkmarx[.]cx via KICS-Telemetry UA
+
+`UC_22_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("checkmarx.zone","*.checkmarx.zone","audit.checkmarx.cx","scan.aquasecurtiy.org") OR All_Traffic.dest_ip IN ("45.148.10.212","94.154.172.43")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url from datamodel=Web.Web where Web.http_user_agent="KICS-Telemetry/2.0" by Web.src Web.dest Web.http_user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badHosts = dynamic(["checkmarx.zone","audit.checkmarx.cx","scan.aquasecurtiy.org"]);
+let badIPs   = dynamic(["45.148.10.212","94.154.172.43"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any (badHosts)) or (RemoteIP in (badIPs))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| union (
+  DeviceEvents
+  | where ActionType == "BrowserLaunchedToOpenUrl" or AdditionalFields has "KICS-Telemetry/2.0"
+  | project Timestamp, DeviceName, AdditionalFields, InitiatingProcessFileName)
+```
+
+### [LLM] Pull or run of poisoned checkmarx/kics Docker tags (v2.1.21 / overwritten v2.1.20 / latest)
+
+`UC_22_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("docker.exe","docker","podman","podman.exe","buildx","nerdctl","crictl","skopeo") AND (Processes.process="*checkmarx/kics:v2.1.21*" OR Processes.process="*checkmarx/kics:v2.1.21-debian*" OR Processes.process="*checkmarx/kics:latest*" OR Processes.process="*checkmarx/kics:v2.1.20*" OR Processes.process="*checkmarx/kics:v2.1.20-debian*" OR Processes.process="*checkmarx/kics:alpine*" OR Processes.process="*checkmarx/kics:debian*") by Processes.user Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval malicious_window=if(firstTime>=strptime("2026-04-22 14:00:00","%Y-%m-%d %H:%M:%S") AND firstTime<=strptime("2026-04-23 00:00:00","%Y-%m-%d %H:%M:%S"),"WITHIN-COMPROMISE-WINDOW","REVIEW") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badTags = dynamic(["checkmarx/kics:v2.1.21","checkmarx/kics:v2.1.21-debian","checkmarx/kics:latest","checkmarx/kics:v2.1.20","checkmarx/kics:v2.1.20-debian","checkmarx/kics:alpine","checkmarx/kics:debian"]);
+DeviceProcessEvents
+| where Timestamp > datetime(2026-04-22)
+| where FileName in~ ("docker.exe","docker","podman","podman.exe","buildx.exe","nerdctl","crictl","skopeo")
+| where ProcessCommandLine has_any (badTags)
+| extend InWindow = iff(Timestamp between (datetime(2026-04-22T14:17:00Z) .. datetime(2026-04-22T15:41:00Z)),"PULL-DURING-COMPROMISE","REVIEW")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InWindow
+| union (
+    DeviceFileEvents
+    | where Timestamp > datetime(2026-04-22)
+    | where FolderPath has ".vscode" or FolderPath has "open-vsx" or FolderPath has "extensions"
+    | where FileName has_any ("checkmarx-ast-results-1.17.0","checkmarx-ast-results-1.19.0","checkmarx-kics")
+    | project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
+### [LLM] TeamPCP fallback exfil: creation of 'tpcp-docs' repository in GitHub org
+
+`UC_22_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("git.exe","git","gh.exe","gh","curl.exe","curl","wget","python.exe","python","node.exe","node")) AND (Processes.process="*tpcp-docs*") by Processes.user Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Web.Web where Web.url="*api.github.com/user/repos*" OR Web.url="*api.github.com/orgs/*/repos*" by Web.src Web.dest Web.url Web.http_user_agent | search url="*tpcp-docs*" | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where ProcessCommandLine has "tpcp-docs"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| union (
+    DeviceNetworkEvents
+    | where Timestamp > ago(60d)
+    | where RemoteUrl has "api.github.com"
+    | where InitiatingProcessCommandLine has "tpcp-docs" or AdditionalFields has "tpcp-docs"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
+  )
+| union (
+    DeviceFileEvents
+    | where Timestamp > ago(60d)
+    | where FileName endswith ".pth" or FolderPath has "site-packages"
+    | where FileName has "litellm" and (FileName has "1.82.7" or FileName has "1.82.8")
+    | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName)
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
