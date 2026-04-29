@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — UAT-4356's Targeting of Cisco Firepower Devices
 
-`UC_51_1` · phase: **install** · confidence: **High**
+`UC_52_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

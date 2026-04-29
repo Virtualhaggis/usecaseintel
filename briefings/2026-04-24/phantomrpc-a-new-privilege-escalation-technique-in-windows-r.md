@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PhantomRPC: A new privilege escalation technique in Windows RPC
 
-`UC_41_1` · phase: **exploit** · confidence: **High**
+`UC_42_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

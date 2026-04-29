@@ -2081,21 +2081,39 @@ body{
 .brand-text > span:first-child{font-size:21px; letter-spacing:-0.02em;}
 .brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
 
+/* All three stats bars share ONE centred slot — they overlap via
+   absolute positioning inside .stats-wrap so the visible one always
+   sits dead-centre regardless of which tab is active. Without this
+   they'd be flex siblings each claiming 1/3 of the row width. */
+.stats-wrap{
+  flex:1; position:relative;
+  display:flex; justify-content:center; align-items:center;
+  min-height:64px;
+}
 .stats{
-  display:flex; gap:16px; flex-wrap:wrap; flex:1; justify-content:center;
-  /* One stats bar per tab — shown only when its tab is active. Toggled
-     via body classes set by showView(). All three sit in the header
-     and animate in/out as the user navigates so the stats they see at
-     a glance always match the tab they're on. */
-  transition:opacity 0.25s ease, max-height 0.3s ease, transform 0.25s ease;
-  opacity:0; max-height:0; transform:translateY(-8px);
-  pointer-events:none; overflow:hidden;
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%, -50%);
+  display:flex; gap:16px; flex-wrap:nowrap;
+  white-space:nowrap;
+  /* Hidden by default — body class shows the active tab's bar. Same
+     fade + slide animation; just no longer fighting siblings for space. */
+  transition:opacity 0.25s ease, transform 0.3s cubic-bezier(0.2,0.8,0.2,1);
+  opacity:0; pointer-events:none;
 }
 body.view-articles-active .stats-articles,
 body.view-matrix-active   .stats-matrix,
 body.view-intel-active    .stats-intel{
-  opacity:1; max-height:80px; transform:translateY(0); pointer-events:auto;
-  overflow:visible;
+  opacity:1; transform:translate(-50%, -50%); pointer-events:auto;
+}
+/* Subtle entry animation — slide up from below as it fades in */
+body:not(.view-articles-active) .stats-articles,
+body:not(.view-matrix-active)   .stats-matrix,
+body:not(.view-intel-active)    .stats-intel{
+  transform:translate(-50%, calc(-50% + 8px));
+}
+@media(max-width:780px){
+  .stats{ flex-wrap:wrap; white-space:normal; }
+  .stats-wrap{ min-height:auto; }
 }
 /* Workflow tab: no stats bar — purposeful blank space, the diagram speaks */
 .stat{
@@ -3028,15 +3046,17 @@ ul.intel-types-doc code{
         <span class="sub">Splunk · Defender · Kill Chain</span>
       </div>
     </div>
-    <div class="stats stats-articles" id="topStats">
-      <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
-      <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
-      <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
-      <div class="stat"><div class="v">__CVE_COUNT__</div><div class="l">CVEs</div></div>
-      <div class="stat"><div class="v">__CRIT_COUNT__</div><div class="l">Critical</div></div>
+    <div class="stats-wrap">
+      <div class="stats stats-articles" id="topStats">
+        <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
+        <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
+        <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
+        <div class="stat"><div class="v">__CVE_COUNT__</div><div class="l">CVEs</div></div>
+        <div class="stat"><div class="v">__CRIT_COUNT__</div><div class="l">Critical</div></div>
+      </div>
+      <div class="stats stats-matrix" id="topStatsMatrix"></div>
+      <div class="stats stats-intel" id="topStatsIntel"></div>
     </div>
-    <div class="stats stats-matrix" id="topStatsMatrix"></div>
-    <div class="stats stats-intel" id="topStatsIntel"></div>
     <div class="search-trigger" id="searchTrigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
       <span class="search-placeholder">Search articles, techniques, CVEs</span>

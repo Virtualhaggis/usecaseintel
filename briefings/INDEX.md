@@ -8,6 +8,9 @@ _305 per-article briefings — auto-generated from articles in the rolling 180-d
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-04-29
+- [litellm cve 2026 42208 sql injection exploited within 36 hou](./2026-04-29/litellm-cve-2026-42208-sql-injection-exploited-within-36-hou.md)
+
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
@@ -123,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [sglang cve 2026 5760 cvss 9 8 enables rce via malicious gguf](./2026-04-20/sglang-cve-2026-5760-cvss-9-8-enables-rce-via-malicious-gguf.md)
 - [weekly recap vercel hack push fraud qemu abused new android ](./2026-04-20/weekly-recap-vercel-hack-push-fraud-qemu-abused-new-android-.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
-- [why most ai deployments stall after the demo](./2026-04-20/why-most-ai-deployments-stall-after-the-demo.md)
 
 ## 2026-04-18
 - [cross tenant helpdesk impersonation to data exfiltration a h](./2026-04-18/cross-tenant-helpdesk-impersonation-to-data-exfiltration-a-h.md)

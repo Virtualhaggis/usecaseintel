@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast16 | Mystery ShadowBrokers Reference Reveals High-Precision Software Sabotag
 
-`UC_47_4` · phase: **exploit** · confidence: **High**
+`UC_48_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

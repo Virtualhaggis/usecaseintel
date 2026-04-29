@@ -334,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — It pays to be a forever student
 
-`UC_50_10` · phase: **exploit** · confidence: **High**
+`UC_51_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

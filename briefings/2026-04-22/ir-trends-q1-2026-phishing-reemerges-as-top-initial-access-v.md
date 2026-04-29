@@ -445,7 +445,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q1 2026: Phishing reemerges as top initial access vector, as attacks t
 
-`UC_69_14` · phase: **exploit** · confidence: **High**
+`UC_70_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
