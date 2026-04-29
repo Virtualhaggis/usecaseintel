@@ -579,6 +579,50 @@ def _llm_call_via_api_key(prompt: str, api_key: str) -> str | None:
         return None
 
 
+def _llm_should_process(article: dict, ind: dict) -> bool:
+    """Filter — should this article go to the LLM at all?
+
+    Each LLM call costs (token bill or subscription quota) and takes
+    30-60s with web search enabled. Skip articles that won't yield
+    useful UCs:
+      - already-curated briefings (analyst overlay wins)
+      - CISA KEV stubs (per-CVE only — IOC-substitution UC handles this)
+      - very short bodies (RSS-only, no mechanics)
+      - opinion / recap / webinar pieces with no attack mechanics
+    """
+    # Body length floor — RSS-only stubs are sub-300 chars
+    body = article.get("raw_body", "") or ""
+    if len(body) < 600:
+        return False
+    # CISA KEV entries are per-CVE; the asset-exposure template UC is
+    # already a perfect match — LLM would just re-emit the same query.
+    sources = article.get("sources") or [article.get("source", "")]
+    if "CISA KEV" in sources and len(sources) == 1:
+        return False
+    title_lower = (article.get("title", "") or "").lower()
+    body_lower = body.lower()
+    # Skip non-attack content
+    NON_ATTACK_TITLES = (
+        "weekly recap", "this month in security", "in memoriam",
+        "5 things to do", "ground zero", "5 places where",
+        "what to look for", "webinar:", "webinar -", "podcast",
+        "unlocked 403", "threatsday bulletin", "ai-powered defense",
+        "making opportunistic", "the agentic soc",
+    )
+    if any(p in title_lower for p in NON_ATTACK_TITLES):
+        return False
+    # Want at least one attack-content keyword
+    ATTACK_KEYWORDS = (
+        "malware", "ransomware", "trojan", "stealer", "backdoor",
+        "exploit", "vulnerab", "campaign", "actor", "apt", "cve-",
+        "rce", "0-day", "zero-day", "phishing", "lateral", "dropper",
+        "loader", "wiper", "rootkit", "implant", "botnet", "intrusion",
+    )
+    if not any(kw in title_lower or kw in body_lower[:2000] for kw in ATTACK_KEYWORDS):
+        return False
+    return True
+
+
 def _llm_generate_ucs(article: dict, ind: dict):
     """Call Claude with the article body and parse a list of UseCase objects
     from the JSON response. Three auth paths, in priority order:
@@ -586,10 +630,18 @@ def _llm_generate_ucs(article: dict, ind: dict):
          Claude Code session (Pro / Max subscription)
       2. ANTHROPIC_API_KEY=... — direct API key (pay-per-token billing)
       3. neither set — skip cleanly, pipeline runs without LLM UCs
-    Cached on disk by article URL hash so repeat runs cost nothing."""
+    Cached on disk by article URL hash so repeat runs cost nothing.
+    Filtered to attack-content articles only — see _llm_should_process()."""
     use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if not use_oauth and not api_key:
+        return []
+    # USECASEINTEL_LLM_SKIP_FILTER=1 forces the LLM to process every
+    # article regardless of attack-content heuristics. Useful for a
+    # comprehensive corpus review; default-on filter saves tokens on
+    # opinion / recap / webinar pieces.
+    skip_filter = os.environ.get("USECASEINTEL_LLM_SKIP_FILTER", "").lower() in ("1", "true", "yes")
+    if not skip_filter and not _llm_should_process(article, ind):
         return []
     url = article.get("link", "")
     if not url:
