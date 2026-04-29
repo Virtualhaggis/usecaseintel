@@ -213,7 +213,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside the LLM | Understanding AI & the Mechanics of Modern Attacks
 
-`UC_241_4` · phase: **install** · confidence: **High**
+`UC_242_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

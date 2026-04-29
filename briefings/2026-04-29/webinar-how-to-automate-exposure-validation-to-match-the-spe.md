@@ -1,19 +1,12 @@
-# [HIGH] PowMix botnet targets Czech workforce
+# [MED] Webinar: How to Automate Exposure Validation to Match the Speed of AI Attacks
 
-**Source:** Cisco Talos
-**Published:** 2026-04-16
-**Article:** https://blog.talosintelligence.com/powmix-botnet-targets-czech-workforce/
+**Source:** The Hacker News
+**Published:** 2026-04-29
+**Article:** https://thehackernews.com/2026/04/webinar-how-to-automate-exposure.html
 
 ## Threat Profile
 
-PowMix botnet targets Czech workforce 
-By 
-Chetan Raghuprasad 
-Thursday, April 16, 2026 06:00
-Threat Spotlight
-Cisco Talos discovered an ongoing malicious campaign, operating since at least December 2025, affecting a broader workforce in the Czech Republic with a previously undocumented botnet we call “PowMix.” 
-PowMix employs randomized command-and-control (C2) beaconing intervals, rather than persistent connection to the C2 server, to evade the network signature detections. 
-PowMix embeds the …
+In February 2026, researchers uncovered a shift that completely changed the game: threat actors are now using custom AI setups to automate attacks directly into the kill chain. We aren't just talking about AI writing better phishing emails anymore. We’re talking about autonomous agents mapping Active Directory and seizing Domain Admin credentials in minutes. The problem? Most defensive workflows
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -21,8 +14,6 @@ PowMix embeds the …
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,51 +21,13 @@ PowMix embeds the …
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1027** — Obfuscated Files or Information
-- **T1053.005** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -222,33 +175,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Scheduled task created with suspicious image / encoded args
-
-`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
-      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
-        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
-        OR Processes.process="*\AppData\*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
-```
-
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
 `UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
@@ -276,84 +202,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
-### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
-
-`UC_114_7` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — PowMix botnet targets Czech workforce ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("user32.dll") OR Processes.process="*Invoke-Expression*")
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("user32.dll"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — PowMix botnet targets Czech workforce
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("user32.dll") or ProcessCommandLine has_any ("Invoke-Expression"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("user32.dll"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -326,7 +326,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_161_8` · phase: **exploit** · confidence: **High**
+`UC_162_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

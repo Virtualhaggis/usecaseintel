@@ -463,7 +463,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Weaponizing the Protectors: TeamPCP’s Multi-Stage Supply Chain Attack on Securit
 
-`UC_143_14` · phase: **exploit** · confidence: **High**
+`UC_144_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

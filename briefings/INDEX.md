@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_305 per-article briefings — auto-generated from articles in the rolling 180-day window._
+_306 per-article briefings — auto-generated from articles in the rolling 180-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-04-29
+- [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
+- [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
+- [cisa adds actively exploited connectwise and windows flaws t](./2026-04-29/cisa-adds-actively-exploited-connectwise-and-windows-flaws-t.md)
+- [cisa orders feds to patch windows flaw exploited as zero day](./2026-04-29/cisa-orders-feds-to-patch-windows-flaw-exploited-as-zero-day.md)
+- [cpanel whm emergency update fixes critical auth bypass bug](./2026-04-29/cpanel-whm-emergency-update-fixes-critical-auth-bypass-bug.md)
+- [critical cpanel authentication vulnerability identified upda](./2026-04-29/critical-cpanel-authentication-vulnerability-identified-upda.md)
+- [european police dismantles 50 million crypto investment frau](./2026-04-29/european-police-dismantles-50-million-crypto-investment-frau.md)
+- [github fixes rce flaw that gave access to millions of privat](./2026-04-29/github-fixes-rce-flaw-that-gave-access-to-millions-of-privat.md)
+- [hackers arrested for hijacking and selling 610 000 roblox ac](./2026-04-29/hackers-arrested-for-hijacking-and-selling-610-000-roblox-ac.md)
+- [learning from the vercel breach shadow ai oauth sprawl](./2026-04-29/learning-from-the-vercel-breach-shadow-ai-oauth-sprawl.md)
 - [litellm cve 2026 42208 sql injection exploited within 36 hou](./2026-04-29/litellm-cve-2026-42208-sql-injection-exploited-within-36-hou.md)
+- [microsoft says backend change broke teams free chat and call](./2026-04-29/microsoft-says-backend-change-broke-teams-free-chat-and-call.md)
+- [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
+- [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
+- [webinar how to automate exposure validation to match the spe](./2026-04-29/webinar-how-to-automate-exposure-validation-to-match-the-spe.md)
+- [what to look for in an exposure management platform and what](./2026-04-29/what-to-look-for-in-an-exposure-management-platform-and-what.md)
 
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
@@ -21,7 +36,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
 - [hackers are exploiting a critical litellm pre auth sqli flaw](./2026-04-28/hackers-are-exploiting-a-critical-litellm-pre-auth-sqli-flaw.md)
 - [inside an opsec playbook how threat actors evade detection](./2026-04-28/inside-an-opsec-playbook-how-threat-actors-evade-detection.md)
-- [microsoft asks iphone users to reauthenticate after outlook ](./2026-04-28/microsoft-asks-iphone-users-to-reauthenticate-after-outlook-.md)
 - [microsoft confirms active exploitation of windows shell cve ](./2026-04-28/microsoft-confirms-active-exploitation-of-windows-shell-cve-.md)
 - [microsoft new remote desktop warnings may display incorrectl](./2026-04-28/microsoft-new-remote-desktop-warnings-may-display-incorrectl.md)
 - [microsoft patches entra id role flaw that enabled service pr](./2026-04-28/microsoft-patches-entra-id-role-flaw-that-enabled-service-pr.md)
@@ -34,20 +48,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [why secure data movement is the zero trust bottleneck nobody](./2026-04-28/why-secure-data-movement-is-the-zero-trust-bottleneck-nobody.md)
 
 ## 2026-04-27
-- [alleged silk typhoon hacker extradited to us for cyberespion](./2026-04-27/alleged-silk-typhoon-hacker-extradited-to-us-for-cyberespion.md)
-- [canada arrests three for operating sms blaster device in tor](./2026-04-27/canada-arrests-three-for-operating-sms-blaster-device-in-tor.md)
 - [checkmarx confirms github repository data posted on dark web](./2026-04-27/checkmarx-confirms-github-repository-data-posted-on-dark-web.md)
 - [fake captcha irsf scam and 120 keitaro campaigns drive globa](./2026-04-27/fake-captcha-irsf-scam-and-120-keitaro-campaigns-drive-globa.md)
-- [ftc americans lost over 2 1 billion to social media scams in](./2026-04-27/ftc-americans-lost-over-2-1-billion-to-social-media-scams-in.md)
-- [glassworm malware attacks return via 73 openvsx sleeper exte](./2026-04-27/glassworm-malware-attacks-return-via-73-openvsx-sleeper-exte.md)
 - [mythos changed the math on vulnerability discovery most team](./2026-04-27/mythos-changed-the-math-on-vulnerability-discovery-most-team.md)
 - [phantomcore exploits trueconf vulnerabilities to breach russ](./2026-04-27/phantomcore-exploits-trueconf-vulnerabilities-to-breach-russ.md)
-- [pypi package with 1 1m monthly downloads hacked to push info](./2026-04-27/pypi-package-with-1-1m-monthly-downloads-hacked-to-push-info.md)
 - [researchers uncover 73 fake vs code extensions delivering gl](./2026-04-27/researchers-uncover-73-fake-vs-code-extensions-delivering-gl.md)
-- [robinhood account creation flaw abused to send phishing emai](./2026-04-27/robinhood-account-creation-flaw-abused-to-send-phishing-emai.md)
 - [weekly recap fast16 malware xchat launch federal backdoor ai](./2026-04-27/weekly-recap-fast16-malware-xchat-launch-federal-backdoor-ai.md)
 
 ## 2026-04-25
+- [cisa adds 4 exploited flaws to kev sets may 2026 federal dea](./2026-04-25/cisa-adds-4-exploited-flaws-to-kev-sets-may-2026-federal-dea.md)
 - [researchers uncover pre stuxnet fast16 malware targeting eng](./2026-04-25/researchers-uncover-pre-stuxnet-fast16-malware-targeting-eng.md)
 
 ## 2026-04-24
@@ -102,12 +111,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [22 bridge break flaws expose thousands of lantronix and sile](./2026-04-21/22-bridge-break-flaws-expose-thousands-of-lantronix-and-sile.md)
 - [5 places where mature socs keep mttr fast and others waste t](./2026-04-21/5-places-where-mature-socs-keep-mttr-fast-and-others-waste-t.md)
 - [bad apples weaponizing native macos primitives for movement ](./2026-04-21/bad-apples-weaponizing-native-macos-primitives-for-movement-.md)
-- [cisa adds 4 exploited flaws to kev sets may 2026 federal dea](./2026-04-21/cisa-adds-4-exploited-flaws-to-kev-sets-may-2026-federal-dea.md)
 - [detection strategies across cloud and identities against inf](./2026-04-21/detection-strategies-across-cloud-and-identities-against-inf.md)
-- [google patches antigravity ide flaw enabling prompt injectio](./2026-04-21/google-patches-antigravity-ide-flaw-enabling-prompt-injectio.md)
 - [new ngate variant hides in a trojanized nfc payment app](./2026-04-21/new-ngate-variant-hides-in-a-trojanized-nfc-payment-app.md)
-- [ngate campaign targets brazil trojanizes handypay to steal n](./2026-04-21/ngate-campaign-targets-brazil-trojanizes-handypay-to-steal-n.md)
-- [no exploit needed how attackers walk through the front door ](./2026-04-21/no-exploit-needed-how-attackers-walk-through-the-front-door-.md)
 - [phishing and mfa exploitation targeting the keys to the king](./2026-04-21/phishing-and-mfa-exploitation-targeting-the-keys-to-the-king.md)
 - [podcast it s not you it s your printer state sponsored and p](./2026-04-21/podcast-it-s-not-you-it-s-your-printer-state-sponsored-and-p.md)
 - [ransomware negotiator pleads guilty to aiding blackcat attac](./2026-04-21/ransomware-negotiator-pleads-guilty-to-aiding-blackcat-attac.md)
@@ -123,8 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fakewallet crypto stealer spreading through ios apps in the ](./2026-04-20/fakewallet-crypto-stealer-spreading-through-ios-apps-in-the-.md)
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
 - [making opportunistic cyberattacks harder by design](./2026-04-20/making-opportunistic-cyberattacks-harder-by-design.md)
-- [sglang cve 2026 5760 cvss 9 8 enables rce via malicious gguf](./2026-04-20/sglang-cve-2026-5760-cvss-9-8-enables-rce-via-malicious-gguf.md)
-- [weekly recap vercel hack push fraud qemu abused new android ](./2026-04-20/weekly-recap-vercel-hack-push-fraud-qemu-abused-new-android-.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
 
 ## 2026-04-18
@@ -169,10 +172,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-10
 - [recovery scammers hit you when you re down here s how to avo](./2026-04-10/recovery-scammers-hit-you-when-you-re-down-here-s-how-to-avo.md)
-- [video the ttp ep 22 the collapse of the patch window](./2026-04-10/video-the-ttp-ep-22-the-collapse-of-the-patch-window.md)
 
 ## 2026-04-09
-- [the agentic soc rethinking secops for the next decade](./2026-04-09/the-agentic-soc-rethinking-secops-for-the-next-decade.md)
 - [the long road to your crypto clipbanker and its marathon inf](./2026-04-09/the-long-road-to-your-crypto-clipbanker-and-its-marathon-inf.md)
 
 ## 2026-04-08
@@ -467,6 +468,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-28
 - [cisa kev cve 2021 26829 openplc scadabr cross site scripting](./2025-11-28/cisa-kev-cve-2021-26829-openplc-scadabr-cross-site-scripting.md)
+- [this month in security with tony anscombe march 2026 edition](./2025-11-28/this-month-in-security-with-tony-anscombe-march-2026-edition.md)
 
 ## 2025-11-27
 - [children and chatbots what parents should know](./2025-11-27/children-and-chatbots-what-parents-should-know.md)
@@ -527,6 +529,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-03
 - [ground zero 5 things to do after discovering a cyberattack](./2025-11-03/ground-zero-5-things-to-do-after-discovering-a-cyberattack.md)
-
-## 2025-10-31
-- [this month in security with tony anscombe march 2026 edition](./2025-10-31/this-month-in-security-with-tony-anscombe-march-2026-edition.md)

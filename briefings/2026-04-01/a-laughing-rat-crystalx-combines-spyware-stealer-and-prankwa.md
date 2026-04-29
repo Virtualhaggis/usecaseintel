@@ -170,7 +170,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — A laughing RAT: CrystalX combines spyware, stealer, and prankware features
 
-`UC_142_6` · phase: **exploit** · confidence: **High**
+`UC_143_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

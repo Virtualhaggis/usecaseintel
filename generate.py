@@ -459,6 +459,22 @@ LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
 
 _LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce 1-3 high-quality detection use cases that hunt the SPECIFIC attack described — NOT a generic technique template.
 
+You have WebSearch and WebFetch tools available. Before finalising your output, you SHOULD search the web for additional context that can corroborate or enrich the article's claims:
+  - Vendor advisories (MSRC, Cisco PSIRT, Fortinet PSIRT) for any CVE mentioned
+  - Other vendor write-ups of the same campaign / actor / malware family (Mandiant, CrowdStrike, Microsoft Threat Intel)
+  - Public IOC bundles on the campaign (abuse.ch ThreatFox, AlienVault OTX, GitHub IOC-list repos)
+  - MITRE ATT&CK group / software pages for any named actor or tool
+  - Sigma rules or Splunk Security Content for the same TTPs (so we don't ship a duplicate)
+
+Use what you find to:
+  - Validate the IOCs / TTPs (only ship them if at least one second source confirms — drop if only the original article cites them)
+  - Add mapped MITRE technique IDs you wouldn't have known from the article alone
+  - Fill in actor / campaign / malware-family attribution when the article is vague
+  - Note in `rationale` which external sources you cross-checked
+
+Don't search for more than 2-3 things — keep it focused.
+
+
 Output STRICT JSON matching this schema (no markdown fences, no prose, just one JSON object):
 
 {
@@ -475,7 +491,8 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "data_models": ["<Splunk CIM dataset names e.g. Endpoint.Processes, Network_Traffic.All_Traffic>"],
       "splunk_spl": "<full Splunk SPL using CIM tstats syntax. Reference SPECIFIC binaries/paths/cmdline strings from the article. Use macros like `summariesonly` and `drop_dm_object_name(<DM>)`.>",
       "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings.>",
-      "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>"
+      "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
+      "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"]
     }
   ]
 }
@@ -488,24 +505,91 @@ Hard rules:
 - Don't generate the same logic that would already be matched by these existing rules: phishing-link click+exec, LSASS access, PsExec lateral movement, Office spawning scripts, encoded PowerShell. Add ONLY genuinely article-specific detections.
 - Maximum 3 UCs per article.
 
-Article title: {title}
-Article URL: {url}
+Article title: <<TITLE>>
+Article URL: <<URL>>
 Article body:
 \"\"\"
-{body}
+<<BODY>>
 \"\"\"
 
 Pre-extracted IOCs from the article (use these in your queries where appropriate):
-{ioc_summary}
+<<IOC_SUMMARY>>
 """
 
 
+def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
+    """Call Claude through the user's Claude Code OAuth session via
+    claude-agent-sdk. Returns the raw response text or None if the SDK
+    isn't installed / the user isn't authenticated.
+
+    When enable_search=True (default), Claude can use the WebSearch tool
+    to cross-reference the article against other public sources before
+    answering. This is what lets the LLM-emitted UCs reach genuinely
+    high fidelity — multiple article sources confirm the IOCs / TTPs."""
+    try:
+        from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
+    except ImportError:
+        return None
+    import asyncio
+    async def _run():
+        chunks = []
+        if enable_search:
+            # WebSearch lets Claude cross-check the article against vendor
+            # advisories, MITRE attributions, public IOC dumps. max_turns=4
+            # gives it room to do 1-2 search rounds + the final answer.
+            options = ClaudeAgentOptions(
+                max_turns=4,
+                allowed_tools=["WebSearch", "WebFetch"],
+            )
+        else:
+            options = ClaudeAgentOptions(max_turns=1, allowed_tools=[])
+        async for msg in query(prompt=prompt, options=options):
+            if isinstance(msg, AssistantMessage):
+                for block in msg.content:
+                    if isinstance(block, TextBlock):
+                        chunks.append(block.text)
+        return "".join(chunks)
+    try:
+        return asyncio.run(_run())
+    except Exception as e:
+        safe = str(e).encode("ascii","replace").decode("ascii")[:120]
+        print(f"    [!] Claude Code OAuth call failed: {safe}")
+        return None
+
+
+def _llm_call_via_api_key(prompt: str, api_key: str) -> str | None:
+    """Call Claude via api.anthropic.com with an x-api-key. Returns raw
+    response text or None on error / library missing."""
+    try:
+        import anthropic
+    except ImportError:
+        print("    [!] anthropic library not installed — pip install anthropic")
+        return None
+    try:
+        client = anthropic.Anthropic(api_key=api_key)
+        msg = client.messages.create(
+            model=LLM_UC_MODEL,
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return "".join(block.text for block in msg.content if hasattr(block, "text"))
+    except Exception as e:
+        safe = str(e).encode("ascii","replace").decode("ascii")[:120]
+        print(f"    [!] Anthropic API call failed: {safe}")
+        return None
+
+
 def _llm_generate_ucs(article: dict, ind: dict):
-    """Call the Anthropic API with the article body and parse a list of UseCase
-    objects from the JSON response. Cached on disk by article URL hash. Returns
-    [] if no API key is present, the call fails, or the response is malformed."""
+    """Call Claude with the article body and parse a list of UseCase objects
+    from the JSON response. Three auth paths, in priority order:
+      1. USECASEINTEL_USE_CLAUDE_OAUTH=1 — claude-agent-sdk + user's
+         Claude Code session (Pro / Max subscription)
+      2. ANTHROPIC_API_KEY=... — direct API key (pay-per-token billing)
+      3. neither set — skip cleanly, pipeline runs without LLM UCs
+    Cached on disk by article URL hash so repeat runs cost nothing."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not api_key:
+    if not use_oauth and not api_key:
         return []
     url = article.get("link", "")
     if not url:
@@ -521,46 +605,49 @@ def _llm_generate_ucs(article: dict, ind: dict):
         except Exception:
             pass
     body = (article.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
-    if len(body) < 400:
-        return []  # not enough content
+    if len(body) < 200:
+        return []  # not enough content for the LLM to ground on
     ioc_summary = []
     for k, label in [("cves","CVEs"),("ips","IPs"),("domains","Domains"),
                      ("sha256","SHA256"),("sha1","SHA1"),("md5","MD5")]:
         if ind.get(k):
             ioc_summary.append(f"  {label}: {', '.join(ind[k][:8])}")
-    prompt = _LLM_UC_PROMPT.format(
-        title=article.get("title","")[:200],
-        url=url[:200],
-        body=body,
-        ioc_summary="\n".join(ioc_summary) or "  (none)",
-    )
-    try:
-        import anthropic
-        client = anthropic.Anthropic(api_key=api_key)
-        msg = client.messages.create(
-            model=LLM_UC_MODEL,
-            max_tokens=4000,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        raw = "".join(block.text for block in msg.content if hasattr(block, "text"))
-    except ImportError:
-        print("    [!] anthropic library not installed — pip install anthropic")
-        return []
-    except Exception as e:
-        safe = str(e).encode("ascii","replace").decode("ascii")[:80]
-        print(f"    [!] LLM call failed for {url[:60]}: {safe}")
+    # Manual placeholder substitution — the prompt body contains literal
+    # JSON `{...}` braces which would confuse str.format(), causing every
+    # call to fail with a KeyError before ever reaching the LLM.
+    prompt = (_LLM_UC_PROMPT
+              .replace("<<TITLE>>",       article.get("title", "")[:200])
+              .replace("<<URL>>",         url[:200])
+              .replace("<<BODY>>",        body)
+              .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)"))
+    raw = None
+    if use_oauth:
+        raw = _llm_call_via_oauth(prompt)
+    if raw is None and api_key:
+        raw = _llm_call_via_api_key(prompt, api_key)
+    if raw is None:
         return []
     raw = raw.strip()
-    # Strip code-fence wrappers if the model added them
     if raw.startswith("```"):
         raw = re.sub(r"^```(?:json)?\s*", "", raw)
         raw = re.sub(r"\s*```\s*$", "", raw)
+    # The Agent SDK sometimes wraps the JSON in chatty prose. Try to
+    # extract the first balanced { ... } block if a direct parse fails.
+    json_lib = __import__("json")
     try:
-        data = __import__("json").loads(raw)
-    except Exception as e:
-        print(f"    [!] LLM output JSON-parse failed: {str(e)[:60]}")
-        return []
-    cache_path.write_text(__import__("json").dumps(data, indent=2), encoding="utf-8")
+        data = json_lib.loads(raw)
+    except Exception:
+        m = re.search(r"\{.*\}", raw, re.DOTALL)
+        if m:
+            try:
+                data = json_lib.loads(m.group(0))
+            except Exception as e:
+                print(f"    [!] LLM output JSON-parse failed: {str(e)[:80]}")
+                return []
+        else:
+            print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
+            return []
+    cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
 
 
@@ -587,11 +674,17 @@ def _uc_from_llm_dict(d: dict):
     req_telem = d.get("required_telemetry") or []
     if not isinstance(req_telem, list):
         req_telem = [str(req_telem)]
+    desc_parts = [(d.get("description") or "").strip()]
+    if d.get("rationale"):
+        desc_parts.append("\n\nRationale: " + (d.get("rationale") or "").strip())
+    cs = d.get("corroborated_sources") or []
+    if isinstance(cs, list) and cs:
+        desc_parts.append("\n\nCross-checked against:")
+        for u in cs[:6]:
+            desc_parts.append(f"\n  • {u}")
     return UseCase(
         title=f"[LLM] {title[:140]}",
-        description=(d.get("description") or "").strip()
-            + (("\n\nRationale: " + (d.get("rationale") or "").strip())
-                if d.get("rationale") else ""),
+        description="".join(desc_parts),
         kill_chain=(d.get("kill_chain") or "actions"),
         techniques=techs,
         data_models=list(d.get("data_models") or []),

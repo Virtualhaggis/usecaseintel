@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlushDaemon compromises network devices for adversary-in-the-middle attacks
 
-`UC_285_4` · phase: **exploit** · confidence: **High**
+`UC_287_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

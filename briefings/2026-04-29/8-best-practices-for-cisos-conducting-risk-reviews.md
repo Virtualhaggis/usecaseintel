@@ -1,19 +1,22 @@
-# [HIGH] PowMix botnet targets Czech workforce
+# [HIGH] 8 best practices for CISOs conducting risk reviews
 
-**Source:** Cisco Talos
-**Published:** 2026-04-16
-**Article:** https://blog.talosintelligence.com/powmix-botnet-targets-czech-workforce/
+**Source:** Microsoft Security Blog
+**Published:** 2026-04-29
+**Article:** https://www.microsoft.com/en-us/security/blog/2026/04/29/8-best-practices-for-cisos-conducting-risk-reviews/
 
 ## Threat Profile
 
-PowMix botnet targets Czech workforce 
-By 
-Chetan Raghuprasad 
-Thursday, April 16, 2026 06:00
-Threat Spotlight
-Cisco Talos discovered an ongoing malicious campaign, operating since at least December 2025, affecting a broader workforce in the Czech Republic with a previously undocumented botnet we call “PowMix.” 
-PowMix employs randomized command-and-control (C2) beaconing intervals, rather than persistent connection to the C2 server, to evade the network signature detections. 
-PowMix embeds the …
+Content types 
+Best practices 
+Products and services 
+Microsoft Entra 
+Topics 
+Microsoft Secure Future Initiative 
+Office of the CISO 
+Security management 
+Security operations 
+Zero Trust 
+The Deputy CISO blog series is where  Microsoft  Deputy Chief Information Security Officers  (CISOs) share their thoughts on what is most important in their respective domains. In this series, you will get practical advice, tactics to start (and stop) deploying, forward-looking commentary on where the industry…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -30,10 +33,6 @@ PowMix embeds the …
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1053.005** — Scheduled Task
-- **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1027** — Obfuscated Files or Information
-- **T1053.005** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
@@ -222,138 +221,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Scheduled task created with suspicious image / encoded args
-
-`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
-      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
-        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
-        OR Processes.process="*\AppData\*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
-```
-
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-```
-
-### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
-
-`UC_114_7` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — PowMix botnet targets Czech workforce ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("user32.dll") OR Processes.process="*Invoke-Expression*")
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("user32.dll"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — PowMix botnet targets Czech workforce
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("user32.dll") or ProcessCommandLine has_any ("Invoke-Expression"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("user32.dll"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

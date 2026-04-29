@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An AI gateway designed to steal your data
 
-`UC_149_6` · phase: **exploit** · confidence: **High**
+`UC_150_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -302,7 +302,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Threat landscape for industrial automation systems in Q4 2025
 
-`UC_115_7` · phase: **exploit** · confidence: **High**
+`UC_118_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

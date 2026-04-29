@@ -1,6 +1,11 @@
 feedparser>=6.0
 requests>=2.28
 pyyaml>=6.0
-# Optional — only required if ANTHROPIC_API_KEY is set to enable
-# LLM-driven bespoke UC generation. Pipeline runs without it.
+# Optional — required for LLM-driven bespoke UC generation. Two paths:
+#   ANTHROPIC_API_KEY=...               → uses anthropic SDK (pay per token)
+#   USECASEINTEL_USE_CLAUDE_OAUTH=1     → uses claude-agent-sdk + the user's
+#                                         Claude Code session (Pro / Max
+#                                         subscription, no separate billing)
+# Pipeline runs without either; LLM UCs just don't get generated.
 anthropic>=0.30; python_version >= "3.9"
+claude-agent-sdk>=0.1; python_version >= "3.10"
