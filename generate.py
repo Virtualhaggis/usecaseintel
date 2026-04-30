@@ -4870,6 +4870,11 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
   });
 });
 </script>
+<!-- Cloudflare Web Analytics — privacy-friendly, no cookies, no GDPR
+     banner needed. Beacon script is loaded with `defer` so it never
+     blocks the 8 MB index.html parse, and it's injected at the very
+     end of <body> so analytics never get in the way of content load. -->
+<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "93e5a6361d834ae2b95d7a90b539fe71"}'></script>
 </body>
 </html>
 """
