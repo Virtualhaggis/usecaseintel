@@ -2237,6 +2237,9 @@ body{
   width:64px; height:64px; border-radius:12px;
   display:flex; align-items:center; justify-content:center;
   position:relative; overflow:hidden;
+  /* Reset default button chrome so the <button> wrapper looks
+     identical to the previous <div>. */
+  padding:0; cursor:pointer; outline:none;
   /* Soft radial wash that picks up Clanker's pink + the Linear indigo
      accent — gives the mascot a glow without being neon, and keeps the
      logo readable on the near-black topbar. */
@@ -2248,9 +2251,65 @@ body{
   box-shadow:0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
   transition:transform 0.22s cubic-bezier(0.2,0.8,0.2,1), border-color 0.18s;
 }
+.brand .logo:focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px;
+}
 .brand:hover .logo{
   transform:rotate(-4deg) scale(1.04);
   border-color:rgba(244,114,182,0.35);
+}
+/* Logo lightbox — click the topbar logo to see Clanker full-size.
+   Backdrop blurs the page; image animates in with a small bounce.
+   Click backdrop, ESC, or close button to dismiss. */
+.logo-lightbox{
+  position:fixed; inset:0; z-index:200; display:none;
+  align-items:center; justify-content:center;
+  background:rgba(8,9,10,0.78);
+  backdrop-filter:blur(12px) saturate(140%);
+  -webkit-backdrop-filter:blur(12px) saturate(140%);
+  animation:lbFade 0.22s ease;
+  cursor:zoom-out;
+}
+.logo-lightbox.open{display:flex;}
+.logo-lightbox img{
+  max-width:min(80vw, 720px);
+  max-height:min(80vh, 720px);
+  width:auto; height:auto;
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 35% 30%, rgba(244,114,182,0.20), transparent 65%),
+    radial-gradient(circle at 70% 80%, rgba(113,112,255,0.18), transparent 65%),
+    var(--panel-elev);
+  border:1px solid var(--border-2);
+  padding:24px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.04);
+  filter:drop-shadow(0 6px 16px rgba(0,0,0,0.5));
+  animation:lbZoom 0.32s cubic-bezier(0.2,0.8,0.2,1);
+  cursor:default;
+}
+.logo-lightbox-close{
+  position:absolute; top:24px; right:24px;
+  width:36px; height:36px; border-radius:50%;
+  background:var(--panel-elev); border:1px solid var(--border);
+  color:var(--text); font-size:18px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.12s, background-color 0.12s;
+}
+.logo-lightbox-close:hover{
+  background:var(--panel2); border-color:var(--border-2);
+}
+.logo-lightbox-caption{
+  position:absolute; bottom:48px; left:50%; transform:translateX(-50%);
+  color:var(--muted); font-size:13px; letter-spacing:-0.005em;
+}
+.logo-lightbox-caption strong{color:var(--text); font-weight:600;}
+@keyframes lbFade{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+@keyframes lbZoom{
+  from{opacity:0; transform:scale(0.85) rotate(-3deg);}
+  to{opacity:1; transform:scale(1) rotate(0);}
 }
 /* logo.png — Clanker the mascot. Drop-shadow lifts the pig-robot off
    the gradient panel; padding-3 keeps a touch of breathing room
@@ -3291,10 +3350,18 @@ ul.intel-types-doc code{
 </style>
 </head>
 <body>
+<!-- Logo lightbox — click logoButton to open, click backdrop or ESC to close. -->
+<div class="logo-lightbox" id="logoLightbox" role="dialog" aria-modal="true" aria-labelledby="lbCaption" hidden>
+  <button class="logo-lightbox-close" id="logoLightboxClose" aria-label="Close">×</button>
+  <img src="logo.png" alt="Clanker the Clankerusecase mascot">
+  <div class="logo-lightbox-caption" id="lbCaption"><strong>Clanker</strong> · the Clankerusecase mascot</div>
+</div>
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand">
-      <div class="logo">
+      <button type="button" class="logo" id="logoButton"
+              aria-label="View Clanker the mascot at full size"
+              title="Meet Clanker">
         <!-- logo.png in repo root → SVG fallback if file missing -->
         <img src="logo.png" alt="Clankerusecase" class="logo-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
@@ -3302,7 +3369,7 @@ ul.intel-types-doc code{
           <path d="M12 2 L4 6 v6 c0 5 3.5 8 8 10 4.5-2 8-5 8-10 V6z"/>
           <path d="M9 12 l2 2 l4-4"/>
         </svg>
-      </div>
+      </button>
       <div class="brand-text">
         <span>Clankerusecase</span>
       </div>
@@ -4261,6 +4328,35 @@ function showView(name) {
 // Apply default state on page load — Articles tab starts active.
 document.body.classList.add('view-articles-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+// =================================================================
+// Logo lightbox — click the topbar Clanker to see him full size.
+// Backdrop click, ESC, or close-button all dismiss. Re-renders cleanly
+// every open (no stale animation state).
+// =================================================================
+(() => {
+  const btn = document.getElementById('logoButton');
+  const lb = document.getElementById('logoLightbox');
+  const close = document.getElementById('logoLightboxClose');
+  if (!btn || !lb) return;
+  function open() {
+    lb.removeAttribute('hidden');
+    lb.classList.add('open');
+  }
+  function dismiss() {
+    lb.classList.remove('open');
+    setTimeout(() => lb.setAttribute('hidden', ''), 220);
+  }
+  btn.addEventListener('click', e => { e.preventDefault(); open(); });
+  close.addEventListener('click', dismiss);
+  lb.addEventListener('click', e => {
+    // Click on the backdrop (not the image itself) closes the lightbox.
+    if (e.target === lb) dismiss();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && lb.classList.contains('open')) dismiss();
+  });
+})();
 
 // =================================================================
 // ATT&CK Matrix
