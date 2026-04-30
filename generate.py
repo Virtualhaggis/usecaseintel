@@ -2232,24 +2232,34 @@ body{
   margin:0; padding:12px 28px;
   display:flex; gap:24px; align-items:center; flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:21px;letter-spacing:-0.018em;}
+.brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:22px;letter-spacing:-0.018em;}
 .brand .logo{
-  width:54px; height:54px; border-radius:10px;
+  width:64px; height:64px; border-radius:12px;
   display:flex; align-items:center; justify-content:center;
   position:relative; overflow:hidden;
-  background:rgba(113,112,255,0.10);
-  border:1px solid var(--border);
-  transition:transform 0.18s cubic-bezier(0.2,0.8,0.2,1);
+  /* Soft radial wash that picks up Clanker's pink + the Linear indigo
+     accent — gives the mascot a glow without being neon, and keeps the
+     logo readable on the near-black topbar. */
+  background:
+    radial-gradient(circle at 35% 30%, rgba(244,114,182,0.18), transparent 65%),
+    radial-gradient(circle at 70% 80%, rgba(113,112,255,0.16), transparent 65%),
+    var(--panel-elev);
+  border:1px solid var(--border-2);
+  box-shadow:0 1px 2px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition:transform 0.22s cubic-bezier(0.2,0.8,0.2,1), border-color 0.18s;
 }
-.brand:hover .logo{transform:rotate(-4deg) scale(1.04);}
-/* logo.png — Clanker the mascot. Sized to fit nicely in the 64×64
-   logo slot regardless of source aspect; object-contain keeps the
-   image whole, padding gives it a touch of breathing room. */
+.brand:hover .logo{
+  transform:rotate(-4deg) scale(1.04);
+  border-color:rgba(244,114,182,0.35);
+}
+/* logo.png — Clanker the mascot. Drop-shadow lifts the pig-robot off
+   the gradient panel; padding-3 keeps a touch of breathing room
+   around the trotters. */
 .brand .logo .logo-img{
   display:block; width:100%; height:100%;
-  object-fit:contain; padding:2px;
+  object-fit:contain; padding:3px;
   position:relative; z-index:1;
-  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35));
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.45));
 }
 .brand .logo svg{width:32px;height:32px;color:var(--accent);position:relative;z-index:1;}
 .brand-text{display:flex;flex-direction:column;line-height:1.2;}
