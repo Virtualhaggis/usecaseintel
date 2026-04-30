@@ -44,6 +44,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] Password manager typosquat phishing domains (the1password / appbitwarden malvertising)
+
+`UC_293_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where Web.url IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*","*bitwardenlogin.com*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com","*.the1password.com","*.app1password.com","*.appbitwarden.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | stats count values(*) as * by src
+```
+
+**Defender KQL:**
+```kql
+let typo_domains = dynamic(["the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (typo_domains) or tostring(AdditionalFields) has_any (typo_domains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AccountName
+| union (DeviceEvents | where ActionType == "BrowserLaunchedToOpenUrl" | where RemoteUrl has_any (typo_domains) | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, AccountName)
+```
+
+### [LLM] InvisibleFerret Python loader modules (bow.py / pay.py / adc.py / .npl) execution
+
+`UC_293_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3","python") OR Processes.parent_process_name IN ("python.exe","pythonw.exe")) AND (Processes.process IN ("*bow.py*","*pay.py*","*pay_u2GgOA8.py*","*adc.py*","*.npl*") OR Processes.process="*p.zip*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("bow.py","pay.py","pay_u2GgOA8.py","adc.py","p.zip") OR Filesystem.file_name="*.npl" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+let if_files = dynamic(["bow.py","pay.py","pay_u2GgOA8.py","adc.py"]);
+let p_zip_sha = "6a104f07ab6c5711b6bc8bf6ff956ab8cd597a388002a966e980c5ec9678b5b0";
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("python.exe","pythonw.exe","python","python3") and (ProcessCommandLine has_any (if_files) or ProcessCommandLine has ".npl"))
+   or InitiatingProcessSHA256 == p_zip_sha
+   or SHA256 == p_zip_sha
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| union (DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ (if_files) or FileName endswith ".npl" or SHA256 == p_zip_sha | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName)
+```
+
+### [LLM] InvisibleFerret C2 callback (DeceptiveDevelopment IPs / endpoints :1244 :1245)
+
+`UC_293_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101") OR All_Traffic.dest_port IN (1244,1245) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Web where Web.url IN ("*:1244/keys*","*:1244/pdown*","*:1245/brow*","*:1245/bow*","*:1245/adc*") OR (Web.dest IN ("147.124.214.129","173.211.106.101") AND Web.uri_path IN ("/keys","/pdown","/brow","/bow","/adc")) by Web.src Web.dest Web.url Web.uri_path | `drop_dm_object_name(Web)`]
+```
+
+**Defender KQL:**
+```kql
+let if_c2_ips = dynamic(["95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101"]);
+let if_paths = dynamic(["/keys","/pdown","/brow","/bow","/adc"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (if_c2_ips) or RemotePort in (1244,1245)
+   or (RemoteUrl has_any (if_paths) and (RemotePort in (1244,1245) or RemoteIP in (if_c2_ips)))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","node.exe","npm.exe") or RemoteUrl has_any (if_paths)
+```
+
 ### Suspicious browser extension installation
 
 `UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
@@ -113,7 +175,6 @@ DeviceFileEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -240,68 +301,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] Password manager typosquat phishing domains (the1password / appbitwarden malvertising)
-
-`UC_292_6` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where Web.url IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*","*bitwardenlogin.com*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com","*.the1password.com","*.app1password.com","*.appbitwarden.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | stats count values(*) as * by src
-```
-
-**Defender KQL:**
-```kql
-let typo_domains = dynamic(["the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (typo_domains) or tostring(AdditionalFields) has_any (typo_domains)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AccountName
-| union (DeviceEvents | where ActionType == "BrowserLaunchedToOpenUrl" | where RemoteUrl has_any (typo_domains) | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, AccountName)
-```
-
-### [LLM] InvisibleFerret Python loader modules (bow.py / pay.py / adc.py / .npl) execution
-
-`UC_292_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3","python") OR Processes.parent_process_name IN ("python.exe","pythonw.exe")) AND (Processes.process IN ("*bow.py*","*pay.py*","*pay_u2GgOA8.py*","*adc.py*","*.npl*") OR Processes.process="*p.zip*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("bow.py","pay.py","pay_u2GgOA8.py","adc.py","p.zip") OR Filesystem.file_name="*.npl" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`]
-```
-
-**Defender KQL:**
-```kql
-let if_files = dynamic(["bow.py","pay.py","pay_u2GgOA8.py","adc.py"]);
-let p_zip_sha = "6a104f07ab6c5711b6bc8bf6ff956ab8cd597a388002a966e980c5ec9678b5b0";
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("python.exe","pythonw.exe","python","python3") and (ProcessCommandLine has_any (if_files) or ProcessCommandLine has ".npl"))
-   or InitiatingProcessSHA256 == p_zip_sha
-   or SHA256 == p_zip_sha
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| union (DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ (if_files) or FileName endswith ".npl" or SHA256 == p_zip_sha | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName)
-```
-
-### [LLM] InvisibleFerret C2 callback (DeceptiveDevelopment IPs / endpoints :1244 :1245)
-
-`UC_292_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101") OR All_Traffic.dest_port IN (1244,1245) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Web where Web.url IN ("*:1244/keys*","*:1244/pdown*","*:1245/brow*","*:1245/bow*","*:1245/adc*") OR (Web.dest IN ("147.124.214.129","173.211.106.101") AND Web.uri_path IN ("/keys","/pdown","/brow","/bow","/adc")) by Web.src Web.dest Web.url Web.uri_path | `drop_dm_object_name(Web)`]
-```
-
-**Defender KQL:**
-```kql
-let if_c2_ips = dynamic(["95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101"]);
-let if_paths = dynamic(["/keys","/pdown","/brow","/bow","/adc"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (if_c2_ips) or RemotePort in (1244,1245)
-   or (RemoteUrl has_any (if_paths) and (RemotePort in (1244,1245) or RemoteIP in (if_c2_ips)))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","node.exe","npm.exe") or RemoteUrl has_any (if_paths)
 ```
 
 ### IOC-driven hunts (use shared templates)

@@ -30,6 +30,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] GhostChat C2 beacon to hitpak.org with 'tynor=<host>sss<user>' URI pattern
+
+`UC_223_2` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest values(Web.dest_ip) as dest_ip from datamodel=Web where Web.url="*hitpak.org/page.php*" OR Web.url="*tynor=*sss*" OR Web.dest="hitpak.org" by Web.src, Web.user | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "hitpak.org" or RemoteIP == "188.114.96.10" or RemoteUrl matches regex @"tynor=[^&]+sss[^&]+"
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| join kind=leftouter (DeviceProcessEvents | where ProcessCommandLine has_any ("FromBase64String","Invoke-Expression","notepad2.dll","file.dll") | project DeviceId, ProcCmd=ProcessCommandLine, ProcTime=Timestamp) on DeviceId
+```
+
+### [LLM] GhostChat second-stage DLL fetch from foxy580.github.io/koko or hitpak.org/notepad2.dll
+
+`UC_223_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua from datamodel=Web where (Web.url="*foxy580.github.io/koko/file.dll*" OR Web.url="*hitpak.org/notepad2.dll*" OR (Web.url="*foxy580.github.io*" AND Web.url="*koko*")) by Web.src, Web.user, Web.dest | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="file.dll" OR Filesystem.file_name="notepad2.dll") AND (Filesystem.file_hash="8B103D0AA37E5297143E21949471FD4F6B2ECBAA") by Filesystem.dest Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+let urls = dynamic(["foxy580.github.io/koko/file.dll","hitpak.org/notepad2.dll"]);
+let sha1s = dynamic(["8B103D0AA37E5297143E21949471FD4F6B2ECBAA","B15B1F3F2227EBA4B69C85BDB638DF34B9D30B6A"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (urls) or (RemoteUrl has "foxy580.github.io" and RemoteUrl has "koko")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
+| union (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("file.dll","notepad2.dll") or SHA1 in (sha1s)
+    | project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
+### [LLM] Visit to fake PKCERT lure on buildthenations.info preceding scripted execution
+
+`UC_223_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as lure_url from datamodel=Web where Web.url="*buildthenations.info*" OR Web.url="*PKCERT/pkcert.html*" by Web.src Web.user | `drop_dm_object_name(Web)` | join type=inner src [| tstats `summariesonly` count values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=powershell.exe OR Processes.process_name=mshta.exe) AND (Processes.process="*FromBase64String*" OR Processes.process="*tynor=*" OR Processes.process="*hitpak.org*" OR Processes.process="*foxy580.github.io*") by Processes.dest Processes.user | rename Processes.dest as src Processes.user as user | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+let lureHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "buildthenations.info" or RemoteUrl has "PKCERT/pkcert.html"
+    | project lureTime=Timestamp, DeviceId, DeviceName, lureUrl=RemoteUrl;
+let badProcs = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe") or FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+    | where ProcessCommandLine has_any ("hitpak.org","foxy580.github.io","notepad2.dll","tynor=")
+        or (ProcessCommandLine has "FromBase64String" and ProcessCommandLine has "Invoke-Expression" and ProcessCommandLine has "WindowStyle Hidden")
+    | project procTime=Timestamp, DeviceId, DeviceName, ProcessCommandLine, FileName, InitiatingProcessFileName;
+lureHits
+| join kind=inner badProcs on DeviceId
+| where procTime between (lureTime .. lureTime + 1h)
+| project lureTime, procTime, DeviceName, lureUrl, FileName, InitiatingProcessFileName, ProcessCommandLine
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -47,7 +115,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -140,74 +207,6 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### [LLM] GhostChat C2 beacon to hitpak.org with 'tynor=<host>sss<user>' URI pattern
-
-`UC_222_2` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest values(Web.dest_ip) as dest_ip from datamodel=Web where Web.url="*hitpak.org/page.php*" OR Web.url="*tynor=*sss*" OR Web.dest="hitpak.org" by Web.src, Web.user | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "hitpak.org" or RemoteIP == "188.114.96.10" or RemoteUrl matches regex @"tynor=[^&]+sss[^&]+"
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
-| join kind=leftouter (DeviceProcessEvents | where ProcessCommandLine has_any ("FromBase64String","Invoke-Expression","notepad2.dll","file.dll") | project DeviceId, ProcCmd=ProcessCommandLine, ProcTime=Timestamp) on DeviceId
-```
-
-### [LLM] GhostChat second-stage DLL fetch from foxy580.github.io/koko or hitpak.org/notepad2.dll
-
-`UC_222_3` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua from datamodel=Web where (Web.url="*foxy580.github.io/koko/file.dll*" OR Web.url="*hitpak.org/notepad2.dll*" OR (Web.url="*foxy580.github.io*" AND Web.url="*koko*")) by Web.src, Web.user, Web.dest | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="file.dll" OR Filesystem.file_name="notepad2.dll") AND (Filesystem.file_hash="8B103D0AA37E5297143E21949471FD4F6B2ECBAA") by Filesystem.dest Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
-```
-
-**Defender KQL:**
-```kql
-let urls = dynamic(["foxy580.github.io/koko/file.dll","hitpak.org/notepad2.dll"]);
-let sha1s = dynamic(["8B103D0AA37E5297143E21949471FD4F6B2ECBAA","B15B1F3F2227EBA4B69C85BDB638DF34B9D30B6A"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (urls) or (RemoteUrl has "foxy580.github.io" and RemoteUrl has "koko")
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| union (DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("file.dll","notepad2.dll") or SHA1 in (sha1s)
-    | project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine)
-```
-
-### [LLM] Visit to fake PKCERT lure on buildthenations.info preceding scripted execution
-
-`UC_222_4` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as lure_url from datamodel=Web where Web.url="*buildthenations.info*" OR Web.url="*PKCERT/pkcert.html*" by Web.src Web.user | `drop_dm_object_name(Web)` | join type=inner src [| tstats `summariesonly` count values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=powershell.exe OR Processes.process_name=mshta.exe) AND (Processes.process="*FromBase64String*" OR Processes.process="*tynor=*" OR Processes.process="*hitpak.org*" OR Processes.process="*foxy580.github.io*") by Processes.dest Processes.user | rename Processes.dest as src Processes.user as user | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-let lureHits = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has "buildthenations.info" or RemoteUrl has "PKCERT/pkcert.html"
-    | project lureTime=Timestamp, DeviceId, DeviceName, lureUrl=RemoteUrl;
-let badProcs = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe") or FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-    | where ProcessCommandLine has_any ("hitpak.org","foxy580.github.io","notepad2.dll","tynor=")
-        or (ProcessCommandLine has "FromBase64String" and ProcessCommandLine has "Invoke-Expression" and ProcessCommandLine has "WindowStyle Hidden")
-    | project procTime=Timestamp, DeviceId, DeviceName, ProcessCommandLine, FileName, InitiatingProcessFileName;
-lureHits
-| join kind=inner badProcs on DeviceId
-| where procTime between (lureTime .. lureTime + 1h)
-| project lureTime, procTime, DeviceName, lureUrl, FileName, InitiatingProcessFileName, ProcessCommandLine
 ```
 
 

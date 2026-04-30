@@ -54,7 +54,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -213,7 +212,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside the LLM | Understanding AI & the Mechanics of Modern Attacks
 
-`UC_242_4` · phase: **install** · confidence: **High**
+`UC_243_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

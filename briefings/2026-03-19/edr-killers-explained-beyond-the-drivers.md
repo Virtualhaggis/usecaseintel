@@ -50,6 +50,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] EDR-Freeze: WerFaultSecure /type 268310 against protected security process
+
+`UC_163_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="WerFaultSecure.exe" AND Processes.process="*/encfile*" AND Processes.process="*/cancel*" AND Processes.process="*/type*" AND (Processes.process="*268310*" OR Processes.process="*0x4186*" OR Processes.process="*0x416d6*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where FileName =~ "WerFaultSecure.exe"
+| where ProcessCommandLine has_all ("/encfile", "/cancel", "/type")
+| where ProcessCommandLine has_any ("268310", "0x4186", "0x416d6")
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where FileName in~ ("MsMpEng.exe","MsSense.exe","SentinelAgent.exe","CSFalconService.exe","elastic-agent.exe","cyserver.exe","FortiEDR.exe","ekrn.exe")
+    | project SuspectPid = ProcessId, SuspectName = FileName, DeviceId
+) on DeviceId
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspectName
+```
+
+### [LLM] EDRSilencer-style WFP filter blocking EDR sensor outbound traffic
+
+`UC_163_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*EDRSilencer*","*blockedr*","*unblockedr*") OR (Processes.process_name="netsh.exe" AND Processes.process="*wfp*" AND Processes.process="*add*" AND Processes.process="*filter*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*New-NetFirewallRule*" AND Processes.process="*-Direction*Outbound*" AND Processes.process="*-Action*Block*" AND (Processes.process="*MsSense*" OR Processes.process="*MsMpEng*" OR Processes.process="*SentinelAgent*" OR Processes.process="*CSFalconService*" OR Processes.process="*cyserver*" OR Processes.process="*FortiEDR*" OR Processes.process="*ekrn*" OR Processes.process="*elastic-agent*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let edrImages = dynamic(["MsSense.exe","MsMpEng.exe","NisSrv.exe","SenseIR.exe","SentinelAgent.exe","SentinelServiceHost.exe","CSFalconService.exe","CSFalconContainer.exe","cyserver.exe","CylanceSvc.exe","FortiEDR.exe","fortiedrcollectorservice.exe","ekrn.exe","egui.exe","elastic-agent.exe","xagt.exe","TmCCSF.exe"]);
+DeviceProcessEvents
+| where ProcessCommandLine has_any ("EDRSilencer", "blockedr", "unblockedr")
+   or (FileName =~ "netsh.exe" and ProcessCommandLine has "wfp" and ProcessCommandLine has "add" and ProcessCommandLine has "filter")
+   or (FileName in~ ("powershell.exe","pwsh.exe")
+       and ProcessCommandLine has "New-NetFirewallRule"
+       and ProcessCommandLine has "Outbound"
+       and ProcessCommandLine has "Block"
+       and ProcessCommandLine has_any (edrImages))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| union (
+DeviceEvents
+| where ActionType in ("FirewallOutboundConnectionBlocked","FirewallServiceStopped","WfpFilterAdd","FirewallRuleAdded")
+| where InitiatingProcessFileName has_any (edrImages) or AdditionalFields has_any (edrImages)
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, AdditionalFields
+)
+```
+
+### [LLM] Warlock-style chain: Velociraptor agent followed by VS Code (code.exe) tunnel
+
+`UC_163_11` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("velociraptor.exe","velociraptor_client.exe") OR Processes.process="*velociraptor*--config*" OR (Processes.process_name="msiexec.exe" AND Processes.process="*velociraptor*")) OR (Processes.process_name IN ("Code.exe","code.exe","code-tunnel.exe") AND (Processes.process="*tunnel*" OR Processes.process="*--accept-server-license-terms*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | eventstats values(process_name) as host_procs by dest | where mvfind(host_procs,"velociraptor")>=0 AND mvfind(host_procs,"[Cc]ode")>=0 | sort 0 dest _time
+```
+
+**Defender KQL:**
+```kql
+let veloHosts = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where FileName has "velociraptor" or ProcessCommandLine has "velociraptor" or (FileName =~ "msiexec.exe" and ProcessCommandLine has "velociraptor")
+    | summarize firstVelo=min(Timestamp) by DeviceId, DeviceName;
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName in~ ("Code.exe","code.exe","code-tunnel.exe")
+   and (ProcessCommandLine has "tunnel" or ProcessCommandLine has "--accept-server-license-terms")
+| join kind=inner veloHosts on DeviceId
+| where Timestamp between (firstVelo .. (firstVelo + 7d))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, firstVelo
+| union (
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any ("global.rel.tunnels.api.visualstudio.com","vscode.dev","tunnels.api.visualstudio.com")
+| join kind=inner veloHosts on DeviceId
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -67,7 +150,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -332,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_162_8` · phase: **exploit** · confidence: **High**
+`UC_163_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -377,89 +459,6 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### [LLM] EDR-Freeze: WerFaultSecure /type 268310 against protected security process
-
-`UC_162_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="WerFaultSecure.exe" AND Processes.process="*/encfile*" AND Processes.process="*/cancel*" AND Processes.process="*/type*" AND (Processes.process="*268310*" OR Processes.process="*0x4186*" OR Processes.process="*0x416d6*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where FileName =~ "WerFaultSecure.exe"
-| where ProcessCommandLine has_all ("/encfile", "/cancel", "/type")
-| where ProcessCommandLine has_any ("268310", "0x4186", "0x416d6")
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where FileName in~ ("MsMpEng.exe","MsSense.exe","SentinelAgent.exe","CSFalconService.exe","elastic-agent.exe","cyserver.exe","FortiEDR.exe","ekrn.exe")
-    | project SuspectPid = ProcessId, SuspectName = FileName, DeviceId
-) on DeviceId
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspectName
-```
-
-### [LLM] EDRSilencer-style WFP filter blocking EDR sensor outbound traffic
-
-`UC_162_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*EDRSilencer*","*blockedr*","*unblockedr*") OR (Processes.process_name="netsh.exe" AND Processes.process="*wfp*" AND Processes.process="*add*" AND Processes.process="*filter*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*New-NetFirewallRule*" AND Processes.process="*-Direction*Outbound*" AND Processes.process="*-Action*Block*" AND (Processes.process="*MsSense*" OR Processes.process="*MsMpEng*" OR Processes.process="*SentinelAgent*" OR Processes.process="*CSFalconService*" OR Processes.process="*cyserver*" OR Processes.process="*FortiEDR*" OR Processes.process="*ekrn*" OR Processes.process="*elastic-agent*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let edrImages = dynamic(["MsSense.exe","MsMpEng.exe","NisSrv.exe","SenseIR.exe","SentinelAgent.exe","SentinelServiceHost.exe","CSFalconService.exe","CSFalconContainer.exe","cyserver.exe","CylanceSvc.exe","FortiEDR.exe","fortiedrcollectorservice.exe","ekrn.exe","egui.exe","elastic-agent.exe","xagt.exe","TmCCSF.exe"]);
-DeviceProcessEvents
-| where ProcessCommandLine has_any ("EDRSilencer", "blockedr", "unblockedr")
-   or (FileName =~ "netsh.exe" and ProcessCommandLine has "wfp" and ProcessCommandLine has "add" and ProcessCommandLine has "filter")
-   or (FileName in~ ("powershell.exe","pwsh.exe")
-       and ProcessCommandLine has "New-NetFirewallRule"
-       and ProcessCommandLine has "Outbound"
-       and ProcessCommandLine has "Block"
-       and ProcessCommandLine has_any (edrImages))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| union (
-DeviceEvents
-| where ActionType in ("FirewallOutboundConnectionBlocked","FirewallServiceStopped","WfpFilterAdd","FirewallRuleAdded")
-| where InitiatingProcessFileName has_any (edrImages) or AdditionalFields has_any (edrImages)
-| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, AdditionalFields
-)
-```
-
-### [LLM] Warlock-style chain: Velociraptor agent followed by VS Code (code.exe) tunnel
-
-`UC_162_11` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("velociraptor.exe","velociraptor_client.exe") OR Processes.process="*velociraptor*--config*" OR (Processes.process_name="msiexec.exe" AND Processes.process="*velociraptor*")) OR (Processes.process_name IN ("Code.exe","code.exe","code-tunnel.exe") AND (Processes.process="*tunnel*" OR Processes.process="*--accept-server-license-terms*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | eventstats values(process_name) as host_procs by dest | where mvfind(host_procs,"velociraptor")>=0 AND mvfind(host_procs,"[Cc]ode")>=0 | sort 0 dest _time
-```
-
-**Defender KQL:**
-```kql
-let veloHosts = DeviceProcessEvents
-    | where Timestamp > ago(14d)
-    | where FileName has "velociraptor" or ProcessCommandLine has "velociraptor" or (FileName =~ "msiexec.exe" and ProcessCommandLine has "velociraptor")
-    | summarize firstVelo=min(Timestamp) by DeviceId, DeviceName;
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("Code.exe","code.exe","code-tunnel.exe")
-   and (ProcessCommandLine has "tunnel" or ProcessCommandLine has "--accept-server-license-terms")
-| join kind=inner veloHosts on DeviceId
-| where Timestamp between (firstVelo .. (firstVelo + 7d))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, firstVelo
-| union (
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any ("global.rel.tunnels.api.visualstudio.com","vscode.dev","tunnels.api.visualstudio.com")
-| join kind=inner veloHosts on DeviceId
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
-)
 ```
 
 

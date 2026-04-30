@@ -33,6 +33,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] PromptSpy Android RAT C2 / distribution-site network callouts
+
+`UC_193_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution where DNS.query IN ("mgardownload.com","*.mgardownload.com","m-mgarg.com","*.m-mgarg.com") by DNS.src DNS.query 
+| append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_ip IN ("54.67.2.84","52.222.205.45") by All_Traffic.src All_Traffic.dest_ip] 
+| append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.url) as url from datamodel=Web where Web.url IN ("*mgardownload.com*","*m-mgarg.com*") OR Web.dest IN ("54.67.2.84","52.222.205.45") by Web.src Web.dest] 
+| convert ctime(firstTime) ctime(lastTime) 
+| `drop_dm_object_name("DNS")` `drop_dm_object_name("All_Traffic")` `drop_dm_object_name("Web")`
+```
+
+**Defender KQL:**
+```kql
+let promptspy_ips = dynamic(["54.67.2.84","52.222.205.45"]);
+let promptspy_doms = dynamic(["mgardownload.com","m-mgarg.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (promptspy_ips)
+   or RemoteUrl has_any (promptspy_doms)
+   or tostring(parse_json(AdditionalFields).host) has_any (promptspy_doms)
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
+| union (
+    DeviceEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (promptspy_doms) or RemoteIP in (promptspy_ips)
+    | project Timestamp, DeviceName, DeviceId, RemoteIP, RemoteUrl, ActionType
+)
+| sort by Timestamp desc
+```
+
+### [LLM] PromptSpy / VNCSpy APK file landing (hash + Chase-Argentina lure)
+
+`UC_193_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.dest) as host values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.apk" OR Filesystem.file_path="*MorganArg*" OR Filesystem.file_path="*mgar*") AND (Filesystem.file_hash IN ("6BBC9AB132BA066F63676E05DA13D108598BC29B","375D7423E63C8F5F2CC814E8CFE697BA25168AFA","3978AC5CD14E357320E127D6C87F10CB70A1DCC2","E60D12017D2DA579DF87368F5596A0244621AE86","9B1723284E311794987997CB7E8814EB6014713F","076801BD9C6EB78FC0331A4C7A22C73199CC3824","8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA","F8F4C5BC498BCCE907DC975DD88BE8D594629909","C14E9B062ED28115EDE096788F62B47A6ED841AC")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash 
+| convert ctime(firstTime) ctime(lastTime) 
+| `drop_dm_object_name("Filesystem")`
+```
+
+**Defender KQL:**
+```kql
+let promptspy_sha1 = dynamic(["6BBC9AB132BA066F63676E05DA13D108598BC29B","375D7423E63C8F5F2CC814E8CFE697BA25168AFA","3978AC5CD14E357320E127D6C87F10CB70A1DCC2","E60D12017D2DA579DF87368F5596A0244621AE86","9B1723284E311794987997CB7E8814EB6014713F","076801BD9C6EB78FC0331A4C7A22C73199CC3824","8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA","C14E9B062ED28115EDE096788F62B47A6ED841AC"]);
+let promptspy_sha256 = dynamic(["F8F4C5BC498BCCE907DC975DD88BE8D594629909"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA1 in~ (promptspy_sha1)
+   or SHA256 in~ (promptspy_sha256)
+   or (FileName endswith ".apk" and (FileName has_any ("MorganArg","mgar","Chase") or FolderPath has_any ("MorganArg","mgar")))
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA1, SHA256, RequestSourceIP, RequestAccountName
+| union (
+    EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where SHA256 in~ (promptspy_sha256) or FileName endswith ".apk" and FileName has_any ("MorganArg","mgar")
+    | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, FileName, SHA256
+)
+| sort by Timestamp desc
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -110,68 +172,6 @@ DeviceProcessEvents
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
-### [LLM] PromptSpy Android RAT C2 / distribution-site network callouts
-
-`UC_192_3` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution where DNS.query IN ("mgardownload.com","*.mgardownload.com","m-mgarg.com","*.m-mgarg.com") by DNS.src DNS.query 
-| append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_ip IN ("54.67.2.84","52.222.205.45") by All_Traffic.src All_Traffic.dest_ip] 
-| append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.url) as url from datamodel=Web where Web.url IN ("*mgardownload.com*","*m-mgarg.com*") OR Web.dest IN ("54.67.2.84","52.222.205.45") by Web.src Web.dest] 
-| convert ctime(firstTime) ctime(lastTime) 
-| `drop_dm_object_name("DNS")` `drop_dm_object_name("All_Traffic")` `drop_dm_object_name("Web")`
-```
-
-**Defender KQL:**
-```kql
-let promptspy_ips = dynamic(["54.67.2.84","52.222.205.45"]);
-let promptspy_doms = dynamic(["mgardownload.com","m-mgarg.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (promptspy_ips)
-   or RemoteUrl has_any (promptspy_doms)
-   or tostring(parse_json(AdditionalFields).host) has_any (promptspy_doms)
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
-| union (
-    DeviceEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (promptspy_doms) or RemoteIP in (promptspy_ips)
-    | project Timestamp, DeviceName, DeviceId, RemoteIP, RemoteUrl, ActionType
-)
-| sort by Timestamp desc
-```
-
-### [LLM] PromptSpy / VNCSpy APK file landing (hash + Chase-Argentina lure)
-
-`UC_192_4` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.dest) as host values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.apk" OR Filesystem.file_path="*MorganArg*" OR Filesystem.file_path="*mgar*") AND (Filesystem.file_hash IN ("6BBC9AB132BA066F63676E05DA13D108598BC29B","375D7423E63C8F5F2CC814E8CFE697BA25168AFA","3978AC5CD14E357320E127D6C87F10CB70A1DCC2","E60D12017D2DA579DF87368F5596A0244621AE86","9B1723284E311794987997CB7E8814EB6014713F","076801BD9C6EB78FC0331A4C7A22C73199CC3824","8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA","F8F4C5BC498BCCE907DC975DD88BE8D594629909","C14E9B062ED28115EDE096788F62B47A6ED841AC")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash 
-| convert ctime(firstTime) ctime(lastTime) 
-| `drop_dm_object_name("Filesystem")`
-```
-
-**Defender KQL:**
-```kql
-let promptspy_sha1 = dynamic(["6BBC9AB132BA066F63676E05DA13D108598BC29B","375D7423E63C8F5F2CC814E8CFE697BA25168AFA","3978AC5CD14E357320E127D6C87F10CB70A1DCC2","E60D12017D2DA579DF87368F5596A0244621AE86","9B1723284E311794987997CB7E8814EB6014713F","076801BD9C6EB78FC0331A4C7A22C73199CC3824","8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA","C14E9B062ED28115EDE096788F62B47A6ED841AC"]);
-let promptspy_sha256 = dynamic(["F8F4C5BC498BCCE907DC975DD88BE8D594629909"]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA1 in~ (promptspy_sha1)
-   or SHA256 in~ (promptspy_sha256)
-   or (FileName endswith ".apk" and (FileName has_any ("MorganArg","mgar","Chase") or FolderPath has_any ("MorganArg","mgar")))
-| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA1, SHA256, RequestSourceIP, RequestAccountName
-| union (
-    EmailAttachmentInfo
-    | where Timestamp > ago(30d)
-    | where SHA256 in~ (promptspy_sha256) or FileName endswith ".apk" and FileName has_any ("MorganArg","mgar")
-    | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, FileName, SHA256
-)
-| sort by Timestamp desc
 ```
 
 

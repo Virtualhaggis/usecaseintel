@@ -634,18 +634,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
     Filtered to attack-content articles only — see _llm_should_process()."""
     use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
-    if not use_oauth and not api_key:
-        return []
-    # USECASEINTEL_LLM_SKIP_FILTER=1 forces the LLM to process every
-    # article regardless of attack-content heuristics. Useful for a
-    # comprehensive corpus review; default-on filter saves tokens on
-    # opinion / recap / webinar pieces.
-    skip_filter = os.environ.get("USECASEINTEL_LLM_SKIP_FILTER", "").lower() in ("1", "true", "yes")
-    if not skip_filter and not _llm_should_process(article, ind):
-        return []
     url = article.get("link", "")
     if not url:
         return []
+    # Cache is consulted regardless of auth-env state — cached responses are
+    # free to read and represent past analyst-grade work that should keep
+    # flowing into the site even when the operator runs without the LLM
+    # creds set (e.g. a quick UI-only rebuild). Only NEW LLM calls require
+    # auth; the env-var gate moved below the cache lookup.
     LLM_UC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
     cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
@@ -656,6 +652,16 @@ def _llm_generate_ucs(article: dict, ind: dict):
             return [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
         except Exception:
             pass
+    # Cache miss — only proceed to make a new LLM call if auth is configured.
+    if not use_oauth and not api_key:
+        return []
+    # USECASEINTEL_LLM_SKIP_FILTER=1 forces the LLM to process every
+    # article regardless of attack-content heuristics. Useful for a
+    # comprehensive corpus review; default-on filter saves tokens on
+    # opinion / recap / webinar pieces.
+    skip_filter = os.environ.get("USECASEINTEL_LLM_SKIP_FILTER", "").lower() in ("1", "true", "yes")
+    if not skip_filter and not _llm_should_process(article, ind):
+        return []
     body = (article.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
     if len(body) < 200:
         return []  # not enough content for the LLM to ground on
@@ -3214,6 +3220,7 @@ ul.intel-types-doc code{
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
       <button class="view-tab" data-view="workflow" role="tab">Workflow</button>
+      <button class="view-tab" data-view="about" role="tab">About</button>
     </div>
   </div>
 </header>
@@ -3674,6 +3681,163 @@ python digest.py                                # daily_digest.md summary
 THN_FETCH_FULL_BODY=0 python generate.py        # IOC feed loses hash/IP/domain coverage
 THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sources)
       </pre>
+    </div>
+  </div>
+</div>
+
+<div id="view-about" class="view">
+  <div class="workflow-wrap" style="max-width:980px;">
+    <h2 style="margin:0 0 8px;">About Clankerusecase</h2>
+    <p style="color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 22px;">
+      Detection content for SOC analysts, generated from threat-intel articles
+      the day they break. Free, open-source, and community-shaped.
+    </p>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">What this is</h3>
+      <p>
+        Clankerusecase reads recent threat-intel articles (The Hacker News,
+        BleepingComputer, Microsoft Security Blog, Cisco Talos, Securelist,
+        SentinelLabs, Unit 42, ESET, CISA KEV) and produces detection use
+        cases an analyst can drop into their SIEM. Every use case is mapped
+        to MITRE ATT&amp;CK, tagged with a tier (alerting vs hunting) and
+        a false-positive estimate, and — for the article-bespoke ones —
+        written by an LLM that's actually <em>read</em> the article rather
+        than spat out a generic technique template.
+      </p>
+    </div>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">The goal</h3>
+      <ul style="line-height:1.6;">
+        <li><strong>Hand analysts ready-to-run detection content</strong> the
+            day a campaign breaks — not three weeks later when the vendor
+            blog post has been turned into a "rule pack" behind a paywall.</li>
+        <li><strong>Cover the platforms analysts actually use.</strong>
+            Pick a vendor, get the same detection rendered for it.</li>
+        <li><strong>Be community-driven.</strong> The platforms covered, the
+            tier thresholds, the FP estimates, the per-source filters — all
+            decided by people doing detection engineering and threat hunting
+            day-to-day, not by a marketing team.</li>
+      </ul>
+    </div>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">Platform coverage today</h3>
+      <table class="wf-table">
+        <thead><tr><th>Platform</th><th>Status</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Microsoft Defender</strong> (Advanced Hunting / KQL)</td>
+            <td><span class="pill tier-alerting" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Working well</span></td>
+            <td>Every use case has a hand-checked KQL query against the
+                <code>DeviceProcessEvents</code> / <code>EmailEvents</code> /
+                <code>UrlClickEvents</code> / <code>AADSignInEventsBeta</code>
+                tables. Pre-deployed table validation against the Defender
+                schema. This is the most mature path on the site today.</td>
+          </tr>
+          <tr>
+            <td><strong>Splunk</strong> (CIM / ESCU)</td>
+            <td><span class="pill" style="background:rgba(234,179,8,.15);color:#fde047;border:1px solid rgba(234,179,8,.4);padding:2px 8px;border-radius:4px;font-size:11px;">In progress</span></td>
+            <td>SPL queries emitted against <code>Endpoint</code>,
+                <code>Network_Traffic</code>, <code>Email</code>,
+                <code>Vulnerabilities</code>, <code>Web</code> data models;
+                CIM-validated. 2,200+ Splunk ESCU detections synced into the
+                ATT&amp;CK matrix. Field-level tuning for production deployment
+                is the next focus area.</td>
+          </tr>
+          <tr>
+            <td><strong>Sentinel ARM / Elastic / Sigma</strong></td>
+            <td><span class="pill" style="background:rgba(148,163,184,.15);color:#cbd5e1;border:1px solid rgba(148,163,184,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Rule-pack export</span></td>
+            <td>Rule packs are emitted to <code>rule_packs/</code> on every
+                build (all <code>enabled=false</code> by default — read,
+                review, then enable). Validation against each platform's
+                native schema is on the roadmap.</td>
+          </tr>
+          <tr>
+            <td><strong>Anything else?</strong></td>
+            <td><span class="pill" style="background:rgba(125,211,252,.15);color:#7dd3fc;border:1px solid rgba(125,211,252,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Tell us</span></td>
+            <td>CrowdStrike NG-SIEM? Chronicle / Google SecOps? Sumo? OpenSearch?
+                Drop a request in Discord (link below) and if there's interest
+                from the community we'll wire it in.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">Community &amp; Discord</h3>
+      <p>
+        We're spinning up a Discord for analysts and detection engineers
+        using the site. The space is for:
+      </p>
+      <ul style="line-height:1.6;">
+        <li>Suggesting new platforms to add (KQL → SPL is done; what's next?).</li>
+        <li>Sharing tuning notes for the FP rate on specific use cases in
+            your environment.</li>
+        <li>Flagging articles you'd like covered (the feed-fetcher is fast
+            but not exhaustive — analyst-curated tips help).</li>
+        <li>Posting your own detection ideas — if they fit the site's
+            criteria they'll get added with attribution.</li>
+      </ul>
+      <div id="discord-cta" style="margin-top:14px;padding:14px 16px;background:rgba(88,101,242,.08);border:1px solid rgba(88,101,242,.3);border-radius:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div style="font-size:24px;">💬</div>
+        <div style="flex:1;min-width:200px;">
+          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">Join the Clankerusecase Discord</div>
+          <div style="color:var(--muted);font-size:13px;">Detection engineers, threat hunters, SOC analysts — all welcome.</div>
+        </div>
+        <a id="discord-link" href="https://discord.gg/" target="_blank" rel="noopener"
+           style="padding:8px 16px;background:#5865f2;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;font-size:13px;">
+          Open Discord →
+        </a>
+      </div>
+      <p style="font-size:12px;color:var(--muted-2);margin-top:8px;">
+        <em>Invite link:</em> <code>https://discord.gg/&lt;invite-id&gt;</code> —
+        being finalised. If the button above 404s, the invite isn't live yet.
+        Ping the maintainer on GitHub
+        (<a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" style="color:var(--accent);">Virtualhaggis/usecaseintel</a>)
+        until then.
+      </p>
+    </div>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">How a use case lands here</h3>
+      <ol style="line-height:1.7;">
+        <li>Article published by a covered intel source.</li>
+        <li>Pipeline fetches the full body (not just the RSS preview), pulls
+            IOCs (defanged-aware, with allowlists for legitimate platforms),
+            and infers MITRE techniques from narrative keywords.</li>
+        <li>Rule-fired generic UCs from <code>use_cases/*.yml</code> attach
+            based on trigger keywords.</li>
+        <li>An LLM (your Claude Code OAuth session, or an
+            <code>ANTHROPIC_API_KEY</code>) reads the article body and
+            generates 1–3 <em>article-specific</em> bespoke UCs with their
+            own SPL/KQL — these get the <code>[LLM]</code> prefix and sort
+            to the top of every list because they're the highest-fidelity
+            detection content on the page.</li>
+        <li>WebSearch corroboration: the LLM cross-checks vendor advisories
+            (Microsoft Threat Intel, Mandiant, CrowdStrike, MITRE, abuse.ch)
+            and links them in the briefing as <em>"Cross-checked against:"</em>.</li>
+        <li>Validation pass: every SPL field is checked against the CIM spec
+            and ESCU production references; every KQL table/column against
+            the Defender schema. Fail validation → don't ship.</li>
+      </ol>
+      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;">
+        See the <strong>Workflow</strong> tab for the full diagram and
+        per-stage prompt detail.
+      </p>
+    </div>
+
+    <div class="wf-card" style="margin-bottom:14px;">
+      <h3 style="margin-top:0;">Repo &amp; licence</h3>
+      <p>
+        Source:
+        <a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" style="color:var(--accent);">github.com/Virtualhaggis/usecaseintel</a>.
+        MIT-licensed. Contributions welcome — open an issue or PR. The site
+        is rebuilt by <code>generate.py</code> on every run; the catalog
+        lives in <code>catalog/use_cases_full.json</code> for non-browser
+        consumers (TIPs, scripts, your SIEM's API).
+      </p>
     </div>
   </div>
 </div>
@@ -4139,11 +4303,19 @@ function openDrawerFor(tid) {
     body += '</div></div>';
   }
   // Mapped use cases — paginated. With 2150 ESCU detections in the matrix,
-  // popular techniques can have hundreds of UCs. Show internal first, then
-  // page through ESCU. Search + source filter inside the drawer.
-  // Internal UCs come first, then ESCU sorted alphabetically.
+  // popular techniques can have hundreds of UCs. Order:
+  //   1. LLM-generated article-bespoke UCs (rank-0 — these read the actual
+  //      threat-intel article and tailor a detection to the specific TTP)
+  //   2. Internal hand-curated UCs
+  //   3. Splunk ESCU detections
+  // Within each group: alphabetical by title.
+  const ucRank = (uc) => {
+    if ((uc.t || '').startsWith('[LLM]') || uc.src === 'llm') return 0;
+    return uc.src === 'internal' ? 1 : 2;
+  };
   const ucsSorted = ucs.slice().sort((a, b) => {
-    if (a.src !== b.src) return a.src === 'internal' ? -1 : 1;
+    const ra = ucRank(a), rb = ucRank(b);
+    if (ra !== rb) return ra - rb;
     return (a.t || '').localeCompare(b.t || '');
   });
   body += `<div class="drawer-section"><h4>Use cases mapped (${ucs.length})</h4>`;
@@ -5844,6 +6016,15 @@ def _news_briefing(article, ind, ucs_pairs, techs, hit, sev):
         UC_NETWORK_IOC.title:   ("network-ioc",    "ipdom",  "IP / domain IOC(s)"),
         UC_HASH_IOC.title:      ("hash-ioc",       "hashes", "file hash IOC(s)"),
     }
+
+    # Sort: LLM-driven article-bespoke UCs first (these read the actual
+    # article and tailor a detection to the specific TTP, so they're the
+    # highest-priority items for the analyst), then everything else in the
+    # order rules fired them.
+    def _llm_first(pair):
+        _v, _u = pair
+        return 0 if (_u.title or "").startswith("[LLM]") else 1
+    ucs_pairs = sorted(ucs_pairs, key=_llm_first)
 
     uc_blocks = []
     boilerplate_seen = []

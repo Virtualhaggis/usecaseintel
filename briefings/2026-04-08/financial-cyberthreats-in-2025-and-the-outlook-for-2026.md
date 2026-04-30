@@ -58,6 +58,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] Maverick banker: WhatsApp-Web-delivered LNK launching fileless PowerShell/.NET chain
+
+`UC_137_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\WhatsApp*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*") AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.zip") AND (Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","firefox.exe","WhatsApp.exe","Whatsapp.exe")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename file_name as drop_file, file_path as drop_path | join type=inner dest [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe","conhost.exe") AND (Processes.process="*-nop*" OR Processes.process="*-w*hidden*" OR Processes.process="*-WindowStyle*Hidden*" OR Processes.process="*FromBase64String*" OR Processes.process="*Reflection.Assembly*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*[Activator]::CreateInstance*" OR Processes.process="*GetCurrentTimeZone*" OR Processes.process="*pt-BR*" OR Processes.process="*E. South America Standard Time*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | where firstTime>0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let dropWindow = 30m;
+let whatsappDrop = DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FolderPath has_any (@"\Downloads\", @"\WhatsApp", @"\AppData\Local\Temp\")
+| where FileName endswith ".lnk" or FileName endswith ".zip"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","firefox.exe","whatsapp.exe")
+| project DropTime=Timestamp, DeviceId, DeviceName, DroppedFile=FileName, DropPath=FolderPath, DropParent=InitiatingProcessFileName;
+let filelessChain = DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has_any ("-nop","-w hidden","-WindowStyle Hidden","FromBase64String","Reflection.Assembly","Invoke-Expression","[Activator]::CreateInstance","GetCurrentTimeZone","E. South America Standard Time","pt-BR","DonutLoader")
+| project ExecTime=Timestamp, DeviceId, ProcessCommandLine, InitiatingProcessCommandLine;
+whatsappDrop
+| join kind=inner filelessChain on DeviceId
+| where ExecTime between (DropTime .. DropTime + dropWindow)
+| project DropTime, ExecTime, DeviceName, DroppedFile, DropPath, DropParent, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
+### [LLM] Pure family (PureCrypter/PureRAT) delivered via accounting-themed attachments targeting EDM/invoice fraud
+
+`UC_137_6` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as drop_proc from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path="*\\Content.Outlook\\*" OR Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\*") AND (Filesystem.file_name="*fatura*" OR Filesystem.file_name="*boleto*" OR Filesystem.file_name="*nfe*" OR Filesystem.file_name="*nota_fiscal*" OR Filesystem.file_name="*nota-fiscal*" OR Filesystem.file_name="*invoice*" OR Filesystem.file_name="*recibo*" OR Filesystem.file_name="*comprovante*" OR Filesystem.file_name="*orcamento*" OR Filesystem.file_name="*orçamento*" OR Filesystem.file_name="*contrato*" OR Filesystem.file_name="*pedido*" OR Filesystem.file_name="*NF-e*") AND (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.scr" OR Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.iso" OR Filesystem.file_name="*.img" OR Filesystem.file_name="*.zip" OR Filesystem.file_name="*.rar" OR Filesystem.file_name="*.7z") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest user [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("OUTLOOK.EXE","outlook.exe","thunderbird.exe","winrar.exe","7zg.exe","7zfm.exe","explorer.exe")) AND (Processes.process_name="*.exe" OR Processes.process_name="*.scr") AND (Processes.process="*MSBuild.exe*" OR Processes.process="*RegAsm.exe*" OR Processes.process="*InstallUtil.exe*" OR Processes.process="*aspnet_compiler.exe*" OR Processes.process="*csc.exe*" OR Processes.original_file_name="*PureCrypter*" OR Processes.process_name="PureCrypter*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let lure = DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FolderPath has_any (@"\Content.Outlook\", @"\Downloads\", @"\AppData\Local\Temp\", @"\AppData\Roaming\")
+| where FileName matches regex @"(?i)(fatura|boleto|nf-?e|nota[ _-]?fiscal|invoice|recibo|comprovante|or[cç]amento|contrato|pedido|cobran[cç]a)"
+| where FileName endswith_cs ".exe" or FileName endswith_cs ".scr" or FileName endswith_cs ".lnk" or FileName endswith_cs ".iso" or FileName endswith_cs ".img" or FileName endswith_cs ".zip" or FileName endswith_cs ".rar" or FileName endswith_cs ".7z"
+| project DropTime=Timestamp, DeviceId, DeviceName, AccountName, DroppedFile=FileName, DropPath=FolderPath, DropParent=InitiatingProcessFileName, DropSHA256=SHA256;
+let pureExec = DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("outlook.exe","thunderbird.exe","winrar.exe","7zg.exe","7zfm.exe","explorer.exe")
+      or ProcessVersionInfoOriginalFileName has "PureCrypter"
+| where (FileName endswith ".exe" or FileName endswith ".scr")
+      or ProcessCommandLine has_any ("MSBuild.exe","RegAsm.exe","InstallUtil.exe","aspnet_compiler.exe","csc.exe","jsc.exe")
+      or ProcessVersionInfoOriginalFileName has_any ("PureCrypter","PureRAT","PureLogs","PureHVNC")
+| project ExecTime=Timestamp, DeviceId, ProcName=FileName, ProcCmd=ProcessCommandLine, ProcParent=InitiatingProcessFileName, ProcSHA256=SHA256, OriginalFileName=ProcessVersionInfoOriginalFileName;
+lure
+| join kind=inner pureExec on DeviceId
+| where ExecTime between (DropTime .. DropTime + 1h)
+| project DropTime, ExecTime, DeviceName, AccountName, DroppedFile, DropPath, DropParent, ProcName, ProcCmd, OriginalFileName, DropSHA256, ProcSHA256
+```
+
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -103,7 +166,6 @@ DeviceFileEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -257,69 +319,6 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### [LLM] Maverick banker: WhatsApp-Web-delivered LNK launching fileless PowerShell/.NET chain
-
-`UC_135_5` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\WhatsApp*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*") AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.zip") AND (Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","firefox.exe","WhatsApp.exe","Whatsapp.exe")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename file_name as drop_file, file_path as drop_path | join type=inner dest [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe","conhost.exe") AND (Processes.process="*-nop*" OR Processes.process="*-w*hidden*" OR Processes.process="*-WindowStyle*Hidden*" OR Processes.process="*FromBase64String*" OR Processes.process="*Reflection.Assembly*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*[Activator]::CreateInstance*" OR Processes.process="*GetCurrentTimeZone*" OR Processes.process="*pt-BR*" OR Processes.process="*E. South America Standard Time*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | where firstTime>0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let dropWindow = 30m;
-let whatsappDrop = DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FolderPath has_any (@"\Downloads\", @"\WhatsApp", @"\AppData\Local\Temp\")
-| where FileName endswith ".lnk" or FileName endswith ".zip"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","firefox.exe","whatsapp.exe")
-| project DropTime=Timestamp, DeviceId, DeviceName, DroppedFile=FileName, DropPath=FolderPath, DropParent=InitiatingProcessFileName;
-let filelessChain = DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any ("-nop","-w hidden","-WindowStyle Hidden","FromBase64String","Reflection.Assembly","Invoke-Expression","[Activator]::CreateInstance","GetCurrentTimeZone","E. South America Standard Time","pt-BR","DonutLoader")
-| project ExecTime=Timestamp, DeviceId, ProcessCommandLine, InitiatingProcessCommandLine;
-whatsappDrop
-| join kind=inner filelessChain on DeviceId
-| where ExecTime between (DropTime .. DropTime + dropWindow)
-| project DropTime, ExecTime, DeviceName, DroppedFile, DropPath, DropParent, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### [LLM] Pure family (PureCrypter/PureRAT) delivered via accounting-themed attachments targeting EDM/invoice fraud
-
-`UC_135_6` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as drop_proc from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path="*\\Content.Outlook\\*" OR Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\*") AND (Filesystem.file_name="*fatura*" OR Filesystem.file_name="*boleto*" OR Filesystem.file_name="*nfe*" OR Filesystem.file_name="*nota_fiscal*" OR Filesystem.file_name="*nota-fiscal*" OR Filesystem.file_name="*invoice*" OR Filesystem.file_name="*recibo*" OR Filesystem.file_name="*comprovante*" OR Filesystem.file_name="*orcamento*" OR Filesystem.file_name="*orçamento*" OR Filesystem.file_name="*contrato*" OR Filesystem.file_name="*pedido*" OR Filesystem.file_name="*NF-e*") AND (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.scr" OR Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.iso" OR Filesystem.file_name="*.img" OR Filesystem.file_name="*.zip" OR Filesystem.file_name="*.rar" OR Filesystem.file_name="*.7z") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest user [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("OUTLOOK.EXE","outlook.exe","thunderbird.exe","winrar.exe","7zg.exe","7zfm.exe","explorer.exe")) AND (Processes.process_name="*.exe" OR Processes.process_name="*.scr") AND (Processes.process="*MSBuild.exe*" OR Processes.process="*RegAsm.exe*" OR Processes.process="*InstallUtil.exe*" OR Processes.process="*aspnet_compiler.exe*" OR Processes.process="*csc.exe*" OR Processes.original_file_name="*PureCrypter*" OR Processes.process_name="PureCrypter*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-let lure = DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FolderPath has_any (@"\Content.Outlook\", @"\Downloads\", @"\AppData\Local\Temp\", @"\AppData\Roaming\")
-| where FileName matches regex @"(?i)(fatura|boleto|nf-?e|nota[ _-]?fiscal|invoice|recibo|comprovante|or[cç]amento|contrato|pedido|cobran[cç]a)"
-| where FileName endswith_cs ".exe" or FileName endswith_cs ".scr" or FileName endswith_cs ".lnk" or FileName endswith_cs ".iso" or FileName endswith_cs ".img" or FileName endswith_cs ".zip" or FileName endswith_cs ".rar" or FileName endswith_cs ".7z"
-| project DropTime=Timestamp, DeviceId, DeviceName, AccountName, DroppedFile=FileName, DropPath=FolderPath, DropParent=InitiatingProcessFileName, DropSHA256=SHA256;
-let pureExec = DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("outlook.exe","thunderbird.exe","winrar.exe","7zg.exe","7zfm.exe","explorer.exe")
-      or ProcessVersionInfoOriginalFileName has "PureCrypter"
-| where (FileName endswith ".exe" or FileName endswith ".scr")
-      or ProcessCommandLine has_any ("MSBuild.exe","RegAsm.exe","InstallUtil.exe","aspnet_compiler.exe","csc.exe","jsc.exe")
-      or ProcessVersionInfoOriginalFileName has_any ("PureCrypter","PureRAT","PureLogs","PureHVNC")
-| project ExecTime=Timestamp, DeviceId, ProcName=FileName, ProcCmd=ProcessCommandLine, ProcParent=InitiatingProcessFileName, ProcSHA256=SHA256, OriginalFileName=ProcessVersionInfoOriginalFileName;
-lure
-| join kind=inner pureExec on DeviceId
-| where ExecTime between (DropTime .. DropTime + 1h)
-| project DropTime, ExecTime, DeviceName, AccountName, DroppedFile, DropPath, DropParent, ProcName, ProcCmd, OriginalFileName, DropSHA256, ProcSHA256
 ```
 
 

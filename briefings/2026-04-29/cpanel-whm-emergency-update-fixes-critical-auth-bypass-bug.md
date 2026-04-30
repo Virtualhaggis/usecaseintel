@@ -41,6 +41,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] CVE-2026-41940 cPanel/WHM auth bypass: session cache-poisoning request sequence
+
+`UC_25_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.status) as statuses values(Web.http_user_agent) as uas from datamodel=Web where (Web.dest_port=2087 OR Web.dest_port=2083) AND (Web.url="*/login/?*login_only=1*" OR Web.url="*/scripts2/listaccts*") by Web.src, Web.dest, Web.site | `drop_dm_object_name(Web)` | eval has_login=if(like(mvjoin(urls,"|"),"%/login/?%login_only=1%"),1,0), has_listaccts=if(like(mvjoin(urls,"|"),"%/scripts2/listaccts%") AND NOT like(mvjoin(urls,"|"),"%/cpsess%/scripts2/listaccts%"),1,0), span_sec=lastTime-firstTime | where has_login=1 AND has_listaccts=1 AND span_sec<=600 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime src dest site span_sec methods statuses urls uas
+```
+
+**Defender KQL:**
+```kql
+let cpanel_ports = dynamic([2083, 2087]);
+let windowStart = ago(7d);
+DeviceNetworkEvents
+| where Timestamp > windowStart
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort in (cpanel_ports) or RemotePort in (cpanel_ports)
+| summarize ConnCount=count(), DistinctRemotes=dcount(RemoteIP), FirstConn=min(Timestamp), LastConn=max(Timestamp) by DeviceName, RemoteIP
+| join kind=inner (
+    DeviceFileEvents
+    | where Timestamp > windowStart
+    | where FolderPath startswith "/var/cpanel/sessions/raw/"
+    | where ActionType in ("FileCreated","FileModified")
+    | summarize SessionWrites=count(), LastWrite=max(Timestamp), Writers=make_set(InitiatingProcessFileName,8) by DeviceName
+) on DeviceName
+| where SessionWrites >= 1 and LastWrite between (FirstConn .. (LastConn + 5m))
+| project DeviceName, RemoteIP, ConnCount, SessionWrites, Writers, FirstConn, LastConn, LastWrite
+| order by LastConn desc
+```
+
+### [LLM] CVE-2026-41940 CRLF-injected Authorization Basic header to cPanel/WHM (cpsrvd)
+
+`UC_25_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`waf_or_proxy_index` (dest_port=2087 OR dest_port=2083) sourcetype IN ("haproxy:http","nginx:plus:kv","apache:access","f5:asm") ("Authorization: Basic" OR auth_basic_decoded=*) | rex field=_raw "(?i)Authorization:\s*Basic\s+(?<basic_b64>[A-Za-z0-9+/=]+)" | eval basic_decoded=if(isnotnull(basic_b64), tostring(basic_b64,"hex"), null()) | eval decoded_str=coalesce(auth_basic_decoded, _raw) | where match(decoded_str,"(?s)hasroot=1") OR match(decoded_str,"successful_internal_auth_with_timestamp=") OR match(decoded_str,"tfa_verified=1") OR match(decoded_str,"\r\n") OR match(_raw,"%0[dD]%0[aA].*hasroot") | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(http_user_agent) as uas by src, dest, dest_port | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Linux Defender — detect cpsrvd writing CRLF-poisoned session files
+let keyMarkers = dynamic(["hasroot=1","tfa_verified=1","successful_internal_auth_with_timestamp"]);
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where FolderPath startswith "/var/cpanel/sessions/raw/"
+| where ActionType in ("FileCreated","FileModified")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RequestAccountName
+| where InitiatingProcessFileName in~ ("cpsrvd","cpsrvd-ssl","perl")
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where FileName in~ ("cpsrvd","cpsrvd-ssl")
+    | project ProcTime=Timestamp, DeviceName, ProcCmd=ProcessCommandLine, ProcessId
+) on DeviceName
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "InboundConnectionAccepted"
+    | where LocalPort in (2083, 2087)
+    | summarize InboundConns=count(), Sources=make_set(RemoteIP, 25), FirstInbound=min(Timestamp), LastInbound=max(Timestamp) by DeviceName
+) on DeviceName
+| where Timestamp between (FirstInbound .. (LastInbound + 10m))
+| extend NoteworthyKeys = keyMarkers
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InboundConns, Sources, NoteworthyKeys
+| order by Timestamp desc
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -58,7 +126,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -212,74 +279,6 @@ DeviceProcessEvents
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### [LLM] CVE-2026-41940 cPanel/WHM auth bypass: session cache-poisoning request sequence
-
-`UC_6_4` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.status) as statuses values(Web.http_user_agent) as uas from datamodel=Web where (Web.dest_port=2087 OR Web.dest_port=2083) AND (Web.url="*/login/?*login_only=1*" OR Web.url="*/scripts2/listaccts*") by Web.src, Web.dest, Web.site | `drop_dm_object_name(Web)` | eval has_login=if(like(mvjoin(urls,"|"),"%/login/?%login_only=1%"),1,0), has_listaccts=if(like(mvjoin(urls,"|"),"%/scripts2/listaccts%") AND NOT like(mvjoin(urls,"|"),"%/cpsess%/scripts2/listaccts%"),1,0), span_sec=lastTime-firstTime | where has_login=1 AND has_listaccts=1 AND span_sec<=600 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime src dest site span_sec methods statuses urls uas
-```
-
-**Defender KQL:**
-```kql
-let cpanel_ports = dynamic([2083, 2087]);
-let windowStart = ago(7d);
-DeviceNetworkEvents
-| where Timestamp > windowStart
-| where ActionType == "InboundConnectionAccepted"
-| where LocalPort in (cpanel_ports) or RemotePort in (cpanel_ports)
-| summarize ConnCount=count(), DistinctRemotes=dcount(RemoteIP), FirstConn=min(Timestamp), LastConn=max(Timestamp) by DeviceName, RemoteIP
-| join kind=inner (
-    DeviceFileEvents
-    | where Timestamp > windowStart
-    | where FolderPath startswith "/var/cpanel/sessions/raw/"
-    | where ActionType in ("FileCreated","FileModified")
-    | summarize SessionWrites=count(), LastWrite=max(Timestamp), Writers=make_set(InitiatingProcessFileName,8) by DeviceName
-) on DeviceName
-| where SessionWrites >= 1 and LastWrite between (FirstConn .. (LastConn + 5m))
-| project DeviceName, RemoteIP, ConnCount, SessionWrites, Writers, FirstConn, LastConn, LastWrite
-| order by LastConn desc
-```
-
-### [LLM] CVE-2026-41940 CRLF-injected Authorization Basic header to cPanel/WHM (cpsrvd)
-
-`UC_6_5` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`waf_or_proxy_index` (dest_port=2087 OR dest_port=2083) sourcetype IN ("haproxy:http","nginx:plus:kv","apache:access","f5:asm") ("Authorization: Basic" OR auth_basic_decoded=*) | rex field=_raw "(?i)Authorization:\s*Basic\s+(?<basic_b64>[A-Za-z0-9+/=]+)" | eval basic_decoded=if(isnotnull(basic_b64), tostring(basic_b64,"hex"), null()) | eval decoded_str=coalesce(auth_basic_decoded, _raw) | where match(decoded_str,"(?s)hasroot=1") OR match(decoded_str,"successful_internal_auth_with_timestamp=") OR match(decoded_str,"tfa_verified=1") OR match(decoded_str,"\r\n") OR match(_raw,"%0[dD]%0[aA].*hasroot") | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as paths values(http_user_agent) as uas by src, dest, dest_port | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// Linux Defender — detect cpsrvd writing CRLF-poisoned session files
-let keyMarkers = dynamic(["hasroot=1","tfa_verified=1","successful_internal_auth_with_timestamp"]);
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FolderPath startswith "/var/cpanel/sessions/raw/"
-| where ActionType in ("FileCreated","FileModified")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RequestAccountName
-| where InitiatingProcessFileName in~ ("cpsrvd","cpsrvd-ssl","perl")
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(14d)
-    | where FileName in~ ("cpsrvd","cpsrvd-ssl")
-    | project ProcTime=Timestamp, DeviceName, ProcCmd=ProcessCommandLine, ProcessId
-) on DeviceName
-| join kind=inner (
-    DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where ActionType == "InboundConnectionAccepted"
-    | where LocalPort in (2083, 2087)
-    | summarize InboundConns=count(), Sources=make_set(RemoteIP, 25), FirstInbound=min(Timestamp), LastInbound=max(Timestamp) by DeviceName
-) on DeviceName
-| where Timestamp between (FirstInbound .. (LastInbound + 10m))
-| extend NoteworthyKeys = keyMarkers
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InboundConns, Sources, NoteworthyKeys
-| order by Timestamp desc
 ```
 
 

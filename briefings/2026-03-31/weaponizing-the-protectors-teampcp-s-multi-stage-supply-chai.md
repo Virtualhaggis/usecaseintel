@@ -113,6 +113,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] LiteLLM 1.82.7/1.82.8 .pth credential stealer (litellm_init.pth + sysmon.py drop)
+
+`UC_146_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name="litellm_init.pth" OR Filesystem.file_path="*/site-packages/litellm_init.pth" OR Filesystem.file_path="*/host/root/.config/sysmon/sysmon.py" OR Filesystem.file_path="*\\.config\\sysmon\\sysmon.py" OR Filesystem.file_path="*/.config/sysmon/sysmon.py") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process="*pip*install*litellm==1.82.7*" OR Processes.process="*pip*install*litellm==1.82.8*" OR Processes.process="*pip*install*telnyx==4.87.1*" OR Processes.process="*pip*install*telnyx==4.87.2*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let pthDrops = DeviceFileEvents | where Timestamp > ago(30d) | where FileName =~ "litellm_init.pth" or FolderPath has "/host/root/.config/sysmon/sysmon.py" or FolderPath has @"\.config\sysmon\sysmon.py" or FolderPath has "/.config/sysmon/sysmon.py" or (FolderPath has "site-packages" and FileName == "litellm_init.pth") | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName; let badInstall = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine has_any ("litellm==1.82.7", "litellm==1.82.8", "telnyx==4.87.1", "telnyx==4.87.2") and ProcessCommandLine has_any ("pip", "poetry", "uv ", "pipenv", "requirements") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName; union pthDrops, badInstall | sort by Timestamp desc
+```
+
+### [LLM] TeamPCP kamikaze.sh on GitHub Actions runner: /proc/<pid>/mem dump of Runner.Worker + Docker 2375 sweep
+
+`UC_146_16` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process) as parent values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process="*kamikaze.sh*" OR (Processes.process="*/proc/*/mem*" AND (Processes.process="*Runner.Worker*" OR Processes.process="*runner.worker*")) OR (Processes.process="*setup-trivy*" AND Processes.process="*curl*") OR (Processes.process="*aquasecurtiy*") OR (Processes.process="*kube.py*" AND Processes.process="*python*")) by Processes.dest Processes.process_name Processes.process_id host | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=2375 OR All_Traffic.dest_port=666) AND All_Traffic.action="allowed" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | stats count by src dest_port | where count > 5] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let memDump = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine matches regex @"/proc/\d+/mem" and ProcessCommandLine has_any ("Runner.Worker", "runner.worker", "dd if=", "cat ", "cp ", "head ") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine; let kamikaze = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine has_any ("kamikaze.sh", "kube.py") or (FolderPath has "_work" and ProcessCommandLine has "setup.sh" and ProcessCommandLine has "base64 -d") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine; let dockerSweep = DeviceNetworkEvents | where Timestamp > ago(30d) | where RemotePort in (2375, 666) and ActionType == "ConnectionSuccess" | summarize hits=dcount(RemoteIP), ports=make_set(RemotePort) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, bin(Timestamp, 1h) | where hits >= 5; union memDump, kamikaze, dockerSweep | sort by Timestamp desc
+```
+
+### [LLM] CanisterWorm post-exploitation: ICP/typosquat C2, WAV stego, pgmon masquerade, docs-tpcp repo abuse
+
+`UC_146_17` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where (DNS.query="*aquasecurtiy.org" OR DNS.query="*checkmarx.zone" OR DNS.query="*models.litellm.cloud" OR DNS.query="tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io" OR DNS.query="*.raw.icp0.io" OR DNS.query="championships-peoples-point-cassette.trycloudflare.com" OR DNS.query="create-sensitivity-grad-sequence.trycloudflare.com" OR DNS.query="investigation-launches-hearings-copying.trycloudflare.com" OR DNS.query="plug-tab-protective-relay.trycloudflare.com") by DNS.dest DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name="hangup.wav" OR Filesystem.file_name="ringtone.wav") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search proc IN ("python","python3","python.exe","pythonw.exe")] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="pgmon" AND NOT Processes.process_path IN ("/usr/lib/postgresql/*","/usr/pgsql*/*","/opt/postgres*/*")) OR Processes.process="*docs-tpcp*" by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let teampcpC2 = dynamic(["scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io","championships-peoples-point-cassette.trycloudflare.com","create-sensitivity-grad-sequence.trycloudflare.com","investigation-launches-hearings-copying.trycloudflare.com","plug-tab-protective-relay.trycloudflare.com"]); let netHits = DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (teampcpC2) or RemoteUrl endswith ".raw.icp0.io" | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName; let wavStego = DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ ("hangup.wav", "ringtone.wav") and InitiatingProcessFileName in~ ("python", "python3", "python.exe", "pythonw.exe") | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine; let pgmonMasq = DeviceProcessEvents | where Timestamp > ago(30d) | where (FileName =~ "pgmon" and not(FolderPath has_any ("/usr/lib/postgresql", "/usr/pgsql", "/opt/postgres", "/var/lib/pgsql"))) or (ProcessCommandLine has "docs-tpcp" and ProcessCommandLine has_any ("GITHUB_TOKEN", "gh repo create", "api.github.com/user/repos")) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName; union netHits, wavStego, pgmonMasq | sort by Timestamp desc
+```
+
 ### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
@@ -245,7 +287,6 @@ DeviceProcessEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -475,7 +516,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Weaponizing the Protectors: TeamPCP’s Multi-Stage Supply Chain Attack on Securit
 
-`UC_144_14` · phase: **exploit** · confidence: **High**
+`UC_146_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -520,48 +561,6 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### [LLM] LiteLLM 1.82.7/1.82.8 .pth credential stealer (litellm_init.pth + sysmon.py drop)
-
-`UC_144_15` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name="litellm_init.pth" OR Filesystem.file_path="*/site-packages/litellm_init.pth" OR Filesystem.file_path="*/host/root/.config/sysmon/sysmon.py" OR Filesystem.file_path="*\\.config\\sysmon\\sysmon.py" OR Filesystem.file_path="*/.config/sysmon/sysmon.py") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process="*pip*install*litellm==1.82.7*" OR Processes.process="*pip*install*litellm==1.82.8*" OR Processes.process="*pip*install*telnyx==4.87.1*" OR Processes.process="*pip*install*telnyx==4.87.2*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let pthDrops = DeviceFileEvents | where Timestamp > ago(30d) | where FileName =~ "litellm_init.pth" or FolderPath has "/host/root/.config/sysmon/sysmon.py" or FolderPath has @"\.config\sysmon\sysmon.py" or FolderPath has "/.config/sysmon/sysmon.py" or (FolderPath has "site-packages" and FileName == "litellm_init.pth") | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName; let badInstall = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine has_any ("litellm==1.82.7", "litellm==1.82.8", "telnyx==4.87.1", "telnyx==4.87.2") and ProcessCommandLine has_any ("pip", "poetry", "uv ", "pipenv", "requirements") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName; union pthDrops, badInstall | sort by Timestamp desc
-```
-
-### [LLM] TeamPCP kamikaze.sh on GitHub Actions runner: /proc/<pid>/mem dump of Runner.Worker + Docker 2375 sweep
-
-`UC_144_16` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process) as parent values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process="*kamikaze.sh*" OR (Processes.process="*/proc/*/mem*" AND (Processes.process="*Runner.Worker*" OR Processes.process="*runner.worker*")) OR (Processes.process="*setup-trivy*" AND Processes.process="*curl*") OR (Processes.process="*aquasecurtiy*") OR (Processes.process="*kube.py*" AND Processes.process="*python*")) by Processes.dest Processes.process_name Processes.process_id host | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=2375 OR All_Traffic.dest_port=666) AND All_Traffic.action="allowed" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | stats count by src dest_port | where count > 5] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let memDump = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine matches regex @"/proc/\d+/mem" and ProcessCommandLine has_any ("Runner.Worker", "runner.worker", "dd if=", "cat ", "cp ", "head ") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine; let kamikaze = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCommandLine has_any ("kamikaze.sh", "kube.py") or (FolderPath has "_work" and ProcessCommandLine has "setup.sh" and ProcessCommandLine has "base64 -d") | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine; let dockerSweep = DeviceNetworkEvents | where Timestamp > ago(30d) | where RemotePort in (2375, 666) and ActionType == "ConnectionSuccess" | summarize hits=dcount(RemoteIP), ports=make_set(RemotePort) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, bin(Timestamp, 1h) | where hits >= 5; union memDump, kamikaze, dockerSweep | sort by Timestamp desc
-```
-
-### [LLM] CanisterWorm post-exploitation: ICP/typosquat C2, WAV stego, pgmon masquerade, docs-tpcp repo abuse
-
-`UC_144_17` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where (DNS.query="*aquasecurtiy.org" OR DNS.query="*checkmarx.zone" OR DNS.query="*models.litellm.cloud" OR DNS.query="tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io" OR DNS.query="*.raw.icp0.io" OR DNS.query="championships-peoples-point-cassette.trycloudflare.com" OR DNS.query="create-sensitivity-grad-sequence.trycloudflare.com" OR DNS.query="investigation-launches-hearings-copying.trycloudflare.com" OR DNS.query="plug-tab-protective-relay.trycloudflare.com") by DNS.dest DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name="hangup.wav" OR Filesystem.file_name="ringtone.wav") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search proc IN ("python","python3","python.exe","pythonw.exe")] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="pgmon" AND NOT Processes.process_path IN ("/usr/lib/postgresql/*","/usr/pgsql*/*","/opt/postgres*/*")) OR Processes.process="*docs-tpcp*" by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let teampcpC2 = dynamic(["scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io","championships-peoples-point-cassette.trycloudflare.com","create-sensitivity-grad-sequence.trycloudflare.com","investigation-launches-hearings-copying.trycloudflare.com","plug-tab-protective-relay.trycloudflare.com"]); let netHits = DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (teampcpC2) or RemoteUrl endswith ".raw.icp0.io" | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName; let wavStego = DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ ("hangup.wav", "ringtone.wav") and InitiatingProcessFileName in~ ("python", "python3", "python.exe", "pythonw.exe") | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine; let pgmonMasq = DeviceProcessEvents | where Timestamp > ago(30d) | where (FileName =~ "pgmon" and not(FolderPath has_any ("/usr/lib/postgresql", "/usr/pgsql", "/opt/postgres", "/var/lib/pgsql"))) or (ProcessCommandLine has "docs-tpcp" and ProcessCommandLine has_any ("GITHUB_TOKEN", "gh repo create", "api.github.com/user/repos")) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName; union netHits, wavStego, pgmonMasq | sort by Timestamp desc
 ```
 
 ### IOC-driven hunts (use shared templates)

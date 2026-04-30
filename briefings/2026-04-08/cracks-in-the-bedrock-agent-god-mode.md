@@ -65,6 +65,88 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] AgentCore SDK auto-create runtime role pulling ECR images (cross-account image exfil)
+
+`UC_136_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as ecr_targets values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages") by All_Changes.user All_Changes.vendor_account span=1h
+| `drop_dm_object_name(All_Changes)`
+| rex field=ecr_targets max_match=0 "repository/(?<repo_names>[^\"\s,]+)"
+| eval distinct_repos=mvcount(mvdedup(repo_names))
+| where (mvfind(commands,"BatchGetImage")>=0 OR mvfind(commands,"GetDownloadUrlForLayer")>=0) AND (distinct_repos>1 OR mvfind(commands,"DescribeRepositories")>=0)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application has "Amazon Web Services" or ApplicationId == 11161
+| where ActionType in ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages")
+| extend Raw = todynamic(RawEventData)
+| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
+| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
+| extend TargetRepo = extract(@"repository/([A-Za-z0-9._/-]+)", 1, tostring(Raw.requestParameters))
+| summarize Commands=make_set(ActionType), Repos=make_set(TargetRepo), DistinctRepos=dcount(TargetRepo), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
+| where Commands has_any ("BatchGetImage","GetDownloadUrlForLayer") and (DistinctRepos > 1 or Commands has "DescribeRepositories")
+```
+
+### [LLM] AgentCore execution role reading memory resources of another agent
+
+`UC_136_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as memory_arns from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent") by All_Changes.user All_Changes.src All_Changes.vendor_account span=1h
+| `drop_dm_object_name(All_Changes)`
+| rex field=memory_arns max_match=0 "memory/(?<memory_ids>[A-Za-z0-9_-]+)"
+| eval distinct_memories=mvcount(mvdedup(memory_ids))
+| where distinct_memories>1 OR mvfind(commands,"ListMemoryRecords")>=0
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application has "Amazon Web Services" or ApplicationId == 11161
+| where ActionType in ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent")
+| extend Raw = todynamic(RawEventData)
+| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
+| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
+| extend MemoryId = coalesce(tostring(Raw.requestParameters.memoryId), extract(@"memory/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
+| summarize Commands=make_set(ActionType), Memories=make_set(MemoryId), DistinctMemories=dcount(MemoryId), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
+| where DistinctMemories > 1 or Commands has "ListMemoryRecords"
+```
+
+### [LLM] AgentCore SDK runtime role invoking a foreign Bedrock AgentCore runtime
+
+`UC_136_11` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as runtime_arns values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters") by All_Changes.user All_Changes.command All_Changes.vendor_account span=1h
+| `drop_dm_object_name(All_Changes)`
+| rex field=user "AmazonBedrockAgentCoreSDKRuntime-(?<role_region>[^-]+)-(?<role_hash>[a-z0-9]{10})"
+| rex field=runtime_arns max_match=0 "runtime/(?<target_runtime>[A-Za-z0-9_-]+)"
+| eval distinct_targets=mvcount(mvdedup(target_runtime))
+| where (command="InvokeAgentRuntime" AND distinct_targets>=1) OR command IN ("ListAgentRuntimes","ListCodeInterpreters")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application has "Amazon Web Services" or ApplicationId == 11161
+| where ActionType in ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters")
+| extend Raw = todynamic(RawEventData)
+| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
+| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
+| extend TargetRuntime = coalesce(tostring(Raw.requestParameters.agentRuntimeArn), tostring(Raw.requestParameters.codeInterpreterIdentifier), extract(@"runtime/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
+| summarize Commands=make_set(ActionType), Targets=make_set(TargetRuntime), DistinctTargets=dcount(TargetRuntime), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
+| where DistinctTargets >= 1 or Commands has_any ("ListAgentRuntimes","ListCodeInterpreters")
+```
+
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -166,7 +248,6 @@ DeviceProcessEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -336,88 +417,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] AgentCore SDK auto-create runtime role pulling ECR images (cross-account image exfil)
-
-`UC_134_9` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as ecr_targets values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages") by All_Changes.user All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=ecr_targets max_match=0 "repository/(?<repo_names>[^\"\s,]+)"
-| eval distinct_repos=mvcount(mvdedup(repo_names))
-| where (mvfind(commands,"BatchGetImage")>=0 OR mvfind(commands,"GetDownloadUrlForLayer")>=0) AND (distinct_repos>1 OR mvfind(commands,"DescribeRepositories")>=0)
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend TargetRepo = extract(@"repository/([A-Za-z0-9._/-]+)", 1, tostring(Raw.requestParameters))
-| summarize Commands=make_set(ActionType), Repos=make_set(TargetRepo), DistinctRepos=dcount(TargetRepo), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where Commands has_any ("BatchGetImage","GetDownloadUrlForLayer") and (DistinctRepos > 1 or Commands has "DescribeRepositories")
-```
-
-### [LLM] AgentCore execution role reading memory resources of another agent
-
-`UC_134_10` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as memory_arns from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent") by All_Changes.user All_Changes.src All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=memory_arns max_match=0 "memory/(?<memory_ids>[A-Za-z0-9_-]+)"
-| eval distinct_memories=mvcount(mvdedup(memory_ids))
-| where distinct_memories>1 OR mvfind(commands,"ListMemoryRecords")>=0
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend MemoryId = coalesce(tostring(Raw.requestParameters.memoryId), extract(@"memory/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
-| summarize Commands=make_set(ActionType), Memories=make_set(MemoryId), DistinctMemories=dcount(MemoryId), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where DistinctMemories > 1 or Commands has "ListMemoryRecords"
-```
-
-### [LLM] AgentCore SDK runtime role invoking a foreign Bedrock AgentCore runtime
-
-`UC_134_11` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as runtime_arns values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters") by All_Changes.user All_Changes.command All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=user "AmazonBedrockAgentCoreSDKRuntime-(?<role_region>[^-]+)-(?<role_hash>[a-z0-9]{10})"
-| rex field=runtime_arns max_match=0 "runtime/(?<target_runtime>[A-Za-z0-9_-]+)"
-| eval distinct_targets=mvcount(mvdedup(target_runtime))
-| where (command="InvokeAgentRuntime" AND distinct_targets>=1) OR command IN ("ListAgentRuntimes","ListCodeInterpreters")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend TargetRuntime = coalesce(tostring(Raw.requestParameters.agentRuntimeArn), tostring(Raw.requestParameters.codeInterpreterIdentifier), extract(@"runtime/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
-| summarize Commands=make_set(ActionType), Targets=make_set(TargetRuntime), DistinctTargets=dcount(TargetRuntime), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where DistinctTargets >= 1 or Commands has_any ("ListAgentRuntimes","ListCodeInterpreters")
 ```
 
 ### IOC-driven hunts (use shared templates)

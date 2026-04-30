@@ -64,6 +64,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] Access to Softr-hosted credential-harvesting page mimicking OWA/Exchange
+
+`UC_71_11` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*softr.app*" OR Web.url="*softr.io*" OR Web.site="*.softr.app" OR Web.site="*.softr.io") by Web.src Web.user Web.dest Web.site
+| `drop_dm_object_name(Web)`
+| eval suspicious=if(match(urls,"(?i)(login|sign[-_]?in|owa|outlook|exchange|auth|verify|mail)") OR match(methods,"POST"),1,0)
+| where suspicious=1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let softrDomains = dynamic(["softr.app","softr.io","softr.dev"]);
+let softrHits = DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (softrDomains)
+| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP;
+let emailDelivery = EmailUrlInfo
+| where Url has_any (softrDomains)
+| join kind=inner EmailEvents on NetworkMessageId
+| project NetworkMessageId, Url, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction;
+softrHits
+| join kind=leftouter emailDelivery on $left.RemoteUrl == $right.Url
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction
+| order by Timestamp desc
+```
+
+### [LLM] Adversarial TruffleHog execution scanning for cloud / repo secrets
+
+`UC_71_12` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog.exe" OR Processes.process_name="trufflehog" OR Processes.process="*trufflehog *" OR Processes.original_file_name="trufflehog*") by Processes.dest Processes.user Processes.process_name
+| `drop_dm_object_name(Processes)`
+| eval scan_target=case(match(cmdline,"(?i) filesystem "),"filesystem", match(cmdline,"(?i) (github|gitlab|git) "),"repo", match(cmdline,"(?i) (s3|gcs|azure) "),"cloud-bucket", match(cmdline,"(?i) docker "),"docker", true(),"other")
+| where scan_target!="other" OR match(cmdline,"(?i)(--no-verification|--results|--json)")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "trufflehog.exe" or FileName =~ "trufflehog"
+      or ProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
+      or InitiatingProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
+| extend ScanTarget = case(
+    ProcessCommandLine has_cs " filesystem ", "filesystem",
+    ProcessCommandLine has_any (" github ", " gitlab ", " git "), "repo",
+    ProcessCommandLine has_any (" s3 ", " gcs ", " azure "), "cloud-bucket",
+    ProcessCommandLine has " docker ", "docker",
+    ProcessCommandLine has_any ("--no-verification","--results","--json"), "flagged",
+    "other")
+| where ScanTarget != "other"
+| where not(InitiatingProcessFolderPath has_any ("\\agent\\","\\runners\\","\\jenkins\\","\\azure-pipelines\\"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, ScanTarget
+| order by Timestamp desc
+```
+
+### [LLM] UAT-4356 FIRESTARTER exploitation of Cisco ASA/Firepower WebVPN (CVE-2025-20333 / CVE-2025-20362)
+
+`UC_71_13` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_content_type) as content_types from datamodel=Web where (Web.url="*/+CSCOE+/*" OR Web.url="*/+webvpn+/*" OR Web.url="*/+CSCOE+/logon.html*" OR Web.url="*/+CSCOE+/saml/sp/acs*" OR Web.url="*/+webvpn+/index.html*") AND Web.http_method="POST" by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| eval external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),0,1)
+| where external_src=1
+| eval cve=case(match(urls,"(?i)logon\.html|saml|webvpn/index"),"CVE-2025-20333/20362-candidate", true(),"unknown")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Defender Advanced Hunting has no native Cisco ASA telemetry; this looks for internal hosts pivoting to ASA WebVPN URIs (post-compromise lateral) and for Cisco-flagged file artifacts referenced by Talos. Pair with Sentinel CommonSecurityLog for true exploit-traffic visibility.
+let asaUriIndicators = dynamic(["+CSCOE+","+webvpn+","/+CSCOE+/","/+webvpn+/","+CSCOE+/logon.html","+CSCOE+/saml"]);
+let known_firestarter_hashes = dynamic([
+    "9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507",
+    "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974",
+    "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (asaUriIndicators)
+| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| union (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (known_firestarter_hashes)
+    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -81,7 +181,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -344,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — It pays to be a forever student
 
-`UC_60_10` · phase: **exploit** · confidence: **High**
+`UC_71_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -388,106 +487,6 @@ DeviceFileEvents
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### [LLM] Access to Softr-hosted credential-harvesting page mimicking OWA/Exchange
-
-`UC_60_11` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*softr.app*" OR Web.url="*softr.io*" OR Web.site="*.softr.app" OR Web.site="*.softr.io") by Web.src Web.user Web.dest Web.site
-| `drop_dm_object_name(Web)`
-| eval suspicious=if(match(urls,"(?i)(login|sign[-_]?in|owa|outlook|exchange|auth|verify|mail)") OR match(methods,"POST"),1,0)
-| where suspicious=1
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let softrDomains = dynamic(["softr.app","softr.io","softr.dev"]);
-let softrHits = DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (softrDomains)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP;
-let emailDelivery = EmailUrlInfo
-| where Url has_any (softrDomains)
-| join kind=inner EmailEvents on NetworkMessageId
-| project NetworkMessageId, Url, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction;
-softrHits
-| join kind=leftouter emailDelivery on $left.RemoteUrl == $right.Url
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction
-| order by Timestamp desc
-```
-
-### [LLM] Adversarial TruffleHog execution scanning for cloud / repo secrets
-
-`UC_60_12` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog.exe" OR Processes.process_name="trufflehog" OR Processes.process="*trufflehog *" OR Processes.original_file_name="trufflehog*") by Processes.dest Processes.user Processes.process_name
-| `drop_dm_object_name(Processes)`
-| eval scan_target=case(match(cmdline,"(?i) filesystem "),"filesystem", match(cmdline,"(?i) (github|gitlab|git) "),"repo", match(cmdline,"(?i) (s3|gcs|azure) "),"cloud-bucket", match(cmdline,"(?i) docker "),"docker", true(),"other")
-| where scan_target!="other" OR match(cmdline,"(?i)(--no-verification|--results|--json)")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "trufflehog.exe" or FileName =~ "trufflehog"
-      or ProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
-      or InitiatingProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
-| extend ScanTarget = case(
-    ProcessCommandLine has_cs " filesystem ", "filesystem",
-    ProcessCommandLine has_any (" github ", " gitlab ", " git "), "repo",
-    ProcessCommandLine has_any (" s3 ", " gcs ", " azure "), "cloud-bucket",
-    ProcessCommandLine has " docker ", "docker",
-    ProcessCommandLine has_any ("--no-verification","--results","--json"), "flagged",
-    "other")
-| where ScanTarget != "other"
-| where not(InitiatingProcessFolderPath has_any ("\\agent\\","\\runners\\","\\jenkins\\","\\azure-pipelines\\"))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, ScanTarget
-| order by Timestamp desc
-```
-
-### [LLM] UAT-4356 FIRESTARTER exploitation of Cisco ASA/Firepower WebVPN (CVE-2025-20333 / CVE-2025-20362)
-
-`UC_60_13` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_content_type) as content_types from datamodel=Web where (Web.url="*/+CSCOE+/*" OR Web.url="*/+webvpn+/*" OR Web.url="*/+CSCOE+/logon.html*" OR Web.url="*/+CSCOE+/saml/sp/acs*" OR Web.url="*/+webvpn+/index.html*") AND Web.http_method="POST" by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| eval external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),0,1)
-| where external_src=1
-| eval cve=case(match(urls,"(?i)logon\.html|saml|webvpn/index"),"CVE-2025-20333/20362-candidate", true(),"unknown")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// Defender Advanced Hunting has no native Cisco ASA telemetry; this looks for internal hosts pivoting to ASA WebVPN URIs (post-compromise lateral) and for Cisco-flagged file artifacts referenced by Talos. Pair with Sentinel CommonSecurityLog for true exploit-traffic visibility.
-let asaUriIndicators = dynamic(["+CSCOE+","+webvpn+","/+CSCOE+/","/+webvpn+/","+CSCOE+/logon.html","+CSCOE+/saml"]);
-let known_firestarter_hashes = dynamic([
-    "9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507",
-    "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974",
-    "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (asaUriIndicators)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
-| union (
-    DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (known_firestarter_hashes)
-    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-)
 | order by Timestamp desc
 ```
 

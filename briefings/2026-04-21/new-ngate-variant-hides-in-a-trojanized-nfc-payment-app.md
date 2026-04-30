@@ -46,6 +46,53 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] NGate HandyPay C&C beacon / distribution traffic (protecaocartao.online, 108.165.230.223)
+
+`UC_98_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("108.165.230.223","104.21.91.170") by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" by Web.src Web.user Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="*protecaocartao.online*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceNetworkEvents
+    | where RemoteIP in ("108.165.230.223","104.21.91.170")
+         or RemoteUrl has "protecaocartao.online"
+    | project Timestamp, DeviceName, DeviceId, ActionType, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol),
+  (DeviceEvents
+    | where ActionType in ("DnsQueryResponse","ConnectionSuccess")
+    | where AdditionalFields has "protecaocartao.online"
+    | project Timestamp, DeviceName, ActionType, AdditionalFields)
+| order by Timestamp desc
+```
+
+### [LLM] Trojanized HandyPay APK delivery (PROTECAO_CARTAO.apk / Rio_de_Premios_Pagamento.apk hash hits)
+
+`UC_98_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C") OR Filesystem.file_name IN ("PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_hash Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" AND Web.url="*.apk*" by Web.src Web.user Web.url Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badHashes = dynamic(["48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C"]);
+let badNames  = dynamic(["PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk"]);
+union
+  (DeviceFileEvents
+    | where SHA1 in~ (badHashes) or FileName in~ (badNames) or FileName endswith ".apk" and FolderPath has_any ("Download","WhatsApp")
+    | where SHA1 in~ (badHashes) or FileName in~ (badNames)
+    | project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, RequestSourceIP),
+  (DeviceNetworkEvents
+    | where RemoteUrl has "protecaocartao.online" and RemoteUrl has ".apk"
+    | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessAccountName)
+| order by Timestamp desc
+```
+
 ### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
@@ -98,7 +145,6 @@ DeviceNetworkEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -225,53 +271,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] NGate HandyPay C&C beacon / distribution traffic (protecaocartao.online, 108.165.230.223)
-
-`UC_93_5` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("108.165.230.223","104.21.91.170") by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" by Web.src Web.user Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="*protecaocartao.online*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-union
-  (DeviceNetworkEvents
-    | where RemoteIP in ("108.165.230.223","104.21.91.170")
-         or RemoteUrl has "protecaocartao.online"
-    | project Timestamp, DeviceName, DeviceId, ActionType, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol),
-  (DeviceEvents
-    | where ActionType in ("DnsQueryResponse","ConnectionSuccess")
-    | where AdditionalFields has "protecaocartao.online"
-    | project Timestamp, DeviceName, ActionType, AdditionalFields)
-| order by Timestamp desc
-```
-
-### [LLM] Trojanized HandyPay APK delivery (PROTECAO_CARTAO.apk / Rio_de_Premios_Pagamento.apk hash hits)
-
-`UC_93_6` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C") OR Filesystem.file_name IN ("PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_hash Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" AND Web.url="*.apk*" by Web.src Web.user Web.url Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let badHashes = dynamic(["48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C"]);
-let badNames  = dynamic(["PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk"]);
-union
-  (DeviceFileEvents
-    | where SHA1 in~ (badHashes) or FileName in~ (badNames) or FileName endswith ".apk" and FolderPath has_any ("Download","WhatsApp")
-    | where SHA1 in~ (badHashes) or FileName in~ (badNames)
-    | project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, RequestSourceIP),
-  (DeviceNetworkEvents
-    | where RemoteUrl has "protecaocartao.online" and RemoteUrl has ".apk"
-    | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessAccountName)
-| order by Timestamp desc
 ```
 
 ### IOC-driven hunts (use shared templates)

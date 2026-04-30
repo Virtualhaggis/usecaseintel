@@ -56,6 +56,52 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] AirSnitch Wi-Fi client-isolation bypass tool execution on Linux endpoint
+
+`UC_91_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.os IN ("Linux","linux") AND (Processes.process="*airsnitch.py*" OR (Processes.process="*--no-ssid-check*" AND (Processes.process="*--c2c-port-steal*" OR Processes.process="*--c2c-port-steal-uplink*" OR Processes.process="*--c2c-broadcast*" OR Processes.process="*--c2c-ip*" OR Processes.process="*--check-gtk-shared*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where DeviceOS in~ ("Linux","macOS")
+| where FileName in~ ("python","python3","sudo","bash","sh") or FileName endswith "airsnitch.py"
+| where ProcessCommandLine has "airsnitch.py"
+   or (ProcessCommandLine has "--no-ssid-check" and ProcessCommandLine has_any ("--c2c-port-steal","--c2c-port-steal-uplink","--c2c-broadcast","--c2c-ip","--check-gtk-shared"))
+| project Timestamp, DeviceName, DeviceId, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+```
+
+### [LLM] Drop of AirSnitch repo artefacts (modified wpa_supplicant configs) on internal host
+
+`UC_91_7` · phase: **weapon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf") OR Filesystem.file_path="*/airsnitch/*" OR (Filesystem.file_name="eap.conf" AND Filesystem.file_path="*/airsnitch*")) by Filesystem.dest Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf")
+   or FolderPath has "/airsnitch/"
+| project Timestamp, DeviceName, DeviceId, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, RequestAccountName, SHA256
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessCommandLine has_any ("git clone","wget","curl")
+    | where InitiatingProcessCommandLine has "airsnitch"
+    | project DeviceId, CloneCmd=InitiatingProcessCommandLine, CloneTime=Timestamp
+) on DeviceId
+```
+
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -101,7 +147,6 @@ DeviceFileEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -245,52 +290,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] AirSnitch Wi-Fi client-isolation bypass tool execution on Linux endpoint
-
-`UC_80_6` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.os IN ("Linux","linux") AND (Processes.process="*airsnitch.py*" OR (Processes.process="*--no-ssid-check*" AND (Processes.process="*--c2c-port-steal*" OR Processes.process="*--c2c-port-steal-uplink*" OR Processes.process="*--c2c-broadcast*" OR Processes.process="*--c2c-ip*" OR Processes.process="*--check-gtk-shared*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where DeviceOS in~ ("Linux","macOS")
-| where FileName in~ ("python","python3","sudo","bash","sh") or FileName endswith "airsnitch.py"
-| where ProcessCommandLine has "airsnitch.py"
-   or (ProcessCommandLine has "--no-ssid-check" and ProcessCommandLine has_any ("--c2c-port-steal","--c2c-port-steal-uplink","--c2c-broadcast","--c2c-ip","--check-gtk-shared"))
-| project Timestamp, DeviceName, DeviceId, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
-```
-
-### [LLM] Drop of AirSnitch repo artefacts (modified wpa_supplicant configs) on internal host
-
-`UC_80_7` · phase: **weapon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf") OR Filesystem.file_path="*/airsnitch/*" OR (Filesystem.file_name="eap.conf" AND Filesystem.file_path="*/airsnitch*")) by Filesystem.dest Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ ("airsnitch.py","hostap.py","multipsk.conf","saepk.conf")
-   or FolderPath has "/airsnitch/"
-| project Timestamp, DeviceName, DeviceId, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, RequestAccountName, SHA256
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where InitiatingProcessCommandLine has_any ("git clone","wget","curl")
-    | where InitiatingProcessCommandLine has "airsnitch"
-    | project DeviceId, CloneCmd=InitiatingProcessCommandLine, CloneTime=Timestamp
-) on DeviceId
 ```
 
 ### IOC-driven hunts (use shared templates)

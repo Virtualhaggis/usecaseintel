@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_306 per-article briefings — auto-generated from articles in the rolling 180-day window._
+_307 per-article briefings — auto-generated from articles in the rolling 180-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,20 +8,38 @@ _306 per-article briefings — auto-generated from articles in the rolling 180-d
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-04-30
+- [april kb5083769 windows 11 update causes backup software fai](./2026-04-30/april-kb5083769-windows-11-update-causes-backup-software-fai.md)
+- [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
+- [critical cpanel and whm bug exploited as a zero day poc now ](./2026-04-30/critical-cpanel-and-whm-bug-exploited-as-a-zero-day-poc-now-.md)
+- [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
+- [etherrat distribution spoofing administrative tools via gith](./2026-04-30/etherrat-distribution-spoofing-administrative-tools-via-gith.md)
+- [fbi links cybercriminals to sharp surge in cargo theft attac](./2026-04-30/fbi-links-cybercriminals-to-sharp-surge-in-cargo-theft-attac.md)
+- [google fixes cvss 10 gemini cli ci rce and cursor flaws enab](./2026-04-30/google-fixes-cvss-10-gemini-cli-ci-rce-and-cursor-flaws-enab.md)
+- [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
+- [new bluekit phishing service includes an ai assistant 40 tem](./2026-04-30/new-bluekit-phishing-service-includes-an-ai-assistant-40-tem.md)
+- [new linux copy fail flaw gives hackers root on major distros](./2026-04-30/new-linux-copy-fail-flaw-gives-hackers-root-on-major-distros.md)
+- [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
+- [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
+- [police dismantles 9 crypto scam centers arrests 276 suspects](./2026-04-30/police-dismantles-9-crypto-scam-centers-arrests-276-suspects.md)
+- [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
+- [romanian leader of online swatting ring gets 4 years in pris](./2026-04-30/romanian-leader-of-online-swatting-ring-gets-4-years-in-pris.md)
+- [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
+- [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
+- [what happens in the first 24 hours after a new asset goes li](./2026-04-30/what-happens-in-the-first-24-hours-after-a-new-asset-goes-li.md)
+- [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
+
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 - [cisa adds actively exploited connectwise and windows flaws t](./2026-04-29/cisa-adds-actively-exploited-connectwise-and-windows-flaws-t.md)
-- [cisa orders feds to patch windows flaw exploited as zero day](./2026-04-29/cisa-orders-feds-to-patch-windows-flaw-exploited-as-zero-day.md)
 - [cpanel whm emergency update fixes critical auth bypass bug](./2026-04-29/cpanel-whm-emergency-update-fixes-critical-auth-bypass-bug.md)
 - [critical cpanel authentication vulnerability identified upda](./2026-04-29/critical-cpanel-authentication-vulnerability-identified-upda.md)
 - [european police dismantles 50 million crypto investment frau](./2026-04-29/european-police-dismantles-50-million-crypto-investment-frau.md)
-- [github fixes rce flaw that gave access to millions of privat](./2026-04-29/github-fixes-rce-flaw-that-gave-access-to-millions-of-privat.md)
 - [hackers arrested for hijacking and selling 610 000 roblox ac](./2026-04-29/hackers-arrested-for-hijacking-and-selling-610-000-roblox-ac.md)
 - [hackers exploit rce flaws in qinglong task scheduler for cry](./2026-04-29/hackers-exploit-rce-flaws-in-qinglong-task-scheduler-for-cry.md)
 - [learning from the vercel breach shadow ai oauth sprawl](./2026-04-29/learning-from-the-vercel-breach-shadow-ai-oauth-sprawl.md)
 - [litellm cve 2026 42208 sql injection exploited within 36 hou](./2026-04-29/litellm-cve-2026-42208-sql-injection-exploited-within-36-hou.md)
-- [microsoft says backend change broke teams free chat and call](./2026-04-29/microsoft-says-backend-change-broke-teams-free-chat-and-call.md)
 - [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
 - [official sap npm packages compromised to steal credentials](./2026-04-29/official-sap-npm-packages-compromised-to-steal-credentials.md)
 - [popular wordpress redirect plugin hid dormant backdoor for y](./2026-04-29/popular-wordpress-redirect-plugin-hid-dormant-backdoor-for-y.md)
@@ -32,19 +50,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
-- [broken vect 2 0 ransomware acts as a data wiper for large fi](./2026-04-28/broken-vect-2-0-ransomware-acts-as-a-data-wiper-for-large-fi.md)
-- [checkmarx confirms lapsus hackers leaked its stolen github d](./2026-04-28/checkmarx-confirms-lapsus-hackers-leaked-its-stolen-github-d.md)
 - [chinese silk typhoon hacker extradited to u s over covid res](./2026-04-28/chinese-silk-typhoon-hacker-extradited-to-u-s-over-covid-res.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
-- [hackers are exploiting a critical litellm pre auth sqli flaw](./2026-04-28/hackers-are-exploiting-a-critical-litellm-pre-auth-sqli-flaw.md)
 - [microsoft confirms active exploitation of windows shell cve ](./2026-04-28/microsoft-confirms-active-exploitation-of-windows-shell-cve-.md)
 - [microsoft patches entra id role flaw that enabled service pr](./2026-04-28/microsoft-patches-entra-id-role-flaw-that-enabled-service-pr.md)
 - [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
 - [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)
-- [us reportedly charges scattered spider hacker arrested in fi](./2026-04-28/us-reportedly-charges-scattered-spider-hacker-arrested-in-fi.md)
 - [vect 2 0 ransomware irreversibly destroys files over 131kb o](./2026-04-28/vect-2-0-ransomware-irreversibly-destroys-files-over-131kb-o.md)
-- [video service vimeo confirms anodot breach exposed user data](./2026-04-28/video-service-vimeo-confirms-anodot-breach-exposed-user-data.md)
 - [why secure data movement is the zero trust bottleneck nobody](./2026-04-28/why-secure-data-movement-is-the-zero-trust-bottleneck-nobody.md)
 
 ## 2026-04-27
@@ -95,28 +108,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-22
 - [ai powered defense for an ai accelerated threat landscape](./2026-04-22/ai-powered-defense-for-an-ai-accelerated-threat-landscape.md)
 - [cisa kev cve 2026 33825 microsoft defender insufficient gran](./2026-04-22/cisa-kev-cve-2026-33825-microsoft-defender-insufficient-gran.md)
-- [cohere ai terrarium sandbox flaw enables root code execution](./2026-04-22/cohere-ai-terrarium-sandbox-flaw-enables-root-code-execution.md)
 - [harvester deploys linux gogra backdoor in south asia using m](./2026-04-22/harvester-deploys-linux-gogra-backdoor-in-south-asia-using-m.md)
 - [ir trends q1 2026 phishing reemerges as top initial access v](./2026-04-22/ir-trends-q1-2026-phishing-reemerges-as-top-initial-access-v.md)
 - [labscon25 replay are your chinese cameras spying for you or ](./2026-04-22/labscon25-replay-are-your-chinese-cameras-spying-for-you-or-.md)
 - [lotus wiper malware targets venezuelan energy systems in des](./2026-04-22/lotus-wiper-malware-targets-venezuelan-energy-systems-in-des.md)
 - [malicious kics docker images and vs code extensions hit chec](./2026-04-22/malicious-kics-docker-images-and-vs-code-extensions-hit-chec.md)
 - [microsoft patches critical asp net core cve 2026 40372 privi](./2026-04-22/microsoft-patches-critical-asp-net-core-cve-2026-40372-privi.md)
-- [mustang panda s new lotuslite variant targets india banks so](./2026-04-22/mustang-panda-s-new-lotuslite-variant-targets-india-banks-so.md)
 - [self propagating supply chain worm hijacks npm packages to s](./2026-04-22/self-propagating-supply-chain-worm-hijacks-npm-packages-to-s.md)
 - [toxic combinations when cross app permissions stack into ris](./2026-04-22/toxic-combinations-when-cross-app-permissions-stack-into-ris.md)
 - [when wi fi encryption fails protecting your enterprise from ](./2026-04-22/when-wi-fi-encryption-fails-protecting-your-enterprise-from-.md)
 
 ## 2026-04-21
-- [22 bridge break flaws expose thousands of lantronix and sile](./2026-04-21/22-bridge-break-flaws-expose-thousands-of-lantronix-and-sile.md)
-- [5 places where mature socs keep mttr fast and others waste t](./2026-04-21/5-places-where-mature-socs-keep-mttr-fast-and-others-waste-t.md)
 - [bad apples weaponizing native macos primitives for movement ](./2026-04-21/bad-apples-weaponizing-native-macos-primitives-for-movement-.md)
 - [detection strategies across cloud and identities against inf](./2026-04-21/detection-strategies-across-cloud-and-identities-against-inf.md)
 - [new ngate variant hides in a trojanized nfc payment app](./2026-04-21/new-ngate-variant-hides-in-a-trojanized-nfc-payment-app.md)
 - [phishing and mfa exploitation targeting the keys to the king](./2026-04-21/phishing-and-mfa-exploitation-targeting-the-keys-to-the-king.md)
 - [podcast it s not you it s your printer state sponsored and p](./2026-04-21/podcast-it-s-not-you-it-s-your-printer-state-sponsored-and-p.md)
-- [ransomware negotiator pleads guilty to aiding blackcat attac](./2026-04-21/ransomware-negotiator-pleads-guilty-to-aiding-blackcat-attac.md)
-- [systembc c2 server reveals 1 570 victims in the gentlemen ra](./2026-04-21/systembc-c2-server-reveals-1-570-victims-in-the-gentlemen-ra.md)
 
 ## 2026-04-20
 - [cisa kev cve 2023 27351 papercut ng mf improper authenticati](./2026-04-20/cisa-kev-cve-2023-27351-papercut-ng-mf-improper-authenticati.md)
@@ -142,7 +149,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [building your cryptographic inventory a customer strategy fo](./2026-04-16/building-your-cryptographic-inventory-a-customer-strategy-fo.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
-- [dissecting sapphire sleet s macos intrusion from lure to com](./2026-04-16/dissecting-sapphire-sleet-s-macos-intrusion-from-lure-to-com.md)
 - [foxit libraw vulnerabilities](./2026-04-16/foxit-libraw-vulnerabilities.md)
 - [more than pretty pictures wendy bishop on visual storytellin](./2026-04-16/more-than-pretty-pictures-wendy-bishop-on-visual-storytellin.md)
 - [powmix botnet targets czech workforce](./2026-04-16/powmix-botnet-targets-czech-workforce.md)
@@ -150,7 +156,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the q1 vulnerability pulse](./2026-04-16/the-q1-vulnerability-pulse.md)
 
 ## 2026-04-15
-- [incident response for ai same fire different fuel](./2026-04-15/incident-response-for-ai-same-fire-different-fuel.md)
 - [the n8n n8mare how threat actors are misusing ai workflow au](./2026-04-15/the-n8n-n8mare-how-threat-actors-are-misusing-ai-workflow-au.md)
 - [threat landscape for industrial automation systems in q4 202](./2026-04-15/threat-landscape-for-industrial-automation-systems-in-q4-202.md)
 
@@ -158,7 +163,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2009 0238 microsoft office remote code executio](./2026-04-14/cisa-kev-cve-2009-0238-microsoft-office-remote-code-executio.md)
 - [cisa kev cve 2026 32201 microsoft sharepoint server improper](./2026-04-14/cisa-kev-cve-2026-32201-microsoft-sharepoint-server-improper.md)
 - [microsoft patch tuesday for april 2026 snort rule and promin](./2026-04-14/microsoft-patch-tuesday-for-april-2026-snort-rule-and-promin.md)
-- [state sponsored threats different objectives similar access ](./2026-04-14/state-sponsored-threats-different-objectives-similar-access-.md)
 
 ## 2026-04-13
 - [cisa kev cve 2012 1854 microsoft visual basic for applicatio](./2026-04-13/cisa-kev-cve-2012-1854-microsoft-visual-basic-for-applicatio.md)
@@ -214,7 +218,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [coruna the framework used in operation triangulation](./2026-03-26/coruna-the-framework-used-in-operation-triangulation.md)
 
 ## 2026-03-25
-- [anatomy of a cyber world global report 2026](./2026-03-25/anatomy-of-a-cyber-world-global-report-2026.md)
 - [cisa kev cve 2026 33017 langflow code injection vulnerabilit](./2026-03-25/cisa-kev-cve-2026-33017-langflow-code-injection-vulnerabilit.md)
 - [virtual machines virtually everywhere and with real security](./2026-03-25/virtual-machines-virtually-everywhere-and-with-real-security.md)
 

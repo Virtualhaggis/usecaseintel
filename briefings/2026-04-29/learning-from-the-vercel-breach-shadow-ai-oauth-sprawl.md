@@ -45,6 +45,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] Google Workspace OAuth grant to Context.ai compromised app (Vercel breach pivot)
+
+`UC_28_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.action) as action values(All_Changes.src) as src from datamodel=Change where All_Changes.object_category IN ("oauth_token","oauth_consent","application") AND All_Changes.object IN ("110671459871-30f1spbu0hptbs60cb4vsmv79i7bbvqj.apps.googleusercontent.com","110671459871-f3cq3okebd3jcg1lllmroqejdbka8cqq.apps.googleusercontent.com") by All_Changes.user All_Changes.object All_Changes.vendor_product
+| `drop_dm_object_name(All_Changes)`
+| eval risk_reason="OAuth grant to Context.ai client_id linked to Vercel/Context.ai April-2026 supply-chain breach"
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application in ("Google Workspace","Google","Google Cloud Platform")
+| where ActionType in ("Add OAuth2 token","OAuth2 application authorized","Authorize","Use OAuth2 token")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("110671459871-30f1spbu0hptbs60cb4vsmv79i7bbvqj.apps.googleusercontent.com","110671459871-f3cq3okebd3jcg1lllmroqejdbka8cqq.apps.googleusercontent.com")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, IPCategory, UserAgent, ActionType, Application, Raw
+| order by Timestamp desc
+```
+
+### [LLM] Salesforce data theft via Drift OAuth tokens — UNC6395 user-agent fingerprints
+
+`UC_28_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src dc(Web.user) as user_count from datamodel=Web where (Web.dest="*.salesforce.com" OR Web.dest="*.my.salesforce.com" OR Web.vendor_product="Salesforce") AND Web.http_user_agent IN ("Salesforce-Multi-Org-Fetcher/1.0","Salesforce-CLI/1.0","python-requests/2.32.4") by Web.user Web.http_user_agent Web.dest
+| `drop_dm_object_name(Web)`
+| eval risk_reason="UNC6395 / Drift OAuth abuse user-agent observed against Salesforce"
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Application == "Salesforce"
+| where UserAgent in~ ("Salesforce-Multi-Org-Fetcher/1.0","Salesforce-CLI/1.0","python-requests/2.32.4")
+| extend SoqlQuery = tostring(parse_json(RawEventData).Query)
+| extend SuspiciousQuery = iff(SoqlQuery has_any ("AKIA","AWS","snowflakecomputing","password","VPN","secret"), true, false)
+| project Timestamp, AccountDisplayName, IPAddress, IPCategory, UserAgent, ActionType, SoqlQuery, SuspiciousQuery, RawEventData
+| order by Timestamp desc
+```
+
+### [LLM] Context.ai Chrome extension still installed on managed endpoints
+
+`UC_28_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Extensions\\omddlmnhcofjbnbflmjginpjjblphbgk*" by Filesystem.dest Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| append [
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_path) as registry_path from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Google\\Chrome\\Extensions\\omddlmnhcofjbnbflmjginpjjblphbgk*" OR Registry.registry_value_data="*omddlmnhcofjbnbflmjginpjjblphbgk*" by Registry.dest Registry.user
+  | `drop_dm_object_name(Registry)`
+]
+| eval risk_reason="Removed Context.ai Chrome extension still resident on host — revoke Google OAuth grants for this user"
+```
+
+**Defender KQL:**
+```kql
+let extId = "omddlmnhcofjbnbflmjginpjjblphbgk";
+DeviceFileEvents
+| where FolderPath has extId or FileName has extId
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType
+| union (
+    DeviceRegistryEvents
+    | where RegistryKey has extId or RegistryValueName has extId or RegistryValueData has extId
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath=RegistryKey, FileName=RegistryValueName, ActionType
+)
+| order by Timestamp desc
+```
+
 ### Suspicious browser extension installation
 
 `UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
@@ -114,7 +189,6 @@ DeviceFileEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -318,81 +392,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] Google Workspace OAuth grant to Context.ai compromised app (Vercel breach pivot)
-
-`UC_9_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.action) as action values(All_Changes.src) as src from datamodel=Change where All_Changes.object_category IN ("oauth_token","oauth_consent","application") AND All_Changes.object IN ("110671459871-30f1spbu0hptbs60cb4vsmv79i7bbvqj.apps.googleusercontent.com","110671459871-f3cq3okebd3jcg1lllmroqejdbka8cqq.apps.googleusercontent.com") by All_Changes.user All_Changes.object All_Changes.vendor_product
-| `drop_dm_object_name(All_Changes)`
-| eval risk_reason="OAuth grant to Context.ai client_id linked to Vercel/Context.ai April-2026 supply-chain breach"
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Application in ("Google Workspace","Google","Google Cloud Platform")
-| where ActionType in ("Add OAuth2 token","OAuth2 application authorized","Authorize","Use OAuth2 token")
-| extend Raw = tostring(RawEventData)
-| where Raw has_any ("110671459871-30f1spbu0hptbs60cb4vsmv79i7bbvqj.apps.googleusercontent.com","110671459871-f3cq3okebd3jcg1lllmroqejdbka8cqq.apps.googleusercontent.com")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, IPCategory, UserAgent, ActionType, Application, Raw
-| order by Timestamp desc
-```
-
-### [LLM] Salesforce data theft via Drift OAuth tokens — UNC6395 user-agent fingerprints
-
-`UC_9_9` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src dc(Web.user) as user_count from datamodel=Web where (Web.dest="*.salesforce.com" OR Web.dest="*.my.salesforce.com" OR Web.vendor_product="Salesforce") AND Web.http_user_agent IN ("Salesforce-Multi-Org-Fetcher/1.0","Salesforce-CLI/1.0","python-requests/2.32.4") by Web.user Web.http_user_agent Web.dest
-| `drop_dm_object_name(Web)`
-| eval risk_reason="UNC6395 / Drift OAuth abuse user-agent observed against Salesforce"
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Application == "Salesforce"
-| where UserAgent in~ ("Salesforce-Multi-Org-Fetcher/1.0","Salesforce-CLI/1.0","python-requests/2.32.4")
-| extend SoqlQuery = tostring(parse_json(RawEventData).Query)
-| extend SuspiciousQuery = iff(SoqlQuery has_any ("AKIA","AWS","snowflakecomputing","password","VPN","secret"), true, false)
-| project Timestamp, AccountDisplayName, IPAddress, IPCategory, UserAgent, ActionType, SoqlQuery, SuspiciousQuery, RawEventData
-| order by Timestamp desc
-```
-
-### [LLM] Context.ai Chrome extension still installed on managed endpoints
-
-`UC_9_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Extensions\\omddlmnhcofjbnbflmjginpjjblphbgk*" by Filesystem.dest Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| append [
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_path) as registry_path from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Google\\Chrome\\Extensions\\omddlmnhcofjbnbflmjginpjjblphbgk*" OR Registry.registry_value_data="*omddlmnhcofjbnbflmjginpjjblphbgk*" by Registry.dest Registry.user
-  | `drop_dm_object_name(Registry)`
-]
-| eval risk_reason="Removed Context.ai Chrome extension still resident on host — revoke Google OAuth grants for this user"
-```
-
-**Defender KQL:**
-```kql
-let extId = "omddlmnhcofjbnbflmjginpjjblphbgk";
-DeviceFileEvents
-| where FolderPath has extId or FileName has extId
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, ActionType
-| union (
-    DeviceRegistryEvents
-    | where RegistryKey has extId or RegistryValueName has extId or RegistryValueData has extId
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath=RegistryKey, FileName=RegistryValueName, ActionType
-)
-| order by Timestamp desc
 ```
 
 

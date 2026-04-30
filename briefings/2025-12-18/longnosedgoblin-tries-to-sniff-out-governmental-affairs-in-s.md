@@ -59,6 +59,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] NosyDoor Stage-2: UevAppMonitor.exe AppDomainManager injection from Microsoft.NET\Framework
+
+`UC_254_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="UevAppMonitor.exe" AND Processes.process_path="*\\Windows\\Microsoft.NET\\Framework*" AND NOT Processes.process_path IN ("*\\System32\\*","*\\SysWOW64\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | join type=left dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name="UevAppMonitor.exe.config" AND Filesystem.file_path="*\\Microsoft.NET\\Framework*" by Filesystem.dest | `drop_dm_object_name(Filesystem)` | rename count as config_drops] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let ConfigDrops = DeviceFileEvents | where FileName =~ "UevAppMonitor.exe.config" | where FolderPath has @"\Microsoft.NET\Framework" | distinct DeviceId, DeviceName; DeviceProcessEvents | where FileName =~ "UevAppMonitor.exe" | where FolderPath has @"\Microsoft.NET\Framework" | where FolderPath !has @"\System32\" and FolderPath !has @"\SysWOW64\" | join kind=leftouter (ConfigDrops) on DeviceId | project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+```
+
+### [LLM] NosyDoor staging artifacts dropped to C:\Windows\Microsoft.NET\Framework
+
+`UC_254_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Windows\\Microsoft.NET\\Framework*" AND Filesystem.file_name IN ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | eval distinct_files=mvcount(files) | where distinct_files >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents | where FolderPath has @"\Microsoft.NET\Framework" | where FileName in~ ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") | summarize FileSet=make_set(FileName), Procs=make_set(InitiatingProcessFileName), Cmds=make_set(InitiatingProcessCommandLine), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName | where array_length(FileSet) >= 2
+```
+
+### [LLM] NosyDoor persistence: 'OneDrive Reporting Task-S-1-5-21-*' scheduled task creation
+
+`UC_254_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") AND Processes.process="*OneDrive Reporting Task-S-1-5-21*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true (DeviceProcessEvents | where (FileName =~ "schtasks.exe" or FileName =~ "powershell.exe" or FileName =~ "pwsh.exe") | where ProcessCommandLine has "OneDrive Reporting Task-S-1-5-21" | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine), (DeviceEvents | where ActionType == "ScheduledTaskCreated" | where AdditionalFields has "OneDrive Reporting Task-S-1-5-21" or AdditionalFields has @"\Microsoft\OneDrive Reporting Task" | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, AdditionalFields, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
 ### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
@@ -227,7 +269,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
 
-`UC_253_8` · phase: **exploit** · confidence: **High**
+`UC_254_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -272,48 +314,6 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### [LLM] NosyDoor Stage-2: UevAppMonitor.exe AppDomainManager injection from Microsoft.NET\Framework
-
-`UC_253_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="UevAppMonitor.exe" AND Processes.process_path="*\\Windows\\Microsoft.NET\\Framework*" AND NOT Processes.process_path IN ("*\\System32\\*","*\\SysWOW64\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | join type=left dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name="UevAppMonitor.exe.config" AND Filesystem.file_path="*\\Microsoft.NET\\Framework*" by Filesystem.dest | `drop_dm_object_name(Filesystem)` | rename count as config_drops] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let ConfigDrops = DeviceFileEvents | where FileName =~ "UevAppMonitor.exe.config" | where FolderPath has @"\Microsoft.NET\Framework" | distinct DeviceId, DeviceName; DeviceProcessEvents | where FileName =~ "UevAppMonitor.exe" | where FolderPath has @"\Microsoft.NET\Framework" | where FolderPath !has @"\System32\" and FolderPath !has @"\SysWOW64\" | join kind=leftouter (ConfigDrops) on DeviceId | project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-```
-
-### [LLM] NosyDoor staging artifacts dropped to C:\Windows\Microsoft.NET\Framework
-
-`UC_253_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Windows\\Microsoft.NET\\Framework*" AND Filesystem.file_name IN ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | eval distinct_files=mvcount(files) | where distinct_files >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents | where FolderPath has @"\Microsoft.NET\Framework" | where FileName in~ ("SharedReg.dll","netfxsbs9.hkf","log.cached","UevAppMonitor.exe.config","error.txt") | summarize FileSet=make_set(FileName), Procs=make_set(InitiatingProcessFileName), Cmds=make_set(InitiatingProcessCommandLine), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName | where array_length(FileSet) >= 2
-```
-
-### [LLM] NosyDoor persistence: 'OneDrive Reporting Task-S-1-5-21-*' scheduled task creation
-
-`UC_253_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") AND Processes.process="*OneDrive Reporting Task-S-1-5-21*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-union isfuzzy=true (DeviceProcessEvents | where (FileName =~ "schtasks.exe" or FileName =~ "powershell.exe" or FileName =~ "pwsh.exe") | where ProcessCommandLine has "OneDrive Reporting Task-S-1-5-21" | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine), (DeviceEvents | where ActionType == "ScheduledTaskCreated" | where AdditionalFields has "OneDrive Reporting Task-S-1-5-21" or AdditionalFields has @"\Microsoft\OneDrive Reporting Task" | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, AdditionalFields, InitiatingProcessFileName, InitiatingProcessCommandLine)
 ```
 
 ### IOC-driven hunts (use shared templates)

@@ -42,6 +42,35 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] MuddyWater MSP-pivot: SimpleHelp RMM client execution at non-MSP endpoints
+
+`UC_172_9` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") OR Processes.process_path IN ("*\\JWrapper-Remote Access\\*","*\\SimpleHelp*\\*","*\\SimpleHelpRemoteAccess\\*") OR (Processes.process_name="java.exe" AND Processes.process="*Technician.jar*")) by Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | lookup approved_msp_endpoints dest OUTPUT msp_owner | where isnull(msp_owner) | join type=left dest [ | tstats `summariesonly` values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.dest) as remote_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8443,443) (All_Traffic.dest="*simple-help.com" OR All_Traffic.app="simplehelp") by All_Traffic.src | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let proc = DeviceProcessEvents | where Timestamp > ago(14d) | where FileName in~ ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") or FolderPath matches regex @"(?i)\\(SimpleHelp|JWrapper-Remote Access|SimpleHelpRemoteAccess)\\" or (FileName =~ "java.exe" and ProcessCommandLine has_cs "Technician.jar") or ProcessVersionInfoCompanyName has "JWrapper" | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountName, SHA256; let net = DeviceNetworkEvents | where Timestamp > ago(14d) | where RemoteUrl has "simple-help.com" or (RemotePort in (8443,443) and InitiatingProcessFileName in~ ("Remote Access.exe","SimpleService.exe","java.exe")) | project NetTime=Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName; proc | join kind=leftouter net on DeviceId | where DeviceName !in ((externaldata(d:string)[@"https://approved-msp-list.csv"] with (format="csv")))  // replace with internal approved-MSP allowlist
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, SHA256
+```
+
+### [LLM] Iranian APT MFA push-bombing followed by attacker-controlled MFA registration change
+
+`UC_172_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as mfa_challenges values(Authentication.src) as src_ips dc(Authentication.src) as dc_src min(_time) as first_attempt max(_time) as last_attempt from datamodel=Authentication where Authentication.action="failure" (Authentication.signature="*MFA*" OR Authentication.signature_id IN ("50074","50158","500121","530003") OR Authentication.authentication_method="MFA") by Authentication.user span=30m | `drop_dm_object_name(Authentication)` | where mfa_challenges >= 10 | join type=inner user [ | tstats `summariesonly` min(_time) as success_time from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="MFA" by Authentication.user | `drop_dm_object_name(Authentication)` ] | where success_time >= first_attempt AND success_time <= (last_attempt + 3600) | join type=inner user [ | tstats `summariesonly` min(_time) as reg_change_time values(All_Changes.object) as changed_object values(All_Changes.action) as change_action from datamodel=Change.Account_Management where (All_Changes.object_category="user" AND (All_Changes.action="updated" OR All_Changes.action="created") AND (All_Changes.object_attrs="*StrongAuthentication*" OR All_Changes.object_attrs="*authenticationMethod*" OR All_Changes.object_attrs="*PhoneAuthentication*")) by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename All_Changes.user as user ] | where reg_change_time >= success_time AND reg_change_time <= (success_time + 86400) | table user first_attempt last_attempt mfa_challenges src_ips success_time reg_change_time changed_object change_action
+```
+
+**Defender KQL:**
+```kql
+let bombing = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode in (50074, 50158, 500121, 530003) or (Status has "MFA" and ConditionalAccessStatus != "success") | summarize FailedMFA=count(), FirstAttempt=min(Timestamp), LastAttempt=max(Timestamp), SrcIPs=make_set(IPAddress, 25), DistinctSrcIPs=dcount(IPAddress) by AccountUpn, AccountObjectId, bin(Timestamp, 1h) | where FailedMFA >= 10; let approved = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode == 0 and AuthenticationRequirement =~ "multiFactorAuthentication" | project SuccessTime=Timestamp, AccountObjectId, ApprovedFromIP=IPAddress, ApprovedDevice=DeviceName; let regChange = CloudAppEvents | where Timestamp > ago(7d) | where Application has_any ("Microsoft Entra","Azure Active Directory") | where ActionType has_any ("Update user","Add registered security info","Update authentication method","User registered security info","User changed default security info","Reset user password") | project RegChangeTime=Timestamp, AccountObjectId, ActionType, RegInitiatedBy=tostring(RawEventData.InitiatedBy), RegFromIP=IPAddress; bombing | join kind=inner approved on AccountObjectId | where SuccessTime between (FirstAttempt .. (LastAttempt + 1h)) | join kind=inner regChange on AccountObjectId | where RegChangeTime between (SuccessTime .. (SuccessTime + 24h)) | project AccountUpn, FirstAttempt, LastAttempt, FailedMFA, DistinctSrcIPs, SrcIPs, SuccessTime, ApprovedFromIP, RegChangeTime, ActionType, RegFromIP
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -59,7 +88,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -341,35 +369,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] MuddyWater MSP-pivot: SimpleHelp RMM client execution at non-MSP endpoints
-
-`UC_171_9` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") OR Processes.process_path IN ("*\\JWrapper-Remote Access\\*","*\\SimpleHelp*\\*","*\\SimpleHelpRemoteAccess\\*") OR (Processes.process_name="java.exe" AND Processes.process="*Technician.jar*")) by Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | lookup approved_msp_endpoints dest OUTPUT msp_owner | where isnull(msp_owner) | join type=left dest [ | tstats `summariesonly` values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.dest) as remote_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8443,443) (All_Traffic.dest="*simple-help.com" OR All_Traffic.app="simplehelp") by All_Traffic.src | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let proc = DeviceProcessEvents | where Timestamp > ago(14d) | where FileName in~ ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") or FolderPath matches regex @"(?i)\\(SimpleHelp|JWrapper-Remote Access|SimpleHelpRemoteAccess)\\" or (FileName =~ "java.exe" and ProcessCommandLine has_cs "Technician.jar") or ProcessVersionInfoCompanyName has "JWrapper" | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountName, SHA256; let net = DeviceNetworkEvents | where Timestamp > ago(14d) | where RemoteUrl has "simple-help.com" or (RemotePort in (8443,443) and InitiatingProcessFileName in~ ("Remote Access.exe","SimpleService.exe","java.exe")) | project NetTime=Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName; proc | join kind=leftouter net on DeviceId | where DeviceName !in ((externaldata(d:string)[@"https://approved-msp-list.csv"] with (format="csv")))  // replace with internal approved-MSP allowlist
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, SHA256
-```
-
-### [LLM] Iranian APT MFA push-bombing followed by attacker-controlled MFA registration change
-
-`UC_171_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as mfa_challenges values(Authentication.src) as src_ips dc(Authentication.src) as dc_src min(_time) as first_attempt max(_time) as last_attempt from datamodel=Authentication where Authentication.action="failure" (Authentication.signature="*MFA*" OR Authentication.signature_id IN ("50074","50158","500121","530003") OR Authentication.authentication_method="MFA") by Authentication.user span=30m | `drop_dm_object_name(Authentication)` | where mfa_challenges >= 10 | join type=inner user [ | tstats `summariesonly` min(_time) as success_time from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="MFA" by Authentication.user | `drop_dm_object_name(Authentication)` ] | where success_time >= first_attempt AND success_time <= (last_attempt + 3600) | join type=inner user [ | tstats `summariesonly` min(_time) as reg_change_time values(All_Changes.object) as changed_object values(All_Changes.action) as change_action from datamodel=Change.Account_Management where (All_Changes.object_category="user" AND (All_Changes.action="updated" OR All_Changes.action="created") AND (All_Changes.object_attrs="*StrongAuthentication*" OR All_Changes.object_attrs="*authenticationMethod*" OR All_Changes.object_attrs="*PhoneAuthentication*")) by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename All_Changes.user as user ] | where reg_change_time >= success_time AND reg_change_time <= (success_time + 86400) | table user first_attempt last_attempt mfa_challenges src_ips success_time reg_change_time changed_object change_action
-```
-
-**Defender KQL:**
-```kql
-let bombing = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode in (50074, 50158, 500121, 530003) or (Status has "MFA" and ConditionalAccessStatus != "success") | summarize FailedMFA=count(), FirstAttempt=min(Timestamp), LastAttempt=max(Timestamp), SrcIPs=make_set(IPAddress, 25), DistinctSrcIPs=dcount(IPAddress) by AccountUpn, AccountObjectId, bin(Timestamp, 1h) | where FailedMFA >= 10; let approved = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode == 0 and AuthenticationRequirement =~ "multiFactorAuthentication" | project SuccessTime=Timestamp, AccountObjectId, ApprovedFromIP=IPAddress, ApprovedDevice=DeviceName; let regChange = CloudAppEvents | where Timestamp > ago(7d) | where Application has_any ("Microsoft Entra","Azure Active Directory") | where ActionType has_any ("Update user","Add registered security info","Update authentication method","User registered security info","User changed default security info","Reset user password") | project RegChangeTime=Timestamp, AccountObjectId, ActionType, RegInitiatedBy=tostring(RawEventData.InitiatedBy), RegFromIP=IPAddress; bombing | join kind=inner approved on AccountObjectId | where SuccessTime between (FirstAttempt .. (LastAttempt + 1h)) | join kind=inner regChange on AccountObjectId | where RegChangeTime between (SuccessTime .. (SuccessTime + 24h)) | project AccountUpn, FirstAttempt, LastAttempt, FailedMFA, DistinctSrcIPs, SrcIPs, SuccessTime, ApprovedFromIP, RegChangeTime, ActionType, RegFromIP
 ```
 
 

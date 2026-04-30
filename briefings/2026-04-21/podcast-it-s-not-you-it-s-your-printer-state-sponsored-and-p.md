@@ -37,6 +37,35 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] M365 Direct Send abuse: external-origin email spoofing internal sender domain
+
+`UC_95_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.src) as src values(All_Email.src_ip) as src_ip values(All_Email.subject) as subject values(All_Email.message_id) as message_id values(All_Email.url) as url from datamodel=Email where All_Email.action=delivered All_Email.recipient=* All_Email.src_user=* by All_Email.src_user All_Email.recipient All_Email.orig_recipient_domain | `drop_dm_object_name(All_Email)` | eval sender_domain=lower(mvindex(split(src_user,"@"),1)) | eval recipient_domain=lower(mvindex(split(recipient,"@"),1)) | where sender_domain==recipient_domain | search src_ip!="10.0.0.0/8" src_ip!="172.16.0.0/12" src_ip!="192.168.0.0/16" | search src="*.mail.protection.outlook.com" OR src="*protection.outlook.com*" | where firstTime >= relative_time(now(),"-7d@d")
+```
+
+**Defender KQL:**
+```kql
+let lookback = 7d;
+EmailEvents
+| where Timestamp > ago(lookback)
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+| where EmailDirection == "Inbound"
+| extend SenderDomain = tolower(tostring(split(SenderFromAddress,"@")[1]))
+| extend RecipientDomain = tolower(tostring(split(RecipientEmailAddress,"@")[1]))
+| where SenderDomain == RecipientDomain          // sender appears internal
+| where AuthenticationDetails has_any ("spf=fail","spf=softfail","spf=none","dmarc=fail","compauth=fail","compauth=softpass")
+| where isnotempty(SenderIPv4)
+| extend isPrivate = SenderIPv4 startswith "10." or SenderIPv4 startswith "192.168." or SenderIPv4 matches regex @"^172\.(1[6-9]|2[0-9]|3[0-1])\."
+| where not(isPrivate)
+| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, SenderIPv4, SenderIPv4Country=tostring(parse_json(AdditionalFields).IPv4Country), Subject, AuthenticationDetails, ConnectorId, Url, UrlDomain
+| summarize Recipients=dcount(RecipientEmailAddress), Urls=make_set(UrlDomain,25), MsgIds=make_set(NetworkMessageId,25), Subjects=make_set(Subject,10), AuthDetails=any(AuthenticationDetails) by SenderFromAddress, SenderIPv4
+| where Recipients >= 2
+```
+
 ### Phishing-link click correlated to endpoint execution
 
 `UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
@@ -54,7 +83,6 @@ _(none detected from narrative keywords)_
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -181,35 +209,6 @@ DeviceProcessEvents
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### [LLM] M365 Direct Send abuse: external-origin email spoofing internal sender domain
-
-`UC_90_3` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.src) as src values(All_Email.src_ip) as src_ip values(All_Email.subject) as subject values(All_Email.message_id) as message_id values(All_Email.url) as url from datamodel=Email where All_Email.action=delivered All_Email.recipient=* All_Email.src_user=* by All_Email.src_user All_Email.recipient All_Email.orig_recipient_domain | `drop_dm_object_name(All_Email)` | eval sender_domain=lower(mvindex(split(src_user,"@"),1)) | eval recipient_domain=lower(mvindex(split(recipient,"@"),1)) | where sender_domain==recipient_domain | search src_ip!="10.0.0.0/8" src_ip!="172.16.0.0/12" src_ip!="192.168.0.0/16" | search src="*.mail.protection.outlook.com" OR src="*protection.outlook.com*" | where firstTime >= relative_time(now(),"-7d@d")
-```
-
-**Defender KQL:**
-```kql
-let lookback = 7d;
-EmailEvents
-| where Timestamp > ago(lookback)
-| where DeliveryAction in ("Delivered","DeliveredAsSpam")
-| where EmailDirection == "Inbound"
-| extend SenderDomain = tolower(tostring(split(SenderFromAddress,"@")[1]))
-| extend RecipientDomain = tolower(tostring(split(RecipientEmailAddress,"@")[1]))
-| where SenderDomain == RecipientDomain          // sender appears internal
-| where AuthenticationDetails has_any ("spf=fail","spf=softfail","spf=none","dmarc=fail","compauth=fail","compauth=softpass")
-| where isnotempty(SenderIPv4)
-| extend isPrivate = SenderIPv4 startswith "10." or SenderIPv4 startswith "192.168." or SenderIPv4 matches regex @"^172\.(1[6-9]|2[0-9]|3[0-1])\."
-| where not(isPrivate)
-| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, SenderIPv4, SenderIPv4Country=tostring(parse_json(AdditionalFields).IPv4Country), Subject, AuthenticationDetails, ConnectorId, Url, UrlDomain
-| summarize Recipients=dcount(RecipientEmailAddress), Urls=make_set(UrlDomain,25), MsgIds=make_set(NetworkMessageId,25), Subjects=make_set(Subject,10), AuthDetails=any(AuthenticationDetails) by SenderFromAddress, SenderIPv4
-| where Recipients >= 2
 ```
 
 

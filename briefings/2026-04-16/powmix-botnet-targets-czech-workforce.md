@@ -50,6 +50,82 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] PowMix scheduled task: explorer.exe launching .lnk from ProgramData (hex task name)
+
+`UC_118_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=explorer.exe OR Processes.original_file_name=EXPLORER.EXE) (Processes.parent_process_name IN (svchost.exe,taskeng.exe,services.exe)) Processes.process="*ProgramData*\\*.lnk*" by host Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | rex field=process "(?<task_lnk>[A-Za-z0-9_\-]+\.lnk)" | where isnotnull(task_lnk) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where FileName =~ "explorer.exe"
+| where InitiatingProcessFileName in~ ("svchost.exe","taskeng.exe","services.exe")
+| where ProcessCommandLine has "ProgramData" and ProcessCommandLine endswith ".lnk"
+// PowMix names tasks as concatenated CRC32 hex strings (e.g. 289c2e236761) — pivot on schtasks/event 4698 if available
+| join kind=leftouter (
+    DeviceEvents
+    | where ActionType == "ScheduledTaskCreated"
+    | where AdditionalFields has_any ("explorer.exe",".lnk")
+    | extend TaskName = tostring(parse_json(AdditionalFields).TaskName)
+    | where TaskName matches regex "^[a-f0-9]{10,16}$"
+    | project DeviceId, TaskName, TaskTime=Timestamp
+) on DeviceId
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, TaskName
+```
+
+### [LLM] PowMix C2 beaconing to PowMix herokuapp subdomains via PowerShell
+
+`UC_118_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("powershell.exe","pwsh.exe") (All_Traffic.dest IN ("erpapp-901-53f1ea72f036.herokuapp.com","crmassets-4a69a8e2b3ee.herokuapp.com","crmassets-351-0ac3da22f804.herokuapp.com","erpsync-120-f41cdcf813e4.herokuapp.com") OR All_Traffic.dest="*.herokuapp.com") by host All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | eval beacon_window=lastTime-firstTime | where count>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let powmix_c2 = dynamic(["erpapp-901-53f1ea72f036.herokuapp.com","crmassets-4a69a8e2b3ee.herokuapp.com","crmassets-351-0ac3da22f804.herokuapp.com","erpsync-120-f41cdcf813e4.herokuapp.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+| where RemoteUrl has_any (powmix_c2) or RemoteUrl endswith "herokuapp.com"
+| extend isKnownIOC = iff(RemoteUrl has_any (powmix_c2), "high", "medium")
+| summarize beacons=count(), first=min(Timestamp), last=max(Timestamp), urls=make_set(RemoteUrl,25) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, isKnownIOC
+| extend beacon_span_min = datetime_diff("minute", last, first)
+// PowMix jitter: 0-261s then 1075-1450s — multiple beacons over time from powershell
+| where beacons >= 3
+```
+
+### [LLM] PowMix loader: AMSI bypass + ZIP marker extraction + IEX-via-$VerbosePreference
+
+`UC_118_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`powershell` EventCode=4104 (ScriptBlockText="*amsiInitFailed*" OR ScriptBlockText="*AmsiUtils*") AND (ScriptBlockText="*zAswKoK*" OR ScriptBlockText="*{cdm}*" OR ScriptBlockText="*VerbosePreference*" OR ScriptBlockText="*HpSWSb*" OR ScriptBlockText="*qDQyxQE*" OR ScriptBlockText="*bKUxmhyAe*" OR ScriptBlockText="*HymzqLse*" OR ScriptBlockText="*KsEYwmgSF*" OR ScriptBlockText="*ujCPOEPU*") | stats count min(_time) as firstTime max(_time) as lastTime values(ScriptBlockText) as ScriptBlockText values(UserID) as user by host Computer | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let amsi_terms = dynamic(["amsiInitFailed","AmsiUtils"]);
+let powmix_terms = dynamic(["zAswKoK","{cdm}","HpSWSb","qDQyxQE","bKUxmhyAe","HymzqLse","KsEYwmgSF","ujCPOEPU"]);
+DeviceEvents
+| where ActionType in ("PowerShellCommand","ScriptContent")
+| extend script = tostring(coalesce(AdditionalFields, ProcessCommandLine))
+| where script has_any (amsi_terms)
+| where script has_any (powmix_terms) or script has "VerbosePreference" and script has "Invoke-Expression"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, FileName, ProcessCommandLine, script
+| join kind=leftouter (
+    DeviceFileEvents
+    | where FolderPath has "ProgramData" and FileName endswith ".zip"
+    | project DeviceName, ZipPath=FolderPath, ZipFile=FileName, ZipTime=Timestamp
+) on DeviceName
+```
+
 ### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
@@ -102,7 +178,6 @@ DeviceNetworkEvents
     [| tstats `summariesonly` count
          from datamodel=Email.All_Email
          where All_Email.action="delivered" AND All_Email.url!="-"
-           AND All_Email.is_internal!="true"
          by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
      | `drop_dm_object_name(All_Email)`
      | rex field=url "https?://(?<email_domain>[^/]+)"
@@ -315,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
 
-`UC_114_7` · phase: **exploit** · confidence: **High**
+`UC_118_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,82 +435,6 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### [LLM] PowMix scheduled task: explorer.exe launching .lnk from ProgramData (hex task name)
-
-`UC_114_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=explorer.exe OR Processes.original_file_name=EXPLORER.EXE) (Processes.parent_process_name IN (svchost.exe,taskeng.exe,services.exe)) Processes.process="*ProgramData*\\*.lnk*" by host Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | rex field=process "(?<task_lnk>[A-Za-z0-9_\-]+\.lnk)" | where isnotnull(task_lnk) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where FileName =~ "explorer.exe"
-| where InitiatingProcessFileName in~ ("svchost.exe","taskeng.exe","services.exe")
-| where ProcessCommandLine has "ProgramData" and ProcessCommandLine endswith ".lnk"
-// PowMix names tasks as concatenated CRC32 hex strings (e.g. 289c2e236761) — pivot on schtasks/event 4698 if available
-| join kind=leftouter (
-    DeviceEvents
-    | where ActionType == "ScheduledTaskCreated"
-    | where AdditionalFields has_any ("explorer.exe",".lnk")
-    | extend TaskName = tostring(parse_json(AdditionalFields).TaskName)
-    | where TaskName matches regex "^[a-f0-9]{10,16}$"
-    | project DeviceId, TaskName, TaskTime=Timestamp
-) on DeviceId
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, TaskName
-```
-
-### [LLM] PowMix C2 beaconing to PowMix herokuapp subdomains via PowerShell
-
-`UC_114_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("powershell.exe","pwsh.exe") (All_Traffic.dest IN ("erpapp-901-53f1ea72f036.herokuapp.com","crmassets-4a69a8e2b3ee.herokuapp.com","crmassets-351-0ac3da22f804.herokuapp.com","erpsync-120-f41cdcf813e4.herokuapp.com") OR All_Traffic.dest="*.herokuapp.com") by host All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | eval beacon_window=lastTime-firstTime | where count>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let powmix_c2 = dynamic(["erpapp-901-53f1ea72f036.herokuapp.com","crmassets-4a69a8e2b3ee.herokuapp.com","crmassets-351-0ac3da22f804.herokuapp.com","erpsync-120-f41cdcf813e4.herokuapp.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
-| where RemoteUrl has_any (powmix_c2) or RemoteUrl endswith "herokuapp.com"
-| extend isKnownIOC = iff(RemoteUrl has_any (powmix_c2), "high", "medium")
-| summarize beacons=count(), first=min(Timestamp), last=max(Timestamp), urls=make_set(RemoteUrl,25) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, isKnownIOC
-| extend beacon_span_min = datetime_diff("minute", last, first)
-// PowMix jitter: 0-261s then 1075-1450s — multiple beacons over time from powershell
-| where beacons >= 3
-```
-
-### [LLM] PowMix loader: AMSI bypass + ZIP marker extraction + IEX-via-$VerbosePreference
-
-`UC_114_10` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`powershell` EventCode=4104 (ScriptBlockText="*amsiInitFailed*" OR ScriptBlockText="*AmsiUtils*") AND (ScriptBlockText="*zAswKoK*" OR ScriptBlockText="*{cdm}*" OR ScriptBlockText="*VerbosePreference*" OR ScriptBlockText="*HpSWSb*" OR ScriptBlockText="*qDQyxQE*" OR ScriptBlockText="*bKUxmhyAe*" OR ScriptBlockText="*HymzqLse*" OR ScriptBlockText="*KsEYwmgSF*" OR ScriptBlockText="*ujCPOEPU*") | stats count min(_time) as firstTime max(_time) as lastTime values(ScriptBlockText) as ScriptBlockText values(UserID) as user by host Computer | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let amsi_terms = dynamic(["amsiInitFailed","AmsiUtils"]);
-let powmix_terms = dynamic(["zAswKoK","{cdm}","HpSWSb","qDQyxQE","bKUxmhyAe","HymzqLse","KsEYwmgSF","ujCPOEPU"]);
-DeviceEvents
-| where ActionType in ("PowerShellCommand","ScriptContent")
-| extend script = tostring(coalesce(AdditionalFields, ProcessCommandLine))
-| where script has_any (amsi_terms)
-| where script has_any (powmix_terms) or script has "VerbosePreference" and script has "Invoke-Expression"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, FileName, ProcessCommandLine, script
-| join kind=leftouter (
-    DeviceFileEvents
-    | where FolderPath has "ProgramData" and FileName endswith ".zip"
-    | project DeviceName, ZipPath=FolderPath, ZipFile=FileName, ZipTime=Timestamp
-) on DeviceName
 ```
 
 
