@@ -3786,17 +3786,20 @@ THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sourc
           <div style="font-weight:600;color:var(--text);margin-bottom:2px;">Join the Clankerusecase Discord</div>
           <div style="color:var(--muted);font-size:13px;">Detection engineers, threat hunters, SOC analysts — all welcome.</div>
         </div>
-        <a id="discord-link" href="https://discord.gg/" target="_blank" rel="noopener"
+        <a id="discord-link" href="https://discord.gg/6KSXVrC3Kr" target="_blank" rel="noopener"
            style="padding:8px 16px;background:#5865f2;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;font-size:13px;">
           Open Discord →
         </a>
       </div>
       <p style="font-size:12px;color:var(--muted-2);margin-top:8px;">
-        <em>Invite link:</em> <code>https://discord.gg/&lt;invite-id&gt;</code> —
-        being finalised. If the button above 404s, the invite isn't live yet.
-        Ping the maintainer on GitHub
-        (<a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" style="color:var(--accent);">Virtualhaggis/usecaseintel</a>)
-        until then.
+        <em>Permanent invite:</em>
+        <a href="https://discord.gg/6KSXVrC3Kr" target="_blank" rel="noopener"
+           style="color:var(--accent);font-family:var(--mono);">https://discord.gg/6KSXVrC3Kr</a>
+        — never expires, no member cap. Channels: <code>#welcome</code>,
+        <code>#use-case-requests</code>, <code>#platform-requests</code>,
+        <code>#detection-engineering</code>, <code>#threat-hunting</code>,
+        <code>#site-feedback</code>. Verified-email + AutoMod spam protection
+        on by default.
       </p>
     </div>
 
