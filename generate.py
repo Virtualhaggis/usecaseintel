@@ -4905,6 +4905,15 @@ def render_card(idx: int, article: dict, ind: dict,
     pubmeta = html.escape(article.get("published", ""))
     summary = html.escape(article.get("summary", ""))
     indicators_html = render_indicators(ind, techniques)
+    # LLM-driven article-bespoke UCs (titles prefixed `[LLM]`) read the
+    # actual threat-intel article and tailor a detection to the specific
+    # TTP, so they're the highest-fidelity items on the card. Sort them
+    # to the top of the per-article use-case list, then everything else
+    # in the order rules fired them.
+    use_cases = sorted(
+        use_cases,
+        key=lambda u: 0 if (u.title or "").startswith("[LLM]") else 1,
+    )
     uc_by_phase = {}
     for uc in use_cases:
         uc_by_phase.setdefault(uc.kill_chain, []).append(uc)
