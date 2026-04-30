@@ -3656,13 +3656,15 @@ ul.intel-types-doc code{
         <g class="wf-stage">
           <rect x="20" y="40" width="180" height="200" rx="12" fill="url(#wfFill1)" stroke="#2a3f5e" stroke-width="1.4"/>
           <text x="110" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">1. SOURCES</text>
-          <text x="35" y="100" fill="#cfd6e3" font-size="11">• The Hacker News</text>
-          <text x="35" y="122" fill="#cfd6e3" font-size="11">• BleepingComputer</text>
-          <text x="35" y="144" fill="#cfd6e3" font-size="11">• Microsoft Security Blog</text>
-          <text x="35" y="166" fill="#36e0c0" font-size="11">• Cisco Talos</text>
-          <text x="35" y="188" fill="#36e0c0" font-size="11">• Securelist (Kaspersky)</text>
-          <text x="35" y="210" fill="#36e0c0" font-size="11">• SentinelLabs</text>
-          <text x="35" y="232" fill="#36e0c0" font-size="11">• Unit 42 / ESET / KEV</text>
+          <text x="35" y="92" fill="#cfd6e3" font-size="11">• The Hacker News</text>
+          <text x="35" y="110" fill="#cfd6e3" font-size="11">• BleepingComputer</text>
+          <text x="35" y="128" fill="#cfd6e3" font-size="11">• Microsoft Security Blog</text>
+          <text x="35" y="146" fill="#cfd6e3" font-size="11">• Cyber Security News</text>
+          <text x="35" y="168" fill="#36e0c0" font-size="11">• Cisco Talos</text>
+          <text x="35" y="186" fill="#36e0c0" font-size="11">• Securelist (Kaspersky)</text>
+          <text x="35" y="204" fill="#36e0c0" font-size="11">• SentinelLabs</text>
+          <text x="35" y="222" fill="#36e0c0" font-size="11">• Unit 42 · ESET · Lab52</text>
+          <text x="35" y="240" fill="#9aa3b2" font-size="10.5">+ CISA KEV</text>
         </g>
 
         <!-- Stage 2: Ingest -->
@@ -3671,7 +3673,7 @@ ul.intel-types-doc code{
           <text x="340" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">2. INGEST</text>
           <text x="255" y="100" fill="#cfd6e3" font-size="11" font-weight="600">RSS / KEV JSON</text>
           <text x="255" y="120" fill="#9aa3b2" font-size="10.5">→ feedparser pulls entries</text>
-          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 180-day rolling window</text>
+          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 30-day rolling window</text>
           <text x="255" y="160" fill="#cfd6e3" font-size="11" font-weight="600">Full body fetch</text>
           <text x="255" y="180" fill="#9aa3b2" font-size="10.5">→ HTTPS GET with cache</text>
           <text x="255" y="198" fill="#9aa3b2" font-size="10.5">→ HTML→text + noise strip</text>
@@ -3744,10 +3746,10 @@ ul.intel-types-doc code{
     <!-- ============== DETAILED STEPS ============== -->
     <h3 class="wf-section-title">1. Sources</h3>
     <div class="wf-step">
-      <p>The pipeline pulls from <strong>9 feeds</strong> on every run:</p>
+      <p>The pipeline pulls from <strong>11 feeds</strong> on every run:</p>
       <ul>
-        <li><strong>News</strong> — The Hacker News, BleepingComputer, Microsoft Security Blog. Broad coverage, light on technical IOC tables.</li>
-        <li><strong>IOC-rich vendor research</strong> — Cisco Talos, Securelist (Kaspersky), SentinelLabs, Unit 42 (Palo Alto), ESET WeLiveSecurity. Where the hash / IP / domain tables live.</li>
+        <li><strong>News</strong> — The Hacker News, BleepingComputer, Microsoft Security Blog, Cyber Security News. Broad coverage, light on technical IOC tables.</li>
+        <li><strong>IOC-rich vendor research</strong> — Cisco Talos, Securelist (Kaspersky), SentinelLabs, Unit 42 (Palo Alto), ESET WeLiveSecurity, Lab52 (S2 Grupo). Where the hash / IP / domain tables and APT write-ups live.</li>
         <li><strong>CISA KEV</strong> — authoritative exploited-vulnerability feed (JSON, not RSS).</li>
       </ul>
       <p>Adding a source is a 3-line entry in <code>SOURCES</code>. The fetcher detects RSS vs JSON automatically.</p>
@@ -3755,7 +3757,7 @@ ul.intel-types-doc code{
 
     <h3 class="wf-section-title">2. Ingest</h3>
     <div class="wf-step">
-      <p>For each entry in the rolling <strong>180-day window</strong>:</p>
+      <p>For each entry in the rolling <strong>30-day window</strong>:</p>
       <ol>
         <li><code>feedparser.parse()</code> reads the RSS preview.</li>
         <li><code>_fetch_full_body(url)</code> issues an HTTPS GET with a polite <code>User-Agent</code>, caches the HTML to <code>intel/.article_cache/</code>, and converts to plain text. <strong>Without this step the IOC feed only has CVEs</strong> — RSS previews don't include hash tables.</li>
@@ -3805,7 +3807,7 @@ ul.intel-types-doc code{
     <div class="wf-step">
       <p>When <code>ANTHROPIC_API_KEY</code> is set in the environment, the pipeline sends each article body to an LLM with a structured detection-engineer prompt, parses the response as JSON, validates the techniques (<code>T####.###</code> format) + tier (alerting/hunting) + KQL/SPL fields, and emits the resulting UseCase objects alongside the regex bespoke UCs.</p>
       <p>The LLM is told: use the actual binaries/paths/cmdlines named in the article, not invented ones; if the article describes the attack only narratively, return no UCs. Output is cached per article URL hash so repeat runs cost nothing.</p>
-      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). 300-article 180-day run ≈ $2-3.</p>
+      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). A typical 30-day run (~150-200 articles) is ≈ $1 if every article hits the LLM; subsequent runs are essentially free thanks to the per-URL cache.</p>
       <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
     </div>
 
