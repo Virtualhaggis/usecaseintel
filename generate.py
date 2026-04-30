@@ -28,7 +28,11 @@ from pathlib import Path
 import feedparser
 
 # Sources & lookback configuration -------------------------------------------
-LOOKBACK_DAYS = 180       # 6-month rolling window
+LOOKBACK_DAYS = 30        # rolling 30-day window — keeps the site
+                          # focused on currently-relevant intel and
+                          # prunes stale articles from the briefings
+                          # index. Bump back up if you want a deeper
+                          # historical archive.
 MAX_PER_SOURCE = 500      # safety cap per source per run
 
 SOURCES = [
@@ -51,6 +55,14 @@ SOURCES = [
      "url":  "https://unit42.paloaltonetworks.com/feed/"},
     {"name": "ESET WeLiveSecurity",     "kind": "rss",
      "url":  "https://www.welivesecurity.com/en/rss/feed/"},
+    # Lab52 — threat-intel research arm of S2 Grupo. Heavy on APT
+    # write-ups (RU/CN/MENA actors) with rich IOC tables and YARA.
+    {"name": "Lab52",                   "kind": "rss",
+     "url":  "https://lab52.io/blog/feed/"},
+    # Cyber Security News — broad daily feed; complements the news-
+    # style sources with extra coverage on emerging CVEs and POCs.
+    {"name": "Cyber Security News",     "kind": "rss",
+     "url":  "https://cybersecuritynews.com/feed/"},
     # Authoritative exploited-vuln feed.
     {"name": "CISA KEV",                "kind": "kev",
      "url":  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"},
@@ -203,7 +215,8 @@ _IOC_DOMAIN_ALLOWLIST = {
     "thehackernews.com", "bleepingcomputer.com", "krebsonsecurity.com",
     "talosintelligence.com", "blog.talosintelligence.com",
     "securelist.com", "sentinelone.com", "unit42.paloaltonetworks.com",
-    "welivesecurity.com", "checkmarx.com", "snyk.io", "socket.dev",
+    "welivesecurity.com", "lab52.io", "cybersecuritynews.com",
+    "checkmarx.com", "snyk.io", "socket.dev",
     "virustotal.com", "abuse.ch", "urlhaus.abuse.ch", "threatfox.abuse.ch",
     # Common legit dispensers (ARTICLE-CONTEXT only — these CAN be abused as
     # dead-drops by malware. We drop them from the IOC feed because alerting
@@ -2520,6 +2533,8 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
 .src-chip.active.sentinel{box-shadow:inset 2px 0 0 #9b8afb;}
 .src-chip.active.unit42{box-shadow:inset 2px 0 0 #e2a93f;}
 .src-chip.active.eset{box-shadow:inset 2px 0 0 #7170ff;}
+.src-chip.active.lab52{box-shadow:inset 2px 0 0 #4cb782;}
+.src-chip.active.csn{box-shadow:inset 2px 0 0 #f25555;}
 .src-chip .cnt{
   font-variant-numeric:tabular-nums; color:var(--muted-2);
   font-size:10.5px; font-weight:500;
@@ -2623,6 +2638,13 @@ article.card p.summary{color:var(--muted);margin:8px 0 16px 0;font-size:13.5px;l
 .source-badge.bc{color:#eb5757;}
 .source-badge.ms{color:#9b8afb;}
 .source-badge.kev{color:#e2a93f;}
+.source-badge.talos{color:#4cb782;}
+.source-badge.securelist{color:#4cb782;}
+.source-badge.sentinel{color:#9b8afb;}
+.source-badge.unit42{color:#e2a93f;}
+.source-badge.eset{color:#7170ff;}
+.source-badge.lab52{color:#4cb782;}
+.source-badge.csn{color:#f25555;}
 .ind.tech{color:#9b8afb; cursor:pointer;}
 .ind.tech:hover{border-color:rgba(155,138,251,0.4); color:#b4a4ff;}
 .ind.malware{color:#eb5757;}
@@ -3875,7 +3897,7 @@ THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sourc
       <p>
         Clankerusecase reads recent threat-intel articles (The Hacker News,
         BleepingComputer, Microsoft Security Blog, Cisco Talos, Securelist,
-        SentinelLabs, Unit 42, ESET, CISA KEV) and produces detection use
+        SentinelLabs, Unit 42, ESET, Lab52, Cyber Security News, CISA KEV) and produces detection use
         cases an analyst can drop into their SIEM. Every use case is mapped
         to MITRE ATT&amp;CK, tagged with a tier (alerting vs hunting) and
         a false-positive estimate, and — for the article-bespoke ones —
@@ -5145,6 +5167,13 @@ def render_card(idx: int, article: dict, ind: dict,
         "BleepingComputer": "bc",
         "Microsoft Security Blog": "ms",
         "CISA KEV": "kev",
+        "Cisco Talos": "talos",
+        "Securelist (Kaspersky)": "securelist",
+        "SentinelLabs": "sentinel",
+        "Unit 42 (Palo Alto)": "unit42",
+        "ESET WeLiveSecurity": "eset",
+        "Lab52": "lab52",
+        "Cyber Security News": "csn",
     }
     sources = article.get("sources") or [article.get("source", "")]
     source_html = "".join(
@@ -7002,6 +7031,8 @@ def main():
         "SentinelLabs": "sentinel",
         "Unit 42 (Palo Alto)": "unit42",
         "ESET WeLiveSecurity": "eset",
+        "Lab52": "lab52",
+        "Cyber Security News": "csn",
     }
     src_counts = {}
     for a in articles:

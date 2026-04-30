@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ToolShell SharePoint RCE: spinstall webshell drop in LAYOUTS directory
 
-`UC_38_7` · phase: **install** · confidence: **High**
+`UC_48_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### [LLM] Adversary-registered MFA method followed by sign-in from same new device
 
-`UC_38_8` · phase: **actions** · confidence: **Medium**
+`UC_48_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

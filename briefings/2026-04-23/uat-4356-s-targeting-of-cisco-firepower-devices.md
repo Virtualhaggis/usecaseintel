@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FIRESTARTER on-disk artifacts on Cisco ASA/FTD (lina_cs, svc_samcore.log, CSP_MOUNTLIST)
 
-`UC_72_2` · phase: **install** · confidence: **High**
+`UC_83_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### [LLM] Snort SIDs 65340/46897/62949 firing against Cisco ASA/FTD WebVPN (UAT-4356 exploit chain)
 
-`UC_72_3` · phase: **exploit** · confidence: **High**
+`UC_83_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ AlertInfo
 
 ### Article-specific behavioural hunt — UAT-4356's Targeting of Cisco Firepower Devices
 
-`UC_72_1` · phase: **install** · confidence: **High**
+`UC_83_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

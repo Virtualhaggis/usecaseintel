@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PhantomRPC coercion: gpupdate.exe /force spawned by service-account process (IIS/SQL/etc.)
 
-`UC_62_2` · phase: **exploit** · confidence: **High**
+`UC_73_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### [LLM] PhantomRPC token theft: SYSTEM-integrity shell spawned by Network/Local Service parent shortly after gpupdate
 
-`UC_62_3` · phase: **install** · confidence: **High**
+`UC_73_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### [LLM] PhantomRPC hunt: rogue process binding TermSrvApi RPC interface (UUID bde95fdf-eee0-45de-9e12-e5a61cd0d4fe)
 
-`UC_62_4` · phase: **weapon** · confidence: **Medium**
+`UC_73_4` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PhantomRPC: A new privilege escalation technique in Windows RPC
 
-`UC_62_1` · phase: **exploit** · confidence: **High**
+`UC_73_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

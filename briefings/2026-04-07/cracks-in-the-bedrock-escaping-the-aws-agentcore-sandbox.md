@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AWS AgentCore Code Interpreter DNS tunneling to dnshook.site / high-entropy subdomains
 
-`UC_138_9` · phase: **c2** · confidence: **High**
+`UC_152_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ CloudAppEvents
 
 ### [LLM] AgentCore microVM MMDS access to undocumented aws_presigned-log-url / kms-key tag paths
 
-`UC_138_10` · phase: **recon** · confidence: **High**
+`UC_152_10` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
