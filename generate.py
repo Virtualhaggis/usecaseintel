@@ -2164,58 +2164,82 @@ HTML_HEAD = r"""<!doctype html>
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ----- Theme ---------------------------------------------------------- */
+/* =====================================================================
+   Theme: Linear-inspired dark UI
+   - Flat near-black background; subtle top-of-page accent wash only
+   - Inter typography with tight tracking, small body scale
+   - Indigo (#5e6ad2) signature accent; purple secondary
+   - Hairline 1px borders (rgba white 0.07) instead of heavy frames
+   - Restrained shadows — Linear leans on borders, not depth
+   - Compact radii (4 / 6 / 8px) for that precision feel
+   ===================================================================== */
 :root {
-  --bg:#070a10; --bg-grad-1:#0c1320; --bg-grad-2:#06080d;
-  --panel:#10161f; --panel-elev:#161e2a; --panel2:#1c2533;
-  --text:#e8eef5; --muted:#8b96a5; --muted-2:#5d6877;
-  --accent:#5fb6ff; --accent-2:#b48dff; --accent-3:#36e0c0;
-  --border:#222b39; --border-2:#2c384a; --hairline:rgba(255,255,255,0.06);
-  --good:#5cd87a; --warn:#ffb060; --bad:#ff5d5d; --crit:#ff3260;
-  --code-bg:#040608;
-  --shadow-sm:0 1px 2px rgba(0,0,0,0.4);
-  --shadow-md:0 4px 16px rgba(0,0,0,0.45),0 2px 4px rgba(0,0,0,0.4);
-  --shadow-lg:0 24px 64px rgba(0,0,0,0.55),0 6px 16px rgba(0,0,0,0.5);
-  --shadow-glow:0 0 0 1px rgba(95,182,255,0.4),0 0 24px rgba(95,182,255,0.18);
-  --r-sm:6px; --r-md:10px; --r-lg:14px;
+  /* Backgrounds — near-black with three elevation steps */
+  --bg:#08090a; --bg-grad-1:#0d0e10; --bg-grad-2:#08090a;
+  --panel:#16171b; --panel-elev:#1f2024; --panel2:#26272b;
+  /* Text — high-contrast on dark; Linear keeps body text very legible */
+  --text:#f7f8f8; --muted:#8a8f98; --muted-2:#62656a;
+  /* Accent — Linear signature indigo, with a purple+green for variety */
+  --accent:#7170ff; --accent-2:#9b8afb; --accent-3:#4cb782;
+  /* Borders — hairlines, not frames */
+  --border:rgba(255,255,255,0.07); --border-2:rgba(255,255,255,0.12);
+  --hairline:rgba(255,255,255,0.04);
+  /* Status colors — calmer than the previous neon */
+  --good:#4cb782; --warn:#e2a93f; --bad:#eb5757; --crit:#f25555;
+  --code-bg:#1a1b1e;
+  /* Shadows — barely there; structure comes from borders */
+  --shadow-sm:0 1px 2px rgba(0,0,0,0.30);
+  --shadow-md:0 8px 24px rgba(0,0,0,0.18),0 2px 4px rgba(0,0,0,0.16);
+  --shadow-lg:0 16px 48px rgba(0,0,0,0.32),0 4px 12px rgba(0,0,0,0.20);
+  --shadow-glow:0 0 0 1px rgba(113,112,255,0.45),0 0 16px rgba(113,112,255,0.18);
+  /* Radii — Linear is precise, not rounded */
+  --r-sm:4px; --r-md:6px; --r-lg:8px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
 }
 *{box-sizing:border-box;}
 html,body{margin:0;}
 body{
+  /* Flat near-black with a single subtle indigo wash from the top — the
+     restrained Linear backdrop. No competing gradients from multiple
+     directions; the eye should land on content, not chrome. */
   background:
-    radial-gradient(1200px 600px at 100% -10%, rgba(95,182,255,0.07), transparent 60%),
-    radial-gradient(900px 600px at -10% 110%, rgba(180,141,255,0.06), transparent 60%),
-    linear-gradient(180deg, var(--bg-grad-1) 0%, var(--bg) 60%, var(--bg-grad-2) 100%);
+    radial-gradient(1200px 500px at 50% -10%, rgba(113,112,255,0.06), transparent 60%),
+    var(--bg);
   background-attachment:fixed;
   color:var(--text);
   font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   font-size:14px; line-height:1.55;
+  font-feature-settings:"cv11","ss01","ss03";
+  letter-spacing:-0.003em;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
   letter-spacing:-0.005em;
 }
-::selection{background:rgba(95,182,255,0.32);color:#fff;}
+::selection{background:rgba(113,112,255,0.32);color:#fff;}
 
 /* ----- Header / Top bar ---------------------------------------------- */
 .topbar{
   position:sticky; top:0; z-index:50;
-  background:rgba(10,14,21,0.78);
-  backdrop-filter:blur(14px) saturate(140%);
-  -webkit-backdrop-filter:blur(14px) saturate(140%);
-  border-bottom:1px solid var(--hairline);
+  background:rgba(8,9,10,0.72);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  border-bottom:1px solid var(--border);
 }
 .topbar-inner{
-  margin:0; padding:14px 28px;
+  margin:0; padding:12px 28px;
   display:flex; gap:24px; align-items:center; flex-wrap:wrap;
 }
-.brand{display:flex;align-items:center;gap:16px;font-weight:700;font-size:20px;letter-spacing:-0.012em;}
+.brand{display:flex;align-items:center;gap:14px;font-weight:600;font-size:17px;letter-spacing:-0.014em;}
 .brand .logo{
-  width:64px; height:64px; border-radius:14px;
+  width:44px; height:44px; border-radius:8px;
   display:flex; align-items:center; justify-content:center;
   position:relative; overflow:hidden;
-  background:radial-gradient(circle at 30% 30%, rgba(255,140,180,0.15), rgba(95,182,255,0.06) 60%, transparent);
-  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,0.10);
-  transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1);
+  background:rgba(113,112,255,0.10);
+  border:1px solid var(--border);
+  transition:transform 0.18s cubic-bezier(0.2,0.8,0.2,1);
 }
 .brand:hover .logo{transform:rotate(-4deg) scale(1.04);}
 /* logo.png — Clanker the mascot. Sized to fit nicely in the 64×64
@@ -2228,9 +2252,9 @@ body{
   filter:drop-shadow(0 2px 6px rgba(0,0,0,0.35));
 }
 .brand .logo svg{width:32px;height:32px;color:var(--accent);position:relative;z-index:1;}
-.brand-text{display:flex;flex-direction:column;line-height:1.15;}
-.brand-text > span:first-child{font-size:21px; letter-spacing:-0.02em;}
-.brand-text .sub{color:var(--muted);font-size:11px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;margin-top:2px;}
+.brand-text{display:flex;flex-direction:column;line-height:1.2;}
+.brand-text > span:first-child{font-size:16px; font-weight:600; letter-spacing:-0.014em;}
+.brand-text .sub{color:var(--muted);font-size:10.5px;font-weight:500;letter-spacing:0.05em;text-transform:uppercase;margin-top:2px;}
 
 /* All three stats bars share ONE centred slot — they overlap via
    absolute positioning inside .stats-wrap so the visible one always
@@ -2271,10 +2295,8 @@ body:not(.view-intel-active)    .stats-intel{
   display:flex; flex-direction:column; align-items:center;
   padding:6px 12px; min-width:64px;
 }
-.stat .v{font-size:20px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;
-  background:linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.stat .l{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;}
+.stat .v{font-size:18px;font-weight:600;color:var(--text);font-variant-numeric:tabular-nums;letter-spacing:-0.014em;}
+.stat .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:500;margin-top:2px;}
 
 .search-trigger{
   display:flex; align-items:center; gap:10px;
@@ -2436,75 +2458,73 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
 }
 article.card.src-hidden{display:none;}
 
-/* ----- Article cards ------------------------------------------------- */
-section#articles{display:flex; flex-direction:column; gap:24px;}
+/* ----- Article cards -------------------------------------------------
+   Linear card: flat panel bg, hairline border, no gradient, no
+   transform on hover. Hover lifts only the border + a subtle inner
+   highlight — that's the look that makes the matrix and articles feel
+   refined rather than vibe-coded. */
+section#articles{display:flex; flex-direction:column; gap:18px;}
 article.card{
-  background:linear-gradient(180deg, var(--panel-elev) 0%, var(--panel) 100%);
+  background:var(--panel);
   border:1px solid var(--border);
   border-radius:var(--r-lg);
-  padding:28px;
-  font-size:15px; line-height:1.6;
+  padding:24px 26px;
+  font-size:14px; line-height:1.6;
   position:relative;
-  box-shadow:var(--shadow-md);
   /* Sticky header is ~90-110px tall (brand row + tabs row). Without this,
      anchor jumps from the sidebar TOC scroll the article's top under the
      header and crop the title / severity ribbon. */
   scroll-margin-top:120px;
-  transition:transform 0.25s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.25s ease, border-color 0.25s ease;
-  transform-style:preserve-3d;
+  transition:border-color 0.15s ease, background-color 0.15s ease;
 }
 article.card:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--shadow-lg);
   border-color:var(--border-2);
+  background:var(--panel-elev);
 }
 article.card.hidden{display:none;}
 article.card .sev-ribbon{
-  position:absolute; top:0; left:24px; padding:4px 12px 5px;
-  font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em;
-  border-radius:0 0 8px 8px;
-  background:linear-gradient(180deg, var(--good), #2fa84a);
-  color:#04130a;
-  box-shadow:var(--shadow-sm);
+  position:absolute; top:0; left:24px; padding:3px 10px 4px;
+  font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;
+  border-radius:0 0 6px 6px;
+  background:rgba(76,183,130,0.16); color:var(--good);
+  border:1px solid rgba(76,183,130,0.28); border-top:none;
 }
-article.card .sev-ribbon.med{background:linear-gradient(180deg, var(--warn), #e08a37);color:#1a0c00;}
-article.card .sev-ribbon.high{background:linear-gradient(180deg, var(--bad), #c93a3a);color:#fff;}
+article.card .sev-ribbon.med{background:rgba(226,169,63,0.14); color:var(--warn); border-color:rgba(226,169,63,0.30);}
+article.card .sev-ribbon.high{background:rgba(235,87,87,0.14); color:var(--bad); border-color:rgba(235,87,87,0.30);}
 article.card .sev-ribbon.crit{
-  background:linear-gradient(180deg, var(--crit), #c40044);
-  color:#fff;
-  box-shadow:var(--shadow-sm), 0 0 16px rgba(255,50,96,0.5);
+  background:rgba(242,85,85,0.18); color:var(--crit);
+  border-color:rgba(242,85,85,0.36);
 }
-article.card h2{margin:16px 0 8px 0;font-size:22px;line-height:1.3;letter-spacing:-0.012em;font-weight:700;}
-article.card h2 a{color:var(--text);text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
-  background-size:0% 1.5px;background-repeat:no-repeat;background-position:0 100%;
-  transition:background-size 0.2s ease;}
-article.card h2 a:hover{background-size:100% 1.5px;color:var(--accent);}
-article.card .pubmeta{color:var(--muted);font-size:12.5px;margin-bottom:16px;display:flex;gap:14px;flex-wrap:wrap;}
-article.card .pubmeta span:not(:first-child)::before{content:"•";margin-right:14px;color:var(--muted-2);}
-article.card p.summary{color:var(--text);opacity:0.9;margin:10px 0 18px 0;font-size:14.5px;line-height:1.6;}
+article.card h2{margin:14px 0 8px 0;font-size:20px;line-height:1.25;letter-spacing:-0.018em;font-weight:600;}
+article.card h2 a{color:var(--text);text-decoration:none;
+  transition:color 0.12s ease;}
+article.card h2 a:hover{color:var(--accent);}
+article.card .pubmeta{color:var(--muted);font-size:12px;margin-bottom:14px;display:flex;gap:12px;flex-wrap:wrap;}
+article.card .pubmeta span:not(:first-child)::before{content:"·";margin-right:12px;color:var(--muted-2);}
+article.card p.summary{color:var(--muted);margin:8px 0 16px 0;font-size:13.5px;line-height:1.6;}
 
 .action-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0 14px 0;align-items:center;}
+/* Linear button style — flat panel bg, hairline border, slight bg
+   shift on hover (no transform). Primary is solid accent on dark, no
+   gradient (Linear keeps buttons calm). */
 .btn{
-  background:var(--panel2); border:1px solid var(--border);
-  color:var(--text); padding:8px 14px; border-radius:var(--r-md);
-  font-size:12px; cursor:pointer; font-family:inherit; font-weight:500;
+  background:var(--panel-elev); border:1px solid var(--border);
+  color:var(--text); padding:6px 12px; border-radius:var(--r-md);
+  font-size:12.5px; cursor:pointer; font-family:inherit; font-weight:500;
   display:inline-flex; align-items:center; gap:6px;
-  transition:all 0.15s;
+  transition:background-color 0.12s, border-color 0.12s, color 0.12s;
+  letter-spacing:-0.003em; line-height:1.4;
 }
-.btn:hover{background:var(--border);border-color:var(--border-2);transform:translateY(-1px);}
-.btn:active{transform:translateY(0);}
+.btn:hover{background:var(--panel2); border-color:var(--border-2);}
+.btn:active{background:var(--panel);}
 .btn-kc{display:inline-flex;align-items:center;gap:6px;}
-.kc-chev{transition:transform 0.2s ease;flex-shrink:0;opacity:0.85;}
+.kc-chev{transition:transform 0.18s ease;flex-shrink:0;opacity:0.7;}
 .btn-kc.primary .kc-chev{transform:rotate(180deg);}
 .btn.primary{
-  background:linear-gradient(135deg, var(--accent) 0%, #4a98e0 100%);
-  color:#04111d; border-color:transparent; font-weight:600;
-  box-shadow:0 2px 8px rgba(95,182,255,0.25);
+  background:var(--accent); color:#fff; border-color:transparent;
+  font-weight:500;
 }
-.btn.primary:hover{
-  background:linear-gradient(135deg, #79c2ff 0%, #5fb6ff 100%);
-  box-shadow:0 4px 14px rgba(95,182,255,0.4);
-}
+.btn.primary:hover{background:#7e7dff; box-shadow:none;}
 .btn-meta{color:var(--muted);font-size:11.5px;margin-left:auto;}
 
 /* ----- Indicator pills ----------------------------------------------- */
@@ -2736,23 +2756,27 @@ footer{
 }
 footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size:11px;}
 
-/* ----- View tabs (Articles / ATT&CK Matrix) -------------------------- */
+/* ----- View tabs (Articles / ATT&CK Matrix) ----------------------------
+   Linear's segmented-tab style: pill-on-pill, 1px border on the parent,
+   active state is a slightly elevated panel with a subtle inner ring.
+   Smaller padding, tighter type than the previous flashy version. */
 .view-tabs{
-  display:flex; gap:4px; padding:4px;
+  display:flex; gap:2px; padding:3px;
   background:var(--panel); border:1px solid var(--border);
   border-radius:var(--r-md); width:fit-content;
 }
 .view-tab{
-  padding:8px 18px; background:transparent; border:none; border-radius:6px;
+  padding:6px 14px; background:transparent; border:none; border-radius:4px;
   color:var(--muted); cursor:pointer; font-family:inherit; font-size:13px;
-  font-weight:600; transition:all 0.15s; letter-spacing:-0.005em;
+  font-weight:500; transition:color 0.12s, background-color 0.12s;
+  letter-spacing:-0.005em;
   display:inline-flex; align-items:center; gap:6px;
 }
-.view-tab:hover{color:var(--text);}
+.view-tab:hover{color:var(--text); background:rgba(255,255,255,0.03);}
 .view-tab.active{
   color:var(--text);
-  background:linear-gradient(180deg, var(--panel2), var(--panel-elev));
-  box-shadow:var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.04);
+  background:var(--panel-elev);
+  box-shadow:inset 0 0 0 1px var(--border);
 }
 .view{display:none;}
 .view.active{display:block;}
