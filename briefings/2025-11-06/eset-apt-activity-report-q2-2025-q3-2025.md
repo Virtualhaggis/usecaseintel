@@ -26,6 +26,12 @@ During the monitore…
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1203** — Exploitation for Client Execution
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1564.004** — Hide Artifacts: NTFS File Attributes
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1090.003** — Proxy: Multi-hop Proxy (Tor)
 
 ## Kill chain phases observed
 
@@ -255,7 +261,59 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
+### [LLM] RomCom CVE-2025-8088 WinRAR ADS path-traversal drops payload into Startup
+
+`UC_300_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("WinRAR.exe","Rar.exe","UnRAR.exe","7zFM.exe","WinRAR.SFX.exe") AND (Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*") AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.cmd" OR Filesystem.file_name="*.bat")) OR Filesystem.file_name IN ("Adverse_Effect_Medical_Records_2025.rar","cv_submission.rar","JobDocs_July2025.rar","Recruitment_Dossier_July_2025.rar") OR Filesystem.file_hash IN ("371A5B8BA86FBCAB80D4E0087D2AA0D8FFDDC70B","D43F49E6A586658B5422EDC647075FFD405D6741") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let romcom_archives = dynamic(["Adverse_Effect_Medical_Records_2025.rar","cv_submission.rar","JobDocs_July2025.rar","Recruitment_Dossier_July_2025.rar"]);
+let romcom_hashes = dynamic(["371a5b8ba86fbcab80d4e0087d2aa0d8ffddc70b","d43f49e6a586658b5422edc647075ffd405d6741"]);
+let rar_procs = dynamic(["winrar.exe","rar.exe","unrar.exe","7zfm.exe","winrar.sfx.exe"]);
+DeviceFileEvents
+| where (InitiatingProcessFileName in~ (rar_procs)
+         and FolderPath has @"\Start Menu\Programs\Startup\"
+         and FileName endswith_cs ".lnk" or FileName endswith_cs ".exe" or FileName endswith_cs ".dll" or FileName endswith_cs ".cmd" or FileName endswith_cs ".bat")
+   or FileName in~ (romcom_archives)
+   or tolower(SHA1) in (romcom_hashes)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA1, SHA256, ActionType
+```
+
+### [LLM] InedibleOchotense fake-ESET installer beaconing to spoofed esetsmart/esetscanner/esetremover domains
+
+`UC_300_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+(| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("esetsmart.com","esetscanner.com","esetremover.com","*.esetsmart.com","*.esetscanner.com","*.esetremover.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`) 
+| append [| tstats `summariesonly` count from datamodel=Web.Web where Web.url IN ("*esetsmart.com*","*esetscanner.com*","*esetremover.com*") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)`] 
+| append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("ESETAVRemover.exe","ESETOnlineScanner.exe","esetsmart*.exe","esetscanner*.exe","esetremover*.exe") AND (Processes.process_name IN ("reg.exe","powershell.exe","cmd.exe","sc.exe","netsh.exe","ssh.exe","sshd.exe") OR Processes.process="*fDenyTSConnections*" OR Processes.process="*OpenSSH*" OR Processes.process="*Add-WindowsCapability*OpenSSH*" OR Processes.process="*Tor*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+let spoofed = dynamic(["esetsmart.com","esetscanner.com","esetremover.com"]);
+let net = DeviceNetworkEvents
+| where RemoteUrl has_any (spoofed) or tolower(RemoteUrl) endswith "esetsmart.com" or tolower(RemoteUrl) endswith "esetscanner.com" or tolower(RemoteUrl) endswith "esetremover.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType;
+let kalambur_post = DeviceProcessEvents
+| where InitiatingProcessFileName matches regex @"(?i)^eset(smart|scanner|remover|avremover|onlinescanner).*\.exe$"
+      or InitiatingProcessParentFileName matches regex @"(?i)^eset(smart|scanner|remover).*\.exe$"
+| where ProcessCommandLine has_any ("fDenyTSConnections","Add-WindowsCapability","OpenSSH","sshd","netsh advfirewall firewall add rule","3389","Tor")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine;
+let rdp_reg = DeviceRegistryEvents
+| where RegistryKey has @"\CurrentControlSet\Control\Terminal Server" and RegistryValueName == "fDenyTSConnections" and RegistryValueData == "0"
+| where InitiatingProcessFileName matches regex @"(?i)^eset(smart|scanner|remover).*\.exe$"
+| project Timestamp, DeviceName, InitiatingProcessFileName, RegistryKey, RegistryValueName, RegistryValueData;
+union net, kalambur_post, rdp_reg
+```
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

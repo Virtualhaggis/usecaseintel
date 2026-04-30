@@ -299,7 +299,7 @@ DeviceProcessEvents
 
 ### [LLM] ToolShell SharePoint RCE: spinstall webshell drop in LAYOUTS directory
 
-`UC_24_7` · phase: **install** · confidence: **High**
+`UC_27_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -325,7 +325,7 @@ DeviceFileEvents
 
 ### [LLM] Adversary-registered MFA method followed by sign-in from same new device
 
-`UC_24_8` · phase: **actions** · confidence: **Medium**
+`UC_27_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

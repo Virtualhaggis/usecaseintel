@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### [LLM] VECT 2.0 ransomware binary execution and .vect artifact creation (Windows/Linux/ESXi)
 
-`UC_16_5` · phase: **actions** · confidence: **High**
+`UC_19_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceProcessEvents
 
 ### [LLM] VECT 2.0 / TeamPCP C2 callback to 158.94.210.11:8000
 
-`UC_16_6` · phase: **c2** · confidence: **High**
+`UC_19_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

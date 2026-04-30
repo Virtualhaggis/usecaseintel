@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### [LLM] TeamPCP/LAPSUS$ exfil to checkmarx[.]zone / audit.checkmarx[.]cx via KICS-Telemetry UA
 
-`UC_22_3` · phase: **c2** · confidence: **High**
+`UC_25_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] Pull or run of poisoned checkmarx/kics Docker tags (v2.1.21 / overwritten v2.1.20 / latest)
 
-`UC_22_4` · phase: **install** · confidence: **High**
+`UC_25_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceProcessEvents
 
 ### [LLM] TeamPCP fallback exfil: creation of 'tpcp-docs' repository in GitHub org
 
-`UC_22_5` · phase: **actions** · confidence: **High**
+`UC_25_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

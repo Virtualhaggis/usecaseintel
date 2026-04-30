@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Client-side git push -o payload matching CVE-2026-3854 X-Stat injection
 
-`UC_7_1` · phase: **exploit** · confidence: **High**
+`UC_10_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +51,7 @@ DeviceProcessEvents
 
 ### [LLM] GHES babeld/gitrpcd spawning interactive shell or interpreter (CVE-2026-3854 hook traversal)
 
-`UC_7_2` · phase: **install** · confidence: **High**
+`UC_10_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

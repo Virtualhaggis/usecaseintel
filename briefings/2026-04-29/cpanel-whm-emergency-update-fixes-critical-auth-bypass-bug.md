@@ -216,7 +216,7 @@ DeviceProcessEvents
 
 ### [LLM] CVE-2026-41940 cPanel/WHM auth bypass: session cache-poisoning request sequence
 
-`UC_3_4` · phase: **exploit** · confidence: **High**
+`UC_6_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,7 +246,7 @@ DeviceNetworkEvents
 
 ### [LLM] CVE-2026-41940 CRLF-injected Authorization Basic header to cPanel/WHM (cpsrvd)
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_6_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

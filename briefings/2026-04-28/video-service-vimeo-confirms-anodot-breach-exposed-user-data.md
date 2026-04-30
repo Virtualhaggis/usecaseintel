@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Anodot service-account auth to Snowflake/BigQuery from non-Anodot egress IP space
 
-`UC_18_0` · phase: **c2** · confidence: **High**
+`UC_21_0` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ CloudAppEvents
 
 ### [LLM] Bulk export / COPY INTO via Anodot integration user on Snowflake or BigQuery
 
-`UC_18_1` · phase: **actions** · confidence: **High**
+`UC_21_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ CloudAppEvents
 
 ### [LLM] Continued use of Anodot OAuth/integration credential after vendor revocation date
 
-`UC_18_2` · phase: **c2** · confidence: **High**
+`UC_21_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

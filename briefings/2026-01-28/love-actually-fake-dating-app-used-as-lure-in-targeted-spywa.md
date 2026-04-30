@@ -1,4 +1,4 @@
-# [LOW] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
+# [MED] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
 
 **Source:** ESET WeLiveSecurity
 **Published:** 2026-01-28
@@ -18,6 +18,11 @@ ESET researchers have uncovered an Android spyware campaign leveraging romance s
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1105** — Ingress Tool Transfer
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
 
 ## Kill chain phases observed
 
@@ -137,7 +142,75 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### [LLM] GhostChat C2 beacon to hitpak.org with 'tynor=<host>sss<user>' URI pattern
+
+`UC_222_2` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest values(Web.dest_ip) as dest_ip from datamodel=Web where Web.url="*hitpak.org/page.php*" OR Web.url="*tynor=*sss*" OR Web.dest="hitpak.org" by Web.src, Web.user | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "hitpak.org" or RemoteIP == "188.114.96.10" or RemoteUrl matches regex @"tynor=[^&]+sss[^&]+"
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
+| join kind=leftouter (DeviceProcessEvents | where ProcessCommandLine has_any ("FromBase64String","Invoke-Expression","notepad2.dll","file.dll") | project DeviceId, ProcCmd=ProcessCommandLine, ProcTime=Timestamp) on DeviceId
+```
+
+### [LLM] GhostChat second-stage DLL fetch from foxy580.github.io/koko or hitpak.org/notepad2.dll
+
+`UC_222_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua from datamodel=Web where (Web.url="*foxy580.github.io/koko/file.dll*" OR Web.url="*hitpak.org/notepad2.dll*" OR (Web.url="*foxy580.github.io*" AND Web.url="*koko*")) by Web.src, Web.user, Web.dest | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="file.dll" OR Filesystem.file_name="notepad2.dll") AND (Filesystem.file_hash="8B103D0AA37E5297143E21949471FD4F6B2ECBAA") by Filesystem.dest Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+let urls = dynamic(["foxy580.github.io/koko/file.dll","hitpak.org/notepad2.dll"]);
+let sha1s = dynamic(["8B103D0AA37E5297143E21949471FD4F6B2ECBAA","B15B1F3F2227EBA4B69C85BDB638DF34B9D30B6A"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (urls) or (RemoteUrl has "foxy580.github.io" and RemoteUrl has "koko")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
+| union (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("file.dll","notepad2.dll") or SHA1 in (sha1s)
+    | project Timestamp, DeviceName, DeviceId, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine)
+```
+
+### [LLM] Visit to fake PKCERT lure on buildthenations.info preceding scripted execution
+
+`UC_222_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as lure_url from datamodel=Web where Web.url="*buildthenations.info*" OR Web.url="*PKCERT/pkcert.html*" by Web.src Web.user | `drop_dm_object_name(Web)` | join type=inner src [| tstats `summariesonly` count values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=powershell.exe OR Processes.process_name=mshta.exe) AND (Processes.process="*FromBase64String*" OR Processes.process="*tynor=*" OR Processes.process="*hitpak.org*" OR Processes.process="*foxy580.github.io*") by Processes.dest Processes.user | rename Processes.dest as src Processes.user as user | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+let lureHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "buildthenations.info" or RemoteUrl has "PKCERT/pkcert.html"
+    | project lureTime=Timestamp, DeviceId, DeviceName, lureUrl=RemoteUrl;
+let badProcs = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe") or FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+    | where ProcessCommandLine has_any ("hitpak.org","foxy580.github.io","notepad2.dll","tynor=")
+        or (ProcessCommandLine has "FromBase64String" and ProcessCommandLine has "Invoke-Expression" and ProcessCommandLine has "WindowStyle Hidden")
+    | project procTime=Timestamp, DeviceId, DeviceName, ProcessCommandLine, FileName, InitiatingProcessFileName;
+lureHits
+| join kind=inner badProcs on DeviceId
+| where procTime between (lureTime .. lureTime + 1h)
+| project lureTime, procTime, DeviceName, lureUrl, FileName, InitiatingProcessFileName, ProcessCommandLine
+```
+
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
