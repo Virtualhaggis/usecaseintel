@@ -273,7 +273,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Jenkins Patches High-Severity Plugin Flaws Including Path Traversal and Stored X
 
-`UC_18_7` · phase: **exploit** · confidence: **High**
+`UC_19_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gemini CLI spawning shell on CI/CD runner (workspace-trust RCE GHSA-wpqr-6v78-jr5g)
 
-`UC_14_8` · phase: **exploit** · confidence: **High**
+`UC_15_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] Untrusted PR introduces .gemini/ config files into GitHub Actions workspace
 
-`UC_14_9` · phase: **delivery** · confidence: **Medium**
+`UC_15_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### [LLM] Vulnerable @google/gemini-cli or run-gemini-cli version invoked in CI
 
-`UC_14_10` · phase: **recon** · confidence: **Medium**
+`UC_15_10` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

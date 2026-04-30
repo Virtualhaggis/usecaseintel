@@ -24,12 +24,78 @@ The malicious code bypassed official security checks by leveraging a custom rem�
 - **T1071.004** — DNS
 - **T1053.005** — Scheduled Task
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1505.003** — Server Software Component: Web Shell
+- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Quick Page/Post Redirect plugin C2 callback to anadnet.com from WordPress hosts
+
+`UC_20_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web where (Web.url="*anadnet.com*" OR Web.dest IN ("anadnet.com","w.anadnet.com") OR Web.url IN ("*w.anadnet.com/bro/3*","*anadnet.com/updates*")) by Web.src host | `drop_dm_object_name(Web)` | append [| tstats summariesonly=t count from datamodel=Network_Resolution where Network_Resolution.DNS.query IN ("anadnet.com","*.anadnet.com") by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name(Network_Resolution.DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceNetworkEvents
+  | where RemoteUrl has_any ("anadnet.com","w.anadnet.com") or RemoteUrl matches regex @"(?i)anadnet\.com/(updates|bro/3)"
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType ),
+( DeviceEvents
+  | where ActionType == "DnsQueryResponse" and AdditionalFields has "anadnet.com"
+  | project Timestamp, DeviceName, InitiatingProcessFileName, AdditionalFields )
+| sort by Timestamp desc
+```
+
+### [LLM] PHP/web-server process initiating outbound connection to anadnet update server
+
+`UC_20_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest IN ("anadnet.com","w.anadnet.com") OR All_Traffic.dest_host="*anadnet.com" by All_Traffic.src All_Traffic.process_name host | `drop_dm_object_name(All_Traffic)` | search process_name IN ("php*","php-fpm*","php-cgi*","httpd*","nginx*","w3wp.exe","apache2*") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where InitiatingProcessFileName in~ ("php.exe","php-cgi.exe","php-fpm","httpd.exe","nginx.exe","w3wp.exe","apache2")
+| where RemoteUrl has "anadnet.com" or RemoteUrl has "w.anadnet.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| sort by Timestamp desc
+```
+
+### [LLM] Hunt for tampered Quick Page/Post Redirect plugin files referencing anadnet update source
+
+`UC_20_5` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_hash) as hashes values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.file_path="*wp-content/plugins/quick-pagepost-redirect-plugin*" AND Filesystem.file_name="*.php" by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where FolderPath has "wp-content\\plugins\\quick-pagepost-redirect-plugin" or FolderPath has "wp-content/plugins/quick-pagepost-redirect-plugin"
+| where FileName endswith ".php"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where ProcessCommandLine has_any ("anadnet.com","w.anadnet.com","plugin-update-checker")
+    | project Timestamp2=Timestamp, DeviceName, MatchCmd=ProcessCommandLine
+) on DeviceName
+| sort by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -119,4 +185,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

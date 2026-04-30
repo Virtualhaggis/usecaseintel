@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gemini CLI headless workspace-trust RCE via attacker-controlled .gemini/ in CI runner
 
-`UC_26_4` · phase: **exploit** · confidence: **High**
+`UC_27_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] Cursor IDE child process spawned from embedded bare-repo .git/hooks (CVE-2026-26268)
 
-`UC_26_5` · phase: **exploit** · confidence: **High**
+`UC_27_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] CursorJacking: non-Cursor process reading Cursor SQLite credential store (state.vscdb)
 
-`UC_26_6` · phase: **actions** · confidence: **Medium**
+`UC_27_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

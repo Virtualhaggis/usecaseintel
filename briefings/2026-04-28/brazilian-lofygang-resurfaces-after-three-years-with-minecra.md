@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LofyStealer/GrabBot C2 beacon to 24.152.36.241:8080 with GrabBot/1.0 User-Agent
 
-`UC_46_12` · phase: **c2** · confidence: **High**
+`UC_47_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union
 
 ### [LLM] Slinky Minecraft hack loader (load.exe pkg-Node) spawning chromeleveler/chromelevator stealer
 
-`UC_46_13` · phase: **install** · confidence: **High**
+`UC_47_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] GrabBot multi-browser credential harvest (Chrome/Edge/Brave/Opera/Firefox/Avast)
 
-`UC_46_14` · phase: **actions** · confidence: **High**
+`UC_47_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -419,7 +419,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Brazilian LofyGang Resurfaces After Three Years With Minecraft LofyStealer Campa
 
-`UC_46_11` · phase: **exploit** · confidence: **High**
+`UC_47_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

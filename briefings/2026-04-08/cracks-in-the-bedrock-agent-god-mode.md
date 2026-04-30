@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AgentCore SDK auto-create runtime role pulling ECR images (cross-account image exfil)
 
-`UC_149_9` · phase: **actions** · confidence: **High**
+`UC_150_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ CloudAppEvents
 
 ### [LLM] AgentCore execution role reading memory resources of another agent
 
-`UC_149_10` · phase: **actions** · confidence: **High**
+`UC_150_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ CloudAppEvents
 
 ### [LLM] AgentCore SDK runtime role invoking a foreign Bedrock AgentCore runtime
 
-`UC_149_11` · phase: **actions** · confidence: **Medium**
+`UC_150_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

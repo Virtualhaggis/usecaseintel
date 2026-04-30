@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_162 per-article briefings — auto-generated from articles in the rolling 30-day window._
+_163 per-article briefings — auto-generated from articles in the rolling 30-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -34,6 +34,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [romanian leader of online swatting ring gets 4 years in pris](./2026-04-30/romanian-leader-of-online-swatting-ring-gets-4-years-in-pris.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [targeted large scale campaign attacking u s organizations wi](./2026-04-30/targeted-large-scale-campaign-attacking-u-s-organizations-wi.md)
+- [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 - [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
 - [what happens in the first 24 hours after a new asset goes li](./2026-04-30/what-happens-in-the-first-24-hours-after-a-new-asset-goes-li.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)

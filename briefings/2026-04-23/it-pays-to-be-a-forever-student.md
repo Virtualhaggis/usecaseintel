@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Access to Softr-hosted credential-harvesting page mimicking OWA/Exchange
 
-`UC_82_11` · phase: **delivery** · confidence: **Medium**
+`UC_83_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ softrHits
 
 ### [LLM] Adversarial TruffleHog execution scanning for cloud / repo secrets
 
-`UC_82_12` · phase: **actions** · confidence: **Medium**
+`UC_83_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### [LLM] UAT-4356 FIRESTARTER exploitation of Cisco ASA/Firepower WebVPN (CVE-2025-20333 / CVE-2025-20362)
 
-`UC_82_13` · phase: **exploit** · confidence: **Medium**
+`UC_83_13` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — It pays to be a forever student
 
-`UC_82_10` · phase: **exploit** · confidence: **High**
+`UC_83_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

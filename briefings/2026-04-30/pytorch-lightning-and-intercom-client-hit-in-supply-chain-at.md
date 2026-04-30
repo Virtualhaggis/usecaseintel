@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious 'lightning' / 'intercom-client' install: _runtime/start.py spawns Bun + router_runtime.js
 
-`UC_5_11` · phase: **install** · confidence: **High**
+`UC_6_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ let bunExec = DeviceProcessEvents | where InitiatingProcessFileName in~ ("python
 
 ### [LLM] TeamPCP repo poisoning: drop of .claude/router_runtime.js + format-check.yml workflow
 
-`UC_5_12` · phase: **actions** · confidence: **High**
+`UC_6_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents | where ActionType in ("FileCreated","FileModified") | where Fo
 
 ### [LLM] Bun runtime contacting AWS IMDS / api.github.com/user from developer endpoint
 
-`UC_5_13` · phase: **c2** · confidence: **High**
+`UC_6_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -386,7 +386,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PyTorch Lightning and Intercom-client Hit in Supply Chain Attacks to Steal Crede
 
-`UC_5_10` · phase: **exploit** · confidence: **High**
+`UC_6_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

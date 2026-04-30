@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Google Workspace OAuth grant to Context.ai compromised app (Vercel breach pivot)
 
-`UC_38_8` · phase: **install** · confidence: **High**
+`UC_39_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ CloudAppEvents
 
 ### [LLM] Salesforce data theft via Drift OAuth tokens — UNC6395 user-agent fingerprints
 
-`UC_38_9` · phase: **actions** · confidence: **High**
+`UC_39_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ CloudAppEvents
 
 ### [LLM] Context.ai Chrome extension still installed on managed endpoints
 
-`UC_38_10` · phase: **install** · confidence: **High**
+`UC_39_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

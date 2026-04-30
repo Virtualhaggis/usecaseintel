@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] M365 Direct Send abuse: external-origin email spoofing internal sender domain
 
-`UC_106_3` · phase: **delivery** · confidence: **High**
+`UC_107_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
