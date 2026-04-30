@@ -2826,7 +2826,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 
 /* ----- Workflow tab -------------------------------------------------- */
 .workflow-wrap{
-  max-width:1280px; padding:20px 28px 60px; line-height:1.65;
+  max-width:1280px; margin:0 auto; padding:20px 28px 60px; line-height:1.65;
 }
 .wf-title{
   font-size:24px; font-weight:700; letter-spacing:-0.012em;
