@@ -2860,6 +2860,76 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .wf-step a{color:var(--accent); text-decoration:none;}
 .wf-step a:hover{text-decoration:underline;}
 
+/* About tab cards — richer than wf-step, used for the platform-coverage
+   table, Discord CTA, and how-a-UC-lands-here sections. Single column on
+   narrow viewports, no internal grid. Generous padding so headings and
+   body copy aren't crammed. */
+.wf-card{
+  background:var(--panel); border:1px solid var(--border); border-radius:var(--r-lg);
+  padding:22px 26px; margin-bottom:18px; color:var(--text);
+  line-height:1.65; font-size:14px;
+  box-shadow:var(--shadow-sm);
+}
+.wf-card h3{
+  margin:0 0 12px 0; font-size:17px; font-weight:700;
+  letter-spacing:-0.005em; color:var(--text);
+  padding-bottom:10px; border-bottom:1px solid var(--border);
+}
+.wf-card p{margin:0 0 12px 0;}
+.wf-card p:last-child{margin-bottom:0;}
+.wf-card ul, .wf-card ol{padding-left:22px; margin:6px 0 12px 0;}
+.wf-card li{margin-bottom:6px;}
+.wf-card code{
+  background:var(--panel-elev); padding:1px 6px; border-radius:4px;
+  font-size:12.5px; color:var(--accent-3);
+}
+.wf-card a{color:var(--accent); text-decoration:none;}
+.wf-card a:hover{text-decoration:underline;}
+.wf-card em{color:var(--muted);}
+
+/* About tab platform-coverage table */
+.wf-table{
+  width:100%; border-collapse:separate; border-spacing:0;
+  font-size:13.5px; line-height:1.55;
+  border:1px solid var(--border); border-radius:var(--r-md);
+  overflow:hidden;
+}
+.wf-table thead th{
+  background:var(--panel-elev); color:var(--muted);
+  text-align:left; padding:10px 14px;
+  font-weight:600; font-size:11.5px;
+  text-transform:uppercase; letter-spacing:0.06em;
+  border-bottom:1px solid var(--border);
+}
+.wf-table tbody td{
+  padding:14px; vertical-align:top;
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+.wf-table tbody tr:last-child td{border-bottom:none;}
+.wf-table tbody tr:nth-child(even) td{background:rgba(255,255,255,0.012);}
+.wf-table tbody td:first-child{
+  white-space:nowrap; min-width:180px;
+  font-weight:600;
+}
+.wf-table tbody td:nth-child(2){
+  white-space:nowrap; width:1%;
+}
+.wf-table code{
+  background:var(--panel-elev); padding:1px 5px; border-radius:3px;
+  font-size:11.5px; color:var(--accent-3);
+}
+@media(max-width:780px){
+  .wf-table thead{display:none;}
+  .wf-table tbody td{display:block; border-bottom:none;}
+  .wf-table tbody tr{
+    display:block; padding:10px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .wf-table tbody td:first-child{font-size:15px; padding-bottom:4px;}
+  .wf-table tbody td:nth-child(2){padding:4px 14px 8px;}
+}
+
 /* ----- Drawer use-case list (paginated for large drawers) ------------ */
 .drawer-uc-toolbar{
   display:flex; gap:8px; align-items:center; margin-bottom:10px; flex-wrap:wrap;
@@ -3686,9 +3756,9 @@ THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sourc
 </div>
 
 <div id="view-about" class="view">
-  <div class="workflow-wrap" style="max-width:980px;">
-    <h2 style="margin:0 0 8px;">About Clankerusecase</h2>
-    <p style="color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 22px;">
+  <div class="workflow-wrap" style="max-width:1180px;">
+    <h2 class="wf-title" style="font-size:28px;">About Clankerusecase</h2>
+    <p class="wf-lede" style="font-size:15px;max-width:760px;">
       Detection content for SOC analysts, generated from threat-intel articles
       the day they break. Free, open-source, and community-shaped.
     </p>
