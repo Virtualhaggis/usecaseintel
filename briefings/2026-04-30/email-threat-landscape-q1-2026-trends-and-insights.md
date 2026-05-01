@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Storm-1747 Tycoon2FA Feb 2026 SVG campaign C2 hostname callout
 
-`UC_16_10` · phase: **delivery** · confidence: **High**
+`UC_24_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### [LLM] Phishing SVG attachment named with Base64-encoded recipient email
 
-`UC_16_11` · phase: **delivery** · confidence: **Medium**
+`UC_24_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ EmailAttachmentInfo
 
 ### [LLM] Browser-rendered SVG followed by outbound HTTPS to fresh .RU TLD landing page (post-takedown Tycoon2FA)
 
-`UC_16_12` · phase: **c2** · confidence: **Medium**
+`UC_24_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

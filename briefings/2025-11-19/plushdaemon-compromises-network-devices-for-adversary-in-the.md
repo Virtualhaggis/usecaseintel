@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PlushDaemon DaemonicLogistics update-hijack URI pattern (Sogou/Baidu)
 
-`UC_288_5` · phase: **delivery** · confidence: **High**
+`UC_281_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### [LLM] DaemonicLogistics drops payload as logo.gif under masqueraded Tencent QQUpdateMgr path
 
-`UC_288_6` · phase: **install** · confidence: **High**
+`UC_281_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### [LLM] PlushDaemon C2/hijack node contact: wcsset.com or known IPs
 
-`UC_288_7` · phase: **c2** · confidence: **High**
+`UC_281_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlushDaemon compromises network devices for adversary-in-the-middle attacks
 
-`UC_288_4` · phase: **exploit** · confidence: **High**
+`UC_281_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

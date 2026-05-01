@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RomCom CVE-2025-8088 WinRAR ADS path-traversal drops payload into Startup
 
-`UC_301_6` · phase: **delivery** · confidence: **High**
+`UC_290_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceFileEvents
 
 ### [LLM] InedibleOchotense fake-ESET installer beaconing to spoofed esetsmart/esetscanner/esetremover domains
 
-`UC_301_7` · phase: **install** · confidence: **High**
+`UC_290_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

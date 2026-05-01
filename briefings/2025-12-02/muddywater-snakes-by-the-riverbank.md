@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyViper HTTP C2 beacon: WinHTTP example UA + distinctive URI paths on port 443
 
-`UC_277_0` · phase: **c2** · confidence: **High**
+`UC_271_0` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### [LLM] MuddyWater PowerShell IEX stager with 'filter_relational_operator_2' query parameter
 
-`UC_277_1` · phase: **delivery** · confidence: **High**
+`UC_271_1` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] MuddyViper / CE-Notes / LP-Notes staging files and ManagerCache startup persistence
 
-`UC_277_2` · phase: **install** · confidence: **High**
+`UC_271_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Password manager typosquat phishing domains (the1password / appbitwarden malvertising)
 
-`UC_293_6` · phase: **delivery** · confidence: **High**
+`UC_285_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### [LLM] InvisibleFerret Python loader modules (bow.py / pay.py / adc.py / .npl) execution
 
-`UC_293_7` · phase: **install** · confidence: **High**
+`UC_285_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### [LLM] InvisibleFerret C2 callback (DeceptiveDevelopment IPs / endpoints :1244 :1245)
 
-`UC_293_8` · phase: **c2** · confidence: **High**
+`UC_285_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

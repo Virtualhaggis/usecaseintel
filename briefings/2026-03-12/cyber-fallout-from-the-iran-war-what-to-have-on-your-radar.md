@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater MSP-pivot: SimpleHelp RMM client execution at non-MSP endpoints
 
-`UC_172_9` · phase: **install** · confidence: **Medium**
+`UC_175_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ let proc = DeviceProcessEvents | where Timestamp > ago(14d) | where FileName in~
 
 ### [LLM] Iranian APT MFA push-bombing followed by attacker-controlled MFA registration change
 
-`UC_172_10` · phase: **install** · confidence: **High**
+`UC_175_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

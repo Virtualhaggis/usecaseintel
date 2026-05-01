@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EDR-Freeze: WerFaultSecure /type 268310 against protected security process
 
-`UC_163_9` · phase: **install** · confidence: **High**
+`UC_167_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### [LLM] EDRSilencer-style WFP filter blocking EDR sensor outbound traffic
 
-`UC_163_10` · phase: **install** · confidence: **High**
+`UC_167_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceEvents
 
 ### [LLM] Warlock-style chain: Velociraptor agent followed by VS Code (code.exe) tunnel
 
-`UC_163_11` · phase: **c2** · confidence: **Medium**
+`UC_167_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -414,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_163_8` · phase: **exploit** · confidence: **High**
+`UC_167_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

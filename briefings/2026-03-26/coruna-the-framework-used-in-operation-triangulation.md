@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Coruna iOS exploit kit delivery domain callouts (UNC6353/UNC6691 watering-holes)
 
-`UC_153_1` · phase: **delivery** · confidence: **High**
+`UC_159_1` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### [LLM] Coruna stager URI '/static/analytics.html' fetched by mobile Safari
 
-`UC_153_2` · phase: **exploit** · confidence: **Medium**
+`UC_159_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LiteLLM/TeamPCP C2 beacon to checkmarx.zone/raw and models.litellm.cloud
 
-`UC_152_7` · phase: **c2** · confidence: **High**
+`UC_158_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union
 
 ### [LLM] Trojanised LiteLLM dropper artefacts (litellm_init.pth, p.py, session.key, tpcp.tar.gz)
 
-`UC_152_8` · phase: **install** · confidence: **High**
+`UC_158_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP sysmon.py systemd persistence and Kubernetes node foothold
 
-`UC_152_9` · phase: **install** · confidence: **High**
+`UC_158_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,7 +239,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An AI gateway designed to steal your data
 
-`UC_152_6` · phase: **exploit** · confidence: **High**
+`UC_158_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silver Fox Japanese tax/HR spearphishing with gofile.io or WeTransfer payload
 
-`UC_150_5` · phase: **delivery** · confidence: **Medium**
+`UC_156_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ candidates
 
 ### [LLM] ValleyRAT fodhelper UAC bypass via HKCU .pwn shell open command
 
-`UC_150_6` · phase: **install** · confidence: **High**
+`UC_156_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ regHits
 
 ### [LLM] ValleyRAT C2 configuration persistence in HKCU\Software\Console IpDate keys
 
-`UC_150_7` · phase: **install** · confidence: **High**
+`UC_156_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

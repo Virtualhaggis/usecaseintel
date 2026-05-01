@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GhostChat C2 beacon to hitpak.org with 'tynor=<host>sss<user>' URI pattern
 
-`UC_223_2` · phase: **c2** · confidence: **High**
+`UC_220_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ DeviceNetworkEvents
 
 ### [LLM] GhostChat second-stage DLL fetch from foxy580.github.io/koko or hitpak.org/notepad2.dll
 
-`UC_223_3` · phase: **delivery** · confidence: **High**
+`UC_220_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] Visit to fake PKCERT lure on buildthenations.info preceding scripted execution
 
-`UC_223_4` · phase: **delivery** · confidence: **Medium**
+`UC_220_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

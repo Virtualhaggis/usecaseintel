@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper staging: execution of schtask.exe / *_update.exe from C:\inetpub\pub\
 
-`UC_220_9` · phase: **install** · confidence: **High**
+`UC_217_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Sandworm rsocx reverse SOCKS5 to compromised progamevl[.]ru host (31.172.71.5:8008)
 
-`UC_220_10` · phase: **c2** · confidence: **High**
+`UC_217_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### [LLM] GPO-staged scheduled task launching wiper from \\*\inetpub\pub\ across domain
 
-`UC_220_11` · phase: **install** · confidence: **Medium**
+`UC_217_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -325,7 +325,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_220_8` · phase: **exploit** · confidence: **High**
+`UC_217_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

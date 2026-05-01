@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PromptSpy Android RAT C2 / distribution-site network callouts
 
-`UC_193_3` · phase: **c2** · confidence: **High**
+`UC_194_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### [LLM] PromptSpy / VNCSpy APK file landing (hash + Chase-Argentina lure)
 
-`UC_193_4` · phase: **delivery** · confidence: **High**
+`UC_194_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

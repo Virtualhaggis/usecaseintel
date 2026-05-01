@@ -10,12 +10,8 @@ Home Cyber Security News
 Critical Wireshark Vulnerabilities Let Attackers Execute Arbitrary Code Via Malformed Packets 
 By Guru Baran 
 May 1, 2026 
-
-
-
-
 Wireshark , the world’s most widely used open-source network protocol analyzer, has released a major security update addressing over 40 vulnerabilities, several of which enable arbitrary code execution through malformed packet injection or malicious capture files.
-Organizations and individuals relying on Wireshark for network monitoring, for…
+Organizations and individuals relying on Wireshark for network monitoring, forensics, …
 
 ## Indicators of Compromise (high-fidelity only)
 

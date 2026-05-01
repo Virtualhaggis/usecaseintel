@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Ollama service started bound to public interface (OLLAMA_HOST=0.0.0.0 / 11434)
 
-`UC_221_3` · phase: **install** · confidence: **High**
+`UC_218_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union OllamaProc, OllamaEnv
 
 ### [LLM] Corporate endpoint reaching out to public Ollama API (TCP/11434) — Silent Brothers abuse
 
-`UC_221_4` · phase: **c2** · confidence: **Medium**
+`UC_218_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

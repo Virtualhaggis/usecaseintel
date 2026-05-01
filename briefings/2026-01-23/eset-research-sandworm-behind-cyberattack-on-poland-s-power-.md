@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sandworm rsocx reverse SOCKS proxy beacon to DynoWiper C2 31.172.71[.]5:8008
 
-`UC_230_1` · phase: **c2** · confidence: **High**
+`UC_227_1` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union rsocx_cmdline, c2_net
 
 ### [LLM] DynoWiper staging in C:\inetpub\pub\ as schtask.exe / schtask2.exe / *_update.exe
 
-`UC_230_2` · phase: **install** · confidence: **High**
+`UC_227_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ union file_drops, exec_from_share
 
 ### [LLM] DynoWiper behavior: mass multi-drive file overwrite immediately followed by forced reboot
 
-`UC_230_3` · phase: **actions** · confidence: **Medium**
+`UC_227_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

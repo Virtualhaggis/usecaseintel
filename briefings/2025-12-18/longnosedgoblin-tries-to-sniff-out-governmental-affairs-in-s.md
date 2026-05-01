@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NosyDoor Stage-2: UevAppMonitor.exe AppDomainManager injection from Microsoft.NET\Framework
 
-`UC_254_9` · phase: **install** · confidence: **High**
+`UC_251_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ let ConfigDrops = DeviceFileEvents | where FileName =~ "UevAppMonitor.exe.config
 
 ### [LLM] NosyDoor staging artifacts dropped to C:\Windows\Microsoft.NET\Framework
 
-`UC_254_10` · phase: **install** · confidence: **High**
+`UC_251_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents | where FolderPath has @"\Microsoft.NET\Framework" | where File
 
 ### [LLM] NosyDoor persistence: 'OneDrive Reporting Task-S-1-5-21-*' scheduled task creation
 
-`UC_254_11` · phase: **install** · confidence: **High**
+`UC_251_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -269,7 +269,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
 
-`UC_254_8` · phase: **exploit** · confidence: **High**
+`UC_251_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

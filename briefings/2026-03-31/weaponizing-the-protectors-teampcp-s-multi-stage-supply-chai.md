@@ -115,7 +115,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LiteLLM 1.82.7/1.82.8 .pth credential stealer (litellm_init.pth + sysmon.py drop)
 
-`UC_146_15` · phase: **install** · confidence: **High**
+`UC_154_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ let pthDrops = DeviceFileEvents | where Timestamp > ago(30d) | where FileName =~
 
 ### [LLM] TeamPCP kamikaze.sh on GitHub Actions runner: /proc/<pid>/mem dump of Runner.Worker + Docker 2375 sweep
 
-`UC_146_16` · phase: **actions** · confidence: **High**
+`UC_154_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ let memDump = DeviceProcessEvents | where Timestamp > ago(30d) | where ProcessCo
 
 ### [LLM] CanisterWorm post-exploitation: ICP/typosquat C2, WAV stego, pgmon masquerade, docs-tpcp repo abuse
 
-`UC_146_17` · phase: **c2** · confidence: **Medium**
+`UC_154_17` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -516,7 +516,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Weaponizing the Protectors: TeamPCP’s Multi-Stage Supply Chain Attack on Securit
 
-`UC_146_14` · phase: **exploit** · confidence: **High**
+`UC_154_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

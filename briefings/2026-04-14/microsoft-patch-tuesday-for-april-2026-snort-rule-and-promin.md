@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for April 2026 - Snort Rule and Prominent Vulnerabilitie
 
-`UC_138_1` · phase: **exploit** · confidence: **High**
+`UC_133_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

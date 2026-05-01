@@ -28,11 +28,11 @@ from pathlib import Path
 import feedparser
 
 # Sources & lookback configuration -------------------------------------------
-LOOKBACK_DAYS = 30        # rolling 30-day window — keeps the site
-                          # focused on currently-relevant intel and
-                          # prunes stale articles from the briefings
-                          # index. Bump back up if you want a deeper
-                          # historical archive.
+LOOKBACK_DAYS = 365       # 1-year window — pulls every article each
+                          # configured feed has indexed in the last
+                          # 365 days. Subsequent runs use the per-URL
+                          # caches so re-runs are cheap; LLM bespoke
+                          # UCs cost only on first encounter.
 MAX_PER_SOURCE = 500      # safety cap per source per run
 
 SOURCES = [
@@ -4280,7 +4280,7 @@ ul.intel-types-doc code{
           <text x="340" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">2. INGEST</text>
           <text x="255" y="100" fill="#cfd6e3" font-size="11" font-weight="600">RSS / KEV JSON</text>
           <text x="255" y="120" fill="#9aa3b2" font-size="10.5">→ feedparser pulls entries</text>
-          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 30-day rolling window</text>
+          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 365-day rolling window</text>
           <text x="255" y="160" fill="#cfd6e3" font-size="11" font-weight="600">Full body fetch</text>
           <text x="255" y="180" fill="#9aa3b2" font-size="10.5">→ HTTPS GET with cache</text>
           <text x="255" y="198" fill="#9aa3b2" font-size="10.5">→ HTML→text + noise strip</text>
@@ -4364,7 +4364,7 @@ ul.intel-types-doc code{
 
     <h3 class="wf-section-title">2. Ingest</h3>
     <div class="wf-step">
-      <p>For each entry in the rolling <strong>30-day window</strong>:</p>
+      <p>For each entry in the rolling <strong>365-day window</strong>:</p>
       <ol>
         <li><code>feedparser.parse()</code> reads the RSS preview.</li>
         <li><code>_fetch_full_body(url)</code> issues an HTTPS GET with a polite <code>User-Agent</code>, caches the HTML to <code>intel/.article_cache/</code>, and converts to plain text. <strong>Without this step the IOC feed only has CVEs</strong> — RSS previews don't include hash tables.</li>
@@ -4414,7 +4414,7 @@ ul.intel-types-doc code{
     <div class="wf-step">
       <p>When <code>ANTHROPIC_API_KEY</code> is set in the environment, the pipeline sends each article body to an LLM with a structured detection-engineer prompt, parses the response as JSON, validates the techniques (<code>T####.###</code> format) + tier (alerting/hunting) + KQL/SPL fields, and emits the resulting UseCase objects alongside the regex bespoke UCs.</p>
       <p>The LLM is told: use the actual binaries/paths/cmdlines named in the article, not invented ones; if the article describes the attack only narratively, return no UCs. Output is cached per article URL hash so repeat runs cost nothing.</p>
-      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). A typical 30-day run (~150-200 articles) is ≈ $1 if every article hits the LLM; subsequent runs are essentially free thanks to the per-URL cache.</p>
+      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). The first 365-day run hits the LLM for every article that passes the attack-content filter (typically a few thousand cents); subsequent runs are essentially free thanks to the per-URL cache.</p>
       <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
     </div>
 

@@ -10,12 +10,8 @@ Home Cyber Security
 Anthropic Launches Claude Security in Public Beta for Enterprise Customers 
 By Guru Baran 
 May 1, 2026 
-
-
-
-
 Anthropic has opened Claude Security to public beta for Claude Enterprise customers, bringing AI-powered vulnerability detection directly into production codebases without the need for custom tooling or API integrations.
-Claude Security leverages the Opus 4.7 model to perform end-to-end security analysis across your codebase. The platform scans for vulnerabilities,…
+Claude Security leverages the Opus 4.7 model to perform end-to-end security analysis across your codebase. The platform scans for vulnerabilities, validat…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -171,7 +167,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Anthropic Launches Claude Security in Public Beta for Enterprise Customers
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_11_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

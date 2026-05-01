@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sednit BeardShell C2 over Icedrive cloud storage from non-browser process
 
-`UC_174_9` · phase: **c2** · confidence: **High**
+`UC_177_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] Sednit modified-Covenant C2 over Filen / pCloud / Koofr cloud storage
 
-`UC_174_10` · phase: **c2** · confidence: **High**
+`UC_177_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ netHits
 
 ### [LLM] SlimAgent keylogger HTML log artefacts (Xagent-derived color scheme)
 
-`UC_174_11` · phase: **actions** · confidence: **Medium**
+`UC_177_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_174_8` · phase: **exploit** · confidence: **High**
+`UC_177_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
