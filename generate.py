@@ -2592,12 +2592,21 @@ body:not(.view-intel-active)    .stats-intel{
   }
   .brand-text > span:first-child{font-size:16px; letter-spacing:-0.014em;}
   .stats-wrap{display:none;}
+  /* Search trigger — full-width on mobile so it reads as a real
+     search input. With the TOC hidden, this becomes the primary way
+     to skim 432 articles. */
   .search-trigger{
-    min-width:0; padding:8px 12px; font-size:12.5px;
-    margin-left:auto;
+    width:100%; min-width:0; flex:1 1 auto;
+    padding:10px 14px; font-size:14px;
+    min-height:44px;
+    border-radius:var(--r-md);
+    margin-left:0;
   }
-  .search-placeholder{display:none;}
-  .search-shortcut{margin-left:0;}
+  .search-placeholder{
+    display:inline; flex:1; min-width:0;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .search-shortcut{display:none;}
   /* Row 2: scrolling view-tab pill bar — feels native */
   .view-tabs{
     width:100%; max-width:100%;
@@ -2616,39 +2625,49 @@ body:not(.view-intel-active)    .stats-intel{
     min-height:36px;
   }
 
-  /* === Articles main grid — stacked, edge-friendly padding === */
+  /* === Articles main grid — single column, no TOC ===
+     The desktop TOC is a 432-item nav rail — on mobile that means
+     scrolling past every article title before reaching the first
+     card. Hide it; rely on Ctrl+K search and the inline filters
+     instead. */
   main, main.width-compact, main.width-wide, main.width-full{
-    padding:14px;
-    gap:14px;
+    padding:12px;
+    gap:0;
+    grid-template-columns:1fr;
   }
-  nav.toc{
-    position:static; max-height:none;
-    padding:12px; border-radius:var(--r-md);
-    margin-bottom:0;
-  }
-  nav.toc h3{font-size:11px; margin:0 4px 8px;}
-  .nav-item{
-    padding:11px 10px; gap:12px; font-size:13px;
-    min-height:44px; align-items:center;     /* touch target */
-  }
-  .nav-item .num{font-size:12px;}
+  nav.toc{display:none;}
 
-  /* Article cards — readable not cramped */
+  /* Article cards — readable, scannable */
   article.card{
-    padding:22px 18px 20px;
+    padding:24px 18px 18px;
     font-size:14px; line-height:1.6;
     border-radius:var(--r-md);
   }
   article.card h2{
-    font-size:19px; line-height:1.3;
-    margin:18px 0 10px;
+    font-size:18px; line-height:1.3;
+    margin:14px 0 8px;
     letter-spacing:-0.014em;
   }
-  article.card .pubmeta{font-size:12px; gap:10px; margin-bottom:14px;}
-  article.card p.summary{font-size:13.5px; line-height:1.55;}
+  article.card .pubmeta{
+    font-size:11.5px; gap:8px; margin-bottom:12px;
+    flex-wrap:wrap; color:var(--muted-2);
+  }
+  article.card .pubmeta span:not(:first-child)::before{margin-right:8px;}
+  article.card p.summary{font-size:13.5px; line-height:1.55; margin:8px 0 12px;}
   article.card .sev-ribbon{left:18px; font-size:10px; padding:4px 11px;}
-  article.card .source-badges{margin:6px 0 4px;}
+  article.card .source-badges{margin:4px 0;}
   article.card .source-badge{font-size:10.5px; padding:3px 8px;}
+  /* Hint text below ATT&CK pills row eats vertical space — hide on mobile */
+  article.card .ind-group + .btn-meta,
+  article.card .meta-hint{display:none;}
+  /* Action row — compact */
+  article.card .action-row{gap:8px; margin:12px 0;}
+  article.card .action-row .btn-meta{font-size:11px; line-height:1.4;}
+  /* Inline UC details — tighter padding */
+  article.card details.uc{margin-bottom:8px;}
+  article.card details.uc summary{padding:10px 12px; font-size:13px;}
+  article.card .uc-body{padding:0 12px 12px;}
+  article.card .uc-meta{font-size:11.5px;}
   /* Action row buttons — bigger touch targets */
   .btn, .btn-kc{
     min-height:38px; padding:8px 14px; font-size:13px;
@@ -2666,29 +2685,48 @@ body:not(.view-intel-active)    .stats-intel{
   }
   .info-banner .info-hint{display:none;}
 
-  /* === Filter toolbars (articles + actors) === */
+  /* === Filter toolbars (articles + actors) ===
+     On mobile we keep the labelled groups but each chip row scrolls
+     horizontally instead of wrapping — that way 11 source chips +
+     2 feature chips don't take 4 rows of vertical space. Snap to
+     centre so a swipe lands cleanly. */
   .filter-toolbar, .actors-filters{
-    padding:14px;
+    padding:12px;
     border-radius:var(--r-md);
   }
   .filter-toolbar .ft-group, .actors-filters .ft-group{
-    flex-direction:column; align-items:stretch; gap:8px;
-    padding:6px 0;
+    flex-direction:column; align-items:stretch; gap:6px;
+    padding:4px 0;
   }
   .filter-toolbar .ft-group + .ft-group,
   .actors-filters .ft-group + .ft-group{
-    padding-top:12px;
+    padding-top:10px;
   }
   .filter-toolbar .ft-label, .actors-filters .ft-label{
-    min-width:0; font-size:11px;
+    min-width:0; font-size:10.5px;
   }
-  .filter-toolbar .ft-chips, .actors-filters .ft-chips{gap:6px;}
+  /* Chip row → single horizontal-scroll line on mobile */
+  .filter-toolbar .ft-chips, .actors-filters .ft-chips{
+    gap:6px;
+    flex-wrap:nowrap;
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    padding-bottom:4px;
+    scroll-snap-type:x proximity;
+  }
+  .filter-toolbar .ft-chips::-webkit-scrollbar,
+  .actors-filters .ft-chips::-webkit-scrollbar{display:none;}
   .src-chip, .actors-country-chip{
-    padding:8px 12px; font-size:12.5px;
-    min-height:36px;
+    flex:0 0 auto;
+    padding:7px 11px; font-size:12px;
+    min-height:34px;
+    scroll-snap-align:start;
+    white-space:nowrap;
   }
   .width-toggle{margin-left:0; align-self:flex-start;}
-  .width-toggle button{padding:7px 14px; font-size:11px; min-height:32px;}
+  .width-toggle button{padding:6px 12px; font-size:11px; min-height:32px;}
 
   /* === Threat Intel tab === */
   .intel-toolbar{flex-direction:column; align-items:stretch; gap:10px;}
