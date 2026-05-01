@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Diesel Vortex post-phish RMM install on freight/logistics endpoints (ScreenConnect, SimpleHelp, PDQ Connect, N-able, GoTo Resolve)
 
-`UC_5_3` · phase: **install** · confidence: **High**
+`UC_7_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] Diesel Vortex load-board phishing — typosquat navigation to DAT / Truckstop / Penske / EFS / Timocom lookalikes
 
-`UC_5_4` · phase: **delivery** · confidence: **Medium**
+`UC_7_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

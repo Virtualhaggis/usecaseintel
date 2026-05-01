@@ -166,7 +166,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silver Fox RustSL Phantom Persistence via RunOnce 'Application Restart' key from suspicious path
 
-`UC_28_10` · phase: **install** · confidence: **High**
+`UC_29_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ DeviceRegistryEvents
 
 ### [LLM] Silver Fox RustSL geofencing — single non-browser process queries 3+ of 5 specific IP-lookup APIs
 
-`UC_28_11` · phase: **install** · confidence: **High**
+`UC_29_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,7 +213,7 @@ DeviceNetworkEvents
 
 ### [LLM] ValleyRAT/Winos 4.0 C2 callback to Silver Fox tax-campaign infrastructure
 
-`UC_28_12` · phase: **c2** · confidence: **High**
+`UC_29_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Silver Fox uses the new ABCDoor backdoor to target organizations in Russia and I
 
-`UC_28_9` · phase: **exploit** · confidence: **High**
+`UC_29_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

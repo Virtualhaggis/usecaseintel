@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PowMix scheduled task: explorer.exe launching .lnk from ProgramData (hex task name)
 
-`UC_132_8` · phase: **install** · confidence: **High**
+`UC_133_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] PowMix C2 beaconing to PowMix herokuapp subdomains via PowerShell
 
-`UC_132_9` · phase: **c2** · confidence: **High**
+`UC_133_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### [LLM] PowMix loader: AMSI bypass + ZIP marker extraction + IEX-via-$VerbosePreference
 
-`UC_132_10` · phase: **delivery** · confidence: **High**
+`UC_133_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -390,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
 
-`UC_132_7` · phase: **exploit** · confidence: **High**
+`UC_133_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Maverick banker: WhatsApp-Web-delivered LNK launching fileless PowerShell/.NET chain
 
-`UC_151_5` · phase: **delivery** · confidence: **High**
+`UC_152_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ whatsappDrop
 
 ### [LLM] Pure family (PureCrypter/PureRAT) delivered via accounting-themed attachments targeting EDM/invoice fraud
 
-`UC_151_6` · phase: **install** · confidence: **Medium**
+`UC_152_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

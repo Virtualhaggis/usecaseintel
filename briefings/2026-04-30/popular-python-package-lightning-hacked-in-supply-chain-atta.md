@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Installation of compromised PyTorch Lightning PyPI versions 2.6.2 / 2.6.3
 
-`UC_13_4` · phase: **delivery** · confidence: **High**
+`UC_15_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] Python-spawned download of Bun runtime from GitHub releases (lightning _runtime stage-1)
 
-`UC_13_5` · phase: **install** · confidence: **High**
+`UC_15_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union suspProc, suspFile
 
 ### [LLM] Outbound GitHub API exfil from dev/CI hosts shortly after lightning import (Shai-Hulud / Team PCP)
 
-`UC_13_6` · phase: **actions** · confidence: **Medium**
+`UC_15_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -193,7 +193,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular Python Package lightning Hacked in Supply Chain Attack
 
-`UC_13_3` · phase: **exploit** · confidence: **High**
+`UC_15_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

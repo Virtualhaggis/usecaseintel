@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LiteLLM pre-auth SQL injection via crafted Authorization header (CVE-2026-42208)
 
-`UC_2_10` · phase: **exploit** · confidence: **High**
+`UC_4_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### [LLM] Talos weekly top-prevalence malware hash sighting (Coinminer / Injector / Dropper.Miner)
 
-`UC_2_11` · phase: **install** · confidence: **High**
+`UC_4_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -378,7 +378,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Great responsibility, without great power
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_4_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

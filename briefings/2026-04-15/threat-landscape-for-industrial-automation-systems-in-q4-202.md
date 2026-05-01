@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Curriculum-vitae-catalina XWorm dropper executed from email/download paths
 
-`UC_135_8` · phase: **delivery** · confidence: **High**
+`UC_136_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### [LLM] XWorm C2 beacon to known DDNS hosts on non-standard ports (6000/7000)
 
-`UC_135_9` · phase: **c2** · confidence: **High**
+`UC_136_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### [LLM] Resume-themed PE written to removable media (XWorm USB propagation on ICS hosts)
 
-`UC_135_10` · phase: **actions** · confidence: **Medium**
+`UC_136_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -372,7 +372,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Threat landscape for industrial automation systems in Q4 2025
 
-`UC_135_7` · phase: **exploit** · confidence: **High**
+`UC_136_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

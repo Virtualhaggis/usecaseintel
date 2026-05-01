@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Softr-hosted credential harvesting page mimicking OWA/Exchange login
 
-`UC_102_15` · phase: **delivery** · confidence: **Medium**
+`UC_103_15` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ union isfuzzy=true
 
 ### [LLM] Crimson Collective: TruffleHog secret-scanning followed by Microsoft Graph data exfiltration
 
-`UC_102_16` · phase: **actions** · confidence: **Medium**
+`UC_103_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ trufflehogActors
 
 ### [LLM] MeowBackConn proxy DLL load (meow_*.dll) on Gootloader-infected hosts
 
-`UC_102_17` · phase: **install** · confidence: **High**
+`UC_103_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -548,7 +548,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q1 2026: Phishing reemerges as top initial access vector, as attacks t
 
-`UC_102_14` · phase: **exploit** · confidence: **High**
+`UC_103_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

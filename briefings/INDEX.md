@@ -1,12 +1,16 @@
 # Briefings — full archive
 
-_163 per-article briefings — auto-generated from articles in the rolling 30-day window._
+_162 per-article briefings — auto-generated from articles in the rolling 30-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-05-01
+- [anthropic launches claude security in public beta for enterp](./2026-05-01/anthropic-launches-claude-security-in-public-beta-for-enterp.md)
+- [critical wireshark vulnerabilities let attackers execute arb](./2026-05-01/critical-wireshark-vulnerabilities-let-attackers-execute-arb.md)
 
 ## 2026-04-30
 - [april kb5083769 windows 11 update causes backup software fai](./2026-04-30/april-kb5083769-windows-11-update-causes-backup-software-fai.md)
@@ -26,7 +30,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new phaas platform phoenix drives brand impersonation smishi](./2026-04-30/new-phaas-platform-phoenix-drives-brand-impersonation-smishi.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
-- [openai releases 5 point action plan to strengthen ai powered](./2026-04-30/openai-releases-5-point-action-plan-to-strengthen-ai-powered.md)
 - [police dismantles 9 crypto scam centers arrests 276 suspects](./2026-04-30/police-dismantles-9-crypto-scam-centers-arrests-276-suspects.md)
 - [popular python package lightning hacked in supply chain atta](./2026-04-30/popular-python-package-lightning-hacked-in-supply-chain-atta.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
@@ -35,10 +38,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [targeted large scale campaign attacking u s organizations wi](./2026-04-30/targeted-large-scale-campaign-attacking-u-s-organizations-wi.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
+- [this month in security with tony anscombe april 2026 edition](./2026-04-30/this-month-in-security-with-tony-anscombe-april-2026-edition.md)
 - [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
 - [what happens in the first 24 hours after a new asset goes li](./2026-04-30/what-happens-in-the-first-24-hours-after-a-new-asset-goes-li.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
-- [wordpress plugin hacked since 2020 to inject malicious code ](./2026-04-30/wordpress-plugin-hacked-since-2020-to-inject-malicious-code-.md)
 
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
@@ -214,7 +217,5 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 3502 trueconf client download of code with](./2026-04-02/cisa-kev-cve-2026-3502-trueconf-client-download-of-code-with.md)
 
 ## 2026-04-01
-- [a laughing rat crystalx combines spyware stealer and prankwa](./2026-04-01/a-laughing-rat-crystalx-combines-spyware-stealer-and-prankwa.md)
-- [cisa kev cve 2026 5281 google dawn use after free vulnerabil](./2026-04-01/cisa-kev-cve-2026-5281-google-dawn-use-after-free-vulnerabil.md)
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)
 - [threat brief widespread impact of the axios supply chain att](./2026-04-01/threat-brief-widespread-impact-of-the-axios-supply-chain-att.md)

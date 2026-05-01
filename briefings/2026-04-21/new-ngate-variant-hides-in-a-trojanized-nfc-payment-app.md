@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGate HandyPay C&C beacon / distribution traffic (protecaocartao.online, 108.165.230.223)
 
-`UC_110_5` · phase: **c2** · confidence: **High**
+`UC_111_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ union
 
 ### [LLM] Trojanized HandyPay APK delivery (PROTECAO_CARTAO.apk / Rio_de_Premios_Pagamento.apk hash hits)
 
-`UC_110_6` · phase: **delivery** · confidence: **High**
+`UC_111_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
