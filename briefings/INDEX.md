@@ -19,6 +19,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ransomware victims jump to 7 831 as ai crime tools scale glo](./2026-05-01/ransomware-victims-jump-to-7-831-as-ai-crime-tools-scale-glo.md)
 - [top five sales challenges costing msps cybersecurity revenue](./2026-05-01/top-five-sales-challenges-costing-msps-cybersecurity-revenue.md)
 - [two cybersecurity professionals get 4 year sentences in blac](./2026-05-01/two-cybersecurity-professionals-get-4-year-sentences-in-blac.md)
+- [ubuntu website and canonical web services hit by ddos attack](./2026-05-01/ubuntu-website-and-canonical-web-services-hit-by-ddos-attack.md)
 - [us ransomware negotiators get 4 years in prison over blackca](./2026-05-01/us-ransomware-negotiators-get-4-years-in-prison-over-blackca.md)
 - [windows 11 kb5083631 update released with 34 changes and fix](./2026-05-01/windows-11-kb5083631-update-released-with-34-changes-and-fix.md)
 
@@ -35,7 +36,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new bluekit phishing service includes an ai assistant 40 tem](./2026-04-30/new-bluekit-phishing-service-includes-an-ai-assistant-40-tem.md)
 - [new linux copy fail flaw gives hackers root on major distros](./2026-04-30/new-linux-copy-fail-flaw-gives-hackers-root-on-major-distros.md)
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
-- [new phaas platform phoenix drives brand impersonation smishi](./2026-04-30/new-phaas-platform-phoenix-drives-brand-impersonation-smishi.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
 - [police dismantles 9 crypto scam centers arrests 276 suspects](./2026-04-30/police-dismantles-9-crypto-scam-centers-arrests-276-suspects.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)

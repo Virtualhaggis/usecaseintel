@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 1, 2026
 07:10 AM
 0 
-
-
 Microsoft has updated a Windows 11 in-box app removal policy introduced in October to include a dynamic list that lets IT admins choose which preinstalled Store apps to uninstall.
-
-
-The updated RemoveDefaultMicrosoftStorePackages policy enables admins to remove any preinstalled MSIX/APPX app by referencing its Package Family Name (PFN) using Group Policy Object (GPO) or a custo…
+The updated RemoveDefaultMicrosoftStorePackages policy enables admins to remove any preinstalled MSIX/APPX app by referencing its Package Family Name (PFN) using Group Policy Object (GPO) or a custom OMA-UR…
 
 ## Indicators of Compromise (high-fidelity only)
 

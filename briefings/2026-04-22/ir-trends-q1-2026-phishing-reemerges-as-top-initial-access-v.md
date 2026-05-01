@@ -19,13 +19,11 @@ Public administration and health care tied as the most targeted indu…
 
 - **CVE:** `CVE-2025-20393`
 - **CVE:** `CVE-2023-20198`
-- **Domain (defanged):** `adobe.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1190** — Exploit Public-Facing Application
@@ -64,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Softr-hosted credential harvesting page mimicking OWA/Exchange login
 
-`UC_101_15` · phase: **delivery** · confidence: **Medium**
+`UC_101_14` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +93,7 @@ union isfuzzy=true
 
 ### [LLM] Crimson Collective: TruffleHog secret-scanning followed by Microsoft Graph data exfiltration
 
-`UC_101_16` · phase: **actions** · confidence: **Medium**
+`UC_101_15` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +128,7 @@ trufflehogActors
 
 ### [LLM] MeowBackConn proxy DLL load (meow_*.dll) on Gootloader-infected hosts
 
-`UC_101_17` · phase: **install** · confidence: **High**
+`UC_101_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -548,7 +546,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q1 2026: Phishing reemerges as top initial access vector, as attacks t
 
-`UC_101_14` · phase: **exploit** · confidence: **High**
+`UC_101_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -599,13 +597,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `adobe.com`
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-20393`, `CVE-2023-20198`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 17 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

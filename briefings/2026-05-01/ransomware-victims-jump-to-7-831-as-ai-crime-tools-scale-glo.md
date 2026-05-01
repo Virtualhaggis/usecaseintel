@@ -322,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Victims Jump to 7,831 as AI Crime Tools Scale Global Attacks
 
-`UC_4_8` · phase: **exploit** · confidence: **High**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

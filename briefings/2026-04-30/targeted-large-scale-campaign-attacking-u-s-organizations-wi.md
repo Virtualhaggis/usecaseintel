@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser-spawned RMM installer (ScreenConnect/ITarian/Datto) — fake invitation lure
 
-`UC_21_6` · phase: **install** · confidence: **High**
+`UC_22_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake-invitation phishing URI sequence: /favicon.ico -> /blocked.html -> /Image/*.png
 
-`UC_21_7` · phase: **delivery** · confidence: **Medium**
+`UC_22_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

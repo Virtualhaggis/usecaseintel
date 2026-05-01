@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Qilin RDP recon: PowerShell query of TerminalServices-RemoteConnectionManager Event ID 1149
 
-`UC_19_11` · phase: **actions** · confidence: **High**
+`UC_20_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] Rogue ScreenConnect / RMM install spawning PowerShell host-recon on a non-IT endpoint
 
-`UC_19_12` · phase: **install** · confidence: **Medium**
+`UC_20_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

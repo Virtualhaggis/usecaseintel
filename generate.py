@@ -361,6 +361,22 @@ _IOC_DOMAIN_ALLOWLIST = {
     "apple.com", "icloud.com", "me.com", "mac.com", "appstoreios.apple.com",
     "amazon.com", "aws.amazon.com", "amazonaws.com", "amazonses.com",
     "cloudflare.com", "cloudflare-dns.com", "cdnjs.cloudflare.com",
+    "adobe.com", "adobeid.com", "creativecloud.adobe.com",
+    # Major enterprise / chip / hardware vendors — legitimate platforms
+    # that show up in articles as victim or context, never as adversary
+    # infrastructure. Subdomain-match strips e.g. "support.cisco.com".
+    "intel.com", "amd.com", "nvidia.com", "qualcomm.com", "broadcom.com", "arm.com",
+    "ibm.com", "redhat.com", "oracle.com", "sap.com", "sap.de",
+    "vmware.com", "citrix.com",
+    "cisco.com", "fortinet.com", "paloaltonetworks.com", "checkpoint.com",
+    "dell.com", "hp.com", "hpe.com", "lenovo.com", "samsung.com", "sony.com",
+    # SaaS platforms with enormous legitimate user bases
+    "salesforce.com", "force.com", "salesforce-experience.com",
+    "zendesk.com", "hubspot.com", "intercom.com", "zoom.us",
+    "slack.com", "discord.com", "telegram.org",
+    "dropbox.com", "box.com", "wetransfer.com",
+    # Document signing / e-sign platforms
+    "docusign.com", "docusign.net", "echosign.com", "adobe-sign.com",
     "facebook.com", "fb.com", "instagram.com", "whatsapp.com", "twitter.com",
     "x.com", "linkedin.com", "reddit.com", "pinterest.com", "tiktok.com",
     # Dev / package ecosystems
