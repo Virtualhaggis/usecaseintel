@@ -5905,8 +5905,8 @@ function renderActorsMap(filtered) {
       code, name: COUNTRY_LABELS[code] || code,
       lat: ll.lat, lng: ll.lng,
       count: info.count,
-      altitude: 0.04 + (info.count / maxCount) * 0.18,
-      radius: 0.4 + (info.count / maxCount) * 1.6,
+      altitude: 0.06 + (info.count / maxCount) * 0.22,
+      radius: 1.4 + (info.count / maxCount) * 2.6,    // chunkier so they're easy to click on a moving globe
       color,
       names: info.names.slice(0, 8).join(', ') + (info.names.length > 8 ? ' +' + (info.names.length - 8) + ' more' : ''),
       isActive: actorsCountryFilter === code
@@ -5914,6 +5914,15 @@ function renderActorsMap(filtered) {
   });
   const container = document.getElementById('actorsGlobe');
   if (!container) return;
+  // Build a parallel ring dataset — concentric pulsing rings under
+  // each pin make the click target visually larger and animated, so
+  // it's obvious where to tap on a slowly-rotating globe.
+  const rings = pins.map(p => ({
+    lat: p.lat, lng: p.lng,
+    color: p.color,
+    maxR: 4 + (p.count / maxCount) * 6,
+  }));
+
   if (!_globe) {
     container.innerHTML = '';   // strip the loading placeholder
     _globe = Globe()(container)
@@ -5925,6 +5934,15 @@ function renderActorsMap(filtered) {
       .pointAltitude('altitude')
       .pointRadius('radius')
       .pointColor('color')
+      // Globe.gl Three.js raycaster: bigger pointer-event radius makes
+      // pins easier to click even while the globe rotates underneath.
+      .pointResolution(8)
+      .ringsData(rings)
+      .ringColor(d => () => d.color)
+      .ringMaxRadius('maxR')
+      .ringPropagationSpeed(2)
+      .ringRepeatPeriod(1800)
+      .ringAltitude(0.005)
       .pointLabel(d => `<div style="background:rgba(15,16,20,0.92); padding:8px 12px; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#f7f8f8; font-family:Inter,system-ui; font-size:12px;">
         <div style="font-weight:600; font-size:13px;">${d.name}</div>
         <div style="color:#9b8afb; margin-top:2px;">${d.count} actor${d.count===1?'':'s'}</div>
@@ -5938,13 +5956,26 @@ function renderActorsMap(filtered) {
         });
         applyActorsFilter();
       })
+      .onPointHover(p => {
+        if (!_globe.controls || !_globe.controls()) return;
+        // Pause auto-rotate when the user is over a pin so clicks land
+        _globe.controls().autoRotate = !p;
+      })
       .pointsData(pins);
-    // Auto-rotate when idle
+    // Auto-rotate when idle; user interaction (drag) pauses it.
     setTimeout(() => {
       if (_globe.controls && _globe.controls()) {
         _globe.controls().autoRotate = true;
         _globe.controls().autoRotateSpeed = 0.5;
         _globe.controls().enableZoom = true;
+        // Pause rotation while the cursor is inside the globe element
+        // — gives the user a still target to click. Resume on leave.
+        container.addEventListener('mouseenter', () => {
+          if (_globe.controls()) _globe.controls().autoRotate = false;
+        });
+        container.addEventListener('mouseleave', () => {
+          if (_globe.controls()) _globe.controls().autoRotate = true;
+        });
       }
     }, 100);
     // Resize on viewport change
@@ -5956,7 +5987,7 @@ function renderActorsMap(filtered) {
     window.addEventListener('resize', resize);
     setTimeout(resize, 50);
   } else {
-    _globe.pointsData(pins);
+    _globe.pointsData(pins).ringsData(rings);
   }
 }
 const COUNTRY_LABELS = {
