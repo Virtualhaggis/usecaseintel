@@ -4,20 +4,22 @@ REM Runs generate.py with OAuth so LLM bespoke UCs come through, then
 REM commits + pushes any refreshed intel/ catalog/ briefings/ index.html
 REM back to GitHub Pages so the site stays live and current.
 REM
-REM Logs each run to logs\auto_<date>.log so failures are traceable.
+REM Locale-independent timestamp via PowerShell (the previous %date%
+REM slicing broke on UK / non-US date formats and produced an invalid
+REM logfile path that silently dropped the output).
 setlocal
 cd /d "%~dp0"
 if not exist logs mkdir logs
 
-set TS=%date:~10,4%-%date:~4,2%-%date:~7,2%_%time:~0,2%%time:~3,2%%time:~6,2%
-set TS=%TS: =0%
-set LOG=logs\auto_%TS%.log
+for /f "delims=" %%t in ('powershell -nop -c "Get-Date -Format yyyy-MM-ddTHH:mm:ss"') do set TS=%%t
+set LOG=logs\auto.log
 
->>"%LOG%" echo === run_once start %date% %time% ===
+>>"%LOG%" echo.
+>>"%LOG%" echo === run_once start %TS% ===
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 py generate.py 1>>"%LOG%" 2>>&1
 if errorlevel 1 (
-  >>"%LOG%" echo [!] generate.py FAILED
+  >>"%LOG%" echo [!] generate.py FAILED rc=%errorlevel%
   exit /b 1
 )
 
@@ -26,7 +28,7 @@ git add intel/ catalog/ briefings/ daily_digest.md index.html 1>>"%LOG%" 2>>&1
 git diff --cached --quiet
 if errorlevel 1 (
   >>"%LOG%" echo [git] changes detected — committing
-  git commit -m "auto: scheduled pipeline run (%TS%)" 1>>"%LOG%" 2>>&1
+  git commit -m "auto: scheduled pipeline run %TS%" 1>>"%LOG%" 2>>&1
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [!] push FAILED — resolve manually
@@ -36,5 +38,5 @@ if errorlevel 1 (
 ) else (
   >>"%LOG%" echo [git] no changes
 )
->>"%LOG%" echo === run_once done %date% %time% ===
+>>"%LOG%" echo === run_once done ===
 endlocal
