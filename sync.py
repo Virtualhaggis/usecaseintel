@@ -220,6 +220,8 @@ def fetch_attack():
     bundle = json.loads(raw)
     techniques = {}      # T1234[.001] -> {name, tactics, kill_chain}
     tactics = {}         # tactic short name -> long name
+    groups_raw = {}      # stix-id -> group dict (intermediate, joined later)
+    rels = []            # uses-relationships joined to groups + techniques
     for obj in bundle.get("objects", []):
         t = obj.get("type")
         if t == "x-mitre-tactic":
@@ -238,8 +240,57 @@ def fetch_attack():
                 "kill_chain_phases": kc,
                 "deprecated": obj.get("x_mitre_deprecated", False) or obj.get("revoked", False),
             }
-    print(f"    techniques: {len(techniques)}, tactics: {len(tactics)}")
-    return techniques, tactics
+        elif t == "intrusion-set":
+            # MITRE-tracked threat group (APT / e-crime / hacktivist).
+            # External ref source_name=mitre-attack carries the G####
+            # canonical id.
+            gid = None
+            for ref in obj.get("external_references", []):
+                if ref.get("source_name") == "mitre-attack":
+                    gid = ref.get("external_id")
+                    break
+            if not gid:
+                continue
+            aliases = list(obj.get("aliases", []) or [])
+            # MITRE includes the canonical name in aliases sometimes; dedupe
+            name = obj.get("name", "")
+            if name and name not in aliases:
+                aliases = [name] + aliases
+            groups_raw[obj.get("id", "")] = {
+                "name": name,
+                "aliases": aliases,
+                "mitre_id": gid,
+                "description": (obj.get("description", "") or "")[:1200],
+                "techniques": [],   # filled via relationships pass below
+                "deprecated": obj.get("x_mitre_deprecated", False) or obj.get("revoked", False),
+            }
+        elif t == "relationship" and obj.get("relationship_type") == "uses":
+            rels.append((obj.get("source_ref", ""), obj.get("target_ref", "")))
+
+    # Build a stix-id -> tid map so we can join relationships -> technique ids
+    stix_to_tid = {}
+    for obj in bundle.get("objects", []):
+        if obj.get("type") == "attack-pattern":
+            for ref in obj.get("external_references", []):
+                if ref.get("source_name") == "mitre-attack":
+                    stix_to_tid[obj.get("id", "")] = ref.get("external_id")
+                    break
+
+    # Wire relationships: every (group-id, technique-id) "uses" pair
+    for src, tgt in rels:
+        if src in groups_raw and tgt in stix_to_tid:
+            tid = stix_to_tid[tgt]
+            if tid not in groups_raw[src]["techniques"]:
+                groups_raw[src]["techniques"].append(tid)
+
+    # Drop deprecated, sort techniques inside each group, keyed by gid
+    groups = {}
+    for g in groups_raw.values():
+        if g["deprecated"]: continue
+        g["techniques"].sort()
+        groups[g["mitre_id"]] = g
+    print(f"    techniques: {len(techniques)}, tactics: {len(tactics)}, groups: {len(groups)}")
+    return techniques, tactics, groups
 
 
 # -------- Build CIM registry from ESCU detections -----------------------------
@@ -357,7 +408,7 @@ def main():
     detections, macros = fetch_security_content()
     cim = derive_cim_registry(detections)
     escu_index = index_detections(detections)
-    techniques, tactics = fetch_attack()
+    techniques, tactics, groups = fetch_attack()
     defender_queries = fetch_defender_queries()
     defender_tables, defender_actions, defender_hints = derive_defender_registry(defender_queries)
 
@@ -369,6 +420,7 @@ def main():
             "escu_detections": len(escu_index),
             "attack_techniques": len(techniques),
             "attack_tactics": len(tactics),
+            "attack_groups": len(groups),
             "macros": len(macros),
             "defender_tables": len(defender_tables),
             "defender_kql_blocks": len(defender_queries),
@@ -377,6 +429,7 @@ def main():
         "escu_detections": escu_index,
         "attack_techniques": techniques,
         "attack_tactics": tactics,
+        "attack_groups": groups,
         "defender_tables": defender_tables,
         "defender_action_types": defender_actions,
         "defender_table_popularity": defender_hints,

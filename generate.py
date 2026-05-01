@@ -3515,7 +3515,10 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 
 /* ----- Threat Actors tab --------------------------------------------- */
 .actors-wrap{
-  max-width:1280px; margin:0 auto; padding:18px 28px 60px;
+  /* Widened to 1600px now that the MITRE Groups merge brings ~140
+     more entries into the grid — gives 4-column card layout breathing
+     room on 1440-2560px monitors. */
+  max-width:1600px; margin:0 auto; padding:18px 28px 60px;
 }
 
 /* ----- World map (Threat Actors hero) -------------------------------- */
@@ -6396,16 +6399,45 @@ function renderActorView(name) {
       window._actorDrawerStack.push({type:'actor', name:a.name});
       renderArticleInDrawer(jumpId, articleIds, a.name);
     }));
-  // Wire UC accordion rows — first expand lazy-clones the UC body
-  // (SPL + KQL tabs, techniques, data sources) from the source
-  // article card. After that the <details> handles open/close.
-  body.querySelectorAll('details.actor-uc-row').forEach(d => {
+  // Wire UC accordion rows — first expand lazy-renders the UC body.
+  // Three sources of UC body content:
+  //   1. Article-bound UC: clone from the source article card DOM.
+  //   2. MITRE-derived UC (technique-match, no article): build a
+  //      tabbed Defender-KQL / Splunk-SPL view from uc.splunk/uc.kql.
+  //   3. UC sidecar lookup (window.__UC_DETAILS__) as fallback for
+  //      internal/ESCU detections referenced by name.
+  body.querySelectorAll('details.actor-uc-row').forEach((d, idx) => {
     d.addEventListener('toggle', () => {
       if (!d.open) return;
       const panel = d.querySelector('.actor-uc-body');
       if (!panel || panel.dataset.loaded === 'true') return;
       const artId = d.dataset.artId;
       const wantTitle = d.dataset.ucTitle;
+      const ucData = sortedUcs[idx] || {};
+      // Path 2: MITRE-match — render embedded SPL/KQL via tabs
+      if (ucData.is_mitre_match) {
+        const uid = 'auc-' + Math.random().toString(36).slice(2,8);
+        let html = '<div class="uc-body" style="padding:14px 16px;">';
+        if (ucData.techs && ucData.techs.length) {
+          html += '<div class="uc-meta"><span class="ind-label">ATT&amp;CK</span>' +
+            ucData.techs.map(t => '<span class="ind tech">'+escapeHtml(t)+'</span>').join(' ') + '</div>';
+        }
+        if (ucData.kql || ucData.splunk) {
+          html += '<div class="tabs">';
+          if (ucData.kql) html += '<button class="tab-btn active" data-target="'+uid+'-kql">Defender KQL</button>';
+          if (ucData.splunk) html += '<button class="tab-btn '+(ucData.kql?'':'active')+'" data-target="'+uid+'-spl">Splunk SPL (CIM)</button>';
+          html += '</div>';
+          if (ucData.kql) html += '<div class="tab-content active" id="'+uid+'-kql"><pre><code>'+escapeHtml(ucData.kql)+'</code></pre></div>';
+          if (ucData.splunk) html += '<div class="tab-content '+(ucData.kql?'':'active')+'" id="'+uid+'-spl"><pre><code>'+escapeHtml(ucData.splunk)+'</code></pre></div>';
+        } else {
+          html += '<div class="drawer-empty">Generic technique match — no SPL/KQL body in catalog yet.</div>';
+        }
+        html += '</div>';
+        panel.innerHTML = html;
+        panel.dataset.loaded = 'true';
+        return;
+      }
+      // Path 1: article-bound UC — find <details class="uc"> in source card
       const sourceArt = document.getElementById(artId);
       let target = null;
       if (sourceArt) {
@@ -6416,13 +6448,7 @@ function renderActorView(name) {
       if (target) {
         const innerBody = target.querySelector('.uc-body');
         if (innerBody) {
-          const clone = innerBody.cloneNode(true);
-          // Preserve interactive sub-tabs (Defender KQL / Splunk SPL)
-          // — they listen for clicks on their own .tab-btn buttons,
-          // which the existing global handler picks up via event-
-          // delegation. Cloning keeps them functional.
-          panel.appendChild(clone);
-          // Add a tiny "View source article" link below the body
+          panel.appendChild(innerBody.cloneNode(true));
           panel.insertAdjacentHTML('beforeend',
             '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ Open source article</a></div>');
           panel.querySelector('.actor-uc-srcart')?.addEventListener('click', e => {
@@ -6431,16 +6457,10 @@ function renderActorView(name) {
             renderArticleInDrawer(artId, articleIds, a.name);
           });
         } else {
-          panel.innerHTML = '<div class="drawer-empty">UC body not available — try refreshing the page.</div>';
+          panel.innerHTML = '<div class="drawer-empty">UC body not available.</div>';
         }
       } else {
-        panel.innerHTML = '<div class="drawer-empty">UC body not found in source article. Tap "→ Open source article" below.</div>'
-          + '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ Open source article</a></div>';
-        panel.querySelector('.actor-uc-srcart')?.addEventListener('click', e => {
-          e.preventDefault();
-          window._actorDrawerStack.push({type:'actor', name:a.name});
-          renderArticleInDrawer(artId, articleIds, a.name);
-        });
+        panel.innerHTML = '<div class="drawer-empty">UC body not in current article payload.</div>';
       }
       panel.dataset.loaded = 'true';
     });
@@ -8880,6 +8900,215 @@ def main():
               f"{matrix_data['stats']['total_subs']} sub-techniques, "
               f"{matrix_data['stats']['covered_techs']} with use-case or article coverage")
     matrix_json = __import__("json").dumps(matrix_data) if matrix_data else "null"
+
+    # ===== MITRE-sourced groups =====================================
+    # Pull every intrusion-set in the MITRE ATT&CK catalog and merge
+    # them into actor_index so the Threat Actors tab shows the full
+    # ~170-group reference, not just the ~30 actors mentioned in
+    # recent articles.
+    #
+    # For each MITRE group:
+    #  - merge with our manual entry if name/alias overlaps (manual
+    #    entry's country + motivation win)
+    #  - else create a new entry with country/motivation derived from
+    #    a small heuristic table (see _mitre_country_for / _mitre_mot_for)
+    #  - link UCs by intersecting the group's MITRE techniques with
+    #    catalog UCs that target those techniques. These come out as
+    #    'mitre-derived' entries flagged is_mitre_match=True so the
+    #    drawer can label them differently from article-driven UCs.
+    try:
+        reg = __import__("json").loads(REGISTRY_PATH_FOR_MATRIX.read_text(encoding="utf-8"))
+        mitre_groups = reg.get("attack_groups") or {}
+    except Exception as _e:
+        print(f"[!] Failed to load attack_groups from registry: {_e}")
+        reg = {}
+        mitre_groups = {}
+    print(f"[*] MITRE attack_groups loaded: {len(mitre_groups)}")
+
+    # Country / motivation overrides for MITRE groups whose attribution
+    # is well-known but not encoded in the STIX bundle. Keyed by canonical
+    # name; covers the major nation-state actors. Anything not listed
+    # falls back to "??" / "unknown".
+    _MITRE_COUNTRY = {
+        # Russia
+        "APT28":"RU","APT29":"RU","Sandworm Team":"RU","Turla":"RU","Gamaredon Group":"RU",
+        "Dragonfly":"RU","Cadet Blizzard":"RU","FIN7":"RU","TA505":"RU","Wizard Spider":"RU",
+        "BlackByte":"RU","INC Ransom":"RU","RomCom":"RU","TEMP.Veles":"RU","FIN8":"RU",
+        # China
+        "APT41":"CN","APT10":"CN","APT3":"CN","APT12":"CN","APT16":"CN","APT17":"CN",
+        "APT18":"CN","APT19":"CN","APT26":"CN","APT30":"CN","Volt Typhoon":"CN",
+        "Salt Typhoon":"CN","Silk Typhoon":"CN","Mustang Panda":"CN","GALLIUM":"CN",
+        "Storm-0558":"CN","Earth Lusca":"CN","Tropic Trooper":"CN","Naikon":"CN",
+        "Threat Group-3390":"CN","Axiom":"CN","Deep Panda":"CN","Suckfly":"CN",
+        "Stone Panda":"CN","Hafnium":"CN","Aoqin Dragon":"CN","Daggerfly":"CN",
+        "Liminal Panda":"CN","Flax Typhoon":"CN","Linen Typhoon":"CN","Granite Typhoon":"CN",
+        "Storm-2077":"CN","Brass Typhoon":"CN","MirrorFace":"CN","BlackTech":"CN",
+        # North Korea
+        "Lazarus Group":"KP","Kimsuky":"KP","APT37":"KP","APT38":"KP","Andariel":"KP",
+        "BlueNoroff":"KP","Moonstone Sleet":"KP","Citrine Sleet":"KP","Famous Chollima":"KP",
+        # Iran
+        "APT33":"IR","APT34":"IR","APT35":"IR","APT39":"IR","MuddyWater":"IR",
+        "Imperial Kitten":"IR","Pioneer Kitten":"IR","Magic Hound":"IR",
+        "Charming Kitten":"IR","OilRig":"IR","Refined Kitten":"IR","Cyber Av3ngers":"IR",
+        # Pakistan / India
+        "Transparent Tribe":"PK","SideCopy":"PK","Patchwork":"IN","SideWinder":"IN",
+        # Vietnam
+        "APT32":"VN",
+        # Lebanon
+        "Volatile Cedar":"LB",
+        # Brazil
+        "LAPSUS$":"BR","Lapsus$":"BR",
+        # USA / Five Eyes
+        "Equation":"US","Scattered Spider":"US","Tortoiseshell":"US",
+    }
+    _COUNTRY_FLAGS = {
+        "RU":"🇷🇺","CN":"🇨🇳","KP":"🇰🇵","IR":"🇮🇷","IN":"🇮🇳","PK":"🇵🇰",
+        "VN":"🇻🇳","MY":"🇲🇾","LB":"🇱🇧","BR":"🇧🇷","US":"🇺🇸","??":"🌐"
+    }
+
+    def _motivation_for(group_name, group_aliases):
+        """Heuristic: state if it's an APT-style nation-state actor;
+        criminal if name/alias mentions ransomware / e-crime keywords;
+        else unknown."""
+        text = (group_name + " " + " ".join(group_aliases)).lower()
+        if any(s in text for s in ["ransom", "evil corp", "darkside", "blackcat", "alphv",
+                                    "lockbit", "conti", "revil", "cl0p", "clop", "akira",
+                                    "play ransomware", "qilin", "medusa", "trinity",
+                                    "ta505", "fin6", "fin7", "fin8", "fin11", "blackbasta",
+                                    "rhysida", "hellcat", "embargo", "stormous", "killsec",
+                                    "wizard spider", "gold ", "indrik spider"]):
+            return "criminal"
+        if any(s in text for s in ["apt", "bear", "panda", "kitten", "tiger", "leopard",
+                                    "buffalo", "spider apt", "typhoon", "blizzard", "sleet",
+                                    "sandstorm", "chollima", "lazarus", "kimsuky",
+                                    "muddywater", "turla", "sandworm", "gamaredon",
+                                    "transparent tribe", "patchwork", "sidewinder",
+                                    "oceanlotus", "cyber av3ngers", "volatile cedar"]):
+            return "state"
+        return "unknown"
+
+    # Build alias -> canonical actor name lookup so we can merge
+    # MITRE entries into our manually-curated ones.
+    _existing_alias_lc = {}
+    for k, e in actor_index.items():
+        for a in e.get("aliases", []) + [e["name"]]:
+            _existing_alias_lc[a.lower()] = k
+
+    # Pre-compute: for each technique id, which of the catalog's UCs
+    # cover it. We use _LOADED_UCS plus the matrix sidecar (built from
+    # ESCU detections + internal yaml UCs) so the join works against
+    # the full ~2238-entry catalog.
+    techs_to_ucs = {}      # tid -> [{name, source, splunk, kql, conf, kc, src_id}]
+    if _LOADED_UCS:
+        for uc_id, uc in _LOADED_UCS.items():
+            for tid, _tname in (uc.techniques or []):
+                techs_to_ucs.setdefault(tid, []).append({
+                    "name": uc.title,
+                    "source": "internal",
+                    "src_id": uc_id,
+                    "kc": uc.kill_chain,
+                    "conf": uc.confidence,
+                    "splunk": uc.splunk_spl or "",
+                    "kql": uc.defender_kql or "",
+                    "techs": [t for t,_ in (uc.techniques or [])],
+                })
+    try:
+        for det in ((reg or {}).get("escu_detections") or []):
+            for tid in (det.get("techniques") or []):
+                techs_to_ucs.setdefault(tid, []).append({
+                    "name": det.get("name") or "",
+                    "source": "splunk_escu",
+                    "src_id": (det.get("id") or "")[:36],
+                    "kc": (det.get("kill_chain_phases") or [""])[0],
+                    "conf": det.get("type", "Detection"),
+                    "splunk": det.get("search", ""),
+                    "kql": "",
+                    "techs": det.get("techniques") or [],
+                })
+    except Exception:
+        pass
+
+    mitre_added = 0
+    mitre_merged = 0
+    for gid, g in (mitre_groups or {}).items():
+        gname = g["name"]
+        existing = None
+        for alias in g["aliases"]:
+            cand = _existing_alias_lc.get(alias.lower())
+            if cand:
+                existing = cand; break
+        country = _MITRE_COUNTRY.get(gname, "??")
+        motivation = _motivation_for(gname, g["aliases"])
+        techs = g.get("techniques") or []
+        if existing:
+            # Merge into existing entry — augment aliases + techniques,
+            # don't override country/motivation (manual catalog wins).
+            entry = actor_index[existing]
+            for a in g["aliases"]:
+                if a not in entry["aliases"]:
+                    entry["aliases"].append(a)
+            for tid in techs:
+                entry["techs"].add(tid)
+            if not entry.get("mitre_id"):
+                entry["mitre_id"] = gid
+            mitre_merged += 1
+        else:
+            # New MITRE-only entry. No article references; UCs come
+            # purely from technique→UC matching.
+            actor_index[gname] = {
+                "name": gname,
+                "country": country,
+                "flag": _COUNTRY_FLAGS.get(country, "🌐"),
+                "motivation": motivation,
+                "aliases": g["aliases"],
+                "mitre_id": gid,
+                "articles": [],
+                "uc_count": 0,
+                "llm_uc_count": 0,
+                "techs": set(techs),
+                "tech_freq": {tid: 1 for tid in techs},
+                "iocs": {"cves": set(), "ips": set(), "domains": set(), "hashes": set()},
+                "sev_dist": {"crit":0, "high":0, "med":0, "low":0},
+                "first_seen": None, "last_seen": None,
+                "ucs": [],
+                "is_mitre_only": True,
+                "mitre_description": g.get("description", "")[:600],
+            }
+            mitre_added += 1
+        # Build UCs for this group from technique matching. Cap at 12
+        # to keep payload light and prefer alerting-tier internal ones.
+        entry = actor_index.get(existing) or actor_index.get(gname)
+        if not entry: continue
+        seen = set((u.get("name") for u in entry["ucs"]))
+        candidates = []
+        for tid in techs:
+            for uc in (techs_to_ucs.get(tid) or [])[:6]:
+                if uc["name"] in seen: continue
+                candidates.append(uc)
+                seen.add(uc["name"])
+        # Prefer LLM-prefixed (none here, but future-proof) then internal then ESCU
+        candidates.sort(key=lambda u: (
+            0 if (u["name"] or "").startswith("[LLM]") else 1,
+            0 if u["source"] == "internal" else 1,
+            (u["name"] or "").lower(),
+        ))
+        for uc in candidates[:12]:
+            if len(entry["ucs"]) >= 24: break  # generous slim cap for MITRE-rich actors
+            entry["ucs"].append({
+                "title": uc["name"],
+                "is_llm": (uc["name"] or "").startswith("[LLM]"),
+                "phase": uc["kc"],
+                "conf": uc["conf"],
+                "techs": uc["techs"][:5],
+                "art_id": "",
+                "art_title": "",
+                "is_mitre_match": True,
+                "splunk": uc["splunk"],
+                "kql": uc["kql"],
+            })
+
+    print(f"[*] MITRE Groups merged: {mitre_added} new + {mitre_merged} merged into existing actors")
+
     # Threat-actor payload — sets are converted to sorted lists for JSON.
     actors_serialisable = []
     for entry in actor_index.values():
@@ -8893,17 +9122,27 @@ def main():
             "aliases": entry["aliases"],
             "mitre_id": entry["mitre_id"],
             "articles": entry["articles"],
-            "uc_count": entry["uc_count"],
+            "uc_count": entry["uc_count"] + sum(1 for u in entry["ucs"] if u.get("is_mitre_match")),
             "llm_uc_count": entry["llm_uc_count"],
             "techs": sorted(entry["techs"]),
-            "top_techs": [t for t, _c in top_techs],
+            "top_techs": [t for t, _c in top_techs] if top_techs else sorted(entry["techs"])[:3],
             "iocs": {k: sorted(v) for k, v in entry["iocs"].items()},
             "sev_dist": entry["sev_dist"],
             "first_seen": entry["first_seen"] or "",
             "last_seen": entry["last_seen"] or "",
             "ucs": entry["ucs"],
+            "is_mitre_only": entry.get("is_mitre_only", False),
+            "mitre_description": entry.get("mitre_description", ""),
         })
-    actors_serialisable.sort(key=lambda e: (-len(e["articles"]), e["name"]))
+    # Sort: actors with article references first (most active), then
+    # MITRE-only by name. So the analyst sees recent-news actors at
+    # the top; MITRE-catalog reference entries follow.
+    actors_serialisable.sort(key=lambda e: (
+        0 if not e.get("is_mitre_only") else 1,
+        -len(e["articles"]),
+        -e["uc_count"],
+        e["name"]
+    ))
     actors_json = __import__("json").dumps(actors_serialisable, separators=(",", ":"))
     print(f"[*] Threat actors detected: {len(actors_serialisable)} unique  ->  page payload")
 
