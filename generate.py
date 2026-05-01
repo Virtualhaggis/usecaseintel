@@ -2558,125 +2558,260 @@ body:not(.view-intel-active)    .stats-intel{
   .stats-wrap{ min-height:auto; }
 }
 
-/* ===== Mobile (≤780px) — comprehensive responsive pass ===============
-   The desktop layout assumes 1280-2560px viewports. On phones we need
-   to: stack the topbar, scroll the view-tabs horizontally, hide the
-   large summary-stats hero (it's cramped at 390px), shrink brand/logo,
-   compact card padding, stack filter groups vertically, give the
-   matrix horizontal scroll, and make drawers full-screen. */
+/* ===== Mobile (≤780px) — proper responsive pass =====================
+   Goals:
+   1. Native-app-feel: bigger touch targets (44px+), smooth horizontal
+      scroll on tab bars, sticky topbar with safe-area padding.
+   2. Readable type — 15px body (not 12-13px), 1.55+ line-height.
+   3. Generous vertical rhythm — 16-20px gaps between sections.
+   4. Drawers slide up as full-screen sheets, not centered modals.
+   5. Active/touched states (no hover on touch).
+   6. Hide every desktop chrome that doesn't earn its place on phone. */
 @media(max-width:780px){
-  /* Topbar — single tight row, brand left, search right, tabs below */
-  .topbar-inner{padding:8px 12px; gap:10px;}
-  .brand{font-size:15px; gap:8px;}
-  .brand .logo{width:38px; height:38px; border-radius:8px;}
-  .brand-text > span:first-child{font-size:14px;}
+  /* Use the device safe-area on iOS so content isn't behind the notch
+     or the bottom home indicator. */
+  body{
+    padding-top:env(safe-area-inset-top);
+    padding-left:env(safe-area-inset-left);
+    padding-right:env(safe-area-inset-right);
+  }
+  /* === Topbar — two clean rows, brand top, scrollable tabs below === */
+  .topbar{padding-top:env(safe-area-inset-top);}
+  .topbar-inner{
+    padding:10px 14px;
+    flex-direction:column; align-items:stretch; gap:10px;
+  }
+  /* Row 1: brand + search */
+  .brand{
+    font-size:16px; gap:10px;
+    width:100%;
+  }
+  .brand .logo{
+    width:42px; height:42px; border-radius:10px;
+    flex-shrink:0;
+  }
+  .brand-text > span:first-child{font-size:16px; letter-spacing:-0.014em;}
   .stats-wrap{display:none;}
   .search-trigger{
-    min-width:0; padding:6px 10px; font-size:11.5px;
+    min-width:0; padding:8px 12px; font-size:12.5px;
+    margin-left:auto;
   }
   .search-placeholder{display:none;}
   .search-shortcut{margin-left:0;}
-  /* View tabs — horizontal-scroll the row instead of wrapping */
+  /* Row 2: scrolling view-tab pill bar — feels native */
   .view-tabs{
     width:100%; max-width:100%;
     overflow-x:auto; overflow-y:hidden;
     -webkit-overflow-scrolling:touch;
     scrollbar-width:none;
-    flex-wrap:nowrap; padding:3px;
+    flex-wrap:nowrap; padding:4px;
+    scroll-snap-type:x proximity;
   }
   .view-tabs::-webkit-scrollbar{display:none;}
-  .view-tab{flex:0 0 auto; padding:6px 12px; font-size:12.5px;}
+  .view-tab{
+    flex:0 0 auto;
+    padding:9px 16px;            /* taller — proper touch target */
+    font-size:13.5px;
+    scroll-snap-align:center;
+    min-height:36px;
+  }
 
-  /* Article main grid — stack TOC above content (already 1-col via 980px
-     rule). Reduce padding for tighter edge-to-edge feel. */
+  /* === Articles main grid — stacked, edge-friendly padding === */
   main, main.width-compact, main.width-wide, main.width-full{
-    padding:12px;
+    padding:14px;
+    gap:14px;
   }
   nav.toc{
-    position:static; max-height:none; padding:8px;
-    margin-bottom:12px;
+    position:static; max-height:none;
+    padding:12px; border-radius:var(--r-md);
+    margin-bottom:0;
   }
-  /* Article cards — tighter padding, smaller h2 */
-  article.card{padding:18px 16px; font-size:13px;}
-  article.card h2{font-size:17px; line-height:1.3;}
-  article.card .pubmeta{font-size:11px; gap:8px;}
-  article.card p.summary{font-size:13px;}
-  article.card .sev-ribbon{left:14px; font-size:9.5px;}
-
-  /* Filter toolbar — every group stacks; no horizontal wasted space */
-  .filter-toolbar{padding:10px 12px;}
-  .filter-toolbar .ft-group{
-    flex-direction:column; align-items:flex-start; gap:6px;
+  nav.toc h3{font-size:11px; margin:0 4px 8px;}
+  .nav-item{
+    padding:11px 10px; gap:12px; font-size:13px;
+    min-height:44px; align-items:center;     /* touch target */
   }
-  .filter-toolbar .ft-label{min-width:0;}
-  .width-toggle{margin-left:0; align-self:flex-start;}
+  .nav-item .num{font-size:12px;}
 
-  /* Article-tab feature info banner — keep readable on narrow */
-  .info-banner summary{padding:9px 12px; font-size:12.5px;}
-  .info-banner .info-body{padding:0 14px 12px 32px; font-size:12.5px;}
+  /* Article cards — readable not cramped */
+  article.card{
+    padding:22px 18px 20px;
+    font-size:14px; line-height:1.6;
+    border-radius:var(--r-md);
+  }
+  article.card h2{
+    font-size:19px; line-height:1.3;
+    margin:18px 0 10px;
+    letter-spacing:-0.014em;
+  }
+  article.card .pubmeta{font-size:12px; gap:10px; margin-bottom:14px;}
+  article.card p.summary{font-size:13.5px; line-height:1.55;}
+  article.card .sev-ribbon{left:18px; font-size:10px; padding:4px 11px;}
+  article.card .source-badges{margin:6px 0 4px;}
+  article.card .source-badge{font-size:10.5px; padding:3px 8px;}
+  /* Action row buttons — bigger touch targets */
+  .btn, .btn-kc{
+    min-height:38px; padding:8px 14px; font-size:13px;
+  }
+  /* IOC indicator pills — slightly bigger, less cramped */
+  .ind, .source-badge{min-height:22px; line-height:1.7;}
+
+  /* === Info banner — friendlier defaults === */
+  .info-banner summary{
+    padding:14px 16px; font-size:13.5px;
+    min-height:48px;
+  }
+  .info-banner .info-body{
+    padding:0 16px 16px 44px; font-size:13.5px; line-height:1.65;
+  }
   .info-banner .info-hint{display:none;}
 
-  /* Threat Intel tab */
-  .intel-toolbar{flex-direction:column; align-items:stretch;}
-  .intel-table-wrap{overflow-x:auto;}
+  /* === Filter toolbars (articles + actors) === */
+  .filter-toolbar, .actors-filters{
+    padding:14px;
+    border-radius:var(--r-md);
+  }
+  .filter-toolbar .ft-group, .actors-filters .ft-group{
+    flex-direction:column; align-items:stretch; gap:8px;
+    padding:6px 0;
+  }
+  .filter-toolbar .ft-group + .ft-group,
+  .actors-filters .ft-group + .ft-group{
+    padding-top:12px;
+  }
+  .filter-toolbar .ft-label, .actors-filters .ft-label{
+    min-width:0; font-size:11px;
+  }
+  .filter-toolbar .ft-chips, .actors-filters .ft-chips{gap:6px;}
+  .src-chip, .actors-country-chip{
+    padding:8px 12px; font-size:12.5px;
+    min-height:36px;
+  }
+  .width-toggle{margin-left:0; align-self:flex-start;}
+  .width-toggle button{padding:7px 14px; font-size:11px; min-height:32px;}
 
-  /* Threat Actors tab */
-  .actors-wrap{padding:12px;}
+  /* === Threat Intel tab === */
+  .intel-toolbar{flex-direction:column; align-items:stretch; gap:10px;}
+  .intel-table-wrap{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    border-radius:var(--r-md);
+  }
+
+  /* === Threat Actors tab === */
+  .actors-wrap{padding:14px;}
   .actors-hero{
-    gap:12px 18px; padding:14px 16px;
+    gap:0;
+    padding:14px;
+    border-radius:var(--r-md);
+    /* 2-column stat grid instead of flex-wrap so the layout is tidy */
+    display:grid; grid-template-columns:1fr 1fr;
+    column-gap:14px; row-gap:12px;
   }
-  .actors-hero .hero-stat .v{font-size:18px;}
-  .actors-toolbar{padding:10px 12px;}
-  .actors-toolbar select{flex:1 1 auto;}
-  .actors-filters{padding:10px 12px;}
-  .actors-filters .ft-group{
-    flex-direction:column; align-items:flex-start; gap:6px;
+  .actors-hero .hero-stat .v{font-size:20px;}
+  .actors-hero .hero-stat .l{font-size:10px; letter-spacing:0.05em;}
+  .actors-toolbar{
+    padding:12px 14px; gap:10px;
+    flex-direction:column; align-items:stretch;
   }
-  .actors-filters .ft-label{min-width:0;}
-  .actors-grid{grid-template-columns:1fr; gap:10px;}
-  .actor-card{padding:14px 16px;}
-  .actor-card .ac-flag{font-size:24px;}
-  .actor-card .ac-name{font-size:14px;}
-  .actors-country-chips, .actors-country-chip{font-size:11.5px;}
+  .actors-toolbar input{font-size:14px; padding:11px 14px; min-height:44px;}
+  .actors-toolbar select{
+    width:100%; font-size:14px; padding:11px 12px; min-height:44px;
+  }
+  .actors-grid{grid-template-columns:1fr; gap:12px;}
+  .actor-card{
+    padding:16px 18px; gap:12px;
+    border-radius:var(--r-md);
+  }
+  .actor-card .ac-flag{font-size:28px;}
+  .actor-card .ac-name{font-size:15.5px;}
+  .actor-card .ac-country{font-size:11px;}
+  .actor-card .ac-aliases{font-size:11.5px; line-height:1.5;}
+  .actor-card .ac-stats .ac-stat .v{font-size:18px;}
 
-  /* Matrix tab — horizontal scroll, smaller cells */
-  .matrix-wrap{padding:10px;}
-  .matrix-toolbar{flex-direction:column; align-items:stretch; gap:8px;}
-  #matrixSearch{width:100%;}
-  .matrix-stats{font-size:11px; gap:10px;}
-  .matrix{overflow-x:auto;}
+  /* === Matrix tab === */
+  .matrix-wrap{padding:12px;}
+  .matrix-toolbar{
+    flex-direction:column; align-items:stretch; gap:10px;
+    padding:12px 14px;
+  }
+  #matrixSearch{
+    width:100%; padding:11px 14px; font-size:14px; min-height:44px;
+  }
+  .matrix-mode button{padding:8px 12px; font-size:12px; min-height:38px;}
+  .matrix-stats{font-size:11px; gap:12px; flex-wrap:wrap;}
+  .matrix-legend{padding:10px 12px; font-size:11px;}
+  .matrix-grid, .matrix{
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+  }
 
-  /* Workflow tab — already scrolls SVG. Tighten cards. */
-  .workflow-wrap{padding:14px;}
-  .wf-step{padding:12px 14px; font-size:12.5px;}
-  .wf-card{padding:16px 18px; font-size:13px;}
-  .wf-card h3{font-size:15px;}
+  /* === Workflow + About tab === */
+  .workflow-wrap{padding:16px;}
+  .wf-title{font-size:22px;}
+  .wf-step, .wf-card{padding:16px 18px; font-size:13.5px; line-height:1.6;}
+  .wf-card h3{font-size:16px;}
+  .wf-table thead{display:none;}
+  .wf-diagram{padding:10px;}
 
-  /* Drawers — already 96vw at 768px, ensure inner content fits */
+  /* === Drawers — feel like native bottom sheets === */
+  .drawer-bg{backdrop-filter:none;}      /* perf on lower-end mobiles */
   .drawer{
     width:100vw; height:100vh; max-height:100vh;
+    top:0; left:0; right:0; bottom:0;
+    transform:none;
     border-radius:0;
+    padding-top:env(safe-area-inset-top);
+    padding-bottom:env(safe-area-inset-bottom);
   }
-  .drawer-head h3{font-size:16px;}
-  .drawer-section{padding:0 14px;}
-  .actor-uc-row{flex-wrap:wrap;}
-  .actor-uc-row .uc-techs{font-size:9.5px; flex-basis:100%;}
+  .drawer-head{padding:16px 18px;}
+  .drawer-head h3{font-size:18px; line-height:1.3;}
+  .drawer-section{padding:0 16px; font-size:13.5px;}
+  .drawer-section h4{font-size:13px;}
+  .drawer-close{
+    width:38px; height:38px; font-size:22px;
+    top:12px; right:12px;
+  }
+  .actor-uc-row{flex-wrap:wrap; padding:11px 14px; min-height:44px;}
+  .actor-uc-row .uc-techs{font-size:10.5px; flex-basis:100%;}
+  .uc-card-row{padding:11px 14px; min-height:48px;}
+  .ind.tech, .ind{font-size:11px; padding:3px 8px;}
+  .art-jump{padding:11px 14px; min-height:44px;}
 
-  /* About tab — single-column, less padding */
-  .actors-footer p, .info-banner .info-body p{line-height:1.55;}
-
-  /* Lightbox — let logo image use most of the screen on tap */
+  /* === Lightbox === */
   .logo-lightbox img{
-    max-width:88vw; max-height:70vh; padding:12px; border-radius:14px;
+    max-width:88vw; max-height:72vh; padding:14px; border-radius:14px;
   }
+  .logo-lightbox-close{top:14px; right:14px; width:40px; height:40px;}
+  .logo-lightbox-caption{bottom:24px; font-size:12px;}
+
+  /* === Touch-state polish — remove hover lifts, add active states === */
+  article.card:hover{transform:none;}
+  .actor-card:hover, .src-chip:hover, .view-tab:hover, .nav-item:hover,
+  .actors-country-chip:hover{background:inherit;}
+  .actor-card:active{background:var(--panel2);}
+  .src-chip:active, .actors-country-chip:active{
+    background:var(--panel2); border-color:var(--border-2);
+  }
+  .nav-item:active{background:var(--panel2);}
+  .btn:active, .view-tab:active{background:var(--panel2);}
+
+  /* === Footer + about copy === */
+  .actors-footer p, .info-banner .info-body p{line-height:1.6;}
+  footer{padding:18px 14px; font-size:12px;}
 }
 
-/* Very narrow phones (≤380px) — slim further to prevent overflow */
+/* Very narrow phones (≤380px) — slim further so nothing overflows */
 @media(max-width:380px){
-  .brand-text > span:first-child{font-size:12.5px;}
-  .brand .logo{width:34px; height:34px;}
-  .view-tab{padding:6px 10px; font-size:11.5px;}
-  article.card{padding:14px 12px;}
+  .topbar-inner{padding:9px 12px;}
+  .brand .logo{width:38px; height:38px;}
+  .brand-text > span:first-child{font-size:14.5px;}
+  .view-tab{padding:8px 14px; font-size:13px;}
+  article.card{padding:18px 14px;}
+  article.card h2{font-size:18px;}
+  .actors-hero{grid-template-columns:1fr 1fr; column-gap:10px;}
+  .actors-hero .hero-stat .v{font-size:18px;}
+  .actor-card{padding:14px 16px;}
 }
 /* Workflow tab: no stats bar — purposeful blank space, the diagram speaks */
 .stat{
