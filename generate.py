@@ -2505,6 +2505,65 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
   background:var(--panel); border:1px solid var(--border);
   border-radius:var(--r-md);
 }
+/* Feature filter chips ("Has UCs", "LLM UCs only") sit alongside the
+   source chips in the filter bar. Distinguished from source chips by
+   a left margin separator and an indigo accent on active. */
+.feat-chip{
+  margin-left:6px;
+  position:relative;
+}
+.feat-chip::before{
+  content:""; position:absolute; left:-6px; top:6px; bottom:6px;
+  width:1px; background:var(--border);
+}
+.src-chip.feat-chip.active{
+  box-shadow:inset 2px 0 0 var(--accent);
+  background:rgba(113,112,255,0.08);
+  border-color:var(--border-2); color:var(--text);
+}
+/* LLM-UC info banner — collapsed details/summary that explains what
+   an [LLM] prefix means before the analyst sees the filter. */
+.info-banner{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-md); margin-bottom:10px;
+  font-size:13px;
+}
+.info-banner summary{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; cursor:pointer; list-style:none;
+  color:var(--text); user-select:none;
+  transition:background-color 0.12s;
+}
+.info-banner summary::-webkit-details-marker{display:none;}
+.info-banner summary::before{
+  content:"›"; color:var(--muted); font-size:16px; line-height:1;
+  margin-right:2px; transition:transform 0.18s; display:inline-block;
+}
+.info-banner[open] summary::before{transform:rotate(90deg);}
+.info-banner summary:hover{background:var(--panel-elev);}
+.info-banner .info-icon{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:50%;
+  background:rgba(113,112,255,0.15); color:var(--accent);
+  font-size:11px; font-weight:600; flex-shrink:0;
+}
+.info-banner .info-hint{
+  margin-left:auto; color:var(--muted-2); font-size:11.5px;
+  font-style:italic;
+}
+.info-banner[open] .info-hint{display:none;}
+.info-banner .info-body{
+  padding:0 18px 14px 44px;
+  line-height:1.6; color:var(--muted);
+}
+.info-banner .info-body p{margin:8px 0;}
+.info-banner .info-body p:first-child{margin-top:0;}
+.info-banner .info-body p:last-child{margin-bottom:0;}
+.info-banner .info-body code{
+  background:var(--panel-elev); padding:1px 5px; border-radius:3px;
+  font-size:12px; color:var(--accent-3); font-family:var(--mono);
+}
+.info-banner .info-body strong{color:var(--text);}
 .src-filter-bar .lg-label{flex:0 0 auto; min-width:72px;}
 /* Source filter chips — Linear style. All chips share the same neutral
    panel + hairline; the only difference between sources is a 2px coloured
@@ -3431,8 +3490,52 @@ ul.intel-types-doc code{
     <div id="navlist">__NAV__</div>
   </nav>
   <section id="articles">
+    <!-- LLM-UC explainer: collapsed by default, click to expand. Sits above
+         the source filter so analysts know what an `[LLM]` prefix means
+         before they click "LLM UCs only". -->
+    <details class="info-banner" id="llmInfoBanner">
+      <summary>
+        <span class="info-icon">ℹ︎</span>
+        <strong>What's an <code>[LLM]</code> use case?</strong>
+        <span class="info-hint">click to expand</span>
+      </summary>
+      <div class="info-body">
+        <p>
+          Most use cases on this site come from <strong>generic rule files</strong>
+          (<code>use_cases/*.yml</code>) — they fire whenever an article mentions a
+          known trigger (e.g. <code>psexec</code> → <code>UC_LATERAL_PSEXEC</code>).
+          Useful, but not tailored to the specific attack.
+        </p>
+        <p>
+          UCs prefixed <code>[LLM]</code> are different. The pipeline asks
+          Claude to <strong>read the actual article</strong> and write a
+          detection that hunts <em>exactly that campaign / actor / malware</em>
+          — Defender KQL or Splunk SPL pinned to the IOCs and TTPs the article
+          describes. Cross-checked via WebSearch against vendor advisories
+          (Microsoft Threat Intel, Mandiant, CrowdStrike, MITRE, abuse.ch)
+          and linked back as <em>"Cross-checked against:"</em>.
+        </p>
+        <p>
+          They sort to the top of every article card and the matrix drawer
+          because they're the highest-fidelity content here. Use the
+          <strong>LLM UCs only</strong> filter below to see only articles
+          where Claude generated bespoke detection logic.
+        </p>
+      </div>
+    </details>
     <div class="src-filter-bar" id="srcFilter">
       __SOURCE_CHIPS__
+      <!-- Feature filters — UC-count predicates that complement the source
+           chips. Multiple feature chips AND together; combined with source
+           chips via AND too. -->
+      <button class="src-chip feat-chip" data-feat="has-uc"
+              title="Show only articles that have at least one detection use case">
+        Has UCs <span class="cnt" id="featCntHasUc"></span>
+      </button>
+      <button class="src-chip feat-chip" data-feat="has-llm"
+              title="Show only articles where the LLM generated bespoke article-specific UCs">
+        LLM UCs only <span class="cnt" id="featCntHasLlm"></span>
+      </button>
       <div class="width-toggle" id="widthToggle" title="Article column width">
         <button data-width="compact">Compact</button>
         <button data-width="wide" class="on">Wide</button>
@@ -4258,35 +4361,57 @@ input.addEventListener('input', () => renderResults(input.value));
 // Source filter (Articles tab) — multi-select
 // =================================================================
 // Click a source chip to toggle its filter on/off. Multiple chips can be
-// active at once; a card is shown if it matches ANY active source.
-// "All" deselects every other chip and shows everything.
+// active at once; a card is shown if it matches ANY active source AND
+// every active feature filter ("Has UCs" / "LLM UCs only").
+// "All" deselects every other source chip; feature chips are independent.
 function applySourceFilter() {
-  const activeChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all)');
-  const activeSources = Array.from(activeChips).map(c => c.dataset.source).filter(Boolean);
+  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip)');
+  const activeSources = Array.from(activeSourceChips).map(c => c.dataset.source).filter(Boolean);
+  const activeFeats = Array.from(document.querySelectorAll('#srcFilter .feat-chip.active')).map(c => c.dataset.feat);
   const cards = document.querySelectorAll('#view-articles article.card');
   cards.forEach(card => {
     const sources = (card.dataset.sources || '').split('|');
-    const show = activeSources.length === 0
-                 || activeSources.some(s => sources.includes(s));
-    card.classList.toggle('src-hidden', !show);
+    const matchSource = activeSources.length === 0
+                        || activeSources.some(s => sources.includes(s));
+    const ucCount = parseInt(card.dataset.ucCount || '0', 10);
+    const llmCount = parseInt(card.dataset.llmUcCount || '0', 10);
+    const matchFeat = activeFeats.every(f => {
+      if (f === 'has-uc')  return ucCount > 0;
+      if (f === 'has-llm') return llmCount > 0;
+      return true;
+    });
+    card.classList.toggle('src-hidden', !(matchSource && matchFeat));
   });
   document.querySelectorAll('#navlist .nav-item').forEach(n => {
     const card = document.getElementById(n.dataset.jump);
     n.style.display = card && card.classList.contains('src-hidden') ? 'none' : '';
   });
-  // Keep the "All" chip's active state in sync (active iff no other source picked)
+  // Keep "All" chip in sync — active iff no source AND no feature filter chosen
   const allChip = document.querySelector('#srcFilter .src-chip.all');
-  if (allChip) allChip.classList.toggle('active', activeSources.length === 0);
+  if (allChip) allChip.classList.toggle('active', activeSources.length === 0 && activeFeats.length === 0);
 }
+// Pre-populate the count badges on the feature chips on load.
+(function() {
+  const cards = Array.from(document.querySelectorAll('#view-articles article.card'));
+  const hasUc = cards.filter(c => parseInt(c.dataset.ucCount||'0',10) > 0).length;
+  const hasLlm = cards.filter(c => parseInt(c.dataset.llmUcCount||'0',10) > 0).length;
+  const a = document.getElementById('featCntHasUc');
+  const b = document.getElementById('featCntHasLlm');
+  if (a) a.textContent = hasUc;
+  if (b) b.textContent = hasLlm;
+})();
 document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
   chip.addEventListener('click', () => {
     if (chip.classList.contains('all')) {
-      // "All" clears every other chip
+      // "All" clears every other chip including feature chips
       document.querySelectorAll('#srcFilter .src-chip').forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
+    } else if (chip.classList.contains('feat-chip')) {
+      // Feature chips toggle independently; they don't deactivate sources
+      chip.classList.toggle('active');
+      document.querySelector('#srcFilter .src-chip.all')?.classList.remove('active');
     } else {
       chip.classList.toggle('active');
-      // any non-All click means "All" is no longer the implicit selection
       document.querySelector('#srcFilter .src-chip.all')?.classList.remove('active');
     }
     applySourceFilter();
@@ -5183,11 +5308,18 @@ def render_card(idx: int, article: dict, ind: dict,
         for s in sources if s
     )
     sources_attr = "|".join(sources)
+    # Counts power the "Has UCs" / "Has LLM UCs" feature filters in the
+    # toolbar. data-uc-count is total UCs on this card; data-llm-uc-count
+    # is the subset whose title starts with "[LLM]" (the article-bespoke
+    # ones the LLM tailored to the specific TTP).
+    uc_total = len(use_cases)
+    uc_llm = sum(1 for u in use_cases if (u.title or "").startswith("[LLM]"))
     return f"""
 <article class="card" id="{aid}"
   data-phases="{phases_attr}" data-sev="{severity}"
   data-techs="{html.escape(techs_attr)}"
   data-sources="{html.escape(sources_attr)}"
+  data-uc-count="{uc_total}" data-llm-uc-count="{uc_llm}"
   data-search="{html.escape(search_blob)}">
   <div class="sev-ribbon {severity}">{SEV_LABEL[severity]}</div>
   <h2><a href="{html.escape(article['link'])}" target="_blank" rel="noopener">{html.escape(article['title'])}</a></h2>
