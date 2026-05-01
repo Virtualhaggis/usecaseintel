@@ -3550,52 +3550,22 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .actors-map-legend .lg-state{background:#7170ff;}
 .actors-map-legend .lg-crim{background:#eb5757;}
 .actors-map-legend .lg-mixed{background:#9b8afb;}
-.actors-map{
-  display:block; width:100%; height:auto; max-height:400px;
+.actors-globe{
+  width:100%; height:480px;
+  background:radial-gradient(ellipse at center, rgba(113,112,255,0.06) 0%, transparent 70%), #08090a;
+  border-radius:var(--r-md);
+  position:relative;
+  overflow:hidden;
 }
-/* Dots — sized by actors-per-country, coloured by motivation mix */
-.actors-map .country-dot{
-  cursor:pointer;
-  transition:transform 0.15s ease, filter 0.15s ease;
-  transform-origin:center;
-  transform-box:fill-box;
-}
-.actors-map .country-dot:hover,
-.actors-map .country-dot.active{
-  transform:scale(1.25);
-  filter:drop-shadow(0 0 8px currentColor) brightness(1.2);
-}
-.actors-map .country-pulse{
-  fill:none; stroke:currentColor; stroke-width:1;
-  opacity:0.6;
-  animation:pulseRing 2.4s ease-out infinite;
-}
-@keyframes pulseRing{
-  0%{r:8px; opacity:0.6;}
-  100%{r:24px; opacity:0;}
-}
-.actors-map .country-label{
-  font-size:10.5px; font-family:var(--mono); font-weight:600;
-  fill:var(--muted); text-anchor:middle;
+.actors-globe canvas{display:block; width:100% !important; height:100% !important;}
+.actors-globe-loading{
+  position:absolute; inset:0; display:flex;
+  align-items:center; justify-content:center;
+  color:var(--muted); font-size:13px;
   pointer-events:none;
 }
-.actors-map .country-dot:hover ~ .country-label,
-.actors-map .country-dot.active ~ .country-label{fill:var(--text);}
-.actors-map-tip{
-  position:absolute; pointer-events:none;
-  background:var(--panel-elev); border:1px solid var(--border-2);
-  padding:8px 12px; border-radius:var(--r-md);
-  font-size:12px; color:var(--text);
-  box-shadow:var(--shadow-md);
-  opacity:0; transform:translateY(4px);
-  transition:opacity 0.12s, transform 0.12s;
-  z-index:30;
-}
-.actors-map-tip.show{opacity:1; transform:translateY(0);}
-.actors-map-tip strong{color:var(--text); font-weight:600;}
-.actors-map-tip .meta{
-  color:var(--muted-2); font-size:10.5px;
-  text-transform:uppercase; letter-spacing:0.06em; margin-top:2px;
+@media(max-width:780px){
+  .actors-globe{height:360px;}
 }
 .actors-toolbar{
   display:flex; gap:12px; align-items:center; flex-wrap:wrap;
@@ -4600,12 +4570,17 @@ ul.intel-types-doc code{
      lazily on tab switch from window.__ACTORS__. ===== -->
 <div id="view-actors" class="view">
   <div class="actors-wrap">
-    <!-- World map — clickable countries (any with attributed actors). -->
+    <!-- 3D globe — actual rotating earth via three-globe + three.js.
+         Loads from unpkg CDN (deferred). Click any pinned country to
+         filter the grid. Drag to spin manually; auto-rotates slowly
+         when idle. WebGL fallback: if the libs fail to load, the
+         empty container takes no space and the country chip bar still
+         works the same. -->
     <div class="actors-map-wrap" id="actorsMapWrap">
       <div class="actors-map-head">
         <div>
           <h3>Threat actor coverage by country</h3>
-          <p>Tap a country to filter the grid. Bigger dot = more actors observed in the last 365 days. Pink = ransomware/criminal weighting · indigo = state-sponsored weighting.</p>
+          <p>Drag to spin · click a pin to filter the grid below. Pin height = actor count, colour = indigo (state) / red (criminal) / purple (mixed).</p>
         </div>
         <div class="actors-map-legend">
           <span class="lg-dot lg-state"></span> state
@@ -4613,52 +4588,7 @@ ul.intel-types-doc code{
           <span class="lg-dot lg-mixed"></span> mixed
         </div>
       </div>
-      <svg id="actorsMap" class="actors-map" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="World map of attributed threat-actor countries">
-        <defs>
-          <linearGradient id="amapBg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="rgba(113,112,255,0.05)"/>
-            <stop offset="100%" stop-color="rgba(113,112,255,0)"/>
-          </linearGradient>
-        </defs>
-        <rect width="1000" height="480" fill="url(#amapBg)"/>
-        <line x1="0" y1="240" x2="1000" y2="240" stroke="rgba(255,255,255,0.04)" stroke-dasharray="2 6"/>
-        <line x1="0" y1="170" x2="1000" y2="170" stroke="rgba(255,255,255,0.03)" stroke-dasharray="2 6"/>
-        <line x1="0" y1="310" x2="1000" y2="310" stroke="rgba(255,255,255,0.03)" stroke-dasharray="2 6"/>
-        <!-- Stylised continent shapes — abstract enough to render fast,
-             recognisable enough that an analyst orients in 2 seconds. -->
-        <g class="continents" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)" stroke-width="1" stroke-linejoin="round">
-          <!-- North America -->
-          <path d="M 60 95 L 130 60 L 230 70 L 285 130 L 275 215 L 230 245 L 185 245 L 145 230 L 95 220 L 60 175 Z"/>
-          <!-- Central America -->
-          <path d="M 230 245 L 270 250 L 280 285 L 250 300 L 230 285 Z"/>
-          <!-- South America -->
-          <path d="M 240 280 L 295 285 L 330 350 L 300 425 L 250 415 L 230 360 Z"/>
-          <!-- Greenland -->
-          <path d="M 360 60 L 410 55 L 420 105 L 380 115 L 360 95 Z"/>
-          <!-- Europe (rough) -->
-          <path d="M 420 95 L 540 95 L 555 165 L 480 180 L 430 165 Z"/>
-          <!-- Africa -->
-          <path d="M 460 195 L 565 215 L 580 290 L 540 380 L 490 415 L 460 380 L 445 295 Z"/>
-          <!-- Russia / North Asia -->
-          <path d="M 540 65 L 870 60 L 880 125 L 700 155 L 545 145 Z"/>
-          <!-- Middle East -->
-          <path d="M 545 165 L 625 175 L 620 230 L 560 240 Z"/>
-          <!-- South Asia -->
-          <path d="M 620 215 L 695 230 L 690 295 L 640 290 L 615 250 Z"/>
-          <!-- East Asia / China -->
-          <path d="M 700 130 L 845 145 L 835 240 L 700 235 Z"/>
-          <!-- Korean peninsula -->
-          <path d="M 825 170 L 850 175 L 850 215 L 825 220 Z"/>
-          <!-- Japan -->
-          <path d="M 870 165 L 895 175 L 905 215 L 880 225 L 870 195 Z"/>
-          <!-- SE Asia / Indonesia -->
-          <path d="M 720 250 L 800 260 L 815 305 L 770 325 L 730 320 Z"/>
-          <!-- Australia -->
-          <path d="M 845 360 L 950 365 L 945 415 L 870 415 Z"/>
-        </g>
-        <!-- Country dots — populated by JS from window.__ACTORS__. -->
-        <g id="actorsMapDots"></g>
-      </svg>
+      <div id="actorsGlobe" class="actors-globe"></div>
     </div>
     <!-- Legacy hero slot (now unused — stats moved to topbar) -->
     <div class="actors-hero" id="actorsHero" style="display:none;"></div>
@@ -5918,23 +5848,40 @@ let actorsCountryFilter = '';
 let actorsMotivationFilter = '';
 let actorsSortMode = 'active';
 
-// Approximate position of each country on the stylised world SVG
-// (viewBox 1000x480). Hand-tuned over the continent paths so dots
-// land on land. "??" deliberately offscreen so unknown actors
-// show up below the map as a separate "Unattributed" cluster.
-const COUNTRY_COORDS = {
-  US: {x: 165, y: 165}, BR: {x: 280, y: 360},
-  RU: {x: 690, y: 100}, CN: {x: 770, y: 195},
-  KP: {x: 837, y: 195}, IR: {x: 590, y: 200},
-  IN: {x: 660, y: 255}, PK: {x: 640, y: 230},
-  VN: {x: 770, y: 250}, MY: {x: 770, y: 300},
-  LB: {x: 555, y: 195}, "??":{x: 950, y: 60}
+// Approximate lat/lng centroid for each country we attribute actors to.
+// The globe library uses {lat, lng} and projects onto the textured
+// sphere automatically.
+const COUNTRY_LATLNG = {
+  RU:{lat:60,  lng:90},   CN:{lat:35,  lng:103},
+  KP:{lat:40,  lng:127},  IR:{lat:33,  lng:53},
+  IN:{lat:21,  lng:78},   PK:{lat:30,  lng:70},
+  VN:{lat:16,  lng:107},  MY:{lat:4,   lng:102},
+  LB:{lat:34,  lng:36},   US:{lat:38,  lng:-97},
+  BR:{lat:-14, lng:-52}
 };
 
+let _globe = null;
+let _globePending = false;
+
 function renderActorsMap(filtered) {
-  const svg = document.getElementById('actorsMapDots');
-  if (!svg) return;
-  // Group by country, count actors + dominant motivation
+  if (typeof Globe === 'undefined') {
+    // globe.gl not loaded yet — retry shortly. Defer until the libs
+    // finish downloading from the CDN.
+    if (!_globePending) {
+      _globePending = true;
+      const tryAgain = () => {
+        if (typeof Globe !== 'undefined') {
+          _globePending = false;
+          renderActorsMap(filtered);
+        } else {
+          setTimeout(tryAgain, 200);
+        }
+      };
+      tryAgain();
+    }
+    return;
+  }
+  // Aggregate per country
   const byCountry = {};
   filtered.forEach(a => {
     const k = a.country;
@@ -5946,57 +5893,71 @@ function renderActorsMap(filtered) {
     byCountry[k].names.push(a.name);
   });
   const maxCount = Math.max(1, ...Object.values(byCountry).map(c=>c.count));
-  let dotsHtml = '';
+  // Build pin data for the globe
+  const pins = [];
   Object.entries(byCountry).forEach(([code, info]) => {
-    const pos = COUNTRY_COORDS[code];
-    if (!pos || code === '??') return;
-    const r = 6 + (info.count / maxCount) * 14;
+    const ll = COUNTRY_LATLNG[code];
+    if (!ll) return;  // unknown / "??" actors don't pin to the globe
     const isCrim = info.crim > info.state;
     const isMixed = info.state > 0 && info.crim > 0;
     const color = isMixed ? '#9b8afb' : isCrim ? '#eb5757' : '#7170ff';
-    const label = COUNTRY_LABELS[code] || code;
-    const names = info.names.slice(0, 6).join(', ') + (info.names.length > 6 ? ' +' + (info.names.length - 6) + ' more' : '');
-    const isActive = actorsCountryFilter === code;
-    dotsHtml +=
-      `<g class="country-group" data-country="${code}">` +
-        `<circle class="country-pulse" cx="${pos.x}" cy="${pos.y}" r="8" style="color:${color}"/>` +
-        `<circle class="country-dot ${isActive?'active':''}" cx="${pos.x}" cy="${pos.y}" r="${r.toFixed(1)}" fill="${color}" fill-opacity="0.85" stroke="${color}" stroke-width="1.5" style="color:${color}" data-name="${escapeHtml(label)}" data-count="${info.count}" data-mix="${info.state}s/${info.crim}c${info.hack?'/'+info.hack+'h':''}" data-names="${escapeHtml(names)}"/>` +
-        `<text class="country-label" x="${pos.x}" y="${pos.y + r + 14}">${escapeHtml(code)} · ${info.count}</text>` +
-      `</g>`;
+    pins.push({
+      code, name: COUNTRY_LABELS[code] || code,
+      lat: ll.lat, lng: ll.lng,
+      count: info.count,
+      altitude: 0.04 + (info.count / maxCount) * 0.18,
+      radius: 0.4 + (info.count / maxCount) * 1.6,
+      color,
+      names: info.names.slice(0, 8).join(', ') + (info.names.length > 8 ? ' +' + (info.names.length - 8) + ' more' : ''),
+      isActive: actorsCountryFilter === code
+    });
   });
-  svg.innerHTML = dotsHtml;
-  // Tooltip
-  let tip = document.querySelector('.actors-map-tip');
-  if (!tip) {
-    tip = document.createElement('div');
-    tip.className = 'actors-map-tip';
-    document.body.appendChild(tip);
+  const container = document.getElementById('actorsGlobe');
+  if (!container) return;
+  if (!_globe) {
+    container.innerHTML = '';   // strip the loading placeholder
+    _globe = Globe()(container)
+      .globeImageUrl('https://unpkg.com/three-globe@2.27.0/example/img/earth-night.jpg')
+      .bumpImageUrl('https://unpkg.com/three-globe@2.27.0/example/img/earth-topology.png')
+      .backgroundColor('rgba(0,0,0,0)')
+      .atmosphereColor('#7170ff')
+      .atmosphereAltitude(0.18)
+      .pointAltitude('altitude')
+      .pointRadius('radius')
+      .pointColor('color')
+      .pointLabel(d => `<div style="background:rgba(15,16,20,0.92); padding:8px 12px; border:1px solid rgba(255,255,255,0.12); border-radius:6px; color:#f7f8f8; font-family:Inter,system-ui; font-size:12px;">
+        <div style="font-weight:600; font-size:13px;">${d.name}</div>
+        <div style="color:#9b8afb; margin-top:2px;">${d.count} actor${d.count===1?'':'s'}</div>
+        <div style="color:#a4a7ad; font-size:10.5px; margin-top:4px; max-width:240px;">${d.names}</div>
+      </div>`)
+      .onPointClick(d => {
+        const newFilter = (actorsCountryFilter === d.code) ? '' : d.code;
+        actorsCountryFilter = newFilter;
+        document.querySelectorAll('#actorsCountryChips .actors-country-chip').forEach(b => {
+          b.classList.toggle('active', (b.dataset.country || '') === newFilter);
+        });
+        applyActorsFilter();
+      })
+      .pointsData(pins);
+    // Auto-rotate when idle
+    setTimeout(() => {
+      if (_globe.controls && _globe.controls()) {
+        _globe.controls().autoRotate = true;
+        _globe.controls().autoRotateSpeed = 0.5;
+        _globe.controls().enableZoom = true;
+      }
+    }, 100);
+    // Resize on viewport change
+    const resize = () => {
+      if (_globe && container.offsetWidth > 0) {
+        _globe.width(container.offsetWidth).height(container.offsetHeight);
+      }
+    };
+    window.addEventListener('resize', resize);
+    setTimeout(resize, 50);
+  } else {
+    _globe.pointsData(pins);
   }
-  svg.querySelectorAll('.country-dot').forEach(dot => {
-    dot.addEventListener('mouseenter', e => {
-      const r = e.target.getBoundingClientRect();
-      tip.innerHTML =
-        '<strong>'+e.target.dataset.name+'</strong>' +
-        '<div class="meta">'+e.target.dataset.count+' actors · '+e.target.dataset.mix+'</div>' +
-        '<div style="margin-top:4px; font-size:11px; color:var(--muted);">'+e.target.dataset.names+'</div>';
-      tip.style.left = (r.left + window.scrollX + r.width/2 - 100) + 'px';
-      tip.style.top  = (r.top + window.scrollY - 56) + 'px';
-      tip.classList.add('show');
-    });
-    dot.addEventListener('mouseleave', () => tip.classList.remove('show'));
-    dot.addEventListener('click', () => {
-      const code = dot.parentElement.dataset.country;
-      // Toggle: clicking the active country clears the filter
-      const newFilter = (actorsCountryFilter === code) ? '' : code;
-      actorsCountryFilter = newFilter;
-      // Sync country chip bar
-      document.querySelectorAll('#actorsCountryChips .actors-country-chip').forEach(b => {
-        b.classList.toggle('active', (b.dataset.country || '') === newFilter);
-      });
-      applyActorsFilter();
-      tip.classList.remove('show');
-    });
-  });
 }
 const COUNTRY_LABELS = {
   RU:"Russia", CN:"China", KP:"North Korea", IR:"Iran",
@@ -6575,6 +6536,13 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
   });
 });
 </script>
+<!-- 3D globe libraries — three.js + globe.gl from unpkg. Loaded with
+     defer so they never block the page; the globe renders only once
+     the user opens the Threat Actors tab. If the CDN fails the rest
+     of the site still works (the country chips and grid are
+     independent). -->
+<script defer src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
+<script defer src="https://unpkg.com/globe.gl@2.27.0/dist/globe.gl.min.js"></script>
 <!-- Cloudflare Web Analytics — privacy-friendly, no cookies, no GDPR
      banner needed. Beacon script is loaded with `defer` so it never
      blocks the 8 MB index.html parse, and it's injected at the very
