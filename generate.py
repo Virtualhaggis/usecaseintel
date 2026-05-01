@@ -4026,7 +4026,7 @@ ul.intel-types-doc code{
 
 <!-- Threat-actor drawer — inline content (linked articles, UCs, IOCs) -->
 <div id="actorDrawerBg" class="drawer-bg" aria-hidden="true"></div>
-<aside id="actorDrawer" class="tech-drawer" aria-hidden="true">
+<aside id="actorDrawer" class="drawer" aria-hidden="true">
   <button class="drawer-close" id="actorDrawerClose" aria-label="Close">×</button>
   <div id="actorDrawerBody"></div>
 </aside>
