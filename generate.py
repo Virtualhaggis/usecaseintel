@@ -135,6 +135,126 @@ def dedupe(seq):
     return out
 
 
+# =====================================================================
+# Threat-actor catalog
+# =====================================================================
+# Curated list of well-known APT / e-crime / ransomware groups with
+# country attribution. Aliases come from MITRE ATT&CK Groups, Mandiant,
+# CrowdStrike (Bears/Pandas/Cobras), Microsoft Threat Intel (Typhoons /
+# Sleet / Blizzard naming convention) and Unit 42.
+# Match against article body via case-insensitive whole-word regex;
+# the longest alias wins so "APT29" and "Midnight Blizzard" both
+# resolve to the same canonical name.
+# Country uses ISO 3166-2 alpha-2 + flag emoji for compact rendering.
+# Motivation: state | criminal | hacktivist | unknown.
+THREAT_ACTORS = [
+    # ===== Russia =====
+    {"name": "APT28", "aliases": ["APT28", "Fancy Bear", "Sofacy", "Sednit", "STRONTIUM", "Forest Blizzard", "Pawn Storm", "Tsar Team", "GRU Unit 26165"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0007"},
+    {"name": "APT29", "aliases": ["APT29", "Cozy Bear", "Nobelium", "Midnight Blizzard", "The Dukes", "YTTRIUM", "SVR"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0016"},
+    {"name": "Sandworm", "aliases": ["Sandworm", "Voodoo Bear", "TeleBots", "BlackEnergy Group", "Iron Viking", "Seashell Blizzard", "GRU Unit 74455"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0034"},
+    {"name": "Turla", "aliases": ["Turla", "Snake", "Venomous Bear", "Waterbug", "Uroburos", "Krypton", "Secret Blizzard"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0010"},
+    {"name": "Gamaredon", "aliases": ["Gamaredon", "Primitive Bear", "Shuckworm", "Aqua Blizzard", "Armageddon", "Trident Ursa"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0047"},
+    {"name": "Berserk Bear", "aliases": ["Berserk Bear", "Energetic Bear", "DragonFly", "Crouching Yeti", "Iron Liberty"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G0035"},
+    {"name": "Cadet Blizzard", "aliases": ["Cadet Blizzard", "Ember Bear", "Saint Bear", "UAC-0056"], "country": "RU", "flag": "🇷🇺", "motivation": "state", "mitre_id": "G1003"},
+
+    # ===== China =====
+    {"name": "APT41", "aliases": ["APT41", "BARIUM", "Wicked Panda", "Winnti Group", "Brass Typhoon", "Double Dragon"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0096"},
+    {"name": "APT10", "aliases": ["APT10", "Stone Panda", "MenuPass", "Cloudhopper", "Potassium", "Bronze Riverside"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0045"},
+    {"name": "Volt Typhoon", "aliases": ["Volt Typhoon", "Vanguard Panda", "Bronze Silhouette", "VOLTZITE", "BRONZE SILHOUETTE"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G1017"},
+    {"name": "Salt Typhoon", "aliases": ["Salt Typhoon", "GhostEmperor", "FamousSparrow", "Earth Estries"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Silk Typhoon", "aliases": ["Silk Typhoon", "Hafnium", "Operation Exchange Marauder"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0125"},
+    {"name": "Mustang Panda", "aliases": ["Mustang Panda", "TA416", "RedDelta", "Earth Preta", "Bronze President", "Stately Taurus"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0129"},
+    {"name": "Storm-0558", "aliases": ["Storm-0558"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "PlushDaemon", "aliases": ["PlushDaemon"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "LongNoseGoblin", "aliases": ["LongNoseGoblin", "Long-Nose Goblin"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "GALLIUM", "aliases": ["GALLIUM", "Operation Soft Cell", "Granite Typhoon"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0093"},
+    {"name": "TA413", "aliases": ["TA413", "LuckyCat", "Tropic Trooper"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "APT3", "aliases": ["APT3", "Gothic Panda", "UPS Team", "Boyusec"], "country": "CN", "flag": "🇨🇳", "motivation": "state", "mitre_id": "G0022"},
+
+    # ===== North Korea =====
+    {"name": "Lazarus Group", "aliases": ["Lazarus", "Lazarus Group", "Hidden Cobra", "Guardians of Peace", "ZINC", "Diamond Sleet", "Labyrinth Chollima"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0032"},
+    {"name": "Kimsuky", "aliases": ["Kimsuky", "Velvet Chollima", "Black Banshee", "Thallium", "Emerald Sleet"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0094"},
+    {"name": "APT38", "aliases": ["APT38", "BeagleBoyz", "Stardust Chollima"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0082"},
+    {"name": "Andariel", "aliases": ["Andariel", "Silent Chollima", "Onyx Sleet"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0138"},
+    {"name": "Bluenoroff", "aliases": ["Bluenoroff", "Sapphire Sleet", "TA444"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0098"},
+    {"name": "APT37", "aliases": ["APT37", "ScarCruft", "Reaper", "InkySquid", "Ricochet Chollima"], "country": "KP", "flag": "🇰🇵", "motivation": "state", "mitre_id": "G0067"},
+    {"name": "Moonstone Sleet", "aliases": ["Moonstone Sleet", "Storm-1789"], "country": "KP", "flag": "🇰🇵", "motivation": "state"},
+
+    # ===== Iran =====
+    {"name": "APT34", "aliases": ["APT34", "OilRig", "Helix Kitten", "Cobalt Gypsy", "Hazel Sandstorm"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G0049"},
+    {"name": "APT35", "aliases": ["APT35", "Charming Kitten", "Phosphorus", "Mint Sandstorm", "Newscaster", "Magic Hound"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G0059"},
+    {"name": "APT33", "aliases": ["APT33", "Refined Kitten", "Elfin", "Holmium", "Peach Sandstorm"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G0064"},
+    {"name": "MuddyWater", "aliases": ["MuddyWater", "Earth Vetala", "MERCURY", "Static Kitten", "Mango Sandstorm", "TEMP.Zagros", "Seedworm"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G0069"},
+    {"name": "Imperial Kitten", "aliases": ["Imperial Kitten", "Tortoiseshell", "TA456"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G1010"},
+    {"name": "APT39", "aliases": ["APT39", "Chafer", "Remix Kitten"], "country": "IR", "flag": "🇮🇷", "motivation": "state", "mitre_id": "G0087"},
+
+    # ===== Vietnam / SEA =====
+    {"name": "APT32", "aliases": ["APT32", "OceanLotus", "SeaLotus", "Cobalt Kitty"], "country": "VN", "flag": "🇻🇳", "motivation": "state", "mitre_id": "G0050"},
+
+    # ===== Pakistan / India =====
+    {"name": "Transparent Tribe", "aliases": ["Transparent Tribe", "APT36", "Mythic Leopard", "Operation C-Major"], "country": "PK", "flag": "🇵🇰", "motivation": "state", "mitre_id": "G0134"},
+    {"name": "Patchwork", "aliases": ["Patchwork", "Dropping Elephant", "Chinastrats", "Quilted Tiger"], "country": "IN", "flag": "🇮🇳", "motivation": "state", "mitre_id": "G0040"},
+    {"name": "SideWinder", "aliases": ["SideWinder", "RattleSnake", "Razor Tiger", "T-APT-04"], "country": "IN", "flag": "🇮🇳", "motivation": "state", "mitre_id": "G0121"},
+
+    # ===== Ransomware groups (criminal, multi-national) =====
+    {"name": "LockBit", "aliases": ["LockBit", "LockBit 2.0", "LockBit 3.0", "LockBit Black", "LockBit Green", "LockBit 5.0"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "BlackCat", "aliases": ["BlackCat", "ALPHV", "ALPHV-BlackCat", "Noberus"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "Conti", "aliases": ["Conti", "Wizard Spider", "TrickBot Group", "GOLD ULRICK"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal", "mitre_id": "G0102"},
+    {"name": "REvil", "aliases": ["REvil", "Sodinokibi", "GOLD SOUTHFIELD", "Pinchy Spider"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal", "mitre_id": "G0115"},
+    {"name": "Cl0p", "aliases": ["Cl0p", "Clop", "TA505", "FIN11", "GRACEFUL SPIDER"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal", "mitre_id": "G0092"},
+    {"name": "Black Basta", "aliases": ["Black Basta", "BlackBasta"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "Royal", "aliases": ["Royal Ransomware", "DEV-0569"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "Akira", "aliases": ["Akira ransomware", "Akira"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Play", "aliases": ["Play ransomware", "PlayCrypt", "Balloonfly"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "Qilin", "aliases": ["Qilin", "Agenda ransomware"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "Medusa", "aliases": ["Medusa ransomware", "MedusaLocker"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "8Base", "aliases": ["8Base ransomware", "8Base"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "RansomHub", "aliases": ["RansomHub"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "DragonForce", "aliases": ["DragonForce", "DragonForce Malaysia"], "country": "MY", "flag": "🇲🇾", "motivation": "criminal"},
+    {"name": "Hunters International", "aliases": ["Hunters International"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Rhysida", "aliases": ["Rhysida"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+
+    # ===== eCrime / IAB =====
+    {"name": "Scattered Spider", "aliases": ["Scattered Spider", "0ktapus", "UNC3944", "Octo Tempest", "Muddled Libra", "Roasted 0ktapus", "Storm-0875"], "country": "US", "flag": "🇺🇸", "motivation": "criminal", "mitre_id": "G1015"},
+    {"name": "FIN7", "aliases": ["FIN7", "Carbanak Group", "Sangria Tempest", "ITG14"], "country": "??", "flag": "🌐", "motivation": "criminal", "mitre_id": "G0046"},
+    {"name": "FIN6", "aliases": ["FIN6", "Skeleton Spider", "Camouflage Tempest", "ITG08"], "country": "??", "flag": "🌐", "motivation": "criminal", "mitre_id": "G0037"},
+    {"name": "FIN8", "aliases": ["FIN8", "Syssphinx"], "country": "??", "flag": "🌐", "motivation": "criminal", "mitre_id": "G0061"},
+    {"name": "Cobalt Group", "aliases": ["Cobalt Group", "Cobalt Gang", "Cobalt Spider", "GOLD KINGSWOOD"], "country": "??", "flag": "🌐", "motivation": "criminal", "mitre_id": "G0080"},
+    {"name": "TA577", "aliases": ["TA577", "Hive0118"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "TA571", "aliases": ["TA571"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+
+    # ===== South America =====
+    {"name": "Lapsus$", "aliases": ["Lapsus$", "DEV-0537", "Strawberry Tempest"], "country": "BR", "flag": "🇧🇷", "motivation": "criminal", "mitre_id": "G1004"},
+]
+
+# Build alias→canonical lookup once at import; precompile a single
+# regex covering every alias (longest-first so a longer alias is
+# preferred over a substring match — e.g. "APT29" wins over "APT").
+import re as _actor_re
+_ALIAS_TO_NAME = {a.lower(): tg["name"] for tg in THREAT_ACTORS for a in tg["aliases"]}
+_ACTOR_PATTERN = _actor_re.compile(
+    r"\b(?:" + "|".join(
+        _actor_re.escape(a) for a in sorted(_ALIAS_TO_NAME.keys(), key=len, reverse=True)
+    ) + r")\b",
+    flags=_actor_re.IGNORECASE,
+)
+_ACTOR_BY_NAME = {tg["name"]: tg for tg in THREAT_ACTORS}
+
+
+def extract_threat_actors(title: str, body: str) -> list:
+    """Return the list of canonical actor names mentioned in the
+    article. Case-insensitive substring match against the curated
+    alias list. De-duped, ordered by first appearance.
+    Empty list if no known actor is mentioned."""
+    text = f"{title}\n\n{body or ''}"
+    seen = []
+    for m in _ACTOR_PATTERN.finditer(text):
+        canonical = _ALIAS_TO_NAME.get(m.group(0).lower())
+        if canonical and canonical not in seen:
+            seen.append(canonical)
+    return seen
+
+
 def extract_indicators(title: str, body: str) -> dict:
     """
     SOC-grade IOC extraction. Quality bar:
@@ -3031,6 +3151,119 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .matrix-stats span{color:var(--muted);}
 .matrix-stats span b{color:var(--text); font-variant-numeric:tabular-nums;}
 
+/* ----- Threat Actors tab --------------------------------------------- */
+.actors-wrap{
+  max-width:1280px; margin:0 auto; padding:18px 28px 60px;
+}
+.actors-toolbar{
+  display:flex; gap:12px; align-items:center; flex-wrap:wrap;
+  padding:14px 16px; margin-bottom:12px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-lg); box-shadow:var(--shadow-sm);
+}
+.actors-toolbar input{
+  flex:1 1 320px; min-width:240px;
+  background:var(--panel-elev); border:1px solid var(--border); color:var(--text);
+  padding:8px 14px; border-radius:var(--r-md); font-size:13.5px; font-family:inherit;
+}
+.actors-toolbar input:focus{border-color:var(--accent); outline:none;}
+.actors-country-chips{
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+}
+.actors-country-chip{
+  padding:5px 11px; border-radius:var(--r-md);
+  background:var(--panel-elev); border:1px solid var(--border);
+  color:var(--muted); cursor:pointer; font-size:12px;
+  font-weight:500; transition:color 0.12s, border-color 0.12s;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.actors-country-chip:hover{color:var(--text); border-color:var(--border-2);}
+.actors-country-chip.active{
+  background:var(--panel2); color:var(--text);
+  border-color:var(--border-2);
+  box-shadow:inset 2px 0 0 var(--accent);
+}
+.actors-country-chip .cnt{
+  color:var(--muted-2); font-variant-numeric:tabular-nums;
+  font-size:10.5px;
+}
+.actors-stats-row{
+  display:flex; gap:18px; padding:8px 4px 16px; flex-wrap:wrap;
+  font-size:12px; color:var(--muted);
+}
+.actors-stats-row b{
+  color:var(--text); font-weight:600; font-variant-numeric:tabular-nums;
+}
+.actors-grid{
+  display:grid; gap:14px;
+  grid-template-columns:repeat(auto-fill, minmax(320px, 1fr));
+}
+.actor-card{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:16px 18px;
+  cursor:pointer; transition:border-color 0.15s, background-color 0.15s;
+  display:flex; flex-direction:column; gap:10px;
+}
+.actor-card:hover{
+  border-color:var(--border-2);
+  background:var(--panel-elev);
+}
+.actor-card .ac-head{
+  display:flex; align-items:center; gap:10px;
+}
+.actor-card .ac-flag{
+  font-size:28px; line-height:1;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+.actor-card .ac-title{
+  flex:1; min-width:0;
+}
+.actor-card .ac-name{
+  font-size:15px; font-weight:600; letter-spacing:-0.012em; color:var(--text);
+}
+.actor-card .ac-country{
+  font-size:11px; color:var(--muted-2); margin-top:2px;
+  text-transform:uppercase; letter-spacing:0.04em;
+}
+.actor-card .ac-mot{
+  font-size:9.5px; padding:2px 7px; border-radius:4px;
+  text-transform:uppercase; letter-spacing:0.06em; font-weight:600;
+  background:var(--panel-elev); border:1px solid var(--border); color:var(--muted);
+  align-self:flex-start;
+}
+.actor-card .ac-mot.state{color:#9b8afb; border-color:rgba(155,138,251,0.3);}
+.actor-card .ac-mot.criminal{color:#eb5757; border-color:rgba(235,87,87,0.3);}
+.actor-card .ac-aliases{
+  font-size:11.5px; color:var(--muted); line-height:1.5;
+  font-family:var(--mono);
+}
+.actor-card .ac-stats{
+  display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;
+  border-top:1px solid var(--border); padding-top:10px;
+}
+.actor-card .ac-stat{
+  display:flex; flex-direction:column; gap:2px;
+}
+.actor-card .ac-stat .v{
+  font-size:16px; font-weight:600; color:var(--text);
+  font-variant-numeric:tabular-nums; letter-spacing:-0.012em;
+}
+.actor-card .ac-stat .l{
+  font-size:9.5px; color:var(--muted-2);
+  text-transform:uppercase; letter-spacing:0.06em; font-weight:500;
+}
+.actors-empty{
+  text-align:center; padding:40px 16px; color:var(--muted);
+  background:var(--panel); border:1px dashed var(--border);
+  border-radius:var(--r-lg);
+}
+.actors-footer{
+  margin-top:24px; padding-top:16px; border-top:1px solid var(--hairline);
+  font-size:12px; color:var(--muted-2); line-height:1.6;
+}
+.actors-footer a{color:var(--accent); text-decoration:none;}
+.actors-footer a:hover{text-decoration:underline;}
+
 /* ----- Workflow tab -------------------------------------------------- */
 .workflow-wrap{
   max-width:1280px; margin:0 auto; padding:20px 28px 60px; line-height:1.65;
@@ -3503,6 +3736,7 @@ ul.intel-types-doc code{
       <button class="view-tab active" data-view="articles" role="tab">Articles</button>
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
+      <button class="view-tab" data-view="actors" role="tab">Threat Actors</button>
       <button class="view-tab" data-view="workflow" role="tab">Workflow</button>
       <button class="view-tab" data-view="about" role="tab">About</button>
     </div>
@@ -3762,6 +3996,40 @@ ul.intel-types-doc code{
     <div class="search-results" id="searchResults"></div>
   </div>
 </div>
+
+<!-- ===== Threat Actors tab — search by actor / country, click for
+     drill-down into linked articles, UCs, IOCs. Lazy-rendered on tab
+     switch from window.__ACTORS__. ===== -->
+<div id="view-actors" class="view">
+  <div class="actors-wrap">
+    <div class="actors-toolbar">
+      <input type="text" id="actorsSearch" placeholder="Search actor name, alias, or country (e.g. APT29, Cozy, Russia, China)…" autocomplete="off">
+      <div class="actors-country-chips" id="actorsCountryChips"></div>
+    </div>
+    <div class="actors-stats-row" id="actorsStatsRow"></div>
+    <div class="actors-grid" id="actorsGrid"></div>
+    <div class="actors-empty" id="actorsEmpty" style="display:none;">
+      <p>No threat actors matched the current filters.</p>
+    </div>
+    <div class="actors-footer">
+      <p>
+        Threat actor names + country attribution are extracted from
+        every article body via a curated alias lookup
+        (<a href="https://attack.mitre.org/groups/" target="_blank">MITRE ATT&amp;CK Groups</a>,
+        Mandiant, CrowdStrike Bears/Pandas/Cobras, Microsoft Threat
+        Intel Typhoon naming). Click any actor to drill into the
+        articles, UCs, and IOCs tied to them.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Threat-actor drawer — inline content (linked articles, UCs, IOCs) -->
+<div id="actorDrawerBg" class="drawer-bg" aria-hidden="true"></div>
+<aside id="actorDrawer" class="tech-drawer" aria-hidden="true">
+  <button class="drawer-close" id="actorDrawerClose" aria-label="Close">×</button>
+  <div id="actorDrawerBody"></div>
+</aside>
 
 <div id="view-workflow" class="view">
   <div class="workflow-wrap">
@@ -4511,6 +4779,10 @@ function showView(name) {
     renderIntel();
     window._intelRendered = true;
   }
+  if (name === 'actors' && !window._actorsRendered) {
+    renderActors();
+    window._actorsRendered = true;
+  }
 }
 // Apply default state on page load — Articles tab starts active.
 document.body.classList.add('view-articles-active');
@@ -4946,6 +5218,181 @@ document.querySelectorAll('.ind.tech').forEach(pill => {
     e.preventDefault(); e.stopPropagation();
     openDrawerFor(tid);
   }, true);
+});
+
+// =================================================================
+// =================================================================
+// Threat Actors tab — rendered on first switch into the tab. Click
+// any actor card for a drawer with linked articles, UCs, IOCs.
+// Search filters across name + alias + country/region; country chips
+// (RU / CN / KP / IR / etc.) further narrow the grid.
+// =================================================================
+const ACTORS = __ACTORS_DATA__;
+let actorsCountryFilter = '';
+const COUNTRY_LABELS = {
+  RU:"Russia", CN:"China", KP:"North Korea", IR:"Iran",
+  US:"United States", BR:"Brazil", IN:"India", PK:"Pakistan",
+  VN:"Vietnam", MY:"Malaysia", "??":"Unknown"
+};
+
+function renderActors() {
+  if (!ACTORS || !ACTORS.length) {
+    const grid = document.getElementById('actorsGrid');
+    if (grid) grid.innerHTML = '<div class="actors-empty"><p>No threat actors detected in the current article window.</p></div>';
+    return;
+  }
+  // Country chip bar — counts per country.
+  const counts = {};
+  ACTORS.forEach(a => { counts[a.country] = (counts[a.country]||0) + 1; });
+  const countryOrder = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([c])=>c);
+  const chips = document.getElementById('actorsCountryChips');
+  if (chips) {
+    chips.innerHTML = '<button class="actors-country-chip active" data-country="">All <span class="cnt">'+ACTORS.length+'</span></button>'
+      + countryOrder.map(c =>
+          '<button class="actors-country-chip" data-country="'+c+'">'+
+          (ACTORS.find(a=>a.country===c)?.flag || '🌐')+' '+
+          escapeHtml(COUNTRY_LABELS[c]||c)+
+          ' <span class="cnt">'+counts[c]+'</span></button>'
+        ).join('');
+    chips.querySelectorAll('.actors-country-chip').forEach(b => {
+      b.addEventListener('click', () => {
+        chips.querySelectorAll('.actors-country-chip').forEach(x => x.classList.remove('active'));
+        b.classList.add('active');
+        actorsCountryFilter = b.dataset.country;
+        applyActorsFilter();
+      });
+    });
+  }
+  applyActorsFilter();
+  document.getElementById('actorsSearch')?.addEventListener('input', applyActorsFilter);
+}
+
+function applyActorsFilter() {
+  const q = (document.getElementById('actorsSearch')?.value || '').toLowerCase().trim();
+  const filtered = ACTORS.filter(a => {
+    if (actorsCountryFilter && a.country !== actorsCountryFilter) return false;
+    if (!q) return true;
+    if (a.name.toLowerCase().includes(q)) return true;
+    if (a.aliases.some(al => al.toLowerCase().includes(q))) return true;
+    if ((COUNTRY_LABELS[a.country]||'').toLowerCase().includes(q)) return true;
+    if ((a.country||'').toLowerCase().includes(q)) return true;
+    return false;
+  });
+  // Stats row
+  const totalArticles = filtered.reduce((n,a)=>n+a.articles.length, 0);
+  const totalUcs = filtered.reduce((n,a)=>n+a.uc_count, 0);
+  const totalLlm = filtered.reduce((n,a)=>n+a.llm_uc_count, 0);
+  const totalTechs = new Set();
+  filtered.forEach(a => a.techs.forEach(t => totalTechs.add(t)));
+  const stats = document.getElementById('actorsStatsRow');
+  if (stats) {
+    stats.innerHTML =
+      '<span><b>'+filtered.length+'</b> actors</span>' +
+      '<span><b>'+totalArticles+'</b> linked articles</span>' +
+      '<span><b>'+totalUcs+'</b> use cases</span>' +
+      '<span><b>'+totalLlm+'</b> LLM UCs</span>' +
+      '<span><b>'+totalTechs.size+'</b> ATT&CK techniques</span>';
+  }
+  // Grid
+  const grid = document.getElementById('actorsGrid');
+  const empty = document.getElementById('actorsEmpty');
+  if (!filtered.length) {
+    if (grid) grid.innerHTML = '';
+    if (empty) empty.style.display = 'block';
+    return;
+  }
+  if (empty) empty.style.display = 'none';
+  if (!grid) return;
+  grid.innerHTML = filtered.map(a => `
+    <div class="actor-card" data-name="${escapeHtml(a.name)}">
+      <div class="ac-head">
+        <span class="ac-flag">${a.flag||'🌐'}</span>
+        <div class="ac-title">
+          <div class="ac-name">${escapeHtml(a.name)}</div>
+          <div class="ac-country">${escapeHtml(COUNTRY_LABELS[a.country]||a.country)}${a.mitre_id ? ' · ' + escapeHtml(a.mitre_id) : ''}</div>
+        </div>
+        <span class="ac-mot ${a.motivation}">${a.motivation}</span>
+      </div>
+      <div class="ac-aliases">${escapeHtml(a.aliases.filter(x=>x!==a.name).slice(0,4).join(' · ') || '—')}</div>
+      <div class="ac-stats">
+        <div class="ac-stat"><span class="v">${a.articles.length}</span><span class="l">Articles</span></div>
+        <div class="ac-stat"><span class="v">${a.uc_count}</span><span class="l">Use cases</span></div>
+        <div class="ac-stat"><span class="v">${a.techs.length}</span><span class="l">Techniques</span></div>
+      </div>
+    </div>
+  `).join('');
+  grid.querySelectorAll('.actor-card').forEach(c =>
+    c.addEventListener('click', () => openActorDrawer(c.dataset.name)));
+}
+
+function openActorDrawer(name) {
+  const a = ACTORS.find(x => x.name === name);
+  if (!a) return;
+  const body = document.getElementById('actorDrawerBody');
+  if (!body) return;
+  const articleLinks = a.articles.map(art =>
+    `<a href="#${art.id}" data-jump="${art.id}" class="art-jump">
+      <div>${escapeHtml(art.title)}</div>
+      <div class="meta"><span class="pill ${art.sev}">${(art.sev||'').toUpperCase()}</span></div>
+    </a>`).join('');
+  const techPills = a.techs.slice(0,40).map(t =>
+    `<span class="ind tech">${escapeHtml(t)}</span>`).join(' ');
+  body.innerHTML = `
+    <div class="drawer-head">
+      <h3>${a.flag||'🌐'} ${escapeHtml(a.name)}</h3>
+      <div class="drawer-meta">
+        <span class="pill">${escapeHtml(COUNTRY_LABELS[a.country]||a.country)}</span>
+        <span class="pill">${escapeHtml(a.motivation)}</span>
+        ${a.mitre_id ? '<span class="pill">'+escapeHtml(a.mitre_id)+'</span>' : ''}
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Aliases</h4>
+      <div style="font-family:var(--mono); color:var(--muted); font-size:12.5px; line-height:1.6;">
+        ${a.aliases.map(x=>'<span class="ind" style="margin-right:4px;">'+escapeHtml(x)+'</span>').join('')}
+      </div>
+    </div>
+    <div class="drawer-section">
+      <h4>Articles citing this actor (${a.articles.length})</h4>
+      <div class="drawer-list">${articleLinks || '<div class="drawer-empty">No articles linked yet.</div>'}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>ATT&amp;CK techniques observed (${a.techs.length})</h4>
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">${techPills || '<div class="drawer-empty">None inferred yet.</div>'}</div>
+    </div>
+    <div class="drawer-section">
+      <h4>IOCs from linked articles</h4>
+      <div style="font-size:12.5px; color:var(--muted); line-height:1.7;">
+        <strong style="color:var(--text);">${a.iocs.cves.length}</strong> CVEs ·
+        <strong style="color:var(--text);">${a.iocs.hashes.length}</strong> hashes ·
+        <strong style="color:var(--text);">${a.iocs.domains.length}</strong> domains ·
+        <strong style="color:var(--text);">${a.iocs.ips.length}</strong> IPs
+      </div>
+      ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,20).map(escapeHtml).join(' · ')+'</div>' : ''}
+    </div>
+  `;
+  document.getElementById('actorDrawer').classList.add('open');
+  document.getElementById('actorDrawerBg').classList.add('open');
+  document.getElementById('actorDrawer').setAttribute('aria-hidden','false');
+  // Wire article-jump links
+  body.querySelectorAll('.art-jump').forEach(el =>
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      closeActorDrawer();
+      showView('articles');
+      const art = document.getElementById(el.dataset.jump);
+      if (art) art.scrollIntoView({behavior:'smooth', block:'start'});
+    }));
+}
+function closeActorDrawer() {
+  document.getElementById('actorDrawer')?.classList.remove('open');
+  document.getElementById('actorDrawerBg')?.classList.remove('open');
+  document.getElementById('actorDrawer')?.setAttribute('aria-hidden','true');
+}
+document.getElementById('actorDrawerClose')?.addEventListener('click', closeActorDrawer);
+document.getElementById('actorDrawerBg')?.addEventListener('click', closeActorDrawer);
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('actorDrawer')?.classList.contains('open')) closeActorDrawer();
 });
 
 // =================================================================
@@ -7102,11 +7549,16 @@ def main():
                   if isinstance(obj, UseCase)}
 
     bespoke_built = 0
+    actor_index = {}      # canonical actor name -> {articles:set, ucs:int, techs:set, ips:set, ...}
     for i, a in enumerate(articles):
         text = f"{a['title']}\n{a['raw_body']}"
         ind = extract_indicators(a["title"], a["raw_body"])
         techniques = infer_techniques(text, ind["explicit_ttps"])
         ucs = select_use_cases(text, ind)
+        # Threat-actor extraction — case-insensitive substring match
+        # against the curated alias list. Used to power the new Threat
+        # Actors tab and a per-actor article filter.
+        a["_actors"] = extract_threat_actors(a["title"], a["raw_body"])
         # Article-specific bespoke UC built from the actual mechanics named
         # in this article. Augments rather than replaces the rule-fired UCs:
         # the generic templates still cover the technique class; the bespoke
@@ -7170,7 +7622,35 @@ def main():
             "techs": merged_techs,
             "ind": ind,
             "ucs": [(uc_var_map.get(id(uc), f"UC_{i}_{j}"), uc) for j, uc in enumerate(ucs)],
+            "actors": a.get("_actors", []),
         })
+        # Aggregate per-actor stats so the Threat Actors tab can render
+        # cards: name + country + flag + linked articles + UC count +
+        # technique set. Looks dense, but it's a single-pass over the
+        # already-extracted data — no extra parsing.
+        for actor in a.get("_actors", []):
+            entry = actor_index.setdefault(actor, {
+                "name": actor,
+                "country": _ACTOR_BY_NAME.get(actor, {}).get("country", "??"),
+                "flag":    _ACTOR_BY_NAME.get(actor, {}).get("flag", "🌐"),
+                "motivation": _ACTOR_BY_NAME.get(actor, {}).get("motivation", "unknown"),
+                "aliases": _ACTOR_BY_NAME.get(actor, {}).get("aliases", [actor]),
+                "mitre_id": _ACTOR_BY_NAME.get(actor, {}).get("mitre_id", ""),
+                "articles": [],
+                "uc_count": 0,
+                "llm_uc_count": 0,
+                "techs": set(),
+                "iocs": {"cves": set(), "ips": set(), "domains": set(), "hashes": set()},
+            })
+            entry["articles"].append({"id": f"art-{i:02d}", "title": a["title"], "sev": sev})
+            entry["uc_count"] += len(ucs)
+            entry["llm_uc_count"] += sum(1 for u in ucs if (u.title or "").startswith("[LLM]"))
+            for tid, _ in merged_techs: entry["techs"].add(tid)
+            for cve in ind.get("cves", []): entry["iocs"]["cves"].add(cve)
+            for ip in ind.get("ips", []): entry["iocs"]["ips"].add(ip)
+            for dom in ind.get("domains", []): entry["iocs"]["domains"].add(dom)
+            for h in (ind.get("sha256",[])+ind.get("sha1",[])+ind.get("md5",[])):
+                entry["iocs"]["hashes"].add(h)
         safe_title = a['title'][:55].encode('ascii', 'replace').decode('ascii')
         print(f"  [{i+1:02d}] {safe_title:55s} | sev={sev:4s} techs={len(techniques)} ucs={len(ucs)} kc-hit={len(hit)}")
 
@@ -7234,6 +7714,25 @@ def main():
               f"{matrix_data['stats']['total_subs']} sub-techniques, "
               f"{matrix_data['stats']['covered_techs']} with use-case or article coverage")
     matrix_json = __import__("json").dumps(matrix_data) if matrix_data else "null"
+    # Threat-actor payload — sets are converted to sorted lists for JSON.
+    actors_serialisable = []
+    for entry in actor_index.values():
+        actors_serialisable.append({
+            "name": entry["name"],
+            "country": entry["country"],
+            "flag": entry["flag"],
+            "motivation": entry["motivation"],
+            "aliases": entry["aliases"],
+            "mitre_id": entry["mitre_id"],
+            "articles": entry["articles"],
+            "uc_count": entry["uc_count"],
+            "llm_uc_count": entry["llm_uc_count"],
+            "techs": sorted(entry["techs"]),
+            "iocs": {k: sorted(v) for k, v in entry["iocs"].items()},
+        })
+    actors_serialisable.sort(key=lambda e: (-len(e["articles"]), e["name"]))
+    actors_json = __import__("json").dumps(actors_serialisable, separators=(",", ":"))
+    print(f"[*] Threat actors detected: {len(actors_serialisable)} unique  ->  page payload")
 
     page = (
         HTML_HEAD
@@ -7248,6 +7747,7 @@ def main():
         .replace("__SOURCE_CHIPS__", source_chips_html)
         .replace("__MATRIX_DATA__", matrix_json)
         .replace("__INTEL_DATA__", intel_json)
+        .replace("__ACTORS_DATA__", actors_json)
     )
     OUT_HTML.write_text(page, encoding="utf-8")
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")
