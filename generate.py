@@ -3583,7 +3583,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 }
 .actors-map-legend .lg-state{background:#7170ff;}
 .actors-map-legend .lg-crim{background:#eb5757;}
-.actors-map-legend .lg-mixed{background:#9b8afb;}
+.actors-map-legend .lg-mixed{background:#e2a93f;}
 .actors-globe{
   width:100%; height:480px;
   background:radial-gradient(ellipse at center, rgba(113,112,255,0.06) 0%, transparent 70%), #08090a;
@@ -5945,7 +5945,10 @@ function renderActorsMap(filtered) {
     if (!ll) return;  // unknown / "??" actors don't pin to the globe
     const isCrim = info.crim > info.state;
     const isMixed = info.state > 0 && info.crim > 0;
-    const color = isMixed ? '#9b8afb' : isCrim ? '#eb5757' : '#7170ff';
+    // Amber for 'mixed' (state + criminal coexist in one country) —
+    // distinguishes clearly from the indigo state-only and red
+    // criminal-only categories at small pin sizes.
+    const color = isMixed ? '#e2a93f' : isCrim ? '#eb5757' : '#7170ff';
     pins.push({
       code, name: COUNTRY_LABELS[code] || code,
       lat: ll.lat, lng: ll.lng,
