@@ -3780,17 +3780,29 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   font-size:9.5px; color:var(--muted-2);
   text-transform:uppercase; letter-spacing:0.06em; font-weight:500;
 }
-/* Per-actor UC list inside the drawer — compact, click to expand
-   with the SPL/KQL query. Mirrors uc-card-row pattern in matrix. */
+/* Per-actor UC accordion inside the drawer. Each row is a <details>
+   element; clicking the summary expands a panel that lazy-renders
+   a clone of the source article's UC body (SPL/KQL tabs, techniques,
+   data sources). Mirrors the inline-detection-content pattern from
+   article cards but localised to a single actor. */
 .actor-uc-list{display:flex; flex-direction:column; gap:6px;}
 .actor-uc-row{
   background:var(--panel); border:1px solid var(--border);
   border-left:3px solid var(--border);
-  border-radius:var(--r-md); padding:8px 12px;
+  border-radius:var(--r-md);
   font-size:12.5px; color:var(--text);
-  display:flex; align-items:center; gap:8px;
+  overflow:hidden;
+  transition:border-color 0.12s;
 }
 .actor-uc-row.is-llm{border-left-color:var(--accent);}
+.actor-uc-row[open]{border-color:var(--border-2);}
+.actor-uc-row > summary{
+  padding:9px 12px; cursor:pointer; user-select:none;
+  display:flex; align-items:center; gap:8px;
+  list-style:none;                     /* Firefox triangle */
+}
+.actor-uc-row > summary::-webkit-details-marker{display:none;}
+.actor-uc-row > summary:hover{background:var(--panel-elev);}
 .actor-uc-row .uc-llm-pill{
   font-size:9px; padding:1px 5px; border-radius:3px;
   background:rgba(113,112,255,0.15); color:var(--accent);
@@ -3801,7 +3813,28 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .actor-uc-row .uc-techs{
   font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
 }
-.actor-uc-row .uc-arrow{color:var(--muted-2); font-size:11px;}
+.actor-uc-row .uc-arrow{
+  color:var(--muted-2); font-size:11px;
+  transition:transform 0.18s;
+}
+.actor-uc-row[open] .uc-arrow{transform:rotate(180deg);}
+.actor-uc-body{
+  padding:0;                /* the cloned uc-body has its own padding */
+  border-top:1px solid var(--border);
+  background:var(--panel-elev);
+  animation:fadeIn 0.18s ease;
+}
+.actor-uc-body[data-loaded="false"]:empty{display:none;}
+.actor-uc-body .uc-body{padding:14px 16px;}
+.actor-uc-foot{
+  padding:8px 16px 12px;
+  border-top:1px dashed var(--hairline);
+}
+.actor-uc-foot .actor-uc-srcart{
+  color:var(--accent); font-size:11.5px; text-decoration:none;
+  font-family:var(--mono);
+}
+.actor-uc-foot .actor-uc-srcart:hover{text-decoration:underline;}
 /* Drawer severity-bar — bigger version of the card's stripe */
 .actor-drawer-sev{
   display:flex; gap:2px; height:8px; border-radius:4px; overflow:hidden;
@@ -6266,19 +6299,26 @@ function renderActorView(name) {
   // Techniques as click-pivot pills
   const techPills = a.techs.slice(0,60).map(t =>
     `<span class="ind tech" data-tid-jump="${escapeHtml(t)}" title="Click to open this technique on the ATT&CK matrix">${escapeHtml(t)}</span>`).join(' ');
-  // Linked UCs — LLM first, then internal. Click any to scroll the
-  // analyst back to the source article where the UC's full SPL/KQL is
-  // already rendered.
+  // Linked UCs — LLM first, then rule-fired. Click any row to expand
+  // it INLINE (accordion) showing the actual SPL/KQL body cloned from
+  // the source article card. The articles section below already gives
+  // an article-level pivot, so this expansion stays focused on the
+  // detection content itself.
   const sortedUcs = a.ucs.slice().sort((x,y)=>(y.is_llm?1:0)-(x.is_llm?1:0));
   const ucList = sortedUcs.length ? `
     <div class="actor-uc-list">
-      ${sortedUcs.map(uc => `
-        <div class="actor-uc-row ${uc.is_llm?'is-llm':''}" data-jump="${uc.art_id}">
-          ${uc.is_llm ? '<span class="uc-llm-pill">LLM</span>' : ''}
-          <span class="uc-name">${escapeHtml(uc.title.replace(/^(\[LLM\]\s*)+/, ''))}</span>
-          <span class="uc-techs">${(uc.techs||[]).slice(0,3).map(escapeHtml).join(' ')}</span>
-          <span class="uc-arrow">→</span>
-        </div>
+      ${sortedUcs.map((uc, idx) => `
+        <details class="actor-uc-row ${uc.is_llm?'is-llm':''}"
+                 data-art-id="${uc.art_id}"
+                 data-uc-title="${escapeHtml(uc.title)}">
+          <summary>
+            ${uc.is_llm ? '<span class="uc-llm-pill">LLM</span>' : ''}
+            <span class="uc-name">${escapeHtml(uc.title.replace(/^(\[LLM\]\s*)+/, ''))}</span>
+            <span class="uc-techs">${(uc.techs||[]).slice(0,3).map(escapeHtml).join(' ')}</span>
+            <span class="uc-arrow">▾</span>
+          </summary>
+          <div class="actor-uc-body" data-loaded="false"></div>
+        </details>
       `).join('')}
     </div>` : '<div class="drawer-empty">No linked use cases yet — articles citing this actor didn\'t fire any UC rules or generate LLM-bespoke detections.</div>';
   // Severity bar (drawer-sized)
@@ -6346,19 +6386,65 @@ function renderActorView(name) {
       ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,30).map(escapeHtml).join(' · ')+'</div>' : ''}
     </div>
   `;
-  // Wire article-jump links + UC-row jumps — RENDER INLINE inside
-  // the drawer instead of switching to the Articles tab. Keeps the
-  // user on the actor's profile while letting them read the article
-  // body. "← Back" returns to the actor view; prev/next walks the
-  // article list.
+  // Wire article-jump links — render the article inline inside the
+  // drawer (preserves Threat Actors tab focus).
   const articleIds = sortedArticles.map(art => art.id);
-  body.querySelectorAll('.art-jump, .actor-uc-row[data-jump]').forEach(el =>
+  body.querySelectorAll('.art-jump').forEach(el =>
     el.addEventListener('click', e => {
       e.preventDefault();
       const jumpId = el.dataset.jump;
       window._actorDrawerStack.push({type:'actor', name:a.name});
       renderArticleInDrawer(jumpId, articleIds, a.name);
     }));
+  // Wire UC accordion rows — first expand lazy-clones the UC body
+  // (SPL + KQL tabs, techniques, data sources) from the source
+  // article card. After that the <details> handles open/close.
+  body.querySelectorAll('details.actor-uc-row').forEach(d => {
+    d.addEventListener('toggle', () => {
+      if (!d.open) return;
+      const panel = d.querySelector('.actor-uc-body');
+      if (!panel || panel.dataset.loaded === 'true') return;
+      const artId = d.dataset.artId;
+      const wantTitle = d.dataset.ucTitle;
+      const sourceArt = document.getElementById(artId);
+      let target = null;
+      if (sourceArt) {
+        const all = sourceArt.querySelectorAll('details.uc');
+        target = Array.from(all).find(node =>
+          (node.querySelector('.uc-title')?.textContent || '').trim() === wantTitle.trim());
+      }
+      if (target) {
+        const innerBody = target.querySelector('.uc-body');
+        if (innerBody) {
+          const clone = innerBody.cloneNode(true);
+          // Preserve interactive sub-tabs (Defender KQL / Splunk SPL)
+          // — they listen for clicks on their own .tab-btn buttons,
+          // which the existing global handler picks up via event-
+          // delegation. Cloning keeps them functional.
+          panel.appendChild(clone);
+          // Add a tiny "View source article" link below the body
+          panel.insertAdjacentHTML('beforeend',
+            '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ Open source article</a></div>');
+          panel.querySelector('.actor-uc-srcart')?.addEventListener('click', e => {
+            e.preventDefault();
+            window._actorDrawerStack.push({type:'actor', name:a.name});
+            renderArticleInDrawer(artId, articleIds, a.name);
+          });
+        } else {
+          panel.innerHTML = '<div class="drawer-empty">UC body not available — try refreshing the page.</div>';
+        }
+      } else {
+        panel.innerHTML = '<div class="drawer-empty">UC body not found in source article. Tap "→ Open source article" below.</div>'
+          + '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ Open source article</a></div>';
+        panel.querySelector('.actor-uc-srcart')?.addEventListener('click', e => {
+          e.preventDefault();
+          window._actorDrawerStack.push({type:'actor', name:a.name});
+          renderArticleInDrawer(artId, articleIds, a.name);
+        });
+      }
+      panel.dataset.loaded = 'true';
+    });
+  });
   // Tech pill → switch to matrix tab and open that technique drawer
   body.querySelectorAll('[data-tid-jump]').forEach(el =>
     el.addEventListener('click', () => {
