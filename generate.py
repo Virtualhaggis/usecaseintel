@@ -2557,6 +2557,127 @@ body:not(.view-intel-active)    .stats-intel{
   .stats{ flex-wrap:wrap; white-space:normal; }
   .stats-wrap{ min-height:auto; }
 }
+
+/* ===== Mobile (≤780px) — comprehensive responsive pass ===============
+   The desktop layout assumes 1280-2560px viewports. On phones we need
+   to: stack the topbar, scroll the view-tabs horizontally, hide the
+   large summary-stats hero (it's cramped at 390px), shrink brand/logo,
+   compact card padding, stack filter groups vertically, give the
+   matrix horizontal scroll, and make drawers full-screen. */
+@media(max-width:780px){
+  /* Topbar — single tight row, brand left, search right, tabs below */
+  .topbar-inner{padding:8px 12px; gap:10px;}
+  .brand{font-size:15px; gap:8px;}
+  .brand .logo{width:38px; height:38px; border-radius:8px;}
+  .brand-text > span:first-child{font-size:14px;}
+  .stats-wrap{display:none;}
+  .search-trigger{
+    min-width:0; padding:6px 10px; font-size:11.5px;
+  }
+  .search-placeholder{display:none;}
+  .search-shortcut{margin-left:0;}
+  /* View tabs — horizontal-scroll the row instead of wrapping */
+  .view-tabs{
+    width:100%; max-width:100%;
+    overflow-x:auto; overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex-wrap:nowrap; padding:3px;
+  }
+  .view-tabs::-webkit-scrollbar{display:none;}
+  .view-tab{flex:0 0 auto; padding:6px 12px; font-size:12.5px;}
+
+  /* Article main grid — stack TOC above content (already 1-col via 980px
+     rule). Reduce padding for tighter edge-to-edge feel. */
+  main, main.width-compact, main.width-wide, main.width-full{
+    padding:12px;
+  }
+  nav.toc{
+    position:static; max-height:none; padding:8px;
+    margin-bottom:12px;
+  }
+  /* Article cards — tighter padding, smaller h2 */
+  article.card{padding:18px 16px; font-size:13px;}
+  article.card h2{font-size:17px; line-height:1.3;}
+  article.card .pubmeta{font-size:11px; gap:8px;}
+  article.card p.summary{font-size:13px;}
+  article.card .sev-ribbon{left:14px; font-size:9.5px;}
+
+  /* Filter toolbar — every group stacks; no horizontal wasted space */
+  .filter-toolbar{padding:10px 12px;}
+  .filter-toolbar .ft-group{
+    flex-direction:column; align-items:flex-start; gap:6px;
+  }
+  .filter-toolbar .ft-label{min-width:0;}
+  .width-toggle{margin-left:0; align-self:flex-start;}
+
+  /* Article-tab feature info banner — keep readable on narrow */
+  .info-banner summary{padding:9px 12px; font-size:12.5px;}
+  .info-banner .info-body{padding:0 14px 12px 32px; font-size:12.5px;}
+  .info-banner .info-hint{display:none;}
+
+  /* Threat Intel tab */
+  .intel-toolbar{flex-direction:column; align-items:stretch;}
+  .intel-table-wrap{overflow-x:auto;}
+
+  /* Threat Actors tab */
+  .actors-wrap{padding:12px;}
+  .actors-hero{
+    gap:12px 18px; padding:14px 16px;
+  }
+  .actors-hero .hero-stat .v{font-size:18px;}
+  .actors-toolbar{padding:10px 12px;}
+  .actors-toolbar select{flex:1 1 auto;}
+  .actors-filters{padding:10px 12px;}
+  .actors-filters .ft-group{
+    flex-direction:column; align-items:flex-start; gap:6px;
+  }
+  .actors-filters .ft-label{min-width:0;}
+  .actors-grid{grid-template-columns:1fr; gap:10px;}
+  .actor-card{padding:14px 16px;}
+  .actor-card .ac-flag{font-size:24px;}
+  .actor-card .ac-name{font-size:14px;}
+  .actors-country-chips, .actors-country-chip{font-size:11.5px;}
+
+  /* Matrix tab — horizontal scroll, smaller cells */
+  .matrix-wrap{padding:10px;}
+  .matrix-toolbar{flex-direction:column; align-items:stretch; gap:8px;}
+  #matrixSearch{width:100%;}
+  .matrix-stats{font-size:11px; gap:10px;}
+  .matrix{overflow-x:auto;}
+
+  /* Workflow tab — already scrolls SVG. Tighten cards. */
+  .workflow-wrap{padding:14px;}
+  .wf-step{padding:12px 14px; font-size:12.5px;}
+  .wf-card{padding:16px 18px; font-size:13px;}
+  .wf-card h3{font-size:15px;}
+
+  /* Drawers — already 96vw at 768px, ensure inner content fits */
+  .drawer{
+    width:100vw; height:100vh; max-height:100vh;
+    border-radius:0;
+  }
+  .drawer-head h3{font-size:16px;}
+  .drawer-section{padding:0 14px;}
+  .actor-uc-row{flex-wrap:wrap;}
+  .actor-uc-row .uc-techs{font-size:9.5px; flex-basis:100%;}
+
+  /* About tab — single-column, less padding */
+  .actors-footer p, .info-banner .info-body p{line-height:1.55;}
+
+  /* Lightbox — let logo image use most of the screen on tap */
+  .logo-lightbox img{
+    max-width:88vw; max-height:70vh; padding:12px; border-radius:14px;
+  }
+}
+
+/* Very narrow phones (≤380px) — slim further to prevent overflow */
+@media(max-width:380px){
+  .brand-text > span:first-child{font-size:12.5px;}
+  .brand .logo{width:34px; height:34px;}
+  .view-tab{padding:6px 10px; font-size:11.5px;}
+  article.card{padding:14px 12px;}
+}
 /* Workflow tab: no stats bar — purposeful blank space, the diagram speaks */
 .stat{
   display:flex; flex-direction:column; align-items:center;
