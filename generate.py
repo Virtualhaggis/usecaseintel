@@ -3537,12 +3537,46 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   margin:4px 0 0; font-size:12px; color:var(--muted);
   max-width:680px; line-height:1.5;
 }
+.actors-map-tools{
+  display:flex; gap:14px; align-items:center; flex-wrap:wrap;
+}
 .actors-map-legend{
   display:flex; gap:14px; align-items:center;
   font-size:11.5px; color:var(--muted-2);
   text-transform:lowercase; letter-spacing:0.02em;
   flex-wrap:wrap;
 }
+/* Clear-filters button — disabled / muted when nothing is filtered;
+   activates with an indigo accent + count badge when something is. */
+.actors-clear-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--panel-elev); border:1px solid var(--border);
+  color:var(--muted); padding:6px 12px; border-radius:var(--r-md);
+  font-size:12px; font-weight:500; font-family:inherit;
+  cursor:pointer; line-height:1;
+  transition:background 0.12s, border-color 0.12s, color 0.12s;
+}
+.actors-clear-btn:hover:not(:disabled){
+  background:var(--panel2); border-color:var(--border-2); color:var(--text);
+}
+.actors-clear-btn:disabled{opacity:0.4; cursor:default;}
+.actors-clear-btn.has-filters{
+  border-color:rgba(113,112,255,0.4);
+  color:var(--text);
+  background:rgba(113,112,255,0.08);
+}
+.actors-clear-btn.has-filters:hover{
+  background:rgba(113,112,255,0.15);
+  border-color:var(--accent);
+}
+.actors-clear-count{
+  background:var(--accent); color:#fff;
+  font-variant-numeric:tabular-nums;
+  padding:1px 6px; border-radius:8px;
+  font-size:10.5px; font-weight:600; line-height:1.4;
+  display:none;
+}
+.actors-clear-btn.has-filters .actors-clear-count{display:inline;}
 .actors-map-legend .lg-dot{
   display:inline-block; width:8px; height:8px; border-radius:50%;
   margin-right:4px; vertical-align:middle;
@@ -4582,10 +4616,21 @@ ul.intel-types-doc code{
           <h3>Threat actor coverage by country</h3>
           <p>Drag to spin · click a pin to filter the grid below. Pin height = actor count, colour = indigo (state) / red (criminal) / purple (mixed).</p>
         </div>
-        <div class="actors-map-legend">
-          <span class="lg-dot lg-state"></span> state
-          <span class="lg-dot lg-crim"></span> criminal
-          <span class="lg-dot lg-mixed"></span> mixed
+        <div class="actors-map-tools">
+          <div class="actors-map-legend">
+            <span class="lg-dot lg-state"></span> state
+            <span class="lg-dot lg-crim"></span> criminal
+            <span class="lg-dot lg-mixed"></span> mixed
+          </div>
+          <button id="actorsClearFilters" class="actors-clear-btn" disabled
+                  title="Reset country, motivation, and search filters">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+            <span>Clear filters</span>
+            <span class="actors-clear-count" id="actorsClearCount"></span>
+          </button>
         </div>
       </div>
       <div id="actorsGlobe" class="actors-globe"></div>
@@ -6047,8 +6092,37 @@ function renderActors() {
     actorsSortMode = sortSel.value;
     applyActorsFilter();
   });
+  // Clear-filters button — resets country, motivation, search
+  document.getElementById('actorsClearFilters')?.addEventListener('click', () => {
+    actorsCountryFilter = '';
+    actorsMotivationFilter = '';
+    const searchEl = document.getElementById('actorsSearch');
+    if (searchEl) searchEl.value = '';
+    document.querySelectorAll('#actorsCountryChips .actors-country-chip').forEach(b =>
+      b.classList.toggle('active', !b.dataset.country));
+    document.querySelectorAll('#actorsMotChips .actors-country-chip').forEach(b =>
+      b.classList.toggle('active', !b.dataset.mot));
+    applyActorsFilter();
+  });
   applyActorsFilter();
   document.getElementById('actorsSearch')?.addEventListener('input', applyActorsFilter);
+}
+
+// Update the clear-filters button state — count active filters and
+// show as a badge so the analyst sees at a glance whether anything
+// is filtered. Called from applyActorsFilter on every refresh.
+function updateActorsClearBtn() {
+  const btn = document.getElementById('actorsClearFilters');
+  if (!btn) return;
+  const q = (document.getElementById('actorsSearch')?.value || '').trim();
+  let n = 0;
+  if (actorsCountryFilter) n++;
+  if (actorsMotivationFilter) n++;
+  if (q) n++;
+  btn.disabled = n === 0;
+  btn.classList.toggle('has-filters', n > 0);
+  const badge = document.getElementById('actorsClearCount');
+  if (badge) badge.textContent = n > 0 ? n : '';
 }
 
 function applyActorsFilter() {
@@ -6083,6 +6157,8 @@ function applyActorsFilter() {
   const countries = new Set(filtered.map(a=>a.country));
   const stateCount = filtered.filter(a=>a.motivation==='state').length;
   const crimCount = filtered.filter(a=>a.motivation==='criminal').length;
+  // Refresh the clear-filters button enabled/disabled state + badge
+  updateActorsClearBtn();
   // Topbar stats — mirrors the .stat shape from #topStats so the
   // existing centred sliding-stats CSS picks it up. Same slot as
   // Articles / Matrix / Intel tabs use.
