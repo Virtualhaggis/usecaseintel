@@ -7992,10 +7992,18 @@ def main():
                     entry["first_seen"] = pub
                 if entry["last_seen"] is None or pub > entry["last_seen"]:
                     entry["last_seen"] = pub
-            # Stash a slim view of UCs for drawer rendering — LLM first
-            # then internal, capped at 8 to keep the payload light.
-            for uc in ucs:
-                if len(entry["ucs"]) >= 8: break
+            # Stash a slim view of UCs for drawer rendering — LLM-bespoke
+            # ones first (they're the article-specific high-fidelity
+            # detections, the most analyst-valuable content), then fill
+            # with rule-fired UCs up to a per-actor cap so the JSON
+            # payload stays light. Sort the per-article UC list once
+            # before iterating; preserving stable order within each tier.
+            ucs_for_drawer = sorted(
+                ucs,
+                key=lambda u: 0 if (u.title or "").startswith("[LLM]") else 1,
+            )
+            for uc in ucs_for_drawer:
+                if len(entry["ucs"]) >= 12: break
                 title = uc.title or ""
                 entry["ucs"].append({
                     "title": title,
