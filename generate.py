@@ -2544,13 +2544,15 @@ body{
 }
 body.view-articles-active .stats-articles,
 body.view-matrix-active   .stats-matrix,
-body.view-intel-active    .stats-intel{
+body.view-intel-active    .stats-intel,
+body.view-actors-active   .stats-actors{
   opacity:1; transform:translate(-50%, -50%); pointer-events:auto;
 }
 /* Subtle entry animation — slide up from below as it fades in */
 body:not(.view-articles-active) .stats-articles,
 body:not(.view-matrix-active)   .stats-matrix,
-body:not(.view-intel-active)    .stats-intel{
+body:not(.view-intel-active)    .stats-intel,
+body:not(.view-actors-active)   .stats-actors{
   transform:translate(-50%, calc(-50% + 8px));
 }
 @media(max-width:780px){
@@ -3515,6 +3517,86 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .actors-wrap{
   max-width:1280px; margin:0 auto; padding:18px 28px 60px;
 }
+
+/* ----- World map (Threat Actors hero) -------------------------------- */
+.actors-map-wrap{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-lg); padding:16px 20px 12px;
+  margin-bottom:16px;
+}
+.actors-map-head{
+  display:flex; gap:14px; align-items:flex-start;
+  justify-content:space-between; flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.actors-map-head h3{
+  margin:0; font-size:15px; font-weight:600;
+  color:var(--text); letter-spacing:-0.012em;
+}
+.actors-map-head p{
+  margin:4px 0 0; font-size:12px; color:var(--muted);
+  max-width:680px; line-height:1.5;
+}
+.actors-map-legend{
+  display:flex; gap:14px; align-items:center;
+  font-size:11.5px; color:var(--muted-2);
+  text-transform:lowercase; letter-spacing:0.02em;
+  flex-wrap:wrap;
+}
+.actors-map-legend .lg-dot{
+  display:inline-block; width:8px; height:8px; border-radius:50%;
+  margin-right:4px; vertical-align:middle;
+}
+.actors-map-legend .lg-state{background:#7170ff;}
+.actors-map-legend .lg-crim{background:#eb5757;}
+.actors-map-legend .lg-mixed{background:#9b8afb;}
+.actors-map{
+  display:block; width:100%; height:auto; max-height:400px;
+}
+/* Dots — sized by actors-per-country, coloured by motivation mix */
+.actors-map .country-dot{
+  cursor:pointer;
+  transition:transform 0.15s ease, filter 0.15s ease;
+  transform-origin:center;
+  transform-box:fill-box;
+}
+.actors-map .country-dot:hover,
+.actors-map .country-dot.active{
+  transform:scale(1.25);
+  filter:drop-shadow(0 0 8px currentColor) brightness(1.2);
+}
+.actors-map .country-pulse{
+  fill:none; stroke:currentColor; stroke-width:1;
+  opacity:0.6;
+  animation:pulseRing 2.4s ease-out infinite;
+}
+@keyframes pulseRing{
+  0%{r:8px; opacity:0.6;}
+  100%{r:24px; opacity:0;}
+}
+.actors-map .country-label{
+  font-size:10.5px; font-family:var(--mono); font-weight:600;
+  fill:var(--muted); text-anchor:middle;
+  pointer-events:none;
+}
+.actors-map .country-dot:hover ~ .country-label,
+.actors-map .country-dot.active ~ .country-label{fill:var(--text);}
+.actors-map-tip{
+  position:absolute; pointer-events:none;
+  background:var(--panel-elev); border:1px solid var(--border-2);
+  padding:8px 12px; border-radius:var(--r-md);
+  font-size:12px; color:var(--text);
+  box-shadow:var(--shadow-md);
+  opacity:0; transform:translateY(4px);
+  transition:opacity 0.12s, transform 0.12s;
+  z-index:30;
+}
+.actors-map-tip.show{opacity:1; transform:translateY(0);}
+.actors-map-tip strong{color:var(--text); font-weight:600;}
+.actors-map-tip .meta{
+  color:var(--muted-2); font-size:10.5px;
+  text-transform:uppercase; letter-spacing:0.06em; margin-top:2px;
+}
 .actors-toolbar{
   display:flex; gap:12px; align-items:center; flex-wrap:wrap;
   padding:14px 16px; margin-bottom:12px;
@@ -4121,6 +4203,40 @@ ul.intel-types-doc code{
 @media(max-width:768px){
   .drawer{ width:96vw; height:94vh; }
 }
+/* Drawer body must scroll — without this, long actor profiles (lots
+   of UCs + 50+ techniques + IOC list) get clipped at the bottom. */
+#actorDrawerBody, #drawerBody{
+  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding-bottom:24px;
+}
+/* Sticky in-drawer navigation bar — used when an article is rendered
+   inline. Lets the user "← Back to ActorName" or step through the
+   actor's article list with prev/next, all without leaving the
+   Threat Actors tab. */
+.drawer-nav{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:10px 14px;
+  background:var(--panel-elev);
+  border-bottom:1px solid var(--border);
+}
+.drawer-nav-btn{
+  background:var(--panel); border:1px solid var(--border);
+  color:var(--text); padding:6px 12px; border-radius:var(--r-md);
+  font-size:12.5px; font-weight:500; font-family:inherit;
+  cursor:pointer;
+  transition:background-color 0.12s, border-color 0.12s, color 0.12s;
+}
+.drawer-nav-btn:hover{background:var(--panel2); border-color:var(--border-2);}
+.drawer-nav-btn:disabled{opacity:0.4; cursor:default;}
+.drawer-nav-btn.drawer-nav-back{font-size:12.5px;}
+.drawer-nav-step{
+  display:flex; align-items:center; gap:6px;
+  color:var(--muted); font-size:11.5px; font-variant-numeric:tabular-nums;
+}
+.drawer-nav-pos{padding:0 6px;}
+.drawer-article{padding:18px 20px;}
+.drawer-article article.card{margin-bottom:0;}
 .drawer-head{padding:18px 20px; border-bottom:1px solid var(--hairline);}
 .drawer-head .tid{color:var(--accent); font-family:ui-monospace,monospace; font-size:13px;
   font-weight:700; letter-spacing:0.02em;}
@@ -4204,6 +4320,7 @@ ul.intel-types-doc code{
       </div>
       <div class="stats stats-matrix" id="topStatsMatrix"></div>
       <div class="stats stats-intel" id="topStatsIntel"></div>
+      <div class="stats stats-actors" id="topStatsActors"></div>
     </div>
     <div class="search-trigger" id="searchTrigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
@@ -4483,8 +4600,68 @@ ul.intel-types-doc code{
      lazily on tab switch from window.__ACTORS__. ===== -->
 <div id="view-actors" class="view">
   <div class="actors-wrap">
-    <!-- Top-of-tab summary stats -->
-    <div class="actors-hero" id="actorsHero"></div>
+    <!-- World map — clickable countries (any with attributed actors). -->
+    <div class="actors-map-wrap" id="actorsMapWrap">
+      <div class="actors-map-head">
+        <div>
+          <h3>Threat actor coverage by country</h3>
+          <p>Tap a country to filter the grid. Bigger dot = more actors observed in the last 365 days. Pink = ransomware/criminal weighting · indigo = state-sponsored weighting.</p>
+        </div>
+        <div class="actors-map-legend">
+          <span class="lg-dot lg-state"></span> state
+          <span class="lg-dot lg-crim"></span> criminal
+          <span class="lg-dot lg-mixed"></span> mixed
+        </div>
+      </div>
+      <svg id="actorsMap" class="actors-map" viewBox="0 0 1000 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="World map of attributed threat-actor countries">
+        <defs>
+          <linearGradient id="amapBg" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="rgba(113,112,255,0.05)"/>
+            <stop offset="100%" stop-color="rgba(113,112,255,0)"/>
+          </linearGradient>
+        </defs>
+        <rect width="1000" height="480" fill="url(#amapBg)"/>
+        <line x1="0" y1="240" x2="1000" y2="240" stroke="rgba(255,255,255,0.04)" stroke-dasharray="2 6"/>
+        <line x1="0" y1="170" x2="1000" y2="170" stroke="rgba(255,255,255,0.03)" stroke-dasharray="2 6"/>
+        <line x1="0" y1="310" x2="1000" y2="310" stroke="rgba(255,255,255,0.03)" stroke-dasharray="2 6"/>
+        <!-- Stylised continent shapes — abstract enough to render fast,
+             recognisable enough that an analyst orients in 2 seconds. -->
+        <g class="continents" fill="rgba(255,255,255,0.04)" stroke="rgba(255,255,255,0.10)" stroke-width="1" stroke-linejoin="round">
+          <!-- North America -->
+          <path d="M 60 95 L 130 60 L 230 70 L 285 130 L 275 215 L 230 245 L 185 245 L 145 230 L 95 220 L 60 175 Z"/>
+          <!-- Central America -->
+          <path d="M 230 245 L 270 250 L 280 285 L 250 300 L 230 285 Z"/>
+          <!-- South America -->
+          <path d="M 240 280 L 295 285 L 330 350 L 300 425 L 250 415 L 230 360 Z"/>
+          <!-- Greenland -->
+          <path d="M 360 60 L 410 55 L 420 105 L 380 115 L 360 95 Z"/>
+          <!-- Europe (rough) -->
+          <path d="M 420 95 L 540 95 L 555 165 L 480 180 L 430 165 Z"/>
+          <!-- Africa -->
+          <path d="M 460 195 L 565 215 L 580 290 L 540 380 L 490 415 L 460 380 L 445 295 Z"/>
+          <!-- Russia / North Asia -->
+          <path d="M 540 65 L 870 60 L 880 125 L 700 155 L 545 145 Z"/>
+          <!-- Middle East -->
+          <path d="M 545 165 L 625 175 L 620 230 L 560 240 Z"/>
+          <!-- South Asia -->
+          <path d="M 620 215 L 695 230 L 690 295 L 640 290 L 615 250 Z"/>
+          <!-- East Asia / China -->
+          <path d="M 700 130 L 845 145 L 835 240 L 700 235 Z"/>
+          <!-- Korean peninsula -->
+          <path d="M 825 170 L 850 175 L 850 215 L 825 220 Z"/>
+          <!-- Japan -->
+          <path d="M 870 165 L 895 175 L 905 215 L 880 225 L 870 195 Z"/>
+          <!-- SE Asia / Indonesia -->
+          <path d="M 720 250 L 800 260 L 815 305 L 770 325 L 730 320 Z"/>
+          <!-- Australia -->
+          <path d="M 845 360 L 950 365 L 945 415 L 870 415 Z"/>
+        </g>
+        <!-- Country dots — populated by JS from window.__ACTORS__. -->
+        <g id="actorsMapDots"></g>
+      </svg>
+    </div>
+    <!-- Legacy hero slot (now unused — stats moved to topbar) -->
+    <div class="actors-hero" id="actorsHero" style="display:none;"></div>
     <!-- Filter toolbar: search, country chips, motivation chips, sort -->
     <div class="actors-toolbar">
       <input type="text" id="actorsSearch" placeholder="Search actor name, alias, or country (e.g. APT29, Cozy, Russia, ransomware)…" autocomplete="off">
@@ -5279,6 +5456,7 @@ function showView(name) {
   document.body.classList.toggle('view-articles-active', name === 'articles');
   document.body.classList.toggle('view-matrix-active',   name === 'matrix');
   document.body.classList.toggle('view-intel-active',    name === 'intel');
+  document.body.classList.toggle('view-actors-active',   name === 'actors');
   if (name === 'matrix' && !window._matrixRendered) {
     renderMatrix();
     window._matrixRendered = true;
@@ -5739,6 +5917,87 @@ const ACTORS = __ACTORS_DATA__;
 let actorsCountryFilter = '';
 let actorsMotivationFilter = '';
 let actorsSortMode = 'active';
+
+// Approximate position of each country on the stylised world SVG
+// (viewBox 1000x480). Hand-tuned over the continent paths so dots
+// land on land. "??" deliberately offscreen so unknown actors
+// show up below the map as a separate "Unattributed" cluster.
+const COUNTRY_COORDS = {
+  US: {x: 165, y: 165}, BR: {x: 280, y: 360},
+  RU: {x: 690, y: 100}, CN: {x: 770, y: 195},
+  KP: {x: 837, y: 195}, IR: {x: 590, y: 200},
+  IN: {x: 660, y: 255}, PK: {x: 640, y: 230},
+  VN: {x: 770, y: 250}, MY: {x: 770, y: 300},
+  LB: {x: 555, y: 195}, "??":{x: 950, y: 60}
+};
+
+function renderActorsMap(filtered) {
+  const svg = document.getElementById('actorsMapDots');
+  if (!svg) return;
+  // Group by country, count actors + dominant motivation
+  const byCountry = {};
+  filtered.forEach(a => {
+    const k = a.country;
+    if (!byCountry[k]) byCountry[k] = {count:0, state:0, crim:0, hack:0, names:[]};
+    byCountry[k].count++;
+    if (a.motivation === 'state') byCountry[k].state++;
+    else if (a.motivation === 'criminal') byCountry[k].crim++;
+    else if (a.motivation === 'hacktivist') byCountry[k].hack++;
+    byCountry[k].names.push(a.name);
+  });
+  const maxCount = Math.max(1, ...Object.values(byCountry).map(c=>c.count));
+  let dotsHtml = '';
+  Object.entries(byCountry).forEach(([code, info]) => {
+    const pos = COUNTRY_COORDS[code];
+    if (!pos || code === '??') return;
+    const r = 6 + (info.count / maxCount) * 14;
+    const isCrim = info.crim > info.state;
+    const isMixed = info.state > 0 && info.crim > 0;
+    const color = isMixed ? '#9b8afb' : isCrim ? '#eb5757' : '#7170ff';
+    const label = COUNTRY_LABELS[code] || code;
+    const names = info.names.slice(0, 6).join(', ') + (info.names.length > 6 ? ' +' + (info.names.length - 6) + ' more' : '');
+    const isActive = actorsCountryFilter === code;
+    dotsHtml +=
+      `<g class="country-group" data-country="${code}">` +
+        `<circle class="country-pulse" cx="${pos.x}" cy="${pos.y}" r="8" style="color:${color}"/>` +
+        `<circle class="country-dot ${isActive?'active':''}" cx="${pos.x}" cy="${pos.y}" r="${r.toFixed(1)}" fill="${color}" fill-opacity="0.85" stroke="${color}" stroke-width="1.5" style="color:${color}" data-name="${escapeHtml(label)}" data-count="${info.count}" data-mix="${info.state}s/${info.crim}c${info.hack?'/'+info.hack+'h':''}" data-names="${escapeHtml(names)}"/>` +
+        `<text class="country-label" x="${pos.x}" y="${pos.y + r + 14}">${escapeHtml(code)} · ${info.count}</text>` +
+      `</g>`;
+  });
+  svg.innerHTML = dotsHtml;
+  // Tooltip
+  let tip = document.querySelector('.actors-map-tip');
+  if (!tip) {
+    tip = document.createElement('div');
+    tip.className = 'actors-map-tip';
+    document.body.appendChild(tip);
+  }
+  svg.querySelectorAll('.country-dot').forEach(dot => {
+    dot.addEventListener('mouseenter', e => {
+      const r = e.target.getBoundingClientRect();
+      tip.innerHTML =
+        '<strong>'+e.target.dataset.name+'</strong>' +
+        '<div class="meta">'+e.target.dataset.count+' actors · '+e.target.dataset.mix+'</div>' +
+        '<div style="margin-top:4px; font-size:11px; color:var(--muted);">'+e.target.dataset.names+'</div>';
+      tip.style.left = (r.left + window.scrollX + r.width/2 - 100) + 'px';
+      tip.style.top  = (r.top + window.scrollY - 56) + 'px';
+      tip.classList.add('show');
+    });
+    dot.addEventListener('mouseleave', () => tip.classList.remove('show'));
+    dot.addEventListener('click', () => {
+      const code = dot.parentElement.dataset.country;
+      // Toggle: clicking the active country clears the filter
+      const newFilter = (actorsCountryFilter === code) ? '' : code;
+      actorsCountryFilter = newFilter;
+      // Sync country chip bar
+      document.querySelectorAll('#actorsCountryChips .actors-country-chip').forEach(b => {
+        b.classList.toggle('active', (b.dataset.country || '') === newFilter);
+      });
+      applyActorsFilter();
+      tip.classList.remove('show');
+    });
+  });
+}
 const COUNTRY_LABELS = {
   RU:"Russia", CN:"China", KP:"North Korea", IR:"Iran",
   US:"United States", BR:"Brazil", IN:"India", PK:"Pakistan",
@@ -5832,19 +6091,23 @@ function applyActorsFilter() {
   const countries = new Set(filtered.map(a=>a.country));
   const stateCount = filtered.filter(a=>a.motivation==='state').length;
   const crimCount = filtered.filter(a=>a.motivation==='criminal').length;
-  const hero = document.getElementById('actorsHero');
-  if (hero) {
-    hero.innerHTML =
-      `<div class="hero-stat"><span class="v">${filtered.length}</span><span class="l">actors</span></div>` +
-      `<div class="hero-stat"><span class="v">${countries.size}</span><span class="l">nations</span></div>` +
-      `<div class="hero-stat"><span class="v">${stateCount}</span><span class="l">state-sponsored</span></div>` +
-      `<div class="hero-stat"><span class="v">${crimCount}</span><span class="l">criminal crews</span></div>` +
-      `<div class="hero-stat"><span class="v">${totalArticles}</span><span class="l">linked articles</span></div>` +
-      `<div class="hero-stat"><span class="v">${totalLlm}</span><span class="l">LLM use cases</span></div>` +
-      `<div class="hero-stat"><span class="v">${totalTechs.size}</span><span class="l">ATT&CK techniques</span></div>` +
-      `<div class="hero-stat"><span class="v">${totalIocs}</span><span class="l">IOCs</span></div>`;
+  // Topbar stats — mirrors the .stat shape from #topStats so the
+  // existing centred sliding-stats CSS picks it up. Same slot as
+  // Articles / Matrix / Intel tabs use.
+  const topActors = document.getElementById('topStatsActors');
+  if (topActors) {
+    topActors.innerHTML =
+      `<div class="stat"><div class="v">${filtered.length}</div><div class="l">Actors</div></div>` +
+      `<div class="stat"><div class="v">${countries.size}</div><div class="l">Nations</div></div>` +
+      `<div class="stat"><div class="v">${totalArticles}</div><div class="l">Articles</div></div>` +
+      `<div class="stat"><div class="v">${totalLlm}</div><div class="l">LLM UCs</div></div>` +
+      `<div class="stat"><div class="v">${totalTechs.size}</div><div class="l">Techniques</div></div>`;
   }
-  // Reset stats row to keep layout consistent (legacy slot)
+  // World map dot states refresh on filter change
+  if (typeof renderActorsMap === 'function') renderActorsMap(filtered);
+  // Reset legacy hero / stats row slots (we now use topbar instead)
+  const hero = document.getElementById('actorsHero');
+  if (hero) hero.innerHTML = '';
   const stats = document.getElementById('actorsStatsRow');
   if (stats) stats.innerHTML = '';
 
@@ -5899,11 +6162,26 @@ function applyActorsFilter() {
     c.addEventListener('click', () => openActorDrawer(c.dataset.name)));
 }
 
+// Drawer history stack — lets us push article views on top of the
+// actor view so the user can read an article without leaving the
+// Threat Actors tab, then "← Back" to the actor or step
+// forward/back through the article list inline.
+window._actorDrawerStack = [];
+
 function openActorDrawer(name) {
+  window._actorDrawerStack = [];
+  renderActorView(name);
+  document.getElementById('actorDrawer').classList.add('open');
+  document.getElementById('actorDrawerBg').classList.add('open');
+  document.getElementById('actorDrawer').setAttribute('aria-hidden','false');
+}
+
+function renderActorView(name) {
   const a = ACTORS.find(x => x.name === name);
   if (!a) return;
   const body = document.getElementById('actorDrawerBody');
   if (!body) return;
+  body.scrollTop = 0;
   // Articles — sort by date desc so latest is first
   const sortedArticles = a.articles.slice().sort((x,y)=>(y.published||'').localeCompare(x.published||''));
   const articleLinks = sortedArticles.map(art =>
@@ -5997,20 +6275,18 @@ function openActorDrawer(name) {
       ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,30).map(escapeHtml).join(' · ')+'</div>' : ''}
     </div>
   `;
-  document.getElementById('actorDrawer').classList.add('open');
-  document.getElementById('actorDrawerBg').classList.add('open');
-  document.getElementById('actorDrawer').setAttribute('aria-hidden','false');
-  // Wire article-jump links + UC-row jumps
+  // Wire article-jump links + UC-row jumps — RENDER INLINE inside
+  // the drawer instead of switching to the Articles tab. Keeps the
+  // user on the actor's profile while letting them read the article
+  // body. "← Back" returns to the actor view; prev/next walks the
+  // article list.
+  const articleIds = sortedArticles.map(art => art.id);
   body.querySelectorAll('.art-jump, .actor-uc-row[data-jump]').forEach(el =>
     el.addEventListener('click', e => {
       e.preventDefault();
       const jumpId = el.dataset.jump;
-      closeActorDrawer();
-      showView('articles');
-      setTimeout(() => {
-        const art = document.getElementById(jumpId);
-        if (art) art.scrollIntoView({behavior:'smooth', block:'start'});
-      }, 80);
+      window._actorDrawerStack.push({type:'actor', name:a.name});
+      renderArticleInDrawer(jumpId, articleIds, a.name);
     }));
   // Tech pill → switch to matrix tab and open that technique drawer
   body.querySelectorAll('[data-tid-jump]').forEach(el =>
@@ -6028,6 +6304,55 @@ function closeActorDrawer() {
   document.getElementById('actorDrawer')?.classList.remove('open');
   document.getElementById('actorDrawerBg')?.classList.remove('open');
   document.getElementById('actorDrawer')?.setAttribute('aria-hidden','true');
+  window._actorDrawerStack = [];
+}
+
+// Render an article inline inside the drawer. Clones the source
+// .card from the Articles tab so the analyst sees the same kill-
+// chain, ATT&CK pills, KQL/SPL queries — without leaving the
+// Threat Actors page. Adds a back/forward nav bar at the top.
+function renderArticleInDrawer(articleId, siblingIds, actorName) {
+  const body = document.getElementById('actorDrawerBody');
+  if (!body) return;
+  const sourceCard = document.getElementById(articleId);
+  if (!sourceCard) {
+    body.innerHTML = '<div class="drawer-section"><div class="drawer-empty">Article not found in current page payload.</div></div>';
+    return;
+  }
+  body.scrollTop = 0;
+  const idx = siblingIds.indexOf(articleId);
+  const prevId = idx > 0 ? siblingIds[idx - 1] : null;
+  const nextId = idx >= 0 && idx < siblingIds.length - 1 ? siblingIds[idx + 1] : null;
+  // Clone the card so we don't move the original out of the Articles
+  // DOM (anchor links to it must still work). Strip the id to avoid
+  // duplicate-id warnings while it's parented in the drawer.
+  const clone = sourceCard.cloneNode(true);
+  clone.removeAttribute('id');
+  clone.style.background = 'transparent';
+  clone.style.border = 'none';
+  clone.style.padding = '0';
+  clone.style.borderRadius = '0';
+  // Build the drawer with a sticky nav header
+  body.innerHTML = `
+    <div class="drawer-nav">
+      <button class="drawer-nav-btn drawer-nav-back" id="drawerNavBack">← Back to ${escapeHtml(actorName)}</button>
+      <div class="drawer-nav-step">
+        <button class="drawer-nav-btn" id="drawerNavPrev" ${prevId?'':'disabled'} aria-label="Previous article">‹</button>
+        <span class="drawer-nav-pos">${idx + 1} / ${siblingIds.length}</span>
+        <button class="drawer-nav-btn" id="drawerNavNext" ${nextId?'':'disabled'} aria-label="Next article">›</button>
+      </div>
+    </div>
+    <div class="drawer-article" id="drawerArticleHost"></div>`;
+  document.getElementById('drawerArticleHost').appendChild(clone);
+  document.getElementById('drawerNavBack').addEventListener('click', () => {
+    const prev = window._actorDrawerStack.pop();
+    if (prev && prev.type === 'actor') renderActorView(prev.name);
+    else if (actorName) renderActorView(actorName);
+  });
+  if (prevId) document.getElementById('drawerNavPrev').addEventListener('click', () =>
+    renderArticleInDrawer(prevId, siblingIds, actorName));
+  if (nextId) document.getElementById('drawerNavNext').addEventListener('click', () =>
+    renderArticleInDrawer(nextId, siblingIds, actorName));
 }
 document.getElementById('actorDrawerClose')?.addEventListener('click', closeActorDrawer);
 document.getElementById('actorDrawerBg')?.addEventListener('click', closeActorDrawer);
