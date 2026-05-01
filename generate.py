@@ -919,6 +919,10 @@ def _uc_from_llm_dict(d: dict):
         desc_parts.append("\n\nCross-checked against:")
         for u in cs[:6]:
             desc_parts.append(f"\n  • {u}")
+    # If the LLM emitted a title that already begins with "[LLM]" we
+    # don't want to compound to "[LLM] [LLM] foo" — strip any leading
+    # repetitions before adding our canonical single prefix.
+    title = re.sub(r"^(\[LLM\]\s*)+", "", title).strip()
     return UseCase(
         title=f"[LLM] {title[:140]}",
         description="".join(desc_parts),
@@ -5612,7 +5616,7 @@ function openActorDrawer(name) {
       ${sortedUcs.map(uc => `
         <div class="actor-uc-row ${uc.is_llm?'is-llm':''}" data-jump="${uc.art_id}">
           ${uc.is_llm ? '<span class="uc-llm-pill">LLM</span>' : ''}
-          <span class="uc-name">${escapeHtml(uc.title.replace(/^\\[LLM\\]\\s*/, ''))}</span>
+          <span class="uc-name">${escapeHtml(uc.title.replace(/^(\[LLM\]\s*)+/, ''))}</span>
           <span class="uc-techs">${(uc.techs||[]).slice(0,3).map(escapeHtml).join(' ')}</span>
           <span class="uc-arrow">→</span>
         </div>
