@@ -225,6 +225,52 @@ THREAT_ACTORS = [
 
     # ===== South America =====
     {"name": "Lapsus$", "aliases": ["Lapsus$", "DEV-0537", "Strawberry Tempest"], "country": "BR", "flag": "🇧🇷", "motivation": "criminal", "mitre_id": "G1004"},
+
+    # ===== Iran (additional) =====
+    {"name": "Pioneer Kitten", "aliases": ["Pioneer Kitten", "FOX KITTEN", "PARISITE", "Lemon Sandstorm"], "country": "IR", "flag": "🇮🇷", "motivation": "state"},
+    {"name": "Cyber Av3ngers", "aliases": ["Cyber Av3ngers", "CyberAvengers", "IRGC-CEC"], "country": "IR", "flag": "🇮🇷", "motivation": "hacktivist"},
+
+    # ===== Russia (additional) =====
+    {"name": "BianLian", "aliases": ["BianLian"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "BlackByte", "aliases": ["BlackByte", "Blackbyte"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "TA505", "aliases": ["TA505", "Hive0065", "Evil Corp", "Indrik Spider", "GOLD DRAKE"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal", "mitre_id": "G0092"},
+    {"name": "TA570", "aliases": ["TA570"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+
+    # ===== China (additional) =====
+    {"name": "Earth Lusca", "aliases": ["Earth Lusca", "TAG-22", "Aquatic Panda", "Bronze University"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "MirrorFace", "aliases": ["MirrorFace", "Cuckoo Spear", "Earth Kasha"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Storm-2077", "aliases": ["Storm-2077"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Brass Typhoon", "aliases": ["Brass Typhoon"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Flax Typhoon", "aliases": ["Flax Typhoon", "Ethereal Panda"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Linen Typhoon", "aliases": ["Linen Typhoon"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+    {"name": "Granite Typhoon", "aliases": ["Granite Typhoon"], "country": "CN", "flag": "🇨🇳", "motivation": "state"},
+
+    # ===== Newer ransomware crews =====
+    {"name": "Hellcat", "aliases": ["Hellcat ransomware", "Hellcat"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Embargo", "aliases": ["Embargo ransomware", "Embargo group"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "INC Ransom", "aliases": ["INC ransomware", "INC Ransom", "INC Group"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Stormous", "aliases": ["Stormous"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Trinity ransomware", "aliases": ["Trinity ransomware"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Brain Cipher", "aliases": ["Brain Cipher ransomware", "BrainCipher"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Termite", "aliases": ["Termite ransomware"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Kairos", "aliases": ["Kairos ransomware"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Funksec", "aliases": ["Funksec", "FunkSec"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Killsec", "aliases": ["KillSec"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+
+    # ===== Additional e-crime / IAB =====
+    {"name": "Wizard Spider", "aliases": ["Wizard Spider", "GOLD BLACKBURN", "ITG23"], "country": "RU", "flag": "🇷🇺", "motivation": "criminal"},
+    {"name": "TA571", "aliases": ["TA571"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "TA582", "aliases": ["TA582"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Storm-1849", "aliases": ["Storm-1849"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Storm-1811", "aliases": ["Storm-1811"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+    {"name": "Storm-1567", "aliases": ["Storm-1567"], "country": "??", "flag": "🌐", "motivation": "criminal"},
+
+    # ===== North Korea (additional) =====
+    {"name": "Citrine Sleet", "aliases": ["Citrine Sleet", "DEV-0139", "DEV-1222", "AppleJeus", "Labyrinth Chollima Citrine"], "country": "KP", "flag": "🇰🇵", "motivation": "state"},
+    {"name": "Famous Chollima", "aliases": ["Famous Chollima"], "country": "KP", "flag": "🇰🇵", "motivation": "state"},
+
+    # ===== MENA / Lebanon =====
+    {"name": "Volatile Cedar", "aliases": ["Volatile Cedar", "Lebanese Cedar"], "country": "LB", "flag": "🇱🇧", "motivation": "state"},
 ]
 
 # Build alias→canonical lookup once at import; precompile a single
@@ -3167,6 +3213,53 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   padding:8px 14px; border-radius:var(--r-md); font-size:13.5px; font-family:inherit;
 }
 .actors-toolbar input:focus{border-color:var(--accent); outline:none;}
+.actors-toolbar select{
+  background:var(--panel-elev); border:1px solid var(--border); color:var(--text);
+  padding:8px 12px; border-radius:var(--r-md); font-size:13px;
+  font-family:inherit; cursor:pointer;
+}
+.actors-toolbar select:focus{border-color:var(--accent); outline:none;}
+
+/* ----- Hero stats card at top of Threat Actors tab ------------------- */
+.actors-hero{
+  display:flex; gap:32px; flex-wrap:wrap;
+  padding:18px 22px; margin-bottom:14px;
+  background:linear-gradient(135deg, rgba(113,112,255,0.06), rgba(155,138,251,0.04));
+  border:1px solid var(--border); border-radius:var(--r-lg);
+}
+.actors-hero .hero-stat{display:flex; flex-direction:column; gap:2px;}
+.actors-hero .hero-stat .v{
+  font-size:24px; font-weight:600; color:var(--text);
+  font-variant-numeric:tabular-nums; letter-spacing:-0.018em;
+  line-height:1.1;
+}
+.actors-hero .hero-stat .l{
+  font-size:10.5px; color:var(--muted-2);
+  text-transform:uppercase; letter-spacing:0.06em; font-weight:500;
+}
+
+/* ----- Multi-group filter row (mirrors articles filter-toolbar) ----- */
+.actors-filters{
+  display:flex; flex-direction:column; gap:8px;
+  padding:14px 16px; margin-bottom:12px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-lg);
+}
+.actors-filters .ft-group{
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap; padding:4px 0;
+}
+.actors-filters .ft-group + .ft-group{
+  border-top:1px dashed var(--hairline); padding-top:10px;
+}
+.actors-filters .ft-label{
+  flex:0 0 auto; min-width:80px;
+  color:var(--muted-2); font-size:10.5px;
+  font-weight:600; letter-spacing:0.08em; text-transform:uppercase;
+}
+.actors-filters .ft-chips{
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+}
 .actors-country-chips{
   display:flex; gap:6px; flex-wrap:wrap; align-items:center;
 }
@@ -3203,6 +3296,41 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   border-radius:var(--r-lg); padding:16px 18px;
   cursor:pointer; transition:border-color 0.15s, background-color 0.15s;
   display:flex; flex-direction:column; gap:10px;
+  position:relative; overflow:hidden;
+}
+/* Recency stripe — left edge bar coloured by activity in the
+   trailing 7 days (red), 30 days (amber), older (muted). */
+.actor-card.recent-7d::before{
+  content:""; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--bad);
+}
+.actor-card.recent-30d::before{
+  content:""; position:absolute; left:0; top:0; bottom:0;
+  width:3px; background:var(--warn);
+}
+/* Top-3 ATT&CK techniques shown as small mono pills */
+.actor-card .ac-top-techs{
+  display:flex; gap:4px; flex-wrap:wrap;
+  font-family:var(--mono); font-size:10.5px;
+}
+.actor-card .ac-top-techs .ac-tt{
+  padding:1px 6px; border-radius:3px;
+  background:var(--panel-elev); border:1px solid var(--border);
+  color:#9b8afb;
+}
+/* Severity distribution bar — horizontal stacked pixels */
+.actor-card .ac-sevbar{
+  display:flex; gap:1px; height:4px; border-radius:2px; overflow:hidden;
+  background:var(--panel-elev);
+}
+.actor-card .ac-sevbar > div{height:100%;}
+.actor-card .ac-sevbar .crit{background:var(--crit);}
+.actor-card .ac-sevbar .high{background:var(--bad);}
+.actor-card .ac-sevbar .med{background:var(--warn);}
+.actor-card .ac-sevbar .low{background:var(--muted);}
+.actor-card .ac-last-seen{
+  font-size:10.5px; color:var(--muted-2);
+  margin-top:-2px;
 }
 .actor-card:hover{
   border-color:var(--border-2);
@@ -3252,6 +3380,44 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   font-size:9.5px; color:var(--muted-2);
   text-transform:uppercase; letter-spacing:0.06em; font-weight:500;
 }
+/* Per-actor UC list inside the drawer — compact, click to expand
+   with the SPL/KQL query. Mirrors uc-card-row pattern in matrix. */
+.actor-uc-list{display:flex; flex-direction:column; gap:6px;}
+.actor-uc-row{
+  background:var(--panel); border:1px solid var(--border);
+  border-left:3px solid var(--border);
+  border-radius:var(--r-md); padding:8px 12px;
+  font-size:12.5px; color:var(--text);
+  display:flex; align-items:center; gap:8px;
+}
+.actor-uc-row.is-llm{border-left-color:var(--accent);}
+.actor-uc-row .uc-llm-pill{
+  font-size:9px; padding:1px 5px; border-radius:3px;
+  background:rgba(113,112,255,0.15); color:var(--accent);
+  border:1px solid rgba(113,112,255,0.30); font-weight:600;
+  text-transform:uppercase; letter-spacing:0.06em;
+}
+.actor-uc-row .uc-name{flex:1; min-width:0;}
+.actor-uc-row .uc-techs{
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+}
+.actor-uc-row .uc-arrow{color:var(--muted-2); font-size:11px;}
+/* Drawer severity-bar — bigger version of the card's stripe */
+.actor-drawer-sev{
+  display:flex; gap:2px; height:8px; border-radius:4px; overflow:hidden;
+  background:var(--panel-elev); margin:6px 0;
+}
+.actor-drawer-sev > div{height:100%;}
+.actor-drawer-sev .crit{background:var(--crit);}
+.actor-drawer-sev .high{background:var(--bad);}
+.actor-drawer-sev .med{background:var(--warn);}
+.actor-drawer-sev .low{background:var(--muted);}
+.actor-drawer-dates{
+  display:flex; gap:18px; font-size:11.5px; color:var(--muted);
+  margin-bottom:4px;
+}
+.actor-drawer-dates strong{color:var(--text); font-variant-numeric:tabular-nums;}
+
 .actors-empty{
   text-align:center; padding:40px 16px; color:var(--muted);
   background:var(--panel); border:1px dashed var(--border);
@@ -3997,14 +4163,39 @@ ul.intel-types-doc code{
   </div>
 </div>
 
-<!-- ===== Threat Actors tab — search by actor / country, click for
-     drill-down into linked articles, UCs, IOCs. Lazy-rendered on tab
-     switch from window.__ACTORS__. ===== -->
+<!-- ===== Threat Actors tab — search by actor / country / motivation,
+     sort by recency or activity, click for drill-down into linked
+     articles, use cases (with SPL/KQL), techniques, IOCs. Rendered
+     lazily on tab switch from window.__ACTORS__. ===== -->
 <div id="view-actors" class="view">
   <div class="actors-wrap">
+    <!-- Top-of-tab summary stats -->
+    <div class="actors-hero" id="actorsHero"></div>
+    <!-- Filter toolbar: search, country chips, motivation chips, sort -->
     <div class="actors-toolbar">
-      <input type="text" id="actorsSearch" placeholder="Search actor name, alias, or country (e.g. APT29, Cozy, Russia, China)…" autocomplete="off">
-      <div class="actors-country-chips" id="actorsCountryChips"></div>
+      <input type="text" id="actorsSearch" placeholder="Search actor name, alias, or country (e.g. APT29, Cozy, Russia, ransomware)…" autocomplete="off">
+      <select id="actorsSort" title="Sort actors">
+        <option value="active">Most active</option>
+        <option value="recent">Most recent</option>
+        <option value="techs">Most techniques</option>
+        <option value="alpha">Alphabetical</option>
+      </select>
+    </div>
+    <div class="actors-filters">
+      <div class="ft-group">
+        <span class="ft-label">Country</span>
+        <div class="ft-chips" id="actorsCountryChips"></div>
+      </div>
+      <div class="ft-group">
+        <span class="ft-label">Motivation</span>
+        <div class="ft-chips" id="actorsMotChips">
+          <button class="actors-country-chip active" data-mot="">All</button>
+          <button class="actors-country-chip" data-mot="state">State-sponsored</button>
+          <button class="actors-country-chip" data-mot="criminal">Criminal</button>
+          <button class="actors-country-chip" data-mot="hacktivist">Hacktivist</button>
+          <button class="actors-country-chip" data-mot="unknown">Unknown</button>
+        </div>
+      </div>
     </div>
     <div class="actors-stats-row" id="actorsStatsRow"></div>
     <div class="actors-grid" id="actorsGrid"></div>
@@ -4017,8 +4208,11 @@ ul.intel-types-doc code{
         every article body via a curated alias lookup
         (<a href="https://attack.mitre.org/groups/" target="_blank">MITRE ATT&amp;CK Groups</a>,
         Mandiant, CrowdStrike Bears/Pandas/Cobras, Microsoft Threat
-        Intel Typhoon naming). Click any actor to drill into the
-        articles, UCs, and IOCs tied to them.
+        Intel Typhoon naming, Unit 42 Sandstorm naming). Click any
+        actor to drill into linked articles, use cases (with SPL/KQL
+        you can run), ATT&amp;CK techniques, and IOCs. Click any
+        technique pill in the drawer to pivot to the Matrix tab and
+        see all UCs covering it.
       </p>
     </div>
   </div>
@@ -5229,11 +5423,21 @@ document.querySelectorAll('.ind.tech').forEach(pill => {
 // =================================================================
 const ACTORS = __ACTORS_DATA__;
 let actorsCountryFilter = '';
+let actorsMotivationFilter = '';
+let actorsSortMode = 'active';
 const COUNTRY_LABELS = {
   RU:"Russia", CN:"China", KP:"North Korea", IR:"Iran",
   US:"United States", BR:"Brazil", IN:"India", PK:"Pakistan",
-  VN:"Vietnam", MY:"Malaysia", "??":"Unknown"
+  VN:"Vietnam", MY:"Malaysia", LB:"Lebanon", "??":"Unknown"
 };
+
+// Days between two ISO YYYY-MM-DD strings (returns Infinity if blank)
+function _daysSince(iso) {
+  if (!iso) return Infinity;
+  const d = new Date(iso + 'T00:00:00Z');
+  if (isNaN(d.getTime())) return Infinity;
+  return (Date.now() - d.getTime()) / 86400000;
+}
 
 function renderActors() {
   if (!ACTORS || !ACTORS.length) {
@@ -5241,7 +5445,7 @@ function renderActors() {
     if (grid) grid.innerHTML = '<div class="actors-empty"><p>No threat actors detected in the current article window.</p></div>';
     return;
   }
-  // Country chip bar — counts per country.
+  // Country chip bar — counts per country, sorted by activity.
   const counts = {};
   ACTORS.forEach(a => { counts[a.country] = (counts[a.country]||0) + 1; });
   const countryOrder = Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([c])=>c);
@@ -5263,37 +5467,73 @@ function renderActors() {
       });
     });
   }
+  // Motivation chips
+  document.querySelectorAll('#actorsMotChips .actors-country-chip').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#actorsMotChips .actors-country-chip').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      actorsMotivationFilter = b.dataset.mot;
+      applyActorsFilter();
+    });
+  });
+  // Sort dropdown
+  const sortSel = document.getElementById('actorsSort');
+  if (sortSel) sortSel.addEventListener('change', () => {
+    actorsSortMode = sortSel.value;
+    applyActorsFilter();
+  });
   applyActorsFilter();
   document.getElementById('actorsSearch')?.addEventListener('input', applyActorsFilter);
 }
 
 function applyActorsFilter() {
   const q = (document.getElementById('actorsSearch')?.value || '').toLowerCase().trim();
-  const filtered = ACTORS.filter(a => {
+  let filtered = ACTORS.filter(a => {
     if (actorsCountryFilter && a.country !== actorsCountryFilter) return false;
+    if (actorsMotivationFilter && a.motivation !== actorsMotivationFilter) return false;
     if (!q) return true;
     if (a.name.toLowerCase().includes(q)) return true;
     if (a.aliases.some(al => al.toLowerCase().includes(q))) return true;
     if ((COUNTRY_LABELS[a.country]||'').toLowerCase().includes(q)) return true;
     if ((a.country||'').toLowerCase().includes(q)) return true;
+    if ((a.motivation||'').toLowerCase().includes(q)) return true;
+    if ((a.mitre_id||'').toLowerCase().includes(q)) return true;
     return false;
   });
-  // Stats row
+  // Sort
+  filtered.sort((a, b) => {
+    if (actorsSortMode === 'recent')  return (b.last_seen||'').localeCompare(a.last_seen||'');
+    if (actorsSortMode === 'techs')   return b.techs.length - a.techs.length;
+    if (actorsSortMode === 'alpha')   return a.name.localeCompare(b.name);
+    return b.articles.length - a.articles.length;   // 'active' default
+  });
+
+  // Hero stats
   const totalArticles = filtered.reduce((n,a)=>n+a.articles.length, 0);
   const totalUcs = filtered.reduce((n,a)=>n+a.uc_count, 0);
   const totalLlm = filtered.reduce((n,a)=>n+a.llm_uc_count, 0);
   const totalTechs = new Set();
   filtered.forEach(a => a.techs.forEach(t => totalTechs.add(t)));
-  const stats = document.getElementById('actorsStatsRow');
-  if (stats) {
-    stats.innerHTML =
-      '<span><b>'+filtered.length+'</b> actors</span>' +
-      '<span><b>'+totalArticles+'</b> linked articles</span>' +
-      '<span><b>'+totalUcs+'</b> use cases</span>' +
-      '<span><b>'+totalLlm+'</b> LLM UCs</span>' +
-      '<span><b>'+totalTechs.size+'</b> ATT&CK techniques</span>';
+  const totalIocs = filtered.reduce((n,a) => n + a.iocs.cves.length + a.iocs.hashes.length + a.iocs.domains.length + a.iocs.ips.length, 0);
+  const countries = new Set(filtered.map(a=>a.country));
+  const stateCount = filtered.filter(a=>a.motivation==='state').length;
+  const crimCount = filtered.filter(a=>a.motivation==='criminal').length;
+  const hero = document.getElementById('actorsHero');
+  if (hero) {
+    hero.innerHTML =
+      `<div class="hero-stat"><span class="v">${filtered.length}</span><span class="l">actors</span></div>` +
+      `<div class="hero-stat"><span class="v">${countries.size}</span><span class="l">nations</span></div>` +
+      `<div class="hero-stat"><span class="v">${stateCount}</span><span class="l">state-sponsored</span></div>` +
+      `<div class="hero-stat"><span class="v">${crimCount}</span><span class="l">criminal crews</span></div>` +
+      `<div class="hero-stat"><span class="v">${totalArticles}</span><span class="l">linked articles</span></div>` +
+      `<div class="hero-stat"><span class="v">${totalLlm}</span><span class="l">LLM use cases</span></div>` +
+      `<div class="hero-stat"><span class="v">${totalTechs.size}</span><span class="l">ATT&CK techniques</span></div>` +
+      `<div class="hero-stat"><span class="v">${totalIocs}</span><span class="l">IOCs</span></div>`;
   }
-  // Grid
+  // Reset stats row to keep layout consistent (legacy slot)
+  const stats = document.getElementById('actorsStatsRow');
+  if (stats) stats.innerHTML = '';
+
   const grid = document.getElementById('actorsGrid');
   const empty = document.getElementById('actorsEmpty');
   if (!filtered.length) {
@@ -5303,8 +5543,25 @@ function applyActorsFilter() {
   }
   if (empty) empty.style.display = 'none';
   if (!grid) return;
-  grid.innerHTML = filtered.map(a => `
-    <div class="actor-card" data-name="${escapeHtml(a.name)}">
+
+  grid.innerHTML = filtered.map(a => {
+    const days = _daysSince(a.last_seen);
+    let recencyCls = '';
+    if (days <= 7) recencyCls = 'recent-7d';
+    else if (days <= 30) recencyCls = 'recent-30d';
+    const lastSeenLabel = a.last_seen ? a.last_seen + (days<1?' (today)':days<2?' (yesterday)':' ('+Math.floor(days)+' days ago)') : 'Date unknown';
+    // Severity bar widths — proportional to article counts
+    const total = (a.sev_dist.crit||0)+(a.sev_dist.high||0)+(a.sev_dist.med||0)+(a.sev_dist.low||0) || 1;
+    const sevBarHtml = `<div class="ac-sevbar">
+      ${a.sev_dist.crit ? `<div class="crit" title="${a.sev_dist.crit} crit" style="flex:${a.sev_dist.crit}"></div>` : ''}
+      ${a.sev_dist.high ? `<div class="high" title="${a.sev_dist.high} high" style="flex:${a.sev_dist.high}"></div>` : ''}
+      ${a.sev_dist.med  ? `<div class="med"  title="${a.sev_dist.med} med"  style="flex:${a.sev_dist.med}"></div>` : ''}
+      ${a.sev_dist.low  ? `<div class="low"  title="${a.sev_dist.low} low"  style="flex:${a.sev_dist.low}"></div>` : ''}
+    </div>`;
+    const topTechHtml = a.top_techs && a.top_techs.length
+      ? `<div class="ac-top-techs">${a.top_techs.map(t=>'<span class="ac-tt">'+escapeHtml(t)+'</span>').join('')}</div>` : '';
+    return `
+    <div class="actor-card ${recencyCls}" data-name="${escapeHtml(a.name)}">
       <div class="ac-head">
         <span class="ac-flag">${a.flag||'🌐'}</span>
         <div class="ac-title">
@@ -5314,13 +5571,16 @@ function applyActorsFilter() {
         <span class="ac-mot ${a.motivation}">${a.motivation}</span>
       </div>
       <div class="ac-aliases">${escapeHtml(a.aliases.filter(x=>x!==a.name).slice(0,4).join(' · ') || '—')}</div>
+      ${topTechHtml}
+      ${sevBarHtml}
+      <div class="ac-last-seen">Last seen: ${escapeHtml(lastSeenLabel)}</div>
       <div class="ac-stats">
         <div class="ac-stat"><span class="v">${a.articles.length}</span><span class="l">Articles</span></div>
         <div class="ac-stat"><span class="v">${a.uc_count}</span><span class="l">Use cases</span></div>
         <div class="ac-stat"><span class="v">${a.techs.length}</span><span class="l">Techniques</span></div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
   grid.querySelectorAll('.actor-card').forEach(c =>
     c.addEventListener('click', () => openActorDrawer(c.dataset.name)));
 }
@@ -5330,35 +5590,87 @@ function openActorDrawer(name) {
   if (!a) return;
   const body = document.getElementById('actorDrawerBody');
   if (!body) return;
-  const articleLinks = a.articles.map(art =>
+  // Articles — sort by date desc so latest is first
+  const sortedArticles = a.articles.slice().sort((x,y)=>(y.published||'').localeCompare(x.published||''));
+  const articleLinks = sortedArticles.map(art =>
     `<a href="#${art.id}" data-jump="${art.id}" class="art-jump">
       <div>${escapeHtml(art.title)}</div>
-      <div class="meta"><span class="pill ${art.sev}">${(art.sev||'').toUpperCase()}</span></div>
+      <div class="meta">
+        ${art.published ? '<span class="pill">'+escapeHtml(art.published)+'</span>' : ''}
+        <span class="pill ${art.sev}">${(art.sev||'').toUpperCase()}</span>
+      </div>
     </a>`).join('');
-  const techPills = a.techs.slice(0,40).map(t =>
-    `<span class="ind tech">${escapeHtml(t)}</span>`).join(' ');
+  // Techniques as click-pivot pills
+  const techPills = a.techs.slice(0,60).map(t =>
+    `<span class="ind tech" data-tid-jump="${escapeHtml(t)}" title="Click to open this technique on the ATT&CK matrix">${escapeHtml(t)}</span>`).join(' ');
+  // Linked UCs — LLM first, then internal. Click any to scroll the
+  // analyst back to the source article where the UC's full SPL/KQL is
+  // already rendered.
+  const sortedUcs = a.ucs.slice().sort((x,y)=>(y.is_llm?1:0)-(x.is_llm?1:0));
+  const ucList = sortedUcs.length ? `
+    <div class="actor-uc-list">
+      ${sortedUcs.map(uc => `
+        <div class="actor-uc-row ${uc.is_llm?'is-llm':''}" data-jump="${uc.art_id}">
+          ${uc.is_llm ? '<span class="uc-llm-pill">LLM</span>' : ''}
+          <span class="uc-name">${escapeHtml(uc.title.replace(/^\\[LLM\\]\\s*/, ''))}</span>
+          <span class="uc-techs">${(uc.techs||[]).slice(0,3).map(escapeHtml).join(' ')}</span>
+          <span class="uc-arrow">→</span>
+        </div>
+      `).join('')}
+    </div>` : '<div class="drawer-empty">No linked use cases yet — articles citing this actor didn\'t fire any UC rules or generate LLM-bespoke detections.</div>';
+  // Severity bar (drawer-sized)
+  const sd = a.sev_dist || {};
+  const sevBar = `<div class="actor-drawer-sev">
+    ${sd.crit ? `<div class="crit" style="flex:${sd.crit}"></div>` : ''}
+    ${sd.high ? `<div class="high" style="flex:${sd.high}"></div>` : ''}
+    ${sd.med  ? `<div class="med"  style="flex:${sd.med}"></div>` : ''}
+    ${sd.low  ? `<div class="low"  style="flex:${sd.low}"></div>` : ''}
+  </div>
+  <div style="display:flex; gap:14px; font-size:11.5px; color:var(--muted); margin-bottom:8px;">
+    ${sd.crit?'<span style="color:var(--crit)">'+sd.crit+' crit</span>':''}
+    ${sd.high?'<span style="color:var(--bad)">'+sd.high+' high</span>':''}
+    ${sd.med?'<span style="color:var(--warn)">'+sd.med+' med</span>':''}
+    ${sd.low?'<span>'+sd.low+' low</span>':''}
+  </div>`;
+  const lastSeenDays = _daysSince(a.last_seen);
+  const recencyText = !a.last_seen ? 'unknown' :
+                      lastSeenDays < 1 ? 'today' :
+                      lastSeenDays < 2 ? 'yesterday' :
+                      Math.floor(lastSeenDays) + ' days ago';
   body.innerHTML = `
     <div class="drawer-head">
       <h3>${a.flag||'🌐'} ${escapeHtml(a.name)}</h3>
       <div class="drawer-meta">
         <span class="pill">${escapeHtml(COUNTRY_LABELS[a.country]||a.country)}</span>
         <span class="pill">${escapeHtml(a.motivation)}</span>
-        ${a.mitre_id ? '<span class="pill">'+escapeHtml(a.mitre_id)+'</span>' : ''}
+        ${a.mitre_id ? '<span class="pill"><a href="https://attack.mitre.org/groups/'+escapeHtml(a.mitre_id)+'/" target="_blank" rel="noopener" style="color:inherit;">'+escapeHtml(a.mitre_id)+' ↗</a></span>' : ''}
       </div>
     </div>
     <div class="drawer-section">
+      <div class="actor-drawer-dates">
+        <span>First seen: <strong>${escapeHtml(a.first_seen||'—')}</strong></span>
+        <span>Last seen: <strong>${escapeHtml(a.last_seen||'—')}</strong> (${escapeHtml(recencyText)})</span>
+      </div>
+      <h4>Severity distribution (${a.articles.length} articles)</h4>
+      ${sevBar}
+    </div>
+    <div class="drawer-section">
+      <h4>Linked use cases (${a.ucs.length}${a.uc_count > a.ucs.length ? ' shown / ' + a.uc_count + ' total' : ''})</h4>
+      ${ucList}
+    </div>
+    <div class="drawer-section">
+      <h4>ATT&amp;CK techniques observed (${a.techs.length}) — click to pivot to Matrix</h4>
+      <div style="display:flex; flex-wrap:wrap; gap:6px;">${techPills || '<div class="drawer-empty">None inferred yet.</div>'}</div>
+    </div>
+    <div class="drawer-section">
       <h4>Aliases</h4>
-      <div style="font-family:var(--mono); color:var(--muted); font-size:12.5px; line-height:1.6;">
+      <div style="font-family:var(--mono); color:var(--muted); font-size:12px; line-height:1.7;">
         ${a.aliases.map(x=>'<span class="ind" style="margin-right:4px;">'+escapeHtml(x)+'</span>').join('')}
       </div>
     </div>
     <div class="drawer-section">
       <h4>Articles citing this actor (${a.articles.length})</h4>
       <div class="drawer-list">${articleLinks || '<div class="drawer-empty">No articles linked yet.</div>'}</div>
-    </div>
-    <div class="drawer-section">
-      <h4>ATT&amp;CK techniques observed (${a.techs.length})</h4>
-      <div style="display:flex; flex-wrap:wrap; gap:6px;">${techPills || '<div class="drawer-empty">None inferred yet.</div>'}</div>
     </div>
     <div class="drawer-section">
       <h4>IOCs from linked articles</h4>
@@ -5368,20 +5680,34 @@ function openActorDrawer(name) {
         <strong style="color:var(--text);">${a.iocs.domains.length}</strong> domains ·
         <strong style="color:var(--text);">${a.iocs.ips.length}</strong> IPs
       </div>
-      ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,20).map(escapeHtml).join(' · ')+'</div>' : ''}
+      ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,30).map(escapeHtml).join(' · ')+'</div>' : ''}
     </div>
   `;
   document.getElementById('actorDrawer').classList.add('open');
   document.getElementById('actorDrawerBg').classList.add('open');
   document.getElementById('actorDrawer').setAttribute('aria-hidden','false');
-  // Wire article-jump links
-  body.querySelectorAll('.art-jump').forEach(el =>
+  // Wire article-jump links + UC-row jumps
+  body.querySelectorAll('.art-jump, .actor-uc-row[data-jump]').forEach(el =>
     el.addEventListener('click', e => {
       e.preventDefault();
+      const jumpId = el.dataset.jump;
       closeActorDrawer();
       showView('articles');
-      const art = document.getElementById(el.dataset.jump);
-      if (art) art.scrollIntoView({behavior:'smooth', block:'start'});
+      setTimeout(() => {
+        const art = document.getElementById(jumpId);
+        if (art) art.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 80);
+    }));
+  // Tech pill → switch to matrix tab and open that technique drawer
+  body.querySelectorAll('[data-tid-jump]').forEach(el =>
+    el.addEventListener('click', () => {
+      const tid = el.dataset.tidJump;
+      closeActorDrawer();
+      showView('matrix');
+      setTimeout(() => {
+        const cell = document.querySelector('#view-matrix [data-tid="' + CSS.escape(tid) + '"]');
+        if (cell) cell.click();
+      }, 220);
     }));
 }
 function closeActorDrawer() {
@@ -7624,10 +7950,11 @@ def main():
             "ucs": [(uc_var_map.get(id(uc), f"UC_{i}_{j}"), uc) for j, uc in enumerate(ucs)],
             "actors": a.get("_actors", []),
         })
-        # Aggregate per-actor stats so the Threat Actors tab can render
-        # cards: name + country + flag + linked articles + UC count +
-        # technique set. Looks dense, but it's a single-pass over the
-        # already-extracted data — no extra parsing.
+        # Aggregate per-actor stats. Tracks: linked articles + dates,
+        # use cases (with LLM ones flagged so the drawer can show their
+        # SPL/KQL queries directly), techniques, IOCs, and a severity
+        # distribution. All single-pass — no extra parsing.
+        pub = a.get("published", "")
         for actor in a.get("_actors", []):
             entry = actor_index.setdefault(actor, {
                 "name": actor,
@@ -7640,17 +7967,45 @@ def main():
                 "uc_count": 0,
                 "llm_uc_count": 0,
                 "techs": set(),
+                "tech_freq": {},  # technique frequency for "top 3" display
                 "iocs": {"cves": set(), "ips": set(), "domains": set(), "hashes": set()},
+                "sev_dist": {"crit": 0, "high": 0, "med": 0, "low": 0},
+                "first_seen": None, "last_seen": None,
+                "ucs": [],     # subset of UCs the analyst can click — LLM-bespoke first
             })
-            entry["articles"].append({"id": f"art-{i:02d}", "title": a["title"], "sev": sev})
+            entry["articles"].append({"id": f"art-{i:02d}", "title": a["title"], "sev": sev, "published": pub})
             entry["uc_count"] += len(ucs)
             entry["llm_uc_count"] += sum(1 for u in ucs if (u.title or "").startswith("[LLM]"))
-            for tid, _ in merged_techs: entry["techs"].add(tid)
+            entry["sev_dist"][sev] = entry["sev_dist"].get(sev, 0) + 1
+            for tid, _ in merged_techs:
+                entry["techs"].add(tid)
+                entry["tech_freq"][tid] = entry["tech_freq"].get(tid, 0) + 1
             for cve in ind.get("cves", []): entry["iocs"]["cves"].add(cve)
             for ip in ind.get("ips", []): entry["iocs"]["ips"].add(ip)
             for dom in ind.get("domains", []): entry["iocs"]["domains"].add(dom)
             for h in (ind.get("sha256",[])+ind.get("sha1",[])+ind.get("md5",[])):
                 entry["iocs"]["hashes"].add(h)
+            # Date tracking — articles arrive in feed order, not strict
+            # publish-date order, so compare and keep min/max.
+            if pub:
+                if entry["first_seen"] is None or pub < entry["first_seen"]:
+                    entry["first_seen"] = pub
+                if entry["last_seen"] is None or pub > entry["last_seen"]:
+                    entry["last_seen"] = pub
+            # Stash a slim view of UCs for drawer rendering — LLM first
+            # then internal, capped at 8 to keep the payload light.
+            for uc in ucs:
+                if len(entry["ucs"]) >= 8: break
+                title = uc.title or ""
+                entry["ucs"].append({
+                    "title": title,
+                    "is_llm": title.startswith("[LLM]"),
+                    "phase": uc.kill_chain,
+                    "conf": uc.confidence,
+                    "techs": [t for t,_n in (uc.techniques or [])],
+                    "art_id": f"art-{i:02d}",
+                    "art_title": a["title"],
+                })
         safe_title = a['title'][:55].encode('ascii', 'replace').decode('ascii')
         print(f"  [{i+1:02d}] {safe_title:55s} | sev={sev:4s} techs={len(techniques)} ucs={len(ucs)} kc-hit={len(hit)}")
 
@@ -7717,6 +8072,8 @@ def main():
     # Threat-actor payload — sets are converted to sorted lists for JSON.
     actors_serialisable = []
     for entry in actor_index.values():
+        # Top-3 techniques by frequency for the card preview
+        top_techs = sorted(entry["tech_freq"].items(), key=lambda kv: -kv[1])[:3]
         actors_serialisable.append({
             "name": entry["name"],
             "country": entry["country"],
@@ -7728,7 +8085,12 @@ def main():
             "uc_count": entry["uc_count"],
             "llm_uc_count": entry["llm_uc_count"],
             "techs": sorted(entry["techs"]),
+            "top_techs": [t for t, _c in top_techs],
             "iocs": {k: sorted(v) for k, v in entry["iocs"].items()},
+            "sev_dist": entry["sev_dist"],
+            "first_seen": entry["first_seen"] or "",
+            "last_seen": entry["last_seen"] or "",
+            "ucs": entry["ucs"],
         })
     actors_serialisable.sort(key=lambda e: (-len(e["articles"]), e["name"]))
     actors_json = __import__("json").dumps(actors_serialisable, separators=(",", ":"))
