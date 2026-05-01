@@ -2499,28 +2499,54 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
 .nav-item .sev.crit{background:var(--crit);}
 
 /* ----- Source filter bar (Articles tab) ------------------------------ */
-.src-filter-bar{
-  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
-  padding:10px 14px; margin-bottom:8px;
+/* ----- Article toolbar — labelled, multi-group filter surface --------
+   Designed to stay legible as we add more filter groups over time.
+   Layout: a single panel with a thin top accent, broken into
+   labelled groups (Source / Content / Layout). Each group is a
+   row of chips with its own muted-uppercase label. Groups wrap
+   onto multiple lines on narrow viewports. */
+.filter-toolbar{
+  display:flex; flex-direction:column; gap:8px;
+  padding:14px 16px; margin-bottom:12px;
   background:var(--panel); border:1px solid var(--border);
-  border-radius:var(--r-md);
+  border-radius:var(--r-lg);
+  box-shadow:var(--shadow-sm);
 }
-/* Feature filter chips ("Has UCs", "LLM UCs only") sit alongside the
-   source chips in the filter bar. Distinguished from source chips by
-   a left margin separator and an indigo accent on active. */
-.feat-chip{
-  margin-left:6px;
-  position:relative;
+.filter-toolbar .ft-group{
+  display:flex; align-items:center; gap:10px;
+  padding:4px 0;
+  flex-wrap:wrap;
 }
-.feat-chip::before{
-  content:""; position:absolute; left:-6px; top:6px; bottom:6px;
-  width:1px; background:var(--border);
+.filter-toolbar .ft-group + .ft-group{
+  border-top:1px dashed var(--hairline);
+  padding-top:10px;
 }
+.filter-toolbar .ft-label{
+  flex:0 0 auto; min-width:62px;
+  color:var(--muted-2); font-size:10.5px;
+  font-weight:600; letter-spacing:0.08em;
+  text-transform:uppercase;
+  font-feature-settings:"cv11","ss01";
+}
+.filter-toolbar .ft-chips{
+  display:flex; gap:6px; flex-wrap:wrap; align-items:center;
+  flex:1 1 auto;
+}
+/* Layout group's width-toggle keeps its own segmented styling — just
+   needs to slot into the .ft-chips container without the chip border. */
+.filter-toolbar .ft-view .width-toggle{margin-left:0;}
+
+/* Feature filter chips ("Has UCs", "LLM UCs only") — same chip-pill
+   style as source chips but accent-coloured stripe on active so
+   they read as a different filter axis. */
 .src-chip.feat-chip.active{
   box-shadow:inset 2px 0 0 var(--accent);
   background:rgba(113,112,255,0.08);
   border-color:var(--border-2); color:var(--text);
 }
+/* Hide the legacy lg-label inside ft-chips (the All chip generator
+   used to emit one); the ft-label above the row replaces it. */
+.filter-toolbar .ft-chips .lg-label{display:none;}
 /* LLM-UC info banner — collapsed details/summary that explains what
    an [LLM] prefix means before the analyst sees the filter. */
 .info-banner{
@@ -3523,23 +3549,35 @@ ul.intel-types-doc code{
         </p>
       </div>
     </details>
-    <div class="src-filter-bar" id="srcFilter">
-      __SOURCE_CHIPS__
-      <!-- Feature filters — UC-count predicates that complement the source
-           chips. Multiple feature chips AND together; combined with source
-           chips via AND too. -->
-      <button class="src-chip feat-chip" data-feat="has-uc"
-              title="Show only articles that have at least one detection use case">
-        Has UCs <span class="cnt" id="featCntHasUc"></span>
-      </button>
-      <button class="src-chip feat-chip" data-feat="has-llm"
-              title="Show only articles where the LLM generated bespoke article-specific UCs">
-        LLM UCs only <span class="cnt" id="featCntHasLlm"></span>
-      </button>
-      <div class="width-toggle" id="widthToggle" title="Article column width">
-        <button data-width="compact">Compact</button>
-        <button data-width="wide" class="on">Wide</button>
-        <button data-width="full">Full</button>
+    <!-- Article toolbar — labelled groups so the filter surface is
+         legible even as we add more groups over time. Each <div class="ft-group">
+         is one logical group: a small uppercase label + its controls.
+         Groups wrap on narrow viewports. -->
+    <div class="filter-toolbar" id="srcFilter">
+      <div class="ft-group ft-source">
+        <span class="ft-label">Source</span>
+        <div class="ft-chips">__SOURCE_CHIPS__</div>
+      </div>
+      <div class="ft-group ft-content">
+        <span class="ft-label">Content</span>
+        <div class="ft-chips">
+          <button class="src-chip feat-chip" data-feat="has-uc"
+                  title="Show only articles that have at least one detection use case">
+            Has UCs <span class="cnt" id="featCntHasUc"></span>
+          </button>
+          <button class="src-chip feat-chip" data-feat="has-llm"
+                  title="Show only articles where the LLM generated bespoke article-specific UCs">
+            LLM UCs only <span class="cnt" id="featCntHasLlm"></span>
+          </button>
+        </div>
+      </div>
+      <div class="ft-group ft-view">
+        <span class="ft-label">Layout</span>
+        <div class="width-toggle" id="widthToggle" title="Article column width">
+          <button data-width="compact">Compact</button>
+          <button data-width="wide" class="on">Wide</button>
+          <button data-width="full">Full</button>
+        </div>
       </div>
     </div>
     __CARDS__
