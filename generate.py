@@ -2976,16 +2976,16 @@ body{
   .brand-tagline{display:none;}
 }
 
-/* First-visit welcome banner — dismissed forever via localStorage. */
+/* Welcome banner — always visible, never dismissable. Acts as the
+   permanent positioning strapline + tour CTA right under the topbar. */
 .first-visit-banner{
-  display:none;          /* JS un-hides on first visit */
+  display:flex;
   margin:0; padding:10px 28px;
   background:linear-gradient(180deg, rgba(113,112,255,0.08), rgba(113,112,255,0.03));
   border-bottom:1px solid rgba(113,112,255,0.20);
   font-size:13px; color:var(--text);
   align-items:center; gap:14px; flex-wrap:wrap;
 }
-.first-visit-banner.show{display:flex;}
 .first-visit-banner b{color:var(--accent-2); font-weight:600;}
 .first-visit-banner .banner-quote{
   font-style:italic; color:var(--text); font-weight:500;
@@ -3009,12 +3009,6 @@ body{
   background:rgba(113,112,255,0.12); border-color:rgba(113,112,255,0.55);
   color:var(--text);
 }
-.first-visit-banner .banner-close{
-  background:transparent; color:var(--muted); border:0;
-  font-size:18px; cursor:pointer; padding:2px 8px; line-height:1;
-  border-radius:var(--r-sm); transition:all 0.15s;
-}
-.first-visit-banner .banner-close:hover{color:var(--text); background:rgba(255,255,255,0.05);}
 @media (max-width: 760px) {
   .first-visit-banner{padding:10px 14px;}
   .first-visit-banner .banner-cta{margin-left:0; flex:1; justify-content:center;}
@@ -3405,6 +3399,347 @@ body:not(.view-actors-active)   .stats-actors{
   background:rgba(113,112,255,0.06);
 }
 .tour-trigger svg{flex-shrink:0;}
+
+/* =================================================================
+   Detection Library — top-level view of every UC as a structured
+   card, plus a slide-in detail drawer showing the full SOC-ready
+   page (description, MITRE, queries, data sources, FPs, tuning,
+   severity, SOC Value Score, recent attacks, blog sources).
+   ================================================================= */
+.lib-wrap{
+  margin:0; padding:18px 28px 36px;
+  display:flex; flex-direction:column; gap:18px;
+}
+@media (max-width: 980px){ .lib-wrap{padding:14px 18px 28px;} }
+.lib-header{
+  display:flex; flex-direction:column; gap:12px;
+  background:linear-gradient(180deg, rgba(113,112,255,0.05), rgba(113,112,255,0.0));
+  border:1px solid rgba(113,112,255,0.18);
+  border-radius:var(--r-lg);
+  padding:18px 20px;
+}
+.lib-title-row{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;}
+.lib-title{
+  margin:0; font-size:22px; font-weight:600; letter-spacing:-0.02em;
+  color:var(--text);
+}
+.lib-subtitle{font-size:13px; color:var(--muted);}
+.lib-toolbar{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.lib-toolbar input{
+  flex:1; min-width:240px;
+  padding:9px 14px; border-radius:var(--r-md);
+  background:var(--panel); border:1px solid var(--border);
+  color:var(--text); font:inherit; font-size:13.5px;
+  transition:border-color 0.15s;
+}
+.lib-toolbar input:focus{outline:0; border-color:var(--accent);}
+.lib-result-count{
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--muted-2); letter-spacing:0.02em;
+}
+.lib-filter-row{display:flex; flex-wrap:wrap; gap:8px;}
+.lib-filter-group{
+  display:flex; align-items:center; gap:6px;
+  padding:4px 10px 4px 4px;
+  border:1px solid var(--border);
+  background:var(--panel);
+  border-radius:99px;
+  font-size:12px;
+}
+.lib-filter-group .lf-label{
+  background:rgba(113,112,255,0.12);
+  color:var(--accent-2);
+  font-weight:600; font-size:10.5px; letter-spacing:0.04em; text-transform:uppercase;
+  padding:3px 9px; border-radius:99px;
+  font-family:var(--mono);
+}
+.lib-filter-group select{
+  background:transparent; color:var(--text); border:0;
+  font:inherit; font-size:12.5px; padding:2px 4px;
+  cursor:pointer; min-width:90px;
+}
+.lib-filter-group select:focus{outline:0;}
+.lib-pill-group{
+  display:inline-flex; gap:2px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:99px; padding:2px;
+}
+.lib-pill{
+  background:transparent; border:0; color:var(--muted);
+  padding:5px 11px; border-radius:99px;
+  font:inherit; font-size:11.5px; font-weight:500;
+  cursor:pointer; transition:all 0.15s;
+  font-family:var(--mono); letter-spacing:0.02em;
+}
+.lib-pill:hover{color:var(--text);}
+.lib-pill.on{
+  background:linear-gradient(180deg, rgba(113,112,255,0.30), rgba(113,112,255,0.18));
+  color:var(--text);
+  box-shadow:0 0 0 1px rgba(113,112,255,0.45) inset;
+}
+.lib-pill.platform-d.on{ background:linear-gradient(180deg, rgba(80,200,160,0.30), rgba(80,200,160,0.18)); box-shadow:0 0 0 1px rgba(80,200,160,0.55) inset; }
+.lib-pill.platform-s.on{ background:linear-gradient(180deg, rgba(110,160,255,0.30), rgba(110,160,255,0.18)); box-shadow:0 0 0 1px rgba(110,160,255,0.55) inset; }
+.lib-pill.platform-z.on{ background:linear-gradient(180deg, rgba(255,170,90,0.30), rgba(255,170,90,0.18)); box-shadow:0 0 0 1px rgba(255,170,90,0.55) inset; }
+.lib-pill.platform-p.on{ background:linear-gradient(180deg, rgba(220,120,200,0.30), rgba(220,120,200,0.18)); box-shadow:0 0 0 1px rgba(220,120,200,0.55) inset; }
+.lib-clear-btn{
+  background:transparent; border:1px solid var(--border-2); color:var(--muted);
+  padding:5px 12px; border-radius:99px;
+  font:inherit; font-size:11.5px; cursor:pointer;
+  transition:all 0.15s;
+}
+.lib-clear-btn:hover{color:var(--bad); border-color:rgba(255,90,90,0.40);}
+.lib-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:14px;
+}
+.lib-card{
+  background:linear-gradient(180deg, var(--panel-elev), var(--panel));
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:14px 16px;
+  cursor:pointer;
+  transition:transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+  display:flex; flex-direction:column; gap:10px;
+  position:relative; overflow:hidden;
+}
+.lib-card:hover{
+  transform:translateY(-1px);
+  border-color:rgba(113,112,255,0.45);
+  box-shadow:0 6px 18px rgba(0,0,0,0.32), 0 0 0 1px rgba(113,112,255,0.12) inset;
+}
+.lib-card-head{display:flex; align-items:flex-start; gap:10px;}
+.lib-card-name{
+  flex:1; font-size:14.5px; font-weight:600; line-height:1.35;
+  color:var(--text); letter-spacing:-0.005em;
+}
+.lib-card-id{
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+  letter-spacing:0.04em; margin-top:3px;
+}
+.lib-card-desc{
+  font-size:12.5px; line-height:1.5; color:var(--muted);
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.lib-card-meta{display:flex; flex-wrap:wrap; gap:5px; align-items:center;}
+.lib-tag{
+  display:inline-flex; align-items:center; gap:4px;
+  padding:2px 7px; border-radius:99px;
+  font-family:var(--mono); font-size:10px; font-weight:600;
+  letter-spacing:0.03em;
+  background:rgba(113,112,255,0.10);
+  border:1px solid rgba(113,112,255,0.22);
+  color:var(--accent-2);
+}
+.lib-tag.tactic{background:rgba(95,182,255,0.10); border-color:rgba(95,182,255,0.22); color:#a8c5ff;}
+.lib-tag.tier{background:rgba(180,141,255,0.10); border-color:rgba(180,141,255,0.22); color:#c5b1ff;}
+.lib-tag.sev-crit{background:rgba(255,90,90,0.14); border-color:rgba(255,90,90,0.40); color:#ff8e8e;}
+.lib-tag.sev-high{background:rgba(255,150,90,0.14); border-color:rgba(255,150,90,0.36); color:#ffba8a;}
+.lib-tag.sev-med{background:rgba(255,200,90,0.14); border-color:rgba(255,200,90,0.36); color:#ffd98a;}
+.lib-tag.sev-low{background:rgba(150,200,255,0.10); border-color:rgba(150,200,255,0.30); color:#a8d0ff;}
+.lib-tag.platform-d{background:rgba(80,200,160,0.12); border-color:rgba(80,200,160,0.32); color:#9bdfc1;}
+.lib-tag.platform-s{background:rgba(110,160,255,0.12); border-color:rgba(110,160,255,0.32); color:#a8c5ff;}
+.lib-tag.platform-z{background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a;}
+.lib-tag.platform-p{background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8;}
+.lib-card-footer{
+  display:flex; align-items:center; gap:10px; justify-content:space-between;
+  padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);
+}
+.lib-svs{
+  display:inline-flex; align-items:baseline; gap:6px;
+  font-family:var(--mono); font-size:11px; color:var(--muted-2);
+}
+.lib-svs-num{
+  font-size:18px; font-weight:700; letter-spacing:-0.02em;
+  color:var(--text);
+  background:linear-gradient(180deg, var(--accent-2), var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.lib-svs-track{
+  flex:1; max-width:120px; height:4px; border-radius:99px;
+  background:rgba(255,255,255,0.06); overflow:hidden;
+}
+.lib-svs-fill{
+  height:100%;
+  background:linear-gradient(90deg, var(--accent-3), var(--accent), var(--accent-2));
+  border-radius:99px;
+  transition:width 0.3s;
+}
+.lib-card-articles{
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+}
+.lib-drawer{
+  position:fixed; inset:0;
+  z-index:8500;
+  background:rgba(8,9,10,0.58);
+  display:flex; align-items:stretch; justify-content:flex-end;
+  opacity:0; transition:opacity 0.22s ease-out;
+  pointer-events:none;
+}
+.lib-drawer.open{opacity:1; pointer-events:auto;}
+.lib-drawer[hidden]{display:none;}
+.lib-drawer-inner{
+  width:min(880px, 100vw);
+  height:100vh; overflow-y:auto;
+  background:var(--bg);
+  border-left:1px solid rgba(113,112,255,0.30);
+  box-shadow:-24px 0 48px rgba(0,0,0,0.55);
+  transform:translateX(40px);
+  transition:transform 0.32s cubic-bezier(0.2,0.8,0.2,1.0);
+  position:relative;
+}
+.lib-drawer.open .lib-drawer-inner{transform:translateX(0);}
+.lib-drawer-close{
+  position:sticky; top:14px; left:auto; float:right;
+  margin:14px 14px 0 0; z-index:10;
+  background:rgba(255,255,255,0.06); color:var(--muted);
+  border:1px solid var(--border-2);
+  width:32px; height:32px; border-radius:50%;
+  font-size:20px; line-height:1; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:all 0.15s;
+}
+.lib-drawer-close:hover{color:var(--text); background:rgba(255,255,255,0.12); border-color:var(--accent-2);}
+.lib-drawer-content{padding:24px 28px 56px;}
+@media (max-width: 640px){ .lib-drawer-content{padding:16px 18px 36px;} }
+.lib-detail-head{
+  display:flex; flex-direction:column; gap:10px;
+  margin-bottom:18px; padding-bottom:18px;
+  border-bottom:1px solid var(--border);
+}
+.lib-detail-name{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+  color:var(--accent-2); text-transform:uppercase;
+}
+.lib-detail-title{
+  margin:0; font-size:24px; font-weight:600; line-height:1.25;
+  letter-spacing:-0.02em; color:var(--text);
+}
+.lib-detail-meta{display:flex; flex-wrap:wrap; gap:6px; align-items:center;}
+.lib-detail-svs{
+  margin-top:8px; display:flex; align-items:center; gap:14px;
+  padding:14px 16px; border-radius:var(--r-md);
+  background:linear-gradient(135deg, rgba(113,112,255,0.10), rgba(95,182,255,0.06));
+  border:1px solid rgba(113,112,255,0.30);
+}
+.lib-detail-svs-score{display:flex; flex-direction:column; gap:2px; min-width:88px;}
+.lib-detail-svs-num{
+  font-size:32px; font-weight:700; line-height:1;
+  background:linear-gradient(180deg, var(--accent-2), var(--accent));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text; letter-spacing:-0.03em;
+}
+.lib-detail-svs-label{
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+  letter-spacing:0.04em; text-transform:uppercase;
+}
+.lib-detail-svs-grid{flex:1; display:grid; grid-template-columns:repeat(4, 1fr); gap:10px;}
+.lib-svs-component{display:flex; flex-direction:column; gap:4px;}
+.lib-svs-component-label{
+  font-family:var(--mono); font-size:10px; color:var(--muted-2);
+  letter-spacing:0.04em; text-transform:uppercase;
+}
+.lib-svs-component-bar{
+  height:6px; border-radius:99px;
+  background:rgba(255,255,255,0.06); overflow:hidden;
+  position:relative;
+}
+.lib-svs-component-fill{height:100%; border-radius:99px; background:linear-gradient(90deg, var(--accent-3), var(--accent));}
+.lib-svs-component-val{font-family:var(--mono); font-size:11px; font-weight:600; color:var(--text); letter-spacing:0.02em;}
+.lib-section{margin:22px 0; display:flex; flex-direction:column; gap:8px;}
+.lib-section-h{
+  font-family:var(--mono); font-size:11px; letter-spacing:0.06em;
+  color:var(--accent-2); text-transform:uppercase; font-weight:600;
+  margin:0; display:flex; align-items:center; gap:8px;
+}
+.lib-section-h::before{
+  content:''; width:4px; height:14px; border-radius:2px;
+  background:linear-gradient(180deg, var(--accent), var(--accent-2));
+}
+.lib-section p{margin:0; font-size:13.5px; line-height:1.6; color:var(--text);}
+.lib-section-body{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  padding:14px 16px;
+  font-size:13px; line-height:1.6; color:var(--text);
+}
+.lib-section-body ul{margin:0; padding-left:18px;}
+.lib-section-body li{margin:4px 0;}
+.lib-mitre-grid{display:flex; flex-wrap:wrap; gap:8px;}
+.lib-mitre-pill{
+  display:inline-flex; flex-direction:column; gap:2px;
+  padding:6px 12px; border-radius:var(--r-sm);
+  background:var(--panel); border:1px solid rgba(95,182,255,0.30);
+  text-decoration:none; color:inherit; cursor:pointer;
+  transition:border-color 0.15s, background 0.15s;
+}
+.lib-mitre-pill:hover{border-color:rgba(95,182,255,0.60); background:rgba(95,182,255,0.06);}
+.lib-mitre-pill .mp-tid{font-family:var(--mono); font-size:11.5px; font-weight:600; color:var(--accent-3); letter-spacing:0.02em;}
+.lib-mitre-pill .mp-name{font-size:12px; color:var(--text);}
+.lib-mitre-pill .mp-tactic{font-family:var(--mono); font-size:9.5px; color:var(--muted-2); letter-spacing:0.04em;}
+.lib-query-tabs{display:flex; gap:2px; background:var(--panel); border:1px solid var(--border); border-radius:var(--r-sm); padding:2px; width:fit-content;}
+.lib-query-tab{
+  background:transparent; border:0; color:var(--muted);
+  padding:6px 14px; border-radius:calc(var(--r-sm) - 2px);
+  font:inherit; font-size:11.5px; font-weight:500;
+  cursor:pointer; transition:all 0.15s;
+}
+.lib-query-tab:hover{color:var(--text);}
+.lib-query-tab.on{background:var(--panel2); color:var(--text); box-shadow:0 0 0 1px rgba(113,112,255,0.30);}
+.lib-query-pre{
+  margin:0; padding:14px 16px;
+  background:#0c0d10; border:1px solid var(--border);
+  border-radius:var(--r-md);
+  font-family:var(--mono); font-size:12px; line-height:1.55;
+  color:#e3e3eb; overflow:auto; max-height:380px;
+  white-space:pre; tab-size:2;
+}
+.lib-query-toolbar{display:flex; align-items:center; gap:10px; justify-content:space-between;}
+.lib-query-meta{font-family:var(--mono); font-size:10.5px; color:var(--muted-2);}
+.lib-copy-btn{
+  background:transparent; border:1px solid var(--border-2);
+  color:var(--muted); font:inherit; font-size:11px; font-weight:500;
+  padding:4px 10px; border-radius:var(--r-sm); cursor:pointer;
+  transition:all 0.15s;
+}
+.lib-copy-btn:hover{color:var(--text); border-color:var(--accent-2);}
+.lib-copy-btn.copied{color:#9bdfc1; border-color:rgba(80,200,160,0.55);}
+.lib-source-list{display:flex; flex-direction:column; gap:6px;}
+.lib-source-row{
+  display:flex; align-items:center; gap:10px;
+  padding:8px 12px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:var(--r-sm);
+  text-decoration:none; color:inherit;
+  transition:border-color 0.15s, background 0.15s;
+}
+.lib-source-row:hover{border-color:rgba(113,112,255,0.45); background:rgba(113,112,255,0.04);}
+.lib-source-row .ls-sev{
+  font-family:var(--mono); font-size:9.5px; font-weight:600;
+  letter-spacing:0.04em; padding:2px 6px; border-radius:99px;
+  text-transform:uppercase; flex-shrink:0;
+}
+.lib-source-row .ls-sev.crit{background:rgba(255,90,90,0.14); color:#ff8e8e; border:1px solid rgba(255,90,90,0.36);}
+.lib-source-row .ls-sev.high{background:rgba(255,150,90,0.14); color:#ffba8a; border:1px solid rgba(255,150,90,0.36);}
+.lib-source-row .ls-sev.med{background:rgba(255,200,90,0.14); color:#ffd98a; border:1px solid rgba(255,200,90,0.36);}
+.lib-source-row .ls-sev.low{background:rgba(150,200,255,0.10); color:#a8d0ff; border:1px solid rgba(150,200,255,0.30);}
+.lib-source-row .ls-title{flex:1; font-size:12.5px; color:var(--text); line-height:1.4;}
+.lib-source-row .ls-src{
+  font-family:var(--mono); font-size:10px; color:var(--muted-2);
+  letter-spacing:0.04em; text-transform:uppercase; flex-shrink:0;
+}
+.lib-empty{
+  padding:48px 28px; text-align:center;
+  color:var(--muted); font-size:14px;
+  background:var(--panel); border:1px dashed var(--border-2);
+  border-radius:var(--r-md);
+}
+.lib-empty b{color:var(--text);}
 
 /* =================================================================
    Guided tour — full-page overlay, spotlight, floating card.
@@ -5139,6 +5474,7 @@ ul.intel-types-doc code{
   <div class="topbar-inner" style="padding-top:0; gap:14px;">
     <div class="view-tabs" role="tablist">
       <button class="view-tab active" data-view="articles" role="tab">Articles</button>
+      <button class="view-tab" data-view="library" role="tab">Detection Library</button>
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
       <button class="view-tab" data-view="actors" role="tab">Threat Actors</button>
@@ -5153,7 +5489,6 @@ ul.intel-types-doc code{
   <span class="banner-explainer"><b>New here?</b> We turn daily threat-intel articles into ready-to-deploy SOC detections — every 2 hours.</span>
   <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
-  <button class="banner-close" id="firstVisitClose" aria-label="Dismiss welcome banner" title="Dismiss">×</button>
 </div>
 
 <!-- =================================================================
@@ -5251,6 +5586,31 @@ ul.intel-types-doc code{
     __CARDS__
   </section>
 </main>
+</div>
+
+<div id="view-library" class="view">
+  <div class="lib-wrap">
+    <div class="lib-header">
+      <div class="lib-title-row">
+        <h2 class="lib-title">Detection Library</h2>
+        <span class="lib-subtitle">Every use case, structured. Click any card for the full detection page.</span>
+      </div>
+      <div class="lib-toolbar">
+        <input type="text" id="libSearch" placeholder="Search by name, technique, actor, app, CVE…" autocomplete="off">
+        <div class="lib-result-count" id="libResultCount">—</div>
+      </div>
+      <div class="lib-filter-row" id="libFilters"><!-- chips populated by renderLibrary() --></div>
+    </div>
+    <div class="lib-grid" id="libGrid" role="list"><!-- card list populated by JS --></div>
+  </div>
+</div>
+
+<!-- UC detail panel — full-width slide-in showing the structured page. -->
+<div class="lib-drawer" id="libDrawer" hidden role="dialog" aria-modal="true" aria-labelledby="libDrawerTitle">
+  <div class="lib-drawer-inner">
+    <button type="button" class="lib-drawer-close" id="libDrawerClose" aria-label="Close">×</button>
+    <div class="lib-drawer-content" id="libDrawerContent"><!-- populated on open --></div>
+  </div>
 </div>
 
 <div id="view-matrix" class="view">
@@ -6267,6 +6627,621 @@ document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
 })();
 
 // =================================================================
+// Detection Library — preprocesses every UC into a search-friendly
+// shape, derives SOC Value Score, extracts queries from the article
+// DOM, and renders a card grid + structured detail drawer.
+// =================================================================
+const LIB_STATE = {
+  prepared: null,
+  filters: {
+    search: '',
+    phase: '',
+    tactic: '',
+    severity: '',
+    tier: '',
+    src: '',
+    actor: '',
+    country: '',
+    app: '',
+    platforms: new Set(),
+  },
+};
+
+const SEV_ORDER = {crit: 4, critical: 4, high: 3, med: 2, medium: 2, low: 1, info: 0};
+const SEV_NORM = {crit:'crit', critical:'crit', high:'high', med:'med', medium:'med', low:'low', info:'low'};
+
+const TACTIC_NAME = (typeof MATRIX !== 'undefined' && MATRIX && MATRIX.tactics)
+  ? Object.fromEntries(MATRIX.tactics.map(t => [t.short, t.name]))
+  : {};
+
+// Heuristic application/binary tags surfaced as filters and pills so an
+// analyst can ask "show me everything that mentions powershell".
+const LIB_APP_PATTERNS = [
+  ['powershell', /\\b(powershell\\.exe|powershell|pwsh)\\b/i],
+  ['cmd',        /\\bcmd\\.exe\\b/i],
+  ['regsvr32',   /\\bregsvr32\\.exe\\b/i],
+  ['rundll32',   /\\brundll32\\.exe\\b/i],
+  ['mshta',      /\\bmshta\\.exe\\b/i],
+  ['certutil',   /\\bcertutil\\.exe\\b/i],
+  ['bitsadmin',  /\\bbitsadmin\\.exe\\b/i],
+  ['wmic',       /\\bwmic\\.exe\\b/i],
+  ['msbuild',    /\\bmsbuild\\.exe\\b/i],
+  ['installutil',/\\binstallutil\\.exe\\b/i],
+  ['lsass',      /\\blsass\\.exe\\b/i],
+  ['wscript',    /\\b(wscript|cscript)\\.exe\\b/i],
+  ['psexec',     /\\bpsexec\\.?(exe)?\\b/i],
+  ['office',     /\\b(winword|excel|outlook|powerpnt|onenote)\\.exe\\b/i],
+  ['browser',    /\\b(chrome|firefox|msedge|edge|brave|safari)\\.exe\\b/i],
+  ['ssh',        /\\bssh(?:\\.exe)?\\b/i],
+  ['curl',       /\\bcurl(?:\\.exe)?\\b/i],
+  ['scheduledtask', /\\bschtasks\\.exe\\b/i],
+];
+
+const LIB_ACTORS = [
+  {n:'APT28', c:'Russia'}, {n:'APT29', c:'Russia'}, {n:'Sandworm', c:'Russia'},
+  {n:'Sednit', c:'Russia'}, {n:'Fancy Bear', c:'Russia'}, {n:'Forest Blizzard', c:'Russia'},
+  {n:'Gamaredon', c:'Russia'}, {n:'Turla', c:'Russia'}, {n:'Cozy Bear', c:'Russia'},
+  {n:'Lazarus', c:'North Korea'}, {n:'Kimsuky', c:'North Korea'},
+  {n:'APT37', c:'North Korea'}, {n:'APT38', c:'North Korea'},
+  {n:'APT41', c:'China'}, {n:'APT10', c:'China'}, {n:'APT40', c:'China'},
+  {n:'Mustang Panda', c:'China'}, {n:'Volt Typhoon', c:'China'},
+  {n:'Salt Typhoon', c:'China'}, {n:'Silver Fox', c:'China'},
+  {n:'PlushDaemon', c:'China'}, {n:'PlugX', c:'China'},
+  {n:'APT34', c:'Iran'}, {n:'OilRig', c:'Iran'}, {n:'MuddyWater', c:'Iran'},
+  {n:'Charming Kitten', c:'Iran'},
+  {n:'FIN7', c:'E-crime'}, {n:'FIN8', c:'E-crime'}, {n:'TA505', c:'E-crime'},
+  {n:'Cordial Spider', c:'E-crime'}, {n:'Snarky Spider', c:'E-crime'},
+  {n:'Scattered Spider', c:'E-crime'}, {n:'LockBit', c:'E-crime'},
+  {n:'BlackCat', c:'E-crime'}, {n:'ALPHV', c:'E-crime'},
+];
+
+function _libExtractApps(text) {
+  const found = new Set();
+  for (const [tag, re] of LIB_APP_PATTERNS) if (re.test(text)) found.add(tag);
+  return [...found];
+}
+function _libExtractActors(text) {
+  const found = [];
+  for (const a of LIB_ACTORS) {
+    const re = new RegExp('\\\\b' + a.n.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&') + '\\\\b', 'i');
+    if (re.test(text)) found.push(a);
+  }
+  return found;
+}
+function _libSourceFromArtId(art) {
+  const t = (art.title || '').toLowerCase();
+  if (/\\bcisa\\b/.test(t)) return 'CISA KEV';
+  if (/(hackers? news|the hacker news)/.test(t)) return 'Hacker News';
+  if (/bleeping/.test(t)) return 'BleepingComputer';
+  if (/\\beset\\b|welive/.test(t)) return 'ESET';
+  if (/talos/.test(t)) return 'Talos';
+  if (/unit\\s*42/.test(t)) return 'Unit 42';
+  if (/sentinellabs|sentinelone/.test(t)) return 'SentinelLabs';
+  if (/securelist|kaspersky/.test(t)) return 'Securelist';
+  if (/microsoft/.test(t)) return 'Microsoft';
+  if (/lab\\s*52/.test(t)) return 'Lab52';
+  return 'Other';
+}
+
+function _libPrepare() {
+  if (LIB_STATE.prepared) return LIB_STATE.prepared;
+  if (typeof MATRIX === 'undefined' || !MATRIX || !Array.isArray(MATRIX.ucs)) return [];
+  const arts = MATRIX.arts || [];
+
+  const ucDom = new Map();
+  document.querySelectorAll('#articles .article details.uc').forEach(d => {
+    const title = (d.querySelector('summary')?.textContent || '').trim();
+    if (!title) return;
+    const tabs = {};
+    d.querySelectorAll('.uc-tabs .uc-tab, [data-platform], .platform-tab').forEach(b => {
+      const k = (b.dataset.platform || b.textContent || '').trim().toLowerCase();
+      if (/defender/.test(k)) tabs.def = true;
+      else if (/sentinel/.test(k)) tabs.sent = true;
+      else if (/sigma/.test(k)) tabs.sigma = true;
+      else if (/splunk|spl/.test(k)) tabs.spl = true;
+    });
+    d.querySelectorAll('pre, code').forEach(p => {
+      const t = (p.textContent || '');
+      if (!tabs.sigma && /^\\s*title:\\s/m.test(t) && /detection:/m.test(t)) tabs.sigma = true;
+      if (!tabs.spl && /^\\s*(?:index=|search\\b)/m.test(t)) tabs.spl = true;
+      if (!tabs.def && /DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(t)) tabs.def = true;
+      if (!tabs.sent && /\\bSecurityEvent\\b|\\bSigninLogs\\b|\\bAuditLogs\\b/.test(t)) tabs.sent = true;
+    });
+    const queries = {};
+    d.querySelectorAll('pre').forEach(pre => {
+      const txt = pre.textContent || '';
+      if (!txt.trim()) return;
+      let kind = 'other';
+      if (/^\\s*title:/m.test(txt) && /\\bdetection:/.test(txt)) kind = 'sigma';
+      else if (/^\\s*(?:index=|search\\b|\\|)/m.test(txt)) kind = 'spl';
+      else if (/DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(txt)) kind = 'def';
+      else if (/SecurityEvent|SigninLogs|AuditLogs/.test(txt)) kind = 'sent';
+      if (!queries[kind] && txt.length < 8000) queries[kind] = txt;
+    });
+    ucDom.set(title, {tabs, queries});
+  });
+
+  const prepared = MATRIX.ucs.map(uc => {
+    const ucArts = (uc.arts || []).map(i => arts[i]).filter(Boolean);
+    let maxSev = 0; let sevTag = 'low';
+    for (const a of ucArts) {
+      const r = SEV_ORDER[(a.sev || '').toLowerCase()] || 0;
+      if (r > maxSev) { maxSev = r; sevTag = SEV_NORM[(a.sev || '').toLowerCase()] || 'low'; }
+    }
+    let plats = ucDom.get(uc.t)?.tabs || {};
+    if (!plats.def && !plats.sent && !plats.sigma && !plats.spl) {
+      if (uc.src === 'internal') plats = {def:true, sent:true, sigma:true, spl:true};
+      else plats = {def:true, sigma:true};
+    }
+    const queries = ucDom.get(uc.t)?.queries || {};
+    const apps = _libExtractApps(uc.t + ' ' + (uc.n || ''));
+    const actorTitles = ucArts.map(a => a.title).join(' || ');
+    const actors = _libExtractActors(actorTitles);
+    const countries = [...new Set(actors.map(a => a.c))];
+    const sources = [...new Set(ucArts.map(a => _libSourceFromArtId(a)))];
+
+    const tacticSet = new Set();
+    for (const tid of (uc.techs || [])) {
+      const t = MATRIX.techniques?.[tid];
+      if (t && t.tactics) for (const tac of t.tactics) tacticSet.add(tac);
+    }
+
+    const probability   = Math.min(100, Math.round(Math.log2(1 + ucArts.length) * 22));
+    const impact        = ({0:20, 1:35, 2:55, 3:80, 4:100})[maxSev] ?? 30;
+    const platformCount = ['def','sent','sigma','spl'].filter(k => plats[k]).length;
+    const detectability = Math.round((platformCount / 4) * 100);
+    const queryLines = Object.values(queries).reduce((s, q) => s + q.split('\\n').length, 0) || 18;
+    const effort = Math.max(20, Math.min(100, 110 - Math.round(queryLines * 1.6)));
+    const score  = Math.round(0.30 * probability + 0.30 * impact + 0.25 * detectability + 0.15 * effort);
+
+    return {
+      uc, ucArts, sevTag, sevRank: maxSev, plats, queries, apps, actors, countries, sources,
+      tactics: [...tacticSet],
+      score, breakdown: {probability, impact, detectability, effort},
+      _idx: uc.i,
+      _searchBlob: [
+        uc.n, uc.t, (uc.techs || []).join(' '),
+        actors.map(a => a.n).join(' '),
+        countries.join(' '),
+        apps.join(' '),
+        ucArts.map(a => a.title).join(' '),
+      ].join(' ').toLowerCase(),
+    };
+  });
+
+  prepared.sort((a, b) => b.score - a.score);
+  LIB_STATE.prepared = prepared;
+  return prepared;
+}
+
+function _libBuildFilters(prepared) {
+  const phases = new Set(); const tiers = new Set(); const srcs = new Set();
+  const tactics = new Set(); const apps = new Set();
+  const actors = new Set(); const countries = new Set();
+  for (const p of prepared) {
+    if (p.uc.ph) phases.add(p.uc.ph);
+    if (p.uc.tier) tiers.add(p.uc.tier);
+    if (p.uc.src) srcs.add(p.uc.src);
+    for (const t of p.tactics) tactics.add(t);
+    for (const a of p.apps) apps.add(a);
+    for (const a of p.actors) actors.add(a.n);
+    for (const c of p.countries) countries.add(c);
+  }
+  function selectChip(label, key, items, formatter) {
+    const opts = ['<option value="">All</option>'].concat(
+      [...items].sort().map(v => `<option value="${escapeHtml(v)}">${escapeHtml((formatter||((x)=>x))(v))}</option>`)
+    ).join('');
+    return `<label class="lib-filter-group"><span class="lf-label">${escapeHtml(label)}</span>
+      <select data-lib-filter="${escapeHtml(key)}">${opts}</select></label>`;
+  }
+  const sevSel = selectChip('Severity', 'severity', ['crit','high','med','low'], v => ({crit:'Critical', high:'High', med:'Medium', low:'Low'}[v]||v));
+  const phaseSel = selectChip('Phase', 'phase', phases);
+  const tacticSel = selectChip('Tactic', 'tactic', tactics, v => TACTIC_NAME[v] || v);
+  const tierSel = selectChip('Tier', 'tier', tiers, v => v[0].toUpperCase() + v.slice(1));
+  const srcSel = selectChip('Source', 'src', srcs, v => v === 'internal' ? 'Internal' : 'LLM');
+  const appSel = selectChip('App', 'app', apps);
+  const actorSel = selectChip('Actor', 'actor', actors);
+  const countrySel = selectChip('Country', 'country', countries);
+  const platformPills = `<div class="lib-pill-group" data-lib-platforms>
+    <button class="lib-pill platform-d" data-pl="def">D · Defender</button>
+    <button class="lib-pill platform-s" data-pl="sent">S · Sentinel</button>
+    <button class="lib-pill platform-z" data-pl="sigma">Σ · Sigma</button>
+    <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
+  </div>`;
+  const clear = `<button type="button" class="lib-clear-btn" id="libClearFilters">Clear all</button>`;
+  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, clear].join('\\n');
+}
+
+function _libCardHtml(p) {
+  const tacticLabel = p.tactics[0] ? (TACTIC_NAME[p.tactics[0]] || p.tactics[0]) : '';
+  const tacticTag = tacticLabel ? `<span class="lib-tag tactic">${escapeHtml(tacticLabel)}</span>` : '';
+  const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
+  const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
+  const platTags = ['def','sent','sigma','spl'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p'}[k];
+    const label = {def:'D', sent:'S', sigma:'Σ', spl:'P'}[k];
+    return `<span class="lib-tag ${cls}" title="${k}">${label}</span>`;
+  }).join('');
+  const techPills = (p.uc.techs || []).slice(0, 4).map(t => `<span class="lib-tag">${escapeHtml(t)}</span>`).join('');
+  const moreTechs = (p.uc.techs || []).length > 4 ? `<span class="lib-tag" title="${escapeHtml((p.uc.techs||[]).join(', '))}">+${(p.uc.techs||[]).length - 4}</span>` : '';
+  return `<article class="lib-card" role="listitem" data-uc-idx="${p._idx}">
+    <div class="lib-card-head">
+      <div style="flex:1;">
+        <div class="lib-card-name">${escapeHtml(p.uc.t || p.uc.n)}</div>
+        <div class="lib-card-id">${escapeHtml(p.uc.n)}</div>
+      </div>
+    </div>
+    <div class="lib-card-meta">
+      ${sevTag}${tacticTag}${tierTag}${techPills}${moreTechs}${platTags}
+    </div>
+    <div class="lib-card-footer">
+      <div class="lib-svs" title="SOC Value Score">
+        <span class="lib-svs-num">${p.score}</span>
+        <span>SVS</span>
+      </div>
+      <div class="lib-svs-track"><div class="lib-svs-fill" style="width:${p.score}%"></div></div>
+      <div class="lib-card-articles">${p.ucArts.length} ${p.ucArts.length === 1 ? 'sighting' : 'sightings'}</div>
+    </div>
+  </article>`;
+}
+
+function _libApplyFilters(prepared) {
+  const f = LIB_STATE.filters;
+  return prepared.filter(p => {
+    if (f.search) {
+      if (!p._searchBlob.includes(f.search)) return false;
+    }
+    if (f.phase   && p.uc.ph !== f.phase) return false;
+    if (f.tactic  && !p.tactics.includes(f.tactic)) return false;
+    if (f.severity && p.sevTag !== f.severity) return false;
+    if (f.tier    && p.uc.tier !== f.tier) return false;
+    if (f.src     && p.uc.src !== f.src) return false;
+    if (f.actor   && !p.actors.some(a => a.n === f.actor)) return false;
+    if (f.country && !p.countries.includes(f.country)) return false;
+    if (f.app     && !p.apps.includes(f.app)) return false;
+    if (f.platforms.size) {
+      for (const k of f.platforms) if (!p.plats[k]) return false;
+    }
+    return true;
+  });
+}
+
+function _libRenderCards() {
+  const prepared = _libPrepare();
+  const filtered = _libApplyFilters(prepared);
+  const grid = document.getElementById('libGrid');
+  const count = document.getElementById('libResultCount');
+  if (count) count.textContent = `${filtered.length.toLocaleString()} of ${prepared.length.toLocaleString()} use cases`;
+  if (!grid) return;
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="lib-empty"><b>No use cases match these filters.</b><br>Try clearing a filter or changing your search.</div>`;
+    return;
+  }
+  const cap = 240;
+  grid.innerHTML = filtered.slice(0, cap).map(_libCardHtml).join('');
+  if (filtered.length > cap) {
+    const more = document.createElement('div');
+    more.className = 'lib-empty';
+    more.innerHTML = `<b>${(filtered.length - cap).toLocaleString()} more results</b><br>Refine your filters to see them.`;
+    grid.appendChild(more);
+  }
+}
+
+function renderLibrary() {
+  const filters = document.getElementById('libFilters');
+  if (filters && !filters.dataset.ready) {
+    filters.innerHTML = _libBuildFilters(_libPrepare());
+    filters.dataset.ready = '1';
+    filters.addEventListener('change', e => {
+      const sel = e.target.closest('select[data-lib-filter]');
+      if (!sel) return;
+      LIB_STATE.filters[sel.dataset.libFilter] = sel.value;
+      _libRenderCards();
+    });
+    filters.addEventListener('click', e => {
+      const pill = e.target.closest('.lib-pill[data-pl]');
+      if (pill) {
+        const k = pill.dataset.pl;
+        if (LIB_STATE.filters.platforms.has(k)) LIB_STATE.filters.platforms.delete(k);
+        else LIB_STATE.filters.platforms.add(k);
+        pill.classList.toggle('on');
+        _libRenderCards();
+        return;
+      }
+      if (e.target.id === 'libClearFilters') {
+        LIB_STATE.filters = {search:'', phase:'', tactic:'', severity:'', tier:'', src:'', actor:'', country:'', app:'', platforms:new Set()};
+        filters.querySelectorAll('select[data-lib-filter]').forEach(s => s.value = '');
+        filters.querySelectorAll('.lib-pill.on').forEach(p => p.classList.remove('on'));
+        const search = document.getElementById('libSearch');
+        if (search) search.value = '';
+        _libRenderCards();
+      }
+    });
+  }
+  const search = document.getElementById('libSearch');
+  if (search && !search.dataset.ready) {
+    search.dataset.ready = '1';
+    let t = null;
+    search.addEventListener('input', () => {
+      clearTimeout(t);
+      t = setTimeout(() => {
+        LIB_STATE.filters.search = search.value.trim().toLowerCase();
+        _libRenderCards();
+      }, 80);
+    });
+  }
+  _libRenderCards();
+}
+
+document.addEventListener('click', e => {
+  const card = e.target.closest('.lib-card[data-uc-idx]');
+  if (!card) return;
+  const idx = parseInt(card.dataset.ucIdx, 10);
+  const prepared = _libPrepare();
+  const p = prepared.find(x => x._idx === idx);
+  if (p) openLibraryDrawer(p);
+});
+
+function openLibraryDrawer(p) {
+  const drawer = document.getElementById('libDrawer');
+  const content = document.getElementById('libDrawerContent');
+  if (!drawer || !content) return;
+  content.innerHTML = _libDetailHtml(p);
+  drawer.removeAttribute('hidden');
+  requestAnimationFrame(() => drawer.classList.add('open'));
+  drawer.scrollTop = 0;
+  if (content.parentElement) content.parentElement.scrollTop = 0;
+  content.querySelectorAll('.lib-query-tab').forEach(b => {
+    b.addEventListener('click', () => {
+      const k = b.dataset.platform;
+      content.querySelectorAll('.lib-query-tab').forEach(x => x.classList.toggle('on', x === b));
+      content.querySelectorAll('[data-query-pane]').forEach(pane => {
+        pane.style.display = pane.dataset.queryPane === k ? '' : 'none';
+      });
+    });
+  });
+  content.querySelectorAll('.lib-copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const pre = btn.closest('[data-query-pane]')?.querySelector('pre');
+      if (!pre) return;
+      try {
+        await navigator.clipboard.writeText(pre.textContent || '');
+        btn.classList.add('copied'); btn.textContent = 'Copied ✓';
+        setTimeout(() => { btn.classList.remove('copied'); btn.textContent = 'Copy'; }, 1400);
+      } catch (_) {
+        btn.textContent = 'Copy failed';
+      }
+    });
+  });
+}
+function closeLibraryDrawer() {
+  const drawer = document.getElementById('libDrawer');
+  if (!drawer) return;
+  drawer.classList.remove('open');
+  setTimeout(() => drawer.setAttribute('hidden', ''), 300);
+}
+document.getElementById('libDrawerClose')?.addEventListener('click', closeLibraryDrawer);
+document.getElementById('libDrawer')?.addEventListener('click', e => {
+  if (e.target.id === 'libDrawer') closeLibraryDrawer();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && !document.getElementById('libDrawer')?.hasAttribute('hidden')) {
+    closeLibraryDrawer();
+  }
+});
+
+function _libFpTuning(p) {
+  const techs = p.uc.techs || [];
+  const phase = p.uc.ph || '';
+  const fp = []; const tune = [];
+  if (techs.some(t => /^T1059/.test(t))) {
+    fp.push('Legitimate admin / IT-automation scripts (deployment tooling, RMM, configuration management) often invoke the same shells with similar flags.');
+    tune.push('Allow-list signed admin scripts by hash or by parent process (e.g. SCCM, Intune) before alerting; consider firing only outside of change-windows.');
+  }
+  if (techs.some(t => /^T1003/.test(t)) || /\\blsass\\b/i.test(p.uc.t)) {
+    fp.push('Memory-protection products (CrowdStrike, Defender, third-party EDR) routinely open LSASS for inspection.');
+    tune.push('Exclude known security-product binaries by signed-publisher; alert only when the requesting process is unsigned or has no parent.');
+  }
+  if (techs.some(t => /^T1027/.test(t))) {
+    fp.push('Packers and obfuscators are also used by legitimate installers (Inno Setup, NSIS) and game protectors.');
+    tune.push('Combine entropy + signing-status — high-entropy + unsigned + outside %ProgramFiles% is the actionable combination.');
+  }
+  if (techs.some(t => /^T1218/.test(t))) {
+    fp.push('LOLBins (mshta, regsvr32, rundll32) appear in legitimate provisioning and Office macros.');
+    tune.push('Alert on the parent-process / commandline pair (e.g. winword.exe → mshta.exe http\\\\:* is rarely benign).');
+  }
+  if (/exfil/i.test(p.uc.t) || phase === 'exfil') {
+    fp.push('Cloud-backup tooling (OneDrive, Dropbox, GDrive sync, Backblaze) generates similar bulk outbound flows.');
+    tune.push('Allow-list known cloud-backup destinations by SNI / fronted FQDN; alert on uncommon destinations or unusual hours.');
+  }
+  if (/(beacon|c2|command-and-control)/i.test(p.uc.t + ' ' + phase)) {
+    fp.push('Long-poll APIs, telemetry agents, and SaaS heartbeats can mimic beaconing cadence.');
+    tune.push('Score on jitter + small payload-size + low domain-popularity rather than periodicity alone.');
+  }
+  if (techs.some(t => /^T1566/.test(t))) {
+    fp.push('Marketing emails and helpdesk auto-replies generate similar URL-click telemetry.');
+    tune.push('Cross-reference the click-time URL against your vendor/partner safe-list before escalating.');
+  }
+  if (!fp.length) {
+    fp.push('Authorised administrators or build/CI tooling can produce the same telemetry signatures.');
+    tune.push("Allow-list the operations team's service accounts and known maintenance windows; tighten the time-of-day filter to off-hours for higher-fidelity firing.");
+  }
+  return {fp, tune};
+}
+
+function _libDetailHtml(p) {
+  const tacticChips = p.tactics.map(t => `<span class="lib-tag tactic">${escapeHtml(TACTIC_NAME[t] || t)}</span>`).join('');
+  const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
+  const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
+  const phaseTag = p.uc.ph ? `<span class="lib-tag">${escapeHtml(p.uc.ph)}</span>` : '';
+  const platTags = ['def','sent','sigma','spl'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL'}[k];
+    return `<span class="lib-tag ${cls}">${escapeHtml(lbl)}</span>`;
+  }).join('');
+
+  const svsGrid = ['probability','impact','detectability','effort'].map(k => {
+    const v = p.breakdown[k];
+    const label = {probability:'Probability', impact:'Impact', detectability:'Detectability', effort:'Low Effort'}[k];
+    return `<div class="lib-svs-component">
+      <span class="lib-svs-component-label">${label}</span>
+      <div class="lib-svs-component-bar"><div class="lib-svs-component-fill" style="width:${v}%"></div></div>
+      <span class="lib-svs-component-val">${v}/100</span>
+    </div>`;
+  }).join('');
+
+  const mitre = (p.uc.techs || []).map(tid => {
+    const t = MATRIX.techniques?.[tid] || {};
+    const tac = (t.tactics && t.tactics[0]) ? (TACTIC_NAME[t.tactics[0]] || t.tactics[0]) : '';
+    const url = `https://attack.mitre.org/techniques/${tid.replace('.', '/')}/`;
+    return `<a class="lib-mitre-pill" href="${url}" target="_blank" rel="noopener">
+      <span class="mp-tid">${escapeHtml(tid)}</span>
+      <span class="mp-name">${escapeHtml(t.name || tid)}</span>
+      ${tac ? `<span class="mp-tactic">${escapeHtml(tac)}</span>` : ''}
+    </a>`;
+  }).join('');
+
+  const descLine = p.uc.t || p.uc.n;
+  const descIntro = (() => {
+    const tCount = (p.uc.techs || []).length;
+    const phaseLabel = p.uc.ph ? `the <b>${escapeHtml(p.uc.ph)}</b> phase` : 'multiple kill-chain phases';
+    return `Detects activity matching ${escapeHtml(descLine)}. Maps to ${tCount} MITRE technique${tCount === 1 ? '' : 's'} across ${phaseLabel}; tuned for ${p.uc.tier === 'alerting' ? 'alert-grade fidelity' : 'analyst hunting'}.`;
+  })();
+
+  const platOrder = ['def','sent','sigma','spl'];
+  const havePlats = platOrder.filter(k => p.queries[k]);
+  const queryTabs = havePlats.length ? havePlats.map((k, i) => {
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL'}[k];
+    return `<button class="lib-query-tab ${i === 0 ? 'on' : ''}" data-platform="${k}">${lbl}</button>`;
+  }).join('') : '';
+  const queryPanes = havePlats.length ? havePlats.map((k, i) => {
+    return `<div data-query-pane="${k}" style="${i === 0 ? '' : 'display:none;'}">
+      <div class="lib-query-toolbar">
+        <span class="lib-query-meta">${({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL'}[k])}</span>
+        <button type="button" class="lib-copy-btn">Copy</button>
+      </div>
+      <pre class="lib-query-pre">${escapeHtml(p.queries[k] || '')}</pre>
+    </div>`;
+  }).join('') : `<div class="lib-section-body" style="color:var(--muted);">Queries for this UC live on the original article cards in the <b>Articles</b> tab — open one of the sightings below to see them inline. (We're working on extracting them into the library directly.)</div>`;
+
+  const tablesFound = new Set();
+  const KQL_TABLES = /(\\b(?:Device(?:ProcessEvents|FileEvents|NetworkEvents|RegistryEvents|ImageLoadEvents|LogonEvents|EmailEvents|EmailUrlInfo|EmailAttachmentInfo)|SecurityEvent|SigninLogs|AuditLogs|OfficeActivity|CloudAppEvents|IdentityLogonEvents|ThreatIntelligenceIndicator)\\b)/g;
+  const SPL_INDEXES = /\\bindex\\s*=\\s*([a-zA-Z0-9_*-]+)/g;
+  for (const q of Object.values(p.queries)) {
+    let m;
+    while ((m = KQL_TABLES.exec(q))) tablesFound.add(m[0]);
+    while ((m = SPL_INDEXES.exec(q))) tablesFound.add('splunk:' + m[1]);
+  }
+  if (!tablesFound.size) {
+    if (/c2|command-and-control/.test(p.uc.ph || '')) tablesFound.add('DeviceNetworkEvents').add('DnsEvents');
+    if (/install|persistence/.test(p.uc.ph || '')) tablesFound.add('DeviceProcessEvents').add('DeviceImageLoadEvents');
+    if (/exec/.test(p.uc.ph || '')) tablesFound.add('DeviceProcessEvents').add('SecurityEvent');
+    if (/cred/.test(p.uc.ph || '')) tablesFound.add('SecurityEvent').add('IdentityLogonEvents');
+    if (/exfil/.test(p.uc.ph || '')) tablesFound.add('DeviceNetworkEvents').add('CloudAppEvents');
+    if (!tablesFound.size) tablesFound.add('DeviceProcessEvents');
+  }
+  const dataSources = `<div class="lib-section-body"><ul>${[...tablesFound].map(t => `<li><code>${escapeHtml(t)}</code></li>`).join('')}</ul></div>`;
+
+  const {fp, tune} = _libFpTuning(p);
+  const fpHtml = `<div class="lib-section-body"><ul>${fp.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+  const tuneHtml = `<div class="lib-section-body"><ul>${tune.map(x => `<li>${x}</li>`).join('')}</ul></div>`;
+
+  const priority = p.score >= 75 ? 'P1' : p.score >= 55 ? 'P2' : p.score >= 35 ? 'P3' : 'P4';
+  const sevLine = `<div class="lib-section-body">
+    <p><b>Severity:</b> ${p.sevTag.toUpperCase()} (rolled up from the highest-severity article currently citing this UC).</p>
+    <p style="margin-top:6px;"><b>Priority:</b> ${priority} — derived from SOC Value Score ${p.score}/100.</p>
+    <p style="margin-top:6px;"><b>Tier:</b> ${escapeHtml(p.uc.tier || 'alerting')}.</p>
+  </div>`;
+
+  const recent = p.ucArts.slice(0, 12).map(a => {
+    const sev = (a.sev || 'low').toLowerCase();
+    const sevCls = ({critical:'crit', crit:'crit', high:'high', medium:'med', med:'med', low:'low'}[sev]) || 'low';
+    const src = _libSourceFromArtId(a);
+    return `<a class="lib-source-row" href="#article-${escapeHtml(a.id || '')}" onclick="document.getElementById('libDrawer').classList.remove('open');setTimeout(()=>document.getElementById('libDrawer').setAttribute('hidden',''),300);showView('articles');">
+      <span class="ls-sev ${sevCls}">${sev}</span>
+      <span class="ls-title">${escapeHtml(a.title || '')}</span>
+      <span class="ls-src">${escapeHtml(src)}</span>
+    </a>`;
+  }).join('');
+  const more = p.ucArts.length > 12 ? `<div class="lib-empty" style="padding:14px; margin-top:8px;">+ ${p.ucArts.length - 12} more sightings — open the Articles tab to browse.</div>` : '';
+  const recentHtml = recent ? `<div class="lib-source-list">${recent}</div>${more}`
+                            : `<div class="lib-section-body" style="color:var(--muted);">No recent intel sightings yet — this UC is still in the catalogue but hasn't been triggered by any current article.</div>`;
+
+  const actorsLine = p.actors.length
+    ? `<div class="lib-section-body">${p.actors.map(a => `<span class="lib-tag" style="margin-right:6px;">${escapeHtml(a.n)} <span style="opacity:0.65;">· ${escapeHtml(a.c)}</span></span>`).join('')}</div>`
+    : '';
+  const sourceList = p.sources.length
+    ? `<div class="lib-section-body" style="display:flex;flex-wrap:wrap;gap:6px;">${p.sources.map(s => `<span class="lib-tag tactic">${escapeHtml(s)}</span>`).join('')}</div>`
+    : '';
+
+  return `
+    <div class="lib-detail-head">
+      <div class="lib-detail-name">${escapeHtml(p.uc.n)}</div>
+      <h2 class="lib-detail-title" id="libDrawerTitle">${escapeHtml(p.uc.t || p.uc.n)}</h2>
+      <div class="lib-detail-meta">${sevTag}${tierTag}${phaseTag}${tacticChips}${platTags}</div>
+      <div class="lib-detail-svs">
+        <div class="lib-detail-svs-score">
+          <span class="lib-detail-svs-num">${p.score}</span>
+          <span class="lib-detail-svs-label">SOC Value Score</span>
+        </div>
+        <div class="lib-detail-svs-grid">${svsGrid}</div>
+      </div>
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Description</h3>
+      <div class="lib-section-body">${descIntro}</div>
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">MITRE ATT&amp;CK Mapping</h3>
+      <div class="lib-mitre-grid">${mitre || '<span class="lib-tag">No technique mapping</span>'}</div>
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Detection Queries</h3>
+      ${havePlats.length ? `<div class="lib-query-tabs">${queryTabs}</div>` : ''}
+      ${queryPanes}
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Data Sources Required</h3>
+      ${dataSources}
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">False Positives</h3>
+      ${fpHtml}
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Tuning Advice</h3>
+      ${tuneHtml}
+    </div>
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Severity &amp; Priority</h3>
+      ${sevLine}
+    </div>
+
+    ${actorsLine ? `<div class="lib-section">
+      <h3 class="lib-section-h">Linked Threat Actors</h3>
+      ${actorsLine}
+    </div>` : ''}
+
+    <div class="lib-section">
+      <h3 class="lib-section-h">Recent Attacks &amp; Sightings</h3>
+      ${recentHtml}
+    </div>
+
+    ${sourceList ? `<div class="lib-section">
+      <h3 class="lib-section-h">Blog Sources</h3>
+      ${sourceList}
+    </div>` : ''}
+  `;
+}
+
+// =================================================================
 // View tab switching (Articles / ATT&CK Matrix)
 // =================================================================
 const viewTabs = document.querySelectorAll('.view-tab');
@@ -6292,33 +7267,24 @@ function showView(name) {
     renderActors();
     window._actorsRendered = true;
   }
+  if (name === 'library' && !window._libraryRendered) {
+    renderLibrary();
+    window._libraryRendered = true;
+  }
 }
 // Apply default state on page load — Articles tab starts active.
 document.body.classList.add('view-articles-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
 
 // =================================================================
-// First-visit welcome banner — dismissed forever via localStorage.
+// Welcome banner — permanent strapline. Only thing JS does here is
+// wire the "Take the 30-second tour" CTA to startTour(); no dismiss
+// logic, no localStorage flag.
 // =================================================================
-(function () {
-  const banner = document.getElementById('firstVisitBanner');
-  if (!banner) return;
-  const KEY = 'cuc_welcome_dismissed_v1';
-  const dismissed = (function () {
-    try { return localStorage.getItem(KEY) === '1'; } catch (_) { return false; }
-  })();
-  if (!dismissed) banner.classList.add('show');
-  function dismiss() {
-    banner.classList.remove('show');
-    try { localStorage.setItem(KEY, '1'); } catch (_) {}
-  }
-  document.getElementById('firstVisitClose')?.addEventListener('click', dismiss);
-  document.getElementById('firstVisitTour')?.addEventListener('click', e => {
-    e.preventDefault();
-    dismiss();
-    startTour();
-  });
-})();
+document.getElementById('firstVisitTour')?.addEventListener('click', e => {
+  e.preventDefault();
+  startTour();
+});
 
 // =================================================================
 // Guided tour — switches views, spotlights elements, narrates each.
@@ -6370,6 +7336,26 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill">Heat</span>' +
              '<span class="tour-preview-meta">·</span>' +
              '<span class="tour-preview-pill">All</span>' },
+
+  { section: "Detection Library", view: "library",
+    target: "#libGrid .lib-card", fallback: "#libGrid",
+    title: "Every UC, structured.",
+    body: "Each card is a full SOC-ready detection page: description, MITRE mapping, queries with copy buttons, data sources, false positives, tuning advice, severity/priority, and recent intel sightings. Click any card for the deep dive.",
+    preview: '<span class="tour-preview-pill platform-z">SVS · SOC Value Score</span>' +
+             '<span class="tour-preview-meta">composite of</span>' +
+             '<span class="tour-preview-pill">Probability</span>' +
+             '<span class="tour-preview-pill">Impact</span>' +
+             '<span class="tour-preview-pill">Detectability</span>' +
+             '<span class="tour-preview-pill">Effort</span>' },
+  { section: "Detection Library", view: "library",
+    target: "#libFilters", fallback: ".lib-toolbar",
+    title: "Filter the way SOC teams actually think",
+    body: "Pin to a single platform (<b>Defender / Sentinel / Sigma / Splunk</b>), drill by attack type, threat actor, country of attribution, app/binary mentioned (powershell, lsass, mshta…), severity, or kill-chain phase. Combine freely.",
+    preview: '<span class="tour-preview-pill platform-d">Defender</span>' +
+             '<span class="tour-preview-pill platform-s">Sentinel</span>' +
+             '<span class="tour-preview-pill platform-z">Sigma</span>' +
+             '<span class="tour-preview-pill platform-p">Splunk</span>' +
+             '<span class="tour-preview-meta">+ phase · actor · country · app</span>' },
 
   { section: "Threat Intel", view: "intel",
     target: "#view-intel",
@@ -6481,7 +7467,7 @@ function tourGoto(i) {
   // Some views need a beat to render before the spotlight can measure
   // their elements — actors mounts a WebGL globe, matrix builds a 222-
   // cell grid. Give those views extra time before scrolling/spotting.
-  const needsRender = step.view === 'actors' || step.view === 'matrix' || step.view === 'intel';
+  const needsRender = step.view === 'actors' || step.view === 'matrix' || step.view === 'intel' || step.view === 'library';
   const delay = needsRender ? 480 : 220;
   setTimeout(() => {
     const el = _tourSpotlight(step.target, step.fallback);
