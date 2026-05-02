@@ -7638,13 +7638,36 @@ def build_matrix_data(articles_meta):
 
     # 1. Walk every technique, build hierarchy + tactic membership
     by_tactic = {t: [] for t in TACTIC_ORDER}
+    # Phase-name aliasing — the upstream STIX bundle ships some techniques
+    # tagged with non-canonical phase names (`stealth` for Defense Evasion,
+    # `defense-impairment` for the Impair-Defenses sub-tactic, etc.).
+    # Map these onto the canonical MITRE tactic short-names so the matrix
+    # column for Defense Evasion is actually populated.
+    PHASE_ALIASES = {
+        "stealth": "defense-evasion",
+        "defense-impairment": "defense-evasion",
+    }
+    def _canonicalise_phases(phases):
+        out = []
+        for p in phases:
+            if p in by_tactic:
+                out.append(p); continue
+            mapped = PHASE_ALIASES.get(p)
+            if mapped and mapped in by_tactic:
+                out.append(mapped)
+        # de-dupe while preserving order
+        seen = set(); deduped = []
+        for p in out:
+            if p in seen: continue
+            seen.add(p); deduped.append(p)
+        return deduped
     technique_view = {}
     for tid, info in techs.items():
         if info.get("deprecated"):
             continue
         parent = tid.rsplit(".", 1)[0] if "." in tid else None
         is_sub = parent is not None
-        tactics_for = [t for t in (info.get("kill_chain_phases") or []) if t in by_tactic]
+        tactics_for = _canonicalise_phases(info.get("kill_chain_phases") or [])
         technique_view[tid] = {
             "name": info.get("name", tid),
             "parent": parent,
