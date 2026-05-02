@@ -133,6 +133,32 @@ a{color:inherit;text-decoration:none}
 .tab-pane{display:none}
 .tab-pane.active{display:block}
 
+/* ------ Sigma cards ------------------------------------------------- */
+.sigma-section{margin-bottom:48px;scroll-margin-top:130px}
+.sigma-section > h2{margin:0 0 4px;font-size:18px;font-weight:600;letter-spacing:-0.018em;text-transform:capitalize;color:var(--text)}
+.sigma-section > p.muted{color:var(--muted);font-size:12px;margin:0 0 14px}
+.sigma-rule{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:14px}
+.sigma-rule > header{padding:14px 18px;border-bottom:1px solid var(--border)}
+.sigma-title-row{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.sigma-rule h4{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-0.012em}
+.sigma-rule p{margin:0;color:var(--muted);font-size:12.2px}
+.sigma-rule .sigma-meta{margin-top:4px;font-size:11.5px}
+.sigma-rule .sigma-meta code{background:var(--code-bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:11px;color:var(--accent-2)}
+.sigma-tags{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}
+.sigma-tag{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:99px;background:rgba(155,138,251,0.10);color:var(--accent-2);border:1px solid rgba(155,138,251,0.20)}
+.sigma-level{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}
+.sigma-level.lvl-low{background:rgba(76,183,130,0.10);color:var(--good);border:1px solid rgba(76,183,130,0.30)}
+.sigma-level.lvl-medium{background:rgba(226,169,63,0.10);color:var(--warn);border:1px solid rgba(226,169,63,0.30)}
+.sigma-level.lvl-high{background:rgba(235,87,87,0.10);color:#eb5757;border:1px solid rgba(235,87,87,0.30)}
+.sigma-level.lvl-critical{background:rgba(242,85,85,0.16);color:#f25555;border:1px solid rgba(242,85,85,0.40)}
+.sigma-tabs{display:flex;gap:2px;padding:8px 14px 0;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border)}
+.sigma-tab{background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;font:inherit;font-size:11.5px;padding:6px 10px;cursor:pointer;font-weight:500;transition:all 0.15s;font-family:var(--mono)}
+.sigma-tab:hover{color:var(--text)}
+.sigma-tab.active{color:var(--accent-2);border-bottom-color:var(--accent)}
+.sigma-pane{display:none;position:relative}
+.sigma-pane.active{display:block}
+.sigma-pane pre{margin:0;padding:14px 18px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;background:var(--code-bg);border-radius:0 0 var(--r-md) var(--r-md)}
+
 /* Mobile */
 @media (max-width: 900px) {
   .cs-layout{grid-template-columns:1fr}
@@ -156,6 +182,7 @@ a{color:inherit;text-decoration:none}
 <nav class="cs-tabs">
   <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
   <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
+  <button class="cs-tab" data-pane="sigma">Sigma <span class="badge">multi-platform</span></button>
   <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
 </nav>
 
@@ -3743,6 +3770,1133 @@ ImProcessCreate
   </div>
 </div>
 
+<div id="pane-sigma" class="tab-pane">
+  <main class="cs-main">
+    <div class="cs-intro">
+      <h1>Sigma · platform-neutral detection rules</h1>
+      <p>Each rule below is a self-contained Sigma YAML, pre-compiled to Defender
+      KQL, Splunk SPL, and Elastic Lucene at build time. Click a tab on any
+      card to copy the format you need — no Sigma toolchain required on your
+      laptop. Source rules live under <code>sigma_rules/</code>; re-run
+      <code>python build_soc_cheatsheet.py</code> after editing to refresh
+      compiled output.</p>
+      <div class="stats">
+        <span><strong>15</strong> rules</span>
+        <span>3 backends pre-compiled</span>
+        <span>Add new rules to <code>sigma_rules/&lt;kill_chain&gt;/</code> and rebuild.</span>
+      </div>
+    </div>
+    <section class="sigma-section"><h2>actions</h2><p class="muted">5 rules · platform-neutral, compiled at build time</p>
+<article class="sigma-rule" id="sigma-0" data-killchain="actions">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Infostealer - Non-Browser Process Accessing Browser Credential Stores</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+SQLite databases from Chrome/Edge/Firefox profile directories. Any
+non-browser process touching these files is a high-fidelity signal.</p>
+    <p class="sigma-meta">
+      <code>category=file_access · product=windows</code> · <code>sigma_rules/actions/UC_BROWSER_STEALER.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1539</span> <span class="sigma-tag">attack.t1555.003</span> <span class="sigma-tag">attack.credential-access</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-0-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-0-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-0-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-0-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-0-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-0-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(TargetFilename contains &quot;\\Google\\Chrome\\User Data\\&quot; or TargetFilename contains &quot;\\Microsoft\\Edge\\User Data\\&quot; or TargetFilename contains &quot;\\Mozilla\\Firefox\\Profiles\\&quot;) and (TargetFilename endswith &quot;\\Login Data&quot; or TargetFilename endswith &quot;\\Cookies&quot; or TargetFilename endswith &quot;\\logins.json&quot; or TargetFilename endswith &quot;\\cookies.sqlite&quot;) and (not((Image endswith &quot;\\chrome.exe&quot; or Image endswith &quot;\\msedge.exe&quot; or Image endswith &quot;\\firefox.exe&quot; or Image endswith &quot;\\brave.exe&quot; or Image endswith &quot;\\opera.exe&quot;)))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-0-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetFilename IN (&quot;*\\Google\\Chrome\\User Data\\*&quot;, &quot;*\\Microsoft\\Edge\\User Data\\*&quot;, &quot;*\\Mozilla\\Firefox\\Profiles\\*&quot;) TargetFilename IN (&quot;*\\Login Data&quot;, &quot;*\\Cookies&quot;, &quot;*\\logins.json&quot;, &quot;*\\cookies.sqlite&quot;) NOT (Image IN (&quot;*\\chrome.exe&quot;, &quot;*\\msedge.exe&quot;, &quot;*\\firefox.exe&quot;, &quot;*\\brave.exe&quot;, &quot;*\\opera.exe&quot;))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-0-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(TargetFilename:(*\\Google\\Chrome\\User\ Data\\* OR *\\Microsoft\\Edge\\User\ Data\\* OR *\\Mozilla\\Firefox\\Profiles\\*)) AND (TargetFilename:(*\\Login\ Data OR *\\Cookies OR *\\logins.json OR *\\cookies.sqlite)) AND (NOT (Image:(*\\chrome.exe OR *\\msedge.exe OR *\\firefox.exe OR *\\brave.exe OR *\\opera.exe)))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-1" data-killchain="actions">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Crypto-Wallet Keystore Access by Non-Wallet Process</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">Stealers / wallet drainers read keystore files from MetaMask,
+Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
+Filtering out the legitimate wallet binaries leaves only attacker
+activity.</p>
+    <p class="sigma-meta">
+      <code>category=file_access · product=windows</code> · <code>sigma_rules/actions/UC_CRYPTO_WALLET.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1005</span> <span class="sigma-tag">attack.collection</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-1-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-1-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-1-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-1-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-1-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
+status: experimental
+description: |
+    Stealers / wallet drainers read keystore files from MetaMask,
+    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
+    Filtering out the legitimate wallet binaries leaves only attacker
+    activity.
+references:
+    - https://attack.mitre.org/techniques/T1005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1005
+    - attack.collection
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Ethereum\keystore\&#x27;
+            - &#x27;\Bitcoin\&#x27;
+            - &#x27;\Exodus\&#x27;
+            - &#x27;\Electrum\wallets\&#x27;
+            - &#x27;\MetaMask\&#x27;
+            - &#x27;\Phantom\&#x27;
+            - &#x27;\Atomic\Local Storage\&#x27;
+    filter_legit:
+        Image|endswith:
+            - &#x27;\MetaMask.exe&#x27;
+            - &#x27;\Exodus.exe&#x27;
+            - &#x27;\Atomic.exe&#x27;
+            - &#x27;\electrum.exe&#x27;
+            - &#x27;\Bitcoin.exe&#x27;
+            - &#x27;\Phantom.exe&#x27;
+    condition: selection_path and not filter_legit
+falsepositives:
+    - Backup software
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-1-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(TargetFilename contains &quot;\\Ethereum\\keystore\\&quot; or TargetFilename contains &quot;\\Bitcoin\\&quot; or TargetFilename contains &quot;\\Exodus\\&quot; or TargetFilename contains &quot;\\Electrum\\wallets\\&quot; or TargetFilename contains &quot;\\MetaMask\\&quot; or TargetFilename contains &quot;\\Phantom\\&quot; or TargetFilename contains &quot;\\Atomic\\Local Storage\\&quot;) and (not((Image endswith &quot;\\MetaMask.exe&quot; or Image endswith &quot;\\Exodus.exe&quot; or Image endswith &quot;\\Atomic.exe&quot; or Image endswith &quot;\\electrum.exe&quot; or Image endswith &quot;\\Bitcoin.exe&quot; or Image endswith &quot;\\Phantom.exe&quot;)))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-1-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetFilename IN (&quot;*\\Ethereum\\keystore\\*&quot;, &quot;*\\Bitcoin\\*&quot;, &quot;*\\Exodus\\*&quot;, &quot;*\\Electrum\\wallets\\*&quot;, &quot;*\\MetaMask\\*&quot;, &quot;*\\Phantom\\*&quot;, &quot;*\\Atomic\\Local Storage\\*&quot;) NOT (Image IN (&quot;*\\MetaMask.exe&quot;, &quot;*\\Exodus.exe&quot;, &quot;*\\Atomic.exe&quot;, &quot;*\\electrum.exe&quot;, &quot;*\\Bitcoin.exe&quot;, &quot;*\\Phantom.exe&quot;))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-1-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(TargetFilename:(*\\Ethereum\\keystore\\* OR *\\Bitcoin\\* OR *\\Exodus\\* OR *\\Electrum\\wallets\\* OR *\\MetaMask\\* OR *\\Phantom\\* OR *\\Atomic\\Local\ Storage\\*)) AND (NOT (Image:(*\\MetaMask.exe OR *\\Exodus.exe OR *\\Atomic.exe OR *\\electrum.exe OR *\\Bitcoin.exe OR *\\Phantom.exe)))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-2" data-killchain="actions">
+  <header>
+    <div class="sigma-title-row">
+      <h4>PsExec / SMB Lateral Movement Tooling Execution</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
+pivots over SMB. Pair with `wmic /node:` for the full cluster.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/actions/UC_LATERAL_PSEXEC.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1021.002</span> <span class="sigma-tag">attack.t1569.002</span> <span class="sigma-tag">attack.lateral-movement</span> <span class="sigma-tag">attack.execution</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-2-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-2-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-2-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-2-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-2-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: PsExec / SMB Lateral Movement Tooling Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
+status: experimental
+description: |
+    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
+    pivots over SMB. Pair with `wmic /node:` for the full cluster.
+references:
+    - https://attack.mitre.org/techniques/T1021/002/
+    - https://attack.mitre.org/techniques/T1569/002/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1021.002
+    - attack.t1569.002
+    - attack.lateral-movement
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_psexec:
+        Image|endswith:
+            - &#x27;\psexec.exe&#x27;
+            - &#x27;\psexec64.exe&#x27;
+            - &#x27;\psexesvc.exe&#x27;
+            - &#x27;\paexec.exe&#x27;
+            - &#x27;\csexec.exe&#x27;
+            - &#x27;\remcom.exe&#x27;
+            - &#x27;\smbexec.py&#x27;
+    selection_wmic_remote:
+        Image|endswith:
+            - &#x27;\wmic.exe&#x27;
+        CommandLine|contains:
+            - &#x27;/node:&#x27;
+    condition: selection_psexec or selection_wmic_remote
+falsepositives:
+    - Sysadmins running approved remote-management tooling — wrap with
+      a known-admin-host watchlist
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-2-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image endswith &quot;\\psexec.exe&quot; or Image endswith &quot;\\psexec64.exe&quot; or Image endswith &quot;\\psexesvc.exe&quot; or Image endswith &quot;\\paexec.exe&quot; or Image endswith &quot;\\csexec.exe&quot; or Image endswith &quot;\\remcom.exe&quot; or Image endswith &quot;\\smbexec.py&quot;) or (Image endswith &quot;\\wmic.exe&quot; and CommandLine contains &quot;/node:&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-2-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image IN (&quot;*\\psexec.exe&quot;, &quot;*\\psexec64.exe&quot;, &quot;*\\psexesvc.exe&quot;, &quot;*\\paexec.exe&quot;, &quot;*\\csexec.exe&quot;, &quot;*\\remcom.exe&quot;, &quot;*\\smbexec.py&quot;) OR (Image=&quot;*\\wmic.exe&quot; CommandLine=&quot;*/node:*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-2-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image:(*\\psexec.exe OR *\\psexec64.exe OR *\\psexesvc.exe OR *\\paexec.exe OR *\\csexec.exe OR *\\remcom.exe OR *\\smbexec.py)) OR (Image:*\\wmic.exe AND CommandLine:*\/node\:*)</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-3" data-killchain="actions">
+  <header>
+    <div class="sigma-title-row">
+      <h4>LSASS Process Access Outside Microsoft-Signed Tooling</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">Anything opening lsass.exe with read-memory access that isn&#x27;t a
+Microsoft signed component (Defender, csrss, etc.) is suspect.
+Mimikatz / Pypykatz / nanodump signature.</p>
+    <p class="sigma-meta">
+      <code>category=process_access · product=windows</code> · <code>sigma_rules/actions/UC_LSASS.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1003.001</span> <span class="sigma-tag">attack.credential-access</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-3-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-3-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-3-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-3-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-3-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
+status: experimental
+description: |
+    Anything opening lsass.exe with read-memory access that isn&#x27;t a
+    Microsoft signed component (Defender, csrss, etc.) is suspect.
+    Mimikatz / Pypykatz / nanodump signature.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1003.001
+    - attack.credential-access
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: &#x27;\lsass.exe&#x27;
+    filter_known_good:
+        SourceImage|endswith:
+            - &#x27;\MsSense.exe&#x27;
+            - &#x27;\MsMpEng.exe&#x27;
+            - &#x27;\csrss.exe&#x27;
+            - &#x27;\svchost.exe&#x27;
+            - &#x27;\wininit.exe&#x27;
+            - &#x27;\services.exe&#x27;
+            - &#x27;\lsm.exe&#x27;
+            - &#x27;\SearchProtocolHost.exe&#x27;
+    condition: selection and not filter_known_good
+falsepositives:
+    - Third-party EDR / forensic tools — extend the filter list
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-3-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetImage endswith &quot;\\lsass.exe&quot; and (not((SourceImage endswith &quot;\\MsSense.exe&quot; or SourceImage endswith &quot;\\MsMpEng.exe&quot; or SourceImage endswith &quot;\\csrss.exe&quot; or SourceImage endswith &quot;\\svchost.exe&quot; or SourceImage endswith &quot;\\wininit.exe&quot; or SourceImage endswith &quot;\\services.exe&quot; or SourceImage endswith &quot;\\lsm.exe&quot; or SourceImage endswith &quot;\\SearchProtocolHost.exe&quot;)))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-3-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetImage=&quot;*\\lsass.exe&quot; NOT (SourceImage IN (&quot;*\\MsSense.exe&quot;, &quot;*\\MsMpEng.exe&quot;, &quot;*\\csrss.exe&quot;, &quot;*\\svchost.exe&quot;, &quot;*\\wininit.exe&quot;, &quot;*\\services.exe&quot;, &quot;*\\lsm.exe&quot;, &quot;*\\SearchProtocolHost.exe&quot;))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-3-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetImage:*\\lsass.exe AND (NOT (SourceImage:(*\\MsSense.exe OR *\\MsMpEng.exe OR *\\csrss.exe OR *\\svchost.exe OR *\\wininit.exe OR *\\services.exe OR *\\lsm.exe OR *\\SearchProtocolHost.exe)))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-4" data-killchain="actions">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Entra ID Consent to Third-Party OAuth Application</h4>
+      <span class="sigma-level lvl-medium">medium</span>
+    </div>
+    <p class="muted">User-driven consent to a third-party OAuth application — illicit-
+consent attack precursor. Pair with first-time-seen-app heuristic
+in your SIEM for higher fidelity.</p>
+    <p class="sigma-meta">
+      <code>product=azure · service=auditlogs</code> · <code>sigma_rules/actions/UC_OAUTH_ABUSE.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1528</span> <span class="sigma-tag">attack.persistence</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-4-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-4-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-4-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-4-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-4-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-4-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>OperationName =~ &quot;Consent to application&quot; and Result =~ &quot;success&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-4-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>OperationName=&quot;Consent to application&quot; Result=&quot;success&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-4-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>OperationName:Consent\ to\ application AND Result:success</code></pre>
+  </div>
+</article>
+</section>
+<section class="sigma-section"><h2>c2</h2><p class="muted">1 rules · platform-neutral, compiled at build time</p>
+<article class="sigma-rule" id="sigma-5" data-killchain="c2">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Outbound Connection to Article-Named IP / Domain</h4>
+      <span class="sigma-level lvl-critical">critical</span>
+    </div>
+    <p class="muted">Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+article-specific destinations. For dynamic IOC management, use a
+watchlist or external feed.</p>
+    <p class="sigma-meta">
+      <code>category=network_connection · product=windows</code> · <code>sigma_rules/c2/UC_NETWORK_IOC.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.command-and-control</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-5-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-5-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-5-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-5-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-5-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-5-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(DestinationIp in~ (&quot;__IP_PLACEHOLDER_1__&quot;, &quot;__IP_PLACEHOLDER_2__&quot;)) or (DestinationHostname in~ (&quot;__DOMAIN_PLACEHOLDER_1__&quot;, &quot;__DOMAIN_PLACEHOLDER_2__&quot;))</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-5-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>DestinationIp IN (&quot;__IP_PLACEHOLDER_1__&quot;, &quot;__IP_PLACEHOLDER_2__&quot;) OR DestinationHostname IN (&quot;__DOMAIN_PLACEHOLDER_1__&quot;, &quot;__DOMAIN_PLACEHOLDER_2__&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-5-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(DestinationIp:(__IP_PLACEHOLDER_1__ OR __IP_PLACEHOLDER_2__)) OR (DestinationHostname:(__DOMAIN_PLACEHOLDER_1__ OR __DOMAIN_PLACEHOLDER_2__))</code></pre>
+  </div>
+</article>
+</section>
+<section class="sigma-section"><h2>exploit</h2><p class="muted">4 rules · platform-neutral, compiled at build time</p>
+<article class="sigma-rule" id="sigma-6" data-killchain="exploit">
+  <header>
+    <div class="sigma-title-row">
+      <h4>FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">&quot;FakeCaptcha&quot; / &quot;ClickFix&quot; social-engineering: malicious site asks
+user to press Win+R and paste a payload. The result is
+powershell/mshta launched directly from explorer.exe with iex /
+base64 / downloadstring in the command line.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/exploit/UC_FAKECAPTCHA.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1059.001</span> <span class="sigma-tag">attack.t1204.002</span> <span class="sigma-tag">attack.execution</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-6-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-6-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-6-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-6-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-6-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
+status: experimental
+description: |
+    &quot;FakeCaptcha&quot; / &quot;ClickFix&quot; social-engineering: malicious site asks
+    user to press Win+R and paste a payload. The result is
+    powershell/mshta launched directly from explorer.exe with iex /
+    base64 / downloadstring in the command line.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1204/002/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059.001
+    - attack.t1204.002
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;\explorer.exe&#x27;
+            - &#x27;\RuntimeBroker.exe&#x27;
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+    selection_cmd:
+        CommandLine|contains:
+            - &#x27;iex&#x27;
+            - &#x27;invoke-expression&#x27;
+            - &#x27;frombase64&#x27;
+            - &#x27;downloadstring&#x27;
+            - &#x27;hxxp&#x27;
+            - &#x27;curl &#x27;
+            - &#x27;wget &#x27;
+    condition: selection_parent and selection_child and selection_cmd
+falsepositives:
+    - IT-driven scripted automation that admins paste-launch
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-6-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(ParentImage endswith &quot;\\explorer.exe&quot; or ParentImage endswith &quot;\\RuntimeBroker.exe&quot;) and (Image endswith &quot;\\powershell.exe&quot; or Image endswith &quot;\\pwsh.exe&quot; or Image endswith &quot;\\mshta.exe&quot;) and (CommandLine contains &quot;iex&quot; or CommandLine contains &quot;invoke-expression&quot; or CommandLine contains &quot;frombase64&quot; or CommandLine contains &quot;downloadstring&quot; or CommandLine contains &quot;hxxp&quot; or CommandLine contains &quot;curl &quot; or CommandLine contains &quot;wget &quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-6-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>ParentImage IN (&quot;*\\explorer.exe&quot;, &quot;*\\RuntimeBroker.exe&quot;) Image IN (&quot;*\\powershell.exe&quot;, &quot;*\\pwsh.exe&quot;, &quot;*\\mshta.exe&quot;) CommandLine IN (&quot;*iex*&quot;, &quot;*invoke-expression*&quot;, &quot;*frombase64*&quot;, &quot;*downloadstring*&quot;, &quot;*hxxp*&quot;, &quot;*curl *&quot;, &quot;*wget *&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-6-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(ParentImage:(*\\explorer.exe OR *\\RuntimeBroker.exe)) AND (Image:(*\\powershell.exe OR *\\pwsh.exe OR *\\mshta.exe)) AND (CommandLine:(*iex* OR *invoke\-expression* OR *frombase64* OR *downloadstring* OR *hxxp* OR *curl\ * OR *wget\ *))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-7" data-killchain="exploit">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Office Application Spawning Script Host</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
+cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
+object payload signature.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/exploit/UC_OFFICE_CHILD.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1059</span> <span class="sigma-tag">attack.t1566.001</span> <span class="sigma-tag">attack.execution</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-7-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-7-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-7-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-7-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-7-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Office Application Spawning Script Host
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
+status: experimental
+description: |
+    Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
+    cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
+    object payload signature.
+references:
+    - https://attack.mitre.org/techniques/T1059/
+    - https://attack.mitre.org/techniques/T1566/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059
+    - attack.t1566.001
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;\winword.exe&#x27;
+            - &#x27;\excel.exe&#x27;
+            - &#x27;\powerpnt.exe&#x27;
+            - &#x27;\outlook.exe&#x27;
+            - &#x27;\onenote.exe&#x27;
+            - &#x27;\mspub.exe&#x27;
+            - &#x27;\visio.exe&#x27;
+    selection_child:
+        Image|endswith:
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+    condition: selection_parent and selection_child
+falsepositives:
+    - Legitimate automation macros in trusted internal documents
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-7-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(ParentImage endswith &quot;\\winword.exe&quot; or ParentImage endswith &quot;\\excel.exe&quot; or ParentImage endswith &quot;\\powerpnt.exe&quot; or ParentImage endswith &quot;\\outlook.exe&quot; or ParentImage endswith &quot;\\onenote.exe&quot; or ParentImage endswith &quot;\\mspub.exe&quot; or ParentImage endswith &quot;\\visio.exe&quot;) and (Image endswith &quot;\\cmd.exe&quot; or Image endswith &quot;\\powershell.exe&quot; or Image endswith &quot;\\pwsh.exe&quot; or Image endswith &quot;\\wscript.exe&quot; or Image endswith &quot;\\cscript.exe&quot; or Image endswith &quot;\\mshta.exe&quot; or Image endswith &quot;\\rundll32.exe&quot; or Image endswith &quot;\\regsvr32.exe&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-7-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>ParentImage IN (&quot;*\\winword.exe&quot;, &quot;*\\excel.exe&quot;, &quot;*\\powerpnt.exe&quot;, &quot;*\\outlook.exe&quot;, &quot;*\\onenote.exe&quot;, &quot;*\\mspub.exe&quot;, &quot;*\\visio.exe&quot;) Image IN (&quot;*\\cmd.exe&quot;, &quot;*\\powershell.exe&quot;, &quot;*\\pwsh.exe&quot;, &quot;*\\wscript.exe&quot;, &quot;*\\cscript.exe&quot;, &quot;*\\mshta.exe&quot;, &quot;*\\rundll32.exe&quot;, &quot;*\\regsvr32.exe&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-7-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(ParentImage:(*\\winword.exe OR *\\excel.exe OR *\\powerpnt.exe OR *\\outlook.exe OR *\\onenote.exe OR *\\mspub.exe OR *\\visio.exe)) AND (Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-8" data-killchain="exploit">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Obfuscated / Encoded PowerShell Execution</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">PowerShell launched with -EncodedCommand, base64 strings, hidden
+window, no-profile, bypass policy, IEX / Invoke-Expression / Net
+.WebClient.DownloadString — combinations indicating evasion.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/exploit/UC_PS_OBFUSCATED.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1059.001</span> <span class="sigma-tag">attack.t1027</span> <span class="sigma-tag">attack.execution</span> <span class="sigma-tag">attack.defense-evasion</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-8-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-8-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-8-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-8-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-8-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Obfuscated / Encoded PowerShell Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
+status: experimental
+description: |
+    PowerShell launched with -EncodedCommand, base64 strings, hidden
+    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
+    .WebClient.DownloadString — combinations indicating evasion.
+references:
+    - https://attack.mitre.org/techniques/T1059/001/
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059.001
+    - attack.t1027
+    - attack.execution
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_image:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+    selection_args:
+        CommandLine|contains:
+            - &#x27;-enc &#x27;
+            - &#x27;EncodedCommand&#x27;
+            - &#x27;FromBase64String&#x27;
+            - &#x27;Invoke-Expression&#x27;
+            - &#x27;IEX(&#x27;
+            - &#x27;DownloadString&#x27;
+            - &#x27;Net.WebClient&#x27;
+            - &#x27;-w hidden&#x27;
+            - &#x27;-WindowStyle Hidden&#x27;
+            - &#x27;-nop&#x27;
+            - &#x27;-NoProfile&#x27;
+            - &#x27;-ep bypass&#x27;
+            - &#x27;-ExecutionPolicy Bypass&#x27;
+    condition: selection_image and selection_args
+falsepositives:
+    - DevOps tooling that legitimately uses encoded command for
+      cross-shell escaping
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-8-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image endswith &quot;\\powershell.exe&quot; or Image endswith &quot;\\pwsh.exe&quot;) and (CommandLine contains &quot;-enc &quot; or CommandLine contains &quot;EncodedCommand&quot; or CommandLine contains &quot;FromBase64String&quot; or CommandLine contains &quot;Invoke-Expression&quot; or CommandLine contains &quot;IEX(&quot; or CommandLine contains &quot;DownloadString&quot; or CommandLine contains &quot;Net.WebClient&quot; or CommandLine contains &quot;-w hidden&quot; or CommandLine contains &quot;-WindowStyle Hidden&quot; or CommandLine contains &quot;-nop&quot; or CommandLine contains &quot;-NoProfile&quot; or CommandLine contains &quot;-ep bypass&quot; or CommandLine contains &quot;-ExecutionPolicy Bypass&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-8-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image IN (&quot;*\\powershell.exe&quot;, &quot;*\\pwsh.exe&quot;) CommandLine IN (&quot;*-enc *&quot;, &quot;*EncodedCommand*&quot;, &quot;*FromBase64String*&quot;, &quot;*Invoke-Expression*&quot;, &quot;*IEX(*&quot;, &quot;*DownloadString*&quot;, &quot;*Net.WebClient*&quot;, &quot;*-w hidden*&quot;, &quot;*-WindowStyle Hidden*&quot;, &quot;*-nop*&quot;, &quot;*-NoProfile*&quot;, &quot;*-ep bypass*&quot;, &quot;*-ExecutionPolicy Bypass*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-8-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image:(*\\powershell.exe OR *\\pwsh.exe)) AND (CommandLine:(*\-enc\ * OR *EncodedCommand* OR *FromBase64String* OR *Invoke\-Expression* OR *IEX\(* OR *DownloadString* OR *Net.WebClient* OR *\-w\ hidden* OR *\-WindowStyle\ Hidden* OR *\-nop* OR *\-NoProfile* OR *\-ep\ bypass* OR *\-ExecutionPolicy\ Bypass*))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-9" data-killchain="exploit">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Trusted Vendor Binary Launching Unusual Children</h4>
+      <span class="sigma-level lvl-medium">medium</span>
+    </div>
+    <p class="muted">A signed vendor binary (in the article&#x27;s named-vendors list)
+spawning script-host or LOLBin children. Strongest signal when
+paired with a recent CVE / supply-chain advisory naming the same
+vendor.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/exploit/UC_SUPPLY_CHAIN.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1195</span> <span class="sigma-tag">attack.initial-access</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-9-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-9-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-9-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-9-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-9-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-9-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image endswith &quot;\\powershell.exe&quot; or Image endswith &quot;\\pwsh.exe&quot; or Image endswith &quot;\\cmd.exe&quot; or Image endswith &quot;\\rundll32.exe&quot; or Image endswith &quot;\\regsvr32.exe&quot; or Image endswith &quot;\\mshta.exe&quot; or Image endswith &quot;\\wscript.exe&quot; or Image endswith &quot;\\cscript.exe&quot; or Image endswith &quot;\\wmic.exe&quot; or Image endswith &quot;\\bitsadmin.exe&quot;) and (ParentImage contains &quot;\\Program Files\\&quot; or ParentImage contains &quot;\\Program Files (x86)\\&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-9-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image IN (&quot;*\\powershell.exe&quot;, &quot;*\\pwsh.exe&quot;, &quot;*\\cmd.exe&quot;, &quot;*\\rundll32.exe&quot;, &quot;*\\regsvr32.exe&quot;, &quot;*\\mshta.exe&quot;, &quot;*\\wscript.exe&quot;, &quot;*\\cscript.exe&quot;, &quot;*\\wmic.exe&quot;, &quot;*\\bitsadmin.exe&quot;) ParentImage IN (&quot;*\\Program Files\\*&quot;, &quot;*\\Program Files (x86)\\*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-9-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image:(*\\powershell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\mshta.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\wmic.exe OR *\\bitsadmin.exe)) AND (ParentImage:(*\\Program\ Files\\* OR *\\Program\ Files\ \(x86\)\\*))</code></pre>
+  </div>
+</article>
+</section>
+<section class="sigma-section"><h2>install</h2><p class="muted">5 rules · platform-neutral, compiled at build time</p>
+<article class="sigma-rule" id="sigma-10" data-killchain="install">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Browser Extension Installation via Registry</h4>
+      <span class="sigma-level lvl-medium">medium</span>
+    </div>
+    <p class="muted">Registry writes under the browser extension policy keys —
+administrative install of an extension. Often used by adware /
+info-stealers to bypass user-level extension controls.</p>
+    <p class="sigma-meta">
+      <code>category=registry_event · product=windows</code> · <code>sigma_rules/install/UC_BROWSER_EXT.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1176</span> <span class="sigma-tag">attack.persistence</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-10-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-10-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-10-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-10-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-10-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Browser Extension Installation via Registry
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
+status: experimental
+description: |
+    Registry writes under the browser extension policy keys —
+    administrative install of an extension. Often used by adware /
+    info-stealers to bypass user-level extension controls.
+references:
+    - https://attack.mitre.org/techniques/T1176/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1176
+    - attack.persistence
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - &#x27;\Software\Google\Chrome\Extensions\&#x27;
+            - &#x27;\Software\Microsoft\Edge\Extensions\&#x27;
+            - &#x27;\Software\Mozilla\Firefox\Extensions\&#x27;
+    condition: selection
+falsepositives:
+    - Group-policy-managed extension whitelists
+level: medium
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-10-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetObject contains &quot;\\Software\\Google\\Chrome\\Extensions\\&quot; or TargetObject contains &quot;\\Software\\Microsoft\\Edge\\Extensions\\&quot; or TargetObject contains &quot;\\Software\\Mozilla\\Firefox\\Extensions\\&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-10-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetObject IN (&quot;*\\Software\\Google\\Chrome\\Extensions\\*&quot;, &quot;*\\Software\\Microsoft\\Edge\\Extensions\\*&quot;, &quot;*\\Software\\Mozilla\\Firefox\\Extensions\\*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-10-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>TargetObject:(*\\Software\\Google\\Chrome\\Extensions\\* OR *\\Software\\Microsoft\\Edge\\Extensions\\* OR *\\Software\\Mozilla\\Firefox\\Extensions\\*)</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-11" data-killchain="install">
+  <header>
+    <div class="sigma-title-row">
+      <h4>File or Process Matching Article Hash IOCs</h4>
+      <span class="sigma-level lvl-critical">critical</span>
+    </div>
+    <p class="muted">Replace `__HASH_LIST__` placeholder with article-specific SHA256
+values. Use a watchlist or external indicator file for management
+at scale.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/install/UC_HASH_IOC.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1027</span> <span class="sigma-tag">attack.defense-evasion</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-11-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-11-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-11-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-11-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-11-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-11-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Hashes contains &quot;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-11-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Hashes=&quot;*SHA256=__HASH_PLACEHOLDER_REPLACE_ME__*&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-11-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Hashes:*SHA256\=__HASH_PLACEHOLDER_REPLACE_ME__*</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-12" data-killchain="install">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Remote-Management (RMM) Tool Execution</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
+RustDesk — RMM tools attackers commonly install for hands-on-
+keyboard access. Filter against the IT estate&#x27;s known tool.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/install/UC_RMM_TOOLS.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1219</span> <span class="sigma-tag">attack.command-and-control</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-12-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-12-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-12-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-12-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-12-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Remote-Management (RMM) Tool Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
+status: experimental
+description: |
+    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
+    RustDesk — RMM tools attackers commonly install for hands-on-
+    keyboard access. Filter against the IT estate&#x27;s known tool.
+references:
+    - https://attack.mitre.org/techniques/T1219/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1219
+    - attack.command-and-control
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - &#x27;\AnyDesk.exe&#x27;
+            - &#x27;\TeamViewer.exe&#x27;
+            - &#x27;\TeamViewer_Service.exe&#x27;
+            - &#x27;\ScreenConnect.ClientService.exe&#x27;
+            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
+            - &#x27;\atera_agent.exe&#x27;
+            - &#x27;\SplashtopStreamer.exe&#x27;
+            - &#x27;\RustDesk.exe&#x27;
+            - &#x27;\NinjaOne.exe&#x27;
+    condition: selection
+falsepositives:
+    - IT-approved RMM in use across the estate. Maintain a known-IT-
+      tool exclusion list per environment.
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-12-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image endswith &quot;\\AnyDesk.exe&quot; or Image endswith &quot;\\TeamViewer.exe&quot; or Image endswith &quot;\\TeamViewer_Service.exe&quot; or Image endswith &quot;\\ScreenConnect.ClientService.exe&quot; or Image endswith &quot;\\ConnectWiseControl.ClientService.exe&quot; or Image endswith &quot;\\atera_agent.exe&quot; or Image endswith &quot;\\SplashtopStreamer.exe&quot; or Image endswith &quot;\\RustDesk.exe&quot; or Image endswith &quot;\\NinjaOne.exe&quot;</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-12-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image IN (&quot;*\\AnyDesk.exe&quot;, &quot;*\\TeamViewer.exe&quot;, &quot;*\\TeamViewer_Service.exe&quot;, &quot;*\\ScreenConnect.ClientService.exe&quot;, &quot;*\\ConnectWiseControl.ClientService.exe&quot;, &quot;*\\atera_agent.exe&quot;, &quot;*\\SplashtopStreamer.exe&quot;, &quot;*\\RustDesk.exe&quot;, &quot;*\\NinjaOne.exe&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-12-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image:(*\\AnyDesk.exe OR *\\TeamViewer.exe OR *\\TeamViewer_Service.exe OR *\\ScreenConnect.ClientService.exe OR *\\ConnectWiseControl.ClientService.exe OR *\\atera_agent.exe OR *\\SplashtopStreamer.exe OR *\\RustDesk.exe OR *\\NinjaOne.exe)</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-13" data-killchain="install">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Scheduled Task Creation with Suspicious Image / Encoded Args</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">schtasks.exe /create with payload-shaped action — points at
+powershell, cmd, rundll32, encoded-base64, or user-writable paths.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/install/UC_SCHEDULED_TASK.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1053.005</span> <span class="sigma-tag">attack.persistence</span> <span class="sigma-tag">attack.execution</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-13-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-13-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-13-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-13-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-13-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Scheduled Task Creation with Suspicious Image / Encoded Args
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0d
+status: experimental
+description: |
+    schtasks.exe /create with payload-shaped action — points at
+    powershell, cmd, rundll32, encoded-base64, or user-writable paths.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1053.005
+    - attack.persistence
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_schtasks:
+        Image|endswith: &#x27;\schtasks.exe&#x27;
+        CommandLine|contains: &#x27;/create&#x27;
+    selection_payload:
+        CommandLine|contains:
+            - &#x27;powershell&#x27;
+            - &#x27;cmd.exe&#x27;
+            - &#x27;rundll32&#x27;
+            - &#x27;-enc&#x27;
+            - &#x27;FromBase64&#x27;
+            - &#x27;\Users\Public&#x27;
+            - &#x27;\AppData\&#x27;
+    condition: selection_schtasks and selection_payload
+falsepositives:
+    - GPO-driven scheduled tasks, MDT/SCCM imaging
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-13-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image endswith &quot;\\schtasks.exe&quot; and CommandLine contains &quot;/create&quot;) and (CommandLine contains &quot;powershell&quot; or CommandLine contains &quot;cmd.exe&quot; or CommandLine contains &quot;rundll32&quot; or CommandLine contains &quot;-enc&quot; or CommandLine contains &quot;FromBase64&quot; or CommandLine contains &quot;\\Users\\Public&quot; or CommandLine contains &quot;\\AppData\\&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-13-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image=&quot;*\\schtasks.exe&quot; CommandLine=&quot;*/create*&quot; CommandLine IN (&quot;*powershell*&quot;, &quot;*cmd.exe*&quot;, &quot;*rundll32*&quot;, &quot;*-enc*&quot;, &quot;*FromBase64*&quot;, &quot;*\\Users\\Public*&quot;, &quot;*\\AppData\\*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-13-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image:*\\schtasks.exe AND CommandLine:*\/create*) AND (CommandLine:(*powershell* OR *cmd.exe* OR *rundll32* OR *\-enc* OR *FromBase64* OR *\\Users\\Public* OR *\\AppData\\*))</code></pre>
+  </div>
+</article>
+
+<article class="sigma-rule" id="sigma-14" data-killchain="install">
+  <header>
+    <div class="sigma-title-row">
+      <h4>Service Persistence via sc.exe with User-Writable Path</h4>
+      <span class="sigma-level lvl-high">high</span>
+    </div>
+    <p class="muted">sc.exe create with the binary path under \Users\, \AppData\,
+\ProgramData\, or \Temp\ — service-install persistence outside
+legitimate program directories.</p>
+    <p class="sigma-meta">
+      <code>category=process_creation · product=windows</code> · <code>sigma_rules/install/UC_SERVICE_PERSIST.yml</code>
+    </p>
+    <div class="sigma-tags"><span class="sigma-tag">attack.t1543.003</span> <span class="sigma-tag">attack.persistence</span></div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="sigma-14-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="sigma-14-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="sigma-14-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="sigma-14-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="sigma-14-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>title: Service Persistence via sc.exe with User-Writable Path
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0e
+status: experimental
+description: |
+    sc.exe create with the binary path under \Users\, \AppData\,
+    \ProgramData\, or \Temp\ — service-install persistence outside
+    legitimate program directories.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1543.003
+    - attack.persistence
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_sc:
+        Image|endswith: &#x27;\sc.exe&#x27;
+        CommandLine|contains: &#x27;create&#x27;
+    selection_path:
+        CommandLine|contains:
+            - &#x27;\Users\&#x27;
+            - &#x27;\AppData\&#x27;
+            - &#x27;\ProgramData\&#x27;
+            - &#x27;\Temp\&#x27;
+    condition: selection_sc and selection_path
+falsepositives:
+    - Internal install scripts dropping a service from %ProgramData%
+level: high
+</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-14-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image endswith &quot;\\sc.exe&quot; and CommandLine contains &quot;create&quot;) and (CommandLine contains &quot;\\Users\\&quot; or CommandLine contains &quot;\\AppData\\&quot; or CommandLine contains &quot;\\ProgramData\\&quot; or CommandLine contains &quot;\\Temp\\&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-14-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>Image=&quot;*\\sc.exe&quot; CommandLine=&quot;*create*&quot; CommandLine IN (&quot;*\\Users\\*&quot;, &quot;*\\AppData\\*&quot;, &quot;*\\ProgramData\\*&quot;, &quot;*\\Temp\\*&quot;)</code></pre>
+  </div>
+  <div class="sigma-pane" id="sigma-14-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>(Image:*\\sc.exe AND CommandLine:*create*) AND (CommandLine:(*\\Users\\* OR *\\AppData\\* OR *\\ProgramData\\* OR *\\Temp\\*))</code></pre>
+  </div>
+</article>
+</section>
+  </main>
+</div>
+
 <div id="pane-spl" class="tab-pane">
   <div class="cs-main" style="max-width:680px;margin:48px auto">
     <div class="placeholder-pane">
@@ -3750,7 +4904,8 @@ ImProcessCreate
       <p>The Splunk SPL counterpart to this catalog is in active build-out. The
       project's curated UCs already include a CIM-conformant <code>splunk_spl</code>
       block per use case — expect a focused, schema-aware SPL cheat sheet here
-      shortly.</p>
+      shortly. In the meantime, every Sigma rule above already compiles to SPL —
+      grab the SPL tab on the card you want.</p>
     </div>
   </div>
 </div>
@@ -3826,6 +4981,17 @@ ImProcessCreate
       if (!target) return;
       e.preventDefault();
       target.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  // Per-Sigma-card tab switching (yaml / kql / spl / lucene).
+  document.querySelectorAll('.sigma-tab').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const card = btn.closest('.sigma-rule');
+      if (!card) return;
+      const targetId = btn.dataset.target;
+      card.querySelectorAll('.sigma-tab').forEach(t => t.classList.toggle('active', t === btn));
+      card.querySelectorAll('.sigma-pane').forEach(p => p.classList.toggle('active', p.id === targetId));
     });
   });
 })();

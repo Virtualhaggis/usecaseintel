@@ -1829,6 +1829,132 @@ def _build_pane(queries: dict, schema: dict, id_prefix: str,
     )
 
 
+# =============================================================================
+# Sigma — load rules from sigma_rules/, pre-compile to common backends.
+# =============================================================================
+
+SIGMA_RULES_DIR = ROOT / "sigma_rules"
+
+
+def _load_sigma_rules() -> list[dict]:
+    """Read every YAML under sigma_rules/, parse, pre-compile to KQL+SPL+Lucene.
+
+    Each entry is {file, kill_chain, parsed (dict), yaml (str), kql, spl,
+    lucene, errors}. Compile failures are recorded but never fatal.
+    """
+    rules: list[dict] = []
+    if not SIGMA_RULES_DIR.exists():
+        return rules
+    try:
+        # Side-imports so the cheat sheet can build without pysigma when
+        # the user explicitly skipped the optional dependency.
+        from sigma_export import compile_sigma, validate_sigma
+    except Exception as e:
+        print(f"  [!] sigma_export unavailable ({e}); skipping Sigma tab.")
+        return rules
+
+    import yaml as _yaml
+    for path in sorted(SIGMA_RULES_DIR.rglob("*.yml")):
+        text = path.read_text(encoding="utf-8")
+        try:
+            parsed = _yaml.safe_load(text)
+        except Exception:
+            parsed = {}
+        kill_chain = path.parent.name  # actions / c2 / delivery / etc.
+        v_issues = validate_sigma(text)
+        compiled: dict[str, str | None] = {}
+        for tag in ("kql", "spl", "lucene"):
+            out, err = compile_sigma(text, tag)
+            compiled[tag] = out if not err else f"// compile error: {err}"
+        rules.append({
+            "path": path.relative_to(ROOT).as_posix(),
+            "filename": path.stem,
+            "kill_chain": kill_chain,
+            "parsed": parsed if isinstance(parsed, dict) else {},
+            "yaml": text,
+            "kql": compiled["kql"],
+            "spl": compiled["spl"],
+            "lucene": compiled["lucene"],
+            "validation_issues": v_issues,
+        })
+    return rules
+
+
+def render_sigma_card(rule: dict, idx: int) -> str:
+    title = html.escape(rule["parsed"].get("title", rule["filename"]))
+    desc = html.escape((rule["parsed"].get("description") or "").strip())
+    level = html.escape(rule["parsed"].get("level", ""))
+    tags = rule["parsed"].get("tags", []) or []
+    logsource = rule["parsed"].get("logsource", {}) or {}
+    ls_str = " · ".join(f"{k}={v}" for k, v in logsource.items() if v)
+    tag_html = " ".join(
+        f'<span class="sigma-tag">{html.escape(str(t))}</span>' for t in tags[:8]
+    )
+    uid = f"sigma-{idx}"
+    return f"""
+<article class="sigma-rule" id="{uid}" data-killchain="{html.escape(rule['kill_chain'])}">
+  <header>
+    <div class="sigma-title-row">
+      <h4>{title}</h4>
+      <span class="sigma-level lvl-{level}">{level or 'unknown'}</span>
+    </div>
+    <p class="muted">{desc}</p>
+    <p class="sigma-meta">
+      <code>{html.escape(ls_str)}</code> · <code>{html.escape(rule['path'])}</code>
+    </p>
+    <div class="sigma-tags">{tag_html}</div>
+  </header>
+  <div class="sigma-tabs">
+    <button class="sigma-tab active" data-target="{uid}-yaml">Sigma YAML</button>
+    <button class="sigma-tab" data-target="{uid}-kql">Defender KQL</button>
+    <button class="sigma-tab" data-target="{uid}-spl">Splunk SPL</button>
+    <button class="sigma-tab" data-target="{uid}-lucene">Elastic Lucene</button>
+  </div>
+  <div class="sigma-pane active" id="{uid}-yaml">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>{html.escape(rule['yaml'])}</code></pre>
+  </div>
+  <div class="sigma-pane" id="{uid}-kql">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>{html.escape(rule['kql'] or '(no output)')}</code></pre>
+  </div>
+  <div class="sigma-pane" id="{uid}-spl">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>{html.escape(rule['spl'] or '(no output)')}</code></pre>
+  </div>
+  <div class="sigma-pane" id="{uid}-lucene">
+    <button class="copy" type="button">Copy</button>
+    <pre><code>{html.escape(rule['lucene'] or '(no output)')}</code></pre>
+  </div>
+</article>
+"""
+
+
+def render_sigma_pane(rules: list[dict]) -> tuple[str, int]:
+    if not rules:
+        return ('<div class="placeholder-pane"><h2>No Sigma rules found</h2>'
+                '<p>Add rules to <code>sigma_rules/</code>, then re-run '
+                '<code>python build_soc_cheatsheet.py</code>.</p></div>', 0)
+    by_kc: dict[str, list[dict]] = {}
+    for r in rules:
+        by_kc.setdefault(r["kill_chain"], []).append(r)
+    sections = []
+    idx = 0
+    for kc in sorted(by_kc):
+        cards = []
+        for r in by_kc[kc]:
+            cards.append(render_sigma_card(r, idx))
+            idx += 1
+        sections.append(
+            f'<section class="sigma-section">'
+            f'<h2>{html.escape(kc)}</h2>'
+            f'<p class="muted">{len(by_kc[kc])} rules · platform-neutral, compiled at build time</p>'
+            f'{"".join(cards)}'
+            f'</section>'
+        )
+    return "\n".join(sections), len(rules)
+
+
 def main() -> None:
     (kql_sidebar, kql_sections,
      kql_curated, kql_total_q, kql_schema_tables) = _build_pane(
@@ -1839,6 +1965,9 @@ def main() -> None:
      sent_curated, sent_total_q, sent_schema_tables) = _build_pane(
         SENTINEL_QUERIES, SENTINEL_SCHEMA, id_prefix="sentinel-table-",
         list_id="sentinelTableList", filter_id="sentinelTableFilter")
+
+    sigma_rules = _load_sigma_rules()
+    sigma_sections, sigma_count = render_sigma_pane(sigma_rules)
 
     OUT.write_text(_TEMPLATE.format(
         kql_sidebar=kql_sidebar,
@@ -1851,12 +1980,15 @@ def main() -> None:
         sent_curated=sent_curated,
         sent_total_q=sent_total_q,
         sent_schema_tables=sent_schema_tables,
+        sigma_sections=sigma_sections,
+        sigma_count=sigma_count,
     ), encoding="utf-8")
     print(f"Wrote {OUT.relative_to(ROOT)}")
     print(f"  Defender:  {kql_curated} curated tables, {kql_total_q} queries "
           f"(across {kql_schema_tables} schema tables)")
     print(f"  Sentinel:  {sent_curated} curated tables, {sent_total_q} queries "
           f"(across {sent_schema_tables} schema tables)")
+    print(f"  Sigma:     {sigma_count} rules pre-compiled (KQL/SPL/Lucene each)")
 
 
 _TEMPLATE = r"""<!doctype html>
@@ -1994,6 +2126,32 @@ a{{color:inherit;text-decoration:none}}
 .tab-pane{{display:none}}
 .tab-pane.active{{display:block}}
 
+/* ------ Sigma cards ------------------------------------------------- */
+.sigma-section{{margin-bottom:48px;scroll-margin-top:130px}}
+.sigma-section > h2{{margin:0 0 4px;font-size:18px;font-weight:600;letter-spacing:-0.018em;text-transform:capitalize;color:var(--text)}}
+.sigma-section > p.muted{{color:var(--muted);font-size:12px;margin:0 0 14px}}
+.sigma-rule{{background:var(--panel);border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:14px}}
+.sigma-rule > header{{padding:14px 18px;border-bottom:1px solid var(--border)}}
+.sigma-title-row{{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}}
+.sigma-rule h4{{margin:0;font-size:13.5px;font-weight:600;letter-spacing:-0.012em}}
+.sigma-rule p{{margin:0;color:var(--muted);font-size:12.2px}}
+.sigma-rule .sigma-meta{{margin-top:4px;font-size:11.5px}}
+.sigma-rule .sigma-meta code{{background:var(--code-bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:11px;color:var(--accent-2)}}
+.sigma-tags{{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px}}
+.sigma-tag{{font-family:var(--mono);font-size:10.5px;padding:2px 7px;border-radius:99px;background:rgba(155,138,251,0.10);color:var(--accent-2);border:1px solid rgba(155,138,251,0.20)}}
+.sigma-level{{font-family:var(--mono);font-size:10.5px;padding:3px 9px;border-radius:99px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600}}
+.sigma-level.lvl-low{{background:rgba(76,183,130,0.10);color:var(--good);border:1px solid rgba(76,183,130,0.30)}}
+.sigma-level.lvl-medium{{background:rgba(226,169,63,0.10);color:var(--warn);border:1px solid rgba(226,169,63,0.30)}}
+.sigma-level.lvl-high{{background:rgba(235,87,87,0.10);color:#eb5757;border:1px solid rgba(235,87,87,0.30)}}
+.sigma-level.lvl-critical{{background:rgba(242,85,85,0.16);color:#f25555;border:1px solid rgba(242,85,85,0.40)}}
+.sigma-tabs{{display:flex;gap:2px;padding:8px 14px 0;background:rgba(255,255,255,0.02);border-bottom:1px solid var(--border)}}
+.sigma-tab{{background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;font:inherit;font-size:11.5px;padding:6px 10px;cursor:pointer;font-weight:500;transition:all 0.15s;font-family:var(--mono)}}
+.sigma-tab:hover{{color:var(--text)}}
+.sigma-tab.active{{color:var(--accent-2);border-bottom-color:var(--accent)}}
+.sigma-pane{{display:none;position:relative}}
+.sigma-pane.active{{display:block}}
+.sigma-pane pre{{margin:0;padding:14px 18px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;background:var(--code-bg);border-radius:0 0 var(--r-md) var(--r-md)}}
+
 /* Mobile */
 @media (max-width: 900px) {{
   .cs-layout{{grid-template-columns:1fr}}
@@ -2017,6 +2175,7 @@ a{{color:inherit;text-decoration:none}}
 <nav class="cs-tabs">
   <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
   <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
+  <button class="cs-tab" data-pane="sigma">Sigma <span class="badge">multi-platform</span></button>
   <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
 </nav>
 
@@ -2060,6 +2219,26 @@ a{{color:inherit;text-decoration:none}}
   </div>
 </div>
 
+<div id="pane-sigma" class="tab-pane">
+  <main class="cs-main">
+    <div class="cs-intro">
+      <h1>Sigma · platform-neutral detection rules</h1>
+      <p>Each rule below is a self-contained Sigma YAML, pre-compiled to Defender
+      KQL, Splunk SPL, and Elastic Lucene at build time. Click a tab on any
+      card to copy the format you need — no Sigma toolchain required on your
+      laptop. Source rules live under <code>sigma_rules/</code>; re-run
+      <code>python build_soc_cheatsheet.py</code> after editing to refresh
+      compiled output.</p>
+      <div class="stats">
+        <span><strong>{sigma_count}</strong> rules</span>
+        <span>3 backends pre-compiled</span>
+        <span>Add new rules to <code>sigma_rules/&lt;kill_chain&gt;/</code> and rebuild.</span>
+      </div>
+    </div>
+    {sigma_sections}
+  </main>
+</div>
+
 <div id="pane-spl" class="tab-pane">
   <div class="cs-main" style="max-width:680px;margin:48px auto">
     <div class="placeholder-pane">
@@ -2067,7 +2246,8 @@ a{{color:inherit;text-decoration:none}}
       <p>The Splunk SPL counterpart to this catalog is in active build-out. The
       project's curated UCs already include a CIM-conformant <code>splunk_spl</code>
       block per use case — expect a focused, schema-aware SPL cheat sheet here
-      shortly.</p>
+      shortly. In the meantime, every Sigma rule above already compiles to SPL —
+      grab the SPL tab on the card you want.</p>
     </div>
   </div>
 </div>
@@ -2143,6 +2323,17 @@ a{{color:inherit;text-decoration:none}}
       if (!target) return;
       e.preventDefault();
       target.scrollIntoView({{behavior:'smooth', block:'start'}});
+    }});
+  }});
+
+  // Per-Sigma-card tab switching (yaml / kql / spl / lucene).
+  document.querySelectorAll('.sigma-tab').forEach(btn => {{
+    btn.addEventListener('click', () => {{
+      const card = btn.closest('.sigma-rule');
+      if (!card) return;
+      const targetId = btn.dataset.target;
+      card.querySelectorAll('.sigma-tab').forEach(t => t.classList.toggle('active', t === btn));
+      card.querySelectorAll('.sigma-pane').forEach(p => p.classList.toggle('active', p.id === targetId));
     }});
   }});
 }})();
