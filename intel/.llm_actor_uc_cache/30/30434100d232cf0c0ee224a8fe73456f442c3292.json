@@ -1,0 +1,47 @@
+{
+  "name": "Molerats",
+  "ucs": [
+    {
+      "title": "[LLM] Molerats / Gaza Cybergang MSI delivery chain from cloud-hosted spearphishing lure",
+      "description": "Hunts the signature Molerats infection chain: politically-themed spearphishing link (T1566.002) clicked from Office/Outlook/browser, dropping or invoking msiexec.exe to silently install a remote MSI hosted on Dropbox, Google Drive, OneDrive or MediaFire. This sequence is a fingerprint of Molerats SharpStage / DropBook / MoleNet campaigns documented by Cybereason (Dec 2020) and Kaspersky (Apr 2019).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1204.001",
+        "T1218.007",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name=msiexec.exe AND (Processes.process=\"*dropbox.com*\" OR Processes.process=\"*dl.dropboxusercontent*\" OR Processes.process=\"*drive.google.com*\" OR Processes.process=\"*googleusercontent*\" OR Processes.process=\"*onedrive.live.com*\" OR Processes.process=\"*1drv.ms*\" OR Processes.process=\"*mediafire.com*\" OR Processes.process=\"*bit.ly*\") AND (Processes.process=\"*/q*\" OR Processes.process=\"*/quiet*\" OR Processes.process=\"*/qn*\" OR Processes.process=\"*/qb*\") AND Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let phishingParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\"]);\nlet cloudHosts = @\"(?i)https?://[^\\s\"\"]*(dropbox\\.com|dl\\.dropboxusercontent|drive\\.google\\.com|googleusercontent|onedrive\\.live\\.com|1drv\\.ms|mediafire\\.com|bit\\.ly|tinyurl\\.com)\";\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName =~ \"msiexec.exe\"\n| where ProcessCommandLine matches regex cloudHosts\n| where ProcessCommandLine has_any (\"/q\",\"/quiet\",\"/qn\",\"/qb\")\n| where ProcessCommandLine has_any (\"/i\",\"-i\")\n| where tolower(InitiatingProcessFileName) in (phishingParents)\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName\n| join kind=leftouter (\n    UrlClickEvents\n    | where Timestamp > ago(30d)\n    | project ClickTime=Timestamp, AccountUpn, Url, NetworkMessageId\n) on $left.AccountName == $right.AccountUpn\n| where isnull(ClickTime) or datetime_diff('minute', Timestamp, ClickTime) between (0 .. 60)",
+      "rationale": "Molerats almost exclusively stages its loaders (SharpStage, DropBook, MoleNet, Spark) on Dropbox / Google Drive and pulls them via msiexec /i /q after the victim opens an Arabic-language political lure. The triple constraint (msiexec + cloud-storage URL + Office/script/browser parent) collapses generic msiexec noise to near-zero in enterprise environments \u2014 legitimate IT tooling neither hosts MSIs"
+    },
+    {
+      "title": "[LLM] Molerats SharpStage/DropBook backdoor: scripted C2 to Dropbox API + browser credential theft",
+      "description": "Hunts the post-exploitation half of the Molerats kill chain: scripted backdoors (SharpStage/DropBook in Python-compiled and PowerShell variants) that abuse the Dropbox/Google Drive/Facebook Graph APIs for C2, persist via Run keys or scheduled tasks, and steal Chrome/Edge Login Data. Joining script-interpreter Dropbox-API beacons with same-host access to browser credential stores fingerprints Gaza Cybergang activity vs. routine cloud usage.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1059.005",
+        "T1059.007",
+        "T1555.003",
+        "T1547.001",
+        "T1053.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"api.dropboxapi.com\" OR All_Traffic.dest=\"content.dropboxapi.com\" OR All_Traffic.dest=\"*.googleapis.com\" OR All_Traffic.dest=\"graph.facebook.com\") AND All_Traffic.app IN (\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"python.exe\",\"pythonw.exe\") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest | rename All_Traffic.src as host All_Traffic.user as user All_Traffic.app as proc All_Traffic.dest as c2dest | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\Google\\\\Chrome\\\\User Data\\\\*Login Data*\" OR Filesystem.file_path=\"*\\\\Microsoft\\\\Edge\\\\User Data\\\\*Login Data*\" OR Filesystem.file_path=\"*\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*logins.json*\") AND Filesystem.process_name IN (\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"python.exe\",\"pythonw.exe\") by Filesystem.dest Filesystem.process_name Filesystem.file_path | rename Filesystem.dest as host Filesystem.process_name as cred_proc Filesystem.file_path as cred_file] | table host user proc c2dest cred_proc cred_file count",
+      "kql": "let scriptHosts = dynamic([\"powershell.exe\",\"powershell_ise.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"python.exe\",\"pythonw.exe\"]);\nlet cloudC2 = DeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where RemoteUrl has_any (\"api.dropboxapi.com\",\"content.dropboxapi.com\",\"www.googleapis.com/drive\",\"graph.facebook.com\")\n| where tolower(InitiatingProcessFileName) in (scriptHosts)\n| project C2Time=Timestamp, DeviceId, DeviceName, RemoteUrl, C2Proc=InitiatingProcessFileName, C2Cmd=InitiatingProcessCommandLine;\nlet credAccess = DeviceFileEvents\n| where Timestamp > ago(30d)\n| where FolderPath has_any (@\"\\Google\\Chrome\\User Data\", @\"\\Microsoft\\Edge\\User Data\", @\"\\Mozilla\\Firefox\\Profiles\")\n| where FileName in~ (\"Login Data\",\"Login Data-journal\",\"logins.json\",\"key4.db\",\"Cookies\")\n| where tolower(InitiatingProcessFileName) in (scriptHosts) or InitiatingProcessFileName has_any (\"powershell\",\"wscript\",\"python\")\n| project CredTime=Timestamp, DeviceId, FolderPath, FileName, CredProc=InitiatingProcessFileName, CredCmd=InitiatingProcessCommandLine;\ncloudC2\n| join kind=inner credAccess on DeviceId\n| where abs(datetime_diff('hour', C2Time, CredTime)) <= 24\n| project DeviceName, C2Time, CredTime, RemoteUrl, C2Proc, C2Cmd, CredProc, FolderPath, FileName",
+      "rationale": "The dual signal \u2014 a scripting host (powershell/wscript/python) talking to Dropbox/Google Drive/Facebook Graph APIs AND the same scripting host touching Chrome/Edge/Firefox credential stores within 24h \u2014 is the operational fingerprint of Gaza Cybergang's SharpStage and DropBook backdoors as reported by Cybereason and Kaspersky. Legitimate Dropbox/Drive desktop clients do not run as powershell.exe a"
+    }
+  ]
+}

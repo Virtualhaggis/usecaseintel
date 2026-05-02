@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Anthropic Launches Claude Security in Public Beta for Enterprise Customers
 
-`UC_12_5` · phase: **exploit** · confidence: **High**
+`UC_14_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

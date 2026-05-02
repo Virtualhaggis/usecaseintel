@@ -1,0 +1,45 @@
+{
+  "name": "Velvet Ant",
+  "ucs": [
+    {
+      "title": "[LLM] Velvet Ant internal C2 pivot via compromised F5 BIG-IP / network appliance into Windows estate",
+      "description": "Hunts inbound sessions from internal network appliance subnets (F5 BIG-IP, load balancers, OOB management) to Windows servers over SMB/RDP/WinRM or non-standard high ports. This is Velvet Ant's signature tradecraft documented by Sygnia, where the actor weaponizes a compromised F5 BIG-IP as a long-term internal C2 relay (CATVANTAGE/VELVETSTING tooling) to retain access after AV remediations on Windows hosts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1090.001",
+        "T1133",
+        "T1571",
+        "T1021.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src IN (10.10.20.0/24, 10.10.30.0/24) OR All_Traffic.src_category=\"f5_bigip\" OR All_Traffic.src_category=\"loadbalancer\" OR All_Traffic.src_category=\"network_appliance\") AND All_Traffic.dest_category=\"windows_server\" AND (All_Traffic.dest_port IN (445, 3389, 5985, 5986) OR All_Traffic.dest_port>=1024) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(\"All_Traffic\")` | where count > 5 | eval reason=case(dest_port==445,\"SMB from appliance\",dest_port==3389,\"RDP from appliance\",dest_port IN (5985,5986),\"WinRM from appliance\",1==1,\"non-standard high port from appliance\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let appliance_subnets = dynamic([\"10.10.20.\",\"10.10.30.\",\"192.168.250.\"]); // populate with F5/LB management & SelfIP ranges\nDeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where ActionType in (\"InboundConnectionAccepted\",\"ConnectionSuccess\")\n| where RemotePort in (445, 3389, 5985, 5986) or RemotePort >= 49152\n| where RemoteIPType == \"Private\"\n| where RemoteIP startswith_cs appliance_subnets[0] or RemoteIP startswith_cs appliance_subnets[1] or RemoteIP startswith_cs appliance_subnets[2]\n| summarize SessionCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(RemotePort), Procs=make_set(InitiatingProcessFileName) by DeviceName, RemoteIP, LocalPort\n| where SessionCount > 3\n| extend Verdict = case(LocalPort==445,\"SMB pivot from appliance\",LocalPort==3389,\"RDP pivot from appliance\",LocalPort in (5985,5986),\"WinRM pivot from appliance\",\"Non-standard C2 from appliance\")",
+      "rationale": "Network appliances should NEVER initiate SMB/RDP/WinRM into the Windows estate under normal operation - they terminate or proxy traffic, they do not log into domain hosts. Velvet Ant is uniquely characterized by Sygnia (2024A/B) for using a hijacked F5 BIG-IP as the internal C2 anchor specifically to survive endpoint cleanup, making appliance->server admin-protocol traffic a near-pathognomonic ind"
+    },
+    {
+      "title": "[LLM] Velvet Ant PlugX/ShadowPad DLL side-loading via EOL signed AV/vendor binaries on legacy Windows hosts",
+      "description": "Hunts execution of legitimately-signed-but-EOL vendor binaries (Symantec, McAfee, IBM, Microsoft legacy tools) loading unsigned DLLs from user-writable or temp directories, with subsequent outbound network activity. Sygnia reported Velvet Ant repeatedly drops PlugX/ShadowPad as side-loaded payloads on Windows Server 2003/2012 and forgotten servers, using the obsolete signed loader as a long-tail persistence beachhead inside the network.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1036.005",
+        "T1055",
+        "T1071"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"RasTls.exe\",\"SCHelper.exe\",\"mcoemcpy.exe\",\"mcods.exe\",\"hkcmd.exe\",\"OInfoP11.exe\",\"IBMTOOLSCENTER.exe\",\"DgService.exe\",\"AvastSvc.exe\") AND NOT (Processes.process_path IN (\"*\\\\Program Files\\\\*\",\"*\\\\Program Files (x86)\\\\*\",\"*\\\\Windows\\\\System32\\\\*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(\"Processes\")` | join type=inner dest [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (443,80,8080,53) AND All_Traffic.dest_category!=\"internal\" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | rename All_Traffic.src as dest All_Traffic.dest as c2_dest All_Traffic.dest_port as c2_port] | `security_content_ctime(firstTime)`",
+      "kql": "let lolbin_loaders = dynamic([\"RasTls.exe\",\"SCHelper.exe\",\"mcoemcpy.exe\",\"mcods.exe\",\"hkcmd.exe\",\"OInfoP11.exe\",\"IBMTOOLSCENTER.exe\",\"DgService.exe\",\"AvastSvc.exe\",\"BDReinit.exe\"]);\nlet sus_paths = dynamic([@\"c:\\programdata\\\",@\"c:\\users\\public\\\",@\"c:\\windows\\temp\\\",@\"c:\\perflogs\\\",@\"c:\\intel\\\",@\"c:\\recovery\\\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (lolbin_loaders)\n| extend lpath = tolower(FolderPath)\n| where lpath has_any (sus_paths) or not(lpath startswith @\"c:\\program files\")\n| where InitiatingProcessSignatureStatus != \"Valid\" or ProcessVersionInfoProductName has_any (\"Symantec\",\"McAfee\",\"IBM\",\"Trend Micro\")\n| join kind=inner (\n    DeviceImageLoadEvents\n    | where Timestamp > ago(30d)\n    | where SHA256 != \"\" and not(FolderPath startswith @\"C:\\Windows\\\") and not(FolderPath startswith @\"C:\\Program Files\")\n    | project DeviceId, InitiatingProcessId=InitiatingProcessId, LoadedDll=FileName, LoadedDllPath=FolderPath, DllSigner=InitiatingProcessSignatureStatus\n) on DeviceId, $left.ProcessId == $right.InitiatingProcessId\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where RemoteIPType == \"Public\" and RemotePort in (443, 80, 53, 8080)\n    | summarize C2Candidates=make_set(RemoteUrl), RemoteIPs=make_set(RemoteIP) by DeviceId, InitiatingProcessId\n) on DeviceId, $left.ProcessId == $right.InitiatingProcessId\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, LoadedDll, LoadedDllPath, RemoteIPs, C2Candidates\n| sort by Timestamp desc",
+      "rationale": "Velvet Ant (Sygnia 2024A/B) leans heavily on legacy/forgotten Windows hosts running EOL Symantec/McAfee/IBM agents because those vendor binaries are known PlugX/ShadowPad side-load targets and their endpoint protection on those hosts is degraded. Detecting one of these specific signed loaders running outside of Program Files AND loading an unsigned DLL AND beaconing externally is the exact chain S"
+    }
+  ]
+}

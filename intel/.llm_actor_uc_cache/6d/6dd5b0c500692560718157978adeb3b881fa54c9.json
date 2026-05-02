@@ -1,0 +1,44 @@
+{
+  "name": "Suckfly",
+  "ucs": [
+    {
+      "title": "[LLM] Suckfly Nidiran-style: validly code-signed but fleet-rare dropper spawning credential-dumping + network-scanning hacktools",
+      "description": "Hunts Suckfly's signature tradecraft: dropping a backdoor (Nidiran / Backdoor.Nidiran) signed with a code-signing certificate stolen from a legitimate (often South Korean) software vendor, which then executes the group's preferred hacktool kit \u2014 credential dumpers (gsecdump, pwdump, Mimikatz) and the Hivelocity/nbtscan-class network sweeper. Catches the chain T1553.002 -> T1059.003 -> T1003 + T1046 that distinguishes Suckfly from generic China-nexus crews.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1553.002",
+        "T1003",
+        "T1046",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as process_name values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process IN (\"*mimikatz*\",\"*gsecdump*\",\"*pwdump*\",\"*wce.exe*\",\"*procdump*lsass*\",\"*sekurlsa*\",\"*ntds.dit*\",\"*nbtscan*\",\"*hivelocity*\",\"*nmap*\",\"*masscan*\",\"*superscan*\",\"*nbscan*\")) by Processes.dest Processes.parent_process_name Processes.parent_process_exec Processes.parent_process_path Processes.parent_process_hash | `drop_dm_object_name(\"Processes\")` | eval cmd_shell_parent=if(match(parent_process_name,\"(?i)cmd\\.exe|powershell\\.exe\"),1,0) | join type=inner parent_process_hash [ | tstats summariesonly=true dc(Endpoint.Processes.dest) as fleet_hosts from datamodel=Endpoint.Processes by Endpoint.Processes.parent_process_hash | rename Endpoint.Processes.parent_process_hash as parent_process_hash | where fleet_hosts <= 5 ] | lookup local=true signed_dropper_lookup process_hash AS parent_process_hash OUTPUT signer signature_status | where signature_status=\"Valid\" AND NOT match(signer,\"(?i)Microsoft|Google|Adobe|Mozilla|Oracle|VMware|Citrix\") | stats min(firstTime) as firstTime max(lastTime) as lastTime values(process_name) as hacktools values(dest) as hosts dc(dest) as host_count by parent_process_name parent_process_path parent_process_hash signer fleet_hosts | where host_count >= 1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let credTools = dynamic([\"mimikatz\",\"gsecdump\",\"pwdump\",\"wce.exe\",\"procdump\",\"sekurlsa\",\"ntds.dit\",\"lsass.dmp\",\"comsvcs.dll\"]);\nlet scanTools = dynamic([\"nbtscan\",\"hivelocity\",\"nbscan\",\"nmap\",\"masscan\",\"superscan\",\"portscan\"]);\nlet rareSignedBinaries =\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessSignatureStatus =~ \"Valid\"\n    | where isnotempty(InitiatingProcessSHA1)\n    | summarize fleetHosts = dcount(DeviceId) by InitiatingProcessSHA1\n    | where fleetHosts <= 5;\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessSHA1 in (rareSignedBinaries)\n| where (ProcessCommandLine has_any (credTools) or FileName has_any (credTools)\n      or ProcessCommandLine has_any (scanTools) or FileName has_any (scanTools))\n| join kind=leftouter (\n    DeviceFileCertificateInfo\n    | summarize arg_max(Timestamp, IsTrusted, Signer, Issuer, IsRootSignerMicrosoft) by SHA1\n  ) on $left.InitiatingProcessSHA1 == $right.SHA1\n| where IsRootSignerMicrosoft != true\n| where Signer !contains \"Microsoft\" and Signer !contains \"Google\" and Signer !contains \"Adobe\" and Signer !contains \"Mozilla\" and Signer !contains \"Oracle\" and Signer !contains \"VMware\" and Signer !contains \"Citrix\"\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessSHA1, Signer, Issuer, IsTrusted, FileName, ProcessCommandLine, InitiatingProcessCommandLine\n| order by Timestamp desc",
+      "rationale": "Suckfly is uniquely characterised in Symantec/Mandiant reporting as the China-nexus actor that systematically stole code-signing certificates from legitimate (mostly South Korean) firms and re-signed Nidiran droppers and hacktools with them. The combination \u2014 VALID Authenticode signature + non-mainstream signer + fleet rarity + IMMEDIATE invocation of credential-dump + network-scan tooling \u2014 is th"
+    },
+    {
+      "title": "[LLM] Suckfly stolen-credential pivot: cmd.exe-driven internal port/share sweep followed by interactive logon from same host (T1078 + T1059.003 + ",
+      "description": "Hunts Suckfly's post-exploitation lateral-movement pattern observed at Indian/South Asian government and commercial victims: after credential theft they live off cmd.exe, run a network/SMB sweep from the beachhead, then re-use the harvested valid account to log onto enumerated hosts within minutes. Designed to surface the chain not any one step.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1078",
+        "T1059.003",
+        "T1046"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as scan_time from datamodel=Endpoint.Processes where Processes.parent_process_name=\"cmd.exe\" (Processes.process IN (\"*nbtscan*\",\"*hivelocity*\",\"*net view*\",\"*net use*\",\"*for /L*\\\\\\\\*\",\"*ping -n 1*\",\"*nmap*\",\"*masscan*\")) by Processes.dest Processes.user Processes.process | `drop_dm_object_name(\"Processes\")` | rename dest as src_host user as scan_user | join type=inner src_host scan_user [ | tstats summariesonly=true count values(Authentication.dest) as logon_targets dc(Authentication.dest) as target_count min(_time) as logon_time from datamodel=Authentication where Authentication.action=\"success\" Authentication.authentication_method IN (\"NTLM\",\"Kerberos\") by Authentication.src Authentication.user | `drop_dm_object_name(\"Authentication\")` | rename src as src_host user as scan_user | where target_count >= 3 ] | where logon_time > scan_time AND (logon_time - scan_time) < 1800 | table scan_time logon_time src_host scan_user process logon_targets target_count",
+      "kql": "let scanWindow = 30m;\nlet scans =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName =~ \"cmd.exe\"\n    | where ProcessCommandLine has_any (\"nbtscan\",\"hivelocity\",\"net view\",\"net use \\\\\",\"for /L\",\"ping -n 1\",\"nmap\",\"masscan\")\n          or (FileName =~ \"net.exe\" and ProcessCommandLine has_any (\"view\",\"use \\\\\"))\n    | project ScanTime=Timestamp, DeviceId, DeviceName, AccountName=tolower(AccountName), ScanCmd=ProcessCommandLine;\nlet logons =\n    IdentityLogonEvents\n    | where Timestamp > ago(7d)\n    | where ActionType =~ \"LogonSuccess\"\n    | where LogonType in (\"Network\",\"Interactive\",\"RemoteInteractive\")\n    | project LogonTime=Timestamp, SrcDevice=DeviceName, AccountName=tolower(AccountName), TargetDeviceName, LogonType, Protocol;\nscans\n| join kind=inner (logons) on $left.DeviceName == $right.SrcDevice, AccountName\n| where LogonTime between (ScanTime .. ScanTime + scanWindow)\n| summarize TargetsHit=dcount(TargetDeviceName), Targets=make_set(TargetDeviceName, 25), ScanCmds=make_set(ScanCmd, 10), FirstScan=min(ScanTime), LastLogon=max(LogonTime) by DeviceName, AccountName\n| where TargetsHit >= 3\n| order by FirstScan desc",
+      "rationale": "Suckfly's tradecraft (per Symantec March 2016 reporting) is unusually shell-centric for a Chinese state-aligned actor \u2014 they prefer cmd.exe + standalone scanner binaries rather than PowerShell or WMI, and they pivot with stolen valid accounts rather than dropping new implants. Tying a cmd.exe-launched network/SMB sweep to a successful logon by the SAME user from the SAME host within 30 minutes aga"
+    }
+  ]
+}

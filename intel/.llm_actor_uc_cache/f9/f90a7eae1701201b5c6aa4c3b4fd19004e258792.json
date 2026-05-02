@@ -1,0 +1,50 @@
+{
+  "name": "APT39",
+  "ucs": [
+    {
+      "title": "[LLM] APT39 (Chafer) ASPXSpy webshell + Plink/Ngrok reverse-tunnel for RDP pivot",
+      "description": "Hunts APT39's signature post-exploitation chain on internet-facing IIS/Exchange: drop ASPXSpy (or variant) webshell, then use w3wp.exe to launch Plink/Ngrok with reverse-tunnel flags to expose internal RDP (3389) outbound, enabling MOIS operators to pivot to tracked targets in travel/telecom/hospitality networks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.003",
+        "T1190",
+        "T1090.001",
+        "T1090.002",
+        "T1021.001",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as process_name values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"w3wp.exe\" OR Processes.parent_process_name=\"httpd.exe\") (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"plink.exe\",\"ngrok.exe\",\"frpc.exe\",\"net.exe\",\"whoami.exe\",\"systeminfo.exe\",\"netstat.exe\") OR Processes.process IN (\"*-R *:127.0.0.1:3389*\",\"*-L 3389*\",\"*tcp 3389*\",\"*aspxspy*\",\"*Server=AspxSpyMembers*\")) by Processes.dest Processes.process_id Processes.parent_process_id _time | `drop_dm_object_name(Processes)` | join type=left dest [| tstats summariesonly=t count as tunnel_egress values(All_Traffic.dest_port) as egress_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!=\"internal\" (All_Traffic.dest_port IN (22,443,4443,7547) OR All_Traffic.app IN (\"ngrok\",\"ssh\",\"plink\")) by All_Traffic.src | rename All_Traffic.src as dest] | where tunnel_egress>0 OR match(process,\"(?i)(-R\\s+\\d+:|aspxspy|ngrok\\s+tcp|plink.*-pw|/usr/share/aspxspy)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let webshellHosts = DeviceProcessEvents | where Timestamp > ago(14d) | where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\") | where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"net.exe\",\"whoami.exe\",\"netstat.exe\",\"systeminfo.exe\",\"net1.exe\",\"ipconfig.exe\") or ProcessCommandLine has_any (\"AspxSpy\",\"AspxSpyMembers\",\"FilesAntsword\",\"SilverSHell\") | project ShellTime=Timestamp, DeviceId, DeviceName, ShellCmd=ProcessCommandLine, ShellParent=InitiatingProcessFileName, ShellChild=FileName; let tunnelProcs = DeviceProcessEvents | where Timestamp > ago(14d) | where (FileName in~ (\"plink.exe\",\"ngrok.exe\",\"frpc.exe\",\"frps.exe\",\"chisel.exe\") or ProcessCommandLine matches regex @\"(?i)\\s-R\\s+\\d+:(127\\.0\\.0\\.1|localhost):3389\" or ProcessCommandLine has_all (\"ngrok\",\"tcp\",\"3389\") or ProcessCommandLine matches regex @\"(?i)plink.*-pw\\s+\\S+.*-R\") | project TunnelTime=Timestamp, DeviceId, DeviceName, TunnelCmd=ProcessCommandLine, TunnelImage=FileName, TunnelUser=AccountName; webshellHosts | join kind=inner (tunnelProcs) on DeviceId | where TunnelTime between (ShellTime .. ShellTime + 6h) | join kind=leftouter (DeviceNetworkEvents | where Timestamp > ago(14d) | where RemotePort in (22,443,4443,7547) and RemoteIPType==\"Public\" | summarize EgressIPs=make_set(RemoteIP,25), EgressPorts=make_set(RemotePort,10) by DeviceId) on DeviceId | project ShellTime, TunnelTime, DeviceName, ShellParent, ShellChild, ShellCmd, TunnelImage, TunnelCmd, TunnelUser, EgressIPs, EgressPorts | order by ShellTime desc",
+      "rationale": "ASPXSpy is APT39/Chafer's documented webshell of choice (FireEye/Mandiant Jan-2019 and Symantec Dec-2015 reporting), and the same intrusions consistently chain w3wp.exe child processes into Plink/Ngrok reverse tunnels exposing internal RDP \u2014 used to surveil airline, telco and hospitality PII in line with MOIS targeting. The two-stage join (webshell-spawned recon \u2192 outbound tunnel binary on the sam"
+    },
+    {
+      "title": "[LLM] APT39 Remexi/POWBAT browser credential harvest with BITS staging and Run-key persistence",
+      "description": "Hunts the Remexi/POWBAT post-compromise pattern: AutoIt or PowerShell loader reads Chrome/IE 'Login Data' and cookie SQLite files, exfils via bitsadmin/Start-BitsTransfer, and persists through HKCU\\...\\Run \u2014 APT39's standard kit for harvesting webmail/social creds of MOIS targets of interest.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1555",
+        "T1555.003",
+        "T1197",
+        "T1547.001",
+        "T1056.001",
+        "T1059.010",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as opener from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (\"Login Data\",\"Cookies\",\"Web Data\",\"Local State\") OR Filesystem.file_path IN (\"*\\\\Microsoft\\\\Windows\\\\WebCache\\\\WebCacheV01.dat\",\"*\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\\logins.json\",\"*\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\\key4.db\")) Filesystem.process_name!=\"chrome.exe\" Filesystem.process_name!=\"msedge.exe\" Filesystem.process_name!=\"firefox.exe\" Filesystem.process_name!=\"iexplore.exe\" by Filesystem.dest Filesystem.user Filesystem.process_id | `drop_dm_object_name(Filesystem)` | join type=inner dest [| tstats summariesonly=t count as bits_count values(Processes.process) as bits_cmd from datamodel=Endpoint.Processes where (Processes.process_name IN (\"bitsadmin.exe\",\"powershell.exe\") AND (Processes.process IN (\"*Start-BitsTransfer*\",\"*bitsadmin*/transfer*\",\"*bitsadmin*/addfile*\",\"*bitsadmin*/upload*\"))) by Processes.dest | rename Processes.dest as dest] | join type=inner dest [| tstats summariesonly=t count as run_key_writes values(Registry.registry_path) as reg_path values(Registry.registry_value_data) as reg_value from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*\") (Registry.registry_value_data IN (\"*AutoIt*\",\"*\\\\AppData\\\\*\\\\*.exe\",\"*powershell*-enc*\",\"*\\\\ProgramData\\\\*.exe\",\"*\\\\Public\\\\*.exe\",\"*Remexi*\")) by Registry.dest | rename Registry.dest as dest] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user opener file_path bits_cmd reg_path reg_value",
+      "kql": "let credAccess = DeviceFileEvents | where Timestamp > ago(7d) | where FileName in~ (\"Login Data\",\"Cookies\",\"Web Data\",\"Local State\",\"logins.json\",\"key4.db\",\"WebCacheV01.dat\") | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"opera.exe\",\"brave.exe\",\"MsMpEng.exe\",\"SenseIR.exe\") | project CredTime=Timestamp, DeviceId, DeviceName, BrowserFile=FileName, FilePath=FolderPath, CredProc=InitiatingProcessFileName, CredCmd=InitiatingProcessCommandLine, CredUser=InitiatingProcessAccountName; let bits = DeviceProcessEvents | where Timestamp > ago(7d) | where (FileName =~ \"bitsadmin.exe\" and ProcessCommandLine has_any (\"/transfer\",\"/addfile\",\"/upload\",\"/setnotifycmdline\")) or (FileName in~ (\"powershell.exe\",\"pwsh.exe\") and ProcessCommandLine has \"Start-BitsTransfer\") | project BitsTime=Timestamp, DeviceId, BitsCmd=ProcessCommandLine; let runKey = DeviceRegistryEvents | where Timestamp > ago(7d) | where RegistryKey has_any (@\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\") | where RegistryValueData has_any (\"AutoIt\",\".exe\",\"powershell\",\"-enc\",\"\\\\AppData\\\\\",\"\\\\ProgramData\\\\\",\"\\\\Public\\\\\",\"Remexi\",\"rundll32\") | where RegistryValueData !has \"OneDrive\" and RegistryValueData !has \"Teams\" | project RegTime=Timestamp, DeviceId, RegKey=RegistryKey, RegValName=RegistryValueName, RegValData=RegistryValueData; credAccess | join kind=inner (bits) on DeviceId | where BitsTime between (CredTime - 1h .. CredTime + 6h) | join kind=inner (runKey) on DeviceId | where RegTime between (CredTime - 24h .. CredTime + 24h) | summarize CredAccessSamples=make_set(strcat(BrowserFile,\"|\",CredProc),10), BitsSamples=make_set(BitsCmd,5), PersistenceSamples=make_set(strcat(RegValName,\"=\",RegValData),5) by DeviceName, DeviceId, CredUser, bin(CredTime,1h) | order by CredTime desc",
+      "rationale": "Kaspersky's Remexi reporting and FireEye's APT39 dossier both highlight that Chafer/APT39 specifically pairs browser credential file reads (Login Data, IE WebCache, Firefox key4.db) with BITS-based exfiltration and HKCU Run-key persistence pointing to AutoIt or PowerShell stagers \u2014 this is the unit-of-work used to track airline, telco and academic targets for MOIS. Requiring all three signals on t"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "CopyKittens",
+  "ucs": [
+    {
+      "title": "[LLM] CopyKittens Matryoshka loader: rundll32 + hidden-window PowerShell DNS C2 chain",
+      "description": "Hunts the signature CopyKittens (Iranian, G0052) execution chain seen in Operation Wilted Tulip where rundll32.exe sideloads the Matryoshka v1/v2 DLL backdoor and then spawns powershell.exe with -WindowStyle Hidden / -EncodedCommand to stage Cobalt Strike or Empire over DNS. Combines T1218.011, T1059.001 and T1564.003 in a single parent-child sequence rarely seen in benign software.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.011",
+        "T1059.001",
+        "T1564.003",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=rundll32.exe Processes.process_name IN (powershell.exe,pwsh.exe) (Processes.process=\"*-w*hidden*\" OR Processes.process=\"*WindowStyle*Hidden*\" OR Processes.process=\"*-enc*\" OR Processes.process=\"*EncodedCommand*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*-nop*\" OR Processes.process=\"*-noni*\") by host Processes.parent_process Processes.process_name Processes.process_id Processes.parent_process_id | `drop_dm_object_name(Processes)` | rename host as src | join type=left src process_id [| tstats summariesonly=t values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_port) as c2_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=53 OR All_Traffic.dest_port=443) by All_Traffic.src All_Traffic.process_id | rename All_Traffic.src as src All_Traffic.process_id as process_id] | where isnotnull(c2_dest) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspiciousPS = dynamic([\"-w hidden\",\"-windowstyle hidden\",\"-enc \",\"-encodedcommand\",\"frombase64string\",\"-nop \",\"-noni\",\"downloadstring\",\"iex(\",\"invoke-expression\"]);\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName =~ \"rundll32.exe\"\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (suspiciousPS)\n| extend rundll_cmd = InitiatingProcessCommandLine\n// Matryoshka style: rundll32 executing a non-System DLL or a quoted DllMain export\n| where rundll_cmd !contains \"\\\\system32\\\\\" or rundll_cmd matches regex @\"(?i)rundll32(\\.exe)?\\s+[\\\"']?[A-Z]:\\\\Users\\\\\"\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(14d)\n    | where RemotePort in (53,443) and ActionType == \"ConnectionSuccess\"\n    | project DeviceId, NetTime=Timestamp, ConnectingPID=InitiatingProcessId, RemoteIP, RemoteUrl, RemotePort\n) on DeviceId\n| where ProcessId == ConnectingPID and NetTime between (Timestamp .. Timestamp + 5m)\n| project Timestamp, DeviceName, AccountName, rundll_cmd, ProcessCommandLine, RemoteIP, RemoteUrl, RemotePort\n| order by Timestamp desc",
+      "rationale": "Operation Wilted Tulip (ClearSky/Trend Micro 2017) documented Matryoshka and TDTESS being loaded specifically via rundll32 calling an exported function in a user-writable directory, which then spawned hidden PowerShell to retrieve Cobalt Strike Beacon over DNS/HTTPS. The triple combination of rundll32 \u2192 hidden PowerShell \u2192 outbound 53/443 in <5 min is highly atypical of legitimate Windows behavior"
+    },
+    {
+      "title": "[LLM] CopyKittens code-signing abuse: execution of binaries signed by AI Squared / known stolen certs + WinRAR staging",
+      "description": "Detects the CopyKittens habit (G0052) of signing Matryoshka and TDTESS payloads with stolen or fraudulently obtained certificates (e.g. AI Squared Inc.) and then using WinRAR/7-Zip with a password to stage data for exfil \u2014 chaining T1553.002 with T1560.001. This sequence was a hallmark of Operation Wilted Tulip targeting Israeli and Saudi diplomatic entities.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1553.002",
+        "T1560.001",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.process_name IN (rar.exe,winrar.exe,7z.exe,7za.exe) (Processes.process=\"*a *\" OR Processes.process=\"* a -*\") (Processes.process=\"*-hp*\" OR Processes.process=\"*-p*\" OR Processes.process=\"*-m5*\" OR Processes.process=\"*-v*\") by host Processes.user Processes.process_id | `drop_dm_object_name(Processes)` | rename host as dest | join type=inner dest [| tstats summariesonly=t values(Processes.process_name) as signed_proc values(Processes.process_path) as signed_path from datamodel=Endpoint.Processes where (Processes.process_signature IN (\"AI Squared Inc*\",\"Egis Technology*\",\"Pacnet Internet*\") OR Processes.process_signature_verified=false) Processes.process_path IN (\"*\\\\Users\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\AppData\\\\*\") by host Processes.process_name | rename host as dest] | where isnotnull(signed_proc) | `security_content_ctime(firstTime)`",
+      "kql": "let copykittens_certs = dynamic([\"AI Squared Inc\",\"AI Squared, Inc.\",\"Egis Technology\",\"Pacnet Internet\"]);\nlet suspiciousSign =\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where (InitiatingProcessSignerType in (\"Unsigned\",\"Unknown\") and FolderPath has_any (@\"\\Users\\\", @\"\\ProgramData\\\", @\"\\AppData\\\"))\n        or InitiatingProcessSignatureStatus in (\"Invalid\",\"Expired\",\"Revoked\")\n        or InitiatingProcessPublisher has_any (copykittens_certs)\n    | project SignTime=Timestamp, DeviceId, DeviceName, SignedProc=FileName, SignedPath=FolderPath, Publisher=InitiatingProcessPublisher;\nlet archiveStage =\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName in~ (\"rar.exe\",\"winrar.exe\",\"7z.exe\",\"7za.exe\")\n    | where ProcessCommandLine matches regex @\"(?i)\\s+a\\s+\" \n        and (ProcessCommandLine has_any (\"-hp\",\" -p\") or ProcessCommandLine has \"-m5\" or ProcessCommandLine has \"-v\")\n    | project ArchTime=Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, ArchPath=FolderPath;\nsuspiciousSign\n| join kind=inner archiveStage on DeviceId\n| where ArchTime between (SignTime .. SignTime + 24h)\n| project ArchTime, DeviceName, AccountName, Publisher, SignedProc, SignedPath, ProcessCommandLine\n| order by ArchTime desc",
+      "rationale": "ClearSky's Wilted Tulip report explicitly named the AI Squared Inc. certificate that CopyKittens abused to sign Matryoshka droppers, and follow-on collection used WinRAR with -hp password protection before exfil over their HTTP/DNS proxies (T1090). Pivoting from a stolen-cert binary executing in a user-writable path to a password-protected archive command on the same host within 24 hours is a beha"
+    }
+  ]
+}

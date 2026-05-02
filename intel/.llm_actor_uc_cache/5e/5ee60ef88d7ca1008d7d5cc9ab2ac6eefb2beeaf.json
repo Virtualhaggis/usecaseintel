@@ -1,0 +1,44 @@
+{
+  "name": "DarkHydrus",
+  "ucs": [
+    {
+      "title": "[LLM] DarkHydrus RogueRobin PowerShell DNS-tunneling C2 (TXT-record beaconing)",
+      "description": "Hunts DarkHydrus's signature RogueRobin backdoor, a PowerShell payload that exfils and beacons over DNS TXT queries to actor-controlled subdomains. We look for powershell.exe (or wscript/regsvr32 spawning PS) generating high-volume, high-entropy DNS lookups \u2014 the exact pattern Unit 42 documented for DarkHydrus's Middle East government/edu campaigns.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1071.004",
+        "T1048.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 OR All_Traffic.app=dns by All_Traffic.src host All_Traffic.process_name _time span=10m | rename All_Traffic.* as * | search process_name IN (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\") | stats sum(count) as dns_query_count dc(dest) as unique_resolvers sum(bytes_out) as total_bytes by src process_name | where dns_query_count > 200 AND total_bytes > 50000 | join type=outer src process_name [| tstats summariesonly=true values(Processes.parent_process_name) as parent values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") (Processes.process=\"*-w hidden*\" OR Processes.process=\"*-WindowStyle Hidden*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*Resolve-DnsName*\" OR Processes.process=\"*nslookup*\") by Processes.dest Processes.process_name | rename Processes.dest as src Processes.process_name as process_name] | where isnotnull(cmdline) | sort - dns_query_count",
+      "kql": "let suspiciousPS = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName in~ (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\") | where ProcessCommandLine has_any (\"-w hidden\",\"-WindowStyle Hidden\",\"-enc\",\"FromBase64String\",\"Resolve-DnsName\",\"nslookup\",\"DownloadString\") | project Timestamp, DeviceId, DeviceName, PSPid=ProcessId, PSCmd=ProcessCommandLine, InitiatingProcessFileName; let dnsBeacon = DeviceNetworkEvents | where Timestamp > ago(7d) | where ActionType == \"DnsQueryResponse\" or RemotePort == 53 | where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\") | summarize QueryCount=count(), DistinctNames=dcount(RemoteUrl), Sample=make_set(RemoteUrl, 25), TotalBytes=sum(toint(coalesce(tostring(AdditionalFields),\"0\"))) by DeviceId, InitiatingProcessId, bin(Timestamp, 1h) | where QueryCount > 150 and DistinctNames > 50; dnsBeacon | join kind=inner suspiciousPS on $left.DeviceId == $right.DeviceId and $left.InitiatingProcessId == $right.PSPid | extend SubdomainEntropy = array_length(Sample) | project Timestamp, DeviceName, PSCmd, QueryCount, DistinctNames, TotalBytes, Sample | order by QueryCount desc",
+      "rationale": "DarkHydrus's RogueRobin (and its later Google Drive variant) is uniquely characterized by PowerShell-driven DNS TXT-record tunneling \u2014 Unit 42's July 2018 report documented the specific pattern of PowerShell.exe issuing thousands of TXT lookups to randomized actor subdomains. Random PowerShell + random DNS volume is noisy; the AND of (hidden/encoded PowerShell process) \u2227 (the same PID generating h"
+    },
+    {
+      "title": "[LLM] DarkHydrus Phishery template-injection forced-auth credential harvest",
+      "description": "Hunts DarkHydrus's documented use of the open-source Phishery tool: a spearphished Office document containing a remote template reference (T1221) that, when opened, forces Word/Excel to authenticate to an attacker-controlled URL \u2014 leaking NTLM hashes or prompting for plaintext creds. This is the actor's known initial-access pattern against Middle East government targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1221",
+        "T1187",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.url) as url values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\") (All_Traffic.dest_port IN (80,443,445,139) OR All_Traffic.app IN (\"http\",\"https\",\"smb\")) by All_Traffic.src All_Traffic.process_name | rename All_Traffic.* as * | search NOT (dest IN (\"*.microsoft.com\",\"*.office.com\",\"*.office365.com\",\"*.sharepoint.com\",\"*.officeapps.live.com\",\"*.windows.net\")) | join type=inner src [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN (\"winword.exe\",\"excel.exe\") by Processes.dest Processes.parent_process_name Processes.process | rename Processes.dest as src Processes.parent_process_name as parent Processes.process as office_cmd | search parent IN (\"outlook.exe\",\"explorer.exe\")] | stats values(url) as urls values(dest) as dests values(dest_port) as ports values(office_cmd) as office_cmd by src process_name | where mvcount(urls) > 0",
+      "kql": "let officeChildren = DeviceProcessEvents | where Timestamp > ago(14d) | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\") | where InitiatingProcessParentFileName in~ (\"outlook.exe\",\"explorer.exe\",\"olk.exe\"); let officeOutbound = DeviceNetworkEvents | where Timestamp > ago(14d) | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\") | where RemotePort in (80,443,445,139) | where not(RemoteUrl has_any (\"microsoft.com\",\"office.com\",\"office365.com\",\"sharepoint.com\",\"officeapps.live.com\",\"windows.net\",\"digicert.com\",\"verisign.com\")) | where not(ipv4_is_private(RemoteIP)) | project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessId, RemoteIP, RemoteUrl, RemotePort, ActionType; let suspiciousFiles = DeviceFileEvents | where Timestamp > ago(14d) | where FileName endswith \".docx\" or FileName endswith \".dotx\" or FileName endswith \".xlsx\" or FileName endswith \".rtf\" or FileName endswith \".iqy\" | where InitiatingProcessFileName in~ (\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\") | project FileTimestamp=Timestamp, DeviceId, DroppedFile=FileName, FolderPath; officeOutbound | join kind=inner officeChildren on DeviceId, $left.InitiatingProcessId == $right.ProcessId | join kind=leftouter suspiciousFiles on DeviceId | where Timestamp between ((FileTimestamp) .. (FileTimestamp + 1h)) or isempty(FileTimestamp) | project Timestamp, DeviceName, DroppedFile, OfficeApp=InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort, ParentProcess=InitiatingProcessParentFileName | union (EmailAttachmentInfo | where Timestamp > ago(14d) | where FileType in~ (\"docx\",\"dotx\",\"rtf\",\"iqy\") | join kind=inner (EmailEvents | where Timestamp > ago(14d) | where SenderFromDomain !endswith \"<your-org>.com\") on NetworkMessageId | project Timestamp, RecipientEmailAddress, SenderFromAddress, Subject, FileName, SHA256) | sort by Timestamp desc",
+      "rationale": "DarkHydrus is one of the few named groups whose tradecraft expressly chains Phishery-style template injection with forced SMB/HTTP authentication against Middle East government/edu targets (Unit 42 Dec 2017 Playbook, Jul 2018 report). The detection's discriminator is the AND of (Outlook\u2192Office app spawn) \u2227 (Office app reaching out over 80/443/445/139 to non-Microsoft infrastructure) shortly after "
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "APT28",
+  "ucs": [
+    {
+      "title": "[LLM] APT28 (Forest Blizzard) CVE-2023-23397 Outlook NTLM credential coercion via PidLidReminderFileParameter UNC",
+      "description": "Hunts Outlook coercing NTLM authentication to an attacker-controlled UNC path via a malicious calendar/task/email reminder \u2014 the zero-click primitive Forest Blizzard / GRU Unit 26165 used against NATO ministries, energy and defense orgs from 2022 onward. Outlook.exe initiating outbound SMB/WebDAV to a non-corporate destination is the smoking gun.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1203",
+        "T1003.001",
+        "T1071.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.app=\"outlook.exe\" OR All_Traffic.process=\"*\\\\outlook.exe\") (All_Traffic.dest_port=445 OR All_Traffic.dest_port=139 OR All_Traffic.dest_port=80 OR All_Traffic.dest_port=443) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.app host | `drop_dm_object_name(\"All_Traffic\")` | iplocation dest | search NOT (dest_ip=10.0.0.0/8 OR dest_ip=172.16.0.0/12 OR dest_ip=192.168.0.0/16 OR dest_ip=100.64.0.0/10 OR dest_ip=169.254.0.0/16) | where dest_port=445 OR dest_port=139 OR (dest_port IN (80,443) AND like(dest,\"%@%\")) | `ctime(firstTime)` | `ctime(lastTime)`",
+      "kql": "DeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"outlook.exe\"\n| where RemotePort in (139, 445)\n   or (RemotePort in (80, 443) and RemoteUrl has_any (\"\\\\\\\\\", \"webdav\", \"@SSL\"))\n| where not(ipv4_is_private(RemoteIP))\n| where RemoteIPType !in (\"Loopback\",\"LinkLocal\",\"Reserved\")\n| extend SuspectedCVE = \"CVE-2023-23397\"\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName =~ \"outlook.exe\"\n    | project DeviceId, OutlookPid = ProcessId, OutlookCmd = ProcessCommandLine\n) on $left.InitiatingProcessId == $right.OutlookPid and $left.DeviceId == $right.DeviceId\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl, ReportId, SuspectedCVE\n| order by Timestamp desc",
+      "rationale": "Outlook.exe should never speak SMB/WebDAV to the public internet under any normal business workflow. APT28 weaponized exactly this primitive in CVE-2023-23397 to harvest Net-NTLMv2 hashes from victims worldwide (Microsoft IR mitigation guidance, March 2023, and CERT-EU 2023-014). Microsoft's CVE-2023-23397 script and subsequent Forest Blizzard reporting both call out outbound 445/139 from Outlook "
+    },
+    {
+      "title": "[LLM] APT28 'GooseEgg' post-exploit of CVE-2022-38028 (Print Spooler driver hijack)",
+      "description": "Hunts Forest Blizzard's bespoke GooseEgg launcher (execute.bat / doit.bat / servtask.bat dropped in C:\\ProgramData\\) tampering with the Print Spooler's JavaScript constraints file to gain SYSTEM, then executing follow-on creds tooling. Microsoft attributed GooseEgg exclusively to Forest Blizzard / GRU 26165 in April 2024.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1068",
+        "T1574.002",
+        "T1059.003",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as child_proc values(Processes.user) as user values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.parent_process_name=\"spoolsv.exe\" AND (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\") OR match(Processes.process,\"(?i)\\\\\\\\ProgramData\\\\\\\\(execute|doit|servtask)\\.bat\") OR match(Processes.process,\"(?i)wayzgoose|MPDW-Constraints\\.js\")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name host | `drop_dm_object_name(\"Processes\")` | append [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path=\"*\\\\Windows\\\\System32\\\\DriverStore\\\\FileRepository\\\\*\\\\MPDW-Constraints.js\" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path host | `drop_dm_object_name(\"Filesystem\")`] | `ctime(firstTime)` | `ctime(lastTime)`",
+      "kql": "let goose_paths = dynamic([\"\\\\ProgramData\\\\execute.bat\",\"\\\\ProgramData\\\\doit.bat\",\"\\\\ProgramData\\\\servtask.bat\",\"wayzgoose\"]);\nlet susp_children = dynamic([\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"net.exe\",\"net1.exe\",\"reg.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"spoolsv.exe\"\n| where FileName in~ (susp_children)\n   or ProcessCommandLine has_any (goose_paths)\n   or ProcessCommandLine matches regex @\"(?i)MPDW-Constraints\\.js\"\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, ReportId\n| union (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where (FolderPath has @\"\\Windows\\System32\\DriverStore\\FileRepository\\\" and FileName =~ \"MPDW-Constraints.js\" and ActionType in (\"FileCreated\",\"FileModified\"))\n         or (FolderPath has @\"\\ProgramData\\\" and FileName in~ (\"execute.bat\",\"doit.bat\",\"servtask.bat\"))\n    | project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, ReportId\n)\n| order by Timestamp desc",
+      "rationale": "GooseEgg is a Forest Blizzard-unique tool \u2014 Microsoft's April 2024 'Forest Blizzard uses GooseEgg' threat-intel publication tied this exact filename set (execute.bat, doit.bat, servtask.bat, wayzgoose*.dll) and the MPDW-Constraints.js tampering directly to GRU Unit 26165 going back to at least 2020. Spoolsv.exe spawning cmd/powershell or modifying JavaScript constraints files in DriverStore is ove"
+    }
+  ]
+}

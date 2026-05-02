@@ -1,0 +1,48 @@
+{
+  "name": "APT1",
+  "ucs": [
+    {
+      "title": "[LLM] APT1 (Comment Crew / Unit 61398) email staging via password-protected RAR archives of PST/OST stores",
+      "description": "Hunts the signature APT1 collection-then-exfil chain documented in the Mandiant APT1 report: their GETMAIL/MAPIGET tooling harvests Outlook PST/OST or .msg files, which are then staged into password-protected RAR archives (often named with single-letter or date-based filenames) prior to exfiltration. The combination of touching a local mail store and creating an encrypted RAR within the same host/user session is highly characteristic of Comment Crew tradecraft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1114.001",
+        "T1119",
+        "T1560.001",
+        "T1005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_name IN (\"rar.exe\",\"winrar.exe\",\"7z.exe\",\"7za.exe\") AND (Processes.process=\"*-hp*\" OR Processes.process=\"*-p\\\"*\" OR Processes.process=\" -p *\" OR Processes.process=\"* a *\")) by Processes.dest Processes.user Processes.process_id Processes.parent_process_id _time span=1h | `drop_dm_object_name(Processes)` | join type=inner dest user [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (\"*.pst\",\"*.ost\",\"*.msg\",\"*.eml\") OR Filesystem.file_path=\"*\\\\Microsoft\\\\Outlook\\\\*\") by Filesystem.dest Filesystem.user Filesystem.process_id _time span=1h | `drop_dm_object_name(Filesystem)` | rename count as mail_file_touch_count | where mail_file_touch_count >= 1] | where lastTime - firstTime <= 3600 | eval description=\"APT1 email-archive staging: password-protected RAR created in same session that touched local mail store\" | table firstTime lastTime dest user parent_process_name process mail_file_touch_count description",
+      "kql": "let window = 1h;\nlet archivers = dynamic([\"rar.exe\",\"winrar.exe\",\"7z.exe\",\"7za.exe\"]);\nlet ArchiveEvents = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (archivers)\n| where ProcessCommandLine has_any (\" -hp\", \" -p\\\"\", \" -p \", \" a \")\n| project ArchiveTime=Timestamp, DeviceId, DeviceName, AccountName, ArchiveCmd=ProcessCommandLine, ArchiveProc=FileName, ArchiveParent=InitiatingProcessFileName;\nlet MailFileEvents = DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FileName endswith \".pst\" or FileName endswith \".ost\" or FileName endswith \".msg\" or FileName endswith \".eml\"\n   or FolderPath has @\"\\Microsoft\\Outlook\\\"\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| project MailTime=Timestamp, DeviceId, AccountName=InitiatingProcessAccountName, MailFile=FileName, MailFolder=FolderPath, MailProc=InitiatingProcessFileName;\nArchiveEvents\n| join kind=inner (MailFileEvents) on DeviceId, AccountName\n| where abs(datetime_diff('second', ArchiveTime, MailTime)) <= 3600\n| summarize MailFiles=make_set(MailFile, 25), MailProcs=make_set(MailProc, 10), FirstMail=min(MailTime), LastArchive=max(ArchiveTime) by DeviceName, AccountName, ArchiveCmd, ArchiveParent\n| extend Detection=\"APT1/Comment Crew GETMAIL+RAR exfil staging pattern\"\n| order by LastArchive desc",
+      "rationale": "The Mandiant APT1 report explicitly documents Unit 61398's tooling (GETMAIL, MAPIGET) and their habitual use of RAR with the -hp (header+payload encryption) flag to package stolen email before exfil. Generic ransomware crews compress data, but few legitimate enterprise workflows touch PST/OST and produce a password-encrypted RAR within the same user session on the same host. The temporal join (wit"
+    },
+    {
+      "title": "[LLM] APT1 cmd.exe post-exploitation recon burst (Mandiant APT1 'standard hello' enumeration sequence)",
+      "description": "Detects the canonical APT1 post-access reconnaissance burst: within minutes of landing on a host, operators spawn cmd.exe and run a tightly-clustered sequence of enumeration commands (ipconfig /all, net view, net view /domain, net group \"domain admins\" /domain, net localgroup administrators, tasklist /v, netstat -ano, systeminfo, net use). Mandiant's APT1 report calls this the operator's 'hello' to a new host. The chain is what fingerprints the actor \u2014 any 4+ of these from one cmd.exe parent inside a 10-minute window is highly indicative of APT1 / Comment Crew hands-on-keyboard.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1059.003",
+        "T1016",
+        "T1049",
+        "T1057",
+        "T1087.001",
+        "T1007",
+        "T1135"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(Processes.process) as commands min(_time) as firstTime max(_time) as lastTime dc(Processes.process_name) as distinct_procs from datamodel=Endpoint.Processes where Processes.parent_process_name=\"cmd.exe\" AND (Processes.process_name IN (\"ipconfig.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"netstat.exe\",\"systeminfo.exe\",\"whoami.exe\",\"nbtstat.exe\",\"hostname.exe\",\"query.exe\")) by Processes.dest Processes.user Processes.parent_process_id _span=10m | `drop_dm_object_name(Processes)` | eval recon_hits=mvcount(commands) | where recon_hits >= 4 AND (lastTime - firstTime) <= 600 | eval has_netview=if(match(mvjoin(commands,\"|\"),\"net(1)?\\.exe\\s+view\"),1,0), has_domadmins=if(match(mvjoin(commands,\"|\"),\"domain admins\"),1,0), has_ipconfig=if(match(mvjoin(commands,\"|\"),\"ipconfig.*\\/all\"),1,0), has_tasklist=if(match(mvjoin(commands,\"|\"),\"tasklist.*\\/v\"),1,0), has_netstat=if(match(mvjoin(commands,\"|\"),\"netstat.*-ano\"),1,0) | eval apt1_signature_score=has_netview+has_domadmins+has_ipconfig+has_tasklist+has_netstat | where apt1_signature_score >= 3 | eval description=\"Probable APT1 hands-on-keyboard recon burst\" | table firstTime lastTime dest user recon_hits apt1_signature_score commands description",
+      "kql": "let window = 10m;\nlet ReconBins =\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"cmd.exe\"\n| where FileName in~ (\"ipconfig.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"netstat.exe\",\"systeminfo.exe\",\"whoami.exe\",\"nbtstat.exe\",\"hostname.exe\",\"query.exe\")\n| extend Bin=bin(Timestamp, window)\n| extend\n    has_netview = iff(ProcessCommandLine matches regex @\"(?i)\\bnet1?\\.exe\\s+view\\b\", 1, 0),\n    has_domadmins = iff(ProcessCommandLine has \"domain admins\", 1, 0),\n    has_ipconfig_all = iff(ProcessCommandLine matches regex @\"(?i)ipconfig.*\\/all\", 1, 0),\n    has_tasklist_v = iff(ProcessCommandLine matches regex @\"(?i)tasklist.*\\/v\", 1, 0),\n    has_netstat_ano = iff(ProcessCommandLine matches regex @\"(?i)netstat.*-ano\", 1, 0),\n    has_netuse = iff(ProcessCommandLine matches regex @\"(?i)\\bnet1?\\.exe\\s+use\\b\", 1, 0),\n    has_localgrp = iff(ProcessCommandLine matches regex @\"(?i)localgroup\\s+administrators\", 1, 0)\n| summarize\n    ReconCmds = make_list(ProcessCommandLine, 25),\n    DistinctTools = dcount(FileName),\n    APT1Score = sum(has_netview)+sum(has_domadmins)+sum(has_ipconfig_all)+sum(has_tasklist_v)+sum(has_netstat_ano)+sum(has_netuse)+sum(has_localgrp),\n    FirstSeen = min(Timestamp),\n    LastSeen = max(Timestamp),\n    ParentCmd = any(InitiatingProcessCommandLine),\n    Grandparent = any(InitiatingProcessParentFileName)\n  by DeviceName, AccountName, InitiatingProcessId, Bin\n| where DistinctTools >= 4 and APT1Score >= 3;\nReconBins\n| extend Detection = \"APT1/Comment Crew operator hello sequence (cmd.exe recon burst)\"\n| project FirstSeen, LastSeen, DeviceName, AccountName, Grandparent, ParentCmd, DistinctTools, APT1Score, ReconCmds, Detection\n| order by LastSeen desc",
+      "rationale": "Mandiant's APT1 report (and follow-on FireEye/CrowdStrike reporting on Comment Panda) repeatedly highlights this exact enumeration set as the operator's first action after gaining access \u2014 they are creatures of habit running the same recipe by hand from cmd.exe. The signature-score gate (must include domain admins enumeration OR net view OR netstat -ano combos) separates this from a sysadmin runni"
+    }
+  ]
+}

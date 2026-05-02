@@ -1,0 +1,49 @@
+{
+  "name": "Gorgon Group",
+  "ucs": [
+    {
+      "title": "[LLM] Gorgon Group maldoc chain: Office app spawning hidden PowerShell to URL-shortener payload host",
+      "description": "Hunts Gorgon Group's signature initial-access-to-stager chain where a weaponized Office attachment (Word/Excel) launches PowerShell with hidden window flags and reaches out to bit.ly/pastebin/blogspot to retrieve a stage-2 commodity RAT (njRAT, NanoCore, Remcos, RevengeRAT, Lokibot). This combination of Office parent + hidden PowerShell + URL-shortener egress is documented across multiple Subaat / Gorgon Group operations against UK/US/Spanish/Russian government targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1059.005",
+        "T1564.003",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\") Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process \n| `drop_dm_object_name(Processes)` \n| where match(process,\"(?i)(-w(in)?\\s*(1|hidden)|-windowstyle\\s*hidden|-nop|-noni|-enc(odedcommand)?|FromBase64String|DownloadString|DownloadFile|IEX|Invoke-Expression)\") \n| join type=left host pid [\n    | tstats summariesonly=true values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(Web.url) as url from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=\"powershell.exe\" OR All_Traffic.process_name=\"powershell.exe\" by All_Traffic.src All_Traffic.process_id host \n    | rename All_Traffic.src as host All_Traffic.process_id as pid \n  ] \n| eval suspect_host=if(match(url,\"(?i)(bit\\.ly|tinyurl|j\\.mp|t\\.co|goo\\.gl|is\\.gd|pastebin\\.com|paste\\.ee|hastebin|blogspot\\.com|blogger\\.com|drive\\.google\\.com|onedrive|raw\\.githubusercontent)\"),1,0) \n| where suspect_host=1 OR cmdline_match=1 \n| convert ctime(firstTime) ctime(lastTime) \n| table firstTime lastTime host Processes.user parent_process_name process_name process dest url",
+      "kql": "let officeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\"]);\nlet susShorteners = dynamic([\"bit.ly\",\"tinyurl.com\",\"j.mp\",\"t.co\",\"goo.gl\",\"is.gd\",\"pastebin.com\",\"paste.ee\",\"hastebin.com\",\"blogspot.com\",\"blogger.com\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (officeParents)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(-w(in)?\\s*(1|hidden)|-windowstyle\\s+hidden|-nop|-noni|-enc(odedcommand)?|FromBase64String|DownloadString|DownloadFile|IEX|Invoke-Expression|Net\\.WebClient)\"\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessId\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n    | extend host=tostring(parse_url(RemoteUrl).Host)\n    | where RemoteUrl has_any (susShorteners) or host has_any (susShorteners) or RemoteIPType==\"Public\"\n    | project NetTime=Timestamp, DeviceName, NetPid=InitiatingProcessId, RemoteUrl, RemoteIP, RemotePort\n) on DeviceName\n| where ProcessId == NetPid and abs(datetime_diff('second', NetTime, Timestamp)) < 120\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, RemoteUrl, RemoteIP",
+      "rationale": "Unit 42's Subaat/Gorgon reporting (Aug 2018) and follow-on tracking show Gorgon Group consistently chains macro-laden Office lures \u2192 cmd/PowerShell with hidden-window + base64 \u2192 fetch from bit.ly or blogspot to stage njRAT/NanoCore/Remcos. The triple-correlation (Office parent + obfuscated PS flags + shortener egress within 120s on the same PID) is far narrower than a generic 'Office spawns PowerS"
+    },
+    {
+      "title": "[LLM] Gorgon Group .NET LOLBIN process hollowing (MSBuild/RegAsm/InstallUtil) loading commodity RAT",
+      "description": "Detects Gorgon Group's hallmark stage-2 evasion: hollowing the unmanaged child of a Microsoft .NET trusted binary (RegAsm.exe, MSBuild.exe, InstallUtil.exe, AddInProcess.exe) to execute njRAT/NanoCore/RevengeRAT/Remcos in-memory while inheriting the LOLBIN's signed reputation. The combination of a script-host or Office/PowerShell parent \u2192 .NET LOLBIN child running from %APPDATA%/%TEMP% \u2192 outbound C2 is highly characteristic of Gorgon's loaders.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1055.012",
+        "T1055.002",
+        "T1218",
+        "T1547.001",
+        "T1112",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN (\"RegAsm.exe\",\"RegSvcs.exe\",\"MSBuild.exe\",\"InstallUtil.exe\",\"AddInProcess.exe\",\"AddInProcess32.exe\",\"AppLaunch.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_id \n| `drop_dm_object_name(Processes)` \n| eval susParent=if(match(parent_process_name,\"(?i)^(powershell|cmd|wscript|cscript|mshta|winword|excel|outlook|explorer)\\.exe$\"),1,0) \n| eval susPath=if(match(process_path,\"(?i)\\\\\\\\(AppData|Temp|ProgramData|Public|Users\\\\\\\\Public)\\\\\\\\\"),1,0) \n| eval bareCmd=if(match(cmdline,\"(?i)(RegAsm|RegSvcs|MSBuild|InstallUtil|AddInProcess|AppLaunch)\\.exe\\s*$\"),1,0) \n| where susParent=1 OR susPath=1 OR bareCmd=1 \n| join type=left host process_id [\n    | tstats summariesonly=true values(All_Traffic.dest) as c2_ip values(All_Traffic.dest_port) as c2_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"RegAsm.exe\",\"RegSvcs.exe\",\"MSBuild.exe\",\"InstallUtil.exe\",\"AddInProcess.exe\",\"AppLaunch.exe\") AND All_Traffic.dest_category!=\"internal\" by All_Traffic.src All_Traffic.process_id \n    | rename All_Traffic.src as host All_Traffic.process_id as process_id\n  ] \n| where isnotnull(c2_ip) OR susParent=1 \n| convert ctime(firstTime) ctime(lastTime) \n| table firstTime lastTime host user parent_process_name process_name process_path cmdline c2_ip c2_port",
+      "kql": "let dotnetLolbins = dynamic([\"regasm.exe\",\"regsvcs.exe\",\"msbuild.exe\",\"installutil.exe\",\"addinprocess.exe\",\"addinprocess32.exe\",\"applaunch.exe\"]);\nlet susParents = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"explorer.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (dotnetLolbins)\n| extend susParent = iff(InitiatingProcessFileName in~ (susParents), 1, 0)\n| extend susPath  = iff(FolderPath matches regex @\"(?i)\\\\(AppData|Temp|ProgramData|Public)\\\\\", 1, 0)\n| extend bareCmd  = iff(ProcessCommandLine matches regex @\"(?i)(regasm|regsvcs|msbuild|installutil|addinprocess|applaunch)\\.exe\\s*$\", 1, 0)\n| where susParent == 1 or susPath == 1 or bareCmd == 1\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, ProcessId\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (dotnetLolbins)\n    | where RemoteIPType == \"Public\"\n    | project NetTime=Timestamp, DeviceName, NetPid=InitiatingProcessId, RemoteIP, RemotePort, RemoteUrl\n) on DeviceName\n| where (ProcessId == NetPid and abs(datetime_diff('second', NetTime, Timestamp)) < 600) or isempty(NetPid)\n| union (\n    DeviceRegistryEvents\n    | where Timestamp > ago(7d)\n    | where RegistryKey has_any (@\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\")\n    | where InitiatingProcessFileName in~ (dotnetLolbins) or RegistryValueData matches regex @\"(?i)(regasm|msbuild|installutil|addinprocess|applaunch)\\.exe\"\n    | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, RegistryKey, RegistryValueName, RegistryValueData\n)",
+      "rationale": "Unit 42 and Morphisec analyses of Gorgon/Subaat campaigns repeatedly show their .NET-based loaders (often built with derivatives of Aspire/CyaX) using process hollowing into RegAsm.exe and MSBuild.exe to evade reputation-based AV \u2014 RegAsm running with no arguments, from %AppData%, parented by powershell.exe or wscript.exe, and beaconing to dynamic-DNS C2 is a near-pathognomonic Gorgon pattern. Pur"
+    }
+  ]
+}

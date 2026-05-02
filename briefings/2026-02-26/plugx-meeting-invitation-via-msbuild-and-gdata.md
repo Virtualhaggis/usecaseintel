@@ -38,12 +38,86 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PlugX persistence: HKCU Run value 'G DATA' pointing to Public\GDatas\Avk.exe
+
+`UC_189_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run*" Registry.registry_value_name="G DATA" Registry.registry_value_data="*\\Users\\Public\\GDatas\\Avk.exe*" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run"
+| where RegistryValueName =~ "G DATA"
+| where RegistryValueData has_cs @"\Users\Public\GDatas\Avk.exe"
+| project Timestamp, DeviceName, AccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
+```
+
+### [LLM] G DATA Avk.exe side-loaded from %Public%\GDatas with two numeric runtime arguments
+
+`UC_189_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_name=Avk.exe OR Processes.original_file_name=Avk.exe) Processes.process_path="*\\Users\\Public\\GDatas\\*" by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | rex field=process "Avk\.exe\"?\s+(?<arg1>\d{1,5})\s+(?<arg2>\d{1,5})" | where isnotnull(arg1) AND isnotnull(arg2) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where FileName =~ "Avk.exe" or ProcessVersionInfoOriginalFileName =~ "Avk.exe"
+| where FolderPath has_cs @"\Users\Public\GDatas\"
+| where ProcessCommandLine matches regex @"(?i)Avk\.exe\"?\s+\d{1,5}\s+\d{1,5}\s*$"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, SHA256
+| join kind=leftouter (
+    DeviceImageLoadEvents
+    | where FileName =~ "Avk.dll"
+    | where FolderPath has_cs @"\Users\Public\GDatas\"
+    | project Timestamp, DeviceName, DllSHA256=SHA256, DllFolderPath=FolderPath
+) on DeviceName
+```
+
+### [LLM] PlugX Meeting-Invitation C2 beacons to decoraat[.]net / decoorat[.]net / gesecole[.]net
+
+`UC_189_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query IN ("decoraat.net","decoorat.net","*.decoraat.net","*.decoorat.net","gesecole.net","*.gesecole.net","onedown.gesecole.net","onedow.gesecole.net") by DNS.query DNS.src | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Web where Web.url="*decoraat.net*" OR Web.url="*decoorat.net*" OR Web.url="*gesecole.net*" OR Web.dest="decoraat.net" OR Web.dest="decoorat.net" by Web.src Web.dest Web.url Web.user_agent Web.app | `drop_dm_object_name(Web)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let plugx_domains = dynamic(["decoraat.net","decoorat.net","gesecole.net","onedown.gesecole.net","onedow.gesecole.net"]);
+DeviceNetworkEvents
+| where ActionType in ("ConnectionSuccess","DnsConnectionInspected","HttpConnectionInspected","ConnectionAttempt")
+| where RemoteUrl has_any (plugx_domains) or tostring(parse_json(AdditionalFields).query) has_any (plugx_domains)
+| extend SuspiciousInitiator = iff(InitiatingProcessFileName in~ ("Avk.exe","MSBuild.exe") or InitiatingProcessFolderPath has @"\Users\Public\GDatas\", 1, 0)
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, SuspiciousInitiator
+| union (
+    DeviceEvents
+    | where ActionType == "DnsQueryResponse"
+    | extend q = tostring(parse_json(AdditionalFields).DnsQueryString)
+    | where q has_any (plugx_domains)
+    | project Timestamp, DeviceName, RemoteUrl=q, RemoteIP="", RemotePort=int(0), InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, SuspiciousInitiator=0
+)
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -302,4 +376,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

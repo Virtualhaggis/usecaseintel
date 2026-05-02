@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unit42 GenAI extension campaign — beacon to qubecare.ai / reverserecruiting.io / browser.cash
 
-`UC_13_11` · phase: **c2** · confidence: **High**
+`UC_24_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Malicious GenAI Chrome extension installed (Unit42 Apr-2026 IDs on disk)
 
-`UC_13_12` · phase: **install** · confidence: **High**
+`UC_24_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceFileEvents
 
 ### [LLM] AI provider API keys exfiltrated via Reverse-Recruiting custom HTTP headers
 
-`UC_13_13` · phase: **actions** · confidence: **Medium**
+`UC_24_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -401,7 +401,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_13_10` · phase: **exploit** · confidence: **High**
+`UC_24_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

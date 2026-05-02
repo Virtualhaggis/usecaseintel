@@ -1,0 +1,45 @@
+{
+  "name": "Aquatic Panda",
+  "ucs": [
+    {
+      "title": "[LLM] Aquatic Panda (G0143) Log4Shell exploitation: VMware Horizon Tomcat spawning PowerShell/cmd recon chain",
+      "description": "Hunts the signature Aquatic Panda intrusion vector documented by CrowdStrike (Dec 2021): exploitation of CVE-2021-44228 (Log4Shell) against internet-facing VMware Horizon servers, where the Apache Tomcat service (ws_TomcatService.exe) spawns PowerShell/cmd to perform host enumeration (whoami, ipconfig, net group 'domain admins'). This parent-child tree is the defining IOC of Aquatic Panda's initial access on Horizon estates.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1059.001",
+        "T1059.003",
+        "T1082",
+        "T1087"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as child_procs from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"ws_TomcatService.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"java.exe\",\"javaw.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wmic.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"nltest.exe\",\"certutil.exe\",\"bitsadmin.exe\") AND (Processes.parent_process_path=\"*VMware*\" OR Processes.parent_process_path=\"*Horizon*\" OR Processes.parent_process_path=\"*Tomcat*\") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name host | `drop_dm_object_name(Processes)` | eventstats dc(process_name) as distinct_children by dest | where distinct_children>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where InitiatingProcessFileName in~ (\"ws_TomcatService.exe\", \"tomcat.exe\", \"tomcat9.exe\", \"java.exe\", \"javaw.exe\")\n| where InitiatingProcessFolderPath has_any (\"VMware\", \"Horizon\", \"Tomcat\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wmic.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"nltest.exe\",\"certutil.exe\",\"bitsadmin.exe\")\n| extend SuspIndicator = case(\n    ProcessCommandLine has_any (\"domain admins\",\"DownloadString\",\"IEX\",\"-enc\",\"FromBase64String\",\"hxxp\",\"http\"), \"high\",\n    \"medium\")\n| summarize ChildProcs = make_set(FileName), CmdLines = make_set(ProcessCommandLine), Count = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, AccountName\n| where array_length(ChildProcs) >= 2\n| order by LastSeen desc",
+      "rationale": "ws_TomcatService.exe is a static, low-volume process unique to VMware Horizon Connection Servers. It has essentially zero legitimate reason to spawn cmd/PowerShell or built-in recon binaries. CrowdStrike's public Aquatic Panda case study identifies precisely this chain (Tomcat \u2192 cmd \u2192 whoami/ipconfig/net group) as the actor's calling card during their late-2021 Horizon intrusions, distinguishing t"
+    },
+    {
+      "title": "[LLM] Aquatic Panda (G0143) LSASS credential theft via comsvcs.dll MiniDump LOLBin",
+      "description": "Detects Aquatic Panda's documented LSASS dumping technique using rundll32 to invoke the MiniDump (ordinal #24) export of comsvcs.dll \u2014 a fileless living-off-the-land method preferred by this China-nexus group (per CrowdStrike) over Mimikatz to evade AV signatures while staging credentials for lateral movement to telecom/tech targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.001",
+        "T1218.011",
+        "T1036.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name IN (\"rundll32.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") AND Processes.process=\"*comsvcs.dll*\" AND (Processes.process=\"*MiniDump*\" OR Processes.process=\"*#24*\" OR Processes.process=\"*,24*\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name host | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where (FileName =~ \"rundll32.exe\" or InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\"))\n| where ProcessCommandLine has \"comsvcs\"\n| where ProcessCommandLine has_any (\"MiniDump\", \"#24\", \" 24 \", \",24 \", \" 24,\")\n| extend TargetIsLsass = ProcessCommandLine has_any (\"lsass\", \"624\", \"\\\"lsass.exe\\\"\") or ProcessCommandLine matches regex @\"\\b\\d{2,5}\\b\\s+[A-Za-z]:\\\\\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, TargetIsLsass\n| order by Timestamp desc",
+      "rationale": "The `rundll32 comsvcs.dll, MiniDump <pid> <path> full` pattern has no benign administrative use \u2014 the export is undocumented and only invoked by attackers. CrowdStrike's Aquatic Panda incident report explicitly calls out this LOLBin pattern as part of the actor's hands-on-keyboard credential staging after Log4Shell footholds, making it a high-confidence indicator of this specific China-nexus opera"
+    }
+  ]
+}

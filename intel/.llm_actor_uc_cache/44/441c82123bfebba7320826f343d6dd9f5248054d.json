@@ -1,0 +1,47 @@
+{
+  "name": "Rocke",
+  "ucs": [
+    {
+      "title": "[LLM] Rocke (Iron Cybercrime) cloud-agent uninstall preceding cryptojacker drop on Linux",
+      "description": "Hunts Rocke's signature anti-defense move: silently uninstalling Alibaba Cloud (Aegis/aliyun-service) and Tencent Cloud (YunJing/qcloud-monitor/BCM) workload-protection agents on Linux servers before staging an XMRig/Monero miner. Talos and Palo Alto Unit 42 documented this exact agent-removal chain as unique to Rocke after Apache Struts / Oracle WebLogic / Adobe ColdFusion exploitation (T1190).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1518.001",
+        "T1562.001",
+        "T1059.004",
+        "T1496.001",
+        "T1190"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where (Processes.process IN (\"*aegis_uninstall*\",\"*quartz_uninstall*\",\"*aegis_update*\",\"*qcloud-monitor*\",\"*YunJing*\",\"*aliyun-service*\",\"*bcm-agent*\") OR (Processes.process=\"*pkill*\" AND Processes.process IN (\"*aliyun*\",\"*YunJing*\",\"*aegis*\",\"*qcloud*\")) OR (Processes.process=\"*systemctl*\" AND Processes.process=\"*stop*\" AND Processes.process IN (\"*aegis*\",\"*aliyun*\",\"*qcloud*\")) OR (Processes.process IN (\"*wget*\",\"*curl*\") AND Processes.process IN (\"*update.aegis.aliyun.com*\",\"*uninstall.sh*\",\"*pastebin.com*\",\"*gitee.com*\"))) by Processes.dest Processes.user Processes.parent_process_name host \n| `drop_dm_object_name(Processes)` \n| join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process IN (\"*xmrig*\",\"*stratum+tcp*\",\"*--donate-level*\",\"*cryptonight*\",\"*minergate*\",\"*xmr-stak*\") OR Processes.process=\"*chmod +x*\" AND Processes.process IN (\"*kerberods*\",\"*sustes*\",\"*xmrig*\",\"*Watchbog*\")) by Processes.dest | `drop_dm_object_name(Processes)`] \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` \n| eval risk_score=85, threat_actor=\"Rocke (Iron Cybercrime, G0106)\"",
+      "kql": "let agent_kill = DeviceProcessEvents \n| where Timestamp > ago(14d) \n| where DeviceInfo has \"Linux\" or InitiatingProcessFolderPath startswith \"/\" or FolderPath startswith \"/\" \n| where ProcessCommandLine has_any (\"aegis_uninstall\",\"quartz_uninstall\",\"qcloud-monitor\",\"YunJing\",\"aliyun-service\",\"bcm-agent\") \n   or (ProcessCommandLine has \"pkill\" and ProcessCommandLine has_any (\"aliyun\",\"YunJing\",\"aegis\",\"qcloud\")) \n   or (ProcessCommandLine has_any (\"systemctl stop\",\"service stop\") and ProcessCommandLine has_any (\"aegis\",\"aliyun\",\"qcloud\")) \n   or (ProcessCommandLine has_any (\"wget\",\"curl\") and ProcessCommandLine has_any (\"update.aegis.aliyun.com\",\"/uninstall.sh\",\"pastebin.com\",\"gitee.com/c-3-p-o\")) \n| project AgentKillTime=Timestamp, DeviceId, DeviceName, AccountName, AgentKillCmd=ProcessCommandLine, InitiatingProcessCommandLine; \nlet miner_drop = DeviceProcessEvents \n| where Timestamp > ago(14d) \n| where ProcessCommandLine has_any (\"xmrig\",\"stratum+tcp\",\"--donate-level\",\"cryptonight\",\"xmr-stak\",\"kerberods\",\"sustes\",\"watchbog\",\"libprocesshider\") \n| project MinerTime=Timestamp, DeviceId, MinerCmd=ProcessCommandLine, MinerProc=FileName; \nagent_kill \n| join kind=inner miner_drop on DeviceId \n| where datetime_diff('minute', MinerTime, AgentKillTime) between (-30 .. 240) \n| extend ThreatActor=\"Rocke / Iron Cybercrime (G0106)\", KillChain=\"Defense Evasion -> Resource Hijacking\" \n| project AgentKillTime, MinerTime, DeviceName, AccountName, AgentKillCmd, MinerCmd, ThreatActor",
+      "rationale": "The combination 'uninstall Alibaba/Tencent cloud agent THEN run XMRig/cryptonight' is documented by Talos (Aug 2018), Unit 42 (Jan 2019 'Malware Used by Rocke Group Evolves to Evade Detection by Cloud Security Products') and Anomali as Rocke-specific TTP, distinguishing them from generic coinminer worms (Outlaw, TeamTNT) which do not target Aegis/YunJing. Time-bounding the two events to < 4h plus "
+    },
+    {
+      "title": "[LLM] Rocke libprocesshider LD_PRELOAD rootkit hiding XMRig miner",
+      "description": "Detects Rocke's hallmark stealth chain: dropping libprocesshider.so and injecting it via /etc/ld.so.preload (T1574.006) so that ps/top/lsof cannot see the miner process, immediately followed by an XMRig/Monero binary launched from a hidden directory (T1564.001) with cron persistence (T1053.003). Unit 42 specifically attributed this libprocesshider variant to Rocke in 2019.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.006",
+        "T1014",
+        "T1564.001",
+        "T1053.003",
+        "T1496.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"/etc/ld.so.preload\" OR Filesystem.file_name=\"libprocesshider.so\" OR Filesystem.file_path IN (\"/usr/local/lib/libprocesshider.so\",\"/lib64/libprocesshider.so\")) AND Filesystem.action IN (\"created\",\"modified\",\"write\") by Filesystem.dest Filesystem.user \n| `drop_dm_object_name(Filesystem)` \n| join type=inner dest [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process IN (\"*xmrig*\",\"*stratum+tcp*\",\"*cryptonight*\",\"*--donate-level*\",\"*kerberods*\",\"*sustes*\") OR (Processes.process=\"*crontab*\" AND Processes.process IN (\"*pastebin.com*\",\"*gitee.com*\",\"*systemd-network*\",\"*.lib*\"))) by Processes.dest Processes.process Processes.user | `drop_dm_object_name(Processes)`] \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` \n| eval threat_actor=\"Rocke (G0106)\", risk_score=90",
+      "kql": "let preload_drop = DeviceFileEvents \n| where Timestamp > ago(14d) \n| where (FolderPath == \"/etc/ld.so.preload\" or FileName == \"ld.so.preload\" or FileName endswith \"libprocesshider.so\" or FolderPath has_any (\"/usr/local/lib/libprocesshider\",\"/lib64/libprocesshider\")) \n| where ActionType in (\"FileCreated\",\"FileModified\") \n| project DropTime=Timestamp, DeviceId, DeviceName, DroppedPath=FolderPath, DroppedFile=FileName, InitiatingProcessCommandLine, InitiatingProcessFileName; \nlet miner_or_cron = DeviceProcessEvents \n| where Timestamp > ago(14d) \n| where ProcessCommandLine has_any (\"xmrig\",\"stratum+tcp\",\"cryptonight\",\"--donate-level\",\"xmr-stak\",\"kerberods\",\"sustes\") \n   or (ProcessCommandLine has \"crontab\" and ProcessCommandLine has_any (\"pastebin.com\",\"gitee.com/c-3-p-o\",\"systemd-network\",\"/.lib\",\"/tmp/.\")) \n   or (FolderPath has_any (\"/tmp/.\",\"/var/tmp/.\",\"/dev/shm/.\") and FileName has_any (\"xmrig\",\"kerberods\",\"sustes\",\"watchbog\")) \n| project ExecTime=Timestamp, DeviceId, ExecCmd=ProcessCommandLine, ExecFile=FileName, ExecFolder=FolderPath; \npreload_drop \n| join kind=inner miner_or_cron on DeviceId \n| where datetime_diff('minute', ExecTime, DropTime) between (-60 .. 360) \n| extend ThreatActor=\"Rocke / Iron Cybercrime (G0106)\", Technique=\"T1574.006 + T1496.001\" \n| project DropTime, ExecTime, DeviceName, DroppedPath, ExecCmd, InitiatingProcessCommandLine, ThreatActor",
+      "rationale": "Modification of /etc/ld.so.preload is exceedingly rare in production Linux fleets (legitimate use is limited to a handful of agents like Datadog, libsnoopy). When it occurs alongside a cryptonight/XMRig launch or pastebin/gitee-fed cron entry on the same host within hours, the chain is essentially pathognomonic for the Rocke libprocesshider variant published by Unit 42 (2019) and re-used in the Pr"
+    }
+  ]
+}

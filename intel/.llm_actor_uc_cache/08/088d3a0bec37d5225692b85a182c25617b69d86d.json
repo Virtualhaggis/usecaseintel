@@ -1,0 +1,53 @@
+{
+  "name": "LazyScripter",
+  "ucs": [
+    {
+      "title": "[LLM] LazyScripter (G0140) IATA-themed mshta.exe execution pulling staged payloads from GitHub",
+      "description": "Hunts LazyScripter's signature delivery chain: spearphishing emails (often impersonating IATA, BSPlink, or airline job-offer lures) drop or link to .hta/.vbs/.bat files that spawn mshta.exe or wscript.exe to fetch second-stage scripts from raw.githubusercontent.com or pastebin-style infra. This combination of airline-sector lure + LOLBin + GitHub staging is the actor's most consistent fingerprint per MalwareBytes (Feb 2021).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1566.002",
+        "T1218.005",
+        "T1059.005",
+        "T1059.003",
+        "T1105",
+        "T1102",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"powershell.exe\")) (Processes.parent_process_name IN (\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"explorer.exe\",\"chrome.exe\",\"msedge.exe\")) AND (Processes.process IN (\"*raw.githubusercontent.com*\",\"*github.io*\",\"*pastebin.com*\",\"*paste.ee*\",\"*.hta*\",\"*IATA*\",\"*BSPlink*\",\"*Job*Offer*\",\"*airline*\")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats summariesonly=true values(All_Traffic.dest) as conn_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (\"*githubusercontent.com\",\"*github.io\",\"*pastebin.com\") by All_Traffic.src | rename All_Traffic.src as dest] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let lures = dynamic([\"IATA\",\"BSPlink\",\"airline\",\"job offer\",\"job_offer\",\"CV\",\"Resume\",\"ticket\",\"booking\"]);\nlet stagers = dynamic([\"raw.githubusercontent.com\",\"github.io\",\"pastebin.com\",\"paste.ee\",\"bitbucket.org\"]);\nlet susParents = dynamic([\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"powershell.exe\")\n| where InitiatingProcessFileName in~ (susParents)\n| where ProcessCommandLine has_any (stagers) or ProcessCommandLine has_any (lures) or ProcessCommandLine has \".hta\"\n| extend stagerHit = iff(ProcessCommandLine has_any (stagers), 1, 0)\n| extend lureHit   = iff(ProcessCommandLine has_any (lures), 1, 0)\n| where stagerHit == 1 or (FileName =~ \"mshta.exe\" and ProcessCommandLine has \"http\")\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(14d)\n    | where Subject has_any (lures) or SenderFromDomain has_any (\"iata\",\"bsplink\")\n    | project NetworkMessageId, RecipientEmailAddress, Subject, SenderFromAddress, EmailTimestamp=Timestamp\n) on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, ProcessCommandLine, stagerHit, lureHit, Subject, SenderFromAddress\n| order by Timestamp desc",
+      "rationale": "LazyScripter's reporting (MalwareBytes G0140) emphasises three pivot points other APTs rarely chain together at once: (1) airline / IATA / BSPlink job-offer lures (industry-specific), (2) mshta/wscript LOLBin execution from Office or browser parents, and (3) staging infrastructure on GitHub raw URLs and paste sites. Joining the email-lure context to the LOLBin process chain dramatically improves p"
+    },
+    {
+      "title": "[LLM] LazyScripter open-source RAT loader chain (Koadic / Octopus / Quasar / LuminosityLink) via PowerShell from GitHub",
+      "description": "Hunts LazyScripter's post-delivery installation pattern: a BAT/VBS dropper invoking PowerShell (often with -NoP -W Hidden -Enc) to download and run open-source RATs the group is uniquely fond of stacking together \u2014 Koadic, Octopus, Quasar, LuminosityLink, RMS, Remcos \u2014 frequently sourced from attacker-controlled GitHub repos and persisted via Run-key. The technique stack is generic on its own but the *combination* of GitHub staging + multi-RAT preference + Run-key persistence is LazyScripter-characteristic.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1059.001",
+        "T1059.003",
+        "T1105",
+        "T1102",
+        "T1547.001",
+        "T1027.010",
+        "T1588.001",
+        "T1583.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=\"powershell.exe\" AND (Processes.process IN (\"*-nop*\",\"*-NoP*\",\"*-w hidden*\",\"*-W Hidden*\",\"*-enc*\",\"*-EncodedCommand*\",\"*FromBase64String*\",\"*DownloadString*\",\"*DownloadFile*\",\"*Invoke-WebRequest*\",\"*iex*\",\"*IEX*\")) AND (Processes.process IN (\"*raw.githubusercontent.com*\",\"*github.io*\",\"*github.com*\",\"*pastebin.com*\")) AND (Processes.parent_process_name IN (\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"explorer.exe\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as run_value values(Registry.registry_key_name) as run_key from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\",\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce*\") AND (Registry.registry_value_data IN (\"*powershell*\",\"*mshta*\",\"*wscript*\",\"*koadic*\",\"*octopus*\",\"*quasar*\",\"*luminosity*\",\"*remcos*\",\"*rms*\",\"*.hta*\",\"*.vbs*\")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data] | stats values(*) as * by dest user | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let ratStrings = dynamic([\"koadic\",\"mshtml\",\"stager.dll\",\"Octopus\",\"esharp\",\"Quasar\",\"client.exe\",\"LuminosityLink\",\"Remcos\",\"RemoteUtilities\",\"rutserv\",\"njrat\"]);\nlet stagers = dynamic([\"raw.githubusercontent.com\",\"github.io\",\"github.com\",\"pastebin.com\",\"paste.ee\"]);\nlet psSuspect = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName =~ \"powershell.exe\"\n| where InitiatingProcessFileName in~ (\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\")\n| where ProcessCommandLine has_any (\"-nop\",\"-NoP\",\"-w hidden\",\"-W Hidden\",\"-enc\",\"-EncodedCommand\",\"FromBase64String\",\"DownloadString\",\"DownloadFile\",\"Invoke-WebRequest\",\"IEX\",\"iex\")\n| where ProcessCommandLine has_any (stagers) or ProcessCommandLine has_any (ratStrings)\n| project Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;\nlet runKey = DeviceRegistryEvents\n| where Timestamp > ago(14d)\n| where RegistryKey has_any (@\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\")\n| where RegistryValueData has_any (\"powershell\",\"mshta\",\"wscript\",\".hta\",\".vbs\",\".bat\")\n   or RegistryValueData has_any (ratStrings)\n| project Timestamp, DeviceId, DeviceName, RegistryKey, RegistryValueName, RegistryValueData;\npsSuspect\n| join kind=inner (runKey) on DeviceId\n| extend timeDelta = abs(datetime_diff('minute', Timestamp, Timestamp1))\n| where timeDelta <= 60\n| project DeviceName, AccountName, PsTime=Timestamp, ProcessCommandLine, RegTime=Timestamp1, RegistryKey, RegistryValueData\n| order by PsTime desc",
+      "rationale": "LazyScripter is unusual among tracked clusters in that it almost exclusively uses *open-source* RATs (Koadic, Octopus, Quasar, LuminosityLink, RMS, Remcos) rather than custom implants, and consistently retrieves them from GitHub repos under attacker control. Correlating an obfuscated PowerShell download from GitHub with a Run-key persistence event referencing one of those RAT names within the same"
+    }
+  ]
+}

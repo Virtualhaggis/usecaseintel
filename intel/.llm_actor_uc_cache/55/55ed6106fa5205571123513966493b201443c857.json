@@ -1,0 +1,46 @@
+{
+  "name": "LAPSUS$",
+  "ucs": [
+    {
+      "title": "[LLM] LAPSUS$ MFA fatigue / push-bombing followed by privileged role assignment (Strawberry Tempest)",
+      "description": "Hunts LAPSUS$'s signature initial-access chain: harvest creds from stealer logs / underground markets, then bombard the user with Azure AD MFA push prompts until one is approved, immediately followed by sign-in from a residential/VPN proxy and self-elevation via AAD role or group membership change. This is the exact playbook MSTIC documented for DEV-0537 against Okta, Microsoft, NVIDIA, and Uber.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1621",
+        "T1078.004",
+        "T1098.003",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.app) as app from datamodel=Authentication where Authentication.action=failure Authentication.signature_id IN (\"50074\",\"500121\",\"50097\",\"50158\",\"500021\") OR Authentication.reason=\"MFA denied\" by Authentication.user _time span=10m\n| eventstats dc(_time) as denied_buckets sum(count) as denied_pushes by Authentication.user\n| where denied_pushes >= 5\n| join type=inner Authentication.user [\n    | tstats summariesonly=true count values(Authentication.src) as success_src values(Authentication.app) as success_app min(_time) as mfa_success_time from datamodel=Authentication where Authentication.action=success Authentication.signature_id IN (\"0\",\"50140\") by Authentication.user\n    | rename Authentication.user as Authentication.user ]\n| where mfa_success_time >= firstTime AND mfa_success_time <= (lastTime + 1800)\n| join type=inner Authentication.user [\n    | tstats summariesonly=true count from datamodel=Change where Change.action=modified Change.object_category IN (\"user\",\"group\",\"role\") (Change.change_type=\"AAD\" OR Change.vendor_product=\"Azure AD\") by Change.user Change.object Change.command _time\n    | rename Change.user as Authentication.user ]\n| table firstTime lastTime Authentication.user denied_pushes success_src success_app Change.object Change.command\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let window = 30m;\nlet pushBombing = AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 500121, 50097, 50158, 500021) // MFA denied / not satisfied / user declined\n| summarize DeniedPushes = count(), FirstDeny = min(Timestamp), LastDeny = max(Timestamp), DenySrcIPs = make_set(IPAddress, 25) by AccountUpn, AccountObjectId\n| where DeniedPushes >= 5;\nlet successAfterBomb = AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode == 0\n| project SuccessTime = Timestamp, AccountUpn, AccountObjectId, SuccessIP = IPAddress, Country, ISP = NetworkLocationDetails, App = Application, DeviceTrust = DeviceTrustType;\npushBombing\n| join kind=inner successAfterBomb on AccountObjectId\n| where SuccessTime between (FirstDeny .. (LastDeny + window))\n| join kind=inner (\n    CloudAppEvents\n    | where Timestamp > ago(1d)\n    | where ActionType in (\"Add member to role.\", \"Add eligible member to role.\", \"Add member to group.\", \"Update user.\", \"Add owner to application.\", \"Consent to application.\")\n    | extend TargetUpn = tostring(parse_json(tostring(RawEventData)).ObjectId)\n    | project ElevationTime = Timestamp, ActorUpn = AccountDisplayName, ActionType, TargetUpn, RawEventData\n) on $left.AccountUpn == $right.ActorUpn\n| where ElevationTime between (SuccessTime .. (SuccessTime + 2h))\n| project FirstDeny, LastDeny, DeniedPushes, AccountUpn, SuccessTime, SuccessIP, Country, ISP, App, ElevationTime, ActionType, TargetUpn",
+      "rationale": "LAPSUS$ does not deploy ransomware or custom malware - their entire intrusion economy is bought creds + MFA push fatigue + cloud-role abuse. The pattern of >=5 denied pushes followed within 30 min by a successful sign-in AND an AAD role/group change within 2 hours is the exact tradecraft MSTIC published for DEV-0537 (NVIDIA, Microsoft source-code theft, Okta sub-processor). Generic MFA-spam rules "
+    },
+    {
+      "title": "[LLM] LAPSUS$ insider-recruitment & SharePoint/Confluence source-code exfil (DEV-0537 collection stage)",
+      "description": "After credential access, LAPSUS$ pivots to collaboration tooling (SharePoint Online, Confluence, GitLab, Jira) to mass-download source code, secrets, and credentials before posting them to their Telegram channel. Hunts abnormal high-volume reads from these repositories by an account that just had a risky/foreign sign-in - characteristic of the Samsung, Microsoft Bing/Cortana, and Vodafone source-leak intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1213.002",
+        "T1213.003",
+        "T1213.001",
+        "T1078.004",
+        "T1199"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(Web.url) as urls values(Web.user_agent) as ua sum(Web.bytes_out) as bytes_out sum(Web.bytes_in) as bytes_in from datamodel=Web where (Web.url IN (\"*sharepoint.com*\",\"*_api/web/*\",\"*/_layouts/15/download.aspx*\",\"*atlassian.net/wiki/rest/api/content*\",\"*gitlab*\",\"*/api/v4/projects/*/repository/archive*\",\"*bitbucket*\")) by Web.user Web.src _time span=15m\n| where bytes_in > 524288000 OR mvcount(urls) > 500\n| join type=inner Web.user [\n    | tstats summariesonly=true count values(Authentication.src) as auth_src values(Authentication.signature) as risk from datamodel=Authentication where Authentication.action=success (Authentication.signature=\"*risky*\" OR Authentication.app=\"Azure Active Directory\") by Authentication.user\n    | rename Authentication.user as Web.user ]\n| eval risk_indicators=if(match(auth_src,\"^(?:5\\.188\\.|45\\.146\\.|185\\.220\\.|198\\.98\\.|tor)\"), \"anon-proxy\", \"normal\")\n| where risk_indicators=\"anon-proxy\" OR like(risk,\"%risky%\")\n| table _time Web.user Web.src auth_src bytes_in mvcount(urls) urls\n| sort -bytes_in",
+      "kql": "let lookback = 1d;\nlet riskyUsers = AADSignInEventsBeta\n| where Timestamp > ago(lookback)\n| where RiskLevelDuringSignIn in (\"high\",\"medium\") or RiskState == \"atRisk\" or isnotempty(RiskEventTypes)\n| summarize RiskyIPs = make_set(IPAddress,10), RiskyCountries = make_set(Country,5), FirstRisk = min(Timestamp) by AccountUpn, AccountObjectId;\nlet repoBurst = CloudAppEvents\n| where Timestamp > ago(lookback)\n| where Application in (\"Microsoft SharePoint Online\",\"Microsoft OneDrive for Business\",\"GitHub\",\"GitLab\",\"Atlassian\",\"Confluence\",\"Bitbucket\")\n| where ActionType in (\"FileDownloaded\",\"FileSyncDownloadedFull\",\"FileAccessed\",\"PageViewed\",\"SearchQueryPerformed\",\"Repo.Clone\",\"Repo.Download\",\"PullRequest.Read\")\n| summarize Downloads = count(),\n            DistinctFiles = dcount(ObjectName),\n            Sites = make_set(tostring(parse_json(tostring(RawEventData)).SiteUrl), 20),\n            Apps = make_set(Application, 10),\n            FirstAct = min(Timestamp), LastAct = max(Timestamp),\n            IPs = make_set(IPAddress, 10)\n  by AccountObjectId, AccountDisplayName\n| where DistinctFiles > 200 or Downloads > 500;\nriskyUsers\n| join kind=inner repoBurst on AccountObjectId\n| where FirstAct between (FirstRisk .. (FirstRisk + 6h))\n| project AccountDisplayName, AccountUpn, RiskyIPs, RiskyCountries, FirstRisk, FirstAct, LastAct, Downloads, DistinctFiles, Apps, Sites, IPs\n| order by DistinctFiles desc",
+      "rationale": "LAPSUS$ is a collection-and-leak crew, not an encryptor. Microsoft's DEV-0537 report and the Samsung/NVIDIA/Microsoft/Vodafone leaks all show the same pattern: compromised cloud account \u2192 SharePoint/Confluence/GitLab mass-pull \u2192 Telegram dump. Pairing the cloud-repo download burst with a preceding risky sign-in (the bought-credential or MFA-bombed session) ties the alert to LAPSUS$ TTPs rather tha"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "name": "RTM",
+  "ucs": [
+    {
+      "title": "[LLM] RTM banking trojan deploying LiteManager/RMS (Remote Manipulator System) as covert RAT",
+      "description": "Hunts for execution of LiteManager / Remote Utilities (rutserv.exe, rfusclient.exe) outside the vendor install path. RTM (G0048) characteristically drops a hidden, repackaged build of Russian-made RMS/LiteManager as its hands-on-keyboard RAT against Russian/CIS accounting and remote-banking (1C, RBS) operators rather than commodity Cobalt Strike, making this binary combination a near-signature artefact of the crew.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1219.002",
+        "T1547.001",
+        "T1574.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"rutserv.exe\",\"rfusclient.exe\",\"rmsservice.exe\") OR Processes.original_file_name IN (\"rutserv.exe\",\"rfusclient.exe\") OR Processes.process IN (\"*LiteManager*\",\"*Remote Manipulator*\",\"*Remote Utilities*\",\"*TektonIT*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where NOT (process_path IN (\"C:\\\\Program Files\\\\LiteManager*\",\"C:\\\\Program Files (x86)\\\\LiteManager*\",\"C:\\\\Program Files\\\\Remote Utilities*\",\"C:\\\\Program Files (x86)\\\\Remote Utilities*\")) | join type=outer dest [| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\" Registry.registry_value_data IN (\"*rutserv*\",\"*rfusclient*\",\"*rmsservice*\") by Registry.dest Registry.registry_path Registry.registry_value_data | `drop_dm_object_name(Registry)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspectRMS = dynamic([\"rutserv.exe\",\"rfusclient.exe\",\"rmsservice.exe\"]);\nlet rmsCompanies = dynamic([\"TektonIT\",\"LiteManager\",\"Remote Utilities\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (suspectRMS)\n   or ProcessVersionInfoOriginalFileName in~ (suspectRMS)\n   or ProcessVersionInfoCompanyName has_any (rmsCompanies)\n   or ProcessVersionInfoProductName has_any (rmsCompanies)\n| where not(FolderPath startswith @\"C:\\Program Files\\LiteManager\"\n          or FolderPath startswith @\"C:\\Program Files (x86)\\LiteManager\"\n          or FolderPath startswith @\"C:\\Program Files\\Remote Utilities\"\n          or FolderPath startswith @\"C:\\Program Files (x86)\\Remote Utilities\")\n| extend SuspiciousPath = (FolderPath startswith @\"C:\\Users\\\" or FolderPath startswith @\"C:\\ProgramData\\\" or FolderPath startswith @\"C:\\Windows\\Temp\\\" or FolderPath startswith @\"C:\\Intel\\\" or FolderPath startswith @\"C:\\PerfLogs\\\")\n| join kind=leftouter (\n    DeviceRegistryEvents\n    | where Timestamp > ago(30d)\n    | where RegistryKey has @\"\\Microsoft\\Windows\\CurrentVersion\\Run\"\n    | where RegistryValueData has_any (\"rutserv\",\"rfusclient\",\"rmsservice\")\n    | project DeviceId, RegPersistKey=RegistryKey, RegPersistValue=RegistryValueData\n) on DeviceId\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspiciousPath, RegPersistKey, RegPersistValue\n| order by Timestamp desc",
+      "rationale": "LiteManager/RMS is a legitimate Russian remote-admin product but is rarely deployed by Western enterprises and almost never from %APPDATA%, %ProgramData% or %TEMP%. RTM specifically renames/repacks rutserv.exe and persists it via Run keys; pairing the binary fingerprint (TektonIT signer / original filename) with non-vendor install path filters out IT-admin usage and isolates the RTM tradecraft cha"
+    },
+    {
+      "title": "[LLM] RTM C2 dead-drop resolution via Namecoin .bit TLD and Pastebin/Livejournal hardcoded profiles",
+      "description": "Hunts for the RTM Trojan's distinctive dead-drop resolver chain: DNS lookups for *.bit (Namecoin blockchain) domains and/or HTTP fetches to hardcoded Livejournal/Pastebin author pages used to retrieve the live C2 IP. Almost no other tracked actor combines .bit-TLD resolution with Livejournal as a fallback resolver.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.001",
+        "T1568.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "(| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query=\"*.bit\" OR DNS.query=\"*.bazar\") by DNS.src DNS.query DNS.answer DNS.dest | `drop_dm_object_name(DNS)` | eval source_type=\"namecoin_bit\") | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url=\"*livejournal.com/users/*\" OR Web.url=\"*pastebin.com/raw/*\" OR Web.url=\"*livejournal.com/data/*\") AND Web.user_agent!=\"*Mozilla*\" by Web.src Web.dest Web.url Web.user_agent Web.app | `drop_dm_object_name(Web)` | eval source_type=\"deaddrop_paste\"] | join type=outer src [| tstats summariesonly=true values(Processes.process_name) as proc values(Processes.process_path) as proc_path from datamodel=Endpoint.Processes where Processes.process_name IN (\"*.exe\",\"rundll32.exe\",\"regsvr32.exe\") by Processes.dest | rename Processes.dest as src | fields src proc proc_path] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime src dest source_type query url user_agent answer proc proc_path count",
+      "kql": "let bitLookups = DeviceEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"DnsQueryResponse\" or ActionType == \"InboundConnectionAccepted\" or ActionType == \"ConnectionSuccess\"\n    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)\n    | where QueryName endswith \".bit\" or QueryName endswith \".bazar\"\n    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, QueryName, Source=\"namecoin_bit\";\nlet pasteResolvers = DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where (RemoteUrl has \"livejournal.com/users/\" or RemoteUrl has \"pastebin.com/raw/\" or RemoteUrl has \"livejournal.com/data/\")\n    | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"opera.exe\",\"brave.exe\")\n    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, Source=\"deaddrop_paste\";\nunion bitLookups, pasteResolvers\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName in~ (\"rundll32.exe\",\"regsvr32.exe\") or ProcessCommandLine has_any (\"DllRegisterServer\",\"core.dll\",\"client.dll\")\n    | project DeviceName, RTM_LoaderProc=FileName, RTM_LoaderCmd=ProcessCommandLine, ProcTime=Timestamp\n) on DeviceName\n| where isnull(ProcTime) or abs(datetime_diff('minute', Timestamp, ProcTime)) <= 60\n| project Timestamp, DeviceName, Source, QueryName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RTM_LoaderProc, RTM_LoaderCmd\n| order by Timestamp desc",
+      "rationale": "Namecoin .bit resolution is virtually unused in legitimate enterprise traffic and is a documented RTM-specific signal (ESET 'Read The Manual' 2017/2019 reports). Pairing .bit lookups OR non-browser HTTP to known Livejournal/Pastebin RTM resolver pages, joined to non-browser initiating processes (rundll32/regsvr32 loading core.dll \u2014 the RTM main module), tightly fingerprints the RTM Trojan's resolv"
+    }
+  ]
+}

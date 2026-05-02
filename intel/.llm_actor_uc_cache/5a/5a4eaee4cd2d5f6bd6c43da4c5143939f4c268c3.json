@@ -1,0 +1,46 @@
+{
+  "name": "BlackCat",
+  "ucs": [
+    {
+      "title": "[LLM] BlackCat/ALPHV (Noberus) ransomware execution: --access-token CLI flag and safe-mode boot tampering",
+      "description": "Hunts the ALPHV/BlackCat Rust ransomware binary's distinctive command-line invocation (--access-token, --paths, --child, --no-prop, --propagated) chained with the actor's signature pre-encryption defense evasion: bcdedit safeboot reconfiguration plus VSS deletion. These exact CLI argument names are unique to the Noberus payload and have been documented by Microsoft (DEV-0237/Storm-1175 affiliates), CrowdStrike, and CISA AA22-152A.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1486",
+        "T1059.001",
+        "T1542.005",
+        "T1490",
+        "T1562.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as process_name values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process=\"*--access-token*\" AND (Processes.process=\"*--paths*\" OR Processes.process=\"*--child*\" OR Processes.process=\"*--no-prop*\" OR Processes.process=\"*--propagated*\")) OR (Processes.process=\"*bcdedit*\" AND Processes.process=\"*safeboot*\" AND Processes.process=\"*network*\") OR (Processes.process=\"*vssadmin*\" AND Processes.process=\"*delete shadows*\" AND Processes.process=\"*/all*\" AND Processes.process=\"*/quiet*\") by Processes.dest Processes.user Processes.process_id Processes.parent_process_id Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | stats values(*) as * count min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where count >= 1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let alphv_args = pack_array(\"--access-token\", \"--child\", \"--no-prop\", \"--propagated\", \"--paths\");\nlet payload = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where ProcessCommandLine has \"--access-token\"\n  and ProcessCommandLine has_any (\"--paths\", \"--child\", \"--no-prop\", \"--propagated\")\n| project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA256;\nlet safeboot = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"bcdedit.exe\"\n  and ProcessCommandLine has \"safeboot\" and ProcessCommandLine has \"network\"\n| project Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName;\nlet vss = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (FileName =~ \"vssadmin.exe\" or FileName =~ \"wmic.exe\")\n  and ProcessCommandLine has_all (\"shadow\", \"delete\")\n| project Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine;\nunion payload, safeboot, vss\n| summarize Signals = make_set(strcat(FileName, \" :: \", ProcessCommandLine)), DistinctSignalTypes = dcount(FileName), MinTime = min(Timestamp), MaxTime = max(Timestamp) by DeviceId, DeviceName, AccountName\n| where DistinctSignalTypes >= 1\n| order by MaxTime desc",
+      "rationale": "The --access-token / --child / --propagated argument scheme is a fingerprint of the ALPHV Rust binary (the affiliate must paste a token issued by the BlackCat panel to detonate). No legitimate admin tool or other ransomware family uses that argument set, so a single hit is essentially confirmed BlackCat. The bcdedit safeboot network reconfiguration is BlackCat's documented trick to reboot into saf"
+    },
+    {
+      "title": "[LLM] BlackCat/ALPHV affiliate pre-encryption staging: ADFind + LSASS dump + remote-access tool deploy",
+      "description": "Hunts the pre-encryption tradecraft chain repeatedly attributed to BlackCat affiliates (Scattered Spider/UNC3944 and DEV-0504 among them): domain enumeration with ADFind/ADRecon, LSASS credential dumping, then deployment of legitimate remote-access software (AnyDesk, Splashtop, ConnectWise/ScreenConnect) on the same host within 72 hours. Per CISA AA23-353A and Microsoft, this exact sequence preceded BlackCat detonations against healthcare, MGM Resorts, and Caesars.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1003.001",
+        "T1087.002",
+        "T1219",
+        "T1021.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as process_names from datamodel=Endpoint.Processes where (Processes.process_name IN (\"adfind.exe\",\"AdFind.exe\") OR Processes.process=\"*Invoke-ADRecon*\" OR (Processes.process=\"*-f*\" AND Processes.process=\"*objectcategory=*\" AND Processes.process=\"*-csv*\") OR (Processes.process_name=\"rundll32.exe\" AND Processes.process=\"*comsvcs.dll*\" AND Processes.process=\"*MiniDump*\") OR Processes.process_name IN (\"procdump.exe\",\"procdump64.exe\") OR Processes.process_name IN (\"AnyDesk.exe\",\"Splashtop.exe\",\"SRService.exe\",\"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientSetup.exe\",\"atera_agent.exe\")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | eval signal=case(match(process_name,\"(?i)adfind|adrecon\"),\"discovery\", match(cmdlines,\"(?i)comsvcs\\.dll.*MiniDump|procdump\"),\"lsass_dump\", match(process_name,\"(?i)anydesk|splashtop|screenconnect|connectwise|atera|srservice\"),\"remote_access\") | stats dc(signal) as stages values(signal) as stages_seen values(process_name) as procs min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where stages >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let window = 3d;\nlet adfind = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"adfind.exe\",\"AdFind.exe\")\n   or ProcessCommandLine has_all (\"objectcategory=\", \"-f\")\n   or ProcessCommandLine has \"Invoke-ADRecon\"\n| project Timestamp, DeviceId, DeviceName, Stage=\"discovery\", Evidence=ProcessCommandLine;\nlet lsass = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (ProcessCommandLine has \"comsvcs.dll\" and ProcessCommandLine has \"MiniDump\")\n     or FileName in~ (\"procdump.exe\",\"procdump64.exe\")\n     or (ProcessCommandLine has \"lsass\" and ProcessCommandLine has_any (\"-ma\",\"dump\",\"MiniDump\"))\n| project Timestamp, DeviceId, DeviceName, Stage=\"lsass_dump\", Evidence=ProcessCommandLine;\nlet rmm = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"AnyDesk.exe\",\"Splashtop.exe\",\"SRService.exe\",\"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientSetup.exe\",\"atera_agent.exe\",\"AteraAgent.exe\")\n   or InitiatingProcessFileName in~ (\"AnyDesk.exe\",\"Splashtop.exe\",\"ScreenConnect.ClientService.exe\")\n| project Timestamp, DeviceId, DeviceName, Stage=\"remote_access\", Evidence=FileName;\nunion adfind, lsass, rmm\n| summarize StageSet = make_set(Stage), StageCount = dcount(Stage), Earliest = min(Timestamp), Latest = max(Timestamp), Evidence = make_set(Evidence, 25) by DeviceId, DeviceName\n| where StageCount >= 2 and (Latest - Earliest) <= window\n| order by Latest desc",
+      "rationale": "Any one of these three signals is noisy on its own (admins legitimately use AnyDesk; ADFind is sometimes used by IT). The high-fidelity twist for BlackCat affiliates \u2014 particularly Scattered Spider, the cluster behind MGM/Caesars \u2014 is the *combination* on a single host within ~72h: domain enumeration via ADFind, LSASS dumping (often via comsvcs.dll MiniDump or ProcDump renamed), then dropping a le"
+    }
+  ]
+}

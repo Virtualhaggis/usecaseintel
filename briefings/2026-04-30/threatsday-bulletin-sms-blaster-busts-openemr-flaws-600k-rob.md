@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious 'tanstack' npm brand-squat (v2.0.4-2.0.7) postinstall .env exfiltration
 
-`UC_26_15` · phase: **delivery** · confidence: **High**
+`UC_34_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ let installs = DeviceProcessEvents | where ProcessCommandLine matches regex @"(?
 
 ### [LLM] elementary-data PyPI 0.23.3 backdoored release - elementary.pth dropper
 
-`UC_26_16` · phase: **install** · confidence: **High**
+`UC_34_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ let pth_drop = DeviceFileEvents | where FileName =~ "elementary.pth" | where Fol
 
 ### [LLM] Komari C2 agent deployment - NSSM-wrapped 'Windows Update Service' persistence
 
-`UC_26_17` · phase: **c2** · confidence: **High**
+`UC_34_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -490,7 +490,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay Bulletin: SMS Blaster Busts, OpenEMR Flaws, 600K Roblox Hacks and 25
 
-`UC_26_14` · phase: **exploit** · confidence: **High**
+`UC_34_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,43 @@
+{
+  "name": "APT34",
+  "ucs": [
+    {
+      "title": "[LLM] APT34 (OilRig) DNS-tunneling C2 \u2014 DNSpionage/ALMA Communicator/Helminth beaconing pattern",
+      "description": "Hunts the DNS-over-A/TXT covert channel that OilRig has used across DNSpionage, ALMA Communicator, Helminth, QUADAGENT and the BONDUPDATER family \u2014 long, high-entropy subdomain labels resolving to attacker zones with abnormal A/TXT volume from a single host. APT34 is the Iranian cluster most consistently fingerprinted on DNS-tunnel tradecraft, so this is far more specific to them than generic 'rare DNS' hunts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1041",
+        "T1008"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries values(DNS.answer) as answers dc(DNS.query) as unique_queries from datamodel=Network_Resolution where DNS.message_type=\"QUERY\" (DNS.record_type=\"A\" OR DNS.record_type=\"TXT\") NOT DNS.query IN (\"*.microsoft.com\",\"*.windowsupdate.com\",\"*.akamai*\",\"*.googleapis.com\",\"*.office.com\",\"*.azureedge.net\",\"*.cloudfront.net\") by DNS.src host DNS.query \n| eval label=mvindex(split(DNS.query,\".\"),0), label_len=len(label), parent=mvindex(split(DNS.query,\".\"),-2)+\".\"+mvindex(split(DNS.query,\".\"),-1) \n| eval entropy=if(label_len>0, round((label_len - len(replace(label,\"[^a-z0-9]\",\"\"))) + (label_len/8.0),2), 0) \n| where label_len>=25 AND entropy>3.5 \n| stats sum(count) as q_count dc(DNS.query) as uniq_subdomains values(DNS.record_type) as rtypes values(label) as sample_labels by DNS.src parent \n| where uniq_subdomains>=20 AND q_count>=50 \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let lookback = 24h;\nlet allowlist = dynamic([\"microsoft.com\",\"windowsupdate.com\",\"office.com\",\"azureedge.net\",\"akamai.net\",\"akamaihd.net\",\"googleapis.com\",\"cloudfront.net\",\"trafficmanager.net\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(lookback)\n| where ActionType in (\"DnsConnectionInspected\",\"ConnectionSuccess\") and (RemotePort == 53 or isnotempty(AdditionalFields))\n| extend Query = tostring(parse_json(AdditionalFields).query)\n| where isnotempty(Query)\n| extend parent = strcat(split(Query,\".\")[-2],\".\",split(Query,\".\")[-1])\n| where not(parent has_any (allowlist))\n| extend label = tostring(split(Query,\".\")[0]), label_len = strlen(tostring(split(Query,\".\")[0]))\n| extend distinct_chars = strlen(replace_string(replace_string(replace_string(label,\"a\",\"\"),\"e\",\"\"),\"o\",\"\"))\n| where label_len >= 25 and label matches regex @\"^[a-z0-9]{25,}$\"\n| summarize qcount=count(), uniq_labels=dcount(label), sample=make_set(label, 5), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName, parent\n| where uniq_labels >= 20 and qcount >= 50\n| join kind=leftouter (DeviceProcessEvents | where Timestamp > ago(lookback) | project DeviceId, InitiatingProcessFileName, FileName, ProcessCommandLine) on DeviceId, InitiatingProcessFileName\n| project firstSeen, lastSeen, DeviceName, InitiatingProcessFileName, parent, uniq_labels, qcount, sample",
+      "rationale": "Long high-entropy single-label subdomains under attacker-controlled zones, combined with A+TXT mix and high uniq-subdomain counts per host, is the exact wire signature of OilRig's DNS implants (DNSpionage, ALMA Communicator, Helminth, BONDUPDATER, QUADAGENT). FireEye and Palo Alto Unit 42 documented this same shape repeatedly across APT34 campaigns from 2017\u20132022; very few legitimate apps generate"
+    },
+    {
+      "title": "[LLM] APT34 Outlook Home Page persistence (CVE-2017-11774 abuse) \u2014 WEBVIEWURL hijack spawning child processes from OUTLOOK.EXE",
+      "description": "Detects APT34's signature persistence/launch primitive: setting the Outlook Home Page (WebView URL) registry/MAPI value to attacker HTML so OUTLOOK.EXE spawns scripting children (powershell, mshta, wscript, cmd) on every mailbox open. OilRig used this as their fall-back access mechanism after the 2018\u20132019 Lab Dookhtegan leaks burned other tools and continued through 2020 RDAT operations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1137.004",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name=\"OUTLOOK.EXE\" Processes.process_name IN (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name \n| `drop_dm_object_name(Processes)` \n| join type=outer dest [| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Office\\\\*\\\\Outlook\\\\WebView\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Office\\\\*\\\\Outlook\\\\Today\\\\*\") (Registry.registry_value_name=\"URL\" OR Registry.registry_value_data=\"http*\") by Registry.dest Registry.registry_path Registry.registry_value_data | `drop_dm_object_name(Registry)` | rename registry_value_data as homepage_url] \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspicious_children = dynamic([\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"hh.exe\"]);\nlet child = DeviceProcessEvents\n  | where Timestamp > ago(7d)\n  | where InitiatingProcessFileName =~ \"OUTLOOK.EXE\"\n  | where FileName in~ (suspicious_children)\n  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;\nlet reg = DeviceRegistryEvents\n  | where Timestamp > ago(30d)\n  | where RegistryKey has_all (\"Software\\\\Microsoft\\\\Office\") and (RegistryKey has \"\\\\Outlook\\\\WebView\\\\\" or RegistryKey has \"\\\\Outlook\\\\Today\\\\\")\n  | where RegistryValueName in~ (\"URL\",\"URLName\") or RegistryValueData startswith \"http\"\n  | project RegTime=Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData, RegInitiator=InitiatingProcessFileName;\nchild\n| join kind=leftouter (reg) on DeviceId\n| extend HomePageHijack = iff(isnotempty(RegistryValueData), \"yes\", \"no\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, HomePageHijack, RegistryKey, RegistryValueData, RegTime\n| order by Timestamp desc",
+      "rationale": "OUTLOOK.EXE legitimately almost never spawns powershell/mshta/wscript/cmd. APT34/OilRig is one of a tiny handful of actors (alongside Turla) publicly documented abusing Outlook Home Page (CVE-2017-11774) for code execution and persistence \u2014 FireEye M-Trends 2019 and CISA AA20-259A explicitly called this out as OilRig's preferred re-entry mechanism. Pairing the OUTLOOK\u2192scripting-child process event"
+    }
+  ]
+}

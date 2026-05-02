@@ -1,0 +1,46 @@
+{
+  "name": "Sidewinder",
+  "ucs": [
+    {
+      "title": "[LLM] Sidewinder (Rattlesnake) Office\u2192mshta.exe remote HTA staging chain",
+      "description": "Hunts Sidewinder's signature delivery chain: spearphishing attachment (RTF/DOCX exploiting CVE-2017-11882 Equation Editor or document with remote template injection) spawning mshta.exe to fetch a hosted .hta loader from an attacker-controlled domain (often typosquatting Pakistani/Nepali/Afghan/Chinese government entities). This bridge from Office to mshta with an HTTP(S) URL argument is highly characteristic of Sidewinder/T-APT-04 and is rare in benign environments.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1203",
+        "T1218.005",
+        "T1059.007",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as pid values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name=mshta.exe (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\",\"explorer.exe\") OR Processes.parent_process_name=\"wscript.exe\") (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\" OR Processes.process=\"*.hta*\" OR Processes.process=\"*javascript:*\" OR Processes.process=\"*vbscript:*\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=process \"(?i)(?<staging_url>https?://[^\\s\\\"']+)\" | eval suspicious_tld=if(match(staging_url,\"(?i)\\.(xyz|top|info|live|cyou|site|online|click|gov\\.[a-z]{2,3}\\.)\"),1,0) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where FileName =~ \"mshta.exe\"\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(https?://|javascript:|vbscript:|\\.hta\\b)\"\n| extend StagingUrl = extract(@\"(?i)(https?://[^\\s\\\"']+)\", 1, ProcessCommandLine)\n| extend SuspiciousTld = iif(StagingUrl matches regex @\"(?i)\\.(xyz|top|info|live|cyou|site|online|click)(/|$)\", true, false)\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where RemoteUrl matches regex @\"(?i)\\.hta($|\\?)\"\n    | project DeviceId, RemoteUrl, RemoteIP, NetTime=Timestamp\n) on DeviceId\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, StagingUrl, SuspiciousTld, RemoteUrl, RemoteIP\n| order by Timestamp desc",
+      "rationale": "Sidewinder has used the Office\u2192mshta\u2192remote-HTA chain consistently across campaigns (ATT 2021, Securelist, Cyble reports), often paired with CVE-2017-11882 (eqnedt32.exe parent) and JavaScript/VBScript stagers fetched over HTTPS from short-lived lookalike domains. Generic admin use of mshta with a remote URL parented by Office or Equation Editor is essentially nonexistent outside of attacker activ"
+    },
+    {
+      "title": "[LLM] Sidewinder LNK-delivered loader with Run-key persistence and DLL sideload",
+      "description": "Hunts Sidewinder's post-exploitation pattern of dropping a renamed legitimate signed binary plus a malicious sideloaded DLL into a user-writable path (AppData / ProgramData / Public), then registering HKCU\\...\\Run persistence pointing at that binary. Sidewinder repeatedly uses this DLL search-order hijack (T1574.001) plus Registry Run-key (T1547.001) combination after initial LNK or HTA execution targeting South Asian government victims.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1547.001",
+        "T1574.001",
+        "T1036.005",
+        "T1027.010"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\AppData\\\\Local\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\") (Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.exe\") by host Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | stats values(file_name) as files dc(file_name) as file_count by host user file_path | where file_count>=2 AND mvfilter(match(files,\"(?i)\\.dll$\")) AND mvfilter(match(files,\"(?i)\\.exe$\")) | join host user [| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run*\" Registry.registry_value_data IN (\"*\\\\AppData\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\") by host Registry.user Registry.registry_value_data | `drop_dm_object_name(Registry)` | rename user as user, registry_value_data as run_target] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let SidewinderPaths = pack_array(@\"\\AppData\\Roaming\\\", @\"\\AppData\\Local\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\");\nlet StagedDrops =\n    DeviceFileEvents\n    | where ActionType in (\"FileCreated\",\"FileRenamed\")\n    | where FolderPath has_any (SidewinderPaths)\n    | where FileName endswith \".dll\" or FileName endswith \".exe\"\n    | summarize Files=make_set(FileName), Folder=any(FolderPath), DropTime=min(Timestamp) by DeviceId, FolderPath\n    | where array_length(Files) >= 2\n      and tostring(Files) matches regex @\"(?i)\\.exe\"\n      and tostring(Files) matches regex @\"(?i)\\.dll\";\nlet RunKey =\n    DeviceRegistryEvents\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where RegistryKey has @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\"\n    | where RegistryValueData has_any (SidewinderPaths)\n    | project DeviceId, PersistTime=Timestamp, RegistryKey, RegistryValueName, RegistryValueData;\nStagedDrops\n| join kind=inner RunKey on DeviceId\n| where PersistTime between (DropTime .. (DropTime + 1h))\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where InitiatingProcessFileName in~ (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"rundll32.exe\")\n    | project DeviceId, InitProc=InitiatingProcessFileName, InitCmd=InitiatingProcessCommandLine, ChildProc=FileName, ChildCmd=ProcessCommandLine, ProcTime=Timestamp\n) on DeviceId\n| where ProcTime between ((DropTime - 10m) .. DropTime)\n| project DropTime, DeviceId, FolderPath, Files, RegistryKey, RegistryValueData, InitProc, InitCmd, ChildProc, ChildCmd\n| order by DropTime desc",
+      "rationale": "Sidewinder/Rattlesnake (G0121) operations documented by AT&T, Securelist, and Cyble repeatedly stage a legitimate signed EXE plus a malicious DLL in user-writable directories and register HKCU Run-key persistence pointing at the renamed signed binary so the malicious DLL is loaded via search-order hijack on logon. Correlating co-located EXE+DLL drops in non-standard install paths with a near-simul"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "Mustang Panda",
+  "ucs": [
+    {
+      "title": "[LLM] Mustang Panda PlugX/ToneShell DLL sideloading via abused signed vendor binaries",
+      "description": "Hunts the actor's signature execution chain: a legitimately-signed third-party binary (Adobe, ESET, Avast, McAfee, Symantec, Norman, Kaspersky) executed from a non-standard path (Public, ProgramData, AppData, Temp, USB) that loads an unsigned DLL from the same directory \u2014 the canonical Mustang Panda / RedDelta / Earth Preta PlugX, ToneShell, and PUBLOAD sideloading pattern documented by Trend Micro, Recorded Future, ESET, and Mandiant.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.009",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.process_name IN (\"AcroRd32.exe\",\"Acrobat.exe\",\"AvastSvc.exe\",\"AvastBrowser.exe\",\"ekrn.exe\",\"mcoemcpy.exe\",\"mcods.exe\",\"RasTls.exe\",\"SymantecHostIDS.exe\",\"NisSrv.exe\",\"gup.exe\",\"avp.exe\",\"AAM Updates Notifier.exe\",\"hkcmd.exe\",\"DLPDoctor.exe\",\"ZAM.exe\",\"PotPlayerMini.exe\",\"GoogleUpdate.exe\")) AND NOT (Processes.process_path IN (\"*\\\\Program Files\\\\*\",\"*\\\\Program Files (x86)\\\\*\",\"*\\\\Windows\\\\*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_guid | `drop_dm_object_name(Processes)` | join type=inner process_guid [| tstats summariesonly=true values(Filesystem.file_name) as loaded_dll values(Filesystem.file_path) as dll_path from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" AND NOT (Filesystem.file_path IN (\"*\\\\Windows\\\\System32\\\\*\",\"*\\\\Windows\\\\SysWOW64\\\\*\",\"*\\\\Program Files\\\\*\")) by Filesystem.process_guid | rename Filesystem.process_guid as process_guid] | where mvcount(loaded_dll) > 0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let SuspectBins = dynamic([\"acrord32.exe\",\"acrobat.exe\",\"avastsvc.exe\",\"avastbrowser.exe\",\"ekrn.exe\",\"mcoemcpy.exe\",\"mcods.exe\",\"rastls.exe\",\"symantechostids.exe\",\"nissrv.exe\",\"gup.exe\",\"avp.exe\",\"aam updates notifier.exe\",\"hkcmd.exe\",\"dlpdoctor.exe\",\"zam.exe\",\"potplayermini.exe\",\"googleupdate.exe\"]);\nlet SuspectPaths = dynamic([@\"c:\\users\\public\\\",@\"c:\\programdata\\\",@\"c:\\users\\\",@\"c:\\windows\\temp\\\",@\"c:\\perflogs\\\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName has_any (SuspectBins)\n| where InitiatingProcessFolderPath has_any (SuspectPaths) or InitiatingProcessFolderPath matches regex @\"^[d-z]:\\\\\"\n| where FileName endswith \".dll\"\n| where FolderPath !startswith @\"C:\\Windows\\\" and FolderPath !startswith @\"C:\\Program Files\"\n| where tolower(InitiatingProcessFolderPath) == tolower(FolderPath)\n| extend SignerOk = iff(InitiatingProcessSignatureStatus == \"Valid\", true, false)\n| where SignerOk == true\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA256, InitiatingProcessSHA256\n| join kind=leftouter (DeviceProcessEvents | where Timestamp > ago(14d) | project DeviceId, InitiatingProcessSHA256=SHA256, ParentProcessName=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine) on InitiatingProcessSHA256",
+      "rationale": "Mustang Panda has built nearly every PlugX variant they ship (THOR, RedDelta variant, ToneShell, PUBLOAD, MISTCLOAK) around DLL search-order hijacking using a small, repeated set of signed AV/Adobe/Razer/Norman binaries that they rename or copy to writable directories. Generic sideload hunts fire on InstallShield/AnyDesk noise; this UC pins to (1) the specific binaries Mustang Panda has been obser"
+    },
+    {
+      "title": "[LLM] Mustang Panda HIUPAN/MISTCLOAK USB worm propagation (hidden files + renamed signed loader on removable media)",
+      "description": "Detects the actor's USB self-propagation chain (HIUPAN, MISTCLOAK, U2EC) used heavily against APAC government, NGO, and Vatican-aligned targets: a process executing from a removable drive that hides folders via attrib +s +h, drops or copies a renamed legitimate binary plus DLL to the volume root, and creates a decoy LNK pointing back into a hidden directory.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1091",
+        "T1204.002",
+        "T1564.001",
+        "T1036.008"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_path=\"[D-Z]:\\\\*\" AND (Processes.process_name=\"attrib.exe\" OR Processes.process_name=\"cmd.exe\" OR Processes.process_name=\"rundll32.exe\" OR Processes.process_name=\"wscript.exe\") AND (Processes.process=\"*+s +h*\" OR Processes.process=\"*attrib*+h*\" OR Processes.process=\"*\\\\RECYCLER.BIN*\" OR Processes.process=\"* /c start *\\\\*.lnk*\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_guid Processes.parent_process_guid | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true values(Filesystem.file_name) as drop_files values(Filesystem.file_path) as drop_paths from datamodel=Endpoint.Filesystem where Filesystem.file_path=\"[D-Z]:\\\\*\" AND (Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.lnk\" OR Filesystem.file_name=\"*.exe\") by Filesystem.dest Filesystem.process_guid] | where mvcount(drop_files) >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let RemovableDrive = @\"^[d-z]:\\\\\";\nlet HideCmd = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName =~ \"attrib.exe\" or InitiatingProcessFileName =~ \"cmd.exe\"\n| where ProcessCommandLine has_all (\"+s\",\"+h\") or ProcessCommandLine has \"+h +s\"\n| where ProcessCommandLine matches regex RemovableDrive or InitiatingProcessFolderPath matches regex RemovableDrive\n| project Timestamp, DeviceId, DeviceName, InitiatingProcessAccountName, ProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessFileName;\nlet UsbDrops = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where FolderPath matches regex RemovableDrive\n| where FileName endswith \".lnk\" or FileName endswith \".dll\" or FileName endswith \".exe\"\n| summarize DroppedFiles = make_set(FileName), DropPaths = make_set(FolderPath), DropCount = dcount(FileName) by DeviceId, bin(Timestamp, 10m), InitiatingProcessSHA256, InitiatingProcessFileName\n| where DropCount >= 2 and DroppedFiles has_any (\".lnk\") and (DroppedFiles has_any (\".dll\") or DroppedFiles has_any (\".exe\"));\nHideCmd\n| join kind=inner (UsbDrops) on DeviceId\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where InitiatingProcessFolderPath matches regex RemovableDrive\n    | where ProcessCommandLine has_any (\".lnk\",\"rundll32\",\"\\\\RECYCLER\")\n    | project DeviceId, ChildExec=ProcessCommandLine, ChildImage=FolderPath, ChildSHA=SHA256\n) on DeviceId\n| project Timestamp, DeviceName, InitiatingProcessAccountName, ProcessCommandLine, DroppedFiles, DropPaths, ChildExec, ChildImage, ChildSHA, InitiatingProcessSHA256",
+      "rationale": "USB-borne propagation is one of Mustang Panda's most distinctive 2022\u20132024 traits \u2014 Trend Micro's Earth Preta reporting, ESET's HIUPAN coverage, and Palo Alto's Stately Taurus reporting all describe the same triad: process running from a removable drive, attrib +s +h hiding a RECYCLER-style folder, then dropping LNK + renamed signed loader + DLL to the volume root. Most APTs do not pivot via USB w"
+    }
+  ]
+}

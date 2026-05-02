@@ -1,0 +1,47 @@
+{
+  "name": "FIN13",
+  "ucs": [
+    {
+      "title": "[LLM] FIN13 / Elephant Beetle: Java application server web shell command execution",
+      "description": "Hunts post-exploitation child processes spawned by Java/IIS-fronted application servers (WebSphere, WebLogic, JBoss, Tomcat) \u2014 the signature foothold Sygnia attributed to Elephant Beetle in LATAM financial institutions, where the actor exploited Java-based web apps (T1190) and dropped JSP/WAR web shells (T1505.003) before pivoting to internal recon and SWIFT/payment system fraud.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.001",
+        "T1059.003",
+        "T1087",
+        "T1082"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"java.exe\",\"javaw.exe\",\"w3wp.exe\",\"tomcat*.exe\",\"httpd.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"hostname.exe\",\"wmic.exe\",\"sc.exe\",\"reg.exe\",\"schtasks.exe\",\"arp.exe\",\"netstat.exe\",\"ping.exe\") by host Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval risk_score=case(match(process_name,\"powershell|pwsh|wmic\"),90,match(process_name,\"whoami|net|nltest|tasklist|quser\"),70,1=1,40) | where risk_score>=40 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"java.exe\",\"javaw.exe\",\"w3wp.exe\",\"tomcat9.exe\",\"tomcat10.exe\",\"httpd.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"hostname.exe\",\"wmic.exe\",\"sc.exe\",\"reg.exe\",\"schtasks.exe\",\"arp.exe\",\"netstat.exe\")\n| extend Recon=iff(FileName in~ (\"whoami.exe\",\"net.exe\",\"net1.exe\",\"nltest.exe\",\"quser.exe\",\"tasklist.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"arp.exe\",\"netstat.exe\"),1,0)\n| summarize ReconCount=sum(Recon), Cmds=make_set(ProcessCommandLine,25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName\n| where ReconCount >= 2 or array_length(Cmds) >= 3\n| order by ReconCount desc",
+      "rationale": "Elephant Beetle's defining behavior (per Sygnia 2022 and Mandiant FIN13 reporting) is months-long persistence on Java-stack edge servers in LATAM banks; they invoke OS commands through their planted JSP/Java shells. A child of java.exe/w3wp.exe running net.exe/whoami/nltest is essentially impossible during normal app server operation and tightly fingerprints this group's post-exploit recon, rather"
+    },
+    {
+      "title": "[LLM] FIN13 / Elephant Beetle: JSP/WAR web shell drops to Java app deployment paths with environment mimicry",
+      "description": "Hunts file writes of .jsp/.jspx/.war/.class artifacts into Java application server deployment directories \u2014 Elephant Beetle's hallmark per Sygnia is dropping web shells whose names blend with the victim's existing application files (T1036.005) inside WebSphere/WebLogic/JBoss/Tomcat webapp roots, often by the app server's own service account after T1190 exploitation.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.003",
+        "T1036.005",
+        "T1564.001",
+        "T1190"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer_process from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path=\"*\\\\webapps\\\\*\" OR Filesystem.file_path=\"*\\\\wlserver\\\\*\" OR Filesystem.file_path=\"*\\\\WebSphere\\\\*\" OR Filesystem.file_path=\"*\\\\JBoss\\\\*\" OR Filesystem.file_path=\"*\\\\jboss\\\\*\" OR Filesystem.file_path=\"*\\\\Tomcat*\\\\*\" OR Filesystem.file_path=\"*/webapps/*\" OR Filesystem.file_path=\"*/wlserver/*\" OR Filesystem.file_path=\"*/WebSphere/*\" OR Filesystem.file_path=\"*/jboss*/*\") AND (Filesystem.file_name=\"*.jsp\" OR Filesystem.file_name=\"*.jspx\" OR Filesystem.file_name=\"*.war\" OR Filesystem.file_name=\"*.class\") by host Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | eval mimicry=if(match(file_name,\"(?i)(error|index|login|default|menu|test|info|home|status|health|sso|auth)[0-9_-]*\\.jspx?\"),1,0) | where mimicry=1 OR match(writer_process,\"(?i)java|w3wp|tomcat\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceFileEvents\n| where Timestamp > ago(14d)\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where FolderPath has_any (\"\\\\webapps\\\\\",\"\\\\wlserver\\\\\",\"\\\\WebSphere\\\\\",\"\\\\JBoss\\\\\",\"\\\\jboss\\\\\",\"\\\\Tomcat\",\"/webapps/\",\"/wlserver/\",\"/WebSphere/\",\"/jboss\")\n| where FileName endswith \".jsp\" or FileName endswith \".jspx\" or FileName endswith \".war\" or FileName endswith \".class\"\n| extend Mimicry = iff(FileName matches regex @\"(?i)^(error|index|login|default|menu|test|info|home|status|health|sso|auth)[0-9_\\-]*\\.(jsp|jspx)$\", 1, 0)\n| extend AppSvcWriter = iff(InitiatingProcessFileName in~ (\"java.exe\",\"javaw.exe\",\"w3wp.exe\",\"cmd.exe\",\"powershell.exe\") or InitiatingProcessAccountName has_any (\"tomcat\",\"weblogic\",\"websphere\",\"jboss\",\"oracle\",\"iusr\"), 1, 0)\n| where Mimicry == 1 or AppSvcWriter == 1\n| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, Mimicry, AppSvcWriter\n| order by Timestamp desc",
+      "rationale": "Mandiant's M-Trends and Sygnia's Elephant Beetle report both call out FIN13's pattern of dropping JSP web shells named to mimic existing application pages so they survive code reviews for months. Legitimate WAR deployments come from controlled CI/CD pipelines, not interactive writes by java.exe or by service accounts running cmd/powershell \u2014 the combination of path + extension + writer-process is "
+    }
+  ]
+}

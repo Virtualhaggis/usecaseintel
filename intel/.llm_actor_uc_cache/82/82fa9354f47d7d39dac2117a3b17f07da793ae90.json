@@ -1,0 +1,46 @@
+{
+  "name": "Group5",
+  "ucs": [
+    {
+      "title": "[LLM] Group5 (suspected Iranian) Syrian-themed lure \u2192 njRAT/NanoCore install chain (commodity RAT persistence after Office/script spawn)",
+      "description": "Hunts the Group5 delivery-to-install pattern: Syrian/Iranian-themed spearphish or watering-hole drop produces an Office/script parent that drops an njRAT or NanoCore payload into %AppData%/%ProgramData% and registers HKCU Run-key persistence within minutes. This combination \u2014 commodity RAT staging + auto-run from a user-writable path immediately after a document/script execution \u2014 is signature Group5 tradecraft (Citizen Lab 'Group5', MITRE G0043).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1547.001",
+        "T1027.013",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent_proc from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"hh.exe\") Processes.process_name IN (\"powershell.exe\",\"cmd.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"msbuild.exe\",\"installutil.exe\") by Processes.dest Processes.user Processes.process_name Processes.process_guid | `drop_dm_object_name(Processes)` | join type=inner dest [ | tstats summariesonly=t count values(Registry.registry_value_data) as run_value from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\CurrentVersion\\\\Run\\\\*\" Registry.registry_value_data IN (\"*\\\\AppData\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Roaming\\\\*\",\"*\\\\Public\\\\*\") by Registry.dest Registry.registry_value_name | `drop_dm_object_name(Registry)` ] | join type=inner dest [ | tstats summariesonly=t count values(Filesystem.file_path) as dropped from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Temp\\\\*\") Filesystem.file_name IN (\"*.exe\",\"*.scr\",\"*.dat\",\"run.dat\") by Filesystem.dest Filesystem.file_name ] | where lastTime - firstTime < 1800 | eval risk=\"njRAT/NanoCore install chain - Group5 (G0043)\" | table firstTime dest user parent_proc process_name cmdline registry_value_name run_value file_name risk",
+      "kql": "let lookback = 1d;\nlet officeKids = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"hh.exe\")\n| where FileName in~ (\"powershell.exe\",\"cmd.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"msbuild.exe\",\"installutil.exe\")\n| project DeviceId, ChildTs=Timestamp, ParentProc=InitiatingProcessFileName, ChildProc=FileName, ChildCmd=ProcessCommandLine, AccountName;\nlet runKeys = DeviceRegistryEvents\n| where Timestamp > ago(lookback)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has_any (@\"\\CurrentVersion\\Run\", @\"\\CurrentVersion\\RunOnce\")\n| where RegistryValueData has_any (\"AppData\",\"Roaming\",\"ProgramData\",\"Temp\",\"Public\")\n| project DeviceId, RegTs=Timestamp, RegistryValueName, RegistryValueData;\nlet drops = DeviceFileEvents\n| where Timestamp > ago(lookback)\n| where ActionType == \"FileCreated\"\n| where FolderPath has_any (@\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Temp\\\")\n| where FileName endswith \".exe\" or FileName endswith \".scr\" or FileName endswith \".dat\" or FileName =~ \"run.dat\"\n| project DeviceId, DropTs=Timestamp, DropPath=FolderPath, DropName=FileName, DropSha256=SHA256;\nofficeKids\n| join kind=inner runKeys on DeviceId\n| where abs(datetime_diff('minute', ChildTs, RegTs)) <= 30\n| join kind=inner drops on DeviceId\n| where abs(datetime_diff('minute', ChildTs, DropTs)) <= 30\n| project ChildTs, DeviceId, AccountName, ParentProc, ChildProc, ChildCmd, RegistryValueName, RegistryValueData, DropPath, DropName, DropSha256\n| extend ThreatActor=\"Group5 (G0043) - suspected Iranian nexus\", Malware=\"njRAT / NanoCore\"",
+      "rationale": "Group5's reported intrusions consistently chain a maldoc/script lure with installation of off-the-shelf RATs (njRAT, NanoCore) that drop into user-writable paths and register HKCU Run-key autoruns within the same session. Generic 'Office spawns PowerShell' or 'Run-key created' rules each fire too often alone; requiring all three artefacts (suspicious Office/script child + Run-key pointing at a use"
+    },
+    {
+      "title": "[LLM] Group5 surveillance burst: keylog + screencapture artefacts followed by self-delete (T1056.001 + T1113 + T1070.004)",
+      "description": "Hunts the Group5 post-install surveillance loop characteristic of njRAT/NanoCore tasking against Syrian-opposition targets: a single non-system process writes a keylog/clipboard cache file and a screenshot file under %AppData%/%Temp%, then deletes its own staged artefacts to defeat forensics. This three-technique combo on one process is the on-host fingerprint of Group5's RAT operators (G0043).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1056.001",
+        "T1113",
+        "T1070.004",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.action) as actions from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\AppData\\\\Local\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\ProgramData\\\\*\") by Filesystem.dest Filesystem.process_guid Filesystem.process_name Filesystem.user _time span=10m | `drop_dm_object_name(Filesystem)` | eval has_keylog=if(match(mvjoin(files,\",\"),\"(?i)(keylog|klog|\\.log|clip\\.txt|keys\\.txt)\"),1,0) | eval has_screen=if(match(mvjoin(files,\",\"),\"(?i)(screen|scr_|capture|\\.bmp|\\.jpg|\\.png)\"),1,0) | eval has_delete=if(match(mvjoin(actions,\",\"),\"(?i)delete\"),1,0) | where has_keylog=1 AND has_screen=1 AND has_delete=1 | where NOT match(process_name,\"(?i)(onedrive|teams|chrome|msedge|firefox|explorer|searchapp|snippingtool|screensketch)\\.exe\") | eval risk=\"Group5 (G0043) RAT surveillance loop - njRAT/NanoCore tasking\" | table firstTime lastTime dest user process_name files actions risk",
+      "kql": "let win = 30m;\nDeviceFileEvents\n| where Timestamp > ago(1d)\n| where FolderPath has_any (@\"\\AppData\\Roaming\\\", @\"\\AppData\\Local\\\", @\"\\Temp\\\", @\"\\ProgramData\\\")\n| where InitiatingProcessFileName !in~ (\"onedrive.exe\",\"teams.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"explorer.exe\",\"searchapp.exe\",\"snippingtool.exe\",\"screensketch.exe\",\"backgroundtaskhost.exe\")\n| extend isKeylog = (FileName matches regex @\"(?i)(keylog|klog|clip\\.txt|keys\\.txt|\\.log)$\"),\n         isScreen = (FileName matches regex @\"(?i)(screen|scr_|capture).*\\.(bmp|jpe?g|png)$\" or FileName endswith \".bmp\"),\n         isDelete = (ActionType == \"FileDeleted\")\n| summarize keylogs = countif(isKeylog),\n            screens = countif(isScreen),\n            deletes = countif(isDelete),\n            sampleFiles = make_set(FileName, 25),\n            firstSeen = min(Timestamp),\n            lastSeen  = max(Timestamp)\n  by DeviceId, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName, bin(Timestamp, win)\n| where keylogs > 0 and screens > 0 and deletes > 0\n| extend ThreatActor=\"Group5 (G0043)\", Malware=\"njRAT / NanoCore (commodity)\", Note=\"Single process exhibits keylog + screencap + self-delete within 30m\"\n| project firstSeen, lastSeen, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, keylogs, screens, deletes, sampleFiles, ThreatActor, Malware, Note",
+      "rationale": "Group5's MITRE-documented post-compromise behaviours are exactly T1056.001 (keylogging), T1113 (screen capture) and T1070.004 (file deletion) \u2014 the three-in-one surveillance/anti-forensics behaviour typical of njRAT and NanoCore plugins. Looking for a single non-browser/non-collab process producing keylog-named files AND screenshot-named files AND deleting files in user-writable directories within"
+    }
+  ]
+}

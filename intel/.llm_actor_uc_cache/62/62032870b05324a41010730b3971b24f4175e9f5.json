@@ -1,0 +1,45 @@
+{
+  "name": "MirrorFace",
+  "ucs": [
+    {
+      "title": "[LLM] MirrorFace (Earth Kasha) NOOPDOOR/LODEINFO DLL sideloading via legitimate signed Japanese-vendor binaries",
+      "description": "Hunts for MirrorFace's signature execution chain where a legitimate, code-signed binary (JustSystems ATOK, K7Computing, Canon, Trend Micro, VMware) is dropped to a writable directory (Temp/ProgramData/AppData/Public) and side-loads a malicious DLL such as jsfc.dll, K7SysMn1.dll, or vftrace.dll that decrypts NOOPDOOR/LODEINFO/ANEL. This precise abuse of Japanese ISV binaries is the documented MirrorFace tradecraft used against Japanese MoFA, defense and academic targets (JPCERT/CC, Trend Micro, ESET reporting 2023-2025).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1553.002",
+        "T1027.013",
+        "T1036.008"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.process_name IN (\"jsschhlp.exe\",\"JSESPR.exe\",\"K7SysMon.exe\",\"K7TSMain.exe\",\"vmtoolsd.exe\",\"vftrace.exe\",\"MsMpEng.exe\",\"icsys.icn.exe\",\"NDR.exe\",\"vsls-agent.exe\")) AND (Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Windows\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.process_id | `drop_dm_object_name(Processes)` | join type=inner dest process_id [| tstats summariesonly=true count values(Filesystem.file_path) as dropped_dll values(Filesystem.file_name) as dll_name from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"jsfc.dll\",\"K7SysMn1.dll\",\"vftrace.dll\",\"vmtools.dll\",\"NDR.dll\",\"shimgvw.dll\",\"mpsvc.dll\",\"libcurl.dll\") by Filesystem.dest Filesystem.process_id | `drop_dm_object_name(Filesystem)`] | where firstTime > relative_time(now(),\"-30d@d\") | table firstTime dest user process_name process_path dll_name dropped_dll parent",
+      "kql": "let suspect_paths = dynamic([@\"\\users\\public\\\", @\"\\appdata\\\", @\"\\programdata\\\", @\"\\windows\\temp\\\", @\"\\perflogs\\\"]);\nlet mirrorface_loaders = dynamic([\"jsschhlp.exe\",\"jsesprjc.exe\",\"k7sysmon.exe\",\"k7tsmain.exe\",\"vmtoolsd.exe\",\"vftrace.exe\",\"icsys.icn.exe\",\"ndr.exe\",\"vsls-agent.exe\"]);\nlet mirrorface_dlls = dynamic([\"jsfc.dll\",\"k7sysmn1.dll\",\"vftrace.dll\",\"ndr.dll\",\"shimgvw.dll\",\"mpsvc.dll\",\"vmtools.dll\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName has_any (mirrorface_loaders)\n| where FolderPath has_any (suspect_paths)\n| extend loader_pid = ProcessId\n| project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, loader_pid\n| join kind=inner (\n    DeviceImageLoadEvents\n    | where Timestamp > ago(30d)\n    | where FileName in~ (mirrorface_dlls) or (FolderPath has_any (suspect_paths) and FileName endswith \".dll\")\n    | project Timestamp, DeviceId, LoadedDll=FileName, LoadedDllPath=FolderPath, InitiatingProcessId\n) on DeviceId, $left.loader_pid == $right.InitiatingProcessId\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"FileCreated\"\n    | where FileName endswith \".dll\" or FileName endswith \".exe\"\n    | project DropTime=Timestamp, DeviceId, DroppedFile=FileName, DroppedPath=FolderPath, InitiatingProcessFileName_drop=InitiatingProcessFileName\n) on DeviceId\n| where DroppedPath has_any (suspect_paths)\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, LoadedDll, LoadedDllPath, DroppedFile, DroppedPath, InitiatingProcessFileName_drop\n| sort by Timestamp desc",
+      "rationale": "The specific binary+DLL pairings (jsschhlp.exe + jsfc.dll, K7SysMon.exe + K7SysMn1.dll, vftrace) are publicly documented MirrorFace/Earth Kasha sideloading chains used to stage NOOPDOOR and LODEINFO. JustSystems ATOK is a Japanese-only IME \u2014 its presence in Public/Temp on a non-Japanese host, or a corporate host without ATOK installed, is virtually pathognomonic for this actor and not seen in comm"
+    },
+    {
+      "title": "[LLM] MirrorFace abuse of Visual Studio Code Remote Tunnels (code.exe tunnel) for covert C2",
+      "description": "Detects MirrorFace's 2024-2025 living-off-the-cloud tradecraft where the actor drops portable code.exe and registers a VS Code Remote Tunnel to *.devtunnels.ms / vscode.dev, giving operators interactive shell access through a Microsoft-signed channel that bypasses most C2 inspection. This was first attributed to MirrorFace by JPCERT/CC and Trend Micro targeting Japanese diplomatic and academic networks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1071.001",
+        "T1090",
+        "T1553.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=\"code.exe\" AND (Processes.process=\"*tunnel*\" OR Processes.process=\"*--accept-server-license-terms*\" OR Processes.process=\"*serve-web*\") by Processes.dest Processes.process_id | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count values(All_Traffic.dest) as dest_ip values(Web.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"*.devtunnels.ms\" OR All_Traffic.dest=\"*.tunnels.api.visualstudio.com\" OR All_Traffic.dest=\"global.rel.tunnels.api.visualstudio.com\") by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)`] | where (path NOT LIKE \"%Program Files%Microsoft VS Code%\" AND path NOT LIKE \"%AppData\\\\Local\\\\Programs\\\\Microsoft VS Code%\") OR isnotnull(dest_ip) | eval anomaly=if(match(parent,\"(?i)cmd\\.exe|powershell\\.exe|wmiprvse\\.exe|services\\.exe|rundll32\\.exe|regsvr32\\.exe\"),\"suspicious_parent\",\"check\") | table firstTime dest user path cmdline parent dest_ip anomaly",
+      "kql": "let tunnel_domains = dynamic([\"devtunnels.ms\",\"tunnels.api.visualstudio.com\",\"global.rel.tunnels.api.visualstudio.com\"]);\nlet legit_vscode_paths = dynamic([@\"\\program files\\microsoft vs code\\\", @\"\\appdata\\local\\programs\\microsoft vs code\\\"]);\n// Process-side signal: code.exe spawning the tunnel command, or running from a non-standard path\nlet proc_signal = DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName =~ \"code.exe\"\n    | where ProcessCommandLine has_any (\"tunnel\",\"serve-web\",\"--accept-server-license-terms\")\n        or not(FolderPath has_any (legit_vscode_paths))\n    | extend suspicious_parent = iff(InitiatingProcessFileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"services.exe\",\"mshta.exe\"), true, false)\n    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, suspicious_parent;\n// Network-side signal: outbound to devtunnels infrastructure\nlet net_signal = DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where RemoteUrl has_any (tunnel_domains) or RemoteIPType == \"Public\"\n    | where RemoteUrl has_any (tunnel_domains)\n    | project NetTime=Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessAccountName;\nproc_signal\n| join kind=leftouter (net_signal) on DeviceId\n| where suspicious_parent == true or isnotempty(RemoteUrl) or not(FolderPath has_any (legit_vscode_paths))\n| extend Severity = case(suspicious_parent==true and isnotempty(RemoteUrl), \"High\", isnotempty(RemoteUrl), \"Medium\", \"Low\")\n| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, RemoteUrl, RemoteIP, Severity\n| sort by Timestamp desc",
+      "rationale": "VS Code Remote Tunnel abuse for C2 was first publicly attributed to MirrorFace/Earth Kasha by JPCERT/CC (Jan 2025) and Trend Micro. Legitimate developers run code.exe from %ProgramFiles% or %LocalAppData%\\Programs\\Microsoft VS Code; MirrorFace drops a portable build under ProgramData/Public and invokes `code.exe tunnel`, then operates over devtunnels.ms. Filtering by parent process (cmd/powershell"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "FIN10",
+  "ucs": [
+    {
+      "title": "[LLM] FIN10 scheduled task persistence masquerading as Adobe/Google updaters launching PowerShell Empire",
+      "description": "Hunts FIN10's signature persistence pattern documented by FireEye/Mandiant: schtasks.exe registering tasks with names mimicking legitimate updaters (e.g. 'Adobe Acrobat Update', 'GoogleUpdateTasksMachineUI', 'Adobe Flash Update') that execute PowerShell, cmd, or rundll32 stagers. This blend of T1053.005 + T1547.001 + T1059.001 with these specific task names is a FIN10 hallmark, distinguishing it from generic scheduled-task abuse.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1053.005",
+        "T1547.001",
+        "T1059.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe) (Processes.process=\"*Adobe Acrobat Update*\" OR Processes.process=\"*Adobe Flash Update*\" OR Processes.process=\"*GoogleUpdateTasksMachineUI*\" OR Processes.process=\"*GoogleUpdate*\" OR Processes.process=\"*Adobe Update*\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process,\"(?i)/create|Register-ScheduledTask\") AND match(process,\"(?i)powershell|cmd\\.exe|rundll32|wscript|cscript|mshta|-enc|FromBase64String|DownloadString|IEX|Net\\.WebClient\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName =~ \"schtasks.exe\" or ProcessCommandLine has_any (\"Register-ScheduledTask\", \"schedule.service\")\n| where ProcessCommandLine has_any (\"Adobe Acrobat Update\", \"Adobe Flash Update\", \"GoogleUpdateTasksMachineUI\", \"GoogleUpdate\", \"Adobe Update\", \"AcrobatUpdater\")\n| where ProcessCommandLine has_any (\"powershell\", \"cmd.exe /c\", \"rundll32\", \"wscript\", \"cscript\", \"mshta\", \"-enc\", \"-ec \", \"FromBase64String\", \"DownloadString\", \"IEX\", \"Net.WebClient\", \".vbs\", \".ps1\", \".bat\")\n| extend MasqueradeName = extract(@\"/TN\\s+\\\"?([^\\\"\\s]+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName, AccountDomain, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, MasqueradeName\n| join kind=leftouter (DeviceProcessEvents | where FileName =~ \"powershell.exe\" or FileName =~ \"cmd.exe\" | project ChildTime=Timestamp, DeviceName, ChildCmd=ProcessCommandLine, ChildParent=InitiatingProcessFileName) on DeviceName\n| where ChildTime between (Timestamp .. Timestamp+1h)",
+      "rationale": "Legitimate Adobe/Google updaters do not register tasks via schtasks.exe with PowerShell/cmd payloads \u2014 they use signed MSI/EXE installers writing native task XML. The exact task-name strings ('Adobe Acrobat Update', 'GoogleUpdateTasksMachineUI') were called out in the FireEye FIN10 report as recurring across victims, making this far more actor-specific than a generic schtasks rule."
+    },
+    {
+      "title": "[LLM] FIN10 lateral RDP from compromised valid account followed by PowerShell/SplinterRAT tool transfer",
+      "description": "Detects FIN10's documented internal pivot chain: authenticate with stolen valid credentials (T1078) over RDP (T1021.001) to a new internal host, then push attacker tooling (PowerShell Empire stagers, Meterpreter, SplinterRAT) within minutes (T1570) before clearing artifacts (T1070.004). This three-stage chain inside a 30-minute window is FIN10's repeatable extortion pre-staging behavior.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1078",
+        "T1021.001",
+        "T1570",
+        "T1070.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as logon_time from datamodel=Authentication where Authentication.signature_id IN (4624) Authentication.authentication_method=\"RemoteInteractive\" by Authentication.dest Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | join type=inner dest [| tstats summariesonly=true count min(_time) as file_time values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\Users\\\\*\\\\AppData\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\PerfLogs\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\") (Filesystem.file_name=\"*.exe\" OR Filesystem.file_name=\"*.ps1\" OR Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.bat\") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)`] | where file_time >= logon_time AND file_time <= logon_time+1800 | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process=\"*del /f*\" OR Processes.process=\"*Remove-Item*\" OR Processes.process=\"*wevtutil cl*\" OR Processes.process=\"*-WhatIf*\") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`] | stats values(*) as * by dest user",
+      "kql": "let rdp_in = DeviceLogonEvents\n  | where Timestamp > ago(14d)\n  | where ActionType == \"LogonSuccess\" and LogonType == \"RemoteInteractive\"\n  | where AccountDomain !in~ (\"FONT DRIVER HOST\",\"Window Manager\")\n  | project LogonTime=Timestamp, DeviceId, DeviceName, AccountName, AccountDomain, RemoteIP, RemoteDeviceName;\nlet tool_drop = DeviceFileEvents\n  | where Timestamp > ago(14d)\n  | where ActionType in (\"FileCreated\",\"FileRenamed\")\n  | where FolderPath has_any (@\"\\AppData\\Roaming\", @\"\\AppData\\Local\\Temp\", @\"\\ProgramData\\\", @\"\\PerfLogs\\\", @\"\\Users\\Public\\\")\n  | where FileName endswith \".exe\" or FileName endswith \".ps1\" or FileName endswith \".dll\" or FileName endswith \".bat\"\n  | project DropTime=Timestamp, DeviceId, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName;\nlet cleanup = DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where ProcessCommandLine has_any (\"del /f /q\",\"Remove-Item -Force\",\"wevtutil cl\",\"cipher /w\",\"sdelete\")\n  | project CleanupTime=Timestamp, DeviceId, CleanupCmd=ProcessCommandLine, CleanupUser=AccountName;\nrdp_in\n| join kind=inner tool_drop on DeviceId\n| where DropTime between (LogonTime .. LogonTime+30m) and InitiatingProcessAccountName =~ AccountName\n| join kind=leftouter cleanup on DeviceId\n| where isnull(CleanupTime) or CleanupTime between (LogonTime .. LogonTime+4h)\n| project LogonTime, DeviceName, AccountName, RemoteIP, RemoteDeviceName, DropTime, FileName, FolderPath, SHA256, CleanupTime, CleanupCmd\n| sort by LogonTime desc",
+      "rationale": "FIN10 (per FireEye June 2017 report) is distinguished from typical extortion groups by its heavy reliance on legitimate RDP with stolen credentials rather than custom backdoors for movement, immediately followed by hand-deployment of PowerShell Empire, Meterpreter, or SplinterRAT into user-writable paths. Chaining the RDP logon \u2192 tool drop \u2192 cleanup sequence within tight time windows isolates this"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "name": "Equation",
+  "ucs": [
+    {
+      "title": "[LLM] Equation Group (NSA/TAO) HDD/SSD firmware reflash via raw ATA passthrough (GrayFish / EquationDrug nls_933w-style)",
+      "description": "Hunts the Equation Group's signature capability: overwriting hard-drive firmware to establish a bootkit-resistant implant. Detects processes opening \\\\.\\PhysicalDriveN with write access and either loading the known nls_933w.dll firmware-resolver module or invoking ATA passthrough/IDENTIFY/DOWNLOAD MICROCODE IOCTLs from non-storage-vendor binaries.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1542.002",
+        "T1014",
+        "T1564.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name!=\"smartctl.exe\" Processes.process_name!=\"chkdsk.exe\" Processes.process_name!=\"defrag.exe\" by Processes.dest Processes.user Processes.process_name Processes.process_id\n| `drop_dm_object_name(Processes)`\n| join type=inner dest process_id [\n    | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"\\\\\\\\.\\\\PhysicalDrive*\",\"\\\\Device\\\\Harddisk*\\\\DR*\") by Filesystem.dest Filesystem.process_id Filesystem.file_path\n    | `drop_dm_object_name(Filesystem)`\n    | rename process_id as process_id\n  ]\n| append [\n    | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"nls_933w.dll\",\"mscfg32.dll\",\"prkrnl.sys\",\"win32m.sys\") by Filesystem.dest Filesystem.process_id Filesystem.file_name Filesystem.file_path\n    | `drop_dm_object_name(Filesystem)`\n  ]\n| stats values(file_path) as touched_artifacts values(file_name) as iocs values(cmdline) as cmdline values(parent) as parent count by dest user process_name\n| where count > 0 AND (mvcount(touched_artifacts) > 0 OR mvcount(iocs) > 0)\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let equation_iocs = dynamic([\"nls_933w.dll\",\"mscfg32.dll\",\"prkrnl.sys\",\"win32m.sys\",\"DoubleFantasy\",\"GrayFish\"]);\nlet storage_vendor_signers = dynamic([\"Western Digital Technologies\",\"Seagate Technology\",\"Samsung Electronics\",\"Intel Corporation\",\"Micron Technology\",\"Microsoft Windows\"]);\nlet raw_disk = DeviceEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"RawAccessRead\" or AdditionalFields has \"PhysicalDrive\"\n| where InitiatingProcessFileName !in~ (\"smartctl.exe\",\"chkdsk.exe\",\"defrag.exe\",\"diskpart.exe\",\"vssadmin.exe\")\n| project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessAccountName, InitiatingProcessCommandLine, ReportId;\nlet ioc_loads = DeviceImageLoadEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (equation_iocs) or SHA256 in (\"\")\n| project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, FileName as LoadedDLL, SHA256;\nraw_disk\n| join kind=leftouter (ioc_loads) on DeviceId\n| union (DeviceProcessEvents\n  | where Timestamp > ago(30d)\n  | where ProcessCommandLine has_any (\"DeviceIoControl\",\"IOCTL_ATA_PASS_THROUGH\",\"SMART_RCV_DRIVE_DATA\",\"DOWNLOAD MICROCODE\",\"\\\\\\\\.\\\\PhysicalDrive\")\n  | where InitiatingProcessSignerType != \"Microsoft\" and InitiatingProcessSignatureStatus !in~ (\"Valid\")\n  | project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)\n| summarize Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Artifacts=make_set(LoadedDLL), Cmdlines=make_set(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessFileName\n| where Hits > 0 and (array_length(Artifacts) > 0 or Cmdlines has_any (\"PhysicalDrive\",\"ATA_PASS\",\"MICROCODE\"))",
+      "rationale": "HDD firmware overwrite is essentially a unique Equation Group capability publicly documented by Kaspersky (EquationDrug/GrayFish, nls_933w.dll resolver). Combining raw \\\\.\\PhysicalDriveN write access from a non-storage-vendor binary with the documented module names produces extremely low FP and is not satisfied by generic disk utilities. This binds the detection to Equation tradecraft rather than "
+    },
+    {
+      "title": "[LLM] Fanny-style USB air-gap recon: peripheral enumeration + hidden filesystem on removable media + environmental keying",
+      "description": "Catches the Equation Group's Fanny worm chain used to bridge air-gapped networks: a process enumerates USB peripherals (SetupDi*/WMI diskdrive), creates a hidden container/filesystem in unallocated or hidden directories on removable media, and gates execution on a host-specific value (environmental keying via volume serial / domain hash). Designed for the EquationDrug/Fanny tradecraft, not generic USB malware.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1120",
+        "T1480.001",
+        "T1564.005",
+        "T1091"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process IN (\"*wmic* diskdrive*\",\"*wmic* path Win32_USB*\",\"*Get-PnpDevice*\",\"*SetupDiGetClassDevs*\",\"*GetVolumeInformation*\",\"*GetVolumeNameForVolumeMountPoint*\")) by Processes.dest Processes.user Processes.process_name Processes.process_id Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n| join type=inner dest [\n    | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\$RECYCLE.BIN\\\\*\",\"*\\\\System Volume Information\\\\*\",\"*\\\\autorun.inf\",\"*\\\\.tmp\\\\*\") AND (Filesystem.file_path IN (\"E:\\\\*\",\"F:\\\\*\",\"G:\\\\*\",\"H:\\\\*\",\"I:\\\\*\",\"J:\\\\*\")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id\n    | `drop_dm_object_name(Filesystem)`\n    | stats values(file_path) as removable_writes values(file_name) as written_files by dest process_id\n  ]\n| stats values(cmdline) as recon_cmd values(removable_writes) as removable_writes values(written_files) as written_files values(parent_process_name) as parent count by dest user process_name\n| where mvcount(recon_cmd)>0 AND mvcount(removable_writes)>0\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let recon_window = 10m;\nlet usb_recon = DeviceProcessEvents\n| where Timestamp > ago(30d)\n| where ProcessCommandLine has_any (\"wmic diskdrive\", \"wmic path Win32_USB\", \"Get-PnpDevice\", \"SetupDiGetClassDevs\", \"GetVolumeInformation\", \"VolumeSerialNumber\", \"Win32_LogicalDisk where DriveType=2\")\n| project ReconTime=Timestamp, DeviceId, DeviceName, ReconProcess=InitiatingProcessFileName, ReconUser=InitiatingProcessAccountName, ReconCmd=ProcessCommandLine;\nlet removable_writes = DeviceFileEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"FileCreated\",\"FileModified\")\n| where FolderPath has_any (\"\\\\$RECYCLE.BIN\\\\\", \"\\\\System Volume Information\\\\\", \"\\\\.Trashes\\\\\")\n   or FileName in~ (\"autorun.inf\",\"desktop.ini\")\n   or FolderPath matches regex @\"^[D-Z]:\\\\\\.[a-zA-Z0-9]+\\\\\"\n| where InitiatingProcessFileName !in~ (\"explorer.exe\",\"OneDrive.exe\",\"WinRAR.exe\",\"7zG.exe\")\n| project FileTime=Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, FolderPath, FileName, FileSize, SHA256;\nusb_recon\n| join kind=inner removable_writes on DeviceId\n| where FileTime between (ReconTime .. ReconTime + recon_window)\n| summarize HiddenArtifacts=make_set(strcat(FolderPath, FileName)), ReconCmds=make_set(ReconCmd), Procs=make_set(InitiatingProcessFileName), FirstSeen=min(ReconTime), LastSeen=max(FileTime), Hits=count() by DeviceName, ReconUser\n| where Hits >= 2",
+      "rationale": "Fanny (Equation Group) is the canonical air-gap-bridging worm and is documented by Kaspersky as enumerating USB peripherals, dropping a hidden virtual filesystem inside $RECYCLE.BIN / System Volume Information on removable media, and using environmental keying to only execute on intended targets. Generic USB malware (e.g. Andromeda, Raspberry Robin) writes LNK lures to the root of the drive, not h"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "name": "CURIUM",
+  "ucs": [
+    {
+      "title": "[LLM] CURIUM (Crimson Sandstorm / TA456) LEMPO-style recon exfiltration over SMTP from Office macro chain",
+      "description": "Hunts the signature LEMPO / Liderbot post-exploitation behavior used by TA456 (Marcella Flores persona) and Tortoise Shell: an Office or scripting host spawns PowerShell/cmd that uses System.Net.Mail (SmtpClient / MailMessage) to ship host-recon output to an attacker-controlled mailbox over TCP 25/465/587. This SMTP exfiltration is a near-unique fingerprint of CURIUM tooling rather than a generic phishing technique.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1204.002",
+        "T1059.001",
+        "T1082",
+        "T1041",
+        "T1048.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"excel.exe\",\"winword.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.dest | `drop_dm_object_name(Processes)` | rename dest as src | search process IN (\"*Net.Mail*\",\"*SmtpClient*\",\"*MailMessage*\",\"*Send-MailMessage*\",\"*systeminfo*\",\"*whoami*\",\"*ipconfig*\") | join type=inner src process_id [ | tstats summariesonly=true count sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest) as smtp_dest values(All_Traffic.dest_port) as smtp_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (25,465,587) AND All_Traffic.app!=\"outlook.exe\" AND All_Traffic.app!=\"mailapp.exe\" by All_Traffic.src All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` ] | eval risk_score=80, threat_actor=\"CURIUM/TA456/Crimson Sandstorm (G1012)\" | table firstTime,lastTime,src,user,parent_process_name,process_name,process,smtp_dest,smtp_port,bytes_out,threat_actor",
+      "kql": "let officeAndScripting = dynamic([\"excel.exe\",\"winword.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\"]);\nlet mailClients = dynamic([\"outlook.exe\",\"hxoutlook.exe\",\"thunderbird.exe\",\"mailapp.exe\"]);\nlet suspectScripts = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (officeAndScripting)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n| where ProcessCommandLine has_any (\"Net.Mail\",\"SmtpClient\",\"MailMessage\",\"Send-MailMessage\",\"systeminfo\",\"whoami\",\"ipconfig\",\"tasklist\",\"netstat\")\n| project Timestamp, DeviceId, DeviceName, AccountName, ParentProcess=InitiatingProcessFileName, FileName, ProcessCommandLine, ScriptPid=ProcessId;\nlet smtpEgress = DeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemotePort in (25,465,587)\n| where InitiatingProcessFileName !in~ (mailClients)\n| project NetTime=Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort, EgressProcess=InitiatingProcessFileName, EgressPid=InitiatingProcessId;\nsuspectScripts\n| join kind=inner smtpEgress on DeviceId\n| where NetTime between (Timestamp .. Timestamp + 10m)\n| where ScriptPid == EgressPid or EgressProcess in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n| extend ThreatActor=\"CURIUM / TA456 / Crimson Sandstorm (G1012)\", Tooling=\"LEMPO / Liderbot\"\n| project Timestamp, DeviceName, AccountName, ParentProcess, FileName, ProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, EgressProcess, ThreatActor, Tooling",
+      "rationale": "Microsoft (Crimson Sandstorm), Mandiant/Symantec (Tortoise Shell), and Proofpoint (TA456 / Marcella Flores reporting) all describe a near-identical kill chain where macro-laden lures (often via long-term LinkedIn/email rapport) drop LEMPO/Liderbot which uses System.Net.Mail SmtpClient over TCP 587 to attacker mailboxes (e.g. Gmail/Yahoo) for staged recon exfil. SMTP exfiltration by a non-mail-clie"
+    },
+    {
+      "title": "[LLM] CURIUM long-rapport spearphishing-via-service: cloud-storage lure from previously benign external sender targeting defense/IT staff",
+      "description": "Catches the months-of-grooming pattern (Tortoise Shell / Yellow Liderc / TA456 'Marcella Flores' persona) where an external sender first establishes harmless correspondence, then pivots to a OneDrive/Google Drive/Dropbox link delivering a macro document. Rather than alert on cloud links generically, this UC requires prior benign email history with the same sender, then a click on a cloud-storage URL, then Office spawning script interpreters within minutes \u2013 a chain documented specifically against defense contractors and Middle East IT providers by this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "medium",
+      "techs": [
+        "T1585.001",
+        "T1585.002",
+        "T1598.003",
+        "T1566.001",
+        "T1566.003",
+        "T1204.002",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count as prior_msgs from datamodel=Email.All_Email where All_Email.action=\"delivered\" AND All_Email.is_phishing=0 earliest=-180d@d latest=-7d@d by All_Email.src_user All_Email.recipient | rename All_Email.src_user as src_user All_Email.recipient as recipient | where prior_msgs>=2 | join type=inner src_user recipient [ | tstats summariesonly=true values(All_Email.subject) as subject values(All_Email.message_id) as message_id min(_time) as mail_time from datamodel=Email.All_Email where All_Email.action=\"delivered\" AND All_Email.url=\"*onedrive.live.com*\" OR All_Email.url=\"*1drv.ms*\" OR All_Email.url=\"*drive.google.com*\" OR All_Email.url=\"*dropbox.com*\" OR All_Email.url=\"*wetransfer.com*\" earliest=-7d@d by All_Email.src_user All_Email.recipient All_Email.url | rename All_Email.src_user as src_user All_Email.recipient as recipient All_Email.url as lure_url ] | join type=inner recipient [ | tstats summariesonly=true min(_time) as click_time from datamodel=Web.Web where Web.url IN (\"*onedrive.live.com*\",\"*1drv.ms*\",\"*drive.google.com*\",\"*dropbox.com*\",\"*wetransfer.com*\") by Web.user Web.dest Web.url | rename Web.user as recipient Web.dest as src ] | join type=inner src [ | tstats summariesonly=true min(_time) as exec_time values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"excel.exe\",\"winword.exe\",\"powerpnt.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\") by host Processes.user | rename host as src ] | where exec_time>click_time AND (exec_time-click_time)<1800 | eval threat_actor=\"CURIUM / TA456 / Yellow Liderc (G1012)\" | table mail_time,click_time,exec_time,src_user,recipient,subject,lure_url,cmdline,prior_msgs,threat_actor",
+      "kql": "let cloud = dynamic([\"onedrive.live.com\",\"1drv.ms\",\"sharepoint.com\",\"drive.google.com\",\"docs.google.com\",\"dropbox.com\",\"wetransfer.com\",\"mediafire.com\"]);\nlet priorBenign = EmailEvents\n| where Timestamp between (ago(180d) .. ago(7d))\n| where DeliveryAction == \"Delivered\" and ThreatTypes == \"\" and EmailDirection == \"Inbound\"\n| summarize priorMsgs=count() by SenderFromAddress, RecipientEmailAddress\n| where priorMsgs >= 2;\nlet lureMail = EmailUrlInfo\n| where Url has_any (cloud)\n| join kind=inner (EmailEvents | where Timestamp > ago(7d) and DeliveryAction == \"Delivered\" and EmailDirection == \"Inbound\") on NetworkMessageId\n| project MailTime=Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, LureUrl=Url;\nlet groomed = lureMail | join kind=inner priorBenign on SenderFromAddress, RecipientEmailAddress;\nlet clicks = UrlClickEvents\n| where Timestamp > ago(7d)\n| where Url has_any (cloud)\n| project ClickTime=Timestamp, NetworkMessageId, AccountUpn, ClickedUrl=Url, IsClickedThrough;\nlet groomedClicked = groomed | join kind=inner clicks on NetworkMessageId | where ClickTime between (MailTime .. MailTime + 7d);\nlet officeChild = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"excel.exe\",\"winword.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\")\n| project ExecTime=Timestamp, DeviceName, AccountUpn=strcat(AccountName,\"@\",AccountDomain), Parent=InitiatingProcessFileName, Child=FileName, CmdLine=ProcessCommandLine;\ngroomedClicked\n| join kind=inner officeChild on AccountUpn\n| where ExecTime between (ClickTime .. ClickTime + 30m)\n| extend ThreatActor=\"CURIUM / TA456 / Yellow Liderc / Tortoise Shell (G1012)\", Tradecraft=\"Long-rapport social-engineering -> cloud-hosted macro lure\"\n| project MailTime, ClickTime, ExecTime, SenderFromAddress, RecipientEmailAddress, Subject, LureUrl, DeviceName, Parent, Child, CmdLine, priorMsgs, ThreatActor, Tradecraft",
+      "rationale": "Generic cloud-link phishing detections drown in FPs. CURIUM is documented (Symantec Tortoiseshell 2019, Proofpoint TA456 'Marcella Flores' 2021, Microsoft Crimson Sandstorm, Mandiant Yellow Liderc) for spending months exchanging benign messages with defense-contractor and Middle East IT-provider targets via fake personas before sending the malicious cloud-hosted lure. Requiring >=2 prior benign me"
+    }
+  ]
+}

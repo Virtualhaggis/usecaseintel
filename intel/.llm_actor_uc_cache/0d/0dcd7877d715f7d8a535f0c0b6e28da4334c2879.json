@@ -1,0 +1,47 @@
+{
+  "name": "INC Ransom",
+  "ucs": [
+    {
+      "title": "[LLM] INC Ransom encryptor execution via PsExec/WMIC with characteristic CLI flags (--file/--dir/--motd/--skip-hidden)",
+      "description": "Hunts the INC Ransom (GOLD IONIC) payload's distinctive command-line invocation pattern. The INC encryptor is routinely pushed across the estate by the operators using PsExec or wmic process call create and is run with bespoke switches such as --file, --dir, --motd, --debug, --sup, --lhd, --skip-hidden, --skip-files, --ens \u2014 a fingerprint not shared by mainstream commodity ransomware families.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1486",
+        "T1059.003",
+        "T1569.002",
+        "T1047",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"psexesvc.exe\",\"PSEXESVC.exe\",\"wmiprvse.exe\",\"services.exe\",\"cmd.exe\") OR Processes.parent_process_name=\"explorer.exe\") (Processes.process=\"*--file*\" OR Processes.process=\"*--dir*\" OR Processes.process=\"*--motd*\" OR Processes.process=\"*--skip-hidden*\" OR Processes.process=\"*--skip-files*\" OR Processes.process=\"*--ens*\" OR Processes.process=\"*--lhd*\" OR Processes.process=\"*--sup*\" OR Processes.process=\"*--debug*\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, \"(?i)(--file\\s+|--dir\\s+|--motd\\s+|--skip-hidden|--skip-files|--ens\\s+|--lhd|--sup\\s+\\d|--debug)\") | rex field=process \"(?<inc_flags>--(file|dir|motd|skip-hidden|skip-files|ens|lhd|sup|debug))\" | stats values(inc_flags) as flags_seen values(process) as cmdlines values(parent_process_name) as parents min(firstTime) as firstTime max(lastTime) as lastTime count by dest user process_name | where mvcount(flags_seen) >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName has_any (\"psexesvc.exe\",\"PSEXEC.exe\",\"wmiprvse.exe\",\"services.exe\",\"cmd.exe\",\"explorer.exe\")\n| where ProcessCommandLine has_any (\"--file \",\"--dir \",\"--motd \",\"--skip-hidden\",\"--skip-files\",\"--ens \",\"--lhd\",\"--sup \",\"--debug\")\n| extend FlagHits = countof(ProcessCommandLine, \"--\")\n| extend IncFlags = extract_all(@\"--(file|dir|motd|skip-hidden|skip-files|ens|lhd|sup|debug)\\b\", ProcessCommandLine)\n| where array_length(IncFlags) >= 2\n| where not(FileName has_any (\"msbuild.exe\",\"dotnet.exe\",\"npm.exe\",\"git.exe\",\"python.exe\",\"node.exe\"))\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, IncFlags, SHA256\n| sort by Timestamp asc",
+      "rationale": "These specific switches (--motd, --skip-hidden, --lhd, --ens, --sup) are documented in SentinelOne, Huntress and SecureWorks reporting on GOLD IONIC's INC encryptor and are not a generic ransomware indicator. Combined with the characteristic PsExec/WMIC parent (their published lateral-movement TTP) the rule fires on INC's actual encryption stage rather than a vague 'ransomware-like' pattern."
+    },
+    {
+      "title": "[LLM] INC Ransom pre-exfil staging: 7-Zip archive of file shares followed by MEGAsync/rclone egress",
+      "description": "Hunts INC Ransom's (GOLD IONIC) double-extortion exfiltration chain. The crew is consistently observed running 7z.exe / 7za.exe to archive enumerated SMB share contents to a staging directory (T1074, T1560.001) and then pushing those archives to MEGA via MEGAsync.exe or to other cloud storage via rclone.exe (T1567 / T1537), often within hours of the encryptor running.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1560.001",
+        "T1074",
+        "T1537",
+        "T1219",
+        "T1135"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"7z.exe\",\"7za.exe\",\"WinRAR.exe\",\"Rar.exe\") Processes.process IN (\"*a -*\",\"*-mx*\",\"*-p*\",\"*\\\\\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name _time | `drop_dm_object_name(Processes)` | rename dest as host | join type=left host [| tstats summariesonly=true count min(_time) as exfil_first max(_time) as exfil_last from datamodel=Endpoint.Processes where Processes.process_name IN (\"MEGAsync.exe\",\"megacmd.exe\",\"rclone.exe\",\"WinSCP.exe\",\"FileZilla.exe\") by Processes.dest Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | rename dest as host process_name as exfil_tool process as exfil_cmd] | where isnotnull(exfil_tool) AND (exfil_first - lastTime) < 86400 AND (exfil_first - lastTime) > -3600 | table firstTime host user process_name process exfil_tool exfil_cmd exfil_first | `security_content_ctime(firstTime)` | `security_content_ctime(exfil_first)`",
+      "kql": "let archive =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (\"7z.exe\",\"7za.exe\",\"WinRAR.exe\",\"Rar.exe\")\n    | where ProcessCommandLine has_any (\" a \",\" a -\",\"-mx\",\"-p\") and ProcessCommandLine has_any (\"\\\\\\\\\",\".7z\",\".rar\",\".zip\")\n    | project ArchiveTime=Timestamp, DeviceId, DeviceName, ArchiveAccount=AccountName, ArchiveCmd=ProcessCommandLine, ArchiveBin=FileName;\nlet exfil =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (\"MEGAsync.exe\",\"megacmd.exe\",\"MEGAcmdServer.exe\",\"rclone.exe\",\"WinSCP.exe\",\"FileZilla.exe\",\"putty.exe\",\"pscp.exe\")\n    | project ExfilTime=Timestamp, DeviceId, ExfilBin=FileName, ExfilCmd=ProcessCommandLine;\narchive\n| join kind=inner exfil on DeviceId\n| where ExfilTime between (ArchiveTime .. ArchiveTime + 24h)\n| extend MinutesBetween = datetime_diff('minute', ExfilTime, ArchiveTime)\n| project ArchiveTime, ExfilTime, MinutesBetween, DeviceName, ArchiveAccount, ArchiveBin, ArchiveCmd, ExfilBin, ExfilCmd\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where RemoteUrl has_any (\"mega.nz\",\"mega.io\",\"userstorage.mega.co.nz\",\"g.api.mega.co.nz\")\n    | project NetTime=Timestamp, DeviceName, RemoteUrl, RemoteIP\n) on DeviceName\n| sort by ArchiveTime asc",
+      "rationale": "MEGA via MEGAsync is INC Ransom's signature exfil channel called out by SecureWorks (GOLD IONIC), Huntress and ReliaQuest, and the 7-Zip-then-MEGA sequence is a specific INC tradecraft pattern (not just any actor that touches MEGA). Time-correlating archive creation with cloud egress on the same host within 24h gives a high-signal chain hit on INC's exfil stage before the encryptor lands, while ke"
+    }
+  ]
+}

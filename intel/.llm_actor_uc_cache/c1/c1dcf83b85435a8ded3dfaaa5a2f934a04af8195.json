@@ -1,0 +1,45 @@
+{
+  "name": "Flax Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Flax Typhoon SoftEther VPN bridge persistence (renamed vpnbridge/vpnclient)",
+      "description": "Hunts Flax Typhoon's signature persistence: deploying a SoftEther VPN bridge/client renamed as conhost.exe, dllhost.exe, or other LOLBin-looking names, launched from non-standard paths and beaconing to attacker-controlled VPN relays. Microsoft's August 2023 Flax Typhoon report calls out this exact TTP as the actor's primary long-term foothold against Taiwanese targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1133",
+        "T1090.003",
+        "T1036.005",
+        "T1543.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name IN (\"conhost.exe\",\"dllhost.exe\",\"svchost.exe\",\"lsass.exe\",\"taskhost.exe\",\"explorer.exe\") AND NOT Processes.process_path IN (\"*\\\\Windows\\\\System32\\\\*\",\"*\\\\Windows\\\\SysWOW64\\\\*\",\"*\\\\Windows\\\\WinSxS\\\\*\",\"*\\\\Program Files*\")) OR (Processes.process IN (\"*vpnbridge*\",\"*vpnclient*\",\"*vpncmd*\",\"*SoftEther*\",\"*hamcore.se2*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | join type=left dest [| tstats summariesonly=true values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port count as net_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (443,992,5555,1194,4500) by All_Traffic.src All_Traffic.app | rename All_Traffic.src as dest] | where net_count > 0 OR match(process_path,\"(?i)\\\\\\\\(ProgramData|Users\\\\\\\\Public|Temp|AppData)\\\\\\\\\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - net_count",
+      "kql": "let suspiciousNames = dynamic([\"conhost.exe\",\"dllhost.exe\",\"svchost.exe\",\"lsass.exe\",\"taskhost.exe\",\"explorer.exe\",\"winlogon.exe\"]);\nlet legitPaths = dynamic([@\"c:\\windows\\system32\",@\"c:\\windows\\syswow64\",@\"c:\\windows\\winsxs\",@\"c:\\program files\"]);\nlet softetherArtifacts = dynamic([\"vpnbridge\",\"vpnclient\",\"vpncmd\",\"vpnserver\",\"softether\",\"hamcore.se2\"]);\nlet renamed = DeviceProcessEvents\n| where Timestamp > ago(30d)\n| where (FileName in~ (suspiciousNames) and not(tolower(FolderPath) has_any (legitPaths)))\n     or ProcessCommandLine has_any (softetherArtifacts)\n     or InitiatingProcessCommandLine has_any (softetherArtifacts)\n| project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, ParentProcess=InitiatingProcessFileName, PPath=InitiatingProcessFolderPath;\nlet netHits = DeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where RemotePort in (443,992,5555,1194,4500)\n| where InitiatingProcessFileName in~ (suspiciousNames)\n  and not(tolower(InitiatingProcessFolderPath) has_any (legitPaths))\n| summarize Beacons=count(), RemoteIPs=make_set(RemoteIP,25), Ports=make_set(RemotePort,5) by DeviceId, InitiatingProcessFileName, InitiatingProcessFolderPath;\nrenamed\n| join kind=leftouter netHits on $left.DeviceId == $right.DeviceId and $left.FileName == $right.InitiatingProcessFileName and $left.FolderPath == $right.InitiatingProcessFolderPath\n| extend FlaxTyphoonScore = iff(ProcessCommandLine has_any (softetherArtifacts), 100, 0)\n  + iff(Beacons > 0, 50, 0)\n  + iff(FolderPath matches regex @\"(?i)\\\\(programdata|users\\\\public|temp|appdata)\\\\\", 25, 0)\n| where FlaxTyphoonScore >= 50\n| sort by FlaxTyphoonScore desc, Timestamp desc",
+      "rationale": "SoftEther VPN bridges renamed as conhost.exe/dllhost.exe and outbound on 443/992 is the publicly-documented Flax Typhoon (Ethereal Panda) signature from Microsoft's August 2023 disclosure. Generic APTs do not consistently combine (a) SoftEther binaries, (b) LOLBin masquerading names, (c) execution from ProgramData/Public, and (d) outbound VPN ports. Joining process+network on the same renamed bina"
+    },
+    {
+      "title": "[LLM] Flax Typhoon Sticky Keys / Accessibility-Feature debugger backdoor with NLA disabled for RDP logon-screen access",
+      "description": "Hunts Flax Typhoon's accessibility-feature backdoor: setting an Image File Execution Options Debugger on sethc.exe/utilman.exe/osk.exe (usually pointing to Task Manager or cmd.exe) combined with disabling Network Level Authentication on Terminal Services so the actor can spawn SYSTEM shells from the RDP logon screen. Microsoft and CrowdStrike specifically attribute this chain to Flax Typhoon for Taiwan-focused intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1546.008",
+        "T1021.001",
+        "T1562.006",
+        "T1112"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as value values(Registry.user) as user values(Registry.process_guid) as guid from datamodel=Endpoint.Registry where (Registry.registry_path=\"*\\\\Image File Execution Options\\\\sethc.exe*\" OR Registry.registry_path=\"*\\\\Image File Execution Options\\\\utilman.exe*\" OR Registry.registry_path=\"*\\\\Image File Execution Options\\\\osk.exe*\" OR Registry.registry_path=\"*\\\\Image File Execution Options\\\\narrator.exe*\" OR Registry.registry_path=\"*\\\\Image File Execution Options\\\\magnify.exe*\") AND Registry.registry_value_name=\"Debugger\" by Registry.dest Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as value from datamodel=Endpoint.Registry where (Registry.registry_path=\"*\\\\Terminal Server\\\\WinStations\\\\RDP-Tcp\\\\UserAuthentication*\" OR Registry.registry_path=\"*\\\\Terminal Server\\\\fDenyTSConnections*\" OR Registry.registry_path=\"*\\\\Terminal Server\\\\SecurityLayer*\") AND Registry.registry_value_data IN (\"0x00000000\",\"0\") by Registry.dest Registry.registry_path] | stats values(registry_path) as paths values(value) as values count by dest | where mvcount(paths) >= 2 | `security_content_ctime(firstTime)`",
+      "kql": "let ifeoTargets = dynamic([\"sethc.exe\",\"utilman.exe\",\"osk.exe\",\"narrator.exe\",\"magnify.exe\",\"displayswitch.exe\",\"atbroker.exe\"]);\nlet ifeoEvents = DeviceRegistryEvents\n| where Timestamp > ago(60d)\n| where RegistryKey has @\"Image File Execution Options\"\n| where RegistryValueName =~ \"Debugger\"\n| extend target = tostring(extract(@\"Image File Execution Options\\\\([^\\\\]+)\", 1, RegistryKey))\n| where target in~ (ifeoTargets)\n| project IfeoTime=Timestamp, DeviceId, DeviceName, target, DebuggerPath=RegistryValueData, IfeoActor=InitiatingProcessAccountName, IfeoProc=InitiatingProcessFileName;\nlet nlaDisabled = DeviceRegistryEvents\n| where Timestamp > ago(60d)\n| where (RegistryKey has @\"Terminal Server\\WinStations\\RDP-Tcp\" and RegistryValueName in~ (\"UserAuthentication\",\"SecurityLayer\") and RegistryValueData in (\"0\",\"0x00000000\"))\n     or (RegistryKey has @\"Terminal Server\" and RegistryValueName =~ \"fDenyTSConnections\" and RegistryValueData in (\"0\",\"0x00000000\"))\n| project NlaTime=Timestamp, DeviceId, NlaKey=RegistryKey, NlaValue=RegistryValueName, NlaData=RegistryValueData;\nlet logonScreenChild = DeviceProcessEvents\n| where Timestamp > ago(60d)\n| where InitiatingProcessFileName in~ (\"sethc.exe\",\"utilman.exe\",\"osk.exe\",\"narrator.exe\",\"magnify.exe\")\n| where FileName in~ (\"taskmgr.exe\",\"cmd.exe\",\"powershell.exe\",\"explorer.exe\",\"mmc.exe\")\n| project ChildTime=Timestamp, DeviceId, ChildProcess=FileName, ChildCmd=ProcessCommandLine, AccountName;\nifeoEvents\n| join kind=inner nlaDisabled on DeviceId\n| join kind=leftouter logonScreenChild on DeviceId\n| where abs(datetime_diff('hour', IfeoTime, NlaTime)) <= 72\n| project IfeoTime, NlaTime, ChildTime, DeviceName, target, DebuggerPath, NlaKey, NlaData, ChildProcess, ChildCmd, AccountName\n| sort by IfeoTime desc",
+      "rationale": "The chain of (1) IFEO Debugger on an accessibility binary, (2) RDP NLA disabled (UserAuthentication=0), and (3) Task Manager / cmd.exe spawned as a child of sethc/utilman is documented as a Flax Typhoon hallmark by Microsoft Threat Intelligence and CrowdStrike's Ethereal Panda profile - the actor specifically wants pre-auth SYSTEM access from the RDP login screen so they can avoid dropping novel m"
+    }
+  ]
+}

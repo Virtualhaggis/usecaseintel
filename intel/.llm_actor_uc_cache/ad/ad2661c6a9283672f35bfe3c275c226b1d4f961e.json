@@ -1,0 +1,47 @@
+{
+  "name": "PlushDaemon",
+  "ucs": [
+    {
+      "title": "[LLM] PlushDaemon supply-chain trojanized installer \u2192 DLL side-load of SlowStepper loader (IPany VPN pattern)",
+      "description": "Hunts the PlushDaemon (ESET-tracked, CN-nexus) supply-chain tradecraft observed in the IPany VPN compromise: a trojanized vendor installer drops a renamed legitimate Microsoft binary (e.g. PerfWatson.exe, a renamed Visual Studio component) into a non-standard path together with a malicious sideloading DLL (lregdll.dll / AutoMsg.dll), which then loads SlowStepper. Catches the install chain regardless of which vendor installer is weaponized next.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1195.002",
+        "T1574.014",
+        "T1574.001",
+        "T1036.005",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN (\"PerfWatson.exe\",\"PerfWatson2.exe\",\"DataExchangeHost.exe\",\"ServiceHub.IdentityHost.exe\") AND NOT (Processes.process_path IN (\"*\\\\Program Files*\\\\Microsoft Visual Studio*\",\"*\\\\Program Files*\\\\Microsoft Shared*\")) by host Processes.process_name Processes.parent_process_name Processes.process_path | join type=outer host [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"lregdll.dll\",\"AutoMsg.dll\",\"PerfWatson.exe\",\"svcghost.exe\") AND NOT (Filesystem.file_path IN (\"*\\\\Program Files*\\\\Microsoft*\",\"*\\\\Windows\\\\WinSxS\\\\*\")) by host Filesystem.file_path Filesystem.file_name Filesystem.process_name | rename Filesystem.file_path as dropped_path Filesystem.file_name as dropped_name Filesystem.process_name as dropper] | where isnotnull(dropped_path) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime host parent process_name process_path cmdline dropper dropped_name dropped_path",
+      "kql": "let suspectNames = dynamic([\"PerfWatson.exe\",\"PerfWatson2.exe\",\"DataExchangeHost.exe\",\"ServiceHub.IdentityHost.exe\",\"svcghost.exe\"]);\nlet sideloadDlls = dynamic([\"lregdll.dll\",\"AutoMsg.dll\"]);\nlet renamedLegit =\n  DeviceProcessEvents\n  | where FileName in~ (suspectNames)\n  | where FolderPath !startswith \"C:\\\\Program Files\\\\Microsoft Visual Studio\"\n      and FolderPath !startswith \"C:\\\\Program Files (x86)\\\\Microsoft Visual Studio\"\n      and FolderPath !startswith \"C:\\\\Program Files\\\\Common Files\\\\Microsoft Shared\"\n  | project Timestamp, DeviceId, DeviceName, FileName, FolderPath, ProcessCommandLine,\n            InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine;\nlet droppedLoader =\n  DeviceFileEvents\n  | where ActionType in (\"FileCreated\",\"FileRenamed\")\n  | where FileName in~ (sideloadDlls) or FileName in~ (suspectNames)\n  | where FolderPath !startswith \"C:\\\\Program Files\\\\Microsoft\"\n      and FolderPath !startswith \"C:\\\\Windows\\\\WinSxS\"\n  | project DropTime=Timestamp, DeviceId, DroppedFile=FileName, DroppedPath=FolderPath,\n            Dropper=InitiatingProcessFileName, DropperPath=InitiatingProcessFolderPath,\n            DropperCmd=InitiatingProcessCommandLine;\nrenamedLegit\n| join kind=inner droppedLoader on DeviceId\n| where abs(datetime_diff('minute', Timestamp, DropTime)) <= 60\n| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName,\n          InitiatingProcessCommandLine, DroppedFile, DroppedPath, Dropper, DropperCmd",
+      "rationale": "The combination of a renamed Microsoft VS binary (PerfWatson.exe et al.) running outside Program Files alongside a same-host drop of lregdll.dll / AutoMsg.dll is the literal IOC pattern ESET documented for PlushDaemon's IPany supply-chain operation. Generic DLL-sideload rules will not anchor on these specific filenames, and these binaries are exceedingly rare outside their legitimate VS install pa"
+    },
+    {
+      "title": "[LLM] PlushDaemon SlowStepper C2 resolution via public DoH + plugin pull from Gitee/GitHub raw",
+      "description": "Hunts the SlowStepper C2 staging tradecraft unique to PlushDaemon: the implant resolves its real C2 by querying public DNS-over-HTTPS resolvers (e.g. dns.alidns.com, doh.pub, cloudflare-dns.com, dns.google) for actor-controlled domains, then retrieves Python plugin modules from gitee.com / raw.githubusercontent.com. Detecting the DoH-from-non-browser + code-host fetch pair on the same host within a short window is highly specific to this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1071.004",
+        "T1090.003",
+        "T1102.002",
+        "T1105",
+        "T1573.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (\"1.1.1.1\",\"1.0.0.1\",\"8.8.8.8\",\"8.8.4.4\",\"9.9.9.9\",\"223.5.5.5\",\"223.6.6.6\",\"119.29.29.29\",\"180.76.76.76\") AND All_Traffic.dest_port=443 AND NOT All_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"safari.exe\",\"iexplore.exe\",\"svchost.exe\") by host All_Traffic.process_name All_Traffic.process_path All_Traffic.dest _time span=10m | rename host as src_host | join type=inner src_host [| tstats summariesonly=true count from datamodel=Web.Web where (Web.url IN (\"*gitee.com/*/raw/*\",\"*raw.githubusercontent.com/*\",\"*gitcode.net/*/raw/*\") OR Web.dest IN (\"gitee.com\",\"raw.githubusercontent.com\")) AND NOT Web.user_agent IN (\"*Mozilla*\",\"*Chrome*\",\"*Edg/*\") by host Web.url Web.user_agent Web.dest Web.http_user_agent _time span=10m | rename host as src_host] | stats min(_time) as firstTime max(_time) as lastTime values(process_name) as doh_process values(All_Traffic.dest) as doh_resolver values(Web.url) as code_host_url values(Web.user_agent) as ua by src_host | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let dohIPs = dynamic([\"1.1.1.1\",\"1.0.0.1\",\"8.8.8.8\",\"8.8.4.4\",\"9.9.9.9\",\"223.5.5.5\",\"223.6.6.6\",\"119.29.29.29\",\"180.76.76.76\",\"185.222.222.222\"]);\nlet browserProcs = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"safari.exe\"]);\nlet doh =\n  DeviceNetworkEvents\n  | where Timestamp > ago(7d)\n  | where RemotePort == 443 and RemoteIP in (dohIPs)\n  | where InitiatingProcessFileName !in~ (browserProcs)\n  | where InitiatingProcessFileName !endswith \"svchost.exe\"\n  | project DohTime=Timestamp, DeviceId, DeviceName,\n            DohProc=InitiatingProcessFileName, DohPath=InitiatingProcessFolderPath,\n            DohCmd=InitiatingProcessCommandLine, DohRemoteIP=RemoteIP;\nlet codehost =\n  DeviceNetworkEvents\n  | where Timestamp > ago(7d)\n  | where RemoteUrl has_any (\"gitee.com\",\"raw.githubusercontent.com\",\"gitcode.net\",\"codeload.github.com\")\n  | where InitiatingProcessFileName !in~ (browserProcs)\n  | project FetchTime=Timestamp, DeviceId,\n            FetchProc=InitiatingProcessFileName, FetchPath=InitiatingProcessFolderPath,\n            FetchCmd=InitiatingProcessCommandLine, FetchUrl=RemoteUrl;\ndoh\n| join kind=inner codehost on DeviceId\n| where abs(datetime_diff('minute', DohTime, FetchTime)) <= 30\n| summarize FirstSeen=min(DohTime), LastSeen=max(FetchTime),\n            DoHProcs=make_set(DohProc), DohIPs=make_set(DohRemoteIP),\n            FetchProcs=make_set(FetchProc), FetchUrls=make_set(FetchUrl)\n  by DeviceName, DeviceId\n| where array_length(DoHProcs) > 0 and array_length(FetchProcs) > 0",
+      "rationale": "ESET's SlowStepper analysis shows PlushDaemon uniquely chains public DoH lookups (to evade defender DNS visibility on actor-controlled domains like st.360safe.company / 7051.gsm.360safe.company) with secondary payload retrieval from Gitee/GitHub raw \u2014 a Chinese-developer-friendly code-host pivot rarely used by Russian or Iranian APTs. Anchoring on same-host DoH-from-non-browser within 30 min of a "
+    }
+  ]
+}

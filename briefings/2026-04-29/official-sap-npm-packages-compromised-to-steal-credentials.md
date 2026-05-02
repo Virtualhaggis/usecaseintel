@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm preinstall script drops setup.mjs/execution.js and fetches Bun runtime (Mini Shai-Hulud)
 
-`UC_36_3` · phase: **install** · confidence: **High**
+`UC_42_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] Linux CI runner: process reading /proc/<pid>/mem of Runner.Worker (Mini Shai-Hulud secret scraper)
 
-`UC_36_4` · phase: **actions** · confidence: **High**
+`UC_42_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### [LLM] Compromised SAP CAP / mbt package files written under node_modules (pinned malicious versions)
 
-`UC_36_5` · phase: **delivery** · confidence: **High**
+`UC_42_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Official SAP npm packages compromised to steal credentials
 
-`UC_36_2` · phase: **exploit** · confidence: **High**
+`UC_42_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,44 @@
+{
+  "name": "APT18",
+  "ucs": [
+    {
+      "title": "[LLM] APT18 (Dynamite Panda) pisloader DNS TXT-record C2 beaconing",
+      "description": "Hunts for the DNS TXT-based command-and-control channel characteristic of APT18's pisloader/HTTPBrowser implants \u2014 high-frequency outbound DNS TXT queries from non-resolver processes to long, low-popularity subdomains, which is how Dynamite Panda exfiltrates data and receives commands while blending with legitimate DNS.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1071.001",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.app) as app dc(All_Traffic.dest) as dc_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 All_Traffic.transport=udp NOT (All_Traffic.dest IN (\"8.8.8.8\",\"8.8.4.4\",\"1.1.1.1\",\"9.9.9.9\")) by All_Traffic.src All_Traffic.dest All_Traffic.process_id _time span=10m | rename All_Traffic.* as * | where count>=50 | eventstats avg(count) as avg_q stdev(count) as sd_q by src | where count > (avg_q + (2*sd_q)) | join type=left src process_id [| tstats summariesonly=true values(Processes.process_name) as process_name values(Processes.process) as process_cmd from datamodel=Endpoint.Processes where NOT Processes.process_name IN (\"chrome.exe\",\"firefox.exe\",\"msedge.exe\",\"svchost.exe\",\"dns.exe\",\"nslookup.exe\") by Processes.dest Processes.process_id | rename Processes.dest as src Processes.process_id as process_id] | where isnotnull(process_name) | table firstTime lastTime src process_name process_cmd dest count dc_dest",
+      "kql": "let lookback = 24h;\nlet dns_beacon = DeviceNetworkEvents\n| where Timestamp > ago(lookback)\n| where RemotePort == 53 and Protocol == \"Udp\"\n| where InitiatingProcessFileName !in~ (\"svchost.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"dns.exe\",\"nslookup.exe\")\n| summarize qcount=count(), distinct_dst=dcount(RemoteIP), first=min(Timestamp), last=max(Timestamp) by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessCommandLine, bin(Timestamp, 10m)\n| where qcount >= 50\n| extend duration_min = datetime_diff(\"minute\", last, first)\n| where duration_min >= 5;\nlet odd_dns_proc = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName in~ (\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"powershell.exe\") and InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"wscript.exe\",\"mshta.exe\")\n| project DeviceId, suspicious_parent=InitiatingProcessFileName, suspicious_child=FileName, ProcessCommandLine, suspicious_time=Timestamp;\ndns_beacon\n| join kind=leftouter (odd_dns_proc) on DeviceId\n| project first, last, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, qcount, distinct_dst, duration_min, suspicious_parent, suspicious_child, ProcessCommandLine\n| order by qcount desc",
+      "rationale": "APT18/Dynamite Panda's pisloader family (publicly documented by Palo Alto Unit 42 and Dell SecureWorks as TG-0416) is one of the few APT tools that uses DNS TXT records as its primary C2 channel. The combination of (a) a non-resolver process generating sustained DNS UDP/53 traffic, (b) a Microsoft Office or scripting parent spawning the network-emitting child, and (c) high query volume to a small "
+    },
+    {
+      "title": "[LLM] APT18 legacy 'at.exe' scheduled-task lateral movement chain",
+      "description": "Detects APT18's distinctive use of the deprecated 'at' command to schedule cmd.exe payloads on remote hosts \u2014 a tradecraft fingerprint documented by Dell SecureWorks for TG-0416 that persists even though Windows has long superseded 'at' with schtasks, making it a low-volume, high-fidelity signal.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1053.002",
+        "T1059.003",
+        "T1078",
+        "T1070.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=\"at.exe\" OR (Processes.process_name=\"cmd.exe\" AND Processes.process=\"*at \\\\\\\\*\")) by Processes.dest Processes.process_name Processes.process_id | rename Processes.* as * | join type=left dest [| tstats summariesonly=true values(Authentication.src) as logon_src values(Authentication.user) as logon_user from datamodel=Authentication.Authentication where Authentication.action=success Authentication.authentication_method=NTLM earliest=-15m by Authentication.dest | rename Authentication.dest as dest] | join type=left dest [| tstats summariesonly=true values(Filesystem.file_name) as deleted_files from datamodel=Endpoint.Filesystem where Filesystem.action=deleted Filesystem.file_path=\"*\\\\Windows\\\\Tasks\\\\*\" earliest=-1h by Filesystem.dest | rename Filesystem.dest as dest] | table firstTime lastTime dest user parent process_name cmdline logon_src logon_user deleted_files",
+      "kql": "let at_usage = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"at.exe\" or (FileName =~ \"cmd.exe\" and ProcessCommandLine matches regex @\"(?i)\\bat\\s+\\\\\\\\\")\n| where ProcessCommandLine has_any (\"\\\\\\\\\", \"/sc\", \"cmd\", \".bat\", \".exe\")\n| project AtTime=Timestamp, DeviceId, DeviceName, AccountName, AtCmd=ProcessCommandLine, Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine;\nlet remote_logon = IdentityLogonEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"LogonSuccess\" and Protocol in (\"NTLM\",\"Kerberos\")\n| project LogonTime=Timestamp, DeviceName=DestinationDeviceName, RemoteSrc=IPAddress, LogonUser=AccountName;\nlet task_cleanup = DeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"FileDeleted\" and FolderPath has_any (@\"\\Windows\\Tasks\\\", @\"\\Windows\\System32\\Tasks\\\")\n| project DelTime=Timestamp, DeviceId, DeletedFile=FileName, DelInitiator=InitiatingProcessFileName;\nat_usage\n| join kind=leftouter (remote_logon) on DeviceName\n| where AtTime between (LogonTime .. LogonTime + 30m) or isempty(LogonTime)\n| join kind=leftouter (task_cleanup) on DeviceId\n| where DelTime between (AtTime .. AtTime + 1h) or isempty(DelTime)\n| project AtTime, DeviceName, AccountName, AtCmd, Parent, ParentCmd, RemoteSrc, LogonUser, DeletedFile, DelInitiator\n| order by AtTime desc",
+      "rationale": "Modern admin tooling and Microsoft GPO have effectively retired 'at.exe' (it's deprecated since Windows 8 and removed from many builds), so legitimate sightings are exceedingly rare. APT18 is specifically documented (Dell SecureWorks 'Lateral Movement' research on TG-0416) chaining valid-account NTLM logons + 'at \\\\HOST time cmd /c ...' + post-execution deletion of the task file under \\Windows\\Tas"
+    }
+  ]
+}

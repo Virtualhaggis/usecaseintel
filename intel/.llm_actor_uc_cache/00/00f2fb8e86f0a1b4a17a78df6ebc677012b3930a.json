@@ -1,0 +1,48 @@
+{
+  "name": "RedCurl",
+  "ucs": [
+    {
+      "title": "[LLM] RedCurl staging & exfil to legitimate cloud (Yandex.Disk / pCloud / cloud.mail.ru) via PowerShell/curl",
+      "description": "Hunts RedCurl's signature corporate-espionage exfiltration pattern: post-compromise use of PowerShell or curl.exe to push collected files to attacker-controlled accounts on Russian-speaking-friendly legitimate cloud services (Yandex Disk WebDAV, pCloud, Mail.ru Cloud). This blob-over-HTTPS-to-trusted-CDN behavior is a documented RedCurl tradecraft fingerprint (Group-IB 'RedCurl.SimpleUploader' / 'RedCurl.SimpleDownloader').",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1567.002",
+        "T1537",
+        "T1102",
+        "T1071.001",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\") AND (Processes.process=\"*webdav.yandex*\" OR Processes.process=\"*disk.yandex*\" OR Processes.process=\"*api.pcloud.com*\" OR Processes.process=\"*pcloud.com*\" OR Processes.process=\"*cloud.mail.ru*\" OR Processes.process=\"*cloud-api.yandex*\") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | where match(cmdline,\"(?i)(curl|Invoke-WebRequest|Invoke-RestMethod|wget|WebClient|Start-BitsTransfer|Net\\.WebRequest|-Method\\s+PUT|--upload-file)\") | join type=inner dest [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!=\"corp_sanctioned_cloud\" AND (All_Traffic.dest=\"*yandex*\" OR All_Traffic.dest=\"*pcloud*\" OR All_Traffic.dest=\"*mail.ru*\") by All_Traffic.src | rename All_Traffic.src as dest] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "kql": "let suspectHosts = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\") | where ProcessCommandLine has_any (\"webdav.yandex\",\"disk.yandex\",\"cloud-api.yandex\",\"api.pcloud.com\",\"pcloud.com\",\"cloud.mail.ru\") | where ProcessCommandLine matches regex @\"(?i)(curl|Invoke-WebRequest|Invoke-RestMethod|wget|WebClient|Start-BitsTransfer|Net\\.WebRequest|--upload-file|-Method\\s+PUT|PROPFIND|MKCOL)\" | project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine; suspectHosts | join kind=inner ( DeviceNetworkEvents | where Timestamp > ago(7d) | where RemoteUrl has_any (\"webdav.yandex.ru\",\"cloud-api.yandex.net\",\"api.pcloud.com\",\"cloud.mail.ru\") or RemoteIPType == \"Public\" and RemoteUrl matches regex @\"(?i)(yandex|pcloud|mail\\.ru)\" | project NetTime=Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName ) on DeviceId | where abs(datetime_diff('second', Timestamp, NetTime)) < 300 | summarize EventCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), CmdSamples=make_set(ProcessCommandLine, 5), Destinations=make_set(RemoteUrl, 10) by DeviceName, AccountName | order by LastSeen desc",
+      "rationale": "RedCurl is uniquely defined by its low-and-slow corporate document theft to Russian-friendly legitimate cloud APIs \u2014 generic exfil rules to Dropbox/Mega/Google would miss them, and generic 'PowerShell + cloud' rules drown in noise. Restricting to (a) Yandex Disk/Cloud-API/WebDAV, pCloud, and Mail.ru Cloud, (b) executed via interpreters or curl, and (c) using PUT/upload/PROPFIND/WebClient verbs col"
+    },
+    {
+      "title": "[LLM] RedCurl ISO/IMG/LNK spearphish chain \u2192 schtasks persistence",
+      "description": "Hunts RedCurl's documented initial-access-to-persistence chain: spearphish delivers a ZIP/ISO/IMG containing a LNK, the LNK shells out to cmd/powershell which fetches a follow-on stage and immediately registers a Scheduled Task for persistence. This compressed delivery \u2192 LNK \u2192 schtasks /create sequence within minutes of mail delivery is a RedCurl signature (Group-IB reports, ATT&CK G1039 T1566.001 + T1204.002 + T1053.005).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1059.003",
+        "T1053.005",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as mailTime from datamodel=Email.All_Email where (All_Email.file_name=\"*.iso\" OR All_Email.file_name=\"*.img\" OR All_Email.file_name=\"*.lnk\" OR All_Email.file_name=\"*.zip\" OR All_Email.file_name=\"*.rar\") by All_Email.recipient All_Email.src_user All_Email.subject All_Email.file_name | `drop_dm_object_name(All_Email)` | rename recipient as user | join type=inner user [ | tstats summariesonly=true count values(Processes.process) as schtasks_cmd values(Processes.parent_process_name) as parent_chain min(_time) as taskTime from datamodel=Endpoint.Processes where Processes.process_name=\"schtasks.exe\" AND Processes.process=\"*/create*\" AND (Processes.parent_process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\") OR match(Processes.parent_process,\"(?i)\\.lnk\")) by Processes.dest Processes.user | `drop_dm_object_name(Processes)` ] | eval delta_min=(taskTime-mailTime)/60 | where delta_min>=0 AND delta_min<=240 | table mailTime taskTime delta_min user dest src_user subject file_name parent_chain schtasks_cmd | sort - taskTime",
+      "kql": "let mailWindow = 4h; let suspectMail = EmailAttachmentInfo | where Timestamp > ago(7d) | where FileName endswith \".iso\" or FileName endswith \".img\" or FileName endswith \".lnk\" or FileName endswith \".zip\" or FileName endswith \".rar\" | join kind=inner (EmailEvents | where Timestamp > ago(7d) | where DeliveryAction == \"Delivered\") on NetworkMessageId | project MailTime=Timestamp, RecipientEmailAddress, SenderFromAddress, Subject, AttachmentName=FileName, NetworkMessageId; let persistence = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ \"schtasks.exe\" and ProcessCommandLine has \"/create\" | where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\") or InitiatingProcessCommandLine has \".lnk\" | project TaskTime=Timestamp, DeviceName, AccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine; suspectMail | join kind=inner persistence on $left.RecipientEmailAddress == $right.AccountUpn | where TaskTime between (MailTime .. MailTime + mailWindow) | extend MinutesFromMail = datetime_diff('minute', TaskTime, MailTime) | project MailTime, TaskTime, MinutesFromMail, RecipientEmailAddress, SenderFromAddress, Subject, AttachmentName, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, SchtasksCmd=ProcessCommandLine | order by TaskTime desc",
+      "rationale": "RedCurl is one of the few crews still leaning on container-file (ISO/IMG/ZIP) \u2192 LNK \u2192 interpreter \u2192 schtasks chains in 2024-2025 reporting; tying the mail-delivery time to a same-recipient host's schtasks /create within a 4-hour window \u2014 and only when the parent is a script interpreter or a LNK \u2014 eliminates almost all benign software-install scheduled tasks. This kill-chain join (T1566.001 \u2192 T1204"
+    }
+  ]
+}

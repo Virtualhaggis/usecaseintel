@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DEEP#DOOR install_obf.bat self-extracting Python via #PYTHON_START/#PYTHON_END delimiters
 
-`UC_28_15` · phase: **install** · confidence: **High**
+`UC_36_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### [LLM] DEEP#DOOR C2 over bore.pub Rust TCP tunnel from Python interpreter
 
-`UC_28_16` · phase: **c2** · confidence: **High**
+`UC_36_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ union suspectHosts, suspectDns, suspectProc
 
 ### [LLM] DEEP#DOOR watchdog: Python process creates Startup + Run key + Scheduled Task in burst
 
-`UC_28_17` · phase: **install** · confidence: **Medium**
+`UC_36_17` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -526,7 +526,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Python Backdoor Uses Tunneling Service to Steal Browser and Cloud Credential
 
-`UC_28_14` · phase: **exploit** · confidence: **High**
+`UC_36_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

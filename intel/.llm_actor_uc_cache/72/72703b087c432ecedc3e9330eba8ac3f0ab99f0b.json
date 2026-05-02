@@ -1,0 +1,46 @@
+{
+  "name": "Play",
+  "ucs": [
+    {
+      "title": "[LLM] Play (PlayCrypt) Exchange OWASSRF / ProxyNotShell exploitation: w3wp.exe spawning PowerShell/cmd",
+      "description": "Hunts for IIS worker process (w3wp.exe) spawning interactive shells, the post-exploitation footprint observed when Play actors weaponize CVE-2022-41080 (OWASSRF) and CVE-2022-41040/41082 (ProxyNotShell) against on-prem Exchange \u2014 a hallmark Play initial-access vector documented by CISA AA23-352A and CrowdStrike's PlayCrypt reporting.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1059.001",
+        "T1059.003",
+        "T1505.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as process_id from datamodel=Endpoint.Processes where Processes.parent_process_name=\"w3wp.exe\" (Processes.process_name IN (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\",\"cmd.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"nltest.exe\",\"systeminfo.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\")) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.dest | `drop_dm_object_name(Processes)` | where match(parent_process, \"(?i)MSExchange|OutlookSession|autodiscover|owa\") OR match(process,\"(?i)-enc|FromBase64String|DownloadString|IEX|Invoke-Expression|webclient|hidden|nop\\\\s\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where InitiatingProcessCommandLine has_any (\"MSExchange\",\"OutlookSession\",\"autodiscover\",\"OWA\",\"FrontEnd\")\n| where FileName in~ (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\",\"cmd.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"nltest.exe\",\"systeminfo.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\",\"wmic.exe\")\n| extend SuspiciousFlags = pack_array(\n    iff(ProcessCommandLine has_any (\"-enc\",\"-EncodedCommand\",\"FromBase64String\"), \"encoded_ps\", \"\"),\n    iff(ProcessCommandLine has_any (\"DownloadString\",\"DownloadFile\",\"WebClient\",\"Invoke-WebRequest\",\"IEX\",\"Invoke-Expression\"), \"net_download\", \"\"),\n    iff(ProcessCommandLine has_any (\"-nop\",\"-w hidden\",\"-windowstyle hidden\",\"-noni\"), \"stealth_flag\", \"\")\n  )\n| where array_length(set_difference(SuspiciousFlags, dynamic([\"\"]))) > 0\n   or FileName in~ (\"whoami.exe\",\"nltest.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SuspiciousFlags, ReportId\n| sort by Timestamp desc",
+      "rationale": "Play's signature initial access in 2022-2024 is OWASSRF against unpatched Exchange \u2014 CISA's joint advisory and Microsoft's tracking of the cluster (Storm-related) explicitly call out w3wp.exe \u2192 PowerShell/cmd as the post-exploit pivot before they drop Cobalt Strike and SystemBC. Legitimate w3wp child-shell activity is vanishingly rare on Exchange servers, so this fires on the actor's actual chokep"
+    },
+    {
+      "title": "[LLM] Play ransomware staging: AdFind + Grixba reconnaissance followed by WinRAR multi-volume exfiltration",
+      "description": "Detects Play's distinctive pre-encryption staging: AdFind enumeration of AD, Grixba (.NET info-stealer enumerating AV/EDR/backup software) execution, and chunked exfiltration via WinRAR using the -v split flag with a password \u2014 the exact sequence Symantec and CISA attribute to the Balloonfly/Play cluster prior to deploying Playcrypt.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1087.002",
+        "T1518.001",
+        "T1560.001",
+        "T1048",
+        "T1657"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as tools from datamodel=Endpoint.Processes where (Processes.process_name IN (\"adfind.exe\",\"AdFind.exe\",\"rar.exe\",\"winrar.exe\",\"WinRAR.exe\") OR Processes.process IN (\"*-f \\\"(objectcategory=person)*\",\"*-f objectcategory=computer*\",\"*trustdmp*\",\"*subnets*\",\"*gpodmp*\") OR match(Processes.process,\"(?i)\\\\s-(v|m|hp|p)\\\\d|\\\\s-v\\\\d+[mg]\\\\s|-hp[A-Za-z0-9]{6,}\") OR match(Processes.process_name,\"(?i)grixba|sysbc|systembc\")) by host Processes.user Processes.dest span=1h | `drop_dm_object_name(Processes)` | eval has_adfind=if(match(tools,\"(?i)adfind\"),1,0), has_archiver=if(match(tools,\"(?i)rar|winrar\"),1,0), has_grixba=if(match(tools,\"(?i)grixba|systembc\"),1,0), has_split=if(match(cmdlines,\"-v\\\\d+[mMgG]\"),1,0) | eval score=has_adfind+has_archiver+has_grixba+has_split | where score>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let window = 4h;\nlet recon =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"adfind.exe\"\n        or ProcessCommandLine has_any (\"objectcategory=person\",\"objectcategory=computer\",\"trustdmp\",\"gpodmp\",\"subnets\",\"-sc trustdmp\",\"-sc dcmodes\")\n    | project ReconTime = Timestamp, DeviceId, DeviceName, AccountName, ReconCmd = ProcessCommandLine;\nlet stealer =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName matches regex @\"(?i)(grixba|sysbc|systembc)\\.exe\"\n        or ProcessCommandLine has_any (\"Costura\",\"-AVList\",\"-EDRList\",\"-BACKUPList\")\n    | project StealerTime = Timestamp, DeviceId, StealerCmd = ProcessCommandLine;\nlet archiver =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (\"rar.exe\",\"winrar.exe\",\"WinRAR.exe\")\n    | where ProcessCommandLine matches regex @\"(?i)\\s-v\\d+[mg]\\b\" \n         or ProcessCommandLine matches regex @\"(?i)\\s-hp\\S{6,}\"\n         or ProcessCommandLine has \"-m5\"\n    | project ArchiveTime = Timestamp, DeviceId, ArchiveCmd = ProcessCommandLine;\nrecon\n| join kind=inner archiver on DeviceId\n| where abs(datetime_diff('minute', ArchiveTime, ReconTime)) <= 240\n| join kind=leftouter stealer on DeviceId\n| extend ChainScore = 2 + iff(isnotempty(StealerCmd),2,0)\n| project FirstSeen = ReconTime, DeviceName, AccountName, ReconCmd, StealerCmd, ArchiveCmd, ChainScore\n| sort by ChainScore desc, FirstSeen asc",
+      "rationale": "The AdFind \u2192 Grixba \u2192 WinRAR (-v split, -hp password, -m5) chain inside a four-hour window is the documented Play/Balloonfly pre-encryption playbook (Symantec Threat Hunter report on Grixba, CISA AA23-352A). Grixba is a Play-bespoke .NET tool packed with Costura that enumerates AV/EDR/backup products specifically \u2014 joining its execution with AdFind AD recon and the multi-volume RAR splitting Play "
+    }
+  ]
+}

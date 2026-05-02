@@ -1,0 +1,47 @@
+{
+  "name": "FIN8",
+  "ucs": [
+    {
+      "title": "[LLM] FIN8 (Syssphinx) SARDONIC backdoor: PowerShell in-memory .NET loader from macro-spawned shell",
+      "description": "Hunts FIN8's signature SARDONIC/BADHATCH execution chain where a macro-enabled lure (.doc/.xls) spawns powershell.exe that reflectively loads a .NET assembly via [System.Reflection.Assembly]::Load with -EncodedCommand and base64-decoded shellcode. This chain \u2014 Office app \u2192 cmd/wscript \u2192 powershell with -enc + Reflection.Assembly \u2014 is the documented loader for FIN8's SARDONIC C++ backdoor used as a ransomware (BlackCat/ALPHV, Ragnar, White Rabbit) precursor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1027.010",
+        "T1055.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_id) as pid values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\") Processes.process_name=\"powershell.exe\" (Processes.process=\"*-enc*\" OR Processes.process=\"*-EncodedCommand*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*Reflection.Assembly*\" OR Processes.process=\"*::Load(*\" OR Processes.process=\"*IEX *\" OR Processes.process=\"*-w hidden*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | eval susp_score = if(match(process,\"(?i)-enc\"),1,0) + if(match(process,\"(?i)Reflection\\.Assembly\"),2,0) + if(match(process,\"(?i)FromBase64String\"),1,0) + if(match(process,\"(?i)-w\\s+hidden\"),1,0) | where susp_score >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\")\n| where FileName =~ \"powershell.exe\" or FileName =~ \"pwsh.exe\"\n| extend cmd = tolower(ProcessCommandLine)\n| where cmd has_any (\"-enc\",\"-encodedcommand\",\"frombase64string\",\"reflection.assembly\",\"::load(\",\"iex \",\"-w hidden\",\"-windowstyle hidden\")\n| extend score = toint(cmd has \"-enc\") + 2 * toint(cmd has \"reflection.assembly\") + toint(cmd has \"frombase64string\") + toint(cmd has \"-w hidden\")\n| where score >= 2\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, score, ReportId\n| order by Timestamp desc",
+      "rationale": "FIN8/Syssphinx (Mandiant, Symantec, Bitdefender reporting Aug 2021\u20132023) consistently chains macro-laden spearphishing lures (hospitality/retail/insurance themed) into a PowerShell stager that base64-decodes and reflectively loads SARDONIC's .NET stub before APC-injecting the C++ payload. The Office/script-host \u2192 powershell.exe -enc + Reflection.Assembly combination is uncommon in legitimate enter"
+    },
+    {
+      "title": "[LLM] FIN8 WMI Event Subscription persistence + remote WMI lateral movement to POS/finance hosts",
+      "description": "Detects FIN8's hallmark ActiveScriptEventConsumer / CommandLineEventConsumer persistence created via WMI plus subsequent remote-WMI (wmic /node, Win32_Process Create) execution against domain-joined POS, hospitality, or finance servers \u2014 the technique combination used to deploy BADHATCH/SARDONIC and stage ransomware (BlackCat, Ragnar Locker, White Rabbit).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1546.003",
+        "T1047",
+        "T1059.001",
+        "T1021.002",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=\"wmic.exe\" AND (Processes.process=\"*/node:*\" OR Processes.process=\"*process call create*\" OR Processes.process=\"*ActiveScriptEventConsumer*\" OR Processes.process=\"*CommandLineEventConsumer*\" OR Processes.process=\"*__EventFilter*\")) OR (Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*Set-WmiInstance*\" OR Processes.process=\"*Register-WmiEvent*\" OR Processes.process=\"*__EventFilter*\" OR Processes.process=\"*ActiveScriptEventConsumer*\" OR Processes.process=\"*CommandLineEventConsumer*\" OR Processes.process=\"*FilterToConsumerBinding*\")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_guid | `drop_dm_object_name(Processes)` | join type=left dest [| tstats summariesonly=t count as remote_wmi_to_dest from datamodel=Endpoint.Processes where Processes.process_name=\"wmic.exe\" Processes.process=\"*/node:*\" by Processes.dest | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let wmi_persistence =\n  DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where (FileName =~ \"wmic.exe\" and ProcessCommandLine has_any (\"ActiveScriptEventConsumer\",\"CommandLineEventConsumer\",\"__EventFilter\",\"FilterToConsumerBinding\",\"process call create\"))\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\") and ProcessCommandLine has_any (\"Set-WmiInstance\",\"Register-WmiEvent\",\"ActiveScriptEventConsumer\",\"CommandLineEventConsumer\",\"__EventFilter\",\"FilterToConsumerBinding\"))\n  | project PersistTime=Timestamp, PersistDevice=DeviceName, PersistUser=AccountName, PersistCmd=ProcessCommandLine, PersistParent=InitiatingProcessFileName;\nlet remote_wmi =\n  DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\" and ProcessCommandLine has_any (\"process call create\",\"call create\")\n  | project RemoteTime=Timestamp, RemoteDevice=DeviceName, RemoteUser=AccountName, RemoteCmd=ProcessCommandLine;\nwmi_persistence\n| join kind=inner remote_wmi on $left.PersistDevice == $right.RemoteDevice\n| where abs(datetime_diff('minute', PersistTime, RemoteTime)) <= 60\n| project PersistTime, RemoteTime, Device=PersistDevice, User=PersistUser, PersistCmd, RemoteCmd, PersistParent\n| order by PersistTime desc",
+      "rationale": "FIN8 (CrowdStrike-tracked criminal/RU-nexus actor, Mandiant cluster Syssphinx) is documented by Bitdefender (2021 SARDONIC report) and Symantec (2023 Syssphinx update) as using WMI Event Subscription consumers as their primary persistence and using wmic /node Win32_Process Create for lateral movement to POS, retail, and finance servers prior to BlackCat/Ragnar Locker deployment. The temporal corre"
+    }
+  ]
+}

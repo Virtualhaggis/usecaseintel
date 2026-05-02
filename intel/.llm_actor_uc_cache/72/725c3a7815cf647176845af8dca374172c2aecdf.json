@@ -1,0 +1,48 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 (ScarCruft) ROKRAT C2 over legitimate cloud storage APIs (pCloud / Yandex / Dropbox)",
+      "description": "Hunts ROKRAT / Chinotto / GoldBackdoor beaconing where the implant abuses pCloud, Yandex Disk, or Dropbox APIs for bidirectional C2 from a host process that just executed a weaponized HWP/Office/LNK lure. This cloud-API-as-C2 pattern is a signature of ScarCruft / Reaper / InkySquid since at least 2018.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1573.001",
+        "T1204.002",
+        "T1203"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest values(Web.user_agent) as ua from datamodel=Web where (Web.url=\"*api.pcloud.com*\" OR Web.url=\"*cloud-api.yandex.net*\" OR Web.url=\"*content.dropboxapi.com*\" OR Web.url=\"*api.dropboxapi.com*\" OR Web.url=\"*api-content.dropbox.com*\") by host Web.src Web.process_name Web.app\n| `drop_dm_object_name(Web)`\n| search process_name!=\"chrome.exe\" process_name!=\"msedge.exe\" process_name!=\"firefox.exe\" process_name!=\"dropbox.exe\" process_name!=\"onedrive.exe\" process_name!=\"yandexdisk.exe\" process_name!=\"pcloud.exe\" process_name!=\"iexplore.exe\" process_name!=\"opera.exe\" process_name!=\"brave.exe\"\n| join type=inner host [\n    | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"hwp.exe\",\"hwp32.exe\",\"hwp64.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"explorer.exe\") AND Processes.process_name IN (\"powershell.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\")) by host Processes.process_name Processes.parent_process_name Processes.process Processes.user _time\n    | `drop_dm_object_name(Processes)`\n    | rename _time as exec_time\n    | where exec_time > relative_time(now(),\"-7d\")\n]\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| table host src process_name parent_process_name url ua firstTime lastTime count",
+      "kql": "let lure_exec = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"hwp.exe\",\"hwp32.exe\",\"hwp64.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"explorer.exe\")\n| where FileName in~ (\"powershell.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\")\n| project DeviceId, DeviceName, ExecTime=Timestamp, Loader=FileName, Parent=InitiatingProcessFileName, Cmd=ProcessCommandLine;\nlet cloud_c2 = DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl has_any (\"api.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"api-content.dropbox.com\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"brave.exe\",\"opera.exe\",\"dropbox.exe\",\"onedrive.exe\",\"yandexdisk.exe\",\"pcloud.exe\")\n| project DeviceId, DeviceName, NetTime=Timestamp, RemoteUrl, RemoteIP, BeaconProc=InitiatingProcessFileName, BeaconCmd=InitiatingProcessCommandLine;\nlure_exec\n| join kind=inner cloud_c2 on DeviceId\n| where (NetTime - ExecTime) between (0min .. 60min)\n| summarize Hits=count(), FirstBeacon=min(NetTime), LastBeacon=max(NetTime), URLs=make_set(RemoteUrl,25), IPs=make_set(RemoteIP,25)\n    by DeviceName, Parent, Loader, BeaconProc, Cmd\n| order by Hits desc",
+      "rationale": "ROKRAT (and successors Chinotto / GoldBackdoor) are essentially exclusive to APT37/ScarCruft and the operators have consistently chosen pCloud, Yandex Disk, and Dropbox REST endpoints for both task retrieval and exfil \u2014 a pattern documented by Cisco Talos, Volexity, Kaspersky and ESET across 2018-2023. Pairing the cloud-API beacon with a recent HWP/Office/LNK-spawned LOLBAS loader on the same host"
+    },
+    {
+      "title": "[LLM] APT37 weaponized HWP/LNK lure \u2192 in-memory PowerShell shellcode loader (ROKRAT/GoldBackdoor stager)",
+      "description": "Detects APT37's characteristic delivery chain targeting Korean-speaking victims (defectors, journalists, ROK think-tanks): a Hangul (HWP) document or oversized LNK launches a shell that base64/hex-decodes and reflectively loads ROKRAT/Chinotto shellcode, often via DLL side-loading of a legitimate signed binary.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1140",
+        "T1574.002",
+        "T1055"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_id) as pid values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"hwp.exe\",\"hwp32.exe\",\"hwp64.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")) by host Processes.parent_process_name Processes.process_name Processes.process\n| `drop_dm_object_name(Processes)`\n| eval susp_b64=if(match(cmd,\"(?i)(FromBase64String|::Decompress|GzipStream|DeflateStream)\"),1,0)\n| eval susp_inj=if(match(cmd,\"(?i)(VirtualAlloc|WriteProcessMemory|CreateRemoteThread|Reflection\\.Assembly|Invoke-ReflectivePEInjection|Add-Type)\"),1,0)\n| eval susp_lnk=if(match(cmd,\"(?i)(\\.lnk|\\.hwp|forfiles|findstr|certutil)\"),1,0)\n| eval score=susp_b64+susp_inj+susp_lnk\n| where score>=2\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| table host parent_process_name process_name user pid cmd score firstTime lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"hwp.exe\",\"hwp32.exe\",\"hwp64.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\")\n| extend Cmd = tolower(ProcessCommandLine)\n| extend SuspB64   = iff(Cmd matches regex @\"(frombase64string|::decompress|gzipstream|deflatestream|-enc(odedcommand)?\\s)\", 1, 0)\n| extend SuspInj   = iff(Cmd matches regex @\"(virtualalloc|writeprocessmemory|createremotethread|reflection\\.assembly|invoke-reflectivepeinjection|add-type|memorystream)\", 1, 0)\n| extend SuspLure  = iff(Cmd matches regex @\"(\\.lnk|\\.hwp|forfiles|findstr |certutil |bitsadmin )\", 1, 0)\n| extend SuspKR    = iff(InitiatingProcessCommandLine has_any (\".hwp\",\"\ud55c\uae00\",\"\ud1b5\uc77c\",\"\uc870\uc120\",\"\ubd81\ud55c\") or Cmd has_any (\".hwp\",\"\\\\appdata\\\\roaming\\\\hnc\\\\\"), 1, 0)\n| extend Score = SuspB64 + SuspInj + SuspLure + SuspKR\n| where Score >= 2\n| join kind=leftouter (\n    DeviceImageLoadEvents\n    | where Timestamp > ago(14d)\n    | where FolderPath has_any (@\"\\appdata\\\", @\"\\programdata\\\", @\"\\users\\public\\\")\n    | where InitiatingProcessVersionInfoCompanyName has_any (\"Microsoft\",\"Adobe\",\"Hancom\",\"Kakao\",\"Naver\")\n    | project DeviceId, SideloadedDll=FileName, SideloadHost=InitiatingProcessFileName, SideloadTime=Timestamp\n) on DeviceId\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, Score, SideloadedDll, SideloadHost, SideloadTime\n| order by Score desc, Timestamp desc",
+      "rationale": "APT37 is one of the very few clusters that routinely weaponizes Hangul Word Processor (HWP) documents \u2014 Hancom is dominant only in Korean victim environments, so an `hwp.exe` parent spawning powershell/mshta is already a strong actor signal. Layering decode+inject indicators (their ROKRAT/GoldBackdoor shellcode loader pattern, documented by Stairwell, Volexity 'BLUELIGHT' / 'Dolphin', and ESET) pl"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "name": "TA577",
+  "ucs": [
+    {
+      "title": "[LLM] TA577 NTLM hash theft via ZIP-delivered HTML coercing outbound SMB authentication",
+      "description": "Hunts the February 2024 TA577 campaign that thread-hijacked replies to deliver ZIP archives containing HTML files which auto-referenced attacker-controlled SMB shares to coerce NTLMv2 authentication and capture Net-NTLMv2 hashes for relay/cracking. This is a TA577-signature primitive \u2014 they pivoted to it before pushing Pikabot/Latrodectus payloads.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1187",
+        "T1557.001",
+        "T1586.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.html\" OR Filesystem.file_name=\"*.htm\") AND (Filesystem.file_path=\"*\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\Downloads\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\") AND (Filesystem.process_name=\"explorer.exe\" OR Filesystem.process_name=\"7zG.exe\" OR Filesystem.process_name=\"7zFM.exe\" OR Filesystem.process_name=\"WinRAR.exe\" OR Filesystem.process_name=\"Bandizip.exe\") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename dest as host | join type=inner host [| tstats summariesonly=true count as smb_count min(_time) as smb_firstTime max(_time) as smb_lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=445 AND NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16 OR All_Traffic.dest_ip=100.64.0.0/10 OR All_Traffic.dest_ip=169.254.0.0/16) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | rename src as host dest_ip as remote_smb_ip ] | where smb_firstTime >= firstTime AND smb_firstTime <= (lastTime + 600) | table firstTime host user file_name file_path process_name remote_smb_ip smb_count | sort - smb_count",
+      "kql": "let HtmlDrops = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where FileName endswith \".html\" or FileName endswith \".htm\"\n| where FolderPath has_any (\"\\\\Temp\\\\\", \"\\\\Downloads\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\")\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"7zG.exe\",\"7zFM.exe\",\"WinRAR.exe\",\"Bandizip.exe\",\"PeaZip.exe\")\n| project DropTime=Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName;\nlet ExternalSmb = DeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemotePort == 445 and ActionType == \"ConnectionSuccess\"\n| where not(ipv4_is_private(RemoteIP))\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"iexplore.exe\",\"OUTLOOK.EXE\")\n| project SmbTime=Timestamp, DeviceId, DeviceName, RemoteIP, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName;\nHtmlDrops\n| join kind=inner ExternalSmb on DeviceId\n| where SmbTime between (DropTime .. DropTime + 10m)\n| project DeviceName, AccountName, DropTime, FileName, FolderPath, SHA256, SmbTime, RemoteIP, InitiatingProcessFileName1, InitiatingProcessCommandLine\n| sort by SmbTime desc",
+      "rationale": "Outbound SMB (TCP/445) to a non-RFC1918 IP from a workstation is already rare in any sane environment; correlating it within 10 minutes of an HTML/HTM file being extracted from an archive in Temp/Downloads is the exact signature Proofpoint and Microsoft documented for the TA577 Feb-2024 NTLM-leak campaign. Generic Forced-Authentication detections fire on any HTML \u2014 this version anchors specificall"
+    },
+    {
+      "title": "[LLM] TA577 Latrodectus / Pikabot loader chain: JS \u2192 curl/msiexec \u2192 rundll32 with named DLL export",
+      "description": "Detects TA577's post-March-2024 loader sequence used to stage Latrodectus (and prior Pikabot): a thread-hijacked URL drops a JS/JSE that spawns curl.exe or msiexec.exe to fetch an MSI, which sideloads a DLL executed via rundll32 with the loader's signature export ordinal/name (e.g. 'homq', 'nail', 'AnselmoLaPastina', 'Crash' for Pikabot). Chains the IAB's known initial-access \u2192 execution \u2192 install pattern.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1059.007",
+        "T1059.003",
+        "T1204.001",
+        "T1218.007",
+        "T1218.011",
+        "T1027.009"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.process_name) as proc from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"wscript.exe\",\"cscript.exe\") AND Processes.process_name IN (\"curl.exe\",\"msiexec.exe\",\"powershell.exe\")) OR (Processes.parent_process_name=\"msiexec.exe\" AND Processes.process_name=\"rundll32.exe\") OR (Processes.process_name=\"rundll32.exe\" AND (Processes.process=\"*homq*\" OR Processes.process=\"*nail*\" OR Processes.process=\"*AnselmoLaPastina*\" OR Processes.process=\"*Crash*\" OR Processes.process=\"*StartW*\")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process _time | `drop_dm_object_name(Processes)` | eval stage=case(parent_process_name IN (\"wscript.exe\",\"cscript.exe\") AND process_name=\"curl.exe\",\"1_js_to_curl\", parent_process_name IN (\"wscript.exe\",\"cscript.exe\") AND process_name=\"msiexec.exe\",\"1_js_to_msi\", parent_process_name=\"msiexec.exe\" AND process_name=\"rundll32.exe\",\"2_msi_to_rundll32\", process_name=\"rundll32.exe\" AND (match(process,\"(?i)homq|nail|AnselmoLaPastina|Crash|StartW\")),\"3_rundll32_named_export\", true(),\"other\") | stats count dc(stage) as stage_count values(stage) as stages values(process) as processes values(user) as user min(_time) as firstTime max(_time) as lastTime by dest | where stage_count >= 2 | sort - stage_count",
+      "kql": "let Window = 30m;\nlet Stage1 = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"wscript.exe\",\"cscript.exe\")\n| where FileName in~ (\"curl.exe\",\"msiexec.exe\",\"powershell.exe\")\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\".msi\",\"-o \",\"--output\")\n| project S1=Timestamp, DeviceId, DeviceName, S1Cmd=ProcessCommandLine, S1Proc=FileName, S1Parent=InitiatingProcessCommandLine;\nlet Stage2 = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"msiexec.exe\"\n| where FileName =~ \"rundll32.exe\"\n| project S2=Timestamp, DeviceId, S2Cmd=ProcessCommandLine;\nlet Stage3 = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"rundll32.exe\"\n| where ProcessCommandLine matches regex @\"(?i)\\b(homq|nail|AnselmoLaPastina|Crash|StartW)\\b\"\n   or ProcessCommandLine has_any (\"\\\\AppData\\\\\",\"\\\\ProgramData\\\\\",\"\\\\Users\\\\Public\\\\\",\"\\\\Temp\\\\\")\n| where ProcessCommandLine has_any (\".dll,\",\".tmp,\",\",#1\",\",#2\")\n| project S3=Timestamp, DeviceId, S3Cmd=ProcessCommandLine;\nStage1\n| join kind=inner Stage2 on DeviceId\n| where S2 between (S1 .. S1 + Window)\n| join kind=inner Stage3 on DeviceId\n| where S3 between (S2 .. S2 + Window)\n| project DeviceName, S1, S1Proc, S1Cmd, S2Cmd, S3, S3Cmd\n| sort by S3 desc",
+      "rationale": "wscript/cscript spawning curl.exe is virtually unheard-of outside malware loaders, and chaining it through msiexec \u2192 rundll32 with one of the documented Latrodectus/Pikabot export names ('homq', 'nail', 'AnselmoLaPastina', 'Crash', 'StartW') is the exact loader pattern Proofpoint, Elastic, and Walmart Cyber Intel reported for TA577's 2023-2024 distribution waves. Generic 'rundll32 from AppData' de"
+    }
+  ]
+}

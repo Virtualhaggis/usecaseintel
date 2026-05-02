@@ -648,6 +648,7 @@ def extract_mechanics(title: str, body: str) -> dict:
 # so ~$2-3 for a 300-article 180-day pipeline run. Cached per article URL
 # so re-runs of the same articles are free.
 LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
+LLM_ACTOR_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_actor_uc_cache"
 LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-haiku-4-5-20251001")
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
 
@@ -902,6 +903,153 @@ def _llm_generate_ucs(article: dict, ind: dict):
             return []
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+
+
+# Prompt for the per-actor LLM bespoke detections. Different shape from
+# the article prompt because the analyst signal is a TTP profile rather
+# than a narrative — emphasise specificity to that actor's known
+# tradecraft over generic technique templates.
+_LLM_ACTOR_PROMPT = """You are a senior detection engineer at a SOC. You will be given a structured profile of a tracked threat actor (APT or e-crime crew) and you must produce 1-2 high-fidelity detection use cases that would catch THIS actor's specific tradecraft.
+
+Quality bar:
+  - Each UC must hunt SPECIFIC TTPs the actor is known for, NOT a generic technique template. Pull on the actor's name, attribution, motivation, and known technique combination (look for chains like initial-access → execution → lateral-movement that this actor characteristically uses).
+  - Defender KQL: use real Advanced Hunting tables (DeviceProcessEvents, EmailEvents, UrlClickEvents, AADSignInEventsBeta, DeviceNetworkEvents, IdentityLogonEvents, DeviceFileEvents, etc.).
+  - Splunk SPL: CIM-conformant. Use `tstats` against accelerated data models (Endpoint, Network_Traffic, Authentication, Email, Web).
+  - Cite the actor's real CrowdStrike / Microsoft / Mandiant cluster names if applicable (e.g. APT29 = Cozy Bear / Midnight Blizzard).
+  - If the actor's technique list is sparse or unfocused, prefer ONE strong UC over two weak ones.
+
+Reply with JSON only, no commentary, this exact shape:
+```json
+{
+  "ucs": [
+    {
+      "title": "<short, actor-specific title — e.g. 'APT29 token theft via OAuth illicit-grant flow'>",
+      "description": "<1-2 sentences on what this hunts and why it's tied to THIS actor>",
+      "kill_chain": "<one of: recon, weapon, delivery, exploit, install, c2, actions>",
+      "techniques": [{"id":"T####", "name":"<official MITRE name>"}, ...],
+      "data_models": ["Endpoint.Processes", ...],
+      "splunk_spl": "<full SPL query>",
+      "defender_kql": "<full KQL query>",
+      "confidence": "high | medium | low",
+      "tier": "alerting | hunting",
+      "fp_rate_estimate": "low | medium | high",
+      "required_telemetry": ["<table or data model>", ...],
+      "rationale": "<why this catches this actor specifically vs random APTs>"
+    }
+  ]
+}
+```
+
+ACTOR PROFILE
+=============
+Name: <<NAME>>
+Aliases: <<ALIASES>>
+Country: <<COUNTRY>>
+Motivation: <<MOTIVATION>>
+MITRE ID: <<MITRE_ID>>
+
+MITRE description:
+<<DESCRIPTION>>
+
+Top-known MITRE techniques (technique-id list, sample of full set):
+<<TECHNIQUES>>
+"""
+
+
+def _llm_generate_actor_ucs(actor: dict):
+    """Generate 1-2 LLM-bespoke detection UCs for a tracked threat
+    actor, given their MITRE profile. Cached on disk per actor name +
+    technique-set hash so re-runs are free, and so a future technique
+    list change invalidates the cache cleanly. Returns [] if no auth
+    is configured (cache miss + skip).
+    Output shape mirrors _llm_generate_ucs but each dict is annotated
+    with `is_llm: True, source_kind: 'actor-bespoke'` so the drawer
+    UI can label them differently from article-bound LLM UCs."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    name = (actor.get("name") or "").strip()
+    techs = sorted(actor.get("techs") or actor.get("techniques") or [])
+    if not name or len(techs) < 3:
+        return []   # too sparse for a meaningful actor-driven UC
+    LLM_ACTOR_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    sig = f"{name}|{','.join(techs)}"
+    cache_key = hashlib.sha1(sig.encode("utf-8", "replace")).hexdigest()
+    cache_path = LLM_ACTOR_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    if cache_path.exists():
+        try:
+            data = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+            return data.get("ucs") or []
+        except Exception:
+            pass
+    # Cache miss — only proceed if auth is configured.
+    if not use_oauth and not api_key:
+        return []
+    aliases = (actor.get("aliases") or [])[:8]
+    description = (actor.get("mitre_description") or actor.get("description") or "")[:600]
+    prompt = (_LLM_ACTOR_PROMPT
+              .replace("<<NAME>>", name)
+              .replace("<<ALIASES>>", ", ".join(aliases) or "(none)")
+              .replace("<<COUNTRY>>", actor.get("country", "??"))
+              .replace("<<MOTIVATION>>", actor.get("motivation", "unknown"))
+              .replace("<<MITRE_ID>>", actor.get("mitre_id", ""))
+              .replace("<<DESCRIPTION>>", description or "(no description in MITRE bundle)")
+              .replace("<<TECHNIQUES>>", ", ".join(techs[:60])))
+    raw = None
+    try:
+        if use_oauth:
+            raw = _llm_call_via_oauth(prompt, enable_search=False)
+        elif api_key:
+            raw = _llm_call_via_api_key(prompt, api_key)
+    except Exception as _e:
+        print(f"    [!] actor-LLM call failed for {name}: {_e}")
+        return []
+    if not raw:
+        return []
+    # Parse — same fence-stripping as _llm_generate_ucs
+    json_lib = __import__("json")
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = "\n".join(raw.split("\n")[1:])
+        if raw.endswith("```"):
+            raw = raw.rsplit("```", 1)[0]
+    try:
+        data = json_lib.loads(raw)
+    except Exception:
+        # Try pulling a JSON block out of mixed text
+        import re as _re
+        m = _re.search(r"\{[\s\S]*\}", raw)
+        if m:
+            try:
+                data = json_lib.loads(m.group(0))
+            except Exception:
+                print(f"    [!] actor-LLM JSON unparseable for {name}")
+                return []
+        else:
+            return []
+    out_ucs = []
+    for d in (data.get("ucs") or []):
+        if not isinstance(d, dict): continue
+        title = (d.get("title") or "").strip()
+        if not title: continue
+        title = _re.sub(r"^(\[LLM\]\s*)+", "", title) if (_re := __import__("re")) else title
+        out_ucs.append({
+            "title": f"[LLM] {title[:140]}",
+            "description": (d.get("description") or "")[:600],
+            "is_llm": True,
+            "source_kind": "actor-bespoke",
+            "phase": d.get("kill_chain", "actions"),
+            "conf": d.get("confidence", "Medium"),
+            "techs": [t.get("id") if isinstance(t, dict) else t for t in (d.get("techniques") or [])][:8],
+            "art_id": "",
+            "art_title": "",
+            "is_mitre_match": False,
+            "splunk": d.get("splunk_spl") or "",
+            "kql": d.get("defender_kql") or "",
+            "rationale": (d.get("rationale") or "")[:400],
+        })
+    cache_path.write_text(json_lib.dumps({"name": name, "ucs": out_ucs}, indent=2), encoding="utf-8")
+    return out_ucs
 
 
 def _uc_from_llm_dict(d: dict):
@@ -6414,10 +6562,17 @@ function renderActorView(name) {
       const artId = d.dataset.artId;
       const wantTitle = d.dataset.ucTitle;
       const ucData = sortedUcs[idx] || {};
-      // Path 2: MITRE-match — render embedded SPL/KQL via tabs
-      if (ucData.is_mitre_match) {
+      // Path 2: embedded SPL/KQL (MITRE-match OR actor-bespoke LLM UC).
+      // Render the body straight from the data — no article DOM lookup.
+      if (ucData.is_mitre_match || ucData.source_kind === 'actor-bespoke' || ucData.kql || ucData.splunk) {
         const uid = 'auc-' + Math.random().toString(36).slice(2,8);
         let html = '<div class="uc-body" style="padding:14px 16px;">';
+        if (ucData.description) {
+          html += '<div class="uc-desc" style="color:var(--muted); font-size:12.5px; margin-bottom:10px; line-height:1.55;">' + escapeHtml(ucData.description) + '</div>';
+        }
+        if (ucData.rationale) {
+          html += '<div class="uc-desc" style="color:var(--muted); font-size:12px; margin-bottom:10px; line-height:1.55; padding:8px 12px; background:rgba(113,112,255,0.05); border-left:2px solid var(--accent); border-radius:4px;"><strong style="color:var(--text); font-weight:600;">Why this catches the actor:</strong> ' + escapeHtml(ucData.rationale) + '</div>';
+        }
         if (ucData.techs && ucData.techs.length) {
           html += '<div class="uc-meta"><span class="ind-label">ATT&amp;CK</span>' +
             ucData.techs.map(t => '<span class="ind tech">'+escapeHtml(t)+'</span>').join(' ') + '</div>';
@@ -9108,6 +9263,44 @@ def main():
             })
 
     print(f"[*] MITRE Groups merged: {mitre_added} new + {mitre_merged} merged into existing actors")
+
+    # ===== Per-actor LLM-bespoke UCs ===================================
+    # For each actor (article-bound + MITRE-only) with a meaningful
+    # technique profile, ask the LLM to produce 1-2 high-fidelity
+    # detections tied to THIS actor's specific tradecraft. Cached on
+    # disk by actor name + technique signature so subsequent runs are
+    # free; only newly-added actors or technique-set changes incur LLM
+    # cost. UCs come back flagged source_kind='actor-bespoke' so the
+    # drawer can label them ('LLM · actor profile' vs the existing
+    # article-bound 'LLM' tag).
+    actor_llm_added = 0
+    actor_llm_skipped = 0
+    actor_llm_total = 0
+    for entry in list(actor_index.values()):
+        actor_llm_total += 1
+        # Build a flat actor dict for the LLM helper
+        try:
+            new_ucs = _llm_generate_actor_ucs({
+                "name": entry["name"],
+                "country": entry["country"],
+                "motivation": entry["motivation"],
+                "aliases": entry["aliases"],
+                "mitre_id": entry["mitre_id"],
+                "techs": sorted(entry["techs"]),
+                "mitre_description": entry.get("mitre_description", ""),
+            })
+        except Exception as _e:
+            print(f"    [!] actor-LLM exception for {entry['name']}: {_e}")
+            new_ucs = []
+        if new_ucs:
+            # Prepend: LLM-bespoke profile UCs sit at the top of the
+            # drawer's UC list, above article-bound and MITRE-match.
+            entry["ucs"] = new_ucs + entry["ucs"]
+            entry["llm_uc_count"] = (entry.get("llm_uc_count") or 0) + len(new_ucs)
+            actor_llm_added += len(new_ucs)
+        else:
+            actor_llm_skipped += 1
+    print(f"[*] Actor-bespoke LLM UCs: {actor_llm_added} generated across {actor_llm_total - actor_llm_skipped}/{actor_llm_total} actors (skipped: sparse profile or no auth)")
 
     # Threat-actor payload — sets are converted to sorted lists for JSON.
     actors_serialisable = []

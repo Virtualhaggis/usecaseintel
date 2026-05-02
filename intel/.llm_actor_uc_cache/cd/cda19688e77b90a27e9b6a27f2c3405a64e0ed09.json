@@ -1,0 +1,26 @@
+{
+  "name": "TA578",
+  "ucs": [
+    {
+      "title": "[LLM] TA578 contact-form / fake-DMCA lure \u2192 wscript JS dropper \u2192 msiexec Latrodectus install chain",
+      "description": "Hunts the signature TA578 delivery sequence: a copyright/DMCA-themed email originating from a website contact form delivers a Google Firebase/Storage or Cloudflare R2 link to a ZIP containing a JScript (.js) file. User executes the .js via wscript.exe, which calls curl/msiexec to fetch and install a remote MSI (Latrodectus/IcedID/Bumblebee). This chain is uniquely characteristic of TA578 vs other loader brokers.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1204.002",
+        "T1059.007",
+        "T1218.007",
+        "T1583.006"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name=wscript.exe AND (Processes.process_name IN (\"msiexec.exe\",\"curl.exe\",\"powershell.exe\",\"rundll32.exe\") AND (Processes.process=\"*msiexec*/i*http*\" OR Processes.process=\"*curl*-o*.msi*\" OR Processes.process=\"*/i *https://*\" OR Processes.process=\"*rundll32*nt_*\")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | join type=outer host [| tstats summariesonly=t values(All_Email.src_user) as sender values(All_Email.subject) as subject from datamodel=Email.All_Email where (All_Email.subject IN (\"*DMCA*\",\"*copyright*\",\"*infringement*\",\"*illegal use*\",\"*image*\",\"*photo*\") OR All_Email.body=\"*contact form*\") by All_Email.recipient | rename All_Email.recipient as host] | where isnotnull(sender) OR cmdline=\"*firebasestorage*\" OR cmdline=\"*storage.googleapis*\" OR cmdline=\"*r2.dev*\" | `convert_timeformat`",
+      "kql": "let suspectMail = EmailEvents | where Timestamp > ago(7d) | where Subject has_any (\"DMCA\",\"copyright\",\"infringement\",\"unauthorized use\",\"my photo\",\"illegal use of\",\"stolen image\") or SenderFromAddress has_any (\"noreply@\",\"no-reply@\",\"contact@\",\"webform@\") | project MailTime=Timestamp, NetworkMessageId, RecipientEmailAddress, SenderFromAddress, Subject; let scriptDrop = DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileName =~ \"wscript.exe\" | where FileName in~ (\"msiexec.exe\",\"curl.exe\",\"powershell.exe\",\"rundll32.exe\") | where ProcessCommandLine has_any (\"msiexec\",\"/i http\",\"/i https\",\"firebasestorage.googleapis\",\"storage.googleapis\",\".r2.dev\",\"--ssl-no-revoke\",\"-o C:\\\\Users\",\".msi\") | project DeviceId, DeviceName, Timestamp, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256; let chainHost = scriptDrop | join kind=leftouter (DeviceFileEvents | where Timestamp > ago(7d) | where FileName endswith \".js\" or FileName endswith \".jse\" or FileName endswith \".zip\" | where FolderPath has_any (\"\\\\Downloads\\\\\",\"\\\\Temp\\\\\",\"\\\\AppData\\\\\") | project DeviceId, JsFile=FileName, JsPath=FolderPath, JsTime=Timestamp) on DeviceId; chainHost | extend RecipientEmailAddress = tostring(AccountName) | join kind=leftouter suspectMail on RecipientEmailAddress | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, JsFile, JsPath, MailTime, SenderFromAddress, Subject | sort by Timestamp desc",
+      "rationale": "Proofpoint and Bitsight reporting on TA578 (the broker behind Latrodectus, IcedID, and Bumblebee delivery in 2023\u20132024) consistently shows the same kill chain: copyright/DMCA-themed lures delivered through legitimate website contact forms (T1566.003) \u2192 Firebase/Google Cloud Storage/Cloudflare R2 hosted ZIP \u2192 JScript (T1059.007) \u2192 msiexec /i pulling a remote MSI (T1218.007) \u2192 rundll32 running an ex"
+    }
+  ]
+}

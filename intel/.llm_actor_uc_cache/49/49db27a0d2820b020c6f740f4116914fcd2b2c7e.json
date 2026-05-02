@@ -1,0 +1,26 @@
+{
+  "name": "TA459",
+  "ucs": [
+    {
+      "title": "[LLM] TA459 weaponized RTF/Office document spawning VBS or PowerShell loader (ZeroT / PlugX / NetTraveler chain)",
+      "description": "Hunts the characteristic TA459 spearphishing chain in which a weaponized Office/RTF lure (frequently exploiting CVE-2017-0199 / CVE-2012-0158) targeting Russian, Belarusian, or Mongolian recipients spawns wscript/cscript/mshta or PowerShell, which then drops ZeroT, NetTraveler, or PlugX. The combination of Office-parent \u2192 script-host child \u2192 outbound HTTP fetch is highly specific to TA459's documented operations against CIS/Eurasian governmental and military targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1203",
+        "T1204.002",
+        "T1059.001",
+        "T1059.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as pid values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"eqnedt32.exe\",\"outlook.exe\") AND Processes.process_name IN (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process_id Processes.process_id | `drop_dm_object_name(Processes)` | rename process_id as pid | join type=left dest pid [| tstats summariesonly=true values(All_Traffic.dest_ip) as c2_ip values(All_Traffic.dest_port) as c2_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443,53) by All_Traffic.src All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` | rename src as dest process_id as pid] | where isnotnull(c2_ip) | eval risk=case(match(process,\"(?i)(IEX|Invoke-Expression|DownloadString|DownloadFile|FromBase64String|-enc|-EncodedCommand|hidden|-w 1|wscript.shell|http[s]?://)\"),\"high\", true(),\"medium\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user parent_process_name process_name process c2_ip c2_port app risk | sort - firstTime",
+      "kql": "let officeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"eqnedt32.exe\",\"outlook.exe\"]);\nlet scriptChildren = dynamic([\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\"]);\nlet suspect = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (officeParents)\n| where FileName in~ (scriptChildren)\n| extend lure = tolower(InitiatingProcessCommandLine)\n| project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessId = tostring(ProcessId), InitiatingProcessSHA256;\nlet egress = DeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemotePort in (80,443,8080,8443,53)\n| where InitiatingProcessFileName in~ (scriptChildren)\n| project NetTime = Timestamp, DeviceId, NetProcId = tostring(InitiatingProcessId), RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName;\nsuspect\n| join kind=inner (egress) on DeviceId, $left.ProcessId == $right.NetProcId\n| where NetTime between (Timestamp .. Timestamp + 10m)\n| extend SuspectCmd = iif(ProcessCommandLine matches regex @\"(?i)(IEX|Invoke-Expression|DownloadString|DownloadFile|FromBase64String|-enc\\s|-EncodedCommand|-w\\s+1|hidden|wscript\\.shell|http[s]?://)\", true, false)\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(14d)\n    | where AttachmentCount > 0\n    | where SenderFromDomain !endswith \"<your-corp-domain>\"\n    | project EmailTime = Timestamp, RecipientEmailAddress, SenderFromAddress, SenderIPv4, Subject, NetworkMessageId\n) on $left.AccountName == $right.RecipientEmailAddress\n| where EmailTime between (Timestamp - 2h .. Timestamp)\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, RemoteIP, RemoteUrl, SenderFromAddress, Subject, NetworkMessageId, SuspectCmd, InitiatingProcessSHA256\n| order by Timestamp desc",
+      "rationale": "TA459 (G0062, suspected PRC-nexus, overlapping with activity Proofpoint tracked alongside KeyBoy/Goblin Panda tooling) almost exclusively delivers payloads via weaponized RTF/Office attachments that exploit Equation Editor or HTA/CVE-2017-0199 to spawn a script host (wscript/mshta) which fetches a second-stage VBS that loads ZeroT, NetTraveler, or PlugX. Generic Office-spawn-script rules fire too "
+    }
+  ]
+}

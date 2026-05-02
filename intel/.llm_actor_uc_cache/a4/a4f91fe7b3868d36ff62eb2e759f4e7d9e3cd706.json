@@ -1,0 +1,45 @@
+{
+  "name": "Windigo",
+  "ucs": [
+    {
+      "title": "[LLM] Windigo/Ebury libkeyutils.so trojanization on Linux SSH servers",
+      "description": "Hunts Ebury's signature persistence mechanism: replacement or sideloading of /lib*/libkeyutils.so* (and sibling OpenSSH binaries sshd/ssh/ssh-add/ssh-agent) on Linux/Unix hosts. Windigo (G0124) has used this exact trojanized shared-object trick since 2011 to backdoor thousands of servers without modifying the OpenSSH package itself.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1554",
+        "T1574.006",
+        "T1543",
+        "T1059.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN (\"created\",\"modified\",\"renamed\") AND (Filesystem.file_path IN (\"/lib/libkeyutils.so*\",\"/lib64/libkeyutils.so*\",\"/usr/lib/libkeyutils.so*\",\"/usr/lib64/libkeyutils.so*\",\"/lib/x86_64-linux-gnu/libkeyutils.so*\") OR Filesystem.file_name IN (\"sshd\",\"ssh\",\"ssh-add\",\"ssh-agent\",\"libns2.so\",\"libns5.so\")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.process_path Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,\"(?i)^(dpkg|rpm|yum|dnf|apt|apt-get|zypper|pacman|puppet|chef-client|salt-minion|ansible)$\") | search NOT [| inputlookup linux_ssh_package_baseline.csv | fields file_hash] | eval risk=case(match(file_name,\"libkeyutils\"),100, match(file_name,\"^(sshd|ssh|ssh-add|ssh-agent)$\"),80, true(),50) | sort - risk - lastTime",
+      "kql": "let sshBinaries = dynamic([\"sshd\",\"ssh\",\"ssh-add\",\"ssh-agent\"]);\nlet pkgMgrs = dynamic([\"dpkg\",\"rpm\",\"yum\",\"dnf\",\"apt\",\"apt-get\",\"zypper\",\"pacman\",\"puppet\",\"chef-client\",\"salt-minion\",\"ansible-playbook\"]);\nDeviceFileEvents\n| where Timestamp > ago(30d)\n| where DeviceInfo_OSPlatform !startswith \"Windows\" or DeviceOSPlatform !startswith \"Windows\"\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where (FolderPath matches regex @\"^(/usr)?/lib(64)?(/x86_64-linux-gnu)?/libkeyutils\\.so(\\.[0-9]+)*$\")\n     or (FileName in (sshBinaries) and FolderPath matches regex @\"^/(usr/)?(s)?bin/\")\n     or FileName in (\"libns2.so\",\"libns5.so\")\n| where InitiatingProcessFileName !in (pkgMgrs)\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName in (sshBinaries) or ProcessCommandLine has \"libkeyutils\"\n    | summarize sshd_starts=count(), procCmd=any(ProcessCommandLine) by DeviceId\n) on DeviceId\n| project Timestamp, DeviceName, DeviceId, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, sshd_starts\n| extend RiskScore = iff(FileName startswith \"libkeyutils\", 100, iff(FileName in (sshBinaries), 80, 50))\n| order by RiskScore desc, Timestamp desc",
+      "rationale": "libkeyutils.so trojanization is the defining Ebury implant pattern (ESET 2014, CERN 2019, ESET 2024 'Ebury is alive but unseen'). The combination of (a) write to libkeyutils.so or core OpenSSH binaries, (b) by a non-package-manager process, (c) on a host that runs sshd, is essentially pathognomonic for Windigo/Ebury and is not produced by legitimate workflows outside of yum/apt/puppet, which we ex"
+    },
+    {
+      "title": "[LLM] Windigo/Ebury credential exfiltration via DNS from sshd-lineage process",
+      "description": "Hunts Ebury's stolen-credential exfiltration channel: the trojanized sshd / libkeyutils sends harvested SSH usernames, passwords, and private keys out via DNS A/TXT queries to attacker DGA-style subdomains. We pivot on DNS originating from the sshd process tree on Linux servers \u2014 a behavior sshd should essentially never exhibit.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1048.003",
+        "T1556.003",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 OR All_Traffic.app=\"dns\" by All_Traffic.src All_Traffic.process_name All_Traffic.process_path host | `drop_dm_object_name(All_Traffic)` | where match(process_name,\"(?i)^(sshd|ssh|ssh-agent|ssh-add)$\") OR match(process_path,\"/(usr/)?s?bin/sshd$\") | join type=left src host [| tstats summariesonly=true values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name=sshd by Processes.dest Processes.user | rename Processes.dest as src] | stats count values(dest_ip) as dst values(dest_port) as ports min(firstTime) as firstTime max(lastTime) as lastTime by src process_name parent | where count > 0 | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let sshLineage = dynamic([\"sshd\",\"ssh\",\"ssh-agent\",\"ssh-add\"]);\nlet window = 14d;\nDeviceNetworkEvents\n| where Timestamp > ago(window)\n| where RemotePort == 53 or RemoteUrl has \".\"  // DNS\n| where InitiatingProcessFileName in (sshLineage)\n     or InitiatingProcessParentFileName in (sshLineage)\n     or InitiatingProcessFolderPath matches regex @\"^/(usr/)?s?bin/sshd$\"\n| extend qname = tolower(coalesce(RemoteUrl, tostring(RemoteIP)))\n| extend label = tostring(split(qname, \".\")[0])\n| extend labelLen = strlen(label)\n| extend hexish = label matches regex @\"^[a-f0-9]{16,}$\"\n| extend b32ish = label matches regex @\"^[a-z2-7]{20,}$\"\n| summarize Queries=count(), DistinctQNames=dcount(qname), MaxLabelLen=max(labelLen),\n            HexLabels=countif(hexish), B32Labels=countif(b32ish),\n            SampleQNames=make_set(qname, 25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp)\n  by DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessAccountName\n| where Queries > 0\n| extend Suspicion = (Queries>20)*1 + (DistinctQNames>10)*2 + (MaxLabelLen>=30)*3 + (HexLabels>5 or B32Labels>5)*3\n| where Suspicion >= 3\n| order by Suspicion desc, LastSeen desc",
+      "rationale": "Per ESET's 2014 'Operation Windigo' report and the 2024 follow-up, Ebury exfiltrates stolen SSH credentials and private keys over DNS, encoded as long base32/hex labels in queries to operator infrastructure. Legitimate sshd does not initiate outbound DNS for any purpose other than reverse-PTR lookups against the local resolver; outbound DNS originating from the sshd process tree \u2014 especially with "
+    }
+  ]
+}

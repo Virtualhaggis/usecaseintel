@@ -1,0 +1,47 @@
+{
+  "name": "Ke3chang",
+  "ucs": [
+    {
+      "title": "[LLM] Ke3chang / NICKEL: Exchange-IIS webshell pivot to LSASS/NTDS credential theft",
+      "description": "Hunts the NICKEL kill-chain documented by Microsoft (Dec 2021) and Mandiant: exploitation of unpatched Exchange/SharePoint, web-process-spawned recon, then credential dumping (Mimikatz/comsvcs/ntdsutil). The web-process parent + same-host credential access within 24h is the signature pivot Ke3chang uses repeatedly against diplomatic/MFA targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1059.003",
+        "T1003.001",
+        "T1003.003",
+        "T1087.002",
+        "T1018"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstRecon max(_time) as lastRecon values(Processes.process) as recon_cmds values(Processes.parent_process_name) as web_parent from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"UMWorkerProcess.exe\",\"MSExchangeDelivery.exe\",\"MSExchangeMailboxAssistants.exe\",\"sharepointsvc.exe\") AND (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"nltest.exe\",\"ipconfig.exe\",\"quser.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"wmic.exe\",\"reg.exe\") OR Processes.process IN (\"*nltest /domain_trusts*\",\"*net group \\\"domain admins\\\"*\")) by Processes.dest Processes.user | `drop_dm_object_name(\"Processes\")` | join type=inner dest [ | tstats summariesonly=true count min(_time) as credTime values(Processes.process) as cred_cmds from datamodel=Endpoint.Processes where (Processes.process IN (\"*lsass.exe*\",\"*sekurlsa*\",\"*ntds.dit*\",\"*ntdsutil*ifm*\",\"*comsvcs.dll*MiniDump*\",\"*procdump*lsass*\",\"*reg*save*sam*\",\"*reg*save*system*\",\"*reg*save*security*\")) by Processes.dest | `drop_dm_object_name(\"Processes\")` ] | where credTime >= firstRecon AND credTime <= (lastRecon + 86400) | convert ctime(firstRecon) ctime(lastRecon) ctime(credTime) | table dest user web_parent recon_cmds cred_cmds firstRecon credTime",
+      "kql": "let RecceCmds = dynamic([\"whoami\",\"net user\",\"net group\",\"nltest\",\"ipconfig\",\"tasklist\",\"quser\",\"systeminfo\",\"wmic\",\"reg query\",\"net view\"]);\nlet WebSvcParents = dynamic([\"w3wp.exe\",\"UMWorkerProcess.exe\",\"MSExchangeDelivery.exe\",\"MSExchangeMailboxAssistants.exe\",\"sharepointsvc.exe\"]);\nlet WebRecon = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (WebSvcParents)\n| where ProcessCommandLine has_any (RecceCmds) or FileName in~ (\"cmd.exe\",\"powershell.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"nltest.exe\",\"reg.exe\")\n| project DeviceId, DeviceName, ReconTime=Timestamp, ReconCmd=ProcessCommandLine, ReconParent=InitiatingProcessFileName, AccountName;\nlet CredAccess = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (ProcessCommandLine has_any (\"sekurlsa\",\"ntds.dit\",\"ntdsutil ifm\",\"comsvcs.dll MiniDump\",\"DCSync\"))\n   or (FileName =~ \"rundll32.exe\" and ProcessCommandLine has \"comsvcs.dll\" and ProcessCommandLine has \"MiniDump\")\n   or (FileName =~ \"procdump.exe\" and ProcessCommandLine has \"lsass\")\n   or (FileName =~ \"reg.exe\" and ProcessCommandLine has \"save\" and ProcessCommandLine has_any (\"hklm\\\\sam\",\"hklm\\\\system\",\"hklm\\\\security\"))\n| project DeviceId, CredTime=Timestamp, CredCmd=ProcessCommandLine, CredFile=FileName;\nWebRecon\n| join kind=inner CredAccess on DeviceId\n| where CredTime between (ReconTime .. (ReconTime + 24h))\n| summarize ReconCmds=make_set(ReconCmd,10), CredCmds=make_set(CredCmd,10), MinReconTime=min(ReconTime), MaxCredTime=max(CredTime) by DeviceName, ReconParent, AccountName\n| order by MinReconTime desc",
+      "rationale": "Microsoft's NICKEL (Dec 2021) and Mandiant Operation Ke3chang reports specifically document Ke3chang exploiting Internet-facing Exchange/SharePoint and immediately pivoting to LSASS/NTDS extraction on the same host using built-in tools (comsvcs.dll, ntdsutil ifm, reg save). The temporal join of an Exchange/IIS worker spawning recon binaries and the same host running a credential-dump primitive wit"
+    },
+    {
+      "title": "[LLM] Ke3chang RoyalDNS / Okrum DNS-tunnel C2 with service persistence",
+      "description": "Detects the DNS-based C2 channel signature of Ke3chang's RoyalDNS and Okrum implants (T1071.004) \u2014 abnormally large/long TXT-record traffic to non-corporate resolvers paired with new Windows Service persistence on the same host. RoyalDNS uses a Windows service named 'Nwsapagent' for persistence, which is a near-unique IOC for this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1071.004",
+        "T1543.003",
+        "T1027",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.dest) as resolvers sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in dc(All_Traffic.query) as unique_queries from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 AND All_Traffic.app=\"dns\" AND NOT All_Traffic.dest IN (\"10.0.0.0/8\",\"172.16.0.0/12\",\"192.168.0.0/16\",\"168.63.129.16\") by All_Traffic.src All_Traffic.user _time span=1h | `drop_dm_object_name(\"All_Traffic\")` | where unique_queries > 200 OR bytes_out > 200000 | join type=inner src [ | tstats summariesonly=true count values(Processes.process) as svc_install_cmd from datamodel=Endpoint.Processes where (Processes.process=\"*sc*create*\" OR Processes.process=\"*New-Service*\" OR Processes.process=\"*Nwsapagent*\" OR Processes.process=\"*helpsvc*\" OR Processes.process=\"*winhelp*\") by Processes.dest Processes.user | rename Processes.dest as src | `drop_dm_object_name(\"Processes\")` ] | table _time src user resolvers unique_queries bytes_out svc_install_cmd",
+      "kql": "let WindowStart = ago(7d);\nlet ExternalDNS = DeviceNetworkEvents\n| where Timestamp > WindowStart\n| where RemotePort == 53 and ActionType == \"ConnectionSuccess\"\n| where not(ipv4_is_private(RemoteIP)) and RemoteIP !in (\"168.63.129.16\")\n| summarize Conns=count(), BytesOut=sum(toint(InitiatingProcessFileSize)), Resolvers=make_set(RemoteIP,5), Procs=make_set(InitiatingProcessFileName,5) by DeviceId, DeviceName, bin(Timestamp, 1h)\n| where Conns > 200 or array_length(Resolvers) >= 3;\nlet SuspectServicePersistence = DeviceProcessEvents\n| where Timestamp > WindowStart\n| where (FileName =~ \"sc.exe\" and ProcessCommandLine has_any (\"create\",\"config\"))\n   or (ProcessCommandLine has \"New-Service\")\n   or (ProcessCommandLine has_any (\"Nwsapagent\",\"helpsvc\",\"WinHelp\",\"NetSvc\"))\n| project DeviceId, SvcTime=Timestamp, SvcCmd=ProcessCommandLine, SvcParent=InitiatingProcessFileName;\nlet RegPersistence = DeviceRegistryEvents\n| where Timestamp > WindowStart\n| where RegistryKey has \"\\\\Services\\\\\" and RegistryValueName in~ (\"ImagePath\",\"ServiceDll\")\n| where RegistryValueData has_any (\"\\\\AppData\\\\\",\"\\\\ProgramData\\\\\",\"\\\\Users\\\\Public\\\\\",\"rundll32\")\n| project DeviceId, RegTime=Timestamp, RegistryKey, RegistryValueData;\nExternalDNS\n| join kind=inner SuspectServicePersistence on DeviceId\n| where SvcTime between (Timestamp .. (Timestamp + 6h))\n| join kind=leftouter RegPersistence on DeviceId\n| project DeviceName, Timestamp, Conns, Resolvers, Procs, SvcTime, SvcCmd, SvcParent, RegistryKey, RegistryValueData\n| order by Timestamp desc",
+      "rationale": "ESET's Okrum and NCC Group's APT15 RoyalDNS analyses both flagged DNS-tunnel C2 plus service-name persistence ('Nwsapagent', masqueraded help services) as Ke3chang trademarks, distinct from other Chinese clusters (APT41 favors HTTP/SMB; APT10 favors HTTPS scheduled-task implants). Correlating high-volume non-corporate DNS egress with a new service install or ImagePath pointing into user-writable d"
+    }
+  ]
+}

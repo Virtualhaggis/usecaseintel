@@ -1,0 +1,46 @@
+{
+  "name": "PLATINUM",
+  "ucs": [
+    {
+      "title": "[LLM] PLATINUM (G0068) Dipsind/JPIN spear-phish chain: Office lure \u2192 in-memory injection \u2192 LSASS credential theft",
+      "description": "Hunts PLATINUM's signature South/Southeast Asia government-targeting chain: a diplomatic-themed Office attachment delivered via spear-phish that drops the Dipsind/JPIN family, hot-patches/injects into a benign Windows process, and pivots to LSASS for credential harvesting. Catches the specific T1566.001 \u2192 T1204.002 \u2192 T1055 \u2192 T1003.001 sequence Microsoft documented for this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1055",
+        "T1036",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as firstTime max(_time) as lastTime values(All_Email.recipient) as recipient values(All_Email.file_name) as att from datamodel=Email.All_Email where All_Email.file_name IN (\"*.doc\",\"*.docx\",\"*.docm\",\"*.xls\",\"*.xlsm\",\"*.rtf\",\"*.lnk\") by All_Email.src_user All_Email.message_id | rename All_Email.* as * | join type=inner src_user [| tstats summariesonly=true values(Processes.process) as proc values(Processes.process_name) as cproc values(Processes.parent_process_name) as pproc from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") AND Processes.process_name IN (\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"powershell.exe\") by Processes.user Processes.dest Processes.process_id | rename Processes.user as src_user Processes.dest as host] | join type=inner host [| tstats summariesonly=true values(Processes.process_name) as injector_proc values(Processes.process) as injector_cmd from datamodel=Endpoint.Processes where (Processes.process=\"*lsass*\" OR Processes.process=\"*MiniDump*\" OR Processes.process=\"*comsvcs.dll*\") by Processes.dest Processes.user Processes.parent_process_name | rename Processes.dest as host] | where lastTime - firstTime < 7200 | table firstTime host src_user att pproc cproc injector_proc injector_cmd",
+      "kql": "let phish = EmailEvents | where Timestamp > ago(7d) | where AttachmentCount > 0 | where Subject has_any (\"diplomatic\",\"ASEAN\",\"embassy\",\"Ministry\",\"visa\",\"summit\",\"meeting\",\"agreement\") or SenderFromDomain has_any (\"gov.\",\"mofa\",\"mfa\") | project PhishTime=Timestamp, NetworkMessageId, RecipientEmailAddress, SenderFromAddress, Subject;\nlet recipients = phish | distinct RecipientEmailAddress;\nlet office_spawn = DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") | where FileName in~ (\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"cmd.exe\") | where AccountUpn in (recipients) or AccountName has_any (recipients) | project SpawnTime=Timestamp, DeviceId, DeviceName, AccountUpn, InitiatingProcessFileName, FileName, ProcessCommandLine, SpawnPID=ProcessId;\nlet lsass_touch = DeviceEvents | where Timestamp > ago(7d) | where ActionType in (\"OpenProcessApiCall\",\"ReadProcessMemoryApiCall\") | extend p=parse_json(AdditionalFields) | where tostring(p.TargetImageFileName) endswith \"lsass.exe\" | where InitiatingProcessFileName !in~ (\"MsMpEng.exe\",\"svchost.exe\",\"wininit.exe\",\"csrss.exe\",\"lsm.exe\") | project LsassTime=Timestamp, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName;\noffice_spawn | join kind=inner lsass_touch on DeviceId | where LsassTime between (SpawnTime .. SpawnTime + 2h) | join kind=inner phish on $left.AccountUpn == $right.RecipientEmailAddress | where SpawnTime between (PhishTime .. PhishTime + 24h) | project PhishTime, SpawnTime, LsassTime, DeviceName, AccountUpn, SenderFromAddress, Subject, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessFileName1, InitiatingProcessParentFileName",
+      "rationale": "PLATINUM (Microsoft Threat Intelligence cluster, no CrowdStrike/Mandiant alias) is uniquely characterized by: (a) targeting MoFA/diplomatic recipients in South/SE Asia (the recipient/subject filter), (b) Dipsind backdoor delivery via spear-phish-attached Office docs (the Office\u2192LOLBin spawn pivot), and (c) Microsoft documented their hot-patching/injection-into-legit-binary tradecraft followed by L"
+    },
+    {
+      "title": "[LLM] PLATINUM JPIN/adbupd raw-socket non-application-layer C2 from injected user-mode process",
+      "description": "Hunts PLATINUM's distinctive use of raw sockets / ICMP and other non-application-layer protocols (T1095) for C2 \u2014 observed in the JPIN and adbupd implant families \u2014 emerging from a previously-injected legitimate Windows binary. Microsoft specifically called out PLATINUM's preference for covert, low-volume protocol channels (including AMT Serial-over-LAN) to evade perimeter inspection.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1095",
+        "T1055",
+        "T1105",
+        "T1036"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.transport) as transport values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport IN (\"icmp\",\"igmp\",\"gre\",\"raw\") OR (All_Traffic.transport=\"tcp\" AND All_Traffic.dest_port NOT IN (53,80,443,8080,8443)) by All_Traffic.src All_Traffic.app All_Traffic.process_name _time span=1h | rename All_Traffic.* as * | search process_name IN (\"svchost.exe\",\"explorer.exe\",\"lsass.exe\",\"spoolsv.exe\",\"services.exe\",\"winlogon.exe\",\"dllhost.exe\",\"taskhostw.exe\") AND NOT dest IN (\"10.0.0.0/8\",\"172.16.0.0/12\",\"192.168.0.0/16\") | join type=inner src process_name [| tstats summariesonly=true values(Processes.parent_process_name) as ppn values(Processes.process_path) as ppath values(Processes.process_hash) as phash from datamodel=Endpoint.Processes where Processes.action=\"allowed\" by Processes.dest Processes.process_name | rename Processes.dest as src Processes.process_name as process_name] | where (ppath!=\"C:\\\\Windows\\\\System32\\\\*\" AND ppath!=\"C:\\\\Windows\\\\SysWOW64\\\\*\") OR ppn NOT IN (\"services.exe\",\"wininit.exe\",\"userinit.exe\",\"explorer.exe\") | stats count by src process_name ppath ppn transport dport dest bytes_out | where count < 50",
+      "kql": "let suspicious_hosts = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName in~ (\"svchost.exe\",\"explorer.exe\",\"spoolsv.exe\",\"services.exe\",\"dllhost.exe\",\"taskhostw.exe\") | where FolderPath !startswith \"C:\\\\Windows\\\\System32\\\\\" and FolderPath !startswith \"C:\\\\Windows\\\\SysWOW64\\\\\" | project DeviceId, DeviceName, MasqProc=FileName, MasqPath=FolderPath, MasqPID=ProcessId, MasqTime=Timestamp;\nlet raw_or_unusual = DeviceNetworkEvents | where Timestamp > ago(7d) | where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\",\"InboundConnectionAccepted\") | where Protocol in~ (\"Icmp\",\"Igmp\",\"Gre\",\"Raw\") or (Protocol =~ \"Tcp\" and RemotePort !in (53,80,443,445,3389,8080,8443) and RemoteIPType == \"Public\") | where InitiatingProcessFileName in~ (\"svchost.exe\",\"explorer.exe\",\"lsass.exe\",\"spoolsv.exe\",\"services.exe\",\"winlogon.exe\",\"dllhost.exe\",\"taskhostw.exe\") | summarize ConnCount=count(), Bytes=sum(toint(InitiatingProcessFileSize)), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Dests=make_set(RemoteIP, 25), Ports=make_set(RemotePort, 25) by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, Protocol | where ConnCount < 50;\nraw_or_unusual | join kind=inner suspicious_hosts on DeviceId | where InitiatingProcessFolderPath == MasqPath or (InitiatingProcessFolderPath !startswith \"C:\\\\Windows\\\\System32\\\\\" and InitiatingProcessFolderPath !startswith \"C:\\\\Windows\\\\SysWOW64\\\\\") | extend RegionFilter = iif(DeviceName has_any (\"asean\",\"vn-\",\"my-\",\"th-\",\"id-\",\"ph-\",\"sg-\",\"in-\",\"mofa\",\"mfa\",\"gov\"),\"in-scope\",\"oos\") | project FirstSeen, LastSeen, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, Protocol, Ports, Dests, ConnCount, RegionFilter | sort by FirstSeen asc",
+      "rationale": "T1095 raw-socket / ICMP C2 from a system-named binary running OUTSIDE System32 is the exact behavioral fingerprint of PLATINUM's JPIN and adbupd implants, which Microsoft observed using non-standard protocol families to blend below typical proxy/firewall inspection in South/SE Asian government networks. Combining the masquerade (T1036) location-anomaly with low-volume non-HTTP/DNS egress filters o"
+    }
+  ]
+}

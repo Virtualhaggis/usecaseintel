@@ -1,0 +1,48 @@
+{
+  "name": "APT41",
+  "ucs": [
+    {
+      "title": "[LLM] APT41 (Wicked Panda / Brass Typhoon) web-app exploitation \u2192 China Chopper / ANTSWORD recon chain",
+      "description": "Hunts the post-exploitation chain APT41 uses after exploiting internet-facing apps (Log4j/Log4Shell, Citrix ADC CVE-2019-19781, USAHerds CVE-2021-44207, Zoho ManageEngine ADSelfService Plus CVE-2021-40539, Confluence CVE-2022-26134) where a web-tier process (w3wp.exe, java, tomcat, httpd) spawns a cluster of native recon utilities within minutes \u2014 the signature of an APT41 operator hand-keyboarding through a freshly dropped China Chopper, ANTSWORD or BLUEBEAM web shell.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003",
+        "T1057",
+        "T1087.001",
+        "T1082"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as child_procs from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"tomcat*.exe\",\"java.exe\",\"javaw.exe\",\"httpd.exe\",\"nginx.exe\",\"tomcat9.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"netstat.exe\",\"arp.exe\",\"nltest.exe\",\"ping.exe\",\"hostname.exe\",\"wmic.exe\",\"reg.exe\",\"sc.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path span=15m | `drop_dm_object_name(Processes)` | eval recon_variety=mvcount(child_procs) | where recon_variety>=3 | rename firstTime as _time | sort 0 -lastTime",
+      "kql": "let webProcs = dynamic([\"w3wp.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"java.exe\",\"javaw.exe\",\"httpd.exe\",\"nginx.exe\"]);\nlet reconProcs = dynamic([\"cmd.exe\",\"powershell.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"netstat.exe\",\"arp.exe\",\"nltest.exe\",\"ping.exe\",\"hostname.exe\",\"wmic.exe\",\"reg.exe\",\"sc.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (webProcs)\n| where FileName in~ (reconProcs)\n| summarize cmds = make_set(FileName, 25), cmdlines = make_set(ProcessCommandLine, 25), variety = dcount(FileName), firstSeen = min(Timestamp), lastSeen = max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, bin(Timestamp, 30m)\n| where variety >= 3\n| order by lastSeen desc",
+      "rationale": "APT41 has repeatedly chained externally-facing web exploits (Log4j against US state governments per Mandiant M-Trends 2022, Citrix ADC, USAHerds, ManageEngine ADSelfService Plus, GlobalProtect) into hand-typed recon via a web shell. The pivot pattern \u2014 Tomcat/IIS parenting cmd.exe \u2192 whoami/net/systeminfo/tasklist within minutes \u2014 is what Mandiant flagged as the giveaway for the APT41 governmental "
+    },
+    {
+      "title": "[LLM] APT41 DLL search-order hijack via signed-vendor binary in writable path (KEYPLUG / DUSTTRAP / ShadowPad loader)",
+      "description": "Hunts APT41's signature side-loading: a legitimate code-signed binary (often from a gaming, AV, or productivity vendor whose cert APT41 has historically stolen \u2014 e.g. Cybereason, Symantec, McAfee, Microsoft, Google) is copied into a non-standard writable directory and loads an unsigned sibling DLL that becomes the KEYPLUG / DUSTTRAP / ShadowPad / Crosswalk loader. This is the deployment chain Mandiant documented for APT41's 2023-2024 KEYPLUG campaigns and the historical Winnti/ShadowPad loader pattern.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.002",
+        "T1105",
+        "T1053.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as exe_path values(Processes.process_hash) as exe_hash from datamodel=Endpoint.Processes where Processes.process_name IN (\"AUG.exe\",\"VsGraphicsResources.exe\",\"Cybereason*.exe\",\"mcoemcpy.exe\",\"GoogleUpdate.exe\",\"OneDrive.exe\",\"AppLaunch.exe\",\"hkcmd.exe\",\"ChromeInstaller.exe\",\"WinWord.exe\",\"setup.exe\") AND (Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\" OR Processes.process_path=\"*\\\\Windows\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\*\\\\AppData\\\\Local\\\\Temp\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | join type=inner dest process_path [| tstats summariesonly=true values(Filesystem.file_name) as sideload_dlls from datamodel=Endpoint.Filesystem where Filesystem.action=\"created\" Filesystem.file_name=\"*.dll\" by Filesystem.dest Filesystem.file_path | rename Filesystem.dest as dest Filesystem.file_path as process_path] | where mvcount(sideload_dlls)>=1",
+      "kql": "let lolSignedNames = dynamic([\"AUG.exe\",\"VsGraphicsResources.exe\",\"mcoemcpy.exe\",\"GoogleUpdate.exe\",\"OneDrive.exe\",\"AppLaunch.exe\",\"hkcmd.exe\",\"ChromeInstaller.exe\",\"WinWord.exe\",\"setup.exe\",\"CybereasonAV.exe\",\"javaw.exe\"]);\nlet writablePaths = dynamic([@\"\\users\\public\\\", @\"\\perflogs\\\", @\"\\windows\\temp\\\", @\"\\programdata\\\", @\"\\appdata\\local\\temp\\\"]);\nlet candidates = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (lolSignedNames)\n| extend folder = tolower(FolderPath)\n| where folder has_any (writablePaths)\n| where InitiatingProcessSignatureStatus !in~ (\"Valid\") or InitiatingProcessFileName in~ (\"explorer.exe\",\"cmd.exe\",\"powershell.exe\",\"rundll32.exe\",\"wmiprvse.exe\",\"svchost.exe\")\n| project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;\ncandidates\n| join kind=inner (\n    DeviceImageLoadEvents\n    | where Timestamp > ago(7d)\n    | where FileName endswith \".dll\"\n    | extend dllFolder = tolower(FolderPath)\n    | project DeviceId, dllName=FileName, dllFolder, dllSHA256=SHA256, dllSigner=tostring(parse_json(AdditionalFields).Signer), dllSignStatus=tostring(parse_json(AdditionalFields).SignatureState), InitiatingProcessFileName, dllTime=Timestamp\n) on DeviceId\n| where dllFolder == tolower(FolderPath)\n| where dllSignStatus !in~ (\"Valid\",\"SignatureValid\") or isempty(dllSigner)\n| summarize sideloadedDlls = make_set(dllName, 10), dllHashes = make_set(dllSHA256, 10), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine\n| order by lastSeen desc",
+      "rationale": "APT41's defining tradecraft (per Mandiant, CrowdStrike Wicked Panda profiling, and the 2020 DOJ indictment) is the abuse of stolen code-signing certificates from compromised gaming/AV vendors plus DLL search-order hijack to launch ShadowPad, Winnti, Crosswalk, KEYPLUG and DUSTTRAP loaders. The combination signal \u2014 a vendor-signed exe relocated to Public/PerfLogs/ProgramData/Temp loading an unsigne"
+    }
+  ]
+}

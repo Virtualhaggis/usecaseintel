@@ -10,12 +10,8 @@ Home Cyber Attack News
 Ubuntu Website and Canonical Web Services Hit by DDoS Attack 
 By Guru Baran 
 May 1, 2026 
-
-
-
-
 Canonical, the company behind the Ubuntu Linux distribution, is currently experiencing widespread service disruptions across its core web infrastructure following a coordinated Distributed Denial-of-Service (DDoS) attack .
-The hacktivist group identifying itself as “The Islamic Cyber Resistance in Iraq – 313 Team” has claimed responsibility for the offensive, marking one of t…
+The hacktivist group identifying itself as “The Islamic Cyber Resistance in Iraq – 313 Team” has claimed responsibility for the offensive, marking one of the most …
 
 ## Indicators of Compromise (high-fidelity only)
 

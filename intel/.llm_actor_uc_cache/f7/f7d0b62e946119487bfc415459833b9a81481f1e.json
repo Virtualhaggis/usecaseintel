@@ -1,0 +1,47 @@
+{
+  "name": "Sandworm",
+  "ucs": [
+    {
+      "title": "[LLM] Sandworm (Seashell Blizzard / APT44) destructive wiper pre-staging chain \u2014 vssadmin + bcdedit + wbadmin + wevtutil",
+      "description": "Hunts the signature 'pre-detonation' command sequence Sandworm chains immediately before deploying NotPetya, Olympic Destroyer, Prestige, HermeticWiper, CaddyWiper and IsaacWiper: shadow copies are nuked, the boot recovery policy is disabled, the WBadmin catalog is wiped, and Windows event logs are cleared \u2014 usually within a few minutes from the same parent on the same host. This sequence is far more specific to Sandworm/GRU 74455 destructive ops than any single recovery-inhibition command on its own.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1485",
+        "T1070.001",
+        "T1486",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as tools values(Processes.parent_process_name) as parents values(Processes.parent_process) as parent_cmdlines from datamodel=Endpoint.Processes where Processes.process_name IN (\"vssadmin.exe\",\"wmic.exe\",\"wbadmin.exe\",\"bcdedit.exe\",\"wevtutil.exe\",\"powershell.exe\",\"cmd.exe\") AND ( (Processes.process_name=\"vssadmin.exe\" AND Processes.process=\"*delete*shadows*\") OR (Processes.process_name=\"wmic.exe\" AND Processes.process=\"*shadowcopy*delete*\") OR (Processes.process_name=\"wbadmin.exe\" AND Processes.process=\"*delete*catalog*\") OR (Processes.process_name=\"bcdedit.exe\" AND (Processes.process=\"*bootstatuspolicy*ignoreallfailures*\" OR Processes.process=\"*recoveryenabled*no*\")) OR (Processes.process_name=\"wevtutil.exe\" AND Processes.process IN (\"*cl*system*\",\"*cl*security*\",\"*cl*application*\",\"*clear-log*\")) ) by Processes.dest Processes.user _time span=15m | eval distinct_actions=mvappend(if(match(cmdlines,\"(?i)shadow\"),\"shadow_delete\",null()), if(match(cmdlines,\"(?i)bootstatuspolicy|recoveryenabled\"),\"bcdedit_disable_recovery\",null()), if(match(cmdlines,\"(?i)delete\\s+catalog\"),\"wbadmin_purge\",null()), if(match(cmdlines,\"(?i)wevtutil.*cl|clear-log\"),\"eventlog_clear\",null())) | eval n_actions=mvcount(distinct_actions) | where n_actions >= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user n_actions distinct_actions tools cmdlines parents parent_cmdlines",
+      "kql": "let window = 15m;\nlet sandworm_actions = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"vssadmin.exe\",\"wmic.exe\",\"wbadmin.exe\",\"bcdedit.exe\",\"wevtutil.exe\")\n| extend Action = case(\n    FileName =~ \"vssadmin.exe\" and ProcessCommandLine has \"delete\" and ProcessCommandLine has \"shadows\", \"shadow_delete\",\n    FileName =~ \"wmic.exe\" and ProcessCommandLine has \"shadowcopy\" and ProcessCommandLine has \"delete\", \"shadow_delete\",\n    FileName =~ \"wbadmin.exe\" and ProcessCommandLine has \"delete\" and ProcessCommandLine has \"catalog\", \"wbadmin_purge\",\n    FileName =~ \"bcdedit.exe\" and (ProcessCommandLine has \"bootstatuspolicy\" and ProcessCommandLine has \"ignoreallfailures\"), \"bcdedit_ignore_failures\",\n    FileName =~ \"bcdedit.exe\" and (ProcessCommandLine has \"recoveryenabled\" and ProcessCommandLine has \" no\"), \"bcdedit_disable_recovery\",\n    FileName =~ \"wevtutil.exe\" and (ProcessCommandLine has \" cl \" or ProcessCommandLine has \"clear-log\"), \"eventlog_clear\",\n    \"\" )\n| where Action != \"\";\nsandworm_actions\n| summarize Actions=make_set(Action), Commands=make_set(ProcessCommandLine), Tools=make_set(FileName), Parents=make_set(InitiatingProcessFileName), ParentCmds=make_set(InitiatingProcessCommandLine), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, AccountName, bin(Timestamp, window)\n| extend ActionCount = array_length(Actions), DurationMin = datetime_diff('minute', LastSeen, FirstSeen)\n| where ActionCount >= 3\n| order by FirstSeen desc",
+      "rationale": "Sandworm/Voodoo Bear/APT44 has reused this exact pre-wipe choreography across nearly every destructive payload it has shipped \u2014 NotPetya (2017), Olympic Destroyer (2018), Prestige (Oct 2022 Polish/Ukrainian logistics), and the 2022 Ukraine wiper waves (HermeticWiper/CaddyWiper/IsaacWiper). Lone admins occasionally run one of these commands; only a destructive operator runs three or four of them wi"
+    },
+    {
+      "title": "[LLM] Sandworm GPO-pushed wiper deployment (HermeticWiper / CaddyWiper TTP \u2014 payload dropped in SYSVOL\\Policies + Immediate Scheduled Task)",
+      "description": "Hunts Sandworm's signature mass-deployment vector against AD: after compromising a domain controller they drop the wiper binary into SYSVOL\\<domain>\\Policies\\{GUID}\\\u2026 and modify an existing GPO (typically adding ScheduledTasks.xml / an Immediate Task) so every domain-joined endpoint executes the payload at next gpupdate. Microsoft (MSTIC) and CERT-UA both attributed this exact deployment chain to Seashell Blizzard / GRU 74455 in the February 2022 Ukraine intrusions and re-observed variants through 2023\u20132024.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1484.001",
+        "T1053.005",
+        "T1570",
+        "T1485",
+        "T1078.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_name) as files values(Filesystem.user) as writer from datamodel=Endpoint.Filesystem where Filesystem.file_path=\"*\\\\SYSVOL\\\\*\\\\Policies\\\\*\" AND (Filesystem.file_name=\"*.exe\" OR Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.ps1\" OR Filesystem.file_name=\"*.bat\" OR Filesystem.file_name=\"*.cmd\" OR Filesystem.file_name=\"ScheduledTasks.xml\" OR Filesystem.file_name=\"Registry.pol\") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user _time span=1h \n| join type=inner Filesystem.dest [\n  | tstats summariesonly=true count as remote_exec_hosts dc(Processes.dest) as endpoint_count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"svchost.exe\",\"taskeng.exe\",\"taskhostw.exe\") AND (Processes.process=\"*\\\\SYSVOL\\\\*\\\\Policies\\\\*\" OR Processes.parent_process=\"*gpupdate*\" OR Processes.process_name=\"gpupdate.exe\") by Processes.dest Processes.process Processes.parent_process _time span=2h | rename Processes.dest as dest \n] \n| where endpoint_count >= 5 \n| `security_content_ctime(firstTime)` | table firstTime dest writer paths files endpoint_count remote_exec_hosts",
+      "kql": "let sysvolDrops = DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has @\"\\SYSVOL\\\" and FolderPath has @\"\\Policies\\\"\n| where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n| where (FileName endswith \".exe\" or FileName endswith \".dll\" or FileName endswith \".ps1\" \n     or FileName endswith \".bat\" or FileName endswith \".cmd\" or FileName endswith \".vbs\"\n     or FileName =~ \"ScheduledTasks.xml\" or FileName =~ \"Registry.pol\")\n| project DropTime=Timestamp, DC=DeviceName, DCId=DeviceId, DroppedFile=FileName, DroppedPath=FolderPath, DropActor=InitiatingProcessAccountName, DropProc=InitiatingProcessFileName, DropCmd=InitiatingProcessCommandLine;\nlet domainExec = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"svchost.exe\",\"taskeng.exe\",\"taskhostw.exe\",\"gpupdate.exe\")\n     or InitiatingProcessCommandLine has \"gpupdate\"\n     or FolderPath has @\"\\SYSVOL\\\" \n     or ProcessCommandLine has @\"\\SYSVOL\\\"\n| project ExecTime=Timestamp, ExecHost=DeviceName, ExecHostId=DeviceId, ExecFile=FileName, ExecCmd=ProcessCommandLine, ExecParent=InitiatingProcessFileName;\nsysvolDrops\n| join kind=inner (domainExec) on $left.DroppedFile == $right.ExecFile\n| where ExecTime between (DropTime .. DropTime + 6h)\n| summarize FirstDrop=min(DropTime), FirstExec=min(ExecTime), DroppedFiles=make_set(DroppedFile), DropPaths=make_set(DroppedPath), DropActors=make_set(DropActor), AffectedHosts=dcount(ExecHostId), HostList=make_set(ExecHost,50), SampleCmds=make_set(ExecCmd,10) by DC\n| where AffectedHosts >= 5\n| order by FirstDrop desc",
+      "rationale": "Sandworm specifically pushes destructive payloads through GPO rather than EDR-noisy tools like PsExec because (a) it propagates to the entire domain instantly via gpupdate and (b) it inherits SYSTEM execution on every endpoint without needing per-host auth \u2014 exactly the technique MSTIC documented for HermeticWiper (Feb 2022) and CERT-UA documented for CaddyWiper. Legitimate admins almost never wri"
+    }
+  ]
+}

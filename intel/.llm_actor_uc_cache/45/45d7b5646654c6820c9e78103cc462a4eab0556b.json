@@ -1,0 +1,47 @@
+{
+  "name": "APT33",
+  "ucs": [
+    {
+      "title": "[LLM] Peach Sandstorm (APT33) password-spray followed by Azure AD device/app persistence",
+      "description": "Hunts the chain Microsoft attributed to Peach Sandstorm in 2023: low-and-slow password spraying against Azure AD/M365 tenants (often from TOR/residential proxy IPs) followed within hours by device registration, new MFA enrollment, or OAuth app consent on the same identity. APT33 specifically uses this combo to seed persistent foothold in aerospace, defense and satellite tenants.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1110.003",
+        "T1078.004",
+        "T1098.005",
+        "T1556.006"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count, dc(user) as users, dc(src) as srcs, values(src) as src_ips from datamodel=Authentication where Authentication.action=failure Authentication.app IN (\"AzureActiveDirectory\",\"office365\",\"AAD\") by Authentication.src _time span=1h | rename Authentication.* as * | where users>=10 AND count<users*3 | rename src as spray_src | join type=inner spray_src [| tstats summariesonly=t count from datamodel=Authentication where Authentication.action=success Authentication.app IN (\"AzureActiveDirectory\",\"office365\",\"AAD\") by Authentication.user, Authentication.src | rename Authentication.* as * | rename src as spray_src, user as victim] | map maxsearches=50 search=\"search index=azure_ad (operation_name=\\\"Add registered users to device\\\" OR operation_name=\\\"Add device\\\" OR operation_name=\\\"User registered security info\\\" OR operation_name=\\\"Consent to application\\\") user=$victim$ earliest=-24h | eval spray_src=\\\"$spray_src$\\\"\" | stats values(operation_name) as persistence_actions, values(spray_src) as origin_ip, count by victim | where mvcount(persistence_actions)>=1",
+      "kql": "let sprayWindow = 1h;\nlet sprayThreshold = 10;\nlet sprayers = AADSignInEventsBeta\n| where Timestamp > ago(7d)\n| where ErrorCode in (50053, 50126, 50055, 50056, 50064, 50076)\n| summarize Failures = count(), Targets = dcount(AccountUpn), TargetList = make_set(AccountUpn, 200) by IPAddress, bin(Timestamp, sprayWindow)\n| where Targets >= sprayThreshold and Failures < Targets * 3\n| project sprayStart = Timestamp, IPAddress, Targets, TargetList;\nlet sprayHits = AADSignInEventsBeta\n| where Timestamp > ago(7d)\n| where ErrorCode == 0\n| join kind=inner sprayers on IPAddress\n| where Timestamp between (sprayStart .. (sprayStart + 6h))\n| project victimTime = Timestamp, AccountUpn, IPAddress, Country, UserAgent;\nsprayHits\n| join kind=inner (\n    CloudAppEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"Add registered users to device\", \"Add device\", \"Register device\", \"Consent to application\", \"Add app role assignment to service principal\", \"User registered security info\", \"Update user\", \"Add member to role\")\n    | project persistTime = Timestamp, AccountUpn = AccountId, ActionType, RawEventData\n) on AccountUpn\n| where persistTime between (victimTime .. (victimTime + 24h))\n| project victimTime, persistTime, AccountUpn, IPAddress, Country, UserAgent, ActionType, RawEventData",
+      "rationale": "Microsoft Threat Intelligence (Sept-2023 'Peach Sandstorm password spray' report) documented this exact two-stage chain: thousands of low-volume sign-in failures from anonymizing infrastructure followed by the operator immediately registering the compromised account onto an attacker-controlled device or consenting to an OAuth app to survive password resets. Generic password-spray rules fire on the"
+    },
+    {
+      "title": "[LLM] APT33 FalseFont / Tickler backdoor staging in aerospace/defense endpoints",
+      "description": "Hunts Peach Sandstorm's custom .NET backdoors (FalseFont, Tickler) which are dropped through LinkedIn-themed recruiting lures aimed at the U.S. Defense Industrial Base. The implants masquerade as a defense-contractor 'application portal', drop a .NET PE under %APPDATA%\\Microsoft\\, beacon to Azure-hosted C2 over HTTPS, and persist via a Run-key or scheduled task using Microsoft-look-alike names.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1204.002",
+        "T1547.001",
+        "T1053.005",
+        "T1071.001",
+        "T1573.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_path IN (\"*\\\\AppData\\\\Roaming\\\\Microsoft\\\\*\",\"*\\\\AppData\\\\Local\\\\Microsoft\\\\*\") AND (Processes.process_name IN (\"FalseFont*.exe\",\"*RecruitmentApp*.exe\",\"*DefenseCareer*.exe\") OR match(Processes.process,\"(?i)(falsefont|tickler|recruit|career|cv\\\\.exe|application[_-]?portal)\")) by host, Processes.user, Processes.process_name, Processes.process_hash, _time span=10m | rename Processes.* as * | append [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\AppData\\\\Roaming\\\\Microsoft\\\\*\\\\*.exe\",\"*\\\\AppData\\\\Roaming\\\\Microsoft\\\\*\\\\*.dll\") AND match(Filesystem.file_name,\"(?i)(falsefont|tickler|recruit|career)\") by host, Filesystem.user, Filesystem.file_name, _time span=10m | rename Filesystem.* as *] | append [| tstats summariesonly=t count from datamodel=Network_Traffic where All_Traffic.dest_port IN (443,8443) AND All_Traffic.app=\"ssl\" AND match(All_Traffic.dest,\"(?i)(\\\\.azurewebsites\\\\.net|\\\\.cloudapp\\\\.azure\\\\.com|\\\\.windows\\\\.net)\") by host, All_Traffic.process_name, All_Traffic.dest, _time span=10m | rename All_Traffic.* as * | where match(process_name,\"(?i)(falsefont|tickler|recruit|career)\") OR process_path LIKE \"%\\\\AppData\\\\Roaming\\\\Microsoft\\\\%\"] | stats dc(host) as hosts, values(process_name) as procs, values(file_name) as files, values(dest) as c2, values(process_hash) as hashes, sum(count) as events by host, user | where events>=2",
+      "kql": "let lures = dynamic([\"falsefont\",\"tickler\",\"recruit\",\"career\",\"defensecareer\",\"applicationportal\",\"cv_application\"]);\nlet susParents = dynamic([\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"winrar.exe\",\"7zg.exe\",\"explorer.exe\"]);\nlet drops = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where ActionType == \"FileCreated\"\n| where FolderPath has_any (@\"\\AppData\\Roaming\\Microsoft\\\", @\"\\AppData\\Local\\Microsoft\\\")\n| where FileName endswith \".exe\" or FileName endswith \".dll\"\n| where FileName has_any (lures) or InitiatingProcessFileName in~ (susParents)\n| project dropTime = Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine;\nlet execs = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FolderPath has_any (@\"\\AppData\\Roaming\\Microsoft\\\", @\"\\AppData\\Local\\Microsoft\\\")\n| where FileName has_any (lures) or ProcessCommandLine has_any (lures)\n| project execTime = Timestamp, DeviceId, ProcessFileName = FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName;\nlet persist = DeviceRegistryEvents\n| where Timestamp > ago(14d)\n| where RegistryKey has_any (@\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\")\n| where RegistryValueData has_any (lures) or RegistryValueData has @\"\\AppData\\Roaming\\Microsoft\\\"\n| project persistTime = Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData;\nlet beacons = DeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemotePort in (443, 8443)\n| where RemoteUrl has_any (\".azurewebsites.net\", \".cloudapp.azure.com\", \".windows.net\", \".trycloudflare.com\")\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\Roaming\\Microsoft\\\", @\"\\AppData\\Local\\Microsoft\\\")\n| project beaconTime = Timestamp, DeviceId, InitiatingProcessFileName, InitiatingProcessSHA256, RemoteUrl, RemoteIP;\ndrops\n| join kind=leftouter execs on DeviceId\n| join kind=leftouter persist on DeviceId\n| join kind=leftouter beacons on DeviceId\n| where isnotempty(execTime) or isnotempty(persistTime) or isnotempty(beaconTime)\n| project DeviceName, dropTime, FileName, FolderPath, SHA256, InitiatingProcessFileName, execTime, persistTime, RegistryValueData, beaconTime, RemoteUrl, RemoteIP",
+      "rationale": "Mandiant (M-Trends 2024) and Microsoft (MSTIC FalseFont advisory, Dec-2023; Tickler advisory, Aug-2024) describe APT33's exact playbook: a LinkedIn 'recruiter' DM links to a fake defense-contractor application portal that delivers a .NET implant impersonating an HR application, written under %APPDATA%\\Microsoft\\, persisted via Run key, beaconing to Azure-hosted infrastructure (a stylistic choice u"
+    }
+  ]
+}

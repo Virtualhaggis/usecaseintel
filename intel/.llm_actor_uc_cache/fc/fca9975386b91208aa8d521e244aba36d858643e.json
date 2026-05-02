@@ -1,0 +1,45 @@
+{
+  "name": "MoustachedBouncer",
+  "ucs": [
+    {
+      "title": "[LLM] MoustachedBouncer ISP-level AitM fake 'Windows Update' lure dropping JScript loader (Disco/NightClub)",
+      "description": "Hunts MoustachedBouncer's signature initial-access chain against embassies in Belarus: an ISP-mediated adversary-in-the-middle redirects victims visiting plain-HTTP sites to a spoofed Windows Update / captive-portal page that delivers a JScript or .url payload, which spawns wscript.exe/cscript.exe (and follow-on PowerShell) from an Internet-zone temp path. ESET attributes this exact 'Disco' plug-in delivery pattern uniquely to MoustachedBouncer (G1019).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1659",
+        "T1059.007",
+        "T1059.001",
+        "T1189"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"iexplore.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"explorer.exe\",\"outlook.exe\") AND Processes.process_name IN (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\") AND (Processes.process IN (\"*\\\\AppData\\\\Local\\\\Temp\\\\*.js\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*.jse\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*.wsf\",\"*\\\\Downloads\\\\*.js\",\"*\\\\INetCache\\\\*\") OR match(Processes.process,\"(?i)(windowsupdate|wuauserv|update\\\\.microsoft|kb\\\\d{6,})\")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats summariesonly=t values(Web.url) as urls values(Web.dest) as web_dest from datamodel=Web where Web.url=\"*update*\" AND NOT (Web.url IN (\"*.update.microsoft.com*\",\"*.windowsupdate.com*\",\"*.delivery.mp.microsoft.com*\",\"*.windowsupdate.microsoft.com*\")) earliest=-30m by Web.src | rename Web.src as dest] | where isnotnull(urls) | `security_content_ctime(firstTime)` | table firstTime dest user parent_process_name process_name process urls web_dest",
+      "kql": "let SuspiciousUpdateBrowsing = DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl has_any (\"windowsupdate\",\"update.microsoft\",\"wuauserv\",\"captive\",\"msftncsi\")\n| where RemoteUrl !endswith \".windowsupdate.com\" and RemoteUrl !endswith \".microsoft.com\" and RemoteUrl !endswith \".msftncsi.com\"\n| where RemotePort in (80, 8080)\n| project NetTime=Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"iexplore.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"explorer.exe\",\"outlook.exe\")\n| where FileName in~ (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\")\n| where ProcessCommandLine has_any (\".js\",\".jse\",\".wsf\",\".hta\",\".url\",\".lnk\")\n   or ProcessCommandLine matches regex @\"(?i)(windowsupdate|kb\\d{6,}|update\\.microsoft)\"\n| where FolderPath has_any (\"\\\\AppData\\\\Local\\\\Temp\\\\\",\"\\\\INetCache\\\\\",\"\\\\Downloads\\\\\")\n| join kind=inner (SuspiciousUpdateBrowsing) on DeviceId\n| where Timestamp between (NetTime .. (NetTime + 30m))\n| project Timestamp, DeviceName, AccountName=AccountUpn, InitiatingProcessFileName, FileName, ProcessCommandLine, RemoteUrl, RemoteIP\n| sort by Timestamp desc",
+      "rationale": "MoustachedBouncer is the only documented actor running an ISP-side AitM (likely via Belarusian operator lawful-intercept tooling) that redirects HTTP traffic to a counterfeit Windows-Update page in order to drop the 'Disco' framework against embassy hosts. Joining (a) plaintext HTTP requests to update-themed URLs that don't terminate on legitimate Microsoft FQDNs, with (b) a browser/Outlook proces"
+    },
+    {
+      "title": "[LLM] MoustachedBouncer NightClub internal SMB staging of screenshots + internal proxy beacon",
+      "description": "Hunts the post-exploitation behaviour of the NightClub implant: periodic GDI screen captures written into a hidden staging directory on an internal SMB share (T1074.002) followed by exfil through an internal proxy chain (T1090.001) used to defeat embassy egress filtering. This share-then-proxy pattern, combined with the MoustachedBouncer victimology (foreign missions in Minsk), is highly specific to G1019.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1074.002",
+        "T1113",
+        "T1090.001",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count values(Filesystem.file_path) as paths values(Filesystem.file_name) as files dc(Filesystem.file_name) as file_count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"\\\\\\\\*\\\\*\" OR Filesystem.file_path=\"*\\\\IPC$\\\\*\" OR Filesystem.file_path=\"*\\\\C$\\\\*\" OR Filesystem.file_path=\"*\\\\ADMIN$\\\\*\") AND (Filesystem.file_name=\"*.bmp\" OR Filesystem.file_name=\"*.jpg\" OR Filesystem.file_name=\"*.png\" OR Filesystem.file_name=\"*.dat\" OR Filesystem.file_name=\"*.bin\") AND Filesystem.action=\"created\" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path span=10m | `drop_dm_object_name(Filesystem)` | where file_count >= 5 | join type=inner dest [| tstats summariesonly=t count values(All_Traffic.dest_ip) as proxy_dest values(All_Traffic.dest_port) as proxy_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category=\"internal\" AND All_Traffic.dest_port IN (8080,8888,3128,1080,8443,4443) by All_Traffic.src | rename All_Traffic.src as dest | where count > 50] | `security_content_ctime(firstTime)` | table firstTime dest user process_name file_count paths proxy_dest proxy_ports",
+      "kql": "let ScreenshotStaging = DeviceFileEvents\n| where Timestamp > ago(1d)\n| where ActionType == \"FileCreated\"\n| where FolderPath startswith \"\\\\\\\\\" or FolderPath has_any (\"\\\\C$\\\\\",\"\\\\ADMIN$\\\\\",\"\\\\IPC$\\\\\")\n| where FileName endswith \".bmp\" or FileName endswith \".jpg\" or FileName endswith \".png\"\n     or FileName endswith \".dat\" or FileName endswith \".bin\"\n| summarize FileCount=dcount(FileName), Files=make_set(FileName, 25), Paths=make_set(FolderPath, 10),\n            FirstSeen=min(Timestamp), LastSeen=max(Timestamp)\n            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, bin(Timestamp, 1h)\n| where FileCount >= 5;\nlet InternalProxyBeacon = DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where ActionType == \"ConnectionSuccess\"\n| where ipv4_is_private(RemoteIP)\n| where RemotePort in (8080, 8888, 3128, 1080, 8443, 4443)\n| summarize Connections=count(), DistinctDests=dcount(RemoteIP), Dests=make_set(RemoteIP, 10) by DeviceId, bin(Timestamp, 1h)\n| where Connections > 50;\nScreenshotStaging\n| join kind=inner (InternalProxyBeacon) on DeviceId\n| project FirstSeen, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileCount, Files, Paths, Connections, Dests",
+      "rationale": "ESET's reporting on NightClub describes the implant grabbing screenshots and dropping them into a remote SMB staging location, then funneling collected data out via an internal proxy host inside the embassy LAN \u2014 a deliberate design choice to survive air-gap-ish egress restrictions in Minsk. Correlating high-volume bitmap/binary writes to admin shares with the same host opening many sessions to in"
+    }
+  ]
+}

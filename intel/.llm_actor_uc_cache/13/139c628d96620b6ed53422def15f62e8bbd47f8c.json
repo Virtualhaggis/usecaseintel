@@ -1,0 +1,46 @@
+{
+  "name": "Salt Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Salt Typhoon (GhostEmperor) Demodex rootkit chain \u2014 BYOVD driver load + side-loaded DLL persistence",
+      "description": "Hunts Salt Typhoon / GhostEmperor's signature persistence chain where a vulnerable signed driver (Cheat Engine's Dbk64.sys is the cluster's documented loader) is dropped to a writable path and registered as a kernel service, immediately followed by DLL side-loading via a legitimate Microsoft binary out of ProgramData/AppData. This combination \u2014 Cheat Engine BYOVD plus PlugX/Demodex side-loading \u2014 is uniquely tied to the GhostEmperor / Earth Estries cluster (Salt Typhoon, G1045) and is rarely seen outside this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1547.001",
+        "T1574.002",
+        "T1218",
+        "T1014"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"dbk64.sys\",\"dbk32.sys\",\"cheatengine*.sys\",\"procexp152.sys\",\"viragt64.sys\",\"mhyprot2.sys\",\"aswarpot.sys\",\"truesight.sys\") OR (Filesystem.file_path IN (\"*\\\\AppData\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\") AND Filesystem.file_name=\"*.sys\") by host Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | join type=inner host [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name IN (\"sc.exe\",\"rundll32.exe\",\"regsvr32.exe\") AND Processes.process IN (\"*create*type=kernel*\",\"*\\\\AppData\\\\*.dll*\",\"*\\\\ProgramData\\\\*.dll*\")) OR (Processes.parent_process_name IN (\"svchost.exe\",\"services.exe\",\"explorer.exe\") AND Processes.process IN (\"*\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process _time | `drop_dm_object_name(Processes)` | rename _time as proc_time ] | where abs(proc_time-lastTime) <= 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let drvDrops = DeviceFileEvents | where Timestamp > ago(7d) | where ActionType == \"FileCreated\" | where FileName endswith \".sys\" | where (FileName has_any (\"dbk64.sys\",\"dbk32.sys\",\"cheatengine\",\"procexp152.sys\",\"viragt64.sys\",\"mhyprot2.sys\",\"aswarpot.sys\",\"truesight.sys\")) or FolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\") | project DropTime=Timestamp, DeviceId, DeviceName, DriverPath=FolderPath, DriverName=FileName, Dropper=InitiatingProcessFileName; let drvLoads = DeviceEvents | where Timestamp > ago(7d) | where ActionType in (\"DriverLoad\",\"ServiceInstalled\") | project LoadTime=Timestamp, DeviceId, LoadedDriver=FileName, LoadPath=FolderPath, LoadCmd=InitiatingProcessCommandLine; let sideLoads = DeviceImageLoadEvents | where Timestamp > ago(7d) | where InitiatingProcessFileName in~ (\"rundll32.exe\",\"regsvr32.exe\",\"DismHost.exe\",\"BdeSvc.exe\",\"AppLaunch.exe\",\"GUP.exe\",\"hkcmd.exe\",\"igfxEM.exe\") | where FolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\") | where FileName endswith \".dll\" | project SideLoadTime=Timestamp, DeviceId, SideLoadedDll=FileName, SideLoadPath=FolderPath, Loader=InitiatingProcessFileName, LoaderCmd=InitiatingProcessCommandLine; drvDrops | join kind=inner drvLoads on DeviceId | where abs(datetime_diff('minute', LoadTime, DropTime)) <= 60 | join kind=inner sideLoads on DeviceId | where abs(datetime_diff('hour', SideLoadTime, LoadTime)) <= 24 | project DropTime, DeviceName, DriverName, DriverPath, LoadedDriver, SideLoadedDll, SideLoadPath, Loader, LoaderCmd, Dropper",
+      "rationale": "GhostEmperor's Demodex rootkit deployment is documented (Kaspersky/Sygnia/Trend) as using Cheat Engine's Dbk64.sys signed driver to bypass DSE, then loading a Demodex/PlugX payload via DLL side-loading from ProgramData. Joining a vulnerable-driver drop+install with a side-loaded DLL inside a 24h window on the same host is a near-pathognomonic signal for Salt Typhoon (G1045) / Earth Estries \u2014 gener"
+    },
+    {
+      "title": "[LLM] Salt Typhoon (Earth Estries) telecom CDR/PCAP harvesting \u2014 packet capture + GRE/SSH tunneling exfil",
+      "description": "Hunts Salt Typhoon's signature telecom-targeting tradecraft: deploying packet-capture tooling (tcpdump, dumpcap, RawCap, pktmon) on jump hosts adjacent to lawful-intercept / CDR infrastructure, then archiving the capture and tunneling it out over GRE or non-standard SSH to actor-controlled multi-hop infrastructure. This intercept-data harvesting workflow is what distinguishes Salt Typhoon from other Chinese clusters (e.g. Volt Typhoon's ICS focus) and was the basis of the 2024 US telco breach reporting.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1040",
+        "T1560.001",
+        "T1572",
+        "T1048.003",
+        "T1090.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as sniff_time values(Processes.process) as sniff_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN (\"dumpcap.exe\",\"tshark.exe\",\"windump.exe\",\"tcpdump\",\"RawCap.exe\",\"pktmon.exe\",\"NetworkMiner.exe\") OR Processes.process IN (\"*pktmon* start*\",\"*netsh trace start*capture=yes*\") by host Processes.process_guid | `drop_dm_object_name(Processes)` | join type=inner host [ | tstats summariesonly=true count min(_time) as archive_time values(Processes.process) as archive_cmd from datamodel=Endpoint.Processes where Processes.process_name IN (\"rar.exe\",\"WinRAR.exe\",\"7z.exe\",\"7za.exe\") AND Processes.process IN (\"*-hp*\",\"*-p*\",\"*a *.rar*\",\"*a *.7z*\") by host Processes.process_guid | `drop_dm_object_name(Processes)` ] | where archive_time >= sniff_time AND (archive_time-sniff_time) < 7200 | join type=inner host [ | tstats summariesonly=true count sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.transport=\"gre\" OR (All_Traffic.app=\"ssh\" AND All_Traffic.dest_port!=22) OR All_Traffic.dest_port IN (443,8443,2222,53) ) AND NOT All_Traffic.dest_category=\"corporate\" by host All_Traffic.dest_ip | where bytes_out > 50000000 | `drop_dm_object_name(All_Traffic)` ] | table host user sniff_cmd archive_cmd dest_ip dest_port bytes_out sniff_time archive_time",
+      "kql": "let sniffers = DeviceProcessEvents | where Timestamp > ago(7d) | where (FileName in~ (\"dumpcap.exe\",\"tshark.exe\",\"windump.exe\",\"RawCap.exe\",\"pktmon.exe\",\"NetworkMiner.exe\",\"tcpdump\")) or (ProcessCommandLine has_any (\"pktmon start\",\"netsh trace start capture=yes\",\"-w \", \"--write-file\")) | project SniffTime=Timestamp, DeviceId, DeviceName, AccountName, SniffProc=FileName, SniffCmd=ProcessCommandLine; let archivers = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName in~ (\"rar.exe\",\"WinRAR.exe\",\"7z.exe\",\"7za.exe\") | where ProcessCommandLine has_any (\" -hp\",\" -p\",\" a \") | project ArcTime=Timestamp, DeviceId, ArcCmd=ProcessCommandLine; let tunnels = DeviceNetworkEvents | where Timestamp > ago(7d) | where ActionType == \"ConnectionSuccess\" | where (RemotePort in (2222, 8443, 53, 4443)) or (Protocol == \"Gre\") or (RemotePort != 22 and InitiatingProcessFileName in~ (\"ssh.exe\",\"plink.exe\",\"OpenSSH.exe\")) | where not(ipv4_is_private(RemoteIP)) | summarize TunnelBytes=sum(toint(coalesce(LocalPort,0))), conns=count(), TunnelStart=min(Timestamp), RemoteIPs=make_set(RemoteIP, 25), Ports=make_set(RemotePort, 10) by DeviceId; sniffers | join kind=inner archivers on DeviceId | where ArcTime between (SniffTime .. (SniffTime + 2h)) | join kind=inner tunnels on DeviceId | where TunnelStart between (SniffTime .. (SniffTime + 24h)) | project SniffTime, DeviceName, AccountName, SniffProc, SniffCmd, ArcCmd, RemoteIPs, Ports, conns",
+      "rationale": "Earth Estries / FamousSparrow / Salt Typhoon's documented telecom intrusions (Trend Micro 2023-2024, US CISA/FBI 2024) chain T1040 packet capture against signaling/CDR networks with T1560.001 RAR archiving and T1572 GRE or non-standard SSH tunneling through compromised SOHO routers (multi-hop proxy, T1090.003). The triple-join (sniffer \u2192 password-protected archive \u2192 GRE/non-22 SSH egress within 24"
+    }
+  ]
+}

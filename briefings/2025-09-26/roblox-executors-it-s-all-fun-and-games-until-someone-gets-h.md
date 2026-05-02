@@ -19,12 +19,77 @@ Every day, tens of millions of young people dive into Roblox to build, connect a
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1204.002** — User Execution: Malicious File
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1082** — System Information Discovery
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Chaos ransomware masquerading as Solara Roblox executor binary
+
+`UC_349_3` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("SolaraBootstrapper.exe","Solara-Roblox-Executor-v3.exe","solara-1.0.1.exe","RobloxInjector.exe") OR Processes.process_hash="6120fb34ef61c7379348b5a1fb6baea5508a8846e70b27460f2c640675dc570b" OR Processes.process_path IN ("*\\Temp\\solara*","*\\Downloads\\Solara*","*\\Downloads\\RobloxInjector*","*\\Downloads\\Synapse*","*\\Downloads\\Krnl*","*\\Downloads\\Fluxus*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where FileName in~ ("SolaraBootstrapper.exe","Solara-Roblox-Executor-v3.exe","solara-1.0.1.exe","RobloxInjector.exe")
+    or SHA256 == "6120fb34ef61c7379348b5a1fb6baea5508a8846e70b27460f2c640675dc570b"
+    or FolderPath has_any (@"\Temp\solara", @"\Downloads\Solara", @"\Downloads\RobloxInjector", @"\Downloads\Synapse", @"\Downloads\Krnl", @"\Downloads\Fluxus")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
+### [LLM] Download of fake Solara executor from known malicious GitHub release paths
+
+`UC_349_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url IN ("*github.com/bow16nelson/Solara-Executor-Roblox/releases/download/*","*fuzzy-octo-couscous/releases/download/*","*solara-executor-1-pc-roblox-executor.github.io*") OR Web.url="*RobloxInjector.zip" OR Web.url="*intera.rar" OR Web.url="*Solara-Roblox-Executor-v3.exe" OR Web.url="*SolaraBootstrapper.exe") by Web.src Web.user Web.url Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where RemoteUrl has_any ("github.com/bow16nelson/Solara-Executor-Roblox/releases/download", "fuzzy-octo-couscous/releases/download", "solara-executor-1-pc-roblox-executor.github.io")
+    or RemoteUrl endswith "RobloxInjector.zip"
+    or RemoteUrl endswith "intera.rar"
+    or RemoteUrl endswith "Solara-Roblox-Executor-v3.exe"
+    or RemoteUrl endswith "SolaraBootstrapper.exe"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+```
+
+### [LLM] Roblox executor masquerade performs WMIC UUID fingerprint and schtasks persistence
+
+`UC_349_5` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("SolaraBootstrapper.exe","Solara-Roblox-Executor-v3.exe","solara-1.0.1.exe","RobloxInjector.exe","Synapse.exe","Krnl.exe","Fluxus.exe") AND ((Processes.process_name="wmic.exe" AND Processes.process="*csproduct*UUID*") OR (Processes.process_name="schtasks.exe" AND Processes.process="*/create*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | stats values(process_name) as child_procs values(process) as cmds dc(process_name) as child_variety by dest user parent_process_name | where child_variety>=2
+```
+
+**Defender KQL:**
+```kql
+let executors = dynamic(["SolaraBootstrapper.exe","Solara-Roblox-Executor-v3.exe","solara-1.0.1.exe","RobloxInjector.exe","Synapse.exe","Krnl.exe","Fluxus.exe"]);
+DeviceProcessEvents
+| where InitiatingProcessFileName in~ (executors)
+| where (FileName =~ "wmic.exe" and ProcessCommandLine has "csproduct" and ProcessCommandLine has "UUID")
+   or (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create")
+| summarize ChildProcs=make_set(FileName), Cmds=make_set(ProcessCommandLine), Variety=dcount(FileName) by DeviceName, AccountName, InitiatingProcessFileName, bin(Timestamp, 1h)
+| where Variety >= 2
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -108,4 +173,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

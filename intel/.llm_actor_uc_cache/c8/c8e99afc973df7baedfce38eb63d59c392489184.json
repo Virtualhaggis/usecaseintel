@@ -1,0 +1,45 @@
+{
+  "name": "BlackByte",
+  "ucs": [
+    {
+      "title": "[LLM] BlackByte BYOVD: RTCore64.sys (MSI Afterburner) loaded to disable EDR before encryption",
+      "description": "Hunts BlackByte's signature 'Bring Your Own Vulnerable Driver' chain where the operator drops the legitimate-but-vulnerable RTCore64.sys (CVE-2019-16098, MSI Afterburner) and/or DBUtil_2_3.sys to obtain kernel R/W and unhook ~1,000 EDR/AV callbacks immediately prior to ransomware deployment. This is a highly characteristic step documented by Sophos and the FBI/CISA #StopRansomware advisory (AA22-321A) for BlackByte 2.0 / Hecamede.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1068",
+        "T1543.003",
+        "T1562.001",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=sc.exe OR Processes.process_name=sc) (Processes.process=\"*create*\" OR Processes.process=\"*config*\") (Processes.process=\"*RTCore64*\" OR Processes.process=\"*DBUtil_2_3*\" OR Processes.process=\"*BlackByte*\" OR Processes.process=\"*type= kernel*\") by host Processes.process_name Processes.process Processes.parent_process_name Processes.user \n| append [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"RTCore64.sys\" OR Filesystem.file_name=\"DBUtil_2_3.sys\") AND NOT Filesystem.file_path IN (\"*\\\\Program Files*\\\\MSI Afterburner*\",\"*\\\\Dell*\") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name ]\n| append [ | tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\System\\\\CurrentControlSet\\\\Services\\\\RTCore64*\" OR Registry.registry_path=\"*\\\\Services\\\\BlackByte*\" by host Registry.registry_path Registry.registry_value_name Registry.process_name ]\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspiciousDriverFiles = dynamic([\"RTCore64.sys\",\"DBUtil_2_3.sys\",\"gdrv.sys\"]);\nlet driverDrop =\n  DeviceFileEvents\n  | where Timestamp > ago(30d)\n  | where FileName in~ (suspiciousDriverFiles)\n  | where not(FolderPath has_any (@\"\\Program Files\\MSI Afterburner\", @\"\\Program Files (x86)\\MSI Afterburner\", @\"\\Dell\\\"))\n  | project Timestamp, DeviceId, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;\nlet svcCreate =\n  DeviceProcessEvents\n  | where Timestamp > ago(30d)\n  | where FileName =~ \"sc.exe\"\n  | where ProcessCommandLine has_any (\"RTCore64\",\"DBUtil_2_3\",\"BlackByte\",\"gdrv\")\n     and ProcessCommandLine has_any (\"create\",\"config\",\"start\")\n  | project Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName;\nlet kernelLoad =\n  DeviceEvents\n  | where Timestamp > ago(30d)\n  | where ActionType in (\"DriverLoad\",\"KernelModuleLoad\")\n  | where FileName in~ (suspiciousDriverFiles)\n  | project Timestamp, DeviceId, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine;\ndriverDrop\n| join kind=inner (svcCreate) on DeviceId\n| union kernelLoad\n| sort by Timestamp desc",
+      "rationale": "Generic BYOVD hunts fire on every gamer with MSI Afterburner. This UC specifically chains (a) RTCore64.sys / DBUtil_2_3.sys dropped OUTSIDE the legitimate vendor path, with (b) sc.exe creating a kernel service whose name matches BlackByte's hard-coded service strings ('BlackByte', 'RTCore64'), with (c) an actual DriverLoad event. That triple is exactly what Sophos reverse-engineered out of the Bla"
+    },
+    {
+      "title": "[LLM] BlackByte ExByte staging + MEGA / mega.nz exfiltration prior to ransomware detonation",
+      "description": "Hunts BlackByte's custom Go-based exfiltration utility 'ExByte' (a.k.a. ExByte.exe / data.exe), which enumerates files, writes a 'data.txt' inventory, and uploads to mega.nz / mega.io via the MEGA API before the encryptor runs. Behavior pattern is unique to BlackByte affiliates and was first documented by Cisco Talos.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1567",
+        "T1083",
+        "T1041",
+        "T1490"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"*.mega.nz\" OR All_Traffic.dest=\"*.mega.co.nz\" OR All_Traffic.dest=\"*.userstorage.mega.co.nz\" OR All_Traffic.dest=\"g.api.mega.co.nz\") by host All_Traffic.src All_Traffic.process_name All_Traffic.user\n| join type=inner host [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name IN (\"ExByte.exe\",\"data.exe\",\"explorer.exe\",\"svchost.exe\") OR Processes.process=\"*-single*\" OR Processes.process=\"*data.txt*\") by host Processes.process Processes.process_name Processes.parent_process_name Processes.user ]\n| append [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"data.txt\",\"l.txt\",\"ExByte.exe\") AND Filesystem.file_path=\"*\\\\Users\\\\*\" by host Filesystem.file_path Filesystem.process_name ]\n| append [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process=\"*vssadmin*delete*shadows*\" OR Processes.process=\"*wmic*shadowcopy*delete*\" OR Processes.process=\"*bcdedit*recoveryenabled*No*\") by host Processes.process Processes.user ]\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let megaDomains = dynamic([\"mega.nz\",\"mega.co.nz\",\"userstorage.mega.co.nz\",\"g.api.mega.co.nz\",\"mega.io\"]);\nlet exbyteHosts =\n  DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where FileName in~ (\"ExByte.exe\",\"data.exe\")\n     or (ProcessCommandLine has \"-single\" and ProcessCommandLine has \"data.txt\")\n     or (FileName endswith \".exe\" and ProcessCommandLine has \"mega.nz\")\n  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName;\nlet megaNet =\n  DeviceNetworkEvents\n  | where Timestamp > ago(14d)\n  | where RemoteUrl has_any (megaDomains) or tostring(parse_url(RemoteUrl).Host) has_any (megaDomains)\n  | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"MEGAsync.exe\")\n  | project Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;\nlet recoveryKill =\n  DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where (FileName =~ \"vssadmin.exe\" and ProcessCommandLine has_all (\"delete\",\"shadows\"))\n       or (FileName =~ \"wmic.exe\" and ProcessCommandLine has_all (\"shadowcopy\",\"delete\"))\n       or (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has_all (\"recoveryenabled\",\"No\"))\n  | project recoveryTime=Timestamp, DeviceId, recoveryCmd=ProcessCommandLine;\nexbyteHosts\n| join kind=inner megaNet on DeviceId\n| join kind=leftouter recoveryKill on DeviceId\n| where datetime_diff('hour', recoveryTime, Timestamp) between (-12 .. 24) or isempty(tostring(recoveryTime))\n| sort by Timestamp desc",
+      "rationale": "BlackByte affiliates are the primary public ransomware crew tied to ExByte (Talos, 2022; AA22-321A). The query joins three actor-specific markers in one short window: (1) a binary launching with the literal '-single' flag and writing 'data.txt' staging file in a user profile, (2) non-browser, non-MEGAsync process beaconing to mega.nz/userstorage.mega.co.nz API endpoints, and (3) the BlackByte reco"
+    }
+  ]
+}

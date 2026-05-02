@@ -1,0 +1,46 @@
+{
+  "name": "Evilnum",
+  "ucs": [
+    {
+      "title": "[LLM] Evilnum KYC-lure: ZIP\u2192LNK\u2192wscript JS dropper chain (financial sector)",
+      "description": "Hunts Evilnum's signature initial-access pattern where spearphishing links deliver a ZIP archive containing multiple LNK files masquerading as KYC docs (utility bills, drivers' licenses, credit-card scans, selfies). Opening any LNK launches wscript/cscript to run an embedded/extracted JS component (the 'Evilnum' JS dropper) that beacons out and stages More_eggs or PyVil. This combination of fintech/forex KYC lure + LNK + JS host is highly characteristic of G0120.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1204.001",
+        "T1059.007",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.lnk\" OR Filesystem.file_name=\"*.zip\") AND (Filesystem.file_path=\"*\\\\Downloads\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path\n| `drop_dm_object_name(Filesystem)`\n| eval kyc_lure=if(match(lower(file_name),\"(utility|driver|licen[cs]e|credit|passport|selfie|scan|photo|kyc|proof|invoice|statement|id[_-])\"),1,0)\n| where kyc_lure=1\n| join type=inner dest [\n    | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN (\"wscript.exe\",\"cscript.exe\") AND Processes.parent_process_name IN (\"explorer.exe\",\"cmd.exe\") AND (Processes.process=\"*.js*\" OR Processes.process=\"*.jse*\" OR Processes.process=\"*.wsf*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id _time\n    | `drop_dm_object_name(Processes)`\n    | rename _time as script_time\n]\n| eval delta=abs(script_time-lastTime)\n| where delta<=1800\n| convert ctime(firstTime) ctime(lastTime) ctime(script_time)\n| table firstTime lastTime script_time dest user file_name file_path parent_process_name process_name process",
+      "kql": "let lure_window = 30m;\nlet kyc_terms = dynamic([\"utility\",\"driver\",\"licen\",\"credit\",\"passport\",\"selfie\",\"scan\",\"photo\",\"kyc\",\"proof\",\"invoice\",\"statement\",\"id_\",\"id-\"]);\nlet lures =\n    DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where (FileName endswith \".lnk\" or FileName endswith \".zip\")\n    | where FolderPath has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n    | where FileName has_any (kyc_terms)\n    | project DeviceId, DeviceName, LureFile=FileName, LurePath=FolderPath, LureTime=Timestamp;\nlet jschain =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (\"wscript.exe\",\"cscript.exe\")\n    | where InitiatingProcessFileName in~ (\"explorer.exe\",\"cmd.exe\")\n    | where ProcessCommandLine has_any (\".js \", \".jse\", \".wsf\", \".vbs\")\n    | project DeviceId, ScriptHost=FileName, ScriptCmd=ProcessCommandLine, ScriptParent=InitiatingProcessFileName, ScriptTime=Timestamp, AccountName;\nlures\n| join kind=inner jschain on DeviceId\n| where ScriptTime between (LureTime .. LureTime + lure_window)\n| project LureTime, ScriptTime, DeviceName, AccountName, LureFile, LurePath, ScriptHost, ScriptParent, ScriptCmd",
+      "rationale": "Evilnum (ESET, Zscaler reporting) is one of very few crews that consistently weaponizes KYC-themed ZIPs full of LNKs as the initial-access primitive against forex/crypto/fintech firms, then pivots via wscript-hosted JavaScript stage-1. Generic LNK\u2192wscript hunts are noisy; constraining on KYC-style filenames in user download paths within a 30-minute window of script execution yields a tight, actor-"
+    },
+    {
+      "title": "[LLM] Evilnum hands-on-keyboard: legitimate RDP/RAT install + browser credential & cookie theft",
+      "description": "Targets Evilnum's post-exploitation tradecraft of side-loading or installing legitimate remote-access software (TeamViewer, AnyDesk, ScreenConnect) on a freshly compromised fintech host and then immediately accessing browser Login Data / Cookies stores (often via PyVil, More_eggs, or interactive operator activity) to harvest broker / trading-platform sessions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1219.002",
+        "T1574.001",
+        "T1555",
+        "T1539",
+        "T1070.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as ratFirst max(_time) as ratLast values(Processes.process) as rat_cmd from datamodel=Endpoint.Processes where Processes.process_name IN (\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\"AnyDesk.exe\",\"ScreenConnect.ClientService.exe\",\"tvnserver.exe\") by Processes.dest Processes.user Processes.process_name\n| `drop_dm_object_name(Processes)`\n| join type=inner dest [\n    | tstats summariesonly=true count min(_time) as credFirst from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\Google\\\\Chrome\\\\User Data\\\\*\\\\Login Data*\" OR Filesystem.file_path=\"*\\\\Google\\\\Chrome\\\\User Data\\\\*\\\\Cookies*\" OR Filesystem.file_path=\"*\\\\Mozilla\\\\Firefox\\\\Profiles\\\\*\\\\cookies.sqlite\" OR Filesystem.file_path=\"*\\\\Microsoft\\\\Edge\\\\User Data\\\\*\\\\Login Data*\") AND Filesystem.action IN (\"read\",\"copy\",\"opened\") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path\n    | `drop_dm_object_name(Filesystem)`\n    | search process_name!=\"chrome.exe\" AND process_name!=\"msedge.exe\" AND process_name!=\"firefox.exe\"\n]\n| eval delta=abs(credFirst-ratFirst)\n| where delta<=3600\n| convert ctime(ratFirst) ctime(ratLast) ctime(credFirst)\n| table ratFirst credFirst dest user process_name rat_cmd file_path",
+      "kql": "let rat_window = 1h;\nlet rat_procs = dynamic([\"teamviewer.exe\",\"teamviewer_service.exe\",\"anydesk.exe\",\"screenconnect.clientservice.exe\",\"tvnserver.exe\"]);\nlet rat =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where tolower(FileName) in (rat_procs)\n    | summarize RatFirst=min(Timestamp), RatCmds=make_set(ProcessCommandLine,5) by DeviceId, DeviceName, AccountName, RatTool=FileName;\nlet credtheft =\n    DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n          or InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"opera.exe\",\"brave.exe\")\n    | where FolderPath has_any (\n        @\"\\Google\\Chrome\\User Data\\\",\n        @\"\\Microsoft\\Edge\\User Data\\\",\n        @\"\\Mozilla\\Firefox\\Profiles\\\")\n    | where FileName in~ (\"Login Data\",\"Cookies\",\"Web Data\",\"cookies.sqlite\",\"logins.json\",\"key4.db\")\n    | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"opera.exe\",\"brave.exe\",\"explorer.exe\")\n    | project DeviceId, CredTime=Timestamp, CredFile=FileName, CredPath=FolderPath, CredProc=InitiatingProcessFileName, CredCmd=InitiatingProcessCommandLine;\nrat\n| join kind=inner credtheft on DeviceId\n| where CredTime between (RatFirst - 30m .. RatFirst + rat_window)\n| project RatFirst, CredTime, DeviceName, AccountName, RatTool, RatCmds, CredProc, CredFile, CredPath, CredCmd",
+      "rationale": "Evilnum's reporting (ESET 2020, Zscaler PyVil 2020) consistently shows the operators dropping legitimate remote-access binaries to avoid AV attention, then pivoting straight to browser credential and trading-cookie theft (the actor's profit center is hijacked broker/forex/crypto sessions). Joining a fresh RAT install with non-browser-process access to Chrome/Edge/Firefox Login Data + Cookies insid"
+    }
+  ]
+}

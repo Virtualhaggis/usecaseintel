@@ -1,0 +1,42 @@
+{
+  "name": "Volatile Cedar",
+  "ucs": [
+    {
+      "title": "[LLM] Volatile Cedar 'Caterpillar' web shell drop via IIS/Apache exploitation",
+      "description": "Hunts the actor's signature chain: internet-facing web server gets exploited (T1190) after recon scanning, then the worker process (w3wp.exe / httpd / nginx) writes an ASPX/PHP/JSP file into the web root and immediately spawns a shell \u2014 the canonical Caterpillar/Explosive-RAT staging pattern Volatile Cedar has used since 2012 against universities, telcos, and defense contractors per Check Point and ClearSky reporting.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"nginx.exe\",\"nginx\",\"tomcat*.exe\",\"java.exe\") (Filesystem.file_name=\"*.aspx\" OR Filesystem.file_name=\"*.asp\" OR Filesystem.file_name=\"*.ashx\" OR Filesystem.file_name=\"*.php\" OR Filesystem.file_name=\"*.jsp\") (Filesystem.file_path=\"*\\\\inetpub\\\\wwwroot\\\\*\" OR Filesystem.file_path=\"*/htdocs/*\" OR Filesystem.file_path=\"*/webapps/*\" OR Filesystem.file_path=\"*\\\\wwwroot\\\\*\") by Filesystem.dest Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"java.exe\",\"tomcat*.exe\") Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"net.exe\",\"whoami.exe\",\"nltest.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"sh\",\"bash\") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)`] | where lastTime - firstTime < 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let webProcs = dynamic([\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"tomcat.exe\",\"java.exe\"]);\nlet shellProcs = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"nltest.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"reg.exe\",\"tasklist.exe\"]);\nlet shellExt = dynamic([\".aspx\",\".asp\",\".ashx\",\".asmx\",\".php\",\".jsp\",\".jspx\"]);\nlet webPaths = dynamic([@\"\\inetpub\\wwwroot\\\", @\"\\wwwroot\\\", \"/htdocs/\",\"/webapps/\",\"/var/www/\"]);\nlet shellWrites =\n  DeviceFileEvents\n  | where Timestamp > ago(7d)\n  | where InitiatingProcessFileName in~ (webProcs)\n  | where FileName has_any (shellExt)\n  | where FolderPath has_any (webPaths)\n  | project ShellTime=Timestamp, DeviceId, DeviceName, ShellFile=FolderPath, ShellName=FileName, WebProc=InitiatingProcessFileName, ShellInitiator=InitiatingProcessId;\nlet shellSpawns =\n  DeviceProcessEvents\n  | where Timestamp > ago(7d)\n  | where InitiatingProcessFileName in~ (webProcs)\n  | where FileName in~ (shellProcs)\n  | project SpawnTime=Timestamp, DeviceId, DeviceName, ChildProc=FileName, ChildCmd=ProcessCommandLine, ParentProc=InitiatingProcessFileName, AccountName;\nshellWrites\n| join kind=inner (shellSpawns) on DeviceId\n| where SpawnTime between (ShellTime .. ShellTime + 30m)\n| project ShellTime, SpawnTime, DeviceName, AccountName, WebProc, ShellFile, ShellName, ChildProc, ChildCmd\n| sort by ShellTime desc",
+      "rationale": "Volatile Cedar's intrusion playbook (per Check Point 2015 and ClearSky 2021) is uniquely web-server-centric: they perform automated vuln/wordlist scanning (T1595.002/.003), exploit unpatched IIS/Tomcat/PHP apps (T1190), and drop the Caterpillar web shell (T1505.003) which is then used to run reconnaissance commands and stage Explosive RAT (T1105). Most APT hunts focus on phishing chains; this grou"
+    },
+    {
+      "title": "[LLM] Volatile Cedar Explosive RAT staging \u2014 web-shell-driven tool transfer to compromised server",
+      "description": "Catches the second stage of Volatile Cedar's chain: after Caterpillar gives them an interactive shell on the IIS/Apache host, they use the same web-server worker process as the parent of certutil/bitsadmin/powershell-WebClient/curl/wget to pull Explosive RAT (T1105) from attacker infrastructure, often hosted on look-alike Lebanese or academic domains.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1105",
+        "T1505.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"java.exe\",\"tomcat*.exe\") AND (Processes.process_name IN (\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*urlcache*\" OR Processes.process=\"*-urlcache*\" OR Processes.process=\"*DownloadFile*\" OR Processes.process=\"*Invoke-WebRequest*\" OR Processes.process=\"*WebClient*\" OR Processes.process=\"*http://*\" OR Processes.process=\"*https://*\" OR Processes.process=\"*/transfer *\")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Network_Traffic where All_Traffic.dest_category!=\"internal\" AND (All_Traffic.app=\"http\" OR All_Traffic.app=\"https\" OR All_Traffic.dest_port IN (80,443,8080,8443)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let webProcs = dynamic([\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"tomcat.exe\",\"java.exe\"]);\nlet livingOff = dynamic([\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (webProcs)\n| where FileName in~ (livingOff)\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\"-urlcache\",\"DownloadFile\",\"Invoke-WebRequest\",\"WebClient\",\"/transfer \",\"-OutFile\")\n| extend hostFromCmd = extract(@\"https?://([^/\\s\\\"']+)\", 1, ProcessCommandLine)\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where RemotePort in (80,443,8080,8443)\n    | where InitiatingProcessFileName in~ (livingOff)\n    | project NetTime=Timestamp, DeviceId, RemoteIP, RemoteUrl, NetInitiator=InitiatingProcessId\n  ) on DeviceId\n| where NetTime between (Timestamp - 2m .. Timestamp + 5m)\n| project Timestamp, DeviceName, AccountName, ParentProc=InitiatingProcessFileName, ChildProc=FileName, ProcessCommandLine, hostFromCmd, RemoteIP, RemoteUrl\n| sort by Timestamp desc",
+      "rationale": "Pivoting from web shell to Explosive RAT is Volatile Cedar's documented MO (Check Point Lebanese Cedar report; ClearSky 2021 Lebanese Cedar APT). Crucially, the parent process is w3wp/httpd \u2014 not a user shell \u2014 which is virtually never legitimate: web server workers should serve HTTP, not invoke certutil/bitsadmin/Invoke-WebRequest with outbound URLs. Combining this lineage with an outbound HTTP e"
+    }
+  ]
+}

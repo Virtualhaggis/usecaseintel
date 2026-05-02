@@ -1,0 +1,49 @@
+{
+  "name": "Mustard Tempest",
+  "ucs": [
+    {
+      "title": "[LLM] Mustard Tempest (TA569 / SocGholish) JS loader discovery burst from wscript.exe",
+      "description": "Hunts the signature SocGholish post-execution behavior: a single wscript.exe instance (running the FakeUpdate .js payload extracted from a fake browser-update ZIP) spawning a tight burst of host/AD reconnaissance commands (whoami /all, nltest /domain_trusts, net group 'Domain Admins', systeminfo, ipconfig /all). This chain is what TA569 hands off to Indrik Spider before WastedLocker/LockBit deployment.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.007",
+        "T1082",
+        "T1087.002",
+        "T1482",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=\"wscript.exe\" AND (Processes.parent_process=\"*\\\\Temp\\\\*\" OR Processes.parent_process=\"*\\\\Downloads\\\\*\" OR Processes.parent_process=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\") AND (Processes.process_name IN (\"whoami.exe\",\"nltest.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"tasklist.exe\",\"hostname.exe\",\"cmd.exe\",\"powershell.exe\")) by host Processes.dest Processes.user Processes.parent_process_id Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval is_dom_recon=if(match(process,\"(?i)(domain admins|domain controllers|/domain_trusts|/all|enterprise admins)\"),1,0) | stats values(process_name) as recon_bins dc(process_name) as bin_variety sum(is_dom_recon) as dom_recon_hits values(process) as cmdlines min(firstTime) as firstTime max(lastTime) as lastTime by dest user parent_process_id parent_process | where bin_variety>=3 AND dom_recon_hits>=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let WindowMin = 5m;\nlet ReconBins = dynamic([\"whoami.exe\",\"nltest.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"tasklist.exe\",\"hostname.exe\",\"cmd.exe\",\"powershell.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"wscript.exe\"\n| where InitiatingProcessCommandLine has_any (\".js\", \".jse\")\n| where InitiatingProcessFolderPath has_any (@\"\\Temp\\\", @\"\\Downloads\\\", @\"\\AppData\\Local\\Temp\\\")\n| where FileName in~ (ReconBins)\n| extend DomainRecon = iff(ProcessCommandLine matches regex @\"(?i)(domain admins|domain controllers|/domain_trusts|/all|enterprise admins|trusted_domains)\", 1, 0)\n| summarize\n    ReconBinsHit  = make_set(FileName, 50),\n    BinVariety    = dcount(FileName),\n    DomainReconHits = sum(DomainRecon),\n    SampleCmds    = make_set(ProcessCommandLine, 25),\n    FirstSeen     = min(Timestamp),\n    LastSeen      = max(Timestamp)\n  by DeviceId, DeviceName, AccountDomain, AccountName,\n     InitiatingProcessId, InitiatingProcessCommandLine, InitiatingProcessFolderPath\n| where BinVariety >= 3 and DomainReconHits >= 1\n| where (LastSeen - FirstSeen) <= WindowMin\n| order by FirstSeen desc",
+      "rationale": "TA569's SocGholish JS loader is consistently executed by wscript.exe out of %TEMP%/Downloads after the user double-clicks a JS extracted from a fake 'Chrome/Edge/Firefox Update' ZIP. The hand-off to Indrik Spider (Evil Corp) is preceded by a near-deterministic recon block (whoami /all + nltest /domain_trusts + net group 'Domain Admins'); legitimate enterprise scripts almost never spawn that exact "
+    },
+    {
+      "title": "[LLM] Mustard Tempest FakeUpdate browser-delivered ZIP\u2192JS staging (SocGholish drive-by)",
+      "description": "Detects the SocGholish delivery primitive: a browser process (chrome/msedge/firefox) writing a small ZIP with a fake-update name to the user's Downloads/Temp directory, immediately followed by extraction of a single .js with a long random/hex stem that is then opened by wscript.exe. This is the core T1189\u2192T1204.002 chain TA569 has run on injected WordPress/CMS sites since 2017.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1189",
+        "T1204.001",
+        "T1204.002",
+        "T1608.004",
+        "T1584.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\") AND (Filesystem.file_path=\"*\\\\Downloads\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\") AND Filesystem.file_name=\"*.zip\" by host Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rex field=file_name \"(?i)(?<lure>update|chrome|edge|firefox|browser|safari)\" | where isnotnull(lure) | join type=inner dest user [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"explorer.exe\",\"7zg.exe\",\"7zfm.exe\",\"WinRAR.exe\",\"explorer.exe\") AND Processes.process_name=\"wscript.exe\" AND (Processes.process=\"*.js*\" OR Processes.process=\"*.jse*\") AND (Processes.process=\"*\\\\Temp\\\\*\" OR Processes.process=\"*\\\\Downloads\\\\*\") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | rename process as wscript_cmd parent_process as extractor ] | table firstTime lastTime dest user process_name file_name file_path extractor wscript_cmd | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\"]);\nlet ZipDrops =\n    DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType == \"FileCreated\"\n    | where InitiatingProcessFileName in~ (Browsers)\n    | where FileName endswith \".zip\"\n    | where FolderPath has_any (@\"\\Downloads\\\", @\"\\AppData\\Local\\Temp\\\")\n    | where FileName matches regex @\"(?i)(update|chrome|edge|firefox|browser|safari|installer)\"\n    | project ZipTime=Timestamp, DeviceId, DeviceName, ZipName=FileName, ZipPath=FolderPath, ZipInitiator=InitiatingProcessFileName, AccountName=InitiatingProcessAccountName;\nlet JsExec =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"wscript.exe\"\n    | where ProcessCommandLine has_any (\".js\", \".jse\")\n    | where ProcessCommandLine has_any (@\"\\Temp\\\", @\"\\Downloads\\\", @\"\\AppData\\Local\\Temp\\\")\n    | extend JsStem = extract(@\"([A-Za-z0-9_\\-]{8,})\\.js[e]?\", 1, ProcessCommandLine)\n    | where isnotempty(JsStem)\n    | project JsTime=Timestamp, DeviceId, JsCmd=ProcessCommandLine, JsParent=InitiatingProcessFileName, JsStem;\nZipDrops\n| join kind=inner JsExec on DeviceId\n| where JsTime between (ZipTime .. (ZipTime + 30m))\n| project ZipTime, JsTime, DeviceName, AccountName, ZipInitiator, ZipName, ZipPath, JsParent, JsCmd, JsStem\n| order by ZipTime desc",
+      "rationale": "Mustard Tempest's only delivery vector is injected JS on compromised CMS sites that prompts a fake browser update; the resulting artifact is invariably a small ZIP named like Chrome.Update*.zip / Edge.Update*.zip dropped by the browser process, containing a single high-entropy .js the user executes via wscript. Tying the browser-written lure-named ZIP to a near-immediate wscript.exe JS execution o"
+    }
+  ]
+}

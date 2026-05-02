@@ -1,0 +1,48 @@
+{
+  "name": "Inception",
+  "ucs": [
+    {
+      "title": "[LLM] Cloud Atlas (Inception) RTF remote-template injection chain via Office \u2192 EQNEDT32/mshta",
+      "description": "Hunts the signature Cloud Atlas/Inception delivery chain: a spearphishing RTF/DOCX that fetches a remote template (T1221) over HTTP/WebDAV and then triggers either the CVE-2017-11882 Equation Editor exploit or an HTA dropper. The combination of Office reaching out for a template followed by EQNEDT32.EXE or mshta.exe child execution within seconds is highly characteristic of this actor and rare in benign traffic.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1221",
+        "T1203",
+        "T1204.002",
+        "T1218.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") AND Processes.process_name IN (\"eqnedt32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\") by host Processes.user Processes.parent_process_name Processes.parent_process_id Processes.process_name Processes.process_id Processes.process Processes.dest | `drop_dm_object_name(Processes)` | rename parent_process_id as office_pid host as src | join type=inner src office_pid [| tstats summariesonly=t count as net_count values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\") AND All_Traffic.dest_port IN (80,443,445) AND NOT (All_Traffic.dest_category=\"microsoft\" OR All_Traffic.dest=\"*.office.com\" OR All_Traffic.dest=\"*.microsoft.com\" OR All_Traffic.dest=\"*.officeapps.live.com\") by host All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` | rename process_id as office_pid host as src] | where net_count > 0 | eval risk_note=\"Office fetched remote template/payload then spawned LOLBin within window\" | convert ctime(firstTime) ctime(lastTime) | table firstTime src user parent_process_name process_name process remote_ip remote_port risk_note",
+      "kql": "let officeProcs = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\"]);\nlet lolbins   = dynamic([\"eqnedt32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\"]);\nlet msDomains = dynamic([\"microsoft.com\",\"office.com\",\"office.net\",\"officeapps.live.com\",\"sharepoint.com\",\"live.com\",\"windows.com\",\"office365.com\"]);\nlet officeNet =\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (officeProcs)\n    | where RemotePort in (80,443,445)\n    | where not(RemoteUrl has_any (msDomains))\n    | where isnotempty(RemoteIP)\n    | project NetTime=Timestamp, DeviceId, OfficePid=InitiatingProcessId, OfficeName=InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (officeProcs)\n| where FileName in~ (lolbins)\n| project SpawnTime=Timestamp, DeviceId, DeviceName, AccountName, OfficePid=InitiatingProcessId, OfficeName=InitiatingProcessFileName, ChildName=FileName, ChildCmd=ProcessCommandLine, ChildSha256=SHA256\n| join kind=inner officeNet on DeviceId, OfficePid\n| where datetime_diff('second', SpawnTime, NetTime) between (-30 .. 600)\n| extend Note = strcat(\"Cloud Atlas chain: \", OfficeName, \" -> \", RemoteUrl, \" -> \", ChildName)\n| project SpawnTime, DeviceName, AccountName, OfficeName, RemoteUrl, RemoteIP, ChildName, ChildCmd, Note",
+      "rationale": "Inception/Cloud Atlas has used remote-template injection plus the Equation Editor exploit (CVE-2017-11882) and HTA droppers as their dominant delivery pattern across multiple campaigns from 2018 through 2022 (Kaspersky/Symantec/Unit42 reporting). Legitimate Office workflows do not retrieve templates over SMB/WebDAV from non-Microsoft hosts and then immediately spawn EQNEDT32 or mshta \u2014 pairing the"
+    },
+    {
+      "title": "[LLM] Cloud Atlas VBShower/PowerShower polymorphic loader: mshta + WebDAV cloud-storage C2 + Run-key persistence",
+      "description": "Detects the post-exploitation behavior of Cloud Atlas's VBShower / PowerShower implants: mshta.exe (or wscript) launched from Office, persistence written to HKCU\\...\\Run pointing at a VBS/HTA dropper, and beacons to consumer cloud-storage / WebDAV endpoints (CloudMe, OpenDrive, 4shared, pCloud) used as the actor's signature C2 channel \u2014 the very behavior the 'Cloud Atlas' name was coined for.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1218.005",
+        "T1059.005",
+        "T1547.001",
+        "T1102",
+        "T1071.001",
+        "T1090.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\") AND (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\") OR match(Processes.process,\"(?i)\\.(hta|vbs|vbe|js)\")) by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename host as src | join type=inner src [| tstats summariesonly=t count as reg_hits values(Registry.registry_key_name) as reg_key values(Registry.registry_value_data) as reg_value from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\CurrentVersion\\\\RunOnce\\\\*\") AND match(Registry.registry_value_data,\"(?i)(\\.vbs|\\.vbe|\\.hta|mshta|wscript|cscript|powershell)\") by host | `drop_dm_object_name(Registry)` | rename host as src] | join type=inner src [| tstats summariesonly=t count as c2_count values(All_Traffic.dest) as c2_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"svchost.exe\") AND (All_Traffic.dest=\"*cloudme.com\" OR All_Traffic.dest=\"*opendrive.com\" OR All_Traffic.dest=\"*4shared.com\" OR All_Traffic.dest=\"*pcloud.com\" OR All_Traffic.dest=\"*yandex.*\" OR All_Traffic.dest=\"webdav.*\") by host | `drop_dm_object_name(All_Traffic)` | rename host as src] | eval rationale=\"VBShower/PowerShower triad: HTA/VBS exec + Run-key + WebDAV cloud-storage C2\" | convert ctime(firstTime) ctime(lastTime) | table firstTime src user process_name process reg_key reg_value c2_host rationale",
+      "kql": "let scripty = dynamic([\"mshta.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet cloudC2 = dynamic([\"cloudme.com\",\"opendrive.com\",\"4shared.com\",\"pcloud.com\",\"yandex.\",\"webdav.\",\"box.com\",\"mail.ru\"]);\nlet execs =\n    DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where FileName in~ (scripty)\n    | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\")\n          or ProcessCommandLine has_any (\".hta\",\".vbs\",\".vbe\",\"vbscript:\",\"javascript:\")\n    | project ExecTime=Timestamp, DeviceId, DeviceName, AccountName, ChildName=FileName, ChildCmd=ProcessCommandLine, ParentName=InitiatingProcessFileName;\nlet persist =\n    DeviceRegistryEvents\n    | where Timestamp > ago(14d)\n    | where ActionType == \"RegistryValueSet\"\n    | where RegistryKey has_any (@\"\\CurrentVersion\\Run\", @\"\\CurrentVersion\\RunOnce\")\n    | where RegistryValueData has_any (\".vbs\",\".vbe\",\".hta\",\"mshta\",\"wscript\",\"cscript\",\"powershell\")\n    | project RegTime=Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData;\nlet beacon =\n    DeviceNetworkEvents\n    | where Timestamp > ago(14d)\n    | where InitiatingProcessFileName in~ (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"svchost.exe\")\n    | where RemoteUrl has_any (cloudC2) or RemoteUrl has \"webdav\"\n    | project NetTime=Timestamp, DeviceId, RemoteUrl, RemoteIP, NetProc=InitiatingProcessFileName;\nexecs\n| join kind=inner persist on DeviceId\n| join kind=inner beacon on DeviceId\n| where datetime_diff('hour', NetTime, ExecTime) between (-72 .. 72)\n| extend Verdict = \"Cloud Atlas VBShower/PowerShower triad: script exec + Run-key persistence + cloud-storage C2\"\n| project ExecTime, DeviceName, AccountName, ParentName, ChildName, ChildCmd, RegistryKey, RegistryValueData, RemoteUrl, NetProc, Verdict",
+      "rationale": "Cloud Atlas earned its Kaspersky-cluster name from its consistent abuse of consumer cloud-storage / WebDAV endpoints (CloudMe was the canonical example) for staging and C2, paired with VBShower (HTA/VBS) and PowerShower (PowerShell) implants persisted via HKCU Run keys. Any single leg is noisy, but the three-way join \u2014 script interpreter spawned from Office, Run-key persistence pointing at script "
+    }
+  ]
+}

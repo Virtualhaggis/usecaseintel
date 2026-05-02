@@ -1,0 +1,42 @@
+{
+  "name": "Cleaver",
+  "ucs": [
+    {
+      "title": "[LLM] Cleaver (TG-2889) ARP cache poisoning AiTM on internal segments",
+      "description": "Hunts for execution of ARP-poisoning toolchains (Cain & Abel, ettercap, arpspoof) used by Cleaver/Operation Cleaver operators to perform Adversary-in-the-Middle attacks against internal infrastructure (energy, oil & gas, airlines) \u2014 a defining TTP of this Iranian cluster per the Cylance Operation Cleaver report.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1557.002",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"cain.exe\",\"abel.exe\",\"ettercap.exe\",\"arpspoof.exe\",\"bettercap.exe\",\"netcommander.exe\") OR Processes.process=\"*arpspoof -i*\" OR Processes.process=\"*ettercap*-M arp*\" OR Processes.process=\"*bettercap*arp.spoof*\" OR Processes.process=\"*Cain.exe*\") by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | eval risk_score=case(match(process_name,\"(?i)cain|abel\"),90,match(process_name,\"(?i)ettercap|bettercap|arpspoof\"),85,1=1,60) | where risk_score>=60 | convert ctime(firstTime) ctime(lastTime) | sort - risk_score",
+      "kql": "let arpTools = dynamic([\"cain.exe\",\"abel.exe\",\"ettercap.exe\",\"arpspoof.exe\",\"bettercap.exe\",\"netcommander.exe\",\"intercepter-ng.exe\"]);\nlet cmdMarkers = dynamic([\"arpspoof -i\",\"ettercap -T -M arp\",\"bettercap\",\"arp.spoof on\",\"-M arp:remote\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (arpTools)\n    or ProcessCommandLine has_any (cmdMarkers)\n    or (FileName =~ \"powershell.exe\" and ProcessCommandLine has_any (\"Invoke-ARPSpoof\",\"Get-NetNeighbor\",\"-NeighborState Reachable\"))\n| join kind=leftouter (DeviceNetworkEvents | where Timestamp > ago(30d) | summarize internalDsts=dcount(RemoteIP), internalPorts=make_set(RemotePort,50) by DeviceId, InitiatingProcessId=ReportId) on DeviceId\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256\n| extend ActorContext = \"G0003 Cleaver / TG-2889 \u2014 Iranian, Operation Cleaver Cylance 2014\"",
+      "rationale": "ARP cache poisoning was a hallmark of Operation Cleaver \u2014 the Cylance report documented Cleaver operators using Cain & Abel and similar AiTM tools to harvest credentials laterally inside ICS-adjacent corporate networks. Most APTs prefer LSASS/Kerberoast over Layer-2 attacks, so a hit on these toolnames or arp-spoof command lines on a corporate or OT-edge endpoint is a strong actor-specific signal "
+    },
+    {
+      "title": "[LLM] Cleaver credential harvesting: Cachedump / PWDump / LSASS dump on critical-infrastructure hosts",
+      "description": "Detects the post-exploitation credential-dump pattern Cleaver/TG-2889 ran after gaining a foothold \u2014 custom-built and off-the-shelf dumpers (Cachedump, PWDumpVariant, gsecdump, Mimikatz) executed against LSASS / SAM / cached domain creds, often staged to %TEMP% or %ProgramData% prior to PsExec lateral movement.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1003.001",
+        "T1587.001",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"cachedump.exe\",\"gsecdump.exe\",\"pwdump.exe\",\"pwdump7.exe\",\"wce.exe\",\"mimikatz.exe\",\"procdump.exe\",\"procdump64.exe\") OR Processes.process=\"*sekurlsa::logonpasswords*\" OR Processes.process=\"*lsadump::cache*\" OR Processes.process=\"*lsadump::sam*\" OR Processes.process=\"*reg save*hklm\\\\sam*\" OR Processes.process=\"*reg save*hklm\\\\security*\" OR Processes.process=\"*procdump*-ma*lsass*\" OR Processes.process=\"*comsvcs.dll*MiniDump*\") by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rename dest as src_host | join type=left src_host [| tstats summariesonly=t count as psexec_count from datamodel=Endpoint.Processes where Processes.process_name IN (\"psexec.exe\",\"paexec.exe\",\"psexesvc.exe\") OR Processes.process=\"*\\\\admin$\\\\*\" by Processes.dest | rename dest as src_host | `drop_dm_object_name(Processes)`] | eval cleaver_chain=if(psexec_count>0,\"YES\",\"NO\") | where cleaver_chain=\"YES\" OR count>=2 | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let dumpTools = dynamic([\"cachedump.exe\",\"gsecdump.exe\",\"pwdump.exe\",\"pwdump7.exe\",\"wce.exe\",\"mimikatz.exe\",\"procdump.exe\",\"procdump64.exe\"]);\nlet cmdMarkers = dynamic([\"sekurlsa::logonpasswords\",\"sekurlsa::tickets\",\"lsadump::cache\",\"lsadump::sam\",\"reg save hklm\\\\sam\",\"reg save hklm\\\\security\",\"reg save hklm\\\\system\",\"procdump -ma lsass\",\"comsvcs.dll, MiniDump\",\"-accepteula -ma lsass\"]);\nlet dumps = DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName in~ (dumpTools)\n        or ProcessCommandLine has_any (cmdMarkers)\n        or (FileName =~ \"rundll32.exe\" and ProcessCommandLine has \"comsvcs.dll\" and ProcessCommandLine has \"MiniDump\")\n    | project DumpTime=Timestamp, DeviceId, DeviceName, AccountName, DumpProcess=FileName, DumpCmd=ProcessCommandLine, ParentProc=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine, FolderPath, SHA256;\nlet lateral = DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName in~ (\"psexec.exe\",\"paexec.exe\",\"psexesvc.exe\")\n        or ProcessCommandLine has_any (\"\\\\admin$\\\\\",\"net use\",\"-accepteula -s -d\");\ndumps\n| join kind=leftouter (lateral | summarize psexecHits=count(), psexecCmd=any(ProcessCommandLine) by DeviceId) on DeviceId\n| extend ActorContext = \"G0003 Cleaver / TG-2889 \u2014 Iran-nexus credential harvesting chain (Cylance Operation Cleaver, Dell SecureWorks TG-2889)\"\n| project DumpTime, DeviceName, AccountName, DumpProcess, DumpCmd, ParentProc, FolderPath, SHA256, psexecHits, psexecCmd, ActorContext\n| order by DumpTime desc",
+      "rationale": "Cylance and Dell SecureWorks documented that Cleaver/TG-2889 operators dropped a recurring kit \u2014 Cachedump, PWDumpVariant, gsecdump, and Mimikatz \u2014 and chained the dump with PsExec for lateral movement on energy, aerospace and airline networks. The chain (dump tool + PsExec on the same host within a tight window) is far more specific to this cluster's tradecraft than firing on Mimikatz alone, whic"
+    }
+  ]
+}

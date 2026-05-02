@@ -1,0 +1,45 @@
+{
+  "name": "Scattered Spider",
+  "ucs": [
+    {
+      "title": "[LLM] Scattered Spider helpdesk-driven MFA/password reset followed by RMM tool stack deployment",
+      "description": "Hunts the signature Scattered Spider (UNC3944 / Octo Tempest) chain: vishing the IT helpdesk to reset a privileged user's password or re-register MFA, signing in from a fresh device, and immediately dropping multiple legitimate RMM agents (AnyDesk, ScreenConnect, Splashtop, Pulseway, Fleetdeck, Ngrok) for redundant interactive C2 before lateral movement and cloud snapshot exfil.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1556.006",
+        "T1098.003",
+        "T1219.002",
+        "T1078.004",
+        "T1539"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmds values(Processes.process_name) as proc_names from datamodel=Endpoint.Processes where Processes.process_name IN (\"anydesk.exe\",\"teamviewer.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"splashtop.exe\",\"SplashtopStreamer.exe\",\"pulseway.exe\",\"ngrok.exe\",\"fleetdeck.exe\",\"rustdesk.exe\",\"meshagent.exe\",\"Action1.exe\",\"atera.exe\",\"syncro.exe\",\"level.exe\",\"tacticalrmm.exe\") by Processes.user Processes.dest | `drop_dm_object_name(Processes)` | eval rmm_count=mvcount(proc_names) | join type=inner user [ | tstats summariesonly=true min(_time) as resetTime from datamodel=Change.All_Changes where (All_Changes.action IN (\"password_reset\",\"modified\") AND All_Changes.object_category IN (\"user\",\"identity\")) OR All_Changes.change_type IN (\"AAD MFA Method Registered\",\"StrongAuthenticationMethod\",\"Reset user password\") by All_Changes.user | `drop_dm_object_name(All_Changes)` ] | where firstSeen >= resetTime AND firstSeen <= (resetTime + 43200) AND rmm_count >= 2 | table user dest resetTime firstSeen rmm_count proc_names cmds",
+      "kql": "let rmmTools = dynamic([\"anydesk.exe\",\"teamviewer.exe\",\"screenconnect.clientservice.exe\",\"screenconnect.windowsclient.exe\",\"splashtop.exe\",\"splashtopstreamer.exe\",\"pulseway.exe\",\"ngrok.exe\",\"fleetdeck.exe\",\"rustdesk.exe\",\"meshagent.exe\",\"action1.exe\",\"atera.exe\",\"syncro.exe\",\"level.exe\",\"tacticalrmm.exe\"]);\nlet idChanges = CloudAppEvents\n| where Timestamp > ago(2d)\n| where ActionType in (\"Reset user password.\",\"Change user password.\",\"Update user.\",\"User registered security info\",\"User started security info registration\",\"Admin reset user password.\")\n| extend TargetUpn = tolower(tostring(parse_json(tostring(RawEventData.ObjectId))))\n| extend TargetUpn = iff(isempty(TargetUpn), tolower(tostring(parse_json(tostring(RawEventData.Target[0].ID)))), TargetUpn)\n| project ChangeTime=Timestamp, TargetUpn, ChangeAction=ActionType, ChangeActor=AccountDisplayName, ChangeIP=IPAddress;\nlet rmmExec = DeviceProcessEvents\n| where Timestamp > ago(2d)\n| where FileName in~ (rmmTools) or ProcessVersionInfoOriginalFileName in~ (rmmTools)\n| project ExecTime=Timestamp, DeviceName, AccountUpn=tolower(AccountUpn), FileName, ProcessCommandLine, InitiatingProcessFileName;\nrmmExec\n| join kind=inner (idChanges) on $left.AccountUpn == $right.TargetUpn\n| where ExecTime between (ChangeTime .. ChangeTime + 12h)\n| summarize ToolsRun=make_set(FileName), ToolCount=dcount(FileName), CmdLines=make_set(ProcessCommandLine, 10), arg_min(ExecTime, *) by AccountUpn, DeviceName, ChangeTime, ChangeAction\n| where ToolCount >= 2 or ToolsRun has_any (\"ngrok.exe\",\"fleetdeck.exe\")",
+      "rationale": "Scattered Spider's Mandiant/CrowdStrike (UNC3944, Muddled Libra) and Microsoft (Octo Tempest) profiles all emphasize the same opening play: vish the service desk for an MFA/password reset on a high-privilege user, then deploy a redundant RMM stack rather than custom malware. The two-of-N RMM threshold within 12h of an identity reset is the specific behavioral fingerprint MGM/Caesars and 2023-2024 "
+    },
+    {
+      "title": "[LLM] Scattered Spider AAD federated domain backdoor (Set-DomainAuthentication / AADInternals)",
+      "description": "Detects Scattered Spider's cloud persistence move where, after compromising a Global Admin via SIM-swap or helpdesk reset, the actor adds or modifies an Entra ID federated domain (often via AADInternals' ConvertTo-AADIntBackdoor or Set-MsolDomainAuthentication) so they can forge SAML tokens for any user. This is a known UNC3944/Octo Tempest persistence pattern flagged by Microsoft IR.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1484.002",
+        "T1098.003",
+        "T1556.009"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src_ip values(All_Changes.user_agent) as ua values(All_Changes.result) as result from datamodel=Change.All_Changes where All_Changes.change_type IN (\"AzureActiveDirectory\",\"Entra\") AND All_Changes.action IN (\"Set domain authentication.\",\"Set federation settings on domain.\",\"Add unverified domain\",\"Add verified domain\",\"Update domain\") by All_Changes.user All_Changes.object All_Changes.action | `drop_dm_object_name(All_Changes)` | join type=outer user [ | tstats summariesonly=true min(_time) as signinTime values(Authentication.src) as auth_src from datamodel=Authentication where Authentication.action=success AND Authentication.app IN (\"Microsoft Graph\",\"Azure Active Directory PowerShell\",\"Microsoft Azure CLI\",\"AADInternals\") by Authentication.user Authentication.app | `drop_dm_object_name(Authentication)` ] | eval risk=case(action=\"Set federation settings on domain.\",100, action=\"Set domain authentication.\",90, true(),60) | table firstTime user object action app src_ip auth_src ua risk | where risk>=90",
+      "kql": "let federationOps = dynamic([\"Set domain authentication.\",\"Set federation settings on domain.\",\"Add unverified domain\",\"Add verified domain\",\"Update domain\",\"Add partner to company.\"]);\nlet suspiciousApps = dynamic([\"AADInternals\",\"Microsoft Graph PowerShell\",\"Azure Active Directory PowerShell\",\"Microsoft Azure CLI\",\"Microsoft Azure PowerShell\"]);\nCloudAppEvents\n| where Timestamp > ago(14d)\n| where ActionType in (federationOps)\n| extend ModProps = tostring(RawEventData.ModifiedProperties)\n| extend TargetDomain = tostring(RawEventData.Target[0].ID)\n| project ChangeTime=Timestamp, Actor=AccountDisplayName, ActorUpn=AccountObjectId, ChangeAction=ActionType, TargetDomain, ModProps, IPAddress, UserAgent\n| join kind=leftouter (\n    AADSignInEventsBeta\n    | where Timestamp > ago(14d)\n    | where Application in (suspiciousApps) or ClientAppUsed in (suspiciousApps)\n    | where ErrorCode == 0\n    | project SignInTime=Timestamp, ActorUpn=AccountObjectId, SignInIP=IPAddress, SignInApp=Application, SignInCountry=Country, SignInUA=UserAgent\n) on ActorUpn\n| where isnull(SignInTime) or SignInTime between (ChangeTime - 6h .. ChangeTime + 1h)\n| extend RiskScore = case(ChangeAction == \"Set federation settings on domain.\", 100, ChangeAction == \"Set domain authentication.\", 95, 70)\n| project ChangeTime, Actor, ChangeAction, TargetDomain, IPAddress, UserAgent, SignInApp, SignInIP, SignInCountry, RiskScore, ModProps\n| sort by ChangeTime desc",
+      "rationale": "Federation tampering in Entra ID is operationally rare (most tenants never call Set-MsolDomainAuthentication after initial setup) but it is a documented Octo Tempest / UNC3944 persistence move per Microsoft DART and Mandiant reporting on 2023 hospitality and insurance intrusions. Pairing the audit event with a sign-in from AADInternals or Graph PowerShell from a non-corporate IP discriminates Scat"
+    }
+  ]
+}

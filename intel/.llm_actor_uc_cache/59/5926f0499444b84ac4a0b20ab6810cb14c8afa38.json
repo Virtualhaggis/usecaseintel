@@ -1,0 +1,47 @@
+{
+  "name": "Sea Turtle",
+  "ucs": [
+    {
+      "title": "[LLM] Sea Turtle (Teal Kurma) Linux web-shell to nohup SSH tunnel chain on internet-facing servers",
+      "description": "Hunts Sea Turtle's hallmark Linux post-exploitation: web-facing application is exploited (T1190), drops a web shell (T1505.003), then spawns a Unix shell that backgrounds an SSH/openssl/socat reverse tunnel via nohup so the implant survives session interrupts \u2014 the exact chain documented in PwC and Hunt&Hackett reporting on Marbled Dust/Teal Kurma campaigns against telcos and ccTLD registrars.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.004",
+        "T1564.011",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"httpd\",\"apache2\",\"nginx\",\"w3wp.exe\",\"java\",\"tomcat\",\"php-fpm\",\"node\")) AND (Processes.process_name IN (\"nohup\",\"sh\",\"bash\",\"dash\",\"ksh\",\"python\",\"python3\",\"perl\")) AND (Processes.process=\"*nohup*\" AND (Processes.process=\"*ssh *\" OR Processes.process=\"* -R *\" OR Processes.process=\"* -L *\" OR Processes.process=\"* -D *\" OR Processes.process=\"*/dev/tcp/*\" OR Processes.process=\"*openssl s_client*\" OR Processes.process=\"*socat *\" OR Processes.process=\"*ncat *\")) by host, user, Processes.parent_process_name, Processes.process_name, Processes.process, Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | join type=left host [| tstats summariesonly=true values(Filesystem.file_path) as webshell_path values(Filesystem.file_name) as webshell_file from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.php\" OR Filesystem.file_name=\"*.jsp\" OR Filesystem.file_name=\"*.jspx\" OR Filesystem.file_name=\"*.aspx\") AND (Filesystem.file_path=\"*/var/www/*\" OR Filesystem.file_path=\"*/usr/share/nginx/*\" OR Filesystem.file_path=\"*/opt/tomcat/*\" OR Filesystem.file_path=\"*wwwroot*\") AND Filesystem.action=\"created\" by host | `drop_dm_object_name(Filesystem)`]",
+      "kql": "let webProcs = dynamic([\"httpd\",\"apache2\",\"nginx\",\"w3wp.exe\",\"java\",\"tomcat\",\"php-fpm\",\"node\"]);\nlet shellSpawn = DeviceProcessEvents\n  | where Timestamp > ago(14d)\n  | where InitiatingProcessFileName in~ (webProcs)\n  | where (FileName =~ \"nohup\" or ProcessCommandLine has \"nohup \")\n  | where ProcessCommandLine has_any (\"ssh \", \" -R \", \" -L \", \" -D \", \"/dev/tcp/\", \"openssl s_client\", \"socat \", \"ncat \", \"reverse\")\n  | project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath;\nlet webshells = DeviceFileEvents\n  | where Timestamp > ago(14d)\n  | where ActionType == \"FileCreated\"\n  | where FileName endswith \".php\" or FileName endswith \".jsp\" or FileName endswith \".jspx\" or FileName endswith \".aspx\"\n  | where FolderPath has_any (\"/var/www\", \"/usr/share/nginx\", \"/opt/tomcat\", \"wwwroot\")\n  | where InitiatingProcessFileName in~ (webProcs)\n  | project ShellTime=Timestamp, DeviceId, ShellFile=FileName, ShellPath=FolderPath;\nshellSpawn\n| join kind=leftouter webshells on DeviceId\n| where isnull(ShellTime) or (Timestamp - ShellTime) between (-1h .. 24h)\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ShellFile, ShellPath",
+      "rationale": "Sea Turtle is a Linux-centric espionage actor (unlike most APTs that lean Windows) and is one of the few groups MITRE explicitly maps to T1564.011 'Ignore Process Interrupts' because their tooling (SnappyTCP, custom SSH-based implants) is launched via nohup to detach from the exploited Apache/Tomcat/Nginx parent. Pairing the nohup+ssh/socat tunnel signal with a recently-created scripted web file u"
+    },
+    {
+      "title": "[LLM] Sea Turtle DNS hijack \u2014 corporate webmail/VPN FQDN resolving to attacker-owned ASN for AiTM credential capture",
+      "description": "Sea Turtle's signature operation is compromising registrars / DNS providers to repoint a victim's mail, webmail, OWA, VPN or SSO hostnames to attacker infrastructure where they front a clone portal with a freshly-issued Let's Encrypt cert (T1608.003) to harvest credentials (T1557). This UC flags corporate FQDNs whose resolved destination IP/ASN deviates from the historical baseline \u2014 the exact lateral signal an org would have seen during the Cisco Talos-documented ccTLD/.gov hijacks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1557",
+        "T1584.002",
+        "T1583.002",
+        "T1608.003",
+        "T1199"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.dest_ip) as observed_ips from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"mail.*\" OR All_Traffic.dest=\"webmail.*\" OR All_Traffic.dest=\"owa.*\" OR All_Traffic.dest=\"autodiscover.*\" OR All_Traffic.dest=\"vpn.*\" OR All_Traffic.dest=\"citrix.*\" OR All_Traffic.dest=\"sso.*\" OR All_Traffic.dest=\"adfs.*\" OR All_Traffic.dest=\"portal.*\") by All_Traffic.dest _time span=1h | `drop_dm_object_name(All_Traffic)` | eval bucket_day=strftime(_time,\"%Y-%m-%d\") | eventstats values(eval(if(_time<relative_time(now(),\"-7d\"),observed_ips,null))) as baseline_ips by dest | where _time>=relative_time(now(),\"-7d\") | mvexpand observed_ips | where NOT observed_ips IN (baseline_ips) | iplocation observed_ips | lookup asn_lookup ip as observed_ips OUTPUT asn as new_asn | eventstats values(eval(if(_time<relative_time(now(),\"-7d\"),new_asn,null))) as baseline_asn by dest | where NOT new_asn IN (baseline_asn) | stats min(_time) as firstSeen count as hits dc(host) as distinct_clients values(new_asn) as resolved_asn by dest, observed_ips | where distinct_clients>=3 | convert ctime(firstSeen)",
+      "kql": "let lookback = 60d;\nlet baselineWindow = ago(lookback) .. ago(7d);\nlet recentWindow = ago(7d);\nlet hv_pattern = @\"(?i)^(mail|webmail|owa|autodiscover|portal|vpn|citrix|sso|adfs|login|remote|gw)\\.\";\nlet corp_domains = dynamic([\".contoso.com\", \".contoso.local\", \".gov.tr\"]);  // tune to org / monitored ccTLDs\nlet baseline = DeviceNetworkEvents\n  | where Timestamp between (baselineWindow)\n  | where ActionType == \"ConnectionSuccess\"\n  | where isnotempty(RemoteUrl) and RemoteUrl matches regex hv_pattern\n  | where RemoteUrl has_any (corp_domains)\n  | summarize known_ips=make_set(RemoteIP, 200), known_count=count() by RemoteUrl;\nDeviceNetworkEvents\n| where Timestamp > recentWindow\n| where ActionType == \"ConnectionSuccess\"\n| where isnotempty(RemoteUrl) and RemoteUrl matches regex hv_pattern\n| where RemoteUrl has_any (corp_domains)\n| join kind=inner baseline on RemoteUrl\n| where known_count > 50  // only domains we have a real baseline for\n| where not(set_has_element(known_ips, RemoteIP))\n| summarize firstSeen=min(Timestamp), lastSeen=max(Timestamp), hits=count(), affected_devices=dcount(DeviceId), sample_devices=make_set(DeviceName, 10)\n        by RemoteUrl, RemoteIP, RemotePort\n| where affected_devices >= 3\n| join kind=leftouter (\n    AADSignInEventsBeta\n    | where Timestamp > ago(7d)\n    | summarize signins=count(), failed=countif(ErrorCode != 0) by IPAddress\n  ) on $left.RemoteIP == $right.IPAddress\n| order by firstSeen asc",
+      "rationale": "DNS-based provider compromise to redirect victim login portals is the defining tradecraft of Sea Turtle / Marbled Dust \u2014 this is essentially the only tracked actor for which large-scale registrar/ccTLD hijack is a documented operational pattern (Talos 2019, NSA/NCSC 2019, Hunt&Hackett 2024). Generic AiTM detections look at proxy domains in URL clicks; this UC instead watches the actor's actual mec"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Stealth Falcon",
+  "ucs": [
+    {
+      "title": "[LLM] Stealth Falcon (FruityArmor) PowerShell scheduled-task BITS backdoor C2",
+      "description": "Hunts Stealth Falcon's signature implant chain: a scheduled task launches a PowerShell loader that uses the Background Intelligent Transfer Service (BITS) \u2014 via bitsadmin.exe or the BITS COM interface in PS \u2014 to beacon and exfiltrate. ESET and Citizen Lab attribute this exact 'Win32/StealthFalcon' chain (schtasks \u2192 powershell \u2192 BITS) to G0038 against UAE dissidents and journalists.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1053.005",
+        "T1059.001",
+        "T1071.001",
+        "T1573.001",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds values(Processes.parent_process) as parents values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"svchost.exe\" OR Processes.parent_process_name=\"taskeng.exe\" OR Processes.parent_process_name=\"schedule.dll\") (Processes.process_name=\"powershell.exe\" OR Processes.process_name=\"pwsh.exe\") (Processes.process=\"*Start-BitsTransfer*\" OR Processes.process=\"*Microsoft.BackgroundIntelligentTransfer*\" OR Processes.process=\"*[Reflection.Assembly]::Load*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*-encodedcommand*\" OR Processes.process=\"*IEX*DownloadString*\") by Processes.dest Processes.user Processes.process_id Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name=\"bitsadmin.exe\" (Processes.process=\"*/transfer*\" OR Processes.process=\"*/addfile*\" OR Processes.process=\"*/setnotifycmdline*\") by Processes.dest | `drop_dm_object_name(Processes)` | rename count as bitsadmin_count] | where isnotnull(bitsadmin_count) OR match(cmds,\"(?i)BitsTransfer|BackgroundIntelligentTransfer\") | `security_content_ctime(firstTime)` | table firstTime dest user parent_process_name process_name cmds bitsadmin_count",
+      "kql": "let timeWindow = 7d;\nlet schedTaskPS = DeviceProcessEvents\n| where Timestamp > ago(timeWindow)\n| where InitiatingProcessFileName in~ (\"svchost.exe\",\"taskeng.exe\")\n| where InitiatingProcessCommandLine has_any (\"Schedule\",\"-k netsvcs\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (\"Start-BitsTransfer\",\"BackgroundIntelligentTransfer\",\"FromBase64String\",\"-enc \",\"-EncodedCommand\",\"IEX\",\"Reflection.Assembly\")\n| project Timestamp, DeviceId, DeviceName, AccountName, ProcessId, ProcessCommandLine, InitiatingProcessCommandLine;\nlet bitsChild = DeviceProcessEvents\n| where Timestamp > ago(timeWindow)\n| where FileName =~ \"bitsadmin.exe\" and ProcessCommandLine has_any (\"/transfer\",\"/addfile\",\"/SetNotifyCmdLine\",\"/create\")\n| project bitsTime=Timestamp, DeviceId, bitsCmd=ProcessCommandLine, bitsParent=InitiatingProcessFileName;\nschedTaskPS\n| join kind=leftouter (bitsChild) on DeviceId\n| where isnotempty(bitsCmd) or ProcessCommandLine has_any (\"Start-BitsTransfer\",\"BackgroundIntelligentTransfer\")\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(timeWindow)\n    | where InitiatingProcessFileName in~ (\"svchost.exe\",\"bitsadmin.exe\",\"powershell.exe\")\n    | where RemotePort in (80,443) and not(ipv4_is_private(RemoteIP))\n    | summarize beacons=dcount(RemoteIP), urls=make_set(RemoteUrl,20) by DeviceId\n) on DeviceId\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, bitsCmd, beacons, urls",
+      "rationale": "The schtasks\u2192svchost/taskeng\u2192powershell\u2192BITS sequence is a near-unique Stealth Falcon fingerprint documented by ESET (Win32/StealthFalcon, 2019) and Citizen Lab (2016). Legitimate admin use of BITS rarely originates from a scheduled-task-spawned PowerShell process with encoded commands, so chaining the parent (Schedule service host) + PS BITS API + outbound HTTPS to non-corporate IPs collapses FP "
+    },
+    {
+      "title": "[LLM] Stealth Falcon Windows Credential Manager & DPAPI vault harvesting",
+      "description": "Hunts G0038's post-compromise credential theft step: direct file-system access to the Credential Manager store (Microsoft\\Credentials) and DPAPI master keys (Microsoft\\Protect) by non-Microsoft processes \u2014 the exact T1555.003/T1555.004 behaviour Citizen Lab observed Stealth Falcon performing against Emirati activists to pivot into webmail and cloud accounts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1555.003",
+        "T1555.004",
+        "T1059.001",
+        "T1047"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\AppData\\\\Roaming\\\\Microsoft\\\\Credentials\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Microsoft\\\\Credentials\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Roaming\\\\Microsoft\\\\Protect\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Microsoft\\\\Vault\\\\*\" OR Filesystem.file_path=\"*\\\\Login Data\" OR Filesystem.file_path=\"*\\\\Cookies\" OR Filesystem.file_path=\"*\\\\Local State\") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,\"(?i)^(svchost|lsass|explorer|chrome|msedge|firefox|opera|brave|outlook|teams|onedrive|searchindexer|RuntimeBroker|backgroundTaskHost)\\.exe$\") | join type=outer dest process_id [| tstats summariesonly=t values(Processes.process) as process_cmd from datamodel=Endpoint.Processes where (Processes.process_name=\"powershell.exe\" OR Processes.process_name=\"pwsh.exe\" OR Processes.process_name=\"wmic.exe\" OR Processes.process_name=\"rundll32.exe\") by Processes.dest Processes.process_id | `drop_dm_object_name(Processes)`] | where isnotnull(process_cmd) OR match(process_name,\"(?i)(powershell|wmic|rundll32|regsvr32)\\.exe$\") | `security_content_ctime(firstTime)` | table firstTime dest user process_name process_cmd paths",
+      "kql": "let lol = dynamic([\"powershell.exe\",\"pwsh.exe\",\"wmic.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\"]);\nlet allow = dynamic([\"svchost.exe\",\"lsass.exe\",\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"opera.exe\",\"brave.exe\",\"outlook.exe\",\"teams.exe\",\"onedrive.exe\",\"searchindexer.exe\",\"runtimebroker.exe\",\"backgroundtaskhost.exe\",\"credentialuibroker.exe\"]);\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\",\"FileAccessed\")\n| where FolderPath has_any (\"\\\\AppData\\\\Roaming\\\\Microsoft\\\\Credentials\",\"\\\\AppData\\\\Local\\\\Microsoft\\\\Credentials\",\"\\\\AppData\\\\Roaming\\\\Microsoft\\\\Protect\",\"\\\\AppData\\\\Local\\\\Microsoft\\\\Vault\")\n   or FileName in~ (\"Login Data\",\"Cookies\",\"Local State\",\"Web Data\")\n| where InitiatingProcessFileName !in~ (allow)\n| extend isLOLBin = InitiatingProcessFileName in~ (lol)\n| join kind=inner (\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName in~ (lol)\n    | where ProcessCommandLine has_any (\"CredentialManager\",\"Vault\",\"DPAPI\",\"CryptUnprotectData\",\"Microsoft\\\\Protect\",\"Microsoft\\\\Credentials\",\"Login Data\",\"masterkey\",\"vaultcli\")\n    | project DeviceId, susPid=ProcessId, susCmd=ProcessCommandLine, susTime=Timestamp\n) on DeviceId\n| where abs(datetime_diff('second', Timestamp, susTime)) < 600\n| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, susCmd",
+      "rationale": "Stealth Falcon explicitly targets the Windows DPAPI vault and Credential Manager stores to lift webmail/cloud creds for follow-on surveillance of activists \u2014 Citizen Lab and ESET both highlight this distinction from typical Mimikatz LSASS dumping (which most APTs use). Pairing direct AppData\\Microsoft\\Protect|Credentials access by a LOLBin (PowerShell/WMIC/rundll32) with a co-temporal command line"
+    }
+  ]
+}

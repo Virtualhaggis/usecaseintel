@@ -1,0 +1,48 @@
+{
+  "name": "BITTER",
+  "ucs": [
+    {
+      "title": "[LLM] BITTER (T-APT-17) Equation Editor / CHM exploit chain dropping ArtraDownloader + scheduled task persistence",
+      "description": "Hunts BITTER's signature initial-access chain against South Asian government/energy targets: a weaponized RTF/XLSX/CHM lure exploits CVE-2018-0798 (Equation Editor) or abuses hh.exe, then spawns a downloader (ArtraDownloader/MuuyDownloader/ZxxZ) that immediately registers a scheduled task masqueraded as a legitimate Windows/AV task for persistence.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1203",
+        "T1204.002",
+        "T1566.001",
+        "T1053.005",
+        "T1036.004",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"EQNEDT32.EXE\",\"WINWORD.EXE\",\"EXCEL.EXE\",\"POWERPNT.EXE\",\"hh.exe\",\"OUTLOOK.EXE\")) (Processes.process_name IN (\"schtasks.exe\",\"cmd.exe\",\"powershell.exe\",\"mshta.exe\",\"curl.exe\",\"certutil.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"bitsadmin.exe\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name _time span=1h \n| `drop_dm_object_name(Processes)` \n| join type=inner dest [ | tstats summariesonly=true count min(_time) as taskTime values(Processes.process) as task_cmd from datamodel=Endpoint.Processes where Processes.process_name=\"schtasks.exe\" (Processes.process=\"*/create*\" OR Processes.process=\"*-create*\") (Processes.process=\"*Microsoft\\\\Windows*\" OR Processes.process=\"*WindowsUpdate*\" OR Processes.process=\"*Defender*\" OR Processes.process=\"*OneDrive*\" OR Processes.process=\"*\\\\AppData\\\\*\" OR Processes.process=\"*\\\\ProgramData\\\\*\" OR Processes.process=\"*\\\\Public\\\\*\") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` ] \n| where taskTime >= firstTime AND taskTime <= (lastTime + 600) \n| eval bitter_score = if(match(task_cmd,\"(?i)(AppData|ProgramData|Public|Temp|Roaming)\\\\\\\\.*\\\\.(exe|dll|scr|bat|cmd)\"),3,1) \n| stats values(parent_process_name) as parents values(process_name) as children values(task_cmd) as scheduled_tasks max(bitter_score) as score by dest user \n| where score >= 2",
+      "kql": "let lookback = 7d;\nlet officeParents = dynamic([\"eqnedt32.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"hh.exe\",\"outlook.exe\"]);\nlet liveOffLandChildren = dynamic([\"cmd.exe\",\"powershell.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"certutil.exe\",\"curl.exe\",\"bitsadmin.exe\",\"schtasks.exe\"]);\nlet stage1 = DeviceProcessEvents\n  | where Timestamp > ago(lookback)\n  | where InitiatingProcessFileName in~ (officeParents)\n  | where FileName in~ (liveOffLandChildren)\n  | project DeviceId, DeviceName, AccountName, Stage1Time=Timestamp, Stage1Parent=InitiatingProcessFileName, Stage1Child=FileName, Stage1Cmd=ProcessCommandLine;\nlet stage2 = DeviceProcessEvents\n  | where Timestamp > ago(lookback)\n  | where FileName =~ \"schtasks.exe\"\n  | where ProcessCommandLine has_any (\"/create\",\"-create\")\n  | where ProcessCommandLine matches regex @\"(?i)(AppData|ProgramData|\\\\Public\\\\|\\\\Temp\\\\|Roaming)\\\\.+\\.(exe|dll|scr|bat|cmd|vbs|js)\"\n     or ProcessCommandLine has_any (\"Microsoft\\\\Windows\\\\\",\"WindowsUpdate\",\"Defender\",\"OneDrive\",\"GoogleUpdate\")\n  | project DeviceId, Stage2Time=Timestamp, TaskCmd=ProcessCommandLine, TaskUser=AccountName;\nstage1\n| join kind=inner stage2 on DeviceId\n| where Stage2Time between (Stage1Time .. Stage1Time + 10m)\n| extend BitterChainScore = iff(Stage1Parent =~ \"eqnedt32.exe\", 5, 3) + iff(TaskCmd has_any (\"AppData\",\"ProgramData\",\"Public\"), 2, 0)\n| project DeviceName, AccountName, Stage1Time, Stage1Parent, Stage1Child, Stage1Cmd, Stage2Time, TaskCmd, BitterChainScore\n| where BitterChainScore >= 5",
+      "rationale": "BITTER almost never moves off this exact chain: weaponized Office or compiled-help (.chm) lure -> Equation Editor or hh.exe child -> downloader -> schtasks.exe creating a task that masquerades as a Microsoft/Defender/OneDrive task pointing at AppData/ProgramData. Cisco Talos (May 2022 Bangladesh campaign) and QiAnXin reports confirm both ArtraDownloader and ZxxZ persist via masqueraded scheduled t"
+    },
+    {
+      "title": "[LLM] BITTER ZxxZ / BitterRAT HTTP C2 beacon with hardcoded URI and victim-ID user-agent",
+      "description": "Hunts BITTER's distinctive C2 fingerprint used by ZxxZ, BitterRAT and ORPCBackdoor: short repeated GET/POST beacons to newly-registered .com/.xyz/.info domains carrying a hardcoded URI path and a user-agent string that embeds the hostname/MAC as the victim ID (a documented ZxxZ trait observed by Cisco Talos and Secuinfra against South Asian government targets).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1071.001",
+        "T1573",
+        "T1568",
+        "T1027.013",
+        "T1583.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as uas dc(Web.url) as uniq_urls dc(_time) as beacons from datamodel=Web where Web.http_method IN (\"GET\",\"POST\") by Web.src Web.dest Web.site _time span=10m \n| `drop_dm_object_name(Web)` \n| eval bitter_uri_hit  = if(match(mvjoin(urls,\"|\"),\"(?i)/(MNHST|gate\\.php|index\\.php\\?id=|api/v[0-9]+/get|cmd\\.php\\?token=|user\\.php\\?[a-z]+=)\"),1,0) \n| eval bitter_ua_hit   = if(match(mvjoin(uas,\"|\"),\"(?i)(ZxxZ|Mozilla/5\\.0 \\(Windows NT [0-9\\.]+; .*\\) [A-Z0-9]{6,}-[A-Z0-9]{6,}|MSIE 6\\.0; Windows NT 5\\.1\\)$)\"),1,0) \n| eval newdomain_hit   = if(match(site,\"\\.(xyz|info|live|cyou|top|icu)$\") OR match(site,\"^[a-z0-9]{6,12}-(news|mail|update|login|gov|mfa)\\.(com|net|org)$\"),1,0) \n| eval beacon_hit      = if(beacons >= 5 AND uniq_urls <= 2,1,0) \n| eval bitter_score = bitter_uri_hit + bitter_ua_hit + newdomain_hit + beacon_hit \n| where bitter_score >= 2 \n| table firstTime src dest site urls uas beacons uniq_urls bitter_score \n| `security_content_ctime(firstTime)`",
+      "kql": "let window = 1d;\nlet bitterUriRegex = @\"(?i)/(MNHST|gate\\.php|index\\.php\\?id=|api/v[0-9]+/get|cmd\\.php\\?token=|user\\.php\\?[a-z]+=)\";\nlet bitterUaRegex  = @\"(?i)ZxxZ|MSIE 6\\.0; Windows NT 5\\.1\\)$|Mozilla/5\\.0 \\(Windows NT [0-9\\.]+;.*\\)\\s+[A-Z0-9]{6,}-[A-Z0-9]{6,}\";\nlet suspiciousTld   = dynamic([\".xyz\",\".info\",\".live\",\".cyou\",\".top\",\".icu\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(window)\n| where ActionType in (\"ConnectionSuccess\",\"HttpConnectionInspected\")\n| where RemotePort in (80, 443, 8080, 8443)\n| extend Url = tostring(parse_json(AdditionalFields).Uri), Ua = tostring(parse_json(AdditionalFields).UserAgent), Host = tostring(parse_json(AdditionalFields).Host)\n| extend uriHit = iff(Url matches regex bitterUriRegex, 1, 0),\n         uaHit  = iff(Ua  matches regex bitterUaRegex,  1, 0),\n         tldHit = iff(Host has_any (suspiciousTld), 1, 0)\n| summarize beacons=count(), distinctUris=dcount(Url), firstSeen=min(Timestamp), lastSeen=max(Timestamp), urls=make_set(Url,10), uas=make_set(Ua,5), maxUriHit=max(uriHit), maxUaHit=max(uaHit), maxTldHit=max(tldHit) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, Host\n| extend beaconHit = iff(beacons >= 5 and distinctUris <= 2, 1, 0)\n| extend bitterScore = maxUriHit + maxUaHit + maxTldHit + beaconHit\n| where bitterScore >= 2\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Public\\\", @\"\\Temp\\\")\n   or maxUriHit == 1 or maxUaHit == 1\n| project firstSeen, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP, Host, urls, uas, beacons, bitterScore\n| order by bitterScore desc, beacons desc",
+      "rationale": "ZxxZ (the BITTER backdoor first published by Cisco Talos in May 2022) uses a hardcoded UA pattern that embeds a victim-ID delimited by a hyphen, and ORPCBackdoor / BitterRAT consistently beacon to short-life .xyz/.info/.live domains registered weeks before campaigns against Pakistani, Bangladeshi and Chinese government infrastructure. Scoring on URI fingerprint + UA fingerprint + new-TLD parking +"
+    }
+  ]
+}

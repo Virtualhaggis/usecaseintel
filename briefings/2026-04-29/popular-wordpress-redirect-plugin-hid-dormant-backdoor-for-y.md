@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound DNS/Web traffic to anadnet[.]com — Quick Page/Post Redirect WordPress backdoor C2
 
-`UC_37_2` · phase: **c2** · confidence: **High**
+`UC_42_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trojanised Quick Page/Post Redirect plugin filesystem & PHP-fetch hunt
 
-`UC_37_3` · phase: **install** · confidence: **Medium**
+`UC_42_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

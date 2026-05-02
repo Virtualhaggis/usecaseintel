@@ -1,0 +1,47 @@
+{
+  "name": "Confucius",
+  "ucs": [
+    {
+      "title": "[LLM] Confucius weaponized Office doc: WINWORD remote-template fetch chained to Equation Editor (EQNEDT32) child execution",
+      "description": "Hunts Confucius's signature delivery chain \u2014 a spearphishing RTF/DOCX that uses remote template injection (T1221) to pull a second-stage payload, followed by the Equation Editor (EQNEDT32.EXE) exploiting CVE-2017-11882 / CVE-2018-0802 to spawn a scripting host or RAT loader (warzone, Sneepy, Hornbill droppers).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1221",
+        "T1203",
+        "T1204.002",
+        "T1059.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"eqnedt32.exe\")) AND (Processes.process_name IN (\"eqnedt32.exe\",\"mshta.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"certutil.exe\")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.dest | `drop_dm_object_name(Processes)` | join type=inner host [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"winword.exe\",\"eqnedt32.exe\") AND All_Traffic.dest_port IN (80,443) by All_Traffic.src All_Traffic.dest_ip All_Traffic.app | rename All_Traffic.src as host | fields host All_Traffic.dest_ip All_Traffic.app] | where (parent_process_name=\"winword.exe\" AND process_name=\"eqnedt32.exe\") OR (parent_process_name=\"eqnedt32.exe\" AND process_name IN (\"mshta.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\")) | `security_content_ctime(firstTime)` | table firstTime host user parent_process_name process_name process All_Traffic.dest_ip",
+      "kql": "let lookback = 1d;\nlet suspChildren = dynamic([\"eqnedt32.exe\",\"mshta.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"certutil.exe\"]);\nlet officeParents = dynamic([\"winword.exe\",\"excel.exe\",\"eqnedt32.exe\"]);\nlet procs = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where InitiatingProcessFileName in~ (officeParents)\n| where FileName in~ (suspChildren)\n| project ProcTime=Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, ReportId;\nlet net = DeviceNetworkEvents\n| where Timestamp > ago(lookback)\n| where InitiatingProcessFileName in~ (officeParents)\n| where RemotePort in (80, 443)\n| project NetTime=Timestamp, DeviceId, RemoteUrl, RemoteIP, NetInitiator=InitiatingProcessFileName;\nprocs\n| join kind=inner net on DeviceId\n| where abs(datetime_diff('second', ProcTime, NetTime)) <= 120\n| where (InitiatingProcessFileName =~ \"winword.exe\" and FileName =~ \"eqnedt32.exe\")\n   or (InitiatingProcessFileName =~ \"eqnedt32.exe\" and FileName in~ (dynamic([\"mshta.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\"])))\n| project ProcTime, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, RemoteUrl, RemoteIP",
+      "rationale": "Template injection followed by EQNEDT32 spawning a scripting host is THE Confucius/Patchwork delivery fingerprint observed since 2017 in campaigns against Pakistani/South Asian government and military targets (TrendMicro 2018/2021, Uptycs 2021). Equation Editor abuse (CVE-2017-11882/0802) was the group's preferred client-side exploit long after most actors moved on, and chaining it to a remote-tem"
+    },
+    {
+      "title": "[LLM] Confucius mshta-driven HTA loader establishing scheduled task persistence to cloud-staged C2",
+      "description": "Hunts the post-exploit Confucius pattern where mshta.exe is launched (often by EQNEDT32 or wscript) to retrieve an HTA from an attacker-controlled site or legitimate cloud service, then registers a scheduled task pointing at a staged binary in %APPDATA% or %PUBLIC% that beacons to web infrastructure (T1583.006) used to deliver Hornbill / Sunbird / Warzone implants.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1218.005",
+        "T1053.005",
+        "T1547.001",
+        "T1071.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=\"mshta.exe\" AND (Processes.process=\"*http*\" OR Processes.process=\"*.hta*\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | rename process as mshta_cmd parent_process_name as mshta_parent | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name=\"schtasks.exe\" AND Processes.process=\"*/create*\" AND (Processes.process=\"*\\\\AppData\\\\*\" OR Processes.process=\"*\\\\Public\\\\*\" OR Processes.process=\"*\\\\ProgramData\\\\*\" OR Processes.process=\"*.exe*\" OR Processes.process=\"*.dll*\") by host Processes.process Processes.user | rename Processes.process as schtask_cmd Processes.user as schtask_user | fields host schtask_cmd schtask_user] | join type=inner host [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=\"mshta.exe\" OR All_Traffic.app=\"powershell.exe\") AND All_Traffic.dest_port IN (80,443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.app | rename All_Traffic.src as host All_Traffic.app as net_app | fields host net_app All_Traffic.dest All_Traffic.dest_ip] | `security_content_ctime(firstTime)` | table firstTime host user mshta_parent mshta_cmd schtask_cmd net_app All_Traffic.dest All_Traffic.dest_ip",
+      "kql": "let lookback = 1d;\nlet mshta = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName =~ \"mshta.exe\"\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\".hta\")\n| project MshtaTime=Timestamp, DeviceId, DeviceName, AccountName, MshtaParent=InitiatingProcessFileName, MshtaCmd=ProcessCommandLine;\nlet sched = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"\\\\AppData\\\\\",\"\\\\Public\\\\\",\"\\\\ProgramData\\\\\",\"\\\\Temp\\\\\",\".exe\",\".dll\",\".vbs\",\".js\")\n| project SchedTime=Timestamp, DeviceId, SchedCmd=ProcessCommandLine, SchedUser=AccountName;\nlet net = DeviceNetworkEvents\n| where Timestamp > ago(lookback)\n| where InitiatingProcessFileName in~ (\"mshta.exe\",\"powershell.exe\",\"wscript.exe\")\n| where RemotePort in (80, 443)\n| project NetTime=Timestamp, DeviceId, RemoteUrl, RemoteIP, NetApp=InitiatingProcessFileName;\nmshta\n| join kind=inner sched on DeviceId\n| where datetime_diff('minute', SchedTime, MshtaTime) between (-30 .. 30)\n| join kind=inner net on DeviceId\n| where datetime_diff('minute', NetTime, MshtaTime) between (-30 .. 30)\n| project MshtaTime, DeviceName, AccountName, MshtaParent, MshtaCmd, SchedCmd, NetApp, RemoteUrl, RemoteIP\n| sort by MshtaTime desc",
+      "rationale": "Confucius reporting (TrendMicro Aug 2021, Uptycs Jan 2021) consistently shows mshta.exe used to stage downloaders that drop Hornbill/Sunbird/ChatSpy/Warzone RAT, immediately backed by a schtasks /create persistence entry pointing into %APPDATA%/%PUBLIC% and HTTP(S) beaconing to attacker web infrastructure registered through commodity providers (T1583.006). Requiring all three signals \u2014 mshta-with-"
+    }
+  ]
+}

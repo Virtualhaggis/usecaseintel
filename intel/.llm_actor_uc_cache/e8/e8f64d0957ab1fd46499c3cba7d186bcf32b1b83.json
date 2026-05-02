@@ -1,0 +1,26 @@
+{
+  "name": "Dark Caracal",
+  "ucs": [
+    {
+      "title": "[LLM] Dark Caracal (G0070) Bandook delivery via CHM \u2192 cmd/PowerShell \u2192 Run-key persistence chain",
+      "description": "Hunts the signature Dark Caracal/GDGS infection chain: a trojanized Compiled HTML Help (.chm) file delivered via spearphishing-via-service (Facebook/WhatsApp lures) is opened by hh.exe, which spawns cmd.exe / mshta.exe / powershell.exe to stage the Bandook RAT, followed by HKCU Run-key persistence. This combination (T1218.001 \u2192 T1059.003 \u2192 T1547.001) is the recurring TTP cluster Lookout and Check Point have repeatedly attributed to Dark Caracal's Bandook campaigns.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.001",
+        "T1059.003",
+        "T1204.002",
+        "T1547.001",
+        "T1566.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_path) as paths values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=\"hh.exe\" AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\") by Processes.dest Processes.parent_process Processes.process_name Processes.process _time span=1h | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats summariesonly=t count as run_key_writes values(Registry.registry_path) as run_path values(Registry.registry_value_data) as run_value from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*\") AND Registry.registry_value_data IN (\"*AppData*\",\"*ProgramData*\",\"*Public*\",\"*\\\\Temp\\\\*\") by Registry.dest | `drop_dm_object_name(Registry)`] | where run_key_writes>0 | eval risk=\"Dark Caracal Bandook chain: CHM->shell->Run-key\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user parent_process process_name cmdlines run_path run_value risk",
+      "kql": "let chmExec = DeviceProcessEvents | where InitiatingProcessFileName =~ \"hh.exe\" | where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\") | extend chmFile = InitiatingProcessCommandLine | project ChmTime=Timestamp, DeviceId, DeviceName, AccountName, ChmCmd=InitiatingProcessCommandLine, ChildProcess=FileName, ChildCmd=ProcessCommandLine; let runKey = DeviceRegistryEvents | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\") | where RegistryKey has_any (@\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\") | where RegistryValueData has_any (\"AppData\",\"ProgramData\",@\"\\Public\\\",@\"\\Temp\\\",\".vbs\",\".hta\",\".js\",\".exe\") | project RegTime=Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData; chmExec | join kind=inner runKey on DeviceId | where RegTime between (ChmTime .. (ChmTime + 30m)) | extend Detection=\"Dark Caracal G0070 Bandook chain: CHM hh.exe -> shell -> Run key persistence\" | project ChmTime, RegTime, DeviceName, AccountName, ChmCmd, ChildProcess, ChildCmd, RegistryKey, RegistryValueName, RegistryValueData, Detection",
+      "rationale": "hh.exe spawning a scripting/shell interpreter is rare in benign enterprise telemetry \u2014 legitimate help files almost never invoke cmd/powershell/mshta. Dark Caracal's documented Bandook campaigns (Operation Manul, Bandook is Back, Lookout 2018 report) consistently deliver via .chm or trojanized installers from Facebook/WhatsApp lures, drop staged binaries into AppData/Public/Temp, and persist via H"
+    }
+  ]
+}

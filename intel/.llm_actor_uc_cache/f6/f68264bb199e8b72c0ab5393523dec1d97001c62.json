@@ -1,0 +1,47 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla ComRAT v4 C2 via Gmail web interface from non-browser process",
+      "description": "Hunts for Turla's signature ComRAT v4 (a.k.a. Agent.BTZ successor) which uses an embedded Gecko/Chromium-like component to log into Gmail with a stolen cookie and pull commands from inbox/attachments. Triggers when a non-browser process touches mail.google.com / accounts.google.com / googleusercontent.com endpoints \u2014 a behavior almost unique to Turla among Russian APTs (ESET, 2020 ComRAT v4 report).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.003",
+        "T1071.001",
+        "T1573"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where (All_Traffic.dest=\"mail.google.com\" OR All_Traffic.dest=\"*.mail.google.com\" OR All_Traffic.dest=\"accounts.google.com\" OR All_Traffic.dest=\"*.googleusercontent.com\" OR All_Traffic.dest=\"mail-attachment.googleusercontent.com\") AND All_Traffic.dest_port=443 by All_Traffic.src All_Traffic.app All_Traffic.process_name All_Traffic.user host\n| `drop_dm_object_name(All_Traffic)`\n| eval is_browser=if(match(lower(process_name),\"(chrome|msedge|firefox|iexplore|brave|opera|safari|edge)\\.exe\"),1,0)\n| where is_browser=0\n| join type=left host process_name [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"mshta.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\",\"taskhostw.exe\") by Processes.dest Processes.process_name Processes.parent_process_name Processes.process | rename Processes.dest as host Processes.process_name as process_name Processes.parent_process_name as parent_process_name Processes.process as process]\n| convert ctime(firstTime) ctime(lastTime)\n| table firstTime lastTime host src user process_name parent_process_name process dest dest_port count",
+      "kql": "let GmailC2 = dynamic([\"mail.google.com\",\"accounts.google.com\",\"googleusercontent.com\",\"mail-attachment.googleusercontent.com\",\"clients.google.com\"]);\nlet Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"brave.exe\",\"opera.exe\",\"safari.exe\",\"edge.exe\"]);\nlet SuspectInitiators = dynamic([\"powershell.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"mshta.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\",\"taskhostw.exe\",\"dllhost.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where RemotePort == 443\n| where RemoteUrl has_any (GmailC2) or RemoteUrl matches regex @\"(?i)(mail|accounts)\\.google\\.com\"\n| where InitiatingProcessFileName !in~ (Browsers)\n| where InitiatingProcessFileName in~ (SuspectInitiators) or isempty(InitiatingProcessFileName)\n| extend ParentChain = strcat(InitiatingProcessParentFileName, \" -> \", InitiatingProcessFileName)\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256\n| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Urls=make_set(RemoteUrl, 25), CmdLines=make_set(InitiatingProcessCommandLine, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessSHA256\n| where ConnCount >= 2\n| order by ConnCount desc",
+      "rationale": "Turla / Secret Blizzard / Venomous Bear is the ONLY public APT documented to weaponize the Gmail web UI for C2 \u2014 ComRAT v4 logs in with a stolen cookie via an embedded browser engine and treats the inbox as a dead-drop. Legitimate Gmail traffic comes from real browsers; svchost/rundll32/powershell hitting mail.google.com is essentially pathognomonic for ComRAT. Other RU clusters (APT28, APT29, San"
+    },
+    {
+      "title": "[LLM] Turla registry-resident PowerShell loader (PowerStallion / Kazuar / IronPython staging)",
+      "description": "Hunts the Turla PowerShell loader pattern publicly burned in ESET (PowerStallion, 2019) and Accenture/Mandiant (Kazuar/IronNetInjector) reports: a small PowerShell stub reads a base64+AES blob from HKCU/HKLM, base64-decodes, then reflectively loads it via [Reflection.Assembly]::Load or IEX. Persistence is COM hijack, scheduled task, or WMI sub. This precise registry-read \u2192 reflective-load chain in one command line is a Turla fingerprint.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1027.011",
+        "T1112",
+        "T1140",
+        "T1620",
+        "T1546.015"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\") by Processes.dest Processes.process_id Processes.process_name\n| `drop_dm_object_name(Processes)`\n| eval cmd_lc=lower(cmdline)\n| eval reads_reg = if(match(cmd_lc,\"(get-itemproperty|get-itempropertyvalue|get-childitem)\\s+.*?(hkcu|hklm|hkey_current_user|hkey_local_machine|registry::|microsoft\\.powershell\\.core\\\\\\\\registry)\"),1,0)\n| eval decodes  = if(match(cmd_lc,\"(frombase64string|convert\\]::frombase64|gzipstream|deflatestream|aes|rijndael|tripledes|rc4)\"),1,0)\n| eval reflects = if(match(cmd_lc,\"(\\[reflection\\.assembly\\]::load|\\[appdomain\\]::currentdomain|invoke-expression|iex\\s*\\(|\\.invoke\\(|\\[system\\.reflection\\.emit)\"),1,0)\n| where reads_reg=1 AND decodes=1 AND reflects=1\n| eval indicators=mvappend(if(reads_reg=1,\"registry_read\",null()), if(decodes=1,\"decode\",null()), if(reflects=1,\"reflective_load\",null()))\n| table firstTime lastTime dest user process_name parent indicators cmdline\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (\"powershell.exe\",\"powershell_ise.exe\",\"pwsh.exe\")\n| extend cmd = tolower(ProcessCommandLine)\n| where cmd matches regex @\"(get-itemproperty|get-itempropertyvalue|get-childitem)\\s+.*(hkcu|hklm|hkey_current_user|hkey_local_machine|registry::)\"\n| where cmd has_any (\"frombase64string\", \"convert]::frombase64\", \"gzipstream\", \"deflatestream\", \"aes\", \"rijndael\", \"tripledes\", \"rc4\")\n| where cmd has_any (\"[reflection.assembly]::load\", \"invoke-expression\", \"iex(\", \"iex (\", \".invoke(\", \"[appdomain]::currentdomain\")\n| extend SuspiciousParent = iff(InitiatingProcessFileName in~ (\"rundll32.exe\",\"mshta.exe\",\"regsvr32.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"schtasks.exe\",\"taskhostw.exe\",\"explorer.exe\",\"dllhost.exe\",\"cmstp.exe\"), 1, 0)\n| join kind=leftouter (\n    DeviceRegistryEvents\n    | where Timestamp > ago(30d)\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where strlen(RegistryValueData) > 1024\n    | where RegistryKey has_any (@\"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\\", @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Classes\\CLSID\\\", @\"HKEY_CURRENT_USER\\Software\\Classes\\CLSID\\\", @\"HKEY_CURRENT_USER\\Console\\\", @\"HKEY_CURRENT_USER\\Software\\Microsoft\\Internet Explorer\\\")\n    | summarize BlobWrites=count(), BlobKeys=make_set(RegistryKey, 10), MaxBlobLen=max(strlen(RegistryValueData)) by DeviceName\n) on DeviceName\n| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName, InitiatingProcessParentFileName, SuspiciousParent, ProcessCommandLine, BlobWrites, BlobKeys, MaxBlobLen\n| order by Timestamp desc",
+      "rationale": "Turla/Snake/Uroburos has used this exact 'big base64/encrypted blob in HKCU + tiny PowerShell decryptor + reflective .NET load' pattern across PowerStallion (ESET 2019), the Kazuar/IronPython staging chain, and the Carbon dropper. The triple-condition (registry read + crypto/base64 decode + reflective load in one PS command) is rare outside of Turla and a handful of red-team frameworks; correlatin"
+    }
+  ]
+}

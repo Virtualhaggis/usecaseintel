@@ -1,0 +1,47 @@
+{
+  "name": "Black Basta",
+  "ucs": [
+    {
+      "title": "[LLM] Black Basta (Storm-1811 / UNC4393) Quick Assist social-engineering chain \u2014 IT-impersonation vishing leading to LOLBAS download",
+      "description": "Hunts the signature Black Basta affiliate playbook publicly attributed by Microsoft to Storm-1811: email-bombing the user, calling via Teams while impersonating IT, then walking them through launching quickassist.exe so the operator can paste/run a curl/PowerShell stager that drops Qakbot/DarkGate/Pikabot, ScreenConnect, or a Cobalt Strike beacon. Pivot is parent=quickassist.exe spawning script/download interpreters or RMM installers \u2014 a chain virtually unique to Black Basta in 2024/2025 intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1566.004",
+        "T1204.004",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"quickassist.exe\" OR Processes.parent_process_name=\"QuickAssist.exe\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process_name,\"(?i)^(powershell|pwsh|cmd|curl|certutil|bitsadmin|msiexec|rundll32|regsvr32|mshta|cscript|wscript|installutil|wmic)\\.exe$\") OR match(process,\"(?i)(http(s)?://|-enc(odedcommand)?|downloadstring|iwr |invoke-webrequest|frombase64string|ScreenConnect\\.|AnyDesk|TeamViewer_Setup|NetSupport)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user parent_process_name process_name process",
+      "kql": "let qa = DeviceProcessEvents\n| where InitiatingProcessFileName =~ \"quickassist.exe\" or InitiatingProcessParentFileName =~ \"quickassist.exe\";\nqa\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"msiexec.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"installutil.exe\",\"wmic.exe\")\n   or ProcessCommandLine has_any (\"http://\",\"https://\",\"-enc\",\"-EncodedCommand\",\"DownloadString\",\"Invoke-WebRequest\",\"FromBase64String\",\"ScreenConnect\",\"AnyDesk\",\"NetSupport\",\"TeamViewer_Setup\",\"connectwisecontrol\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where RemoteUrl has_any (\"screenconnect\",\"connectwisecontrol\",\"anydesk\",\"netsupport\",\"pastebin\",\"transfer.sh\")\n    | project DeviceName, RemoteUrl, RemoteIP, NetTimestamp=Timestamp\n) on DeviceName\n| where isnull(NetTimestamp) or (NetTimestamp between (Timestamp - 10m .. Timestamp + 30m))\n| order by Timestamp desc",
+      "rationale": "Quick Assist (quickassist.exe) is rarely launched in enterprise environments and almost never spawns a download/script interpreter or RMM installer organically. Microsoft's May-2024 Storm-1811 advisory and Mandiant UNC4393 reporting both call out this exact chain (Teams vishing \u2192 Quick Assist \u2192 curl/PowerShell stager \u2192 ScreenConnect/Qakbot/DarkGate \u2192 Black Basta deployment), which differentiates i"
+    },
+    {
+      "title": "[LLM] Black Basta (UNC4393) lateral deployment \u2014 remote service install + smbexec/PsExec admin-share writes preceding mass encryption",
+      "description": "Hunts the post-CobaltStrike movement and ransomware staging stage uniquely characteristic of Black Basta operators: writing the encryptor binary to ADMIN$/C$ on multiple peers, registering it as a service via remote SCM (T1569.002), and chaining with vssadmin/wevtutil cleanup. The combination of cross-host SMB writes from a single source within minutes of new service creation referencing a freshly-dropped binary in C:\\Windows\\ or C:\\ProgramData\\ is the distinctive Black Basta detonation pattern documented by CISA AA24-131A.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1021.002",
+        "T1569.002",
+        "T1486",
+        "T1550.002",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count dc(Filesystem.dest) as victim_count values(Filesystem.dest) as victims values(Filesystem.file_name) as files values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\ADMIN$\\\\*\",\"*\\\\C$\\\\Windows\\\\*\",\"*\\\\C$\\\\ProgramData\\\\*\") AND Filesystem.file_name=\"*.exe\" by Filesystem.user Filesystem.process_guid Filesystem.src | `drop_dm_object_name(Filesystem)` | where victim_count >= 3 | join type=inner user [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name=\"PsExec*.exe\" OR Processes.process=\"*sc.exe* create *\" OR Processes.process=\"*sc.exe*\\\\\\\\*binPath*\" OR Processes.process=\"*vssadmin* delete shadows*\" OR Processes.process=\"*wevtutil* cl *\") by Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime user src victim_count victims files process_name process",
+      "kql": "let window = 30m;\nlet mass_writes = DeviceFileEvents\n| where ActionType == \"FileCreated\"\n| where FolderPath has_any (@\"\\ADMIN$\\\", @\"\\C$\\Windows\\\", @\"\\C$\\ProgramData\\\")\n| where FileName endswith \".exe\" or FileName endswith \".dll\"\n| summarize VictimCount=dcount(DeviceName), Victims=make_set(DeviceName,50), Files=make_set(FileName,20), FirstWrite=min(Timestamp), LastWrite=max(Timestamp)\n    by InitiatingProcessAccountName, InitiatingProcessSHA256, bin(Timestamp, window)\n| where VictimCount >= 3;\nlet svc_or_cleanup = DeviceProcessEvents\n| where (FileName =~ \"sc.exe\" and ProcessCommandLine has \"create\" and ProcessCommandLine has \"binPath\")\n    or (FileName in~ (\"PsExec.exe\",\"PsExec64.exe\",\"paexec.exe\",\"csexec.exe\"))\n    or (FileName =~ \"vssadmin.exe\" and ProcessCommandLine has \"delete\" and ProcessCommandLine has \"shadows\")\n    or (FileName =~ \"wevtutil.exe\" and ProcessCommandLine has \"cl\")\n    or (FileName =~ \"net.exe\" and ProcessCommandLine has_any (\"stop\",\"start\")  and ProcessCommandLine has_any (\"backup\",\"sql\",\"veeam\",\"exchange\"))\n| project SvcTime=Timestamp, DeviceName, AccountName=AccountName, FileName, ProcessCommandLine;\nmass_writes\n| join kind=inner svc_or_cleanup on $left.InitiatingProcessAccountName == $right.AccountName\n| where SvcTime between (FirstWrite - window .. LastWrite + window)\n| project FirstWrite, LastWrite, InitiatingProcessAccountName, VictimCount, Victims, Files, DeviceName, FileName, ProcessCommandLine, SvcTime\n| order by FirstWrite desc",
+      "rationale": "Black Basta / UNC4393 affiliates (post-Conti lineage) consistently stage their encryptor by pushing it to ADMIN$/C$ across multiple peers from a single beachhead account, then create remote services to run it \u2014 a sequence captured in CISA AA24-131A and Mandiant's UNC4393 profile. Tying mass cross-host SMB writes to the same actor identity that runs sc.exe create / PsExec / vssadmin / wevtutil with"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "name": "The White Company",
+  "ucs": [
+    {
+      "title": "[LLM] The White Company (Operation Shaheen) \u2014 weaponized Office lure spawning Equation Editor / LOLBin payload chain",
+      "description": "Detects the Operation Shaheen initial-access chain where a Pakistani-military-themed RTF/DOC arrives via spearphish and the Office app spawns EQNEDT32.EXE (CVE-2017-11882 / CVE-2018-0802) or LOLBins (cmd, mshta, certutil, wscript) that drop NetWire RAT or the Shaheen multi-stage loader. Tied specifically to The White Company's documented exploitation of Equation Editor against Pakistan Air Force and government targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1203",
+        "T1204.002",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"WINWORD.EXE\",\"EXCEL.EXE\",\"POWERPNT.EXE\",\"OUTLOOK.EXE\") AND (Processes.process_name IN (\"EQNEDT32.EXE\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\") OR Processes.process IN (\"*\\\\AppData\\\\*\\\\*.exe\",\"*\\\\Temp\\\\*.exe\",\"*ping -n*del*\")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats summariesonly=true values(All_Email.src_user) as sender values(All_Email.file_name) as attachment from datamodel=Email.All_Email where All_Email.file_name IN (\"*.doc\",\"*.docx\",\"*.rtf\",\"*.xls\",\"*.xlsx\") AND (All_Email.subject=\"*Pakistan*\" OR All_Email.subject=\"*PAF*\" OR All_Email.subject=\"*Shaheen*\" OR All_Email.subject=\"*MoD*\" OR All_Email.subject=\"*Inter Services*\") by All_Email.recipient | rename All_Email.recipient as dest] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let officeApps = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\"]);\nlet badChildren = dynamic([\"eqnedt32.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\"]);\nlet phishLures = EmailAttachmentInfo\n| where Timestamp > ago(7d)\n| where FileName endswith \".doc\" or FileName endswith \".docx\" or FileName endswith \".rtf\" or FileName endswith \".xls\" or FileName endswith \".xlsx\"\n| join kind=inner (EmailEvents | where Subject has_any (\"Pakistan\",\"PAF\",\"Shaheen\",\"Inter Services\",\"MoD\",\"Pak Army\",\"Joint Staff\")) on NetworkMessageId\n| project Timestamp, RecipientEmailAddress, SenderFromAddress, FileName, SHA256;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (officeApps)\n| where FileName in~ (badChildren)\n   or FolderPath has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\")\n   or ProcessCommandLine has_any (\"ping -n\", \"timeout /t\", \"choice /t\") and ProcessCommandLine has \"del \"\n| join kind=leftouter (phishLures) on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, SHA256, SenderFromAddress, FileName1\n| order by Timestamp desc",
+      "rationale": "Cylance's Operation Shaheen report documents that The White Company specifically weaponized Equation Editor (CVE-2017-11882) inside RTF lures themed around Pakistan Air Force, ISPR, and Pak Army content delivered to .gov.pk and .mil.pk targets. The OFFICE\u2192EQNEDT32 child-process pattern combined with Pakistani-themed lure subject lines is a near-unique fingerprint of this actor in 2017\u20132018; boltin"
+    },
+    {
+      "title": "[LLM] The White Company anti-analysis 'AV-aware self-surrender' loader behavior",
+      "description": "Hunts the distinctive Operation Shaheen loader behavior that enumerates a hard-coded list of AV products (Kaspersky, ESET, Quick Heal, BitDefender, Sophos, AVG, Avira, Avast), checks system time/date, and then self-deletes via a ping/timeout-then-del batch trick. The actor deliberately allowed certain AVs to detect the binary to frustrate researchers, making this combined enumeration\u2192time-check\u2192self-delete chain a high-signal fingerprint.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1518.001",
+        "T1124",
+        "T1070.004",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as proc from datamodel=Endpoint.Processes where Processes.parent_process_path IN (\"*\\\\Users\\\\*\\\\AppData\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\ProgramData\\\\*\") by Processes.dest Processes.parent_process_id Processes.parent_process_name _time span=10m | `drop_dm_object_name(Processes)` | eval av_recon=if(match(cmdline,\"(?i)(kaspersky|eset|nod32|quickheal|bitdefender|sophos|avgnt|avastsvc|avgsvc|mcshield|ekrn|avgui)\"),1,0) | eval time_check=if(match(cmdline,\"(?i)(GetSystemTime|GetLocalTime|net time|w32tm|systeminfo.*BIOS)\"),1,0) | eval self_delete=if(match(cmdline,\"(?i)(ping(\\s+-n\\s+\\d+\\s+127\\.0\\.0\\.1).*del|choice\\s+/c\\s+y.*del|timeout\\s+/t\\s+\\d+.*del)\"),1,0) | stats sum(av_recon) as av_recon sum(time_check) as time_check sum(self_delete) as self_delete values(cmdline) as commands values(proc) as processes by dest parent_process_name parent_process_id | where av_recon>=1 AND (time_check>=1 OR self_delete>=1) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let window = 10m;\nlet avTerms = dynamic([\"kaspersky\",\"avp.exe\",\"ekrn\",\"nod32\",\"egui\",\"quickheal\",\"bitdefender\",\"vsserv\",\"sophos\",\"savservice\",\"avgnt\",\"avgsvc\",\"avastsvc\",\"avastui\",\"avguard\",\"avira\",\"mcshield\"]);\nlet suspiciousParents = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\ProgramData\\\")\n| project DeviceId, DeviceName, ParentPid=InitiatingProcessId, ParentName=InitiatingProcessFileName, Timestamp, ProcessCommandLine, FileName, FolderPath;\nsuspiciousParents\n| extend AvRecon = iff(ProcessCommandLine has_any (avTerms) or FileName =~ \"tasklist.exe\" and ProcessCommandLine has_any (avTerms) or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"AntiVirusProduct\") or (FileName =~ \"reg.exe\" and ProcessCommandLine has \"SecurityCenter2\"), 1, 0)\n| extend TimeCheck = iff(ProcessCommandLine has_any (\"net time\",\"w32tm\",\"systeminfo\") or FileName =~ \"systeminfo.exe\", 1, 0)\n| extend SelfDelete = iff(ProcessCommandLine matches regex @\"(?i)ping\\s+-n\\s+\\d+\\s+127\\.0\\.0\\.1.*del\\s\" or ProcessCommandLine matches regex @\"(?i)choice\\s+/c\\s+\\w.*del\\s\" or ProcessCommandLine matches regex @\"(?i)timeout\\s+/t\\s+\\d+.*del\\s\", 1, 0)\n| summarize AvRecon=max(AvRecon), TimeCheck=max(TimeCheck), SelfDelete=max(SelfDelete), Commands=make_set(ProcessCommandLine, 25), Children=make_set(FileName, 25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, ParentPid, ParentName, bin(Timestamp, window)\n| where AvRecon == 1 and (TimeCheck == 1 or SelfDelete == 1)\n| join kind=leftouter (DeviceFileEvents | where ActionType == \"FileDeleted\" and InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\Temp\\\")) on DeviceId\n| order by LastSeen desc",
+      "rationale": "Cylance's reverse engineering of the Shaheen loader showed a deliberately unusual anti-analysis routine: enumerate a fixed set of AV products and selectively let some catch the sample, query system time, then self-delete using a ping-loopback-then-del trampoline. Most APTs do AV recon OR self-delete, but the *combination from a binary running out of AppData/Temp* within minutes is highly character"
+    }
+  ]
+}

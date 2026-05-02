@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network connections to fake-CAPTCHA SMS-pumping (IRSF) domains (Malwarebytes-tracked)
 
-`UC_10_7` · phase: **delivery** · confidence: **High**
+`UC_21_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ union net, evt
 
 ### [LLM] Browser invoking sms: URI handler with multi-recipient pre-filled body (IRSF / Click2SMS pattern)
 
-`UC_10_8` · phase: **actions** · confidence: **Medium**
+`UC_21_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

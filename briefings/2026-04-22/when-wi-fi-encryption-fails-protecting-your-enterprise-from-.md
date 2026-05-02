@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AirSnitch Wi-Fi client-isolation bypass tool execution on Linux endpoint
 
-`UC_102_6` · phase: **actions** · confidence: **High**
+`UC_103_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Drop of AirSnitch repo artefacts (modified wpa_supplicant configs) on internal host
 
-`UC_102_7` · phase: **weapon** · confidence: **Medium**
+`UC_103_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,46 @@
+{
+  "name": "Qilin",
+  "ucs": [
+    {
+      "title": "[LLM] Qilin (Agenda) GPO logon-script Chrome credential harvest",
+      "description": "Hunts Qilin's signature pre-encryption credential sweep, in which the affiliate pushes a PowerShell logon-script GPO (publicly seen as 'IPScanner.ps1' / 'logins.ps1') that copies Chrome's 'Login Data' SQLite DB and 'Local State' from every interactive user across the domain. Tied to Qilin specifically by Sophos' July/Aug-2024 incident reporting \u2014 distinct from typical ransomware infostealer behaviour because the harvester runs out of gpscript.exe/userinit.exe at logon, on every workstation, fanning out via Group Policy.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1037.001",
+        "T1555.003",
+        "T1059.001",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"gpscript.exe\",\"userinit.exe\",\"explorer.exe\",\"svchost.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"powershell_ise.exe\") AND (Processes.process=\"*Login Data*\" OR Processes.process=\"*Local State*\" OR Processes.process=\"*\\\\Google\\\\Chrome\\\\User Data*\" OR Processes.process=\"*\\\\Microsoft\\\\Edge\\\\User Data*\" OR Processes.process=\"*IPScanner*\" OR Processes.process=\"*logins.ps1*\" OR Processes.process=\"*Invoke-WebRequest*tor2web*\" OR Processes.process=\"*-enc *\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name host | `drop_dm_object_name(Processes)` | join type=left dest [| tstats summariesonly=true count as host_hits values(Processes.user) as targeted_users from datamodel=Endpoint.Processes where Processes.parent_process_name=\"gpscript.exe\" Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") by Processes.dest | `drop_dm_object_name(Processes)`] | where host_hits>=3 | sort - lastTime",
+      "kql": "let lookback = 7d;\nlet susp = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where InitiatingProcessFileName in~ (\"gpscript.exe\",\"userinit.exe\",\"explorer.exe\",\"svchost.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"powershell_ise.exe\")\n| where ProcessCommandLine has_any (\"Login Data\",\"Local State\",@\"\\Google\\Chrome\\User Data\",@\"\\Microsoft\\Edge\\User Data\",\"IPScanner\",\"logins.ps1\",\"key4.db\",\"key3.db\",\"signons.sqlite\",\"-enc \",\"-EncodedCommand\",\"FromBase64String\",\"tor2web\",\"onion\")\n| extend ChromeArtefact = ProcessCommandLine has_any (\"Login Data\",\"Local State\",@\"\\Google\\Chrome\\User Data\",@\"\\Microsoft\\Edge\\User Data\")\n| project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, ChromeArtefact;\nsusp\n| summarize Hosts=dcount(DeviceId), Users=dcount(AccountName), Sample=any(ProcessCommandLine), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by InitiatingProcessFileName\n| where Hosts >= 3 and Users >= 3\n| join kind=inner (susp | where ChromeArtefact) on InitiatingProcessFileName\n| project FirstSeen, LastSeen, Hosts, Users, Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine\n| sort by LastSeen desc",
+      "rationale": "Generic infostealers touch Chrome 'Login Data' too, but they almost never spawn from gpscript.exe/userinit.exe across many hosts simultaneously. That fan-out pattern is the Qilin tradecraft fingerprint Sophos described in the Synnovis-era cluster \u2014 affiliates abusing a domain-wide logon-script GPO to weaponise every workstation as a credential-collection node before staging Agenda's encryptor. Joi"
+    },
+    {
+      "title": "[LLM] Qilin pre-encryption boot-tamper + EDR-kill chain (safeboot + shadow wipe + Defender disable)",
+      "description": "Hunts Qilin/Agenda's documented pre-detonation playbook: bcdedit /set safeboot network, reboot into Safe Mode to bypass tamper-protected EDR, then vssadmin/wbadmin shadow wipe and wevtutil log clear before launching the Rust/Go encryptor. The combination of bcdedit safeboot + shadow deletion + Defender exclusion within a short window on the same host is far more specific to Qilin/BlackCat-lineage RaaS than to commodity wipers.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1562.001",
+        "T1529",
+        "T1070.001",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds values(Processes.process_name) as procs values(Processes.user) as user from datamodel=Endpoint.Processes where (   (Processes.process_name=\"bcdedit.exe\" AND Processes.process=\"*safeboot*\")  OR (Processes.process_name=\"bcdedit.exe\" AND Processes.process=\"*recoveryenabled*no*\")  OR (Processes.process_name=\"vssadmin.exe\" AND (Processes.process=\"*delete shadows*\" OR Processes.process=\"*resize shadowstorage*\"))  OR (Processes.process_name=\"wmic.exe\" AND Processes.process=\"*shadowcopy*delete*\")  OR (Processes.process_name=\"wbadmin.exe\" AND Processes.process=\"*delete catalog*\")  OR (Processes.process_name=\"wevtutil.exe\" AND Processes.process=\"*cl *\")  OR (Processes.process_name=\"powershell.exe\" AND (Processes.process=\"*Set-MpPreference*DisableRealtimeMonitoring*\" OR Processes.process=\"*Add-MpPreference*ExclusionPath*\" OR Processes.process=\"*Uninstall-WindowsFeature*Windows-Defender*\"))  OR (Processes.process_name=\"net.exe\" AND Processes.process=\"*stop*\" AND (Processes.process=\"*MBAMService*\" OR Processes.process=\"*SentinelAgent*\" OR Processes.process=\"*CSFalcon*\" OR Processes.process=\"*WinDefend*\"))  OR (Processes.process_name=\"shutdown.exe\" AND Processes.process=\"*/r*\")) by Processes.dest Processes.user host | `drop_dm_object_name(Processes)` | eval action=case(  match(cmds,\"safeboot\"),\"safeboot\",  match(cmds,\"shadow|shadowcopy|delete catalog\"),\"shadow_wipe\",  match(cmds,\"DisableRealtime|ExclusionPath|Windows-Defender|SentinelAgent|CSFalcon|MBAMService|WinDefend\"),\"edr_kill\",  match(cmds,\"wevtutil\"),\"log_clear\",  match(cmds,\"shutdown\"),\"reboot\") | stats dc(action) as action_variety values(action) as actions values(cmds) as all_cmds min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where action_variety>=3 AND (lastTime-firstTime) < 3600 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let win = 1h;\nlet evts = DeviceProcessEvents\n| where Timestamp > ago(2d)\n| extend cmd = tolower(ProcessCommandLine)\n| extend bucket = case(\n    FileName =~ \"bcdedit.exe\" and (cmd has \"safeboot\" or cmd has \"recoveryenabled no\"), \"safeboot\",\n    (FileName =~ \"vssadmin.exe\" and cmd has_any (\"delete shadows\",\"resize shadowstorage\"))\n      or (FileName =~ \"wmic.exe\" and cmd has \"shadowcopy\" and cmd has \"delete\")\n      or (FileName =~ \"wbadmin.exe\" and cmd has \"delete catalog\"), \"shadow_wipe\",\n    FileName =~ \"wevtutil.exe\" and cmd has \" cl \", \"log_clear\",\n    FileName =~ \"powershell.exe\" and cmd has_any (\"set-mppreference\",\"add-mppreference\",\"disablerealtimemonitoring\",\"exclusionpath\",\"uninstall-windowsfeature\"), \"defender_off\",\n    FileName =~ \"net.exe\" and cmd has \"stop\" and cmd has_any (\"sentinelagent\",\"csfalcon\",\"mbamservice\",\"windefend\",\"sense\",\"sophos\"), \"edr_stop\",\n    FileName =~ \"shutdown.exe\" and cmd has \"/r\", \"reboot\",\n    \"\")\n| where bucket != \"\";\nevts\n| summarize Buckets=make_set(bucket), Cmds=make_set(ProcessCommandLine,50), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Actor=any(InitiatingProcessAccountName) by DeviceId, DeviceName\n| extend Variety = array_length(Buckets), Window = (LastSeen - FirstSeen)\n| where Variety >= 3 and Window <= win\n| extend Qilin_Score = iff(Buckets has \"safeboot\" and Buckets has \"shadow_wipe\", \"HIGH\", \"MEDIUM\")\n| sort by LastSeen desc",
+      "rationale": "Most ransomware crews delete shadow copies, but the bcdedit safeboot pivot to bypass tamper-protected EDR is a hallmark of Qilin/Agenda (and BlackCat-derived affiliates that overlap with Qilin's affiliate pool) reported by Trend Micro and Group-IB. Requiring 3+ distinct buckets within a 1-hour window on a single host filters out admin housekeeping (one-off shadow resize, one-off Defender exclusion"
+    }
+  ]
+}

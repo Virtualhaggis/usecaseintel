@@ -1,0 +1,46 @@
+{
+  "name": "SilverTerrier",
+  "ucs": [
+    {
+      "title": "[LLM] SilverTerrier commodity infostealer SMTP/FTP credential exfil (Agent Tesla / LokiBot / Pony)",
+      "description": "Hunts the signature SilverTerrier C2 pattern: a non-mail-client process running from a user-writable path beaconing over SMTP(S)/FTP to exfiltrate stolen credentials. SilverTerrier's BEC operations rely heavily on Agent Tesla, LokiBot, AzoRult, Pony and PredatorPain, all of which embed an attacker SMTP/FTP credential and POST harvested logins directly to mailboxes the actor controls.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.002",
+        "T1071.003",
+        "T1048.003",
+        "T1555"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest_ips values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (25,465,587,21) AND All_Traffic.app!=\"unknown\" by All_Traffic.src All_Traffic.app All_Traffic.process_name host\n| `drop_dm_object_name(\"All_Traffic\")`\n| search NOT app IN (\"outlook.exe\",\"thunderbird.exe\",\"mailbird.exe\",\"hMailServer.exe\",\"smtp.exe\",\"postfix*\",\"sendmail*\",\"exchange*\")\n| join type=inner src process_name [\n    | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_path=\"*\\\\AppData\\\\Roaming\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\") by Processes.dest Processes.process_name Processes.parent_process_name Processes.process_path\n    | rename Processes.dest as src Processes.process_name as process_name Processes.parent_process_name as parent Processes.process_path as image_path\n]\n| where count >= 3\n| eval risk_reason=\"non-mail process performing SMTP/FTP from user-writable path - SilverTerrier infostealer pattern\"\n| table firstTime lastTime host src process_name image_path parent ports dest_ips count risk_reason\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let mailParents = dynamic([\"outlook.exe\",\"thunderbird.exe\",\"mailbird.exe\",\"hMailServer.exe\",\"em_client.exe\"]);\nlet userWritable = dynamic([@\"\\appdata\\roaming\\\", @\"\\appdata\\local\\temp\\\", @\"\\programdata\\\", @\"\\users\\public\\\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemotePort in (25, 465, 587, 21, 20)\n| where InitiatingProcessFileName !in~ (mailParents)\n| extend ImgLower = tolower(InitiatingProcessFolderPath)\n| where ImgLower has_any (userWritable)\n| summarize Connections=count(), DistinctRemotes=dcount(RemoteIP), Remotes=make_set(RemoteIP,25), Ports=make_set(RemotePort,5), FirstSeen=min(Timestamp), LastSeen=max(Timestamp)\n  by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessParentFileName, InitiatingProcessSHA256\n| where Connections >= 3\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\")\n    | project DeviceName, ChildSHA=SHA256, ChildName=FileName, OfficeParent=InitiatingProcessFileName\n  ) on $left.InitiatingProcessSHA256 == $right.ChildSHA, DeviceName\n| extend Verdict = iff(isnotempty(OfficeParent), \"HIGH - Office/Script lineage + SMTP exfil\", \"MEDIUM - non-mail SMTP/FTP from user path\")\n| project FirstSeen, LastSeen, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessParentFileName, OfficeParent, Ports, Remotes, Connections, Verdict, InitiatingProcessSHA256",
+      "rationale": "Unit 42's multi-year SilverTerrier reporting documents that >90% of their malware families (Agent Tesla, LokiBot, AzoRult, Pony, PredatorPain, ISRStealer, NanoCore, NetWire) exfiltrate to attacker-controlled mailboxes over SMTP/465/587 or FTP \u2014 a tradecraft choice tied to Nigerian BEC monetization rather than nation-state staged C2. Legitimate enterprise endpoints rarely have non-Outlook binaries "
+    },
+    {
+      "title": "[LLM] SilverTerrier phishing chain: Office spawns scripting host that drops & runs binary from %AppData%",
+      "description": "Catches SilverTerrier's classic delivery-to-install pivot: a weaponized invoice/PO/shipping document (often .doc, .xls, .iso, or .img) opened by the victim spawns wscript/cscript/mshta/powershell, which then writes and launches a PE under the user's profile. This 3-hop chain (Office \u2192 script host \u2192 user-path PE) is the consistent precursor to their Agent Tesla/LokiBot deployments tracked by Unit 42.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1059.005",
+        "T1059.001",
+        "T1204.002",
+        "T1657"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") AND Processes.process_name IN (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_id Processes.process\n| `drop_dm_object_name(\"Processes\")`\n| rename process_id as script_pid process_name as script_host\n| join type=inner dest script_pid [\n    | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_path=\"*\\\\AppData\\\\Roaming\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\") AND Processes.process_name IN (\"*.exe\",\"*.scr\",\"*.pif\") by Processes.dest Processes.parent_process_id Processes.process_name Processes.process_path Processes.process_hash\n    | rename Processes.parent_process_id as script_pid Processes.process_name as dropped_bin Processes.process_path as dropped_path Processes.process_hash as dropped_hash Processes.dest as dest\n]\n| eval kill_chain=\"OfficeApp -> \".script_host.\" -> \".dropped_bin\n| table firstTime lastTime dest user parent_process_name script_host script_pid dropped_bin dropped_path dropped_hash kill_chain\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let officeApps = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"acrord32.exe\"]);\nlet scriptHosts = dynamic([\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\"]);\nlet userPaths = dynamic([@\"\\appdata\\roaming\\\", @\"\\appdata\\local\\temp\\\", @\"\\users\\public\\\", @\"\\programdata\\\"]);\nlet scriptStage =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (officeApps)\n    | where FileName in~ (scriptHosts)\n    | project ScriptTime=Timestamp, DeviceId, DeviceName, OfficeParent=InitiatingProcessFileName, ScriptHost=FileName, ScriptPid=ProcessId, ScriptCmd=ProcessCommandLine, AccountName;\nlet dropStage =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName endswith \".exe\" or FileName endswith \".scr\" or FileName endswith \".pif\"\n    | extend ImgLower = tolower(FolderPath)\n    | where ImgLower has_any (userPaths)\n    | project DropTime=Timestamp, DeviceId, DroppedBin=FileName, DroppedPath=FolderPath, DroppedSHA=SHA256, DropParentPid=InitiatingProcessId, DropParentName=InitiatingProcessFileName;\nscriptStage\n| join kind=inner (dropStage) on DeviceId\n| where DropParentPid == ScriptPid\n| where DropTime between (ScriptTime .. ScriptTime + 10m)\n| extend Chain = strcat(OfficeParent, \" -> \", ScriptHost, \" -> \", DroppedBin)\n| project ScriptTime, DropTime, DeviceName, AccountName, Chain, OfficeParent, ScriptHost, ScriptCmd, DroppedBin, DroppedPath, DroppedSHA\n| join kind=leftouter (\n    EmailAttachmentInfo\n    | where Timestamp > ago(7d)\n    | project EmailTime=Timestamp, NetworkMessageId, AttachmentSHA=SHA256, FileName, SenderFromAddress\n  ) on $left.DroppedSHA == $right.AttachmentSHA\n| extend Severity = iff(isnotempty(SenderFromAddress), \"CRITICAL - dropped binary matches inbound email attachment\", \"HIGH - Office->Script->User-path PE chain\")\n| order by ScriptTime desc",
+      "rationale": "SilverTerrier (G0083) is a Nigerian BEC/419-evolved cluster whose entire economic model depends on commodity-RAT delivery via invoice/shipping/PO themed phishing \u2014 not on living-off-the-land or zero-days. Unit 42 sample analyses repeatedly show the same 3-stage local execution graph: Office \u2192 script interpreter \u2192 user-writable PE within seconds. Joining the dropped-binary SHA256 back to EmailAttac"
+    }
+  ]
+}

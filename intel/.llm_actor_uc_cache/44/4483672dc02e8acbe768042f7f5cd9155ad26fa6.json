@@ -1,0 +1,46 @@
+{
+  "name": "Cyber Av3ngers",
+  "ucs": [
+    {
+      "title": "[LLM] Cyber Av3ngers (IRGC-CEC) \u2014 Unitronics Vision PLC PCOM exposure & default-credential abuse on TCP/20256",
+      "description": "Hunts inbound or unsanctioned connections to Unitronics Vision/Samba series PLC programming port (TCP/20256, PCOM protocol). This is the signature initial-access vector of Cyber Av3ngers (CISA AA23-335A): they scan the internet for Israeli-made Unitronics PLCs reachable from the public internet, log in with vendor default password '1111', and overwrite HMI logic/screens with their 'Down with Israel' defacement.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T0883",
+        "T0886",
+        "T0836",
+        "T1133",
+        "T1190"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.action) as action values(All_Traffic.bytes_in) as bytes_in values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=20256 OR All_Traffic.src_port=20256 by All_Traffic.src All_Traffic.src_category All_Traffic.dest All_Traffic.dest_category All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | eval is_external_src=if(cidrmatch(\"10.0.0.0/8\",src) OR cidrmatch(\"172.16.0.0/12\",src) OR cidrmatch(\"192.168.0.0/16\",src),0,1) | eval is_engineering_app=if(match(app,\"(?i)unilogic|visilogic|remote.?operator|pcom\"),1,0) | where is_external_src=1 OR is_engineering_app=0 | eval threat_actor=\"Cyber Av3ngers / IRGC-CEC\", note=\"TCP/20256 = Unitronics PCOM. Validate against engineering jump-host allowlist; investigate any external src.\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - count",
+      "kql": "let UnitronicsPort = 20256;\nlet EngineeringTools = dynamic([\"unilogic.exe\",\"visilogic.exe\",\"remoteoperator.exe\",\"u90ladder.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where RemotePort == UnitronicsPort or LocalPort == UnitronicsPort\n| where ActionType in (\"ConnectionSuccess\",\"InboundConnectionAccepted\",\"ConnectionAttempt\",\"ConnectionFailed\")\n| extend RemoteIsPublic = not(ipv4_is_private(RemoteIP))\n| extend ToolUsed = tolower(InitiatingProcessFileName)\n| extend IsSanctionedTool = ToolUsed in (EngineeringTools)\n| where RemoteIsPublic == true or IsSanctionedTool == false\n| summarize ConnAttempts=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Apps=make_set(InitiatingProcessFileName,10), Cmds=make_set(InitiatingProcessCommandLine,5) by DeviceName, LocalIP, RemoteIP, RemotePort, ActionType, RemoteIsPublic\n| extend ThreatActor=\"Cyber Av3ngers (IRGC-CEC, Iran)\", Reference=\"CISA AA23-335A\", Signature=\"Unitronics PCOM exposure / default-cred abuse\"\n| order by ConnAttempts desc",
+      "rationale": "Port 20256 is the Unitronics PCOM (Programming Communication) port \u2014 there is essentially zero legitimate reason for it to traverse the IT corporate boundary or be reached from arbitrary endpoints. Cyber Av3ngers' November-2023 Aliquippa/PA water-authority and follow-on campaigns are uniquely defined by mass-scanning this port and using vendor default password '1111'. A generic 'expose-public-PLC'"
+    },
+    {
+      "title": "[LLM] Cyber Av3ngers \u2014 engineering-workstation pivot: VisiLogic/UniLogic spawning PowerShell or downloading PLC project payloads",
+      "description": "Hunts the IT\u2192OT pivot stage where Cyber Av3ngers compromises an engineering workstation (via T1566 phishing or T1190 exposed VPN/Fortinet) and then abuses the legitimate Unitronics IDE binaries to push tampered ladder logic or HMI defacement images to PLCs. Detects anomalous child processes / network egress from VisiLogic/UniLogic that indicate hijacked engineering tooling rather than normal commissioning.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T0836",
+        "T1059.001",
+        "T1218",
+        "T1133"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"VisiLogic.exe\",\"UniLogic.exe\",\"RemoteOperator.exe\",\"U90Ladder.exe\")) AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_id | `drop_dm_object_name(Processes)` | eval threat_actor=\"Cyber Av3ngers / IRGC-CEC\", stage=\"Engineering workstation hijack -> PLC tampering pivot\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let EngineeringIDEs = dynamic([\"visilogic.exe\",\"unilogic.exe\",\"remoteoperator.exe\",\"u90ladder.exe\"]);\nlet LolBins = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"msiexec.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where tolower(InitiatingProcessFileName) in (EngineeringIDEs)\n| where tolower(FileName) in (LolBins)\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessId\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(14d)\n    | where tolower(InitiatingProcessFileName) in (EngineeringIDEs)\n    | where not(ipv4_is_private(RemoteIP))\n    | summarize ExternalDest=make_set(strcat(RemoteIP,\":\",tostring(RemotePort)),20) by DeviceName\n) on DeviceName\n| extend ThreatActor=\"Cyber Av3ngers (IRGC-CEC)\", Reference=\"CISA AA23-335A; Microsoft Storm-0784 / Pink Sandstorm overlap\", Signature=\"Hijacked Unitronics IDE spawning LOLBin or beaconing externally\"\n| order by Timestamp desc",
+      "rationale": "Cyber Av3ngers does not write novel malware \u2014 they weaponize the legitimate vendor IDE (VisiLogic/UniLogic) to push ladder-logic/HMI changes after gaining footholds via Iranian-pattern phishing (T1566) or exposed remote services (T1133). Generic 'Office spawning PowerShell' rules miss this entirely; pivoting on `VisiLogic.exe`/`UniLogic.exe` as the parent of LOLBins (or their unexpected outbound t"
+    }
+  ]
+}

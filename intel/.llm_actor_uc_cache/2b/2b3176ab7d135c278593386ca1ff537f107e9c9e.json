@@ -1,0 +1,46 @@
+{
+  "name": "FIN7",
+  "ucs": [
+    {
+      "title": "[LLM] FIN7 (Sangria Tempest / Carbon Spider) POWERTRASH loader: obfuscated PowerShell spawned from mshta/wscript/Office",
+      "description": "Hunts FIN7's signature in-memory PowerShell loader chain (POWERTRASH / POWERPLANT / GRIFFON) where mshta.exe, wscript.exe, cscript.exe, or an Office host launches heavily obfuscated PowerShell with base64/IEX cradles. This is the documented post-spearphish (T1566.001/002) execution pattern for Carbanak-lineage intrusions and is consistently reused across FIN7's BlackCat/ALPHV ransomware operations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.005",
+        "T1059.001",
+        "T1059.005",
+        "T1027.010",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"hh.exe\") AND Processes.process_name=\"powershell.exe\" by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval cmd_len=len(cmdline) | eval susp_flag=if(match(cmdline,\"(?i)(-nop|-noprofile|-w(in)?\\s+hidden|-windowstyle\\s+hidden|-enc(odedcommand)?|FromBase64String|IEX|Invoke-Expression|DownloadString|DownloadData|\\[char\\]|-join|-split|`[a-z]|\\$\\{)\"),1,0) | where susp_flag=1 OR cmd_len>800 | `security_content_ctime(firstTime)` | table firstTime host user parent_process_name parent_cmd cmdline cmd_len pid",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName =~ \"powershell.exe\"\n| where InitiatingProcessFileName in~ (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"hh.exe\")\n| extend cmdLen = strlen(ProcessCommandLine)\n| where ProcessCommandLine has_any (\"-nop\",\"-noprofile\",\"-w hidden\",\"-windowstyle hidden\",\"-enc\",\"-encodedcommand\",\"FromBase64String\",\"IEX\",\"Invoke-Expression\",\"DownloadString\",\"DownloadData\")\n   or ProcessCommandLine matches regex @\"(?i)(\\$\\{[^}]+\\}|`[a-z]|\\[char\\]|-join|-split|-replace\\s)\"\n   or cmdLen > 800\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, cmdLen, SHA256, ReportId\n| order by Timestamp desc",
+      "rationale": "FIN7's loader family (POWERTRASH, POWERPLANT, GRIFFON, BIRDWATCH, BOOSTWRITE) is delivered via .lnk/.iso/.js droppers that consistently invoke mshta or Windows Script Host to chain into obfuscated PowerShell \u2014 Mandiant, Microsoft (Sangria Tempest), and CrowdStrike (Carbon Spider) all flag this exact parent\u2192child relationship as a Carbon Spider hallmark. Generic Office\u2192PowerShell rules miss the msh"
+    },
+    {
+      "title": "[LLM] FIN7 BadUSB / 'badusb' HID drop: explorer-spawned scripting host from removable media",
+      "description": "Hunts the FBI-flagged FIN7 mail-in USB campaign (Aug 2022, ongoing through ALPHV operations) where a USB device \u2014 either a LNK on a thumb drive or a HID-emulating BadUSB \u2014 causes explorer.exe to spawn cmd/powershell/rundll32 referencing a non-system drive letter. Used by FIN7 to bypass email gateways entirely against retail, hospitality, defense, and transport targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "medium",
+      "techs": [
+        "T1091",
+        "T1204.002",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.parent_process_name=\"explorer.exe\" AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=cmdline \"(?i)(?<drv>[d-z]:\\\\\\\\[^\\\"\\s]+\\.(lnk|bat|cmd|js|vbs|ps1|hta))\" | where isnotnull(drv) OR match(cmdline,\"(?i)([d-z]:\\\\\\\\.+\\.(lnk|bat|cmd|js|vbs|ps1|hta)|powershell.+(IEX|DownloadString|-enc))\") | `security_content_ctime(firstTime)` | table firstTime host user process_name parent_process_name cmdline drv",
+      "kql": "let removableDriveProcs =\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"explorer.exe\"\n    | where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\")\n    | where ProcessCommandLine matches regex @\"(?i)[d-z]:\\\\[^\\\"\\s]+\\.(lnk|bat|cmd|js|vbs|ps1|hta)\"\n       or ProcessCommandLine has_any (\"IEX\",\"DownloadString\",\"-enc\",\"FromBase64String\",\"Invoke-WebRequest\")\n    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, ReportId;\nlet removableLnkDrops =\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\")\n    | where FileName endswith \".lnk\" or FileName endswith \".bat\" or FileName endswith \".ps1\"\n    | where FolderPath matches regex @\"^[D-Z]:\\\\\"\n    | project DropTime=Timestamp, DeviceId, LnkPath=FolderPath, LnkFile=FileName;\nremovableDriveProcs\n| join kind=leftouter removableLnkDrops on DeviceId\n| where isnull(DropTime) or (Timestamp between ((DropTime - 1h) .. (DropTime + 24h)))\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, LnkPath, LnkFile\n| order by Timestamp desc",
+      "rationale": "The FBI's Aug-2022 FLASH alert and Mandiant's tracking of FIN7 (UNC3753) specifically call out mailed BadUSB / LilyGO devices to US defense, transport, and insurance targets that bridge directly into Diceloader/POWERTRASH and BlackCat ransomware. Generic 'process from USB' detections drown in legitimate IT activity; pinning on explorer.exe parent + script interpreter child + removable-drive path +"
+    }
+  ]
+}

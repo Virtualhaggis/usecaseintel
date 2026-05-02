@@ -1,0 +1,48 @@
+{
+  "name": "Akira",
+  "ucs": [
+    {
+      "title": "[LLM] Akira (PUNK SPIDER / Howling Scorpius) VPN-to-RDP pivot via Cisco/SonicWall single-factor access",
+      "description": "Hunts Akira's signature initial-access pattern: authentication to a Cisco ASA/AnyConnect or SonicWall SSL VPN appliance using stolen credentials on an account lacking MFA, followed within hours by interactive RDP to internal hosts from the same identity. CISA AA24-109A and Sophos/Arctic Wolf IR data both call this out as the dominant Akira foothold (CVE-2023-20269 brute-force / no-MFA local users on Cisco ASA, and SonicWall SSLVPN cred abuse).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1133",
+        "T1078.004",
+        "T1078",
+        "T1021.001",
+        "T1021.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as vpn_time from datamodel=Authentication where (Authentication.app IN (\"cisco:asa\",\"cisco_anyconnect\",\"sonicwall_sslvpn\",\"sonicwall\",\"ciscoasa\") OR Authentication.signature_id IN (\"%ASA-6-113019%\",\"%ASA-6-716002%\",\"%ASA-6-302013%\")) AND Authentication.action=success by Authentication.user Authentication.src_ip Authentication.dest | `drop_dm_object_name(Authentication)` | rename src_ip as vpn_src_ip, dest as vpn_concentrator | eval vpn_user=lower(user) \n| join type=inner vpn_user [ | tstats summariesonly=t count min(_time) as rdp_time values(All_Traffic.dest) as rdp_targets dc(All_Traffic.dest) as rdp_target_count from datamodel=Network_Traffic where All_Traffic.dest_port=3389 AND All_Traffic.action=allowed by All_Traffic.user All_Traffic.src | `drop_dm_object_name(All_Traffic)` | eval vpn_user=lower(user) | rename src as rdp_src ] \n| eval delta_min=round((rdp_time-vpn_time)/60,1) \n| where delta_min>=0 AND delta_min<=240 AND rdp_target_count>=2 \n| table vpn_time rdp_time delta_min vpn_user vpn_src_ip vpn_concentrator rdp_src rdp_targets rdp_target_count",
+      "kql": "let suspectVpn = AADSignInEventsBeta\n| where Timestamp > ago(7d)\n| where AppDisplayName has_any (\"Cisco AnyConnect\",\"SonicWall\",\"GlobalProtect\",\"Citrix Gateway\") or ResourceDisplayName has_any (\"VPN\",\"AnyConnect\")\n| where ErrorCode == 0\n| where MfaDetail == \"\" or AuthenticationRequirement == \"singleFactorAuthentication\" or ConditionalAccessStatus == \"notApplied\"\n| project VpnTime=Timestamp, Account=tolower(AccountUpn), VpnSrcIp=IPAddress, VpnApp=AppDisplayName;\nlet rdpHops = IdentityLogonEvents\n| where Timestamp > ago(7d)\n| where LogonType == \"RemoteInteractive\" or Protocol =~ \"Rdp\"\n| project RdpTime=Timestamp, Account=tolower(AccountName), DeviceName, RdpSrcIp=IPAddress;\nsuspectVpn\n| join kind=inner rdpHops on Account\n| extend DeltaMin = datetime_diff('minute', RdpTime, VpnTime)\n| where DeltaMin between (0 .. 240)\n| summarize FirstVpn=min(VpnTime), FirstRdp=min(RdpTime), RdpTargets=make_set(DeviceName,25), TargetCount=dcount(DeviceName), VpnSrcs=make_set(VpnSrcIp,5) by Account, VpnApp\n| where TargetCount >= 2\n| order by FirstRdp desc",
+      "rationale": "Akira does not use bespoke malware loaders for initial access \u2014 the IR signature in nearly every published Akira intrusion (Sophos X-Ops, Arctic Wolf, CISA AA24-109A, Mandiant) is exactly: stolen creds against an internet-facing SSL VPN where the breached account had no MFA, then human-operated RDP fan-out within the first few hours. A generic 'unusual VPN logon' alert misses the actor; chaining V"
+    },
+    {
+      "title": "[LLM] Akira pre-encryption staging chain: PowerShell/WMI shadow-copy wipe + RustDesk/AnyDesk drop + rclone exfil",
+      "description": "Hunts the tightly-coupled tooling sequence Akira operators run on a beachhead/file-server in the 24-48h before detonation: PowerShell-based VSS removal via Get-WmiObject Win32_Shadowcopy | Remove-WmiObject, sideloaded RustDesk or AnyDesk for hands-on-keyboard, and rclone/WinSCP exfil to MEGA or a Tor-fronted host. This combination on one device is near-pathognomonic for Akira/Megazord (GOLD SAHARA).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1059.001",
+        "T1047",
+        "T1219",
+        "T1567.002",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"powershell.exe\" OR Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"wmic.exe\",\"vssadmin.exe\")) AND ( (Processes.process=\"*Win32_Shadowcopy*\" AND Processes.process=\"*Remove-WmiObject*\") OR Processes.process=\"*Get-WmiObject Win32_Shadowcopy*\" OR Processes.process=\"*shadowcopy delete*\" OR Processes.process=\"*delete shadows /all /quiet*\") by Processes.dest Processes.user _time \n| `drop_dm_object_name(Processes)` | bin _time span=1d \n| join type=inner dest [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name IN (\"rustdesk.exe\",\"AnyDesk.exe\",\"rclone.exe\",\"WinSCP.exe\",\"PCHunter64.exe\",\"PCHunter32.exe\",\"masscan.exe\",\"advanced_ip_scanner.exe\") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | stats values(process_name) as akira_tools dc(process_name) as tool_count by dest | where tool_count>=2 ] \n| join type=outer dest [ | tstats summariesonly=t count from datamodel=Network_Traffic where (All_Traffic.dest_category=\"mega_nz\" OR All_Traffic.dest IN (\"*.mega.nz\",\"*.mega.io\") OR All_Traffic.app=\"rclone\") by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as dest | eval mega_seen=1 ] \n| table firstTime lastTime dest user cmds akira_tools tool_count mega_seen",
+      "kql": "let lookback = 2d;\nlet vssWipe = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where (FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"wmic.exe\",\"vssadmin.exe\"))\n  and ( (ProcessCommandLine has \"Win32_Shadowcopy\" and ProcessCommandLine has \"Remove-WmiObject\")\n     or ProcessCommandLine has \"Get-WmiObject Win32_Shadowcopy\"\n     or ProcessCommandLine has_all (\"shadows\",\"delete\")\n     or ProcessCommandLine has \"shadowcopy delete\")\n| project VssTime=Timestamp, DeviceId, DeviceName, VssCmd=ProcessCommandLine, VssUser=AccountName;\nlet akiraTools = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName in~ (\"rustdesk.exe\",\"anydesk.exe\",\"rclone.exe\",\"winscp.exe\",\"winscp.com\",\"pchunter64.exe\",\"pchunter32.exe\",\"masscan.exe\",\"advanced_ip_scanner.exe\",\"netscan.exe\",\"zemana.sys\")\n  or ProcessCommandLine has_any (\"rclone copy\",\"--config rclone.conf\",\"mega:\",\"--transfers \")\n| summarize ToolFirst=min(Timestamp), Tools=make_set(FileName,15), ToolCount=dcount(FileName) by DeviceId, DeviceName\n| where ToolCount >= 2 or Tools has_any (\"rclone.exe\",\"rustdesk.exe\");\nlet exfilNet = DeviceNetworkEvents\n| where Timestamp > ago(lookback)\n| where RemoteUrl has_any (\"mega.nz\",\"mega.io\",\"mega.co.nz\") or RemoteIPType == \"Public\" and InitiatingProcessFileName in~ (\"rclone.exe\",\"winscp.exe\")\n| summarize ExfilTime=min(Timestamp), ExfilDest=make_set(RemoteUrl,10) by DeviceId;\nvssWipe\n| join kind=inner akiraTools on DeviceId\n| join kind=leftouter exfilNet on DeviceId\n| project VssTime, DeviceName, VssUser, VssCmd, ToolFirst, Tools, ExfilTime, ExfilDest\n| order by VssTime asc",
+      "rationale": "Akira's playbook is unusually consistent across cases (Sophos X-Ops 'Crying Out Cloud', Arctic Wolf Labs Megazord report, CISA #StopRansomware: Akira). Operators specifically prefer the PowerShell+WMI shadow-copy removal one-liner (not vssadmin alone), pair it with RustDesk or AnyDesk for persistence even after IR begins, and stage exfil with rclone to MEGA. Each individual TTP is noisy alone; req"
+    }
+  ]
+}

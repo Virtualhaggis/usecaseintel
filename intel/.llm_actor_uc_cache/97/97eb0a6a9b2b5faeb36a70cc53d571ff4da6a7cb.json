@@ -1,0 +1,42 @@
+{
+  "name": "Strider",
+  "ucs": [
+    {
+      "title": "[LLM] Strider/ProjectSauron credential theft via malicious LSA Password Filter DLL registration",
+      "description": "Hunts for the registration of a non-default DLL in the LSA 'Notification Packages' registry value, the hallmark persistence + credential-harvesting technique used by Strider's Remsec/Sauron implant to steal plaintext domain credentials at password-change time on DCs and key servers.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1556.002",
+        "T1547.008"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Control\\\\Lsa*\" AND Registry.registry_value_name=\"Notification Packages\" AND (Registry.action=modified OR Registry.action=created) by Registry.dest Registry.user Registry.registry_value_data Registry.process_name Registry.process_id host\n| `drop_dm_object_name(Registry)`\n| eval pkgs=lower(replace(registry_value_data,\"\\\\\\\\0\",\",\"))\n| eval pkgs=replace(pkgs,\"\\s+\",\",\")\n| eval pkg_list=split(pkgs,\",\")\n| mvexpand pkg_list\n| where pkg_list!=\"\" AND NOT match(pkg_list,\"^(scecli|rassfm|kdcsvc|wdigest)$\")\n| stats values(pkg_list) as suspicious_packages values(process_name) as registering_process values(user) as user min(firstTime) as firstTime max(lastTime) as lastTime by dest registry_value_data\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| join type=left dest [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" Filesystem.file_path=\"*\\\\System32\\\\*\" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_create_time | `drop_dm_object_name(Filesystem)` | rename file_name as suspicious_packages]\n| where firstTime > relative_time(now(),\"-7d@d\")",
+      "kql": "let DefaultPackages = dynamic([\"scecli\",\"rassfm\",\"kdcsvc\",\"wdigest\",\"\"]);\nlet RegHits =\nDeviceRegistryEvents\n| where Timestamp > ago(30d)\n| where RegistryKey has @\"\\Control\\Lsa\"\n| where RegistryValueName =~ \"Notification Packages\"\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| extend RawData = tostring(RegistryValueData)\n| extend PackagesNorm = tolower(replace_string(replace_string(RawData,\"\\0\",\",\"),\" \",\",\"))\n| mv-expand pkg = split(PackagesNorm,\",\") to typeof(string)\n| where isnotempty(pkg) and pkg !in~ (DefaultPackages)\n| project Timestamp, DeviceId, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, SuspiciousPackage = pkg, RawData, ReportId;\nlet DllLoads =\nDeviceImageLoadEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"lsass.exe\"\n| where FileName endswith \".dll\"\n| where FolderPath !startswith @\"C:\\Windows\\System32\\\"\n     and FolderPath !startswith @\"C:\\Windows\\WinSxS\\\"\n     and FolderPath !startswith @\"C:\\Windows\\SystemResources\\\"\n| project lsassLoadTime = Timestamp, DeviceId, LoadedDll = FileName, LoadedPath = FolderPath, SHA256;\nRegHits\n| join kind=leftouter (DllLoads) on DeviceId\n| where isnotempty(LoadedDll) or SuspiciousPackage matches regex @\"^[a-z0-9]{4,16}$\"\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, SuspiciousPackage, LoadedDll, LoadedPath, SHA256, RawData",
+      "rationale": "Strider/ProjectSauron (Symantec: Strider; Kaspersky: ProjectSauron) is one of the only well-documented APTs to operationalize Password Filter DLLs in the wild on domain controllers (e.g. modules tied to Remsec). Legit additions to 'Notification Packages' beyond scecli/rassfm/kdcsvc are extremely rare in production AD, so any non-default value written here is high signal. Joining the registry write"
+    },
+    {
+      "title": "[LLM] Strider Remsec air-gap bridging: hidden VFS staging on removable media + internal proxy beacon",
+      "description": "Hunts for Strider's documented air-gap jumping pattern \u2014 staging payloads/exfil in a hidden encrypted virtual file system on USB media, paired with internal-network proxy relays used to tunnel C2 from isolated subnets through a connected pivot host.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1564.005",
+        "T1090.001",
+        "T1052.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (\"*\\\\$RECYCLE.BIN\\\\*\",\"*\\\\System Volume Information\\\\*\",\"*:\\\\.*\") AND (Filesystem.file_name=\"*.dat\" OR Filesystem.file_name=\"*.bin\" OR Filesystem.file_name=\"*.tmp\") AND Filesystem.file_size>1048576 by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user host\n| `drop_dm_object_name(Filesystem)`\n| search file_path=\"[D-Z]:\\\\*\"\n| join type=inner dest [| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16) AND All_Traffic.dest_port IN (80,443,53,8080) AND All_Traffic.app!=\"known-good\" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.bytes_out All_Traffic.bytes_in | `drop_dm_object_name(All_Traffic)` | stats sum(bytes_out) as bytes_out sum(bytes_in) as bytes_in dc(dest) as internal_dest_count by src | where internal_dest_count>=3 AND bytes_out>5000000 | rename src as dest]\n| table firstTime dest user file_path file_name internal_dest_count bytes_out bytes_in\n| `security_content_ctime(firstTime)`",
+      "kql": "let SuspectMedia =\nDeviceFileEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"FileCreated\",\"FileModified\")\n| where FolderPath matches regex @\"^[D-Z]:\\\\\"\n| where FolderPath has_any (@\"$RECYCLE.BIN\", @\"System Volume Information\") or FileName startswith \".\"\n| where FileSize > 1048576\n| where FileName endswith \".dat\" or FileName endswith \".bin\" or FileName endswith \".tmp\" or FileName matches regex @\"^[a-f0-9]{8,}\\.\"\n| project mediaTime = Timestamp, DeviceId, DeviceName, FolderPath, FileName, FileSize, InitiatingProcessFileName, InitiatingProcessAccountName;\nlet InternalRelay =\nDeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ConnectionSuccess\"\n| where RemoteIPType == \"Private\"\n| where RemotePort in (80, 443, 53, 8080, 4444)\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"outlook.exe\",\"teams.exe\",\"onedrive.exe\",\"svchost.exe\")\n| summarize relayPeers = dcount(RemoteIP), conns = count(), totalBytes = sum(toint(coalesce(tostring(InitiatingProcessFileSize),\"0\"))) by DeviceId, InitiatingProcessFileName, InitiatingProcessSHA256, bin(Timestamp,1h)\n| where relayPeers >= 3 and conns >= 20;\nSuspectMedia\n| join kind=inner (InternalRelay) on DeviceId\n| where mediaTime between (Timestamp - 6h .. Timestamp + 6h)\n| project mediaTime, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, RelayProcess = InitiatingProcessFileName, RelayPeers = relayPeers, RelayConns = conns",
+      "rationale": "Strider is one of the few actors confirmed (Kaspersky 2016) to operate against air-gapped networks using a hidden encrypted VFS staged on USB drives in obscured paths ($RECYCLE.BIN, hidden directories, fake System Volume Information), with a paired component on internet-connected hosts that acts as an internal HTTP/53 proxy back to the operator. Correlating large opaque blobs on removable media wi"
+    }
+  ]
+}

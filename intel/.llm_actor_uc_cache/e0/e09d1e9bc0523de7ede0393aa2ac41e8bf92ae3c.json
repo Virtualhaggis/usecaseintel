@@ -1,0 +1,50 @@
+{
+  "name": "APT5",
+  "ucs": [
+    {
+      "title": "[LLM] APT5 (Mulberry Typhoon / UNC2630) post-VPN-appliance lateral pivot: RDP/SMB from edge gateway followed by LSASS dumping",
+      "description": "Hunts the characteristic APT5 chain of compromising a Pulse Secure / Citrix ADC / Fortinet edge appliance via T1190 zero-day, then pivoting from the appliance's management/internal interface to a domain host where they immediately stage credential theft (Mandiant: SLOWPULSE, RADIALPULSE, ATRIUM; NSA APT5 Citrix hunting bulletin Dec 2022). The behavior of a logon/SMB session originating from the VPN concentrator's inside IP followed within minutes by lsass handle access on the same host is highly specific to APT5's known op tempo on telco/defense targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1021.001",
+        "T1021.002",
+        "T1003.001",
+        "T1078.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t min(_time) as first_seen max(_time) as last_seen values(Authentication.src) as src values(Authentication.user) as user from datamodel=Authentication where Authentication.action=success Authentication.app=win:remote* [| inputlookup apt5_edge_appliance_ips.csv | fields src_ip | rename src_ip as Authentication.src] by Authentication.dest Authentication.src _time span=1h | rename Authentication.* as * | join type=inner dest [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name IN (\"rundll32.exe\",\"procdump.exe\",\"comsvcs.dll\",\"taskmgr.exe\",\"powershell.exe\",\"sqldumper.exe\") (Processes.process=*lsass* OR Processes.process=*MiniDump* OR Processes.process=*sekurlsa* OR Processes.process=*comsvcs.dll*MiniDump*) by Processes.dest Processes.process_name Processes.process Processes.user Processes.parent_process_name _time span=1h | rename Processes.* as * | rename _time as cred_dump_time] | where cred_dump_time >= first_seen AND cred_dump_time <= (last_seen + 3600) | table first_seen cred_dump_time src dest user process_name process parent_process_name",
+      "kql": "let edgeAppliances = dynamic([\"10.10.250.5\",\"10.10.250.6\"]); // <- populate with Pulse/Citrix/Fortinet inside IPs\nlet pivotWindow = 1h;\nlet pivots =\n  IdentityLogonEvents\n  | where Timestamp > ago(7d)\n  | where ActionType == \"LogonSuccess\"\n  | where LogonType in (\"RemoteInteractive\",\"Network\")\n  | where IPAddress in (edgeAppliances)\n  | project PivotTime=Timestamp, DeviceName=DestinationDeviceName, AccountName, IPAddress, LogonType;\nlet credDumps =\n  DeviceProcessEvents\n  | where Timestamp > ago(7d)\n  | where (FileName in~ (\"rundll32.exe\",\"procdump.exe\",\"taskmgr.exe\",\"powershell.exe\",\"sqldumper.exe\",\"createdump.exe\"))\n      and (ProcessCommandLine has_any (\"lsass\",\"MiniDump\",\"sekurlsa\",\"comsvcs.dll, MiniDump\",\"-ma \",\"SilentProcessExit\"))\n  | project DumpTime=Timestamp, DeviceName, DumpProc=FileName, DumpCmd=ProcessCommandLine, DumpUser=AccountName, ParentName=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine\n  | union (\n     DeviceEvents\n     | where Timestamp > ago(7d)\n     | where ActionType == \"OpenProcessApiCall\"\n     | extend tp = tostring(parse_json(AdditionalFields).TargetImageFileName)\n     | where tp endswith \"lsass.exe\"\n     | project DumpTime=Timestamp, DeviceName, DumpProc=InitiatingProcessFileName, DumpCmd=InitiatingProcessCommandLine, DumpUser=InitiatingProcessAccountName, ParentName=InitiatingProcessParentFileName, ParentCmd=\"\"\n  );\npivots\n| join kind=inner credDumps on DeviceName\n| where DumpTime between (PivotTime .. PivotTime + pivotWindow)\n| project PivotTime, DumpTime, DeviceName, AccountName, IPAddress, DumpProc, DumpCmd, DumpUser, ParentName\n| order by PivotTime desc",
+      "rationale": "APT5's signature initial-access pattern across a decade is exploitation of internet-facing networking devices (Pulse Secure CVE-2019-11510 / CVE-2021-22893, Citrix ADC CVE-2022-27518, Fortinet FortiOS) \u2014 confirmed by Mandiant, NSA, and Microsoft (Mulberry Typhoon) reporting. Because most orgs do not run EDR on the appliance itself, the highest-fidelity detection is the moment APT5 leaves the appli"
+    },
+    {
+      "title": "[LLM] APT5 web shell child-process hunt on Citrix ADC / Pulse / IIS gateway hosts",
+      "description": "Detects APT5's post-exploit drop of web shells and trojanized appliance binaries (SLIGHTPULSE, RADIALPULSE, ATRIUM web shells; per Mandiant UNC2630 and NSA Citrix hunt guide) by alerting on internet-facing gateway processes (w3wp.exe, httpd, nsppe, dsmdm) spawning Windows/Unix shells, recon binaries, or archive utilities. Targets the actor's documented combination of T1190 \u2192 T1505.003 \u2192 T1083/T1049/T1057 reconnaissance.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1554",
+        "T1059.001",
+        "T1059.003",
+        "T1083",
+        "T1049",
+        "T1057"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_id) as pid values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd\",\"httpd.exe\",\"nginx.exe\",\"tomcat*.exe\",\"java.exe\",\"nsppe\",\"nsapimgr\",\"dsmdm\",\"web\") Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\",\"perl\",\"python\",\"python3\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"hostname.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"ifconfig\",\"netstat.exe\",\"netstat\",\"arp.exe\",\"nltest.exe\",\"quser.exe\",\"reg.exe\",\"rar.exe\",\"7z.exe\",\"wmic.exe\",\"schtasks.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | rename Processes.* as * | eval risk_score = case(process_name IN (\"powershell.exe\",\"pwsh.exe\",\"reg.exe\",\"rar.exe\",\"7z.exe\",\"wmic.exe\"), 70, process_name IN (\"net.exe\",\"net1.exe\",\"nltest.exe\",\"quser.exe\",\"schtasks.exe\"), 60, 1=1, 40) | where risk_score >= 40 | sort -lastTime | table firstTime lastTime dest user parent_process_name process_name cmd parent_cmd risk_score count",
+      "kql": "let gatewayParents = dynamic([\"w3wp.exe\",\"httpd.exe\",\"nginx.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"java.exe\",\"node.exe\",\"php-cgi.exe\"]);\nlet reconChildren = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"hostname.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"netstat.exe\",\"arp.exe\",\"nltest.exe\",\"quser.exe\",\"reg.exe\",\"rar.exe\",\"7z.exe\",\"wmic.exe\",\"schtasks.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet susp =\n  DeviceProcessEvents\n  | where Timestamp > ago(7d)\n  | where InitiatingProcessFileName in~ (gatewayParents)\n  | where FileName in~ (reconChildren)\n  | extend Score = case(\n      FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"rar.exe\",\"7z.exe\",\"certutil.exe\",\"bitsadmin.exe\"), 80,\n      FileName in~ (\"net.exe\",\"net1.exe\",\"nltest.exe\",\"reg.exe\",\"wmic.exe\",\"schtasks.exe\"), 60,\n      40)\n  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, Score, ReportId;\nlet edgeFacing =\n  DeviceNetworkEvents\n  | where Timestamp > ago(30d)\n  | where ActionType == \"InboundConnectionAccepted\"\n  | where LocalPort in (80,443,8443,4443)\n  | where RemoteIPType == \"Public\"\n  | summarize PublicHits=count() by DeviceName\n  | where PublicHits > 50;\nsusp\n| join kind=inner edgeFacing on DeviceName\n| extend AlertScore = Score + 20 // bonus: this host is genuinely internet-exposed\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType == \"FileCreated\"\n    | where FolderPath has_any (\"\\\\inetpub\\\\wwwroot\\\\\",\"\\\\netscaler\\\\\",\"/var/vpn/\",\"/home/perl/\",\"/var/dana/\")\n    | where FileName endswith \".aspx\" or FileName endswith \".jsp\" or FileName endswith \".php\" or FileName endswith \".pl\" or FileName endswith \".cgi\"\n    | project DropTime=Timestamp, DeviceName, DroppedShell=FolderPath + FileName, FileSize\n  ) on DeviceName\n| where isnotempty(DroppedShell) or AlertScore >= 80\n| order by AlertScore desc, Timestamp desc",
+      "rationale": "APT5/UNC2630 has an unusually consistent post-exploitation pattern on edge gateways: after exploiting a public-facing appliance (Pulse, Citrix ADC, Fortinet, Exchange) they deploy ASPX/JSP/Perl web shells (ATRIUM, SLIGHTPULSE) and immediately enumerate the host with net.exe / nltest / netstat / quser before pivoting. Most orgs cannot get EDR onto the appliance OS, but the same TTP appears on Windo"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Threat Group-3390",
+  "ucs": [
+    {
+      "title": "[LLM] Emissary Panda HyperBro loader: DLL side-loading via signed binary relocated to ProgramData/Public",
+      "description": "Hunts TG-3390's signature HyperBro implant deployment, where a legitimately-signed third-party binary (commonly ThinSoft thinmon.exe, vftrace.exe, or Symantec/Trend/Sophos utilities) is dropped together with a malicious side-loaded DLL and an encrypted .dat payload into world-writable directories (ProgramData, Users\\Public, AppData). This trio of file co-location plus signed-process executing from a non-install path is the LuckyMouse/BRONZE UNION HyperBro fingerprint.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1140",
+        "T1055.012",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_name IN (\"thinmon.exe\",\"vftrace.exe\",\"VFTrace.exe\",\"AppLaunch.exe\",\"hpqhvind.exe\",\"GUP.exe\",\"chrome_frame_helper.exe\")) AND (Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.dat\" OR Filesystem.file_name=\"*.bin\" OR Filesystem.file_name=\"thinmon.dll\" OR Filesystem.file_name=\"hccutils.dll\" OR Filesystem.file_name=\"libcurl.dll\") AND (Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\Users\\\\Public\\\\*\" OR Filesystem.file_path=\"*\\\\PerfLogs\\\\*\") by Filesystem.dest Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename file_path as side_loaded_artifact] | convert ctime(firstTime) ctime(lastTime) | sort - count",
+      "kql": "let suspectDirs = dynamic([@\"\\programdata\\\", @\"\\users\\public\\\", @\"\\appdata\\local\\temp\\\", @\"\\perflogs\\\"]);\nlet hyperbroLoaders = dynamic([\"thinmon.exe\",\"vftrace.exe\",\"applaunch.exe\",\"hpqhvind.exe\",\"gup.exe\",\"chrome_frame_helper.exe\",\"vssvc.exe\"]);\nlet sideloadDlls = dynamic([\"thinmon.dll\",\"hccutils.dll\",\"libcurl.dll\",\"vftrace.dll\",\"msvcr100.dll\"]);\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (hyperbroLoaders)\n| where tolower(FolderPath) has_any (suspectDirs)\n| extend SignedLegit = (InitiatingProcessSignatureStatus == \"Valid\" or ProcessVersionInfoCompanyName has_any (\"ThinSoft\",\"Symantec\",\"Trend\",\"Hewlett\",\"Google\",\"Microsoft\"))\n| join kind=inner (\n    DeviceFileEvents\n    | where Timestamp > ago(14d)\n    | where ActionType in (\"FileCreated\",\"FileModified\")\n    | where tolower(FolderPath) has_any (suspectDirs)\n    | where FileName in~ (sideloadDlls) or FileName endswith \".dat\" or FileName endswith \".bin\"\n    | project DeviceId, DroppedFile=FileName, DroppedPath=FolderPath, DropTime=Timestamp, DropInitiator=InitiatingProcessFileName\n) on DeviceId\n| where DropTime between ((Timestamp - 1h) .. (Timestamp + 1h))\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, DroppedFile, DroppedPath, DropInitiator, SHA256\n| sort by Timestamp desc",
+      "rationale": "Generic DLL-sideload hunts return mountains of FPs from legitimate installers. This rule narrows to the exact signed-binary names TG-3390 has reused for 7+ years to load HyperBro (ThinSoft thinmon, VFTrace, AppLaunch), pinned to ProgramData/Public/PerfLogs (their preferred staging dirs), AND requires temporal co-location with a sibling .dat/.bin or known sideload DLL \u2014 the three-file HyperBro patt"
+    },
+    {
+      "title": "[LLM] TG-3390 SharePoint/IIS China Chopper webshell pivoting to WinRM lateral movement",
+      "description": "Catches Emissary Panda's hallmark intrusion chain: exploitation of internet-facing SharePoint/Exchange/IIS (CVE-2019-0604, ProxyLogon) to drop a China Chopper .aspx webshell, w3wp.exe spawning recon/credential commands, then lateral movement via WinRM (winrs.exe / wsmprovhost.exe) \u2014 a sequence repeatedly attributed to APT27/BRONZE UNION/Iron Tiger by SecureWorks and NCC Group.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003",
+        "T1021.006",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=\"w3wp.exe\" AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"powershell_ise.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"ntdsutil.exe\",\"vssadmin.exe\",\"wmic.exe\",\"winrs.exe\",\"reg.exe\") by Processes.dest Processes.process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` | eval phase=\"webshell_recon\" | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"wsmprovhost.exe\" OR Processes.process_name=\"winrs.exe\" OR (Processes.process_name=\"powershell.exe\" AND Processes.process=\"*Invoke-Command*\" AND Processes.process=\"*-ComputerName*\")) by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval phase=\"winrm_lateral\"] | stats values(phase) as phases values(cmdline) as cmds count by dest | where mvcount(phases)>=2 | sort - count",
+      "kql": "let webshellRecon = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"ntdsutil.exe\",\"vssadmin.exe\",\"wmic.exe\",\"winrs.exe\",\"reg.exe\",\"hostname.exe\")\n| project ReconTime=Timestamp, DeviceId, DeviceName, ReconAccount=AccountName, ReconCmd=ProcessCommandLine, ReconParentPath=InitiatingProcessFolderPath;\nlet winrmPivot = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (InitiatingProcessFileName =~ \"wsmprovhost.exe\")\n   or (FileName =~ \"winrs.exe\")\n   or (FileName =~ \"powershell.exe\" and ProcessCommandLine has_any (\"Invoke-Command\",\"Enter-PSSession\",\"New-PSSession\") and ProcessCommandLine has \"-ComputerName\")\n| project PivotTime=Timestamp, DeviceId, DeviceName, PivotAccount=AccountName, PivotCmd=ProcessCommandLine, PivotProc=FileName;\nlet aspxDrop = DeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"FileCreated\",\"FileModified\")\n| where FileName endswith \".aspx\" or FileName endswith \".ashx\" or FileName endswith \".asmx\"\n| where FolderPath has_any (@\"\\inetpub\\wwwroot\\\", @\"\\TEMPLATE\\LAYOUTS\\\", @\"\\Microsoft\\Exchange Server\\\", @\"\\FrontEnd\\HttpProxy\\\")\n| where InitiatingProcessFileName in~ (\"w3wp.exe\",\"UMWorkerProcess.exe\")\n| project DropTime=Timestamp, DeviceId, ShellPath=FolderPath, ShellName=FileName;\nwebshellRecon\n| join kind=inner winrmPivot on DeviceId\n| where PivotTime between ((ReconTime) .. (ReconTime + 6h))\n| join kind=leftouter aspxDrop on DeviceId\n| project ReconTime, DeviceName, ReconAccount, ReconCmd, PivotTime, PivotProc, PivotCmd, ShellName, ShellPath\n| sort by ReconTime desc",
+      "rationale": "TG-3390 is one of the few state-aligned crews that consistently chains (1) public-facing IIS/SharePoint exploitation, (2) China Chopper .aspx webshell on the same web tier, and (3) WinRM (T1021.006) \u2014 not WMI or RDP \u2014 for internal pivot. Joining w3wp.exe child-process recon to a WinRM pivot on the same host within a 6-hour window mirrors the BRONZE UNION/Iron Tiger intrusion timeline reported by S"
+    }
+  ]
+}

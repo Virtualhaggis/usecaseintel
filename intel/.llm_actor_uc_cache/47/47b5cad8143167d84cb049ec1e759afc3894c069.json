@@ -1,0 +1,45 @@
+{
+  "name": "BlackTech",
+  "ucs": [
+    {
+      "title": "[LLM] BlackTech (Palmerworm) DLL sideloading via legitimate signed binaries in user-writable paths (Waterbear / BendyBear / Flagpro / PLEAD patter",
+      "description": "Hunts BlackTech's signature execution pattern: dropping a legitimate, often code-signed third-party binary (e.g., AcroRd32, gup.exe/Notepad++, wsc_proxy.exe/Avast, oleview.exe, javaw.exe) into a user-writable directory alongside a sibling unsigned DLL that gets sideloaded. This chain has been observed across BlackTech's bespoke implants (Waterbear, BendyBear, Flagpro, PLEAD/TSCookie) and is one of the few techniques the group uses with near-uniform consistency across campaigns from 2017\u20132024.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1036.002",
+        "T1588.003",
+        "T1106"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"AcroRd32.exe\",\"gup.exe\",\"wsc_proxy.exe\",\"oleview.exe\",\"javaw.exe\",\"mscorsvw.exe\",\"GoogleUpdate.exe\",\"vftrace.exe\") AND NOT Processes.process_path IN (\"*\\\\Program Files\\\\*\",\"*\\\\Program Files (x86)\\\\*\",\"C:\\\\Windows\\\\*\",\"*\\\\Microsoft\\\\Edge\\\\*\") by host Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.process_id\n| `drop_dm_object_name(Processes)`\n| rex field=process_path \"(?<exec_dir>.*\\\\\\\\)[^\\\\\\\\]+$\"\n| join type=inner dest exec_dir [\n    | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash\n    | `drop_dm_object_name(Filesystem)`\n    | rex field=file_path \"(?<exec_dir>.*\\\\\\\\)[^\\\\\\\\]+$\"\n    | search exec_dir IN (\"*\\\\AppData\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\PerfLogs\\\\*\")\n]\n| stats values(file_name) as sideloaded_dlls values(process_name) as host_binary values(process_path) as host_binary_path values(parent_process_name) as parent count by dest user\n| where mvcount(sideloaded_dlls) >= 1\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspectHosts = dynamic([\"AcroRd32.exe\",\"gup.exe\",\"wsc_proxy.exe\",\"oleview.exe\",\"javaw.exe\",\"mscorsvw.exe\",\"GoogleUpdate.exe\",\"vftrace.exe\",\"hkcmd.exe\",\"VTTrace.exe\"]);\nlet userPaths = dynamic([@\"\\appdata\\\",@\"\\programdata\\\",@\"\\users\\public\\\",@\"\\temp\\\",@\"\\perflogs\\\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName in~ (suspectHosts)\n| extend lowerInitPath = tolower(InitiatingProcessFolderPath), lowerDllPath = tolower(FolderPath)\n| where lowerInitPath has_any (userPaths)\n| extend hostDir = tolower(strcat(InitiatingProcessFolderPath, \"\\\\\"))\n| where lowerDllPath startswith tolower(InitiatingProcessFolderPath)\n| join kind=leftouter (\n    DeviceFileCertificateInfo\n    | project SHA1, IsSigned, IsTrusted, Signer\n) on $left.SHA1 == $right.SHA1\n| where IsTrusted != true or isempty(IsTrusted)\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessParentFileName, FileName, FolderPath, SHA256, Signer, IsSigned, IsTrusted\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where ProcessCommandLine has_any (\"rundll32\",\"regsvr32\") or InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"7zG.exe\",\"WinRAR.exe\")\n    | project DeviceName, InitiatingProcessFileName2=InitiatingProcessFileName, ProcessCreationTime=Timestamp\n) on DeviceName\n| summarize hostBinaryHits=count(), dllSet=make_set(FileName, 25), parentSet=make_set(InitiatingProcessParentFileName, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath",
+      "rationale": "BlackTech is one of the most prolific abusers of DLL search-order hijacking among Chinese-nexus crews; Trend Micro, JPCERT and Symantec all document the same staging pattern: a benign, often signed host EXE planted in AppData/ProgramData with a sibling rogue DLL that loads Waterbear/BendyBear/Flagpro shellcode. The combination of (a) one of a small set of frequently-abused host binaries, (b) execu"
+    },
+    {
+      "title": "[LLM] BlackTech edge-router-to-HQ SSH pivot (CISA AA23-270A 'modified Cisco IOS firmware' tradecraft)",
+      "description": "Hunts the lateral-movement leg of BlackTech's signature campaign documented by CISA/NSA/FBI/JPCERT (AA23-270A, Sep 2023): after implanting modified Cisco IOS firmware on a subsidiary's edge router, the actor pivots inbound from the router's management interface over SSH/Telnet into the parent organization's internal servers (DCs, file servers, jump boxes). Detects internal SSH/Telnet sessions originating from network-edge device IPs to crown-jewel hosts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1021.004",
+        "T1190",
+        "T1046",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.bytes_in) as bytes_in values(All_Traffic.bytes_out) as bytes_out min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,23) AND All_Traffic.src_category=\"network_device\" AND All_Traffic.dest_category IN (\"domain_controller\",\"file_server\",\"jump_host\",\"crown_jewel\") by All_Traffic.src All_Traffic.src_category All_Traffic.dest All_Traffic.dest_category All_Traffic.dest_port All_Traffic.action\n| `drop_dm_object_name(All_Traffic)`\n| where action=\"allowed\"\n| join type=outer dest [\n    | tstats summariesonly=true count as auth_count values(Authentication.user) as users from datamodel=Authentication where Authentication.app IN (\"sshd\",\"ssh\",\"openssh\") AND Authentication.action=\"success\" by Authentication.dest Authentication.src\n    | `drop_dm_object_name(Authentication)`\n    | rename src as auth_src dest as dest\n]\n| eval pivot_indicator=if(isnotnull(auth_count) AND auth_count>0, \"router_to_internal_ssh_success\", \"router_to_internal_ssh_attempt\")\n| table firstTime lastTime src src_category dest dest_category dest_port bytes_in bytes_out users pivot_indicator\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let edgeRouterIPs = dynamic([\"10.255.0.1\",\"10.255.0.2\"]);  // populate with org's edge/branch router mgmt IPs\nlet crownJewelTags = dynamic([\"DomainController\",\"FileServer\",\"JumpHost\",\"PKI\",\"ExchangeServer\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"InboundConnectionAccepted\",\"ConnectionSuccess\")\n| where RemotePort in (22, 23) or LocalPort in (22, 23)\n| where RemoteIP in (edgeRouterIPs)\n| join kind=leftouter (\n    DeviceInfo\n    | summarize arg_max(Timestamp, *) by DeviceId\n    | project DeviceId, DeviceName, MachineGroup, OnboardingStatus\n) on DeviceId\n| where MachineGroup has_any (crownJewelTags) or DeviceName has_any (\"dc0\",\"-dc-\",\"sql\",\"file\",\"jump\",\"adfs\",\"exch\")\n| extend pivotKey = strcat(RemoteIP, \"->\", DeviceName)\n| join kind=leftouter (\n    IdentityLogonEvents\n    | where LogonType in (\"Network\",\"RemoteInteractive\",\"Interactive\") and Protocol in~ (\"SSH\",\"Kerberos\",\"NTLM\")\n    | where ActionType == \"LogonSuccess\"\n    | project LogonTime=Timestamp, DeviceName, AccountName, AccountDomain, LogonType, IPAddress\n) on DeviceName\n| where IPAddress == RemoteIP or isempty(IPAddress)\n| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, ActionType, AccountName, AccountDomain, LogonType, InitiatingProcessFileName\n| summarize sessions=count(), accounts=make_set(AccountName, 25), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by DeviceName, RemoteIP\n| where sessions >= 1",
+      "rationale": "This pattern is uniquely BlackTech: the joint CISA/NSA/FBI/JPCERT/NPA advisory AA23-270A specifically called out the actor's practice of compromising a subsidiary's Cisco IOS edge router, installing a backdoored firmware image, and using it as a foothold to SSH inbound to the parent organization's internal infrastructure \u2014 abusing the implicit trust between branch/HQ networks. Almost no benign wor"
+    }
+  ]
+}

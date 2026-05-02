@@ -1,0 +1,44 @@
+{
+  "name": "Storm-1849",
+  "ucs": [
+    {
+      "title": "[LLM] Storm-1849 (UAT4356 / ArcaneDoor) \u2014 Cisco ASA WebVPN auth anomaly chained to internal AD reconnaissance",
+      "description": "Hunts the ArcaneDoor entry pattern where Storm-1849 exploits Cisco ASA edge devices (CVE-2024-20353 / CVE-2024-20359) and reuses valid VPN/admin accounts (Line Dancer in-memory implant) to authenticate inward, then immediately performs LDAP/SMB recon against domain controllers from the VPN-assigned subnet. The 'VPN logon from low-prevalence ASN \u2192 DC enumeration within minutes' chain is the actor's signature pivot, not generic VPN abuse.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1133",
+        "T1078",
+        "T1556"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(Authentication.src) as vpn_src values(Authentication.app) as auth_app from datamodel=Authentication where Authentication.app IN (\"cisco:asa\",\"cisco:anyconnect\",\"ciscoasa\",\"cisco_vpn\") Authentication.action=success by Authentication.user Authentication.src_ip _time span=1h | `drop_dm_object_name(Authentication)` | iplocation src_ip | search country!=\"United States\" OR Country=\"\" | join type=inner user [ | tstats summariesonly=true count as recon_hits values(All_Traffic.dest_port) as ports values(All_Traffic.dest) as dest_dcs from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port IN (88,389,445,636,3268) AND All_Traffic.dest_category=\"domain_controller\") by All_Traffic.user All_Traffic.src _time span=1h | `drop_dm_object_name(All_Traffic)` | rename user as user ] | where recon_hits > 25 AND (last_seen - first_seen) < 600 | table _time user src_ip country auth_app dest_dcs ports recon_hits",
+      "kql": "let suspectVpnLogons = AADSignInEventsBeta | where Timestamp > ago(7d) | where AppDisplayName has_any (\"Cisco AnyConnect\",\"AnyConnect\",\"ASA\") or ResourceDisplayName has \"VPN\" | where ErrorCode == 0 | extend vpnAsn = tostring(parse_json(NetworkLocationDetails)[0].networkType) | where Country !in (\"US\",\"GB\",\"CA\") or isempty(Country) | project vpnTime=Timestamp, AccountObjectId, AccountUpn, IPAddress, Country, vpnAsn; let dcRecon = IdentityDirectoryEvents | where Timestamp > ago(7d) | where ActionType in (\"LDAP search\",\"SAMR query\",\"DCSync\",\"Account enumeration\") | summarize reconCount=count(), dcTargets=make_set(TargetDeviceName), actions=make_set(ActionType) by AccountObjectId, bin(Timestamp, 10m) | where reconCount > 20; suspectVpnLogons | join kind=inner dcRecon on AccountObjectId | where Timestamp between (vpnTime .. vpnTime + 15m) | project vpnTime, Timestamp, AccountUpn, IPAddress, Country, vpnAsn, reconCount, dcTargets, actions",
+      "rationale": "Generic VPN-anomaly rules fire constantly on traveling users. This UC narrows to the exact Storm-1849 ArcaneDoor sequence Cisco Talos and Microsoft documented: edge-device exploitation yielding a valid VPN session that, within minutes, performs unusual LDAP/SAMR enumeration of DCs \u2014 Line Dancer's hallmark internal pivot. Time-bounding the join (<10\u201315m) and requiring high-volume DC port hits filte"
+    },
+    {
+      "title": "[LLM] Storm-1849 Line Runner persistence \u2014 beaconing from Cisco ASA management plane to rare destination",
+      "description": "Detects the Line Runner persistence implant Storm-1849 plants on Cisco ASA appliances by hunting low-prevalence outbound HTTPS/SSH from ASA management IPs to internet destinations the device has never previously contacted, paired with disabled syslog forwarding (T1562.006) \u2014 the actor's documented anti-forensics step before C2 callback.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1542.003",
+        "T1562.006",
+        "T1070"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category=\"network_appliance_mgmt\" OR All_Traffic.src IN (<ASA_MGMT_CIDRS>) All_Traffic.dest_port IN (443,22,8443) NOT All_Traffic.dest_category=\"internal\" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.bytes_out _time span=1h | `drop_dm_object_name(All_Traffic)` | eventstats dc(dest) as historical_dest_count by src | stats count sum(bytes_out) as total_bytes values(dest_port) as ports min(_time) as first_seen max(_time) as last_seen by src dest historical_dest_count | where count < 50 AND total_bytes < 5000000 AND historical_dest_count < 10 | join type=left src [ search index=cisco sourcetype=cisco:asa (\"logging disable\" OR \"no logging host\" OR \"%ASA-7-111009\") | stats count as logging_changes values(_time) as logging_change_time by host | rename host as src ] | where isnotnull(logging_changes) | iplocation dest | table first_seen src dest dest_country ports total_bytes count logging_changes logging_change_time",
+      "kql": "let asaMgmtIps = dynamic([\"10.10.250.0/24\",\"10.20.250.0/24\"]); let rareEgress = DeviceNetworkEvents | where Timestamp > ago(14d) | where ipv4_is_in_any_range(LocalIP, asaMgmtIps) or RemoteIPType == \"Public\" and DeviceName has_any (\"asa\",\"firewall\",\"edge\") | where RemotePort in (443, 22, 8443) | where ActionType == \"ConnectionSuccess\" | summarize beacons=count(), totalBytes=sum(toint(coalesce(tostring(parse_json(AdditionalFields).bytes_out),\"0\"))), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by LocalIP, RemoteIP, RemotePort | extend durationMin = (lastSeen - firstSeen) / 1m | where beacons between (5 .. 200) and durationMin > 60 and totalBytes < 5000000; let prevalentDests = DeviceNetworkEvents | where Timestamp between (ago(60d) .. ago(14d)) | where RemoteIPType == \"Public\" | summarize seenCount=count() by RemoteIP | where seenCount > 50; rareEgress | join kind=leftanti prevalentDests on RemoteIP | extend RemoteASN = tostring(parse_json(AdditionalFields).RemoteASN) | project firstSeen, lastSeen, LocalIP, RemoteIP, RemoteASN, RemotePort, beacons, totalBytes, durationMin",
+      "rationale": "Storm-1849's Line Runner / Line Dancer toolset specifically hides on ASA appliances and the actor was observed disabling logging immediately before establishing C2 \u2014 Cisco Talos called this out as a unique anti-forensic tell. Combining 'first-time-seen egress from mgmt IP' with 'preceding logging-disable command' is highly specific to ArcaneDoor and won't fire on routine vendor update beacons or a"
+    }
+  ]
+}

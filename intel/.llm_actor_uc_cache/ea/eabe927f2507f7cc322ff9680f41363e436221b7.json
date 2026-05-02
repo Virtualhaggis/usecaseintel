@@ -1,0 +1,46 @@
+{
+  "name": "APT10",
+  "ucs": [
+    {
+      "title": "[LLM] APT10 (Stone Panda) DLL side-loading via signed binaries dropping ANEL/RedLeaves/PlugX",
+      "description": "Hunts APT10's signature execution chain: abuse of legitimately-signed binaries (jjs.exe, GUP.exe, vsodscpl.exe, mcoemcpy.exe, sylauncher.exe) to side-load malicious DLLs (UPPERCUT/ANEL, ChChes, RedLeaves, QuasarRAT loaders) from non-standard directories, often after a spearphish drops a self-extracting archive containing all three components.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1027",
+        "T1140",
+        "T1566.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"jjs.exe\",\"GUP.exe\",\"vsodscpl.exe\",\"mcoemcpy.exe\",\"sylauncher.exe\",\"MsMpEng.exe\",\"hkcmd.exe\",\"PresentationHost.exe\") AND NOT (Processes.process_path IN (\"*\\\\Program Files\\\\*\",\"*\\\\Program Files (x86)\\\\*\",\"*\\\\Windows\\\\System32\\\\*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process Processes.process_id\n| `drop_dm_object_name(Processes)`\n| join type=inner dest process_id [| tstats summariesonly=true values(Filesystem.file_path) as loaded_dll values(Filesystem.file_name) as dll_name from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" AND NOT (Filesystem.file_path IN (\"*\\\\Windows\\\\*\",\"*\\\\Program Files*\")) by Filesystem.dest Filesystem.process_id]\n| where match(loaded_dll, \"(?i)\\\\\\\\(ProgramData|Users\\\\\\\\Public|AppData\\\\\\\\Roaming|Temp|Intel|PerfLogs)\\\\\\\\\")\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let signed_lolbins = dynamic([\"jjs.exe\",\"GUP.exe\",\"vsodscpl.exe\",\"mcoemcpy.exe\",\"sylauncher.exe\",\"MsMpEng.exe\",\"hkcmd.exe\",\"PresentationHost.exe\",\"iviewers.exe\"]);\nlet susp_paths = dynamic([\"\\\\programdata\\\\\",\"\\\\users\\\\public\\\\\",\"\\\\appdata\\\\roaming\\\\\",\"\\\\appdata\\\\local\\\\temp\\\\\",\"\\\\perflogs\\\\\",\"\\\\intel\\\\\"]);\nDeviceProcessEvents\n| where FileName in~ (signed_lolbins)\n| where FolderPath !startswith \"C:\\\\Program Files\" and FolderPath !startswith \"C:\\\\Windows\\\\System32\"\n| extend lpath = tolower(FolderPath)\n| where lpath has_any (susp_paths)\n| join kind=inner (\n    DeviceImageLoadEvents\n    | where FileName endswith \".dll\"\n    | where FolderPath !startswith \"C:\\\\Windows\" and FolderPath !startswith \"C:\\\\Program Files\"\n    | project DeviceId, InitiatingProcessId, LoadedDll=FileName, LoadedDllPath=FolderPath, LoadTime=Timestamp\n) on $left.DeviceId == $right.DeviceId, $left.ProcessId == $right.InitiatingProcessId\n| where abs(datetime_diff('second', LoadTime, Timestamp)) < 120\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, LoadedDll, LoadedDllPath, InitiatingProcessFileName, InitiatingProcessCommandLine\n| sort by Timestamp desc",
+      "rationale": "DLL side-loading via specifically-named signed binaries dropped outside of their installation directories is one of the most consistently re-used APT10 TTPs across Operation Cloud Hopper, A41APT, and the Cicada/menuPass campaigns. PwC, Symantec, Kaspersky and Secureworks all documented Stone Panda dropping triplets (legit EXE + malicious DLL + encoded payload) into ProgramData/Public/PerfLogs as t"
+    },
+    {
+      "title": "[LLM] APT10 Cloud Hopper MSP pivot: trusted-relationship RDP/WMI followed by NTDS extraction",
+      "description": "Hunts APT10's Cloud Hopper / Operation Soft Cell pattern of pivoting from a compromised MSP (T1199) into a customer tenant via RDP or WMI using a service/admin account, then dumping NTDS.dit using ntdsutil + vssadmin or wmic shadowcopy \u2014 the classic Stone Panda lateral-then-credential-harvest sequence on domain controllers.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1199",
+        "T1021.001",
+        "T1047",
+        "T1003.003",
+        "T1078"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src_ip values(Authentication.user) as user from datamodel=Authentication where Authentication.action=success AND Authentication.authentication_method IN (\"RemoteInteractive\",\"Network\") AND (Authentication.dest_category=\"domain_controller\" OR Authentication.dest=\"*DC*\") by Authentication.dest Authentication.user Authentication.src\n| `drop_dm_object_name(Authentication)`\n| join type=inner dest [| tstats summariesonly=true values(Processes.process) as ntds_cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN (\"ntdsutil.exe\",\"vssadmin.exe\",\"wmic.exe\",\"esentutl.exe\",\"diskshadow.exe\") AND (Processes.process=\"*ntds*\" OR Processes.process=\"*shadow*\" OR Processes.process=\"*ifm*\" OR Processes.process=\"*create full*\")) OR (Processes.process_name=\"cmd.exe\" AND Processes.process=\"*\\\\\\\\admin$\\\\*\") by Processes.dest Processes.user Processes.process_name _time]\n| eval pivot_to_dump_seconds = abs(_time - lastTime)\n| where pivot_to_dump_seconds < 3600\n| stats values(src_ip) as src_ip values(user) as user values(ntds_cmd) as ntds_cmd values(parent) as parent by dest firstTime lastTime\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let dc_logons =\n    IdentityLogonEvents\n    | where ActionType == \"LogonSuccess\"\n    | where LogonType in (\"RemoteInteractive\",\"Network\")\n    | where DeviceName has_any (\"DC0\",\"DC1\",\"DC2\",\"-DC-\",\"PDC\",\"ADC\")\n    | project LogonTime=Timestamp, DeviceName, AccountName, AccountDomain, IPAddress, LogonType;\nlet ntds_dump =\n    DeviceProcessEvents\n    | where (FileName in~ (\"ntdsutil.exe\",\"diskshadow.exe\",\"esentutl.exe\") and ProcessCommandLine has_any (\"ntds\",\"ifm\",\"create full\",\"shadow\"))\n        or (FileName =~ \"vssadmin.exe\" and ProcessCommandLine has \"create shadow\")\n        or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"shadowcopy\" and ProcessCommandLine has \"call create\")\n        or (FileName =~ \"cmd.exe\" and ProcessCommandLine has \"\\\\windows\\\\ntds\\\\ntds.dit\")\n    | project DumpTime=Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName;\ndc_logons\n| join kind=inner ntds_dump on DeviceName\n| where datetime_diff('minute', DumpTime, LogonTime) between (0 .. 60)\n| extend SuspiciousMSPSource = iff(ipv4_is_private(IPAddress) == false, \"EXTERNAL_PIVOT\", \"INTERNAL\")\n| project LogonTime, DumpTime, DeviceName, AccountName, AccountDomain, IPAddress, SuspiciousMSPSource, FileName, ProcessCommandLine, InitiatingProcessParentFileName\n| sort by DumpTime desc",
+      "rationale": "Cloud Hopper (PwC/BAE 2017, US DoJ 2018 indictment of APT10/Stone Panda) and follow-on intrusions documented by Secureworks (Bronze Riverside) showed the same end-to-end behaviour: APT10 used compromised MSP credentials to RDP/WMI into customer DCs and ran ntdsutil 'ifm create full' or vssadmin shadow-copy to extract NTDS.dit for offline cracking. The temporal join (privileged interactive logon to"
+    }
+  ]
+}

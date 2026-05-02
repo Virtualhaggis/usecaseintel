@@ -1,0 +1,46 @@
+{
+  "name": "HEXANE",
+  "ucs": [
+    {
+      "title": "[LLM] HEXANE/Lyceum password-spray pivot to RDP against ME O&G/telecom tenants",
+      "description": "Hunts HEXANE's signature low-and-slow password-spray campaigns (DanBot/Shark operators are well-documented spraying telecom and oil & gas tenants in Israel, Saudi, Kuwait, Tunisia, Morocco) followed within hours by an interactive RDP/network logon from the same successful account \u2014 the classic Lyceum 'spray-then-RDP' chain that distinguishes them from APT33/OilRig.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1110.003",
+        "T1589.002",
+        "T1078.004",
+        "T1021.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstFail max(_time) as lastFail dc(Authentication.user) as failed_user_count values(Authentication.user) as sprayed_users from datamodel=Authentication where Authentication.action=\"failure\" Authentication.app IN (\"azuread\",\"o365\",\"adfs\") by Authentication.src _time span=1h | `drop_dm_object_name(Authentication)` | where failed_user_count >= 15 | join type=inner src [| tstats `summariesonly` min(_time) as success_time values(Authentication.user) as success_user from datamodel=Authentication where Authentication.action=\"success\" Authentication.app IN (\"azuread\",\"o365\",\"adfs\") by Authentication.src Authentication.user | `drop_dm_object_name(Authentication)`] | where success_time >= firstFail AND success_time <= (lastFail + 7200) | join type=inner success_user [| tstats `summariesonly` min(_time) as rdp_time values(Authentication.dest) as pivot_host from datamodel=Authentication where Authentication.authentication_method=\"RemoteInteractive\" OR Authentication.signature=\"4624\" Authentication.logon_type IN (10,3) by Authentication.user Authentication.src | rename Authentication.user as success_user | `drop_dm_object_name(Authentication)`] | where rdp_time >= success_time AND rdp_time <= (success_time + 21600) | table firstFail src failed_user_count success_user success_time rdp_time pivot_host",
+      "kql": "let SprayWindow = 1h;\nlet MinFailedAccounts = 15;\nlet SprayIPs =\n    AADSignInEventsBeta\n    | where Timestamp > ago(7d)\n    | where ErrorCode in (50053, 50126, 50055, 50056, 50057, 50064)\n    | summarize FailedUsers=dcount(AccountUpn), SampleUsers=make_set(AccountUpn, 25), FirstFail=min(Timestamp), LastFail=max(Timestamp) by IPAddress, bin(Timestamp, SprayWindow)\n    | where FailedUsers >= MinFailedAccounts;\nlet Successes =\n    AADSignInEventsBeta\n    | where ErrorCode == 0\n    | project SuccessTime=Timestamp, IPAddress, SuccessUser=AccountUpn, ClientAppUsed, Country;\nSprayIPs\n| join kind=inner Successes on IPAddress\n| where SuccessTime between (FirstFail .. LastFail + 2h)\n| join kind=inner (\n    DeviceLogonEvents\n    | where ActionType == \"LogonSuccess\"\n    | where LogonType in (\"RemoteInteractive\",\"Network\")\n    | project LMTime=Timestamp, DeviceName, AccountName=tolower(AccountName), RemoteIP, LogonType\n) on $left.SuccessUser == $right.AccountName\n| where LMTime between (SuccessTime .. SuccessTime + 6h)\n| project FirstFail, IPAddress, FailedUsers, SuccessTime, SuccessUser, Country, LMTime, DeviceName, RemoteIP, LogonType, SampleUsers",
+      "rationale": "Lyceum/HEXANE has been repeatedly burned (SecureWorks, ClearSky, Kaspersky Siamesekitten reports) running large-volume password sprays against externally-exposed OWA/Azure AD tenants in MENA telecom and energy verticals, then immediately reusing the cracked credential for hands-on-keyboard RDP rather than the longer-dwell C2 deployments seen with APT33/OilRig. Joining a >=15-account spray to a sam"
+    },
+    {
+      "title": "[LLM] HEXANE DanBot/Shark loader: Office macro spawning WMI Event Subscription persistence",
+      "description": "Detects the HEXANE post-exploitation chain where a maldoc lure (frequently masquerading as O&G or HR/recruiter content per the Siamesekitten campaigns) executes a VBA macro that drops Shark/Milan/DanBot and immediately registers a WMI __EventFilter+CommandLineEventConsumer for persistence \u2014 a combo Lyceum has used since 2018 and that is rare in benign Office workflows.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.005",
+        "T1059.001",
+        "T1546.003",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as office_spawn_time values(Processes.process) as child_cmdline values(Processes.process_name) as child_proc values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") AND Processes.process_name IN (\"wmic.exe\",\"powershell.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"cmd.exe\",\"rundll32.exe\") by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` min(_time) as wmi_time values(Processes.process) as wmi_cmdline from datamodel=Endpoint.Processes where (Processes.process_name=\"wmic.exe\" AND Processes.process IN (\"*subscription*\",\"*__EventFilter*\",\"*CommandLineEventConsumer*\",\"*ActiveScriptEventConsumer*\")) OR (Processes.process_name=\"powershell.exe\" AND (Processes.process=\"*Set-WmiInstance*\" OR Processes.process=\"*Register-WmiEvent*\" OR Processes.process=\"*__EventFilter*\" OR Processes.process=\"*CommandLineEventConsumer*\")) by Processes.dest | `drop_dm_object_name(Processes)`] | where wmi_time >= office_spawn_time AND wmi_time <= (office_spawn_time + 1800) | table office_spawn_time dest user parent_process_name child_proc child_cmdline wmi_time wmi_cmdline",
+      "kql": "let LureExec =\n    DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")\n    | where FileName in~ (\"wmic.exe\",\"powershell.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"cmd.exe\",\"rundll32.exe\")\n    | project LureTime=Timestamp, DeviceId, DeviceName, AccountName, Lure=InitiatingProcessFileName, Child=FileName, ChildCmd=ProcessCommandLine;\nlet WmiPersist =\n    DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where (FileName =~ \"wmic.exe\" and ProcessCommandLine has_any (\"subscription\",\"__EventFilter\",\"CommandLineEventConsumer\",\"ActiveScriptEventConsumer\"))\n         or (FileName =~ \"powershell.exe\" and ProcessCommandLine has_any (\"Set-WmiInstance\",\"Register-WmiEvent\",\"__EventFilter\",\"CommandLineEventConsumer\",\"ActiveScriptEventConsumer\",\"root\\\\subscription\"))\n    | project WmiTime=Timestamp, DeviceId, WmiProc=FileName, WmiCmd=ProcessCommandLine;\nLureExec\n| join kind=inner WmiPersist on DeviceId\n| where WmiTime between (LureTime .. LureTime + 30m)\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(14d)\n    | where RemotePort in (53, 443, 80)\n    | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"outlook.exe\")\n    | summarize Beacons=count(), DistinctRemotes=dcount(RemoteIP), SampleHosts=make_set(RemoteUrl, 10) by DeviceId, bin(Timestamp, 1h)\n) on DeviceId\n| project LureTime, DeviceName, AccountName, Lure, Child, ChildCmd, WmiTime, WmiProc, WmiCmd, Beacons, DistinctRemotes, SampleHosts\n| order by LureTime desc",
+      "rationale": "WMI Event Subscription persistence is a HEXANE staple documented across DanBot, Shark, Milan and the Siamesekitten campaign (SecureWorks 2019, Kaspersky 2021, ClearSky). Pairing it with the immediate parent being an Office app \u2014 driven by the actor's recruiter/HR-themed lures aimed at Israeli, Saudi, and Tunisian targets \u2014 produces a chain that is essentially unique to Lyceum's loaders within MENA"
+    }
+  ]
+}

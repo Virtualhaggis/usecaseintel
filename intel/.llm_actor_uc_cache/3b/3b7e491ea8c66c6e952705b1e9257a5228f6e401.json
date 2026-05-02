@@ -1,0 +1,44 @@
+{
+  "name": "Agrius",
+  "ucs": [
+    {
+      "title": "[LLM] Agonizing Serpens (Agrius) web shell drop after Fortinet/Exchange exploitation",
+      "description": "Hunts Agrius's signature initial-access chain: exploitation of internet-facing FortiOS/Exchange/Log4j followed by ASPXSpy or 'AntSword'-style web shell deployment to maintain footholds on Israeli/MENA targets. Catches w3wp.exe (or FortiOS web daemons) writing ASPX/JSP/PHP web shells and immediately spawning command interpreters \u2014 the precursor to credential theft and wiper staging that defines this MOIS-linked crew (G1030 / Pink Sandstorm / AMERICIUM / BlackShadow).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (\"w3wp.exe\",\"httpd.exe\",\"tomcat*.exe\",\"java.exe\") AND (Filesystem.file_path IN (\"*\\\\inetpub\\\\wwwroot\\\\*\",\"*\\\\Exchange Server\\\\*\\\\FrontEnd\\\\HttpProxy\\\\*\",\"*\\\\ClientAccess\\\\owa\\\\auth\\\\*\",\"*\\\\webapps\\\\*\")) AND Filesystem.file_name IN (\"*.aspx\",\"*.ashx\",\"*.asmx\",\"*.jsp\",\"*.jspx\",\"*.php\") by Filesystem.dest Filesystem.process_name Filesystem.process_guid \n| `drop_dm_object_name(Filesystem)` \n| join type=inner process_guid [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"java.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"whoami.exe\",\"systeminfo.exe\",\"certutil.exe\",\"wmic.exe\") by Processes.process_guid Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`] \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` \n| table firstTime lastTime dest parent_process_name file_path file_name process_name process",
+      "kql": "let webshell_writes = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"java.exe\")\n| where FolderPath has_any (@\"\\inetpub\\wwwroot\\\", @\"\\Exchange Server\\\", @\"FrontEnd\\HttpProxy\\\", @\"ClientAccess\\owa\\auth\\\", @\"\\webapps\\\")\n| where FileName endswith \".aspx\" or FileName endswith \".ashx\" or FileName endswith \".asmx\" or FileName endswith \".jsp\" or FileName endswith \".jspx\" or FileName endswith \".php\"\n| project DeviceId, DeviceName, FileWriteTime=Timestamp, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessId;\nlet child_exec = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"java.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"certutil.exe\",\"wmic.exe\",\"nltest.exe\",\"ipconfig.exe\")\n| project DeviceId, ChildExecTime=Timestamp, InitiatingProcessFileName, FileName, ProcessCommandLine, InitiatingProcessId;\nwebshell_writes\n| join kind=inner child_exec on DeviceId, InitiatingProcessId\n| where abs(datetime_diff('minute', ChildExecTime, FileWriteTime)) <= 60\n| project FileWriteTime, ChildExecTime, DeviceName, FolderPath, FileName, InitiatingProcessFileName, ChildProcess=FileName1, ProcessCommandLine\n| sort by FileWriteTime desc",
+      "rationale": "Agrius's public intrusions (Israeli logistics, IT, government via Agonizing Serpens 2023; BlackShadow against insurers; Pink Sandstorm against universities) consistently begin with exploitation of internet-facing FortiOS / Microsoft Exchange (ProxyShell) / Log4j followed by web shell drops (ASPXSpy variants, AntSword) used as the staging beachhead before Mimikatz, SoftPerfect scanner, and wiper de"
+    },
+    {
+      "title": "[LLM] Agrius wiper/ransomware staging: WinRAR archival + service install of unsigned destructive payload",
+      "description": "Hunts the late-stage Agrius chain that distinguishes it from generic ransomware crews: heavy data archival via WinRAR (rar.exe) for exfiltration immediately followed by installation of an unsigned binary as a Windows service from a non-standard path \u2014 the deployment pattern of Apostle, Fantasy, DEADWOOD, Moneybird, IPsec Helper, and BiBi-Wiper. Disguising wipers as ransomware is an Agrius signature, so this catches the destructive payoff specifically rather than any commodity encryptor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1560.001",
+        "T1543.003",
+        "T1041",
+        "T1078.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN (\"rar.exe\",\"WinRAR.exe\") AND (Processes.process=\"*a *\" OR Processes.process=\"* -hp*\" OR Processes.process=\"* -m*\" OR Processes.process=\"* -v*\" OR Processes.process=\"* -r *\")) by Processes.dest Processes.user Processes.process_guid \n| `drop_dm_object_name(Processes)` \n| rename dest as host \n| join type=inner host [| tstats summariesonly=true count as svc_count values(Processes.process) as svc_cmd values(Processes.process_path) as svc_path from datamodel=Endpoint.Processes where Processes.process_name IN (\"sc.exe\",\"services.exe\") AND (Processes.process=\"*create*\" OR Processes.process=\"*config*\") AND (Processes.process=\"*\\\\ProgramData\\\\*\" OR Processes.process=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process=\"*\\\\Windows\\\\Temp\\\\*\" OR Processes.process=\"*\\\\PerfLogs\\\\*\" OR Processes.process=\"*\\\\Temp\\\\*\") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` | rename dest as host] \n| where lastTime - firstTime < 14400 \n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` \n| table firstTime lastTime host user parent cmd svc_cmd",
+      "kql": "let archival = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"rar.exe\",\"WinRAR.exe\",\"7z.exe\")\n| where ProcessCommandLine has_any (\" a \", \" -hp\", \" -m5\", \" -v\", \" -r \")\n| project ArchiveTime=Timestamp, DeviceId, DeviceName, AccountName=AccountUpn, ArchiveCmd=ProcessCommandLine;\nlet svc_install = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (FileName =~ \"sc.exe\" and ProcessCommandLine has_any (\"create\",\"config\")) or InitiatingProcessFileName =~ \"services.exe\"\n| where ProcessCommandLine has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\", @\"\\PerfLogs\\\", @\"\\Temp\\\", @\"C:\\Intel\\\")\n| project SvcTime=Timestamp, DeviceId, DeviceName, SvcCmd=ProcessCommandLine;\nlet susp_binary = DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\", @\"\\PerfLogs\\\")\n| where FileName endswith \".exe\" or FileName endswith \".dll\"\n| where isempty(Signer) or SignatureType == \"Unsigned\" or InitiatingProcessAccountName !in (\"system\",\"trustedinstaller\")\n| project DropTime=Timestamp, DeviceId, FolderPath, FileName, SHA256, Signer, SignatureType;\narchival\n| join kind=inner svc_install on DeviceId\n| where datetime_diff('minute', SvcTime, ArchiveTime) between (0 .. 720)\n| join kind=leftouter susp_binary on DeviceId\n| project ArchiveTime, SvcTime, DropTime, DeviceName, AccountName, ArchiveCmd, SvcCmd, FileName, FolderPath, SHA256, Signer\n| sort by SvcTime desc",
+      "rationale": "Across SentinelOne (Apostle/DEADWOOD), CheckPoint (Fantasy/Moneybird), and Unit 42 (Agonizing Serpens / BiBi-Wiper) reporting, Agrius reliably (1) collects and archives victim data with WinRAR before the destructive payload runs \u2014 separating it from pure crypto-ransomware actors \u2014 and (2) deploys the wiper masquerading as a ransomware binary via sc.exe service install from world-writable directori"
+    }
+  ]
+}

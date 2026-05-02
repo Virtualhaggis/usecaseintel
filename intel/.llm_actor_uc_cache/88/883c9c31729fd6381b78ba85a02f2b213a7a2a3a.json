@@ -1,0 +1,44 @@
+{
+  "name": "BRONZE BUTLER",
+  "ucs": [
+    {
+      "title": "[LLM] BRONZE BUTLER (Tick) DLL search-order hijacking via signed Japanese/AV binary in user-writable path",
+      "description": "Hunts the signature BRONZE BUTLER loader pattern: a legitimately-signed binary (Symantec/Trend Micro/JustSystems Ichitaro/Skype/Sysinternals) is dropped to a user-writable directory (AppData, Temp, ProgramData, Public) and side-loads an unsigned DLL \u2014 the documented delivery mechanism for Daserf, Datper and xxmm against Japanese targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1036.005",
+        "T1027.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"ichitaro.exe\",\"Skype.exe\",\"GoogleUpdate.exe\",\"MsMpEng.exe\",\"ccSvcHst.exe\",\"NisSrv.exe\",\"PWMTR32V.DLL\",\"vmtoolsd.exe\",\"OUTLFLTR.DLL\",\"NTWDBLIB.dll\",\"TmDbgLog.exe\",\"coreServiceShell.exe\") AND (Processes.process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\Roaming\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval exe_dir=replace(process_path,\"\\\\\\\\[^\\\\\\\\]+$\",\"\") | join type=inner dest exe_dir [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" by Filesystem.dest Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | eval exe_dir=replace(file_path,\"\\\\\\\\[^\\\\\\\\]+$\",\"\") | rename file_name as sideloaded_dll, count as dll_writes] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let suspect_signers = dynamic([\"Symantec Corporation\",\"Trend Micro Inc.\",\"Skype Technologies S.A.\",\"JustSystems Corporation\",\"Microsoft Corporation\",\"Sysinternals - www.sysinternals.com\",\"Google LLC\"]);\nlet writable_paths = dynamic([@\"\\appdata\\local\\temp\\\", @\"\\appdata\\roaming\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\perflogs\\\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessVersionInfoCompanyName in~ (suspect_signers)\n| extend exe_path_l = tolower(InitiatingProcessFolderPath)\n| where exe_path_l has_any (writable_paths)\n| where FileName endswith \".dll\"\n| extend ExeDir = tolower(strcat(InitiatingProcessFolderPath, \"\\\\\"))\n| extend DllDir = tolower(strcat(FolderPath, \"\\\\\"))\n| where ExeDir == DllDir\n| join kind=leftouter (DeviceFileCertificateInfo | project SHA1, DllSigned=IsSigned, DllSigner=Signer, DllTrusted=IsTrusted) on $left.SHA1 == $right.SHA1\n| where DllSigned == false or isempty(DllSigned) or DllTrusted == false\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessVersionInfoCompanyName, InitiatingProcessFolderPath, SideloadedDll=FileName, FolderPath, DllSigner, DllSigned, SHA256\n| sort by Timestamp desc",
+      "rationale": "Trend Micro and Secureworks both document that BRONZE BUTLER's primary persistence/execution chain for Daserf, Datper and xxmm is to drop a benign signed host EXE alongside a malicious DLL into a user-writable directory and abuse search-order. The combination of (a) signer = legitimate AV/Japanese-software vendor, (b) execution from %TEMP%/%APPDATA%/ProgramData, and (c) co-located unsigned DLL is "
+    },
+    {
+      "title": "[LLM] BRONZE BUTLER Daserf/Datper C2 beacon to compromised JP/Asia infrastructure with custom-encoded HTTP",
+      "description": "Detects long-lived, low-volume HTTP beacons from non-browser processes with the short, fixed-format URI and custom base64-encoded query strings used by Daserf and Datper, which BRONZE BUTLER routes through compromised Japanese SMB websites \u2014 a tradecraft pattern unique to this actor's targeting of Japan.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1071.001",
+        "T1102.001",
+        "T1132.001",
+        "T1573.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count values(Web.url) as urls values(Web.http_user_agent) as ua values(Web.dest) as dest dc(Web.url) as url_count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=\"GET\" AND (Web.url=\"*/index.php?id=*\" OR Web.url=\"*/wp-content/themes/*.php?*\" OR Web.url=\"*/cgi-bin/*.cgi?*\" OR match(Web.url,\"\\?[a-zA-Z]{1,3}=[A-Za-z0-9+/=]{16,}$\")) AND NOT (Web.http_user_agent=\"*Mozilla/5.0*Chrome*\" OR Web.http_user_agent=\"*Edge*\" OR Web.http_user_agent=\"*Firefox*\") by Web.src Web.dest Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | eval beacon_window=(lastTime-firstTime) | where beacon_window > 3600 AND count >= 10 | join type=inner src [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name!=\"chrome.exe\" Processes.process_name!=\"msedge.exe\" Processes.process_name!=\"firefox.exe\" Processes.process_name!=\"iexplore.exe\" by Processes.dest Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | rename dest as src, process_name as initiating_process] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let known_browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"opera.exe\",\"brave.exe\",\"safari.exe\"]);\nlet jp_asia_tlds = dynamic([\".jp\",\".kr\",\".tw\",\".cn\",\".hk\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"ConnectionSuccess\"\n| where RemotePort in (80, 443, 8080)\n| where InitiatingProcessFileName !in~ (known_browsers)\n| where InitiatingProcessFileName endswith \".exe\"\n| where not(InitiatingProcessFolderPath startswith @\"C:\\Windows\\System32\\\" and InitiatingProcessFileName in~ (\"svchost.exe\",\"backgroundtaskhost.exe\"))\n| summarize hits=count(), firstSeen=min(Timestamp), lastSeen=max(Timestamp), urls=make_set(RemoteUrl, 50), dests=make_set(RemoteIP, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, RemoteUrl\n| extend beacon_minutes = datetime_diff('minute', lastSeen, firstSeen)\n| where hits >= 8 and beacon_minutes >= 60\n| where RemoteUrl matches regex @\"(?i)\\?[a-z]{1,3}=[A-Za-z0-9+/=]{16,}$\"\n   or RemoteUrl has_any (\"/index.php?id=\", \"/cgi-bin/\", \"/wp-content/themes/\")\n| extend jp_target = iff(tolower(RemoteUrl) has_any (jp_asia_tlds), true, false)\n| join kind=inner (\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | project DeviceName, ProcessSHA256=SHA256, ProcessCreated=Timestamp, ProcessFolder=FolderPath, ProcessParent=InitiatingProcessFileName\n  ) on $left.InitiatingProcessSHA256 == $right.ProcessSHA256, DeviceName\n| project firstSeen, lastSeen, beacon_minutes, hits, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, ProcessParent, RemoteUrl, urls, dests, jp_target, InitiatingProcessSHA256\n| sort by hits desc",
+      "rationale": "Secureworks CTU and Trend Micro reporting on Daserf/Datper describe a fingerprint-able C2 channel: a non-browser process beacons over plain HTTP/HTTPS with short URIs ending in `?id=<base64>`, often to legitimate-looking but compromised Japanese SMB CMS sites used as dead-drop resolvers. The query pivots on (a) non-browser EXE, (b) regex-matched custom-encoded query, (c) repetitive low-volume cade"
+    }
+  ]
+}

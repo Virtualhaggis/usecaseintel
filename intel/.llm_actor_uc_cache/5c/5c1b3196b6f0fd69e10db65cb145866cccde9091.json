@@ -1,0 +1,50 @@
+{
+  "name": "APT32",
+  "ucs": [
+    {
+      "title": "[LLM] APT32 (OceanLotus) malicious LNK + side-loaded backdoor via spear-phish lure",
+      "description": "Hunts OceanLotus's signature initial-access chain: a weaponized LNK or Office doc dropped from a ZIP/ISO archive that spawns a living-off-the-land binary (rundll32, regsvr32, mshta, or a legitimate signed executable like wscript/AcroRd32) which side-loads a malicious DLL implant (e.g., Cobalt Strike beacon, Denis, KerrDown). This delivery \u2192 execution chain is the most consistent OceanLotus tradecraft observed by FireEye, Volexity, and ESET.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.001",
+        "T1059.003",
+        "T1218.011",
+        "T1218.010",
+        "T1218.005",
+        "T1574.002",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as proc_path values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"explorer.exe\",\"7zg.exe\",\"7zfm.exe\",\"winrar.exe\",\"outlook.exe\",\"winword.exe\",\"excel.exe\")) (Processes.process_name IN (\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\") OR Processes.process IN (\"*.lnk*\")) by host Processes.user Processes.process_name Processes.parent_process_name | rename Processes.* as * | search (cmdline=\"*.lnk*\" OR cmdline=\"*\\\\AppData\\\\*\\\\*.dll*\" OR cmdline=\"*\\\\Public\\\\*\\\\*.dll*\" OR cmdline=\"*-EncodedCommand*\" OR cmdline=\"*scrobj.dll*\" OR cmdline=\"*.sct*\" OR cmdline=\"*javascript:*\") | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (\"*.lnk\",\"*.iso\",\"*.img\",\"*.zip\",\"*.rar\")) Filesystem.file_path IN (\"*\\\\Downloads\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\AppData\\\\*\") by host Filesystem.file_name | rename Filesystem.* as *] | `convert_timeformat(firstTime,lastTime)` | table firstTime host user process_name parent_process_name cmdline file_name",
+      "kql": "let lure_drops = DeviceFileEvents | where Timestamp > ago(7d) | where FileName endswith \".lnk\" or FileName endswith \".iso\" or FileName endswith \".img\" or FileName endswith \".zip\" or FileName endswith \".rar\" | where FolderPath has_any (\"\\\\Downloads\\\\\", \"\\\\Temp\\\\\", \"\\\\AppData\\\\Local\\\\Temp\\\\\", \"\\\\Outlook\\\\\") | project DropTime=Timestamp, DeviceId, DeviceName, DroppedFile=FileName, DropPath=FolderPath, InitiatingProcessFileName; let suspicious_exec = DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileName in~ (\"explorer.exe\",\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"7zg.exe\",\"7zfm.exe\",\"winrar.exe\") | where FileName in~ (\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\") or ProcessCommandLine has_any (\".lnk\", \"scrobj.dll\", \".sct\", \"javascript:\", \"-EncodedCommand\", \"AppData\\\\Roaming\", \"\\\\Public\\\\\") | where ProcessCommandLine has_any (\".dll\",\".lnk\",\".sct\",\".hta\",\".vbs\",\".js\",\"http\") | project ExecTime=Timestamp, DeviceId, DeviceName, FileName, InitiatingProcessFileName, ProcessCommandLine, AccountName; lure_drops | join kind=inner suspicious_exec on DeviceId | where ExecTime between (DropTime .. DropTime + 30m) | project DropTime, ExecTime, DeviceName, AccountName, DroppedFile, DropPath, FileName, InitiatingProcessFileName, ProcessCommandLine | sort by ExecTime desc",
+      "rationale": "OceanLotus has been documented since 2017 (FireEye, Volexity, ESET, Mandiant) using ZIP/ISO-delivered LNKs and weaponized Office docs that proxy execution through LOLBins which then side-load a malicious DLL \u2014 this is their fingerprint for KerrDown, Denis, and Cobalt Strike loaders against Vietnamese dissidents, ASEAN governments, and automotive/manufacturing targets. The temporal join between arc"
+    },
+    {
+      "title": "[LLM] APT32 WMI/scheduled-task lateral movement with COM/Outlook persistence (BISMUTH)",
+      "description": "Hunts the post-exploitation phase Microsoft (BISMUTH) and Mandiant attribute to APT32: WMI-based remote execution (T1047) and on-host scheduled task creation (T1053.005) to drop a backdoor, combined with Outlook Home Page or Office Test persistence (T1137) \u2014 a uniquely OceanLotus persistence trick rarely seen outside this cluster.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1047",
+        "T1053.005",
+        "T1137",
+        "T1021.002",
+        "T1543.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "(`wmi_lateral` OR `schtask_create` OR `office_persistence`) | eval indicator=case(match(process_name,\"(?i)wmic\\.exe\") AND match(process,\"(?i)/node:|process call create\"), \"WMI_Remote_Exec\", match(process_name,\"(?i)schtasks\\.exe\") AND match(process,\"(?i)/create.*?(/ru\\s+system|/rl\\s+highest|/tn\\s+\\\\\\\\)\"), \"Scheduled_Task_Persist\", match(registry_path,\"(?i)Software\\\\\\\\Microsoft\\\\\\\\Office\\\\\\\\\\\\d+\\\\\\\\\\\\w+\\\\\\\\(WebView|Today|Test\\\\\\\\Special)\"), \"Office_Persistence\") | search indicator=* | stats min(_time) as firstTime max(_time) as lastTime values(indicator) as indicators dc(indicator) as indicator_count values(process) as cmds values(registry_path) as reg by host user | where indicator_count >= 2 | `convert_timeformat(firstTime,lastTime)`",
+      "kql": "let wmi_remote = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ \"wmic.exe\" and ProcessCommandLine has_any (\"/node:\", \"process call create\") | project Timestamp, DeviceId, DeviceName, AccountName, Tactic=\"WMI_Remote_Exec\", Detail=ProcessCommandLine; let sched = DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ \"schtasks.exe\" and ProcessCommandLine has \"/create\" and ProcessCommandLine has_any (\"/ru SYSTEM\",\"/rl HIGHEST\",\"\\\\\\\\\") | project Timestamp, DeviceId, DeviceName, AccountName, Tactic=\"Scheduled_Task_Persist\", Detail=ProcessCommandLine; let office_persist = DeviceRegistryEvents | where Timestamp > ago(7d) | where RegistryKey matches regex @\"(?i)Software\\\\Microsoft\\\\Office\\\\\\d+\\.\\d+\\\\(Outlook\\\\WebView|Word\\\\Today|Excel\\\\Today|.*\\\\Test\\\\Special\\\\Perf)\" | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, Tactic=\"Office_Persistence\", Detail=strcat(RegistryKey,\" => \",RegistryValueName,\"=\",RegistryValueData); union wmi_remote, sched, office_persist | summarize TacticsHit=make_set(Tactic), Events=make_list(Detail,20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName | where array_length(TacticsHit) >= 2 | sort by LastSeen desc",
+      "rationale": "Microsoft's BISMUTH report and Mandiant's APT32 reporting both highlight the combination of WMI remote process creation, schtasks-based service-tier persistence, and Outlook Home Page / Office Test\\Special\\Perf registry persistence as a hallmark of OceanLotus intrusions against ASEAN government, dissident, and automotive targets. Requiring two of these three rare behaviors on the same host within "
+    }
+  ]
+}
