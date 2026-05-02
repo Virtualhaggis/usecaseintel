@@ -665,7 +665,10 @@ def _load_kql_knowledge() -> str:
     if not KNOWLEDGE_DIR.exists():
         return ""
     parts = []
-    for fname in ("kql_patterns.md", "kql_tables.md",
+    for fname in ("kql_fundamentals.md", "kql_searching_filtering.md",
+                  "kql_scalar_functions.md", "kql_combining_data.md",
+                  "kql_aggregation_anomaly.md",
+                  "kql_patterns.md", "kql_tables.md",
                   "kql_antipatterns.md", "kql_examples.md"):
         p = KNOWLEDGE_DIR / fname
         if p.exists():
@@ -677,6 +680,61 @@ def _load_kql_knowledge() -> str:
 
 
 _KQL_KNOWLEDGE_BLOCK = _load_kql_knowledge()
+
+
+def _load_defender_schema_block() -> str:
+    """Render data_sources/defender_spec_tables.json into a compact text
+    block — one line per table, columns comma-separated. Injected into
+    the LLM prompt so the model never has to guess at column names."""
+    schema_path = Path(__file__).parent / "data_sources" / "defender_spec_tables.json"
+    if not schema_path.exists():
+        return ""
+    try:
+        import json as _j
+        raw = _j.loads(schema_path.read_text(encoding="utf-8"))
+    except Exception:
+        return ""
+    lines = []
+    for t in sorted(raw):
+        if t.startswith("_"):
+            continue
+        cols = raw[t]
+        if not isinstance(cols, list):
+            continue
+        lines.append(f"{t}: {', '.join(cols)}")
+    return "\n".join(lines)
+
+
+_DEFENDER_SCHEMA_BLOCK = _load_defender_schema_block()
+
+
+# ---- Schema-field validator (canonical Defender table columns) -------------
+# Lazy-imported so a missing data_sources/defender_spec_tables.json doesn't
+# break the rest of the pipeline.
+try:
+    from kql_schema_validator import validate_kql as _validate_kql_fields
+except Exception:
+    _validate_kql_fields = None  # type: ignore[assignment]
+
+
+def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql") -> int:
+    """Run the schema validator on uc_dict[kql_key] and attach
+    `_field_issues` to the dict in-place. Returns the issue count."""
+    if _validate_kql_fields is None:
+        return 0
+    kql = uc_dict.get(kql_key) or ""
+    if not kql:
+        return 0
+    try:
+        issues = _validate_kql_fields(kql)
+    except Exception as e:
+        # Validator must never crash the pipeline.
+        uc_dict["_field_issues"] = [{"kind": "validator_error", "message": str(e)[:200]}]
+        return 1
+    if issues:
+        # Trim to plain dicts in case Issue subclass shows up oddly in JSON.
+        uc_dict["_field_issues"] = [dict(i) for i in issues]
+    return len(issues)
 
 
 _LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce 1-3 high-quality detection use cases that hunt the SPECIFIC attack described — NOT a generic technique template.
@@ -736,6 +794,25 @@ Article body:
 
 Pre-extracted IOCs from the article (use these in your queries where appropriate):
 <<IOC_SUMMARY>>
+
+================================================================
+CANONICAL DEFENDER ADVANCED HUNTING SCHEMA
+================================================================
+Below is the EXACT column list for every Microsoft 365 Defender
+Advanced Hunting table you may use. When you write `defender_kql`:
+
+  • Use ONLY columns that appear in this list for the table you are querying.
+  • Do NOT invent column names. If the field you want isn't in the
+    table, either pick a different table or restructure the query.
+  • Common pitfall: `DeviceFileEvents` and `DeviceNetworkEvents` do NOT have
+    `AccountName` or `ProcessCommandLine` directly — those are on the
+    initiating-process side: `InitiatingProcessAccountName`,
+    `InitiatingProcessCommandLine`. Same rule for `FileName` / `ProcessId`.
+  • Joins: when both tables share a column name (e.g. `Timestamp`,
+    `DeviceId`), the right-hand instance is auto-renamed with a `1`
+    suffix (`Timestamp1`, `DeviceId1`).
+
+<<DEFENDER_SCHEMA>>
 
 ================================================================
 KQL DETECTION-ENGINEERING KNOWLEDGE BASE
@@ -913,6 +990,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<URL>>",         url[:200])
               .replace("<<BODY>>",        body)
               .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
+              .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     if use_oauth:
@@ -941,6 +1019,15 @@ def _llm_generate_ucs(article: dict, ind: dict):
         else:
             print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
             return []
+    # Schema-field validation — flag any column the LLM invented or used on
+    # the wrong table. Issues are attached to each UC in the cache so a later
+    # `validate_kql_knowledge.py --score` run can audit corpus correctness.
+    total_issues = 0
+    for uc in data.get("ucs") or []:
+        if isinstance(uc, dict):
+            total_issues += _attach_field_issues(uc, "defender_kql")
+    if total_issues:
+        print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(data.get('ucs') or [])} UC(s)")
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
 
@@ -993,6 +1080,25 @@ MITRE description:
 
 Top-known MITRE techniques (technique-id list, sample of full set):
 <<TECHNIQUES>>
+
+================================================================
+CANONICAL DEFENDER ADVANCED HUNTING SCHEMA
+================================================================
+Below is the EXACT column list for every Microsoft 365 Defender
+Advanced Hunting table you may use. When you write `defender_kql`:
+
+  • Use ONLY columns that appear in this list for the table you are querying.
+  • Do NOT invent column names. If the field you want isn't in the
+    table, either pick a different table or restructure the query.
+  • Common pitfall: `DeviceFileEvents` and `DeviceNetworkEvents` do NOT have
+    `AccountName` or `ProcessCommandLine` directly — those are on the
+    initiating-process side: `InitiatingProcessAccountName`,
+    `InitiatingProcessCommandLine`. Same rule for `FileName` / `ProcessId`.
+  • Joins: when both tables share a column name (e.g. `Timestamp`,
+    `DeviceId`), the right-hand instance is auto-renamed with a `1`
+    suffix (`Timestamp1`, `DeviceId1`).
+
+<<DEFENDER_SCHEMA>>
 
 ================================================================
 KQL DETECTION-ENGINEERING KNOWLEDGE BASE
@@ -1048,6 +1154,7 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<MITRE_ID>>", actor.get("mitre_id", ""))
               .replace("<<DESCRIPTION>>", description or "(no description in MITRE bundle)")
               .replace("<<TECHNIQUES>>", ", ".join(techs[:60]))
+              .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     try:
@@ -1102,6 +1209,12 @@ def _llm_generate_actor_ucs(actor: dict):
             "kql": d.get("defender_kql") or "",
             "rationale": (d.get("rationale") or "")[:400],
         })
+    # Schema-field validation. Actor cache stores `kql` (not `defender_kql`).
+    total_issues = 0
+    for uc in out_ucs:
+        total_issues += _attach_field_issues(uc, "kql")
+    if total_issues:
+        print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(out_ucs)} actor UC(s)")
     cache_path.write_text(json_lib.dumps({"name": name, "ucs": out_ucs}, indent=2), encoding="utf-8")
     return out_ucs
 
