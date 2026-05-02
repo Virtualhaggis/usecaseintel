@@ -2,7 +2,8 @@ id: UC_SCHEDULED_TASK
 title: Scheduled task created with suspicious image / encoded args
 kill_chain: install
 confidence: High
-description: schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.
+description: schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698
+  with LOLBin actions.
 implementations:
 - splunk
 - defender
@@ -14,10 +15,19 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceProcessEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"schtasks.exe\" AND Processes.process=\"*/create*\"\n      AND (Processes.process=\"*powershell*\" OR Processes.process=\"*cmd.exe*\"\n        OR Processes.process=\"*rundll32*\" OR Processes.process=\"*-enc*\"\n        OR Processes.process=\"*FromBase64*\" OR Processes.process=\"*\\Users\\Public*\"\n        OR Processes.process=\"*\\AppData\\*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`"
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"\
+  schtasks.exe\" AND Processes.process=\"*/create*\"\n      AND (Processes.process=\"\
+  *powershell*\" OR Processes.process=\"*cmd.exe*\"\n        OR Processes.process=\"\
+  *rundll32*\" OR Processes.process=\"*-enc*\"\n        OR Processes.process=\"*FromBase64*\"\
+  \ OR Processes.process=\"*\\Users\\Public*\"\n        OR Processes.process=\"*\\\
+  AppData\\*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n\
+  | `drop_dm_object_name(Processes)`"
 defender_kql: 'DeviceProcessEvents
 
   | where Timestamp > ago(7d)
+
+  | where AccountName !endswith "$"
 
   | where FileName =~ "schtasks.exe"
 

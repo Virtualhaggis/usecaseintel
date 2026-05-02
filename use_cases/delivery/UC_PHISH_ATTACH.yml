@@ -2,7 +2,8 @@ id: UC_PHISH_ATTACH
 title: Email attachment opened from external sender
 kill_chain: delivery
 confidence: High
-description: Attachment delivery + execution by recipient — most common malware initial access.
+description: Attachment delivery + execution by recipient — most common malware initial
+  access.
 implementations:
 - splunk
 - defender
@@ -18,8 +19,26 @@ data_models:
   defender:
   - EmailAttachmentInfo
   - DeviceProcessEvents
-splunk_spl: "| tstats `summariesonly` count\n    from datamodel=Email.All_Email\n    where All_Email.file_name!=\"-\"\n    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject\n| rename All_Email.recipient as user\n| join type=inner user\n    [| tstats `summariesonly` count\n        from datamodel=Endpoint.Processes\n        where Processes.parent_process_name IN (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n          AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process\n     | rename Processes.user as user]"
-defender_kql: "let LookbackDays = 7d;\nlet MalAttachments = EmailAttachmentInfo\n    | where Timestamp > ago(LookbackDays)\n    | project NetworkMessageId, RecipientEmailAddress,\n              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n                      \"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,\n          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256"
+splunk_spl: "| tstats `summariesonly` count\n    from datamodel=Email.All_Email\n\
+  \    where All_Email.file_name!=\"-\"\n    by All_Email.src_user, All_Email.recipient,\
+  \ All_Email.file_name, All_Email.subject\n| rename All_Email.recipient as user\n\
+  | join type=inner user\n    [| tstats `summariesonly` count\n        from datamodel=Endpoint.Processes\n\
+  \        where Processes.parent_process_name IN (\"OUTLOOK.EXE\",\"winword.exe\"\
+  ,\"excel.exe\",\"powerpnt.exe\")\n          AND Processes.process_name IN (\"cmd.exe\"\
+  ,\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\"\
+  ,\"regsvr32.exe\")\n        by Processes.dest, Processes.user, Processes.parent_process_name,\
+  \ Processes.process_name, Processes.process\n     | rename Processes.user as user]"
+defender_kql: "let LookbackDays = 7d;\nlet MalAttachments = EmailAttachmentInfo\n\
+  \    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"\
+  $\"\n    | project NetworkMessageId, RecipientEmailAddress,\n              AttachmentFileName\
+  \ = FileName, AttachmentSHA256 = SHA256;\nDeviceProcessEvents\n| where Timestamp\
+  \ > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"OUTLOOK.EXE\",\"\
+  winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"cmd.exe\"\
+  ,\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n                      \"mshta.exe\"\
+  ,\"rundll32.exe\",\"regsvr32.exe\")\n| join kind=inner MalAttachments on $left.AccountUpn\
+  \ == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName,\
+  \ FileName, ProcessCommandLine,\n          InitiatingProcessFileName, AttachmentFileName,\
+  \ AttachmentSHA256"
 tier: hunting
 fp_rate_estimate: high
 required_telemetry:

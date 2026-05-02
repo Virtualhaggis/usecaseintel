@@ -17,13 +17,24 @@ data_models:
   - DeviceFileEvents
   - DeviceProcessEvents
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.file_hash IN (__HASH_LIST__)\n    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash\n| `drop_dm_object_name(Filesystem)`\n| append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Processes\n        where Processes.process_hash IN (__HASH_LIST__)\n        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash\n     | `drop_dm_object_name(Processes)`]"
-defender_kql: 'union DeviceFileEvents, DeviceProcessEvents
-
-  | where Timestamp > ago(7d)
-
-  | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
-
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine'
+defender_kql: |
+  // Pre-filter each table BEFORE the union — the engine cannot push
+  // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+  // (Initiating only) so column-projection has to differ per side.
+  union
+      ( DeviceFileEvents
+          | where Timestamp > ago(7d)
+          | where InitiatingProcessAccountName !endswith "$"
+          | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
+          | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                    Cmd = InitiatingProcessCommandLine, Source = "DeviceFileEvents" ),
+      ( DeviceProcessEvents
+          | where Timestamp > ago(7d)
+          | where AccountName !endswith "$"
+          | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
+          | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                    Cmd = ProcessCommandLine, Source = "DeviceProcessEvents" )
+  | order by Timestamp desc
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:

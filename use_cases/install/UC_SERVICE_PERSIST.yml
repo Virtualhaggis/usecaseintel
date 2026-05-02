@@ -2,7 +2,9 @@ id: UC_SERVICE_PERSIST
 title: Service install for persistence — sc.exe / new service registry write
 kill_chain: install
 confidence: High
-description: Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\SYSTEM\CurrentControlSet\Services\* writes).
+description: Service install with binPath pointing to user-writeable path or LOLBin.
+  Detects via process telemetry (sc.exe create) and registry (HKLM\SYSTEM\CurrentControlSet\Services\*
+  writes).
 implementations:
 - splunk
 - defender
@@ -15,11 +17,23 @@ data_models:
   - Endpoint.Registry
   defender:
   - DeviceProcessEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"sc.exe\" AND Processes.process=\"*create*\"\n      AND (Processes.process=\"*\\Users\\*\" OR Processes.process=\"*\\AppData\\*\"\n        OR Processes.process=\"*\\ProgramData\\*\" OR Processes.process=\"*\\Temp\\*\")\n    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n| append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Registry\n        where Registry.registry_path=\"*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\"\n          AND Registry.registry_value_name=\"ImagePath\"\n          AND (Registry.registry_value_data=\"*\\Users\\*\"\n            OR Registry.registry_value_data=\"*\\AppData\\*\"\n            OR Registry.registry_value_data=\"*\\Temp\\*\")\n        by Registry.dest, Registry.registry_path, Registry.registry_value_data,\
-  \ Registry.user\n     | `drop_dm_object_name(Registry)`]"
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"\
+  sc.exe\" AND Processes.process=\"*create*\"\n      AND (Processes.process=\"*\\\
+  Users\\*\" OR Processes.process=\"*\\AppData\\*\"\n        OR Processes.process=\"\
+  *\\ProgramData\\*\" OR Processes.process=\"*\\Temp\\*\")\n    by Processes.dest,\
+  \ Processes.user, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n\
+  | append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Registry\n\
+  \        where Registry.registry_path=\"*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\
+  \\*\"\n          AND Registry.registry_value_name=\"ImagePath\"\n          AND (Registry.registry_value_data=\"\
+  *\\Users\\*\"\n            OR Registry.registry_value_data=\"*\\AppData\\*\"\n \
+  \           OR Registry.registry_value_data=\"*\\Temp\\*\")\n        by Registry.dest,\
+  \ Registry.registry_path, Registry.registry_value_data, Registry.user\n     | `drop_dm_object_name(Registry)`]"
 defender_kql: 'DeviceProcessEvents
 
   | where Timestamp > ago(7d)
+
+  | where AccountName !endswith "$"
 
   | where FileName =~ "sc.exe" and ProcessCommandLine has "create"
 

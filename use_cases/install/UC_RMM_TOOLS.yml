@@ -2,7 +2,9 @@ id: UC_RMM_TOOLS
 title: RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 kill_chain: install
 confidence: High
-description: ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.
+description: ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed
+  outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk
+  impersonators.
 implementations:
 - splunk
 - defender
@@ -14,8 +16,19 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceProcessEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name IN (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\",\"kaseya*.exe\")\n    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`"
-defender_kql: "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\")\n   or FileName matches regex @\"(?i)kaseya.*\\.exe\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine"
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name\
+  \ IN (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"\
+  ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n  \
+  \      \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\"\
+  ,\"kaseya*.exe\")\n    by Processes.dest, Processes.user, Processes.process_name,\
+  \ Processes.process, Processes.parent_process_name\n| `drop_dm_object_name(Processes)`"
+defender_kql: "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName\
+  \ !endswith \"$\"\n| where FileName in~ (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\"\
+  ,\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\"\
+  ,\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\"\
+  )\n   or FileName matches regex @\"(?i)kaseya.*\\.exe\"\n| project Timestamp, DeviceName,\
+  \ AccountName, FileName, ProcessCommandLine"
 tier: hunting
 fp_rate_estimate: high
 required_telemetry:

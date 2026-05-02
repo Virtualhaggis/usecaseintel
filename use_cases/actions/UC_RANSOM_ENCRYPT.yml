@@ -15,17 +15,15 @@ data_models:
   defender:
   - DeviceFileEvents
 splunk_spl: "| tstats `summariesonly` count, dc(Filesystem.file_name) AS files\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.action IN (\"modified\",\"renamed\")\n    by Filesystem.dest, Filesystem.user, _time span=1m\n| `drop_dm_object_name(Filesystem)`\n| where files > 200\n| sort - files"
-defender_kql: 'DeviceFileEvents
-
+defender_kql: |
+  DeviceFileEvents
   | where Timestamp > ago(1d)
-
+  | where InitiatingProcessAccountName !endswith "$"
   | where ActionType in ("FileRenamed","FileModified")
-
-  | summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-
-  | where files > 200
-
-  | order by files desc'
+  | summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+  | where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                         //            is well above the P99 of legitimate bulk-tooling
+  | order by files desc
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:

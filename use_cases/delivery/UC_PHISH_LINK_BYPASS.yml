@@ -20,7 +20,30 @@ data_models:
   defender:
   - UrlClickEvents
   - EmailEvents
-defender_kql: "// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare —\n// every hit deserves analyst review.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc"
+  - EmailUrlInfo
+defender_kql: |
+  // Safe Links assessed the URL as risky, showed a warning page, and the
+  // user proceeded anyway. ClickedThrough events are inherently rare —
+  // every hit deserves analyst review. UrlDomain isn't on UrlClickEvents
+  // or EmailEvents — it's only on EmailUrlInfo, so we left-outer join it.
+  UrlClickEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "ClickedThrough"
+  | join kind=leftouter (
+      EmailEvents
+      | where Timestamp > ago(30d)
+      | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                RecipientEmailAddress, EmailDirection
+    ) on NetworkMessageId
+  | join kind=leftouter (
+      EmailUrlInfo
+      | where Timestamp > ago(30d)
+      | project NetworkMessageId, Url, UrlDomain
+    ) on NetworkMessageId, Url
+  | project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+            EmailDirection, SenderFromAddress, SenderFromDomain,
+            RecipientEmailAddress, Subject, Workload
+  | order by Timestamp desc
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
