@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised SAP CAP / mbt npm package preinstall dropping setup.mjs (Mini Shai-Hulud)
 
-`UC_44_7` · phase: **install** · confidence: **High**
+`UC_46_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud GitHub commit-search dead-drop C2 ('OhNoWhatsGoingOnWithGitHub')
 
-`UC_44_8` · phase: **c2** · confidence: **High**
+`UC_46_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceEvents
 
 ### [LLM] Bun v1.3.13 runtime fetched from npm/node install context (Mini Shai-Hulud dropper)
 
-`UC_44_9` · phase: **delivery** · confidence: **Medium**
+`UC_46_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -254,7 +254,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SAP-Related npm Packages Compromised in Credential-Stealing Supply Chain Attack
 
-`UC_44_6` · phase: **exploit** · confidence: **High**
+`UC_46_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

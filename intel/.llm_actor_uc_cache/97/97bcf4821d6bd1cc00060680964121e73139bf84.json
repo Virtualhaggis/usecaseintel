@@ -1,0 +1,50 @@
+{
+  "name": "Famous Chollima",
+  "ucs": [
+    {
+      "title": "[LLM] Famous Chollima 'Contagious Interview' \u2014 node.exe \u2192 python chain dropping BeaverTail/InvisibleFerret with browser-credential and crypto-wall",
+      "description": "Hunts the DPRK Famous Chollima (CrowdStrike) / UNC5342 (Mandiant) developer-targeting campaign where a trojanized npm/GitHub 'coding challenge' executes via Node, then spawns a Python implant (InvisibleFerret) that reads Chromium 'Login Data' SQLite stores and crypto-wallet extension folders. The node\u2192python pivot from a developer's Code/Terminal session combined with Login Data file access is highly specific to this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1195.001",
+        "T1204.002",
+        "T1059.007",
+        "T1059.006",
+        "T1555.003",
+        "T1539",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"node.exe\",\"node\") AND Processes.parent_process_name IN (\"Code.exe\",\"Cursor.exe\",\"cmd.exe\",\"powershell.exe\",\"WindowsTerminal.exe\",\"bash\",\"zsh\",\"Terminal\") AND (Processes.process=\"*main.js*\" OR Processes.process=\"*error.js*\" OR Processes.process=\"*server.js*\" OR Processes.process=\"*tailwind.config*\" OR Processes.process=\"*helper.js*\") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename process as node_cmd | join type=inner dest [ | tstats summariesonly=t count as py_count earliest(_time) as py_time from datamodel=Endpoint.Processes where Processes.process_name IN (\"python.exe\",\"python3\",\"pythonw.exe\",\"python\") AND Processes.parent_process_name IN (\"node.exe\",\"node\",\"cmd.exe\",\"powershell.exe\") by Processes.dest Processes.process | `drop_dm_object_name(Processes)` | rename process as py_cmd ] | where py_time >= firstTime AND (py_time - lastTime) < 1800 | join type=inner dest [ | tstats summariesonly=t count as wallet_or_login_hits from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*Login Data*\" OR Filesystem.file_path=\"*Local Extension Settings*nkbihfbeogaeaoehlefnkodbefgpgknn*\" OR Filesystem.file_path=\"*Local Extension Settings*ejbalbakoplchlghecdalmeeeajnimhm*\" OR Filesystem.file_path=\"*solana*id.json*\" OR Filesystem.file_path=\"*Exodus*exodus.wallet*\") AND Filesystem.process_name IN (\"node.exe\",\"node\",\"python.exe\",\"python3\",\"pythonw.exe\") by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` ] | table firstTime lastTime dest user parent_process_name node_cmd py_cmd file_path wallet_or_login_hits | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let window = 30m;\nlet devSessions = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (\"node.exe\",\"node\")\n| where InitiatingProcessFileName in~ (\"Code.exe\",\"Cursor.exe\",\"cmd.exe\",\"powershell.exe\",\"WindowsTerminal.exe\",\"bash\",\"zsh\",\"Terminal\")\n| where ProcessCommandLine has_any (\"main.js\",\"error.js\",\"server.js\",\"tailwind.config\",\"helper.js\",\"dist/index\")\n| project NodeTime=Timestamp, DeviceId, DeviceName, AccountName, NodePid=ProcessId, NodeCmd=ProcessCommandLine;\nlet pySpawn = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (\"python.exe\",\"python3\",\"pythonw.exe\",\"python\")\n| where InitiatingProcessFileName in~ (\"node.exe\",\"node\",\"cmd.exe\",\"powershell.exe\")\n| project PyTime=Timestamp, DeviceId, PyPid=ProcessId, PyCmd=ProcessCommandLine, PyParent=InitiatingProcessFileName;\nlet credAccess = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where FolderPath has_any (\"\\\\Google\\\\Chrome\\\\User Data\\\\\",\"\\\\Microsoft\\\\Edge\\\\User Data\\\\\",\"\\\\BraveSoftware\\\\\",\"/Library/Application Support/Google/Chrome/\",\"Local Extension Settings\\\\nkbihfbeogaeaoehlefnkodbefgpgknn\",\"Local Extension Settings\\\\ejbalbakoplchlghecdalmeeeajnimhm\",\"Exodus\\\\exodus.wallet\",\".config/solana\")\n| where FileName in~ (\"Login Data\",\"Cookies\",\"Web Data\",\"id.json\",\"exodus.wallet\") or FolderPath has \"Local Extension Settings\"\n| where InitiatingProcessFileName in~ (\"node.exe\",\"node\",\"python.exe\",\"python3\",\"pythonw.exe\")\n| project FileTime=Timestamp, DeviceId, ToucherPid=InitiatingProcessId, ToucherImg=InitiatingProcessFileName, FilePath=strcat(FolderPath,FileName);\ndevSessions\n| join kind=inner pySpawn on DeviceId\n| where PyTime between (NodeTime .. (NodeTime + window))\n| join kind=inner credAccess on DeviceId\n| where FileTime between (NodeTime .. (NodeTime + 2h))\n| summarize FilesTouched=make_set(FilePath,25), NodeCmd=any(NodeCmd), PyCmd=any(PyCmd), PyParent=any(PyParent) by DeviceId, DeviceName, AccountName, bin(NodeTime, 1h)\n| where array_length(FilesTouched) >= 1",
+      "rationale": "Famous Chollima's 'Contagious Interview' campaign (BeaverTail JS stealer \u2192 InvisibleFerret Python RAT) is the only widely reported actor whose canonical chain is: developer launches a 'coding test' under Code/Cursor/Terminal \u2192 node.exe runs a benign-looking JS file \u2192 that node process spawns python.exe which immediately reaches into Chromium Login Data and Solana/MetaMask/Phantom/Exodus wallet art"
+    },
+    {
+      "title": "[LLM] Famous Chollima DPRK IT-worker fraud \u2014 multi-RMM stack-up on developer endpoint with Astrill/residential-proxy SaaS sign-ins",
+      "description": "Hunts the second Famous Chollima TTP set (DPRK 'Wagemole' / IT-worker scheme): a freshly-onboarded remote engineer's corporate device installs multiple residential RMM/remote-control tools (AnyDesk, Chrome Remote Desktop, RustDesk, TeamViewer) in a tight window while the same identity's GitHub/Slack/Jira/M365 sign-ins originate from Astrill VPN or known DPRK-laundering residential-proxy ASNs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1219",
+        "T1078",
+        "T1133",
+        "T1567.002",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t values(Processes.process_name) as rmm_tools dc(Processes.process_name) as rmm_count min(_time) as firstInstall max(_time) as lastInstall from datamodel=Endpoint.Processes where Processes.process_name IN (\"AnyDesk.exe\",\"remoting_host.exe\",\"chromeremotedesktophost.exe\",\"rustdesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\"ScreenConnect.ClientService.exe\",\"AteraAgent.exe\",\"splashtop*.exe\") by Processes.dest Processes.user span=7d | `drop_dm_object_name(Processes)` | where rmm_count >= 2 | join type=inner user [ | tstats summariesonly=t values(Authentication.src) as src_ips values(Authentication.app) as apps count from datamodel=Authentication where Authentication.action=success AND Authentication.app IN (\"github\",\"slack\",\"jira\",\"office365\",\"azuread\",\"okta\",\"gsuite\") by Authentication.user Authentication.src_country | `drop_dm_object_name(Authentication)` | stats values(src_country) as countries values(src_ips) as src_ips values(apps) as apps by user | where mvcount(countries) >= 2 OR match(mvjoin(countries,\",\"),\"(?i)KP|RU|CN|HK|LA|MY\") ] | table firstInstall lastInstall dest user rmm_tools rmm_count countries src_ips apps | `security_content_ctime(firstInstall)`",
+      "kql": "let lookback = 14d;\nlet rmmStack = DeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName in~ (\"AnyDesk.exe\",\"remoting_host.exe\",\"chromeremotedesktophost.exe\",\"rustdesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\"ScreenConnect.ClientService.exe\",\"AteraAgent.exe\",\"splashtop.exe\",\"SRService.exe\")\n  and ActionType == \"ProcessCreated\"\n| summarize RmmTools=make_set(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, AccountUpn=tostring(AccountUpn)\n| where array_length(RmmTools) >= 2 and (LastSeen - FirstSeen) < 7d;\nlet riskySignIns = AADSignInEventsBeta\n| where Timestamp > ago(lookback)\n| where ErrorCode == 0\n| where Application has_any (\"GitHub\",\"Slack\",\"Atlassian\",\"Office 365\",\"Microsoft 365\",\"Azure\")\n| extend isProxy = tostring(parse_json(tostring(NetworkLocationDetails))) has_any (\"trustedNamedLocation\",\"compliantNetwork\") == false\n| summarize Countries=make_set(Country), ASNs=make_set(NetworkLocationDetails), IPs=make_set(IPAddress), Apps=make_set(Application), SignIns=count() by AccountUpn\n| where array_length(Countries) >= 2\n     or Countries has_any (\"KP\",\"RU\",\"CN\",\"HK\",\"LA\",\"MY\")\n     or tostring(ASNs) has_any (\"Astrill\",\"AS9009\",\"AS59729\",\"M247\",\"residential\",\"Datacamp\");\nrmmStack\n| join kind=inner riskySignIns on AccountUpn\n| project FirstSeen, LastSeen, DeviceName, AccountUpn, RmmTools, Countries, Apps, IPs, SignIns\n| order by FirstSeen desc",
+      "rationale": "The DPRK IT-worker fraud (Famous Chollima / Wagemole, also tracked by Mandiant as UNC5267) has a uniquely operational fingerprint: the actor needs simultaneous remote control (because the laptop is physically in a US laptop-farm but the operator is in DPRK/RU/CN), so they layer 2-3 RMM tools on day one and front identity logins through Astrill VPN or rented residential proxies. Legitimate engineer"
+    }
+  ]
+}

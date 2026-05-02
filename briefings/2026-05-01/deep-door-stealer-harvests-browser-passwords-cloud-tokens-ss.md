@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DEEP#DOOR self-extracting batch: PowerShell reads %~f0 for #PYTHON_START block
 
-`UC_20_10` · phase: **install** · confidence: **High**
+`UC_25_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### [LLM] DEEP#DOOR persistence artefacts: SystemServices.vbs in Startup and svc.py in %LOCALAPPDATA%\SystemServices
 
-`UC_20_11` · phase: **install** · confidence: **High**
+`UC_25_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ union
 
 ### [LLM] DEEP#DOOR C2 via bore.pub tunnel on ports 41234-41243 from script interpreters
 
-`UC_20_12` · phase: **c2** · confidence: **High**
+`UC_25_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -410,7 +410,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Deep#Door Stealer Harvests Browser Passwords, Cloud Tokens, SSH Keys, and Wi-Fi
 
-`UC_20_9` · phase: **exploit** · confidence: **High**
+`UC_25_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

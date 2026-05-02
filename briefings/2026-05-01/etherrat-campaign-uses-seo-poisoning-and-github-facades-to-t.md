@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EtherRAT persistence: conhost.exe launching node.exe in headless mode
 
-`UC_3_10` · phase: **install** · confidence: **High**
+`UC_8_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] Trojanised admin-tool MSI Custom Action drops obfuscated batch + Node stager
 
-`UC_3_11` · phase: **delivery** · confidence: **Medium**
+`UC_8_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] Endpoint beaconing to public Ethereum JSON-RPC endpoints (EtherHiding C2 resolver)
 
-`UC_3_12` · phase: **c2** · confidence: **Medium**
+`UC_8_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -429,7 +429,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — EtherRAT Campaign Uses SEO Poisoning and GitHub Facades to Target Enterprise Adm
 
-`UC_3_9` · phase: **exploit** · confidence: **High**
+`UC_8_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

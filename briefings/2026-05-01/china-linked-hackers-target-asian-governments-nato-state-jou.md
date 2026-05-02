@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ShadowPad DLL side-load via AnyDesk binary launched outside install path
 
-`UC_9_12` · phase: **install** · confidence: **Medium**
+`UC_14_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ let suspectAnydesk = DeviceProcessEvents | where FileName =~ "AnyDesk.exe" | whe
 
 ### [LLM] Godzilla webshell artefacts on Exchange/IIS w3wp.exe (post ProxyLogon-style chain)
 
-`UC_9_13` · phase: **install** · confidence: **High**
+`UC_14_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ let webshellDrops = DeviceFileEvents | where ActionType in ("FileCreated","FileM
 
 ### [LLM] GOST / Wstunnel / IOX tunneling binaries used by SHADOW-EARTH-053 for C2 relay
 
-`UC_9_14` · phase: **c2** · confidence: **Medium**
+`UC_14_14` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

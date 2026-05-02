@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClickFix CAPTCHA execution: RunMRU populated with LOLBin command followed by explorer-spawned exec
 
-`UC_10_7` · phase: **exploit** · confidence: **High**
+`UC_15_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ RunMRUWrites
 
 ### [LLM] SVG email attachment opened in browser from Outlook temp dir then beacons to external CAPTCHA host
 
-`UC_10_8` · phase: **delivery** · confidence: **Medium**
+`UC_15_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ SvgOpens
 
 ### [LLM] Local HTML attachment launches browser then redirects to Tycoon2FA-pattern .ru AiTM landing
 
-`UC_10_9` · phase: **delivery** · confidence: **Medium**
+`UC_15_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

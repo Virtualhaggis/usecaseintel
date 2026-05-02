@@ -1,0 +1,47 @@
+{
+  "name": "Qilin",
+  "ucs": [
+    {
+      "title": "[LLM] Qilin (Agenda) Safe Mode reboot to disarm EDR before ransomware encryption",
+      "description": "Hunts the signature Qilin/Agenda affiliate playbook of forcing a Windows reboot into Safe Mode (with networking) via bcdedit so endpoint protection drivers don't load, then detonating the Rust/Go ransomware binary. Microsoft tracks this cluster overlapping Storm-2575 / Agenda; Trend Micro and CrowdStrike have repeatedly documented this exact bcdedit\u2192shutdown\u2192encrypt chain.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1562.009",
+        "T1562.001",
+        "T1490",
+        "T1486",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=bcdedit.exe AND Processes.process IN (\"*safeboot*network*\",\"*safeboot*minimal*\",\"*/set*safeboot*\")) OR (Processes.process_name IN (vssadmin.exe,wmic.exe) AND Processes.process IN (\"*delete*shadows*\",\"*shadowcopy*delete*\")) OR (Processes.process_name=wevtutil.exe AND Processes.process=\"*cl*\") by Processes.dest Processes.parent_process_name Processes.process_name _time span=10m | `drop_dm_object_name(Processes)` | stats dc(process_name) as distinct_actions values(process) as cmds values(parent) as parents min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where distinct_actions>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let safeboot = DeviceProcessEvents | where FileName =~ \"bcdedit.exe\" | where ProcessCommandLine has \"safeboot\" and ProcessCommandLine has_any (\"/set\",\"-set\") | project SafeTime=Timestamp, DeviceId, DeviceName, AccountName=AccountUpn, SafeCmd=ProcessCommandLine, SafeParent=InitiatingProcessFileName; let reboot = DeviceProcessEvents | where (FileName =~ \"shutdown.exe\" and ProcessCommandLine has_any (\"/r\",\"-r\")) or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"reboot\") | project RebootTime=Timestamp, DeviceId, RebootCmd=ProcessCommandLine; let killrecov = DeviceProcessEvents | where (FileName in~ (\"vssadmin.exe\",\"wmic.exe\") and ProcessCommandLine has_any (\"delete shadows\",\"shadowcopy delete\")) or (FileName =~ \"wbadmin.exe\" and ProcessCommandLine has \"delete catalog\") or (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has_any (\"recoveryenabled no\",\"bootstatuspolicy ignoreallfailures\")) | project RecovTime=Timestamp, DeviceId, RecovCmd=ProcessCommandLine; safeboot | join kind=inner (reboot) on DeviceId | where datetime_diff('minute', RebootTime, SafeTime) between (-30 .. 30) | join kind=leftouter (killrecov) on DeviceId | project SafeTime, DeviceName, AccountName, SafeParent, SafeCmd, RebootCmd, RecovCmd",
+      "rationale": "bcdedit /set safeboot is essentially never used by legitimate admins on production endpoints, and Qilin/Agenda is the dominant ransomware family that pivots into Safe Mode-with-Networking specifically to neuter EDR minifilters before launching its Rust/Go encryptor. Pairing the bcdedit edit with a forced reboot inside a 30-minute window and shadow-copy/recovery destruction yields a Qilin-shaped ch"
+    },
+    {
+      "title": "[LLM] Qilin mass browser-credential harvesting via GPO-deployed PowerShell on domain endpoints",
+      "description": "Hunts the August-2024 Sophos-documented Qilin tradecraft where the affiliate, after privileged AD access, pushed a PowerShell logon script through Group Policy that copied Chrome/Edge 'Login Data', 'Cookies', and 'Local State' from every user profile on every domain-joined host before the ransomware stage. This pre-encryption credential sweep is a Qilin-distinctive behavior not seen in most RaaS playbooks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1555.003",
+        "T1003",
+        "T1037.001",
+        "T1059.001",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (powershell.exe,pwsh.exe,cmd.exe) AND (Processes.process=\"*\\\\User Data\\\\*Login Data*\" OR Processes.process=\"*\\\\User Data\\\\*Cookies*\" OR Processes.process=\"*\\\\User Data\\\\Local State*\" OR Processes.process=\"*Chrome\\\\User Data*\" OR Processes.process=\"*Edge\\\\User Data*\") AND Processes.parent_process_name IN (gpscript.exe,userinit.exe,services.exe,svchost.exe,wscript.exe) by Processes.dest Processes.user Processes.parent_process_name _time span=1h | `drop_dm_object_name(Processes)` | stats dc(dest) as host_count values(cmdline) as cmds values(user) as users by parent_process_name | where host_count>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let browser_artifacts = pack_array(@\"\\Google\\Chrome\\User Data\\\", @\"\\Microsoft\\Edge\\User Data\\\", @\"\\BraveSoftware\\Brave-Browser\\User Data\\\", @\"\\Mozilla\\Firefox\\Profiles\\\"); let suspicious = DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileName in~ (\"gpscript.exe\",\"userinit.exe\",\"svchost.exe\",\"services.exe\",\"wscript.exe\",\"cscript.exe\") or InitiatingProcessParentFileName =~ \"gpscript.exe\" | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") | where ProcessCommandLine has_any (\"Login Data\",\"Cookies\",\"Local State\",\"Web Data\",@\"User Data\") | where ProcessCommandLine has_any (browser_artifacts) or ProcessCommandLine has_any (\"Chrome\",\"Edge\",\"Brave\",\"Firefox\"); let file_touch = DeviceFileEvents | where Timestamp > ago(7d) | where FileName in~ (\"Login Data\",\"Cookies\",\"Local State\",\"Web Data\") | where FolderPath has_any (browser_artifacts) | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"brave.exe\",\"firefox.exe\",\"OneDrive.exe\",\"MsMpEng.exe\",\"explorer.exe\") | summarize FileEvents=count(), Files=make_set(FileName,10), Folders=make_set(FolderPath,10) by DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine; suspicious | join kind=inner file_touch on DeviceId | summarize Hosts=dcount(DeviceId), SampleHosts=make_set(DeviceName,10), SampleCmd=any(ProcessCommandLine) by InitiatingProcessFileName, InitiatingProcessCommandLine | where Hosts >= 3",
+      "rationale": "Sophos X-Ops attributed this exact GPO-pushed PowerShell logon script that drags Chrome/Edge 'Login Data' and 'Cookies' off thousands of endpoints to Qilin in 2024 \u2014 the fan-out from a single GPO parent (gpscript.exe \u2192 powershell.exe touching browser SQLite stores across many hosts simultaneously) is the discriminator. Generic infostealers (RedLine, Lumma) hit one host at a time; LockBit/BlackCat "
+    }
+  ]
+}

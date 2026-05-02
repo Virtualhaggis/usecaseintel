@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Endpoint traffic to known Bluekit PhaaS operator/panel infrastructure (bluekit.pk/.su/.cc)
 
-`UC_25_4` · phase: **c2** · confidence: **High**
+`UC_29_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union
 
 ### [LLM] Lookalike-domain visits impersonating Bluekit's distinctive brand template set (Ledger/ProtonMail/Zoho/Zara)
 
-`UC_25_5` · phase: **delivery** · confidence: **Medium**
+`UC_29_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

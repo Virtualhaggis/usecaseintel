@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SHADOW-EARTH-053 ShadowPad persistence: scheduled task 'M1onltor' running sideloaded binary every 5 min
 
-`UC_21_6` · phase: **install** · confidence: **High**
+`UC_25_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union
 
 ### [LLM] Post-ProxyLogon: IIS w3wp.exe drops GODZILLA web shells or spawns Evil-CreateDump / Mimikatz
 
-`UC_21_7` · phase: **actions** · confidence: **High**
+`UC_25_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ union
 
 ### [LLM] SHADOW-EARTH-053 staging: LocalAccountTokenFilterPolicy=1 followed by IOX/GOST/Wstunnel from C:\Users\Public or C:\ProgramData
 
-`UC_21_8` · phase: **c2** · confidence: **Medium**
+`UC_25_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

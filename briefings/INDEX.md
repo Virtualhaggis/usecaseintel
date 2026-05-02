@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_432 per-article briefings — auto-generated from articles in the rolling 365-day window._
+_430 per-article briefings — auto-generated from articles in the rolling 365-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,16 +8,22 @@ _432 per-article briefings — auto-generated from articles in the rolling 365-d
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-02
+- [cpanelsniper poc exploit disclosed for cpanel vulnerability ](./2026-05-02/cpanelsniper-poc-exploit-disclosed-for-cpanel-vulnerability-.md)
+- [microsoft tests modern windows run says it s faster than leg](./2026-05-02/microsoft-tests-modern-windows-run-says-it-s-faster-than-leg.md)
+- [the npm threat landscape attack surface and mitigations upda](./2026-05-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
+
 ## 2026-05-01
 - [15 year old detained over french govt agency data breach](./2026-05-01/15-year-old-detained-over-french-govt-agency-data-breach.md)
 - [30 000 facebook accounts hacked via google appsheet phishing](./2026-05-01/30-000-facebook-accounts-hacked-via-google-appsheet-phishing.md)
 - [attackers abuse captcha and clickfix tactics to boost creden](./2026-05-01/attackers-abuse-captcha-and-clickfix-tactics-to-boost-creden.md)
-- [china aligned attackers use shadowpad iox proxy and wmic in ](./2026-05-01/china-aligned-attackers-use-shadowpad-iox-proxy-and-wmic-in-.md)
 - [china linked hackers target asian governments nato state jou](./2026-05-01/china-linked-hackers-target-asian-governments-nato-state-jou.md)
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
 - [criminal ip and securonix threatq collaborate to enhance thr](./2026-05-01/criminal-ip-and-securonix-threatq-collaborate-to-enhance-thr.md)
 - [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
 - [deep door stealer harvests browser passwords cloud tokens ss](./2026-05-01/deep-door-stealer-harvests-browser-passwords-cloud-tokens-ss.md)
+- [edu tech firm instructure discloses cyber incident probes im](./2026-05-01/edu-tech-firm-instructure-discloses-cyber-incident-probes-im.md)
+- [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
 - [etherrat campaign uses seo poisoning and github facades to t](./2026-05-01/etherrat-campaign-uses-seo-poisoning-and-github-facades-to-t.md)
 - [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
 - [microsoft fixes remote desktop warnings displaying incorrect](./2026-05-01/microsoft-fixes-remote-desktop-warnings-displaying-incorrect.md)
@@ -37,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-30
 - [april kb5083769 windows 11 update causes backup software fai](./2026-04-30/april-kb5083769-windows-11-update-causes-backup-software-fai.md)
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
-- [critical cpanel and whm bug exploited as a zero day poc now ](./2026-04-30/critical-cpanel-and-whm-bug-exploited-as-a-zero-day-poc-now-.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [etherrat distribution spoofing administrative tools via gith](./2026-04-30/etherrat-distribution-spoofing-administrative-tools-via-gith.md)
 - [fbi links cybercriminals to sharp surge in cargo theft attac](./2026-04-30/fbi-links-cybercriminals-to-sharp-surge-in-cargo-theft-attac.md)
@@ -47,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new linux copy fail flaw gives hackers root on major distros](./2026-04-30/new-linux-copy-fail-flaw-gives-hackers-root-on-major-distros.md)
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
-- [police dismantles 9 crypto scam centers arrests 276 suspects](./2026-04-30/police-dismantles-9-crypto-scam-centers-arrests-276-suspects.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
 - [romanian leader of online swatting ring gets 4 years in pris](./2026-04-30/romanian-leader-of-online-swatting-ring-gets-4-years-in-pris.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
@@ -104,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [phantomrpc a new privilege escalation technique in windows r](./2026-04-24/phantomrpc-a-new-privilege-escalation-technique-in-windows-r.md)
 - [tgr sta 1030 new activity in central and south america](./2026-04-24/tgr-sta-1030-new-activity-in-central-and-south-america.md)
 - [the calm before the ransom what you see is not all there is](./2026-04-24/the-calm-before-the-ransom-what-you-see-is-not-all-there-is.md)
-- [the npm threat landscape attack surface and mitigations](./2026-04-24/the-npm-threat-landscape-attack-surface-and-mitigations.md)
 - [tropic trooper uses trojanized sumatrapdf and github to depl](./2026-04-24/tropic-trooper-uses-trojanized-sumatrapdf-and-github-to-depl.md)
 
 ## 2026-04-23
@@ -209,9 +212,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a laughing rat crystalx combines spyware stealer and prankwa](./2026-04-01/a-laughing-rat-crystalx-combines-spyware-stealer-and-prankwa.md)
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)
 - [threat brief widespread impact of the axios supply chain att](./2026-04-01/threat-brief-widespread-impact-of-the-axios-supply-chain-att.md)
-
-## 2026-03-31
-- [weaponizing the protectors teampcp s multi stage supply chai](./2026-03-31/weaponizing-the-protectors-teampcp-s-multi-stage-supply-chai.md)
 
 ## 2026-03-27
 - [a cunning predator how silver fox preys on japanese firms th](./2026-03-27/a-cunning-predator-how-silver-fox-preys-on-japanese-firms-th.md)
@@ -781,7 +781,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-05-05
 - [cisa kev cve 2025 3248 langflow missing authentication vulne](./2025-05-05/cisa-kev-cve-2025-3248-langflow-missing-authentication-vulne.md)
-
-## 2025-05-02
-- [cisa kev cve 2024 58136 yiiframework yii improper protection](./2025-05-02/cisa-kev-cve-2024-58136-yiiframework-yii-improper-protection.md)
-- [cisa kev cve 2025 34028 commvault command center path traver](./2025-05-02/cisa-kev-cve-2025-34028-commvault-command-center-path-traver.md)

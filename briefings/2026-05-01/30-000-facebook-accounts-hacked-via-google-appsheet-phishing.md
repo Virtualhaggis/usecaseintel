@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AppSheet-relayed Meta/Facebook 'AccountDumpling' phishing email
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_5_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ EmailEvents
 
 ### [LLM] Browser visit to Netlify/Vercel Facebook lookalike followed by api.telegram.org exfil
 
-`UC_0_10` · phase: **c2** · confidence: **Medium**
+`UC_5_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ landings
 
 ### [LLM] DNS/web hit on AccountDumpling operator infrastructure phamtaitan[.]vn
 
-`UC_0_11` · phase: **recon** · confidence: **Medium**
+`UC_5_11` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

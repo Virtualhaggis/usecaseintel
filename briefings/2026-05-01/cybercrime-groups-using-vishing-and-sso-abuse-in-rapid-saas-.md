@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cordial/Snarky Spider: MFA device deleted then new device registered within short window
 
-`UC_7_9` · phase: **install** · confidence: **High**
+`UC_12_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ deletes
 
 ### [LLM] Inbox rule auto-deleting Entra/Exchange MFA & device-registration notifications
 
-`UC_7_10` · phase: **install** · confidence: **High**
+`UC_12_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ CloudAppEvents
 
 ### [LLM] Bulk SaaS data export from Salesforce/SharePoint/HubSpot/Google Workspace within 1h of new MFA device
 
-`UC_7_11` · phase: **actions** · confidence: **High**
+`UC_12_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

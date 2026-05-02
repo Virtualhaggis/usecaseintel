@@ -1,0 +1,45 @@
+{
+  "name": "FIN6",
+  "ucs": [
+    {
+      "title": "[LLM] FIN6/Skeleton Spider More_eggs delivery chain \u2014 LNK \u2192 ie4uinit.exe / msxsl.exe JScript proxy",
+      "description": "Hunts the canonical FIN6 (Mandiant: Skeleton Spider, Microsoft: Camouflage Tempest) loader execution where a LNK extracted from a resume-themed ZIP spawns cmd.exe that abuses ie4uinit.exe (-BaseSettings flag), msxsl.exe, or regsvr32 /scrobj to execute the More_eggs (TerraLoader / VenomLNK) JScript backdoor. This LOLBin combo is a long-standing FIN6/Cobalt Group tradecraft signature distinct from generic JScript abuse.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.007",
+        "T1027.010",
+        "T1036.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name=ie4uinit.exe AND Processes.process=\"*BaseSettings*\") OR Processes.process_name=msxsl.exe OR (Processes.process_name=regsvr32.exe AND (Processes.process=\"*scrobj*\" OR Processes.process=\"*/i:http*\" OR Processes.process=\"*.sct*\")) OR (Processes.process_name IN (wscript.exe,cscript.exe) AND Processes.process=\"*.js*\")) AND Processes.parent_process_name IN (cmd.exe,explorer.exe,wmiprvse.exe) AND (Processes.parent_process=\"*\\\\Temp\\\\*\" OR Processes.parent_process=\"*\\\\Downloads\\\\*\" OR Processes.parent_process=\"*\\\\AppData\\\\Local\\\\*\" OR Processes.parent_process=\"*.lnk*\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where (FileName =~ \"ie4uinit.exe\" and ProcessCommandLine has_cs \"BaseSettings\")\n     or FileName =~ \"msxsl.exe\"\n     or (FileName =~ \"regsvr32.exe\" and ProcessCommandLine has_any (\"scrobj\", \"/i:http\", \".sct\"))\n     or (FileName in~ (\"wscript.exe\",\"cscript.exe\") and ProcessCommandLine has \".js\")\n| where InitiatingProcessFileName in~ (\"cmd.exe\",\"explorer.exe\",\"wmiprvse.exe\")\n| where InitiatingProcessCommandLine has_any (\".lnk\",\"\\\\Temp\\\\\",\"\\\\Downloads\\\\\",\"\\\\AppData\\\\Local\\\\\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256\n| order by Timestamp desc",
+      "rationale": "ie4uinit.exe -BaseSettings and msxsl.exe abuse to sideload JScript is a narrow, FIN6-attributed primitive documented across Mandiant/FireEye reporting for More_eggs deployment (Cobalt Group also overlaps). Constraining the parent to cmd.exe/explorer with a Temp/Downloads/.lnk command-line removes admin scripting noise and isolates the lure-driven Skeleton Spider chain rather than alerting on every"
+    },
+    {
+      "title": "[LLM] FIN6 LinkedIn resume lure \u2014 cloud-hosted resume site \u2192 ZIP/LNK drop \u2192 script-host execution",
+      "description": "Detects the FIN6 / Skeleton Spider social-engineering chain where a contractor or HR user is solicited via LinkedIn DM to a fake personal-portfolio site (typically AWS S3, CloudFront, or GitHub Pages) using resume/CV themed paths, downloads a resume-named ZIP/LNK, and within minutes spawns a JScript proxy. Correlates web egress + filesystem drop + script execution in one window \u2014 characteristic of FIN6's 2023-2025 access-broker operations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1204.002",
+        "T1059.007",
+        "T1102"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as web_time from datamodel=Web where (Web.url=\"*s3.amazonaws.com*\" OR Web.url=\"*cloudfront.net*\" OR Web.url=\"*github.io*\" OR Web.url=\"*azurewebsites.net*\") AND (Web.url=\"*resume*\" OR Web.url=\"*cv*\" OR Web.url=\"*portfolio*\" OR Web.url=\"*candidate*\" OR Web.url=\"*applicant*\") by Web.src Web.user Web.url | `drop_dm_object_name(Web)` | rename src as host | join type=inner host [ | tstats summariesonly=t count min(_time) as file_time from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*resume*.zip\" OR Filesystem.file_name=\"*cv*.zip\" OR Filesystem.file_name=\"*resume*.lnk\" OR Filesystem.file_name=\"*application*.zip\" OR Filesystem.file_name=\"*portfolio*.lnk\") AND (Filesystem.file_path=\"*\\\\Downloads\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\") by Filesystem.dest Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename dest as host ] | join type=inner host [ | tstats summariesonly=t count min(_time) as proc_time from datamodel=Endpoint.Processes where Processes.process_name IN (wscript.exe,cscript.exe,msxsl.exe,ie4uinit.exe,regsvr32.exe) AND Processes.parent_process_name IN (cmd.exe,explorer.exe) by Processes.dest Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | rename dest as host ] | eval drop_lag=(file_time-web_time), exec_lag=(proc_time-file_time) | where drop_lag>=0 AND drop_lag<=1800 AND exec_lag>=0 AND exec_lag<=3600 | table host user url file_name file_path process_name process parent_process web_time file_time proc_time",
+      "kql": "let lure =\n    DeviceNetworkEvents\n    | where Timestamp > ago(14d)\n    | where RemoteUrl has_any (\"amazonaws.com\",\"cloudfront.net\",\"github.io\",\"azurewebsites.net\",\"web.app\")\n    | where RemoteUrl matches regex @\"(?i)(resume|cv|portfolio|candidate|applicant|career|hire)\"\n    | project DeviceId, NetTime=Timestamp, RemoteUrl, NetProc=InitiatingProcessFileName;\nlet drop =\n    DeviceFileEvents\n    | where Timestamp > ago(14d)\n    | where ActionType == \"FileCreated\"\n    | where FolderPath has_any (\"\\\\Downloads\\\\\",\"\\\\Temp\\\\\",\"\\\\AppData\\\\Local\\\\\")\n    | where FileName matches regex @\"(?i)(resume|cv|portfolio|application|candidate).*\\.(zip|lnk|iso|img)$\"\n    | project DeviceId, FileTime=Timestamp, FileName, FolderPath;\nlet exec =\n    DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where (FileName =~ \"ie4uinit.exe\" and ProcessCommandLine has_cs \"BaseSettings\")\n         or FileName in~ (\"msxsl.exe\",\"wscript.exe\",\"cscript.exe\")\n         or (FileName =~ \"regsvr32.exe\" and ProcessCommandLine has_any (\"scrobj\",\"/i:http\",\".sct\"))\n    | where InitiatingProcessFileName in~ (\"cmd.exe\",\"explorer.exe\",\"7zG.exe\",\"WinRAR.exe\")\n    | project DeviceId, ExecTime=Timestamp, ProcName=FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;\nlure\n| join kind=inner drop on DeviceId\n| where datetime_diff('minute', FileTime, NetTime) between (0 .. 30)\n| join kind=inner exec on DeviceId\n| where datetime_diff('minute', ExecTime, FileTime) between (0 .. 60)\n| project NetTime, FileTime, ExecTime, DeviceId, RemoteUrl, FileName, FolderPath, ProcName, ProcessCommandLine, InitiatingProcessFileName",
+      "rationale": "FIN6's pivot from POS skimming to access-broker ops is centered on bespoke LinkedIn outreach pointing at attacker-controlled resume sites on legitimate cloud CDNs (Mandiant Skeleton Spider 2024 reporting). Generic 'malicious download' rules miss this because the URL host is reputable AWS/CloudFront. Joining the resume-themed cloud URL, a resume-named archive in Downloads, and a script-host child o"
+    }
+  ]
+}

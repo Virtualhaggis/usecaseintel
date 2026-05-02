@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] KidsProtect Android stalkerware APK by SHA-256 hash on endpoint filesystem
 
-`UC_6_6` · phase: **delivery** · confidence: **High**
+`UC_11_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceFileEvents
 
 ### [LLM] KidsProtect package com.example.parentguard installed or active on managed Android device
 
-`UC_6_7` · phase: **install** · confidence: **High**
+`UC_11_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
