@@ -6362,21 +6362,14 @@ const TOUR_STEPS = [
     body: "All 14 MITRE tactics, every non-deprecated technique. <b>Cell intensity</b> shows how many of your detections cover that technique. <b>Click any cell</b> for the drawer of UCs and articles.",
     preview: '<span class="tour-preview-meta">222 techniques · 475 sub-techniques · 14 tactics</span>' },
   { section: "ATT&CK Matrix", view: "matrix",
-    target: "#matrixGrid .tech-cell.has-uc", fallback: "#matrixGrid .tech-cell",
-    title: "Per-platform coverage badges",
-    body: "Each cell carries badges showing which detection languages cover that technique. Spot at a glance where a Sigma migration would close a gap.",
-    preview: '<span class="tour-preview-pill platform-d">D · Defender</span>' +
-             '<span class="tour-preview-pill platform-s">S · Sentinel</span>' +
-             '<span class="tour-preview-pill platform-z">Σ · Sigma</span>' +
-             '<span class="tour-preview-pill platform-p">P · Splunk</span>' },
-  { section: "ATT&CK Matrix", view: "matrix",
-    target: "#matrixPlatforms", fallback: "#view-matrix .filter-row",
-    title: "Filter by platform",
-    body: "Pin the matrix to a single platform — say, only show techniques that have a Sigma rule. Combines with the search box for fast scoping.",
-    preview: '<span class="tour-preview-meta">Toggle:</span>' +
-             '<span class="tour-preview-pill platform-d">DEF</span>' +
-             '<span class="tour-preview-pill platform-s">SENT</span>' +
-             '<span class="tour-preview-pill">ALL</span>' },
+    target: "#matrixModes", fallback: "#view-matrix .matrix-toolbar",
+    title: "Coverage vs Heat — switch the lens",
+    body: "<b>Coverage</b> shades cells by how many of your detections fire on that technique. <b>Heat</b> shades them by how many recent articles cite it. <b>All</b> shows both.",
+    preview: '<span class="tour-preview-pill">Coverage</span>' +
+             '<span class="tour-preview-meta">·</span>' +
+             '<span class="tour-preview-pill">Heat</span>' +
+             '<span class="tour-preview-meta">·</span>' +
+             '<span class="tour-preview-pill">All</span>' },
 
   { section: "Threat Intel", view: "intel",
     target: "#view-intel",
@@ -6389,16 +6382,16 @@ const TOUR_STEPS = [
              '<span class="tour-preview-meta">→ CSV / JSON / Splunk lookup</span>' },
 
   { section: "Threat Actors", view: "actors",
-    target: "#view-actors",
+    target: "#actorsGlobe", fallback: ".actors-map-wrap",
     title: "187 tracked actors on a 3D globe",
-    body: "Every MITRE-tracked APT and e-crime crew, mapped by attribution country. <b>Click any country dot</b> to see actors operating from there.",
+    body: "Every MITRE-tracked APT and e-crime crew, plotted by attribution country on a live WebGL globe. <b>Drag to spin</b>; <b>click any country marker</b> to filter the actor grid below to crews operating from there.",
     preview: '<span class="tour-preview-pill">APT28</span>' +
              '<span class="tour-preview-pill">Lazarus</span>' +
              '<span class="tour-preview-pill">FIN7</span>' +
              '<span class="tour-preview-pill">Volt Typhoon</span>' +
              '<span class="tour-preview-meta">+183 more</span>' },
   { section: "Threat Actors", view: "actors",
-    target: "#view-actors",
+    target: ".actor-card", fallback: ".actors-grid",
     title: "Per-actor bespoke detections",
     body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template.",
     preview: '<span class="tour-preview-meta">e.g.</span>' +
@@ -6485,13 +6478,18 @@ function tourGoto(i) {
   _tourIndex = i;
   const step = TOUR_STEPS[i];
   if (step.view) showView(step.view);
+  // Some views need a beat to render before the spotlight can measure
+  // their elements — actors mounts a WebGL globe, matrix builds a 222-
+  // cell grid. Give those views extra time before scrolling/spotting.
+  const needsRender = step.view === 'actors' || step.view === 'matrix' || step.view === 'intel';
+  const delay = needsRender ? 480 : 220;
   setTimeout(() => {
     const el = _tourSpotlight(step.target, step.fallback);
     _placeTourCard(el);
     // Re-check placement once scroll settles — getBoundingClientRect
     // immediately after scrollIntoView returns the pre-scroll rect.
     setTimeout(() => _placeTourCard(el), 380);
-  }, 220);
+  }, delay);
   document.getElementById('tourSection').textContent = step.section;
   document.getElementById('tourCounter').textContent = `${i + 1} / ${TOUR_STEPS.length}`;
   document.getElementById('tourCardTitle').textContent = step.title;
