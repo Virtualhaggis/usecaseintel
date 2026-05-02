@@ -3411,9 +3411,7 @@ body:not(.view-actors-active)   .stats-actors{
    ================================================================= */
 .tour-overlay{
   position:fixed; inset:0;
-  background:rgba(8,9,10,0.72);
-  backdrop-filter:blur(2px);
-  -webkit-backdrop-filter:blur(2px);
+  background:rgba(8,9,10,0.45);
   z-index:9000;
   opacity:0; pointer-events:none;
   transition:opacity 0.22s ease-out;
@@ -3422,27 +3420,29 @@ body.tour-on .tour-overlay{opacity:1; pointer-events:auto;}
 
 /* Box-shadow spotlight: a 9999px outer-spread shadow on the target
    element creates the "punch hole" effect. The element appears to
-   float above the dimmed page. No DOM gymnastics needed. */
+   float above the dimmed page. No DOM gymnastics needed. Lower
+   outer-dim opacity keeps surrounding features readable so the user
+   sees what's actually being demoed. */
 .tour-spotlight{
   position:relative !important;
   z-index:9050 !important;
   box-shadow:
-    0 0 0 4px rgba(113,112,255,0.55),
-    0 0 0 9px rgba(113,112,255,0.18),
-    0 0 0 9999px rgba(8,9,10,0.78) !important;
+    0 0 0 3px rgba(113,112,255,0.75),
+    0 0 0 8px rgba(113,112,255,0.22),
+    0 0 0 9999px rgba(8,9,10,0.55) !important;
   border-radius:var(--r-md);
   transition:box-shadow 0.3s ease-out;
   animation:tour-pulse 2.4s ease-in-out infinite;
 }
 @keyframes tour-pulse{
   0%, 100% { box-shadow:
-    0 0 0 4px rgba(113,112,255,0.55),
-    0 0 0 9px rgba(113,112,255,0.18),
-    0 0 0 9999px rgba(8,9,10,0.78) !important; }
+    0 0 0 3px rgba(113,112,255,0.75),
+    0 0 0 8px rgba(113,112,255,0.22),
+    0 0 0 9999px rgba(8,9,10,0.55) !important; }
   50% { box-shadow:
-    0 0 0 4px rgba(113,112,255,0.85),
-    0 0 0 14px rgba(113,112,255,0.10),
-    0 0 0 9999px rgba(8,9,10,0.78) !important; }
+    0 0 0 3px rgba(113,112,255,1.00),
+    0 0 0 13px rgba(113,112,255,0.14),
+    0 0 0 9999px rgba(8,9,10,0.55) !important; }
 }
 /* Block clicks on everything except the spotlight + tour card while
    tour is on. Lets the user navigate the tour without accidentally
@@ -3455,11 +3455,14 @@ body.tour-on .tour-spotlight *,
 body.tour-on .tour-card,
 body.tour-on .tour-card *{pointer-events:auto;}
 
-/* Floating tour card */
+/* Floating tour card. Default anchor is bottom-center; the engine
+   flips it to top-center via .tour-card-top when the spotlight is in
+   the lower half of the viewport, so the card never overlaps the
+   element it's narrating. */
 .tour-card{
-  position:fixed; left:50%; bottom:32px;
+  position:fixed; left:50%; bottom:32px; top:auto;
   transform:translateX(-50%) translateY(8px);
-  width:min(420px, calc(100vw - 32px));
+  width:min(440px, calc(100vw - 32px));
   background:linear-gradient(180deg, var(--panel-elev), var(--panel));
   border:1px solid rgba(113,112,255,0.40);
   border-radius:var(--r-lg);
@@ -3470,13 +3473,60 @@ body.tour-on .tour-card *{pointer-events:auto;}
     0 0 0 1px rgba(255,255,255,0.04) inset;
   z-index:9100;
   opacity:0;
-  transition:transform 0.28s cubic-bezier(0.2,0.8,0.2,1.0), opacity 0.22s ease-out;
+  transition:transform 0.28s cubic-bezier(0.2,0.8,0.2,1.0),
+             opacity 0.22s ease-out,
+             top 0.28s cubic-bezier(0.2,0.8,0.2,1.0),
+             bottom 0.28s cubic-bezier(0.2,0.8,0.2,1.0);
+}
+.tour-card.tour-card-top{
+  top:24px; bottom:auto;
+  transform:translateX(-50%) translateY(-8px);
 }
 body.tour-on .tour-card{
   opacity:1;
   transform:translateX(-50%) translateY(0);
 }
+body.tour-on .tour-card.tour-card-top{
+  transform:translateX(-50%) translateY(0);
+}
 .tour-card[hidden]{display:none;}
+
+/* Preview chips — small visual showcase row below the body text,
+   used to render concrete examples of what the spotlight is about
+   (e.g. a row of platform pills, a fake search-bar mock, etc). */
+.tour-preview{
+  margin:0 0 14px;
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding:10px 12px;
+  background:rgba(113,112,255,0.06);
+  border:1px solid rgba(113,112,255,0.18);
+  border-radius:var(--r-md);
+  align-items:center;
+}
+.tour-preview:empty{display:none;}
+.tour-preview-pill{
+  display:inline-flex; align-items:center; gap:5px;
+  padding:3px 9px; border-radius:99px;
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:0.02em;
+  background:rgba(113,112,255,0.14);
+  border:1px solid rgba(113,112,255,0.32);
+  color:var(--accent-2);
+}
+.tour-preview-pill.platform-d{ background:rgba(80,200,160,0.12); border-color:rgba(80,200,160,0.32); color:#9bdfc1; }
+.tour-preview-pill.platform-s{ background:rgba(110,160,255,0.12); border-color:rgba(110,160,255,0.32); color:#a8c5ff; }
+.tour-preview-pill.platform-z{ background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a; }
+.tour-preview-pill.platform-p{ background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8; }
+.tour-preview-key{
+  font-family:var(--mono); font-size:11px; font-weight:600;
+  padding:3px 7px; border-radius:4px;
+  background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14);
+  color:var(--text);
+}
+.tour-preview-meta{
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+  letter-spacing:0.02em;
+}
 .tour-card-header{
   display:flex; align-items:center; gap:10px;
   margin-bottom:6px;
@@ -3564,6 +3614,7 @@ body.tour-on .tour-card{
     bottom:14px; padding:14px 16px 12px;
     width:calc(100vw - 24px);
   }
+  .tour-card.tour-card-top{top:14px;}
   .tour-spotlight{animation:none;}
 }
 
@@ -5117,6 +5168,7 @@ ul.intel-types-doc code{
   </div>
   <h3 class="tour-title" id="tourCardTitle">Step title</h3>
   <p class="tour-body" id="tourBody">Step body text.</p>
+  <div class="tour-preview" id="tourPreview"></div>
   <div class="tour-progress" id="tourProgress" aria-hidden="true"></div>
   <div class="tour-actions">
     <button type="button" class="tour-btn tour-back" id="tourBack">← Back</button>
@@ -6277,56 +6329,107 @@ const TOUR_STEPS = [
   { section: "Articles", view: "articles",
     target: "#articles .article", fallback: "#articles",
     title: "Daily threat-intel feed",
-    body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with ready-to-deploy detection queries. Refreshes every 2 hours." },
+    body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with ready-to-deploy detection queries. Refreshes every 2 hours.",
+    preview: '<span class="tour-preview-meta">Sources →</span>' +
+             '<span class="tour-preview-pill">The Hacker News</span>' +
+             '<span class="tour-preview-pill">Bleeping Computer</span>' +
+             '<span class="tour-preview-pill">Rapid7</span>' +
+             '<span class="tour-preview-pill">CISA KEV</span>' +
+             '<span class="tour-preview-pill">+7 more</span>' },
   { section: "Articles", view: "articles",
     target: "#articles .article details.uc", fallback: "#articles .article",
     title: "Multi-platform queries on every UC",
-    body: "Open any use case to see four detection languages: <b>Defender KQL</b>, <b>Sentinel KQL</b>, <b>Sigma</b>, and <b>Splunk SPL</b> — each with a one-click copy. Sigma rules also pre-compile to Elastic, QRadar, and CrowdStrike." },
+    body: "Open any use case to see four detection languages — each with a one-click copy. Sigma rules also pre-compile to Elastic, QRadar, and CrowdStrike at build time.",
+    preview: '<span class="tour-preview-pill platform-d">Defender KQL</span>' +
+             '<span class="tour-preview-pill platform-s">Sentinel KQL</span>' +
+             '<span class="tour-preview-pill platform-z">Sigma</span>' +
+             '<span class="tour-preview-pill platform-p">Splunk SPL</span>' },
   { section: "Articles", view: "articles",
     target: "#searchTrigger",
     title: "Search the entire corpus",
-    body: "Hit <b>Ctrl/⌘ + K</b> (or click here) to filter by technique ID, CVE, severity, or any string in an article body. The search index covers all 430+ articles and 2,300+ detections." },
+    body: "Hit the shortcut (or click the search bar) to filter by technique ID, CVE, severity, or any string in an article body. Indexes 430+ articles and 2,300+ detections.",
+    preview: '<span class="tour-preview-key">Ctrl</span>' +
+             '<span class="tour-preview-meta">+</span>' +
+             '<span class="tour-preview-key">K</span>' +
+             '<span class="tour-preview-meta">try:</span>' +
+             '<span class="tour-preview-pill">T1059.001</span>' +
+             '<span class="tour-preview-pill">CVE-2026-29431</span>' +
+             '<span class="tour-preview-pill">lsass</span>' },
 
   { section: "ATT&CK Matrix", view: "matrix",
     target: "#matrixGrid", fallback: "#view-matrix",
     title: "Coverage-by-technique heatmap",
-    body: "All 14 MITRE tactics, every non-deprecated technique. <b>Cell intensity</b> shows how many of your detections cover that technique. <b>Click any cell</b> for the drawer of UCs and articles." },
+    body: "All 14 MITRE tactics, every non-deprecated technique. <b>Cell intensity</b> shows how many of your detections cover that technique. <b>Click any cell</b> for the drawer of UCs and articles.",
+    preview: '<span class="tour-preview-meta">222 techniques · 475 sub-techniques · 14 tactics</span>' },
   { section: "ATT&CK Matrix", view: "matrix",
-    target: "#matrixGrid .tech-cell .pl-badges", fallback: "#matrixGrid .tech-cell",
+    target: "#matrixGrid .tech-cell.has-uc", fallback: "#matrixGrid .tech-cell",
     title: "Per-platform coverage badges",
-    body: "<b>D / S / Σ / P</b> — shows which detection languages cover this technique: Defender KQL, Sentinel KQL, Sigma, Splunk SPL. Useful for spotting where a Sigma migration would close gaps." },
+    body: "Each cell carries badges showing which detection languages cover that technique. Spot at a glance where a Sigma migration would close a gap.",
+    preview: '<span class="tour-preview-pill platform-d">D · Defender</span>' +
+             '<span class="tour-preview-pill platform-s">S · Sentinel</span>' +
+             '<span class="tour-preview-pill platform-z">Σ · Sigma</span>' +
+             '<span class="tour-preview-pill platform-p">P · Splunk</span>' },
   { section: "ATT&CK Matrix", view: "matrix",
-    target: "#matrixPlatforms",
+    target: "#matrixPlatforms", fallback: "#view-matrix .filter-row",
     title: "Filter by platform",
-    body: "Pin the matrix to a single platform — say, only show techniques that have a Sigma rule. Combines with the search box for fast scoping." },
+    body: "Pin the matrix to a single platform — say, only show techniques that have a Sigma rule. Combines with the search box for fast scoping.",
+    preview: '<span class="tour-preview-meta">Toggle:</span>' +
+             '<span class="tour-preview-pill platform-d">DEF</span>' +
+             '<span class="tour-preview-pill platform-s">SENT</span>' +
+             '<span class="tour-preview-pill">ALL</span>' },
 
   { section: "Threat Intel", view: "intel",
     target: "#view-intel",
     title: "IOC aggregator",
-    body: "Every IP, domain, hash, URL, and email mentioned across the article corpus, deduplicated. <b>Filter by type</b>, then export to CSV / JSON / Splunk lookup." },
+    body: "Every IP, domain, hash, URL, and email mentioned across the article corpus, deduplicated. <b>Filter by type</b>, then export to CSV / JSON / Splunk lookup.",
+    preview: '<span class="tour-preview-pill">IPs</span>' +
+             '<span class="tour-preview-pill">Domains</span>' +
+             '<span class="tour-preview-pill">SHA256</span>' +
+             '<span class="tour-preview-pill">URLs</span>' +
+             '<span class="tour-preview-meta">→ CSV / JSON / Splunk lookup</span>' },
 
   { section: "Threat Actors", view: "actors",
     target: "#view-actors",
     title: "187 tracked actors on a 3D globe",
-    body: "Every MITRE-tracked APT and e-crime crew, mapped by attribution country. <b>Click any country dot</b> to see actors operating from there." },
+    body: "Every MITRE-tracked APT and e-crime crew, mapped by attribution country. <b>Click any country dot</b> to see actors operating from there.",
+    preview: '<span class="tour-preview-pill">APT28</span>' +
+             '<span class="tour-preview-pill">Lazarus</span>' +
+             '<span class="tour-preview-pill">FIN7</span>' +
+             '<span class="tour-preview-pill">Volt Typhoon</span>' +
+             '<span class="tour-preview-meta">+183 more</span>' },
   { section: "Threat Actors", view: "actors",
     target: "#view-actors",
     title: "Per-actor bespoke detections",
-    body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template." },
+    body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template.",
+    preview: '<span class="tour-preview-meta">e.g.</span>' +
+             '<span class="tour-preview-pill">APT28 → INCLUDEPICTURE webhooks</span>' },
 
   { section: "Workflow", view: "workflow",
     target: "#view-workflow",
     title: "How the pipeline works",
-    body: "RSS in → ATT&CK mapping → LLM enrichment with the schema-aware prompt → multi-platform validators → live render. End-to-end every 2 hours." },
+    body: "RSS in → ATT&CK mapping → LLM enrichment with the schema-aware prompt → multi-platform validators → live render. End-to-end every 2 hours.",
+    preview: '<span class="tour-preview-pill">RSS</span>' +
+             '<span class="tour-preview-meta">→</span>' +
+             '<span class="tour-preview-pill">ATT&amp;CK</span>' +
+             '<span class="tour-preview-meta">→</span>' +
+             '<span class="tour-preview-pill">LLM</span>' +
+             '<span class="tour-preview-meta">→</span>' +
+             '<span class="tour-preview-pill">Validate</span>' +
+             '<span class="tour-preview-meta">→</span>' +
+             '<span class="tour-preview-pill">Ship</span>' },
 
   { section: "SOC Cheat Sheet", view: "articles",
     target: ".cheatsheet-btn",
     title: "Analyst-ready query catalogue",
-    body: "Opens in a new tab. <b>96 Defender + 56 Sentinel queries + 15 Sigma rules</b>, all with copy buttons. Sigma rules compile to KQL, SPL, and Lucene at build time — no toolchain needed on your laptop." },
+    body: "Opens in a new tab. A curated catalogue of vetted queries, all with copy buttons. Sigma rules compile to KQL, SPL, and Lucene at build time — no toolchain needed on your laptop.",
+    preview: '<span class="tour-preview-pill platform-d">96 Defender</span>' +
+             '<span class="tour-preview-pill platform-s">56 Sentinel</span>' +
+             '<span class="tour-preview-pill platform-z">15 Sigma</span>' },
 
   { section: "All set", view: "articles", target: null,
     title: "That's the tour.",
-    body: "Everything you saw is open source — repo at <b>github.com/Virtualhaggis/usecaseintel</b>. Click the <b>Tour</b> button in the topbar any time to replay." }
+    body: "Everything you saw is open source — repo at <b>github.com/Virtualhaggis/usecaseintel</b>. Click the <b>Tour</b> button in the topbar any time to replay.",
+    preview: '<span class="tour-preview-meta">★ Star the repo · share the site · ship better detections</span>' }
 ];
 
 let _tourIndex = 0;
@@ -6353,23 +6456,48 @@ function _tourSpotlight(target, fallback) {
   if (!el && fallback) el = document.querySelector(fallback);
   if (!el) return null;
   el.classList.add('tour-spotlight');
+  // Scroll target into upper-third of viewport so the bottom-anchored
+  // tour card never obscures it. We do this BEFORE measuring for the
+  // card-flip so positioning sees the post-scroll rect.
   const rect = el.getBoundingClientRect();
   const viewportH = window.innerHeight;
-  if (rect.top < 100 || rect.bottom > viewportH - 240) {
+  if (rect.top < 100 || rect.bottom > viewportH - 280) {
     el.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
   return el;
+}
+// Flip the tour card to the top of the viewport when the spotlight
+// target sits in the lower half — keeps the card from covering the
+// thing it's narrating. Re-checked after scrolling settles.
+function _placeTourCard(el) {
+  const card = document.getElementById('tourCard');
+  if (!card) return;
+  if (!el) { card.classList.remove('tour-card-top'); return; }
+  const rect = el.getBoundingClientRect();
+  const viewportH = window.innerHeight;
+  const targetMid = (rect.top + rect.bottom) / 2;
+  // If the spotlight midline is in the lower 45% of the viewport,
+  // flip the card to the top so it sits above the spotlight.
+  card.classList.toggle('tour-card-top', targetMid > viewportH * 0.55);
 }
 function tourGoto(i) {
   if (i < 0 || i >= TOUR_STEPS.length) return;
   _tourIndex = i;
   const step = TOUR_STEPS[i];
   if (step.view) showView(step.view);
-  setTimeout(() => _tourSpotlight(step.target, step.fallback), 220);
+  setTimeout(() => {
+    const el = _tourSpotlight(step.target, step.fallback);
+    _placeTourCard(el);
+    // Re-check placement once scroll settles — getBoundingClientRect
+    // immediately after scrollIntoView returns the pre-scroll rect.
+    setTimeout(() => _placeTourCard(el), 380);
+  }, 220);
   document.getElementById('tourSection').textContent = step.section;
   document.getElementById('tourCounter').textContent = `${i + 1} / ${TOUR_STEPS.length}`;
   document.getElementById('tourCardTitle').textContent = step.title;
   document.getElementById('tourBody').innerHTML = step.body;
+  const preview = document.getElementById('tourPreview');
+  if (preview) preview.innerHTML = step.preview || '';
   const prog = document.getElementById('tourProgress');
   if (prog) {
     [...prog.children].forEach((dot, idx) => {
