@@ -1,0 +1,34 @@
+title: LSASS Process Access Outside Microsoft-Signed Tooling
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
+status: experimental
+description: |
+    Anything opening lsass.exe with read-memory access that isn't a
+    Microsoft signed component (Defender, csrss, etc.) is suspect.
+    Mimikatz / Pypykatz / nanodump signature.
+references:
+    - https://attack.mitre.org/techniques/T1003/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1003.001
+    - attack.credential-access
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: '\lsass.exe'
+    filter_known_good:
+        SourceImage|endswith:
+            - '\MsSense.exe'
+            - '\MsMpEng.exe'
+            - '\csrss.exe'
+            - '\svchost.exe'
+            - '\wininit.exe'
+            - '\services.exe'
+            - '\lsm.exe'
+            - '\SearchProtocolHost.exe'
+    condition: selection and not filter_known_good
+falsepositives:
+    - Third-party EDR / forensic tools — extend the filter list
+level: high

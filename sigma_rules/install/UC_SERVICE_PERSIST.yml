@@ -1,0 +1,31 @@
+title: Service Persistence via sc.exe with User-Writable Path
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0e
+status: experimental
+description: |
+    sc.exe create with the binary path under \Users\, \AppData\,
+    \ProgramData\, or \Temp\ — service-install persistence outside
+    legitimate program directories.
+references:
+    - https://attack.mitre.org/techniques/T1543/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1543.003
+    - attack.persistence
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_sc:
+        Image|endswith: '\sc.exe'
+        CommandLine|contains: 'create'
+    selection_path:
+        CommandLine|contains:
+            - '\Users\'
+            - '\AppData\'
+            - '\ProgramData\'
+            - '\Temp\'
+    condition: selection_sc and selection_path
+falsepositives:
+    - Internal install scripts dropping a service from %ProgramData%
+level: high

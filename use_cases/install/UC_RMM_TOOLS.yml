@@ -9,6 +9,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1219
   name: Remote Access Software
@@ -48,3 +49,4 @@ sentinel_kql: "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID =
   \ or NewProcessName endswith \"\\NinjaOne.exe\"\n| project TimeGenerated, Computer,\
   \ Account, NewProcessName,\n          CommandLine, ParentProcessName\n| order by\
   \ TimeGenerated desc\n"
+sigma_id: install/UC_RMM_TOOLS

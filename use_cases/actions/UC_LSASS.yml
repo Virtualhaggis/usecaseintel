@@ -7,6 +7,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1003.001
   name: LSASS Memory
@@ -46,3 +47,4 @@ sentinel_kql: "// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 
   \ > ago(7d)\n| where EventID == 4663\n| where ObjectName endswith \"\\lsass.exe\"\
   \n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account, ObjectName,\
   \ ProcessName,\n          AccessMask, AccessReason\n| order by TimeGenerated desc\n"
+sigma_id: actions/UC_LSASS

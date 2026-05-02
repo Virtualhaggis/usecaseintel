@@ -8,6 +8,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1053.005
   name: Scheduled Task
@@ -52,3 +53,4 @@ sentinel_kql: "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID =
   \   \"\\Users\\Public\", \"\\AppData\\\")\n| project TimeGenerated, Computer, Account,\
   \ CommandLine,\n          ParentProcessName, NewProcessName\n| order by TimeGenerated\
   \ desc\n"
+sigma_id: install/UC_SCHEDULED_TASK

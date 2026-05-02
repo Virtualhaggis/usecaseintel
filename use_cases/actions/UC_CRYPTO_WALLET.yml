@@ -8,6 +8,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1005
   name: Data from Local System
@@ -57,3 +58,4 @@ sentinel_kql: "ImFileEvent\n| where TimeGenerated > ago(7d)\n| where ActorUserna
   \                              \"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\"\
   )\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n   \
   \       TargetFilePath, TargetFileName, EventType\n"
+sigma_id: actions/UC_CRYPTO_WALLET

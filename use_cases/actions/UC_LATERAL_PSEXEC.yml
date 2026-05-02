@@ -8,6 +8,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1021.002
   name: SMB/Windows Admin Shares
@@ -44,3 +45,4 @@ sentinel_kql: "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID =
   \   or (NewProcessName endswith \"\\wmic.exe\" and CommandLine has \"/node:\")\n\
   | project TimeGenerated, Computer, Account, NewProcessName, CommandLine,\n     \
   \     ParentProcessName\n| order by TimeGenerated desc\n"
+sigma_id: actions/UC_LATERAL_PSEXEC

@@ -8,6 +8,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1176
   name: Browser Extensions
@@ -41,3 +42,4 @@ sentinel_kql: "ImRegistryEvent\n| where TimeGenerated > ago(7d)\n| where ActorUs
   Extensions\\\")\n| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,\n\
   \          RegistryValue, RegistryValueData, ActingProcessName\n| order by TimeGenerated\
   \ desc\n"
+sigma_id: install/UC_BROWSER_EXT

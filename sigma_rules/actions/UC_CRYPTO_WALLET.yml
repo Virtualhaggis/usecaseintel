@@ -1,0 +1,40 @@
+title: Crypto-Wallet Keystore Access by Non-Wallet Process
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
+status: experimental
+description: |
+    Stealers / wallet drainers read keystore files from MetaMask,
+    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
+    Filtering out the legitimate wallet binaries leaves only attacker
+    activity.
+references:
+    - https://attack.mitre.org/techniques/T1005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1005
+    - attack.collection
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - '\Ethereum\keystore\'
+            - '\Bitcoin\'
+            - '\Exodus\'
+            - '\Electrum\wallets\'
+            - '\MetaMask\'
+            - '\Phantom\'
+            - '\Atomic\Local Storage\'
+    filter_legit:
+        Image|endswith:
+            - '\MetaMask.exe'
+            - '\Exodus.exe'
+            - '\Atomic.exe'
+            - '\electrum.exe'
+            - '\Bitcoin.exe'
+            - '\Phantom.exe'
+    condition: selection_path and not filter_legit
+falsepositives:
+    - Backup software
+level: high

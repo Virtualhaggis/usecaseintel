@@ -8,6 +8,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1539
   name: Steal Web Session Cookie
@@ -62,3 +63,4 @@ sentinel_kql: "// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for 
   \ !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\"\
   )\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n   \
   \       TargetFilePath, TargetFileName, EventType\n"
+sigma_id: actions/UC_BROWSER_STEALER

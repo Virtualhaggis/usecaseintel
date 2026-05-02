@@ -7,6 +7,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1027
   name: Obfuscated Files or Information
@@ -59,3 +60,4 @@ sentinel_kql: "// Pre-filter both ASIM tables before the union — same pattern 
   \                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,\n\
   \                  TargetFileSHA256 = SHA256,\n                  Cmd = TargetProcessCommandLine,\
   \ Source = \"ImProcessCreate\" )\n| order by TimeGenerated desc\n"
+sigma_id: install/UC_HASH_IOC

@@ -7,6 +7,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1528
   name: Steal Application Access Token
@@ -41,3 +42,4 @@ sentinel_kql: "// Entra ID directory audit — user / admin consent to a third-p
   \      User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)\n\
   | project TimeGenerated, OperationName, User, AppName, AppId, Result\n| order by\
   \ TimeGenerated desc\n"
+sigma_id: actions/UC_OAUTH_ABUSE

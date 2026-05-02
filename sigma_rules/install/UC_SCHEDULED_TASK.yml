@@ -1,0 +1,34 @@
+title: Scheduled Task Creation with Suspicious Image / Encoded Args
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0d
+status: experimental
+description: |
+    schtasks.exe /create with payload-shaped action — points at
+    powershell, cmd, rundll32, encoded-base64, or user-writable paths.
+references:
+    - https://attack.mitre.org/techniques/T1053/005/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1053.005
+    - attack.persistence
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_schtasks:
+        Image|endswith: '\schtasks.exe'
+        CommandLine|contains: '/create'
+    selection_payload:
+        CommandLine|contains:
+            - 'powershell'
+            - 'cmd.exe'
+            - 'rundll32'
+            - '-enc'
+            - 'FromBase64'
+            - '\Users\Public'
+            - '\AppData\'
+    condition: selection_schtasks and selection_payload
+falsepositives:
+    - GPO-driven scheduled tasks, MDT/SCCM imaging
+level: high

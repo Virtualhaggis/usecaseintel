@@ -9,6 +9,7 @@ implementations:
 - splunk
 - defender
 - sentinel
+- sigma
 mitre_attack:
 - id: T1543.003
   name: Windows Service
@@ -60,3 +61,4 @@ sentinel_kql: "// EventID 4697 is \"Service installed\" — direct signal, no cm
   \ matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n    \
   \    | project TimeGenerated, Computer, Account,\n                  Detail = strcat(\"\
   4688 sc.exe create: \", CommandLine) )\n| order by TimeGenerated desc\n"
+sigma_id: install/UC_SERVICE_PERSIST

@@ -1,0 +1,27 @@
+title: Browser Extension Installation via Registry
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0a
+status: experimental
+description: |
+    Registry writes under the browser extension policy keys —
+    administrative install of an extension. Often used by adware /
+    info-stealers to bypass user-level extension controls.
+references:
+    - https://attack.mitre.org/techniques/T1176/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1176
+    - attack.persistence
+logsource:
+    category: registry_event
+    product: windows
+detection:
+    selection:
+        TargetObject|contains:
+            - '\Software\Google\Chrome\Extensions\'
+            - '\Software\Microsoft\Edge\Extensions\'
+            - '\Software\Mozilla\Firefox\Extensions\'
+    condition: selection
+falsepositives:
+    - Group-policy-managed extension whitelists
+level: medium
