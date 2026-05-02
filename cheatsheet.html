@@ -1,0 +1,2351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SOC Analyst Cheat Sheet — KQL · Clankerusecase</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#08090a; --panel:#16171b; --panel-elev:#1f2024; --panel2:#26272b;
+  --text:#f7f8f8; --muted:#8a8f98; --muted-2:#62656a;
+  --accent:#7170ff; --accent-2:#9b8afb; --good:#4cb782; --warn:#e2a93f;
+  --border:rgba(255,255,255,0.07); --border-2:rgba(255,255,255,0.12);
+  --code-bg:#1a1b1e;
+  --r-sm:4px; --r-md:6px; --r-lg:8px;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:radial-gradient(1200px 500px at 50% -10%,rgba(113,112,255,0.06),transparent 60%),var(--bg);
+  background-attachment:fixed;color:var(--text);
+  font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-size:13.5px;line-height:1.55;letter-spacing:-0.003em;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:rgba(113,112,255,0.32);color:#fff}
+a{color:inherit;text-decoration:none}
+
+/* Top bar */
+.cs-topbar{
+  position:sticky;top:0;z-index:50;
+  background:rgba(8,9,10,0.78);backdrop-filter:blur(16px) saturate(160%);
+  border-bottom:1px solid var(--border);
+  padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;
+}
+.cs-brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:18px;letter-spacing:-0.018em}
+.cs-brand img{width:36px;height:36px;border-radius:8px;border:1px solid var(--border-2)}
+.cs-brand .sub{color:var(--muted);font-weight:500;font-size:12px}
+.cs-back{margin-left:auto;color:var(--muted);font-size:12.5px;border:1px solid var(--border);padding:6px 12px;border-radius:var(--r-sm);transition:all .15s}
+.cs-back:hover{color:var(--text);border-color:var(--border-2);background:var(--panel)}
+
+/* Platform tabs */
+.cs-tabs{
+  border-bottom:1px solid var(--border);padding:0 28px;
+  background:rgba(8,9,10,0.45);backdrop-filter:blur(8px);
+  display:flex;gap:4px;align-items:flex-end;
+}
+.cs-tab{
+  background:transparent;color:var(--muted);border:0;border-bottom:2px solid transparent;
+  font:inherit;padding:10px 16px;cursor:pointer;font-weight:500;
+  letter-spacing:-0.005em;transition:all .15s;
+}
+.cs-tab:hover{color:var(--text)}
+.cs-tab.active{color:var(--text);border-bottom-color:var(--accent)}
+.cs-tab .badge{margin-left:6px;font-size:10.5px;padding:1px 6px;border-radius:99px;background:rgba(113,112,255,0.12);color:var(--accent-2);border:1px solid rgba(113,112,255,0.20)}
+.cs-tab.placeholder .badge{background:rgba(226,169,63,0.12);color:var(--warn);border-color:rgba(226,169,63,0.30)}
+
+/* Layout */
+.cs-layout{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - 110px)}
+.cs-sidebar{
+  border-right:1px solid var(--border);padding:18px;
+  position:sticky;top:110px;align-self:start;
+  height:calc(100vh - 110px);overflow-y:auto;
+}
+.cs-sidebar input[type=search]{
+  width:100%;background:var(--panel);color:var(--text);border:1px solid var(--border);
+  border-radius:var(--r-sm);padding:7px 10px;font:inherit;font-size:12.5px;
+  margin-bottom:10px;
+}
+.cs-sidebar input[type=search]:focus{outline:0;border-color:var(--accent);box-shadow:0 0 0 3px rgba(113,112,255,0.18)}
+.cs-sidebar ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px}
+.cs-sidebar li a{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:6px 10px;border-radius:var(--r-sm);color:var(--muted);font-size:12.5px;
+  font-family:var(--mono);letter-spacing:-0.005em;
+}
+.cs-sidebar li a:hover{background:var(--panel);color:var(--text)}
+.cs-sidebar li a.active{background:rgba(113,112,255,0.10);color:var(--accent-2);border-left:2px solid var(--accent);padding-left:8px}
+.cs-sidebar li a .n{color:var(--muted-2);font-size:11px;padding:0 6px;border-radius:99px;background:var(--panel-elev);border:1px solid var(--border)}
+
+.cs-main{padding:28px;max-width:1080px}
+.cs-intro{margin-bottom:24px;padding:16px;border:1px solid var(--border);border-radius:var(--r-md);background:var(--panel)}
+.cs-intro h1{margin:0 0 4px;font-size:18px;font-weight:600;letter-spacing:-0.020em}
+.cs-intro p{margin:0;color:var(--muted);font-size:12.5px}
+.cs-intro .stats{display:flex;gap:18px;margin-top:10px;font-size:12px}
+.cs-intro .stats span strong{color:var(--text);font-weight:600}
+.cs-intro .stats span{color:var(--muted)}
+
+.placeholder-pane{padding:48px 24px;border:1px dashed var(--border-2);border-radius:var(--r-md);background:var(--panel);text-align:center;color:var(--muted)}
+.placeholder-pane h2{color:var(--text);font-weight:600;font-size:18px;margin:0 0 8px;letter-spacing:-0.018em}
+.placeholder-pane code{background:var(--code-bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:11.5px;color:var(--accent-2)}
+
+/* Table sections */
+.table-section{margin-bottom:48px;scroll-margin-top:130px}
+.table-header{margin-bottom:14px}
+.table-header h2{margin:0;font-size:22px;font-weight:600;letter-spacing:-0.022em;color:var(--text);font-family:var(--mono)}
+.table-header .muted{color:var(--muted);margin:2px 0 8px;font-size:12px}
+.table-header details{margin-top:6px;font-size:12px}
+.table-header summary{cursor:pointer;color:var(--accent-2);user-select:none}
+.table-header .cols{margin:8px 0 0;color:var(--muted);font-size:11.5px;line-height:1.8}
+.table-header .cols code{background:var(--code-bg);border:1px solid var(--border);padding:1px 5px;border-radius:3px;font-family:var(--mono);font-size:10.5px;color:var(--text)}
+
+/* Query cards */
+.query{
+  background:var(--panel);border:1px solid var(--border);border-radius:var(--r-md);
+  margin-bottom:14px;
+}
+.query > header{padding:14px 18px;border-bottom:1px solid var(--border)}
+.query h4{margin:0 0 4px;font-size:13.5px;font-weight:600;letter-spacing:-0.012em}
+.query > header p{margin:0;color:var(--muted);font-size:12.2px}
+.kql-block{position:relative}
+.kql-block pre{
+  margin:0;padding:14px 18px;overflow-x:auto;
+  font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--text);
+  background:var(--code-bg);border-radius:0 0 var(--r-md) var(--r-md);
+}
+.kql-block code{font-family:var(--mono);white-space:pre;color:var(--text)}
+.copy{
+  position:absolute;top:8px;right:8px;
+  background:rgba(255,255,255,0.06);color:var(--muted);
+  border:1px solid var(--border-2);font:inherit;font-size:11px;
+  padding:4px 10px;border-radius:var(--r-sm);cursor:pointer;
+  transition:all .15s;font-family:var(--mono);
+}
+.copy:hover{color:var(--text);background:rgba(255,255,255,0.10);border-color:var(--accent)}
+.copy.copied{color:var(--good);border-color:rgba(76,183,130,0.45)}
+
+/* Tab pane visibility */
+.tab-pane{display:none}
+.tab-pane.active{display:block}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .cs-layout{grid-template-columns:1fr}
+  .cs-sidebar{position:relative;top:0;height:auto;max-height:50vh;border-right:0;border-bottom:1px solid var(--border)}
+}
+</style>
+</head>
+<body>
+
+<header class="cs-topbar">
+  <div class="cs-brand">
+    <img src="logo.png" alt="">
+    <div>
+      <div>SOC Analyst Cheat Sheet</div>
+      <div class="sub">Hand-curated queries · Clankerusecase</div>
+    </div>
+  </div>
+  <a href="index.html" class="cs-back">← Back to main site</a>
+</header>
+
+<nav class="cs-tabs">
+  <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Microsoft Defender</span></button>
+  <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
+</nav>
+
+<div id="pane-kql" class="tab-pane active">
+  <div class="cs-layout">
+    
+<nav class="cs-sidebar">
+  <input type="search" id="tableFilter" placeholder="Filter tables…" autocomplete="off">
+  <ul id="tableList">
+    <li><a href="#table-DeviceProcessEvents" data-table="DeviceProcessEvents"><span class="t">DeviceProcessEvents</span><span class="n">10</span></a></li>
+<li><a href="#table-DeviceNetworkEvents" data-table="DeviceNetworkEvents"><span class="t">DeviceNetworkEvents</span><span class="n">8</span></a></li>
+<li><a href="#table-DeviceFileEvents" data-table="DeviceFileEvents"><span class="t">DeviceFileEvents</span><span class="n">6</span></a></li>
+<li><a href="#table-DeviceLogonEvents" data-table="DeviceLogonEvents"><span class="t">DeviceLogonEvents</span><span class="n">6</span></a></li>
+<li><a href="#table-DeviceImageLoadEvents" data-table="DeviceImageLoadEvents"><span class="t">DeviceImageLoadEvents</span><span class="n">4</span></a></li>
+<li><a href="#table-DeviceRegistryEvents" data-table="DeviceRegistryEvents"><span class="t">DeviceRegistryEvents</span><span class="n">4</span></a></li>
+<li><a href="#table-DeviceEvents" data-table="DeviceEvents"><span class="t">DeviceEvents</span><span class="n">5</span></a></li>
+<li><a href="#table-DeviceInfo" data-table="DeviceInfo"><span class="t">DeviceInfo</span><span class="n">4</span></a></li>
+<li><a href="#table-DeviceNetworkInfo" data-table="DeviceNetworkInfo"><span class="t">DeviceNetworkInfo</span><span class="n">2</span></a></li>
+<li><a href="#table-EmailEvents" data-table="EmailEvents"><span class="t">EmailEvents</span><span class="n">5</span></a></li>
+<li><a href="#table-EmailUrlInfo" data-table="EmailUrlInfo"><span class="t">EmailUrlInfo</span><span class="n">2</span></a></li>
+<li><a href="#table-EmailAttachmentInfo" data-table="EmailAttachmentInfo"><span class="t">EmailAttachmentInfo</span><span class="n">3</span></a></li>
+<li><a href="#table-EmailPostDeliveryEvents" data-table="EmailPostDeliveryEvents"><span class="t">EmailPostDeliveryEvents</span><span class="n">2</span></a></li>
+<li><a href="#table-UrlClickEvents" data-table="UrlClickEvents"><span class="t">UrlClickEvents</span><span class="n">3</span></a></li>
+<li><a href="#table-IdentityLogonEvents" data-table="IdentityLogonEvents"><span class="t">IdentityLogonEvents</span><span class="n">3</span></a></li>
+<li><a href="#table-IdentityQueryEvents" data-table="IdentityQueryEvents"><span class="t">IdentityQueryEvents</span><span class="n">3</span></a></li>
+<li><a href="#table-IdentityDirectoryEvents" data-table="IdentityDirectoryEvents"><span class="t">IdentityDirectoryEvents</span><span class="n">3</span></a></li>
+<li><a href="#table-IdentityInfo" data-table="IdentityInfo"><span class="t">IdentityInfo</span><span class="n">2</span></a></li>
+<li><a href="#table-AADSignInEventsBeta" data-table="AADSignInEventsBeta"><span class="t">AADSignInEventsBeta</span><span class="n">6</span></a></li>
+<li><a href="#table-AlertInfo" data-table="AlertInfo"><span class="t">AlertInfo</span><span class="n">3</span></a></li>
+<li><a href="#table-AlertEvidence" data-table="AlertEvidence"><span class="t">AlertEvidence</span><span class="n">3</span></a></li>
+<li><a href="#table-CloudAppEvents" data-table="CloudAppEvents"><span class="t">CloudAppEvents</span><span class="n">3</span></a></li>
+<li><a href="#table-DeviceTvmSoftwareInventory" data-table="DeviceTvmSoftwareInventory"><span class="t">DeviceTvmSoftwareInventory</span><span class="n">2</span></a></li>
+<li><a href="#table-DeviceTvmSoftwareVulnerabilities" data-table="DeviceTvmSoftwareVulnerabilities"><span class="t">DeviceTvmSoftwareVulnerabilities</span><span class="n">2</span></a></li>
+<li><a href="#table-DeviceTvmSoftwareVulnerabilitiesKB" data-table="DeviceTvmSoftwareVulnerabilitiesKB"><span class="t">DeviceTvmSoftwareVulnerabilitiesKB</span><span class="n">2</span></a></li>
+  </ul>
+</nav>
+
+    <main class="cs-main">
+      <div class="cs-intro">
+        <h1>Microsoft 365 Defender · Advanced Hunting</h1>
+        <p>Pick a table from the sidebar (or scroll) — every query is schema-validated against the canonical column list and follows the BluRaven house style: time-bound first, machine-account excluded, case-insensitive equality, indexed token matching.</p>
+        <div class="stats">
+          <span><strong>25</strong> tables curated</span>
+          <span><strong>96</strong> queries</span>
+          <span><strong>25</strong> schema tables</span>
+          <span>Click <strong>Copy</strong> on any query to paste into Defender Advanced Hunting.</span>
+        </div>
+      </div>
+
+      
+<section class="table-section" id="table-DeviceProcessEvents" data-table="DeviceProcessEvents">
+  <header class="table-header">
+    <h2>DeviceProcessEvents</h2>
+    <p class="muted">56 columns · 10 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>FileName</code> · <code>FolderPath</code> · <code>SHA1</code> · <code>SHA256</code> · <code>MD5</code> · <code>FileSize</code> · <code>ProcessVersionInfoCompanyName</code> · <code>ProcessVersionInfoProductName</code> · <code>ProcessVersionInfoProductVersion</code> · <code>ProcessVersionInfoInternalFileName</code> · <code>ProcessVersionInfoOriginalFileName</code> · <code>ProcessVersionInfoFileDescription</code> · <code>ProcessId</code> · <code>ProcessCommandLine</code> · <code>ProcessIntegrityLevel</code> · <code>ProcessTokenElevation</code> · <code>ProcessCreationTime</code> · <code>AccountDomain</code> · <code>AccountName</code> · <code>AccountSid</code> · <code>AccountUpn</code> · <code>AccountObjectId</code> · <code>LogonId</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessAccountUpn</code> · <code>InitiatingProcessAccountObjectId</code> · <code>InitiatingProcessLogonId</code> · <code>InitiatingProcessIntegrityLevel</code> · <code>InitiatingProcessTokenElevation</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessFileSize</code> · <code>InitiatingProcessVersionInfoCompanyName</code> · <code>InitiatingProcessVersionInfoProductName</code> · <code>InitiatingProcessVersionInfoProductVersion</code> · <code>InitiatingProcessVersionInfoInternalFileName</code> · <code>InitiatingProcessVersionInfoOriginalFileName</code> · <code>InitiatingProcessVersionInfoFileDescription</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessFolderPath</code> · <code>InitiatingProcessParentId</code> · <code>InitiatingProcessParentFileName</code> · <code>InitiatingProcessParentCreationTime</code> · <code>ReportId</code> · <code>AppGuardContainerId</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Recent processes on a device</h4>
+        <p>Quick triage: every process spawned on a host in the last hour. Replace `&lt;DeviceName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(1h)
+| where DeviceName =~ &quot;&lt;DeviceName&gt;&quot;
+| project Timestamp, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Processes spawned by a user in the last 24h</h4>
+        <p>User-scoped activity. Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(24h)
+| where AccountName =~ &quot;&lt;UserName&gt;&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>LOLBin executions (living-off-the-land binaries)</h4>
+        <p>Built-in binaries adversaries abuse — high-signal when paired with unusual parents/cmdlines.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,
+                      &quot;rundll32.exe&quot;,&quot;wmic.exe&quot;,&quot;msbuild.exe&quot;,&quot;installutil.exe&quot;,
+                      &quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;cmstp.exe&quot;,&quot;forfiles.exe&quot;)
+| project Timestamp, DeviceName, AccountName, FileName,
+          ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Office app spawning a script host</h4>
+        <p>Classic macro-payload signal — Word/Excel/Outlook spawning powershell/cmd/wscript.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,
+                                         &quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
+                       &quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>PowerShell with `-EncodedCommand` (decode inline)</h4>
+        <p>Decodes the base64 payload right in the result so analysts can read it.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
+| where ProcessCommandLine has_any (&quot;-EncodedCommand&quot;,&quot;-enc &quot;,&quot;-EC &quot;)
+| extend B64 = extract(@&quot;(?i)(?:-(?:e(?:nc(?:odedcommand)?)?))\s+([A-Za-z0-9+/=]{20,})&quot;, 1, ProcessCommandLine)
+| extend Decoded = base64_decode_tostring(B64)
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, Decoded
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Suspicious PowerShell flags</h4>
+        <p>Hidden window, no-profile, bypass-policy — common evasion combos.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
+| where ProcessCommandLine matches regex @&quot;(?i)-w(in)?(dow)?style?\s+h(idden)?|-nop(rofile)?|-ep\s+bypass|frombase64string|invoke-expression|iex\s*\(|net\.webclient&quot;
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-6">
+      <header>
+        <h4>Rare child by parent (anti-baseline, 30d)</h4>
+        <p>Anti-baseline join. A child binary spawned by a parent that has never spawned it during the 30d baseline.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let BaselineDays = 30d;
+let RecentHours = 4h;
+let Baseline = DeviceProcessEvents
+    | where Timestamp between (ago(BaselineDays) .. ago(RecentHours))
+    | summarize by InitiatingProcessFileName, FileName;
+DeviceProcessEvents
+| where Timestamp &gt; ago(RecentHours)
+| where AccountName !endswith &quot;$&quot;
+| where FileName !in~ (&quot;conhost.exe&quot;,&quot;svchost.exe&quot;,&quot;backgroundtaskhost.exe&quot;,
+                       &quot;wermgr.exe&quot;,&quot;wuauclt.exe&quot;,&quot;searchindexer.exe&quot;)
+| join kind=leftanti Baseline on InitiatingProcessFileName, FileName
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName, Child = FileName,
+          ChildCmd = ProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-7">
+      <header>
+        <h4>Files run from temp / AppData</h4>
+        <p>Most user-mode malware drops to %TEMP% or %APPDATA% before execution.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\AppData\Local\Temp\&quot;, @&quot;\AppData\Roaming\&quot;,
+                             @&quot;\Windows\Temp\&quot;, @&quot;\Users\Public\&quot;)
+| where FileName endswith &quot;.exe&quot; or FileName endswith &quot;.dll&quot;
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName,
+          ProcessCommandLine, InitiatingProcessFileName, SHA256
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-8">
+      <header>
+        <h4>Process count timechart</h4>
+        <p>Sudden volume spikes — beaconing or compromise-driven hyperactivity.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| summarize ProcessCount = count() by bin(Timestamp, 1h), DeviceName
+| render timechart with (ytitle=&quot;Processes per hour&quot;)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-9">
+      <header>
+        <h4>Hash IOC sweep</h4>
+        <p>Replace the dynamic list with article-specific hashes.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let BadHashes = dynamic([&quot;&lt;sha256-1&gt;&quot;,&quot;&lt;sha256-2&gt;&quot;]);
+DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where SHA256 in~ (BadHashes)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, SHA256
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceNetworkEvents" data-table="DeviceNetworkEvents">
+  <header class="table-header">
+    <h2>DeviceNetworkEvents</h2>
+    <p class="muted">36 columns · 8 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>RemoteIP</code> · <code>RemotePort</code> · <code>RemoteUrl</code> · <code>LocalIP</code> · <code>LocalPort</code> · <code>Protocol</code> · <code>LocalIPType</code> · <code>RemoteIPType</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessFileSize</code> · <code>InitiatingProcessVersionInfoCompanyName</code> · <code>InitiatingProcessVersionInfoProductName</code> · <code>InitiatingProcessVersionInfoProductVersion</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessFolderPath</code> · <code>InitiatingProcessParentFileName</code> · <code>InitiatingProcessParentId</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessAccountUpn</code> · <code>InitiatingProcessAccountObjectId</code> · <code>InitiatingProcessIntegrityLevel</code> · <code>InitiatingProcessTokenElevation</code> · <code>ReportId</code> · <code>AppGuardContainerId</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Recent outbound from a device</h4>
+        <p>First-look network telemetry. Replace `&lt;DeviceName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1h)
+| where DeviceName =~ &quot;&lt;DeviceName&gt;&quot;
+| where ActionType == &quot;ConnectionSuccess&quot;
+| project Timestamp, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Public-IP egress only</h4>
+        <p>Strip out internal-LAN noise — focuses on internet-bound traffic.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;ConnectionSuccess&quot;
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>LOLBin reaching the internet</h4>
+        <p>LOLBin + public destination = high signal. LOLBin alone is noise.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (
+    &quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,&quot;rundll32.exe&quot;,
+    &quot;msbuild.exe&quot;,&quot;installutil.exe&quot;,&quot;wmic.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
+    &quot;cmstp.exe&quot;,&quot;forfiles.exe&quot;,&quot;ftp.exe&quot;,&quot;tftp.exe&quot;,&quot;odbcconf.exe&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Beaconing detector — periodic outbound</h4>
+        <p>Sustained, periodic connections to one destination from one process — C2 signature.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(2h)
+| where RemoteIPType == &quot;Public&quot;
+| summarize ConnCount = count(),
+            DistinctMinutes = dcount(bin(Timestamp, 1m))
+            by DeviceId, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName
+| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
+| order by ConnCount desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Connections by IP block-list</h4>
+        <p>Bring your own IOC list.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let BadIPs = dynamic([&quot;1.2.3.4&quot;,&quot;5.6.7.8&quot;]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;)
+| where RemoteIP in (BadIPs)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Rare destination (org-wide first-seen)</h4>
+        <p>Domain seen for the first time across the org in the last hour.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1h))
+    | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl
+    | where BaselineHosts &gt; 2;
+DeviceNetworkEvents
+| where Timestamp &gt; ago(1h)
+| where isnotempty(RemoteUrl)
+| join kind=leftanti Baseline on RemoteUrl
+| summarize FirstSeen = min(Timestamp), HostsCount = dcount(DeviceName)
+            by RemoteUrl
+| order by FirstSeen desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-6">
+      <header>
+        <h4>Top destinations by data volume</h4>
+        <p>If your tenant tracks byte counts. Useful for exfil triage.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(24h)
+| where RemoteIPType == &quot;Public&quot;
+| summarize TotalConnections = count(),
+            UniqueDevices    = dcount(DeviceName)
+            by RemoteUrl, RemoteIP
+| order by TotalConnections desc
+| take 50</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-7">
+      <header>
+        <h4>Listening services on a device</h4>
+        <p>Server-side foothold detection. Replace `&lt;DeviceName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where DeviceName =~ &quot;&lt;DeviceName&gt;&quot;
+| where ActionType == &quot;ListeningConnectionCreated&quot;
+| project Timestamp, LocalIP, LocalPort, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceFileEvents" data-table="DeviceFileEvents">
+  <header class="table-header">
+    <h2>DeviceFileEvents</h2>
+    <p class="muted">49 columns · 6 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>FileName</code> · <code>FolderPath</code> · <code>SHA1</code> · <code>SHA256</code> · <code>MD5</code> · <code>FileOriginUrl</code> · <code>FileOriginReferrerUrl</code> · <code>FileOriginIP</code> · <code>PreviousFolderPath</code> · <code>PreviousFileName</code> · <code>FileSize</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessAccountUpn</code> · <code>InitiatingProcessAccountObjectId</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessFolderPath</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessFileSize</code> · <code>InitiatingProcessVersionInfoCompanyName</code> · <code>InitiatingProcessVersionInfoProductName</code> · <code>InitiatingProcessVersionInfoProductVersion</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessIntegrityLevel</code> · <code>InitiatingProcessTokenElevation</code> · <code>InitiatingProcessParentId</code> · <code>InitiatingProcessParentFileName</code> · <code>InitiatingProcessParentCreationTime</code> · <code>RequestProtocol</code> · <code>RequestSourceIP</code> · <code>RequestSourcePort</code> · <code>RequestAccountName</code> · <code>RequestAccountDomain</code> · <code>RequestAccountSid</code> · <code>ShareName</code> · <code>SensitivityLabel</code> · <code>IsAzureInfoProtectionApplied</code> · <code>ReportId</code> · <code>AppGuardContainerId</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Recent file creates in suspect paths</h4>
+        <p>Most user-mode malware drops to temp/AppData; this is the first-look query.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType == &quot;FileCreated&quot;
+| where FolderPath has_any (@&quot;\AppData\Local\Temp\&quot;, @&quot;\AppData\Roaming\&quot;,
+                             @&quot;\Windows\Temp\&quot;, @&quot;\Users\Public\&quot;)
+| where FileName endswith &quot;.exe&quot; or FileName endswith &quot;.dll&quot;
+   or FileName endswith &quot;.ps1&quot; or FileName endswith &quot;.bat&quot;
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Hash IOC match across files</h4>
+        <p>Sweep file telemetry for known-bad hashes.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let BadHashes = dynamic([&quot;&lt;sha256-1&gt;&quot;,&quot;&lt;sha256-2&gt;&quot;]);
+DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Mass file rename (ransomware)</h4>
+        <p>200+ unique-file renames in a 1-min window from one process — encryption-stage signal.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceFileEvents
+| where Timestamp &gt; ago(1d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
+| summarize files = dcount(FileName)
+            by DeviceName, InitiatingProcessAccountName,
+               InitiatingProcessFileName, bin(Timestamp, 1m)
+| where files &gt; 200
+| order by files desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Browser cookie / login DB access by non-browser</h4>
+        <p>Infostealer (RedLine, Lumma, Vidar) reading Login Data / cookies.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                             @&quot;\Microsoft\Edge\User Data\&quot;,
+                             @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
+                                          &quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, FolderPath, FileName, ActionType
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Crypto-wallet keystore access by non-wallet process</h4>
+        <p>MetaMask / Exodus / Bitcoin / Phantom keystore touched by something unexpected.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
+                             @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
+                             @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
+                             @&quot;\Atomic\Local Storage\&quot;)
+| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
+                                          &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, FolderPath, FileName, ActionType
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Files dropped under a specific user</h4>
+        <p>User-scoped drop hunt. Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName =~ &quot;&lt;UserName&gt;&quot;
+| where ActionType == &quot;FileCreated&quot;
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceLogonEvents" data-table="DeviceLogonEvents">
+  <header class="table-header">
+    <h2>DeviceLogonEvents</h2>
+    <p class="muted">27 columns · 6 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>AccountDomain</code> · <code>AccountName</code> · <code>AccountSid</code> · <code>LogonType</code> · <code>RemoteDeviceName</code> · <code>RemoteIP</code> · <code>RemoteIPType</code> · <code>RemotePort</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessAccountUpn</code> · <code>InitiatingProcessAccountObjectId</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>ReportId</code> · <code>AppGuardContainerId</code> · <code>FailureReason</code> · <code>IsLocalAdmin</code> · <code>LogonId</code> · <code>Protocol</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Failed logons in last 24h</h4>
+        <p>Brute-force / credential-spray triage.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;LogonFailed&quot;
+| where AccountName !endswith &quot;$&quot;
+| summarize FailCount = count(),
+            DistinctTargets = dcount(DeviceName),
+            FirstAttempt = min(Timestamp),
+            LastAttempt = max(Timestamp)
+            by AccountName, RemoteIP, FailureReason
+| where FailCount &gt; 5
+| order by FailCount desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Successful RDP from public IP</h4>
+        <p>RemoteInteractive (LogonType 10) from a public source — high-priority review.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where LogonType == &quot;RemoteInteractive&quot;
+| where RemoteIPType == &quot;Public&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, RemoteIP, RemoteDeviceName,
+          IsLocalAdmin, Protocol
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>NTLM where Kerberos is expected</h4>
+        <p>NTLM-over-RDP or NTLM-from-domain-joined-host = pivot signal for cred theft.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where Protocol == &quot;NTLM&quot;
+| where LogonType in (&quot;RemoteInteractive&quot;,&quot;Network&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, RemoteIP, LogonType,
+          IsLocalAdmin, RemoteDeviceName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Local-admin interactive logons</h4>
+        <p>Privilege use — every hit deserves review on production hosts.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where IsLocalAdmin == true
+| where LogonType in (&quot;Interactive&quot;,&quot;RemoteInteractive&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, LogonType, RemoteIP, Protocol
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>After-hours interactive logon</h4>
+        <p>Tune the hour bounds for your business. Default: 21:00–06:00 local.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where LogonType == &quot;Interactive&quot;
+| where AccountName !endswith &quot;$&quot;
+| extend Hour = datetime_part(&quot;hour&quot;, Timestamp)
+| where Hour &gt;= 21 or Hour &lt; 6
+| project Timestamp, Hour, DeviceName, AccountName, RemoteIP, IsLocalAdmin
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Logon-velocity anomaly per account</h4>
+        <p>Account logging on to &gt;5 distinct hosts in 1h — lateral-movement candidate.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where AccountName !endswith &quot;$&quot;
+| summarize HostsCount = dcount(DeviceName)
+            by AccountName, bin(Timestamp, 1h)
+| where HostsCount &gt; 5
+| order by HostsCount desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceImageLoadEvents" data-table="DeviceImageLoadEvents">
+  <header class="table-header">
+    <h2>DeviceImageLoadEvents</h2>
+    <p class="muted">21 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>FileName</code> · <code>FolderPath</code> · <code>SHA1</code> · <code>SHA256</code> · <code>MD5</code> · <code>FileSize</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessFolderPath</code> · <code>ReportId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>DLLs loaded by lsass.exe outside System32</h4>
+        <p>Credential-theft tooling loads custom DLLs into LSASS. Drop System32-resident loads.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceImageLoadEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;lsass.exe&quot;
+| where FolderPath !startswith @&quot;C:\Windows\&quot;
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Side-loaded DLLs adjacent to dropped binary</h4>
+        <p>DLL search-order hijack. The loaded module sits next to a binary that isn&#x27;t its expected loader.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceImageLoadEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFolderPath has_any (@&quot;\AppData\Local\Temp\&quot;,
+                                              @&quot;\AppData\Roaming\&quot;,
+                                              @&quot;\Windows\Temp\&quot;)
+| where FolderPath =~ InitiatingProcessFolderPath
+   and SHA256 != InitiatingProcessSHA256
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA256
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Loads of a specific suspicious DLL</h4>
+        <p>Replace `&lt;dll-name&gt;` with the IOC.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceImageLoadEvents
+| where Timestamp &gt; ago(7d)
+| where FileName =~ &quot;&lt;dll-name&gt;&quot;
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Volume of image loads per device (anomaly)</h4>
+        <p>Sudden surge in DLL loads = injection or unpacking activity.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceImageLoadEvents
+| where Timestamp &gt; ago(7d)
+| summarize Loads = count() by DeviceName, bin(Timestamp, 1h)
+| render timechart with (ytitle=&quot;DLL loads per hour&quot;)</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceRegistryEvents" data-table="DeviceRegistryEvents">
+  <header class="table-header">
+    <h2>DeviceRegistryEvents</h2>
+    <p class="muted">31 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>RegistryKey</code> · <code>RegistryValueType</code> · <code>RegistryValueName</code> · <code>RegistryValueData</code> · <code>PreviousRegistryKey</code> · <code>PreviousRegistryValueName</code> · <code>PreviousRegistryValueData</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessAccountUpn</code> · <code>InitiatingProcessAccountObjectId</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessFolderPath</code> · <code>InitiatingProcessParentId</code> · <code>InitiatingProcessParentFileName</code> · <code>InitiatingProcessParentCreationTime</code> · <code>InitiatingProcessIntegrityLevel</code> · <code>InitiatingProcessTokenElevation</code> · <code>ReportId</code> · <code>AppGuardContainerId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Run / RunOnce key changes</h4>
+        <p>Classic persistence locations (HKLM + HKCU).</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType == &quot;RegistryValueSet&quot;
+| where RegistryKey has_any (@&quot;\Run&quot;, @&quot;\RunOnce&quot;)
+| where InitiatingProcessFileName !in~ (&quot;msiexec.exe&quot;,&quot;explorer.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey,
+          RegistryValueName, RegistryValueData, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Image File Execution Options (debugger hijack)</h4>
+        <p>Setting `Debugger` under IFEO redirects a binary&#x27;s launch — common evasion.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType == &quot;RegistryValueSet&quot;
+| where RegistryKey has @&quot;\Image File Execution Options\&quot;
+| where RegistryValueName =~ &quot;Debugger&quot;
+| project Timestamp, DeviceName, RegistryKey, RegistryValueData,
+          InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Service installation</h4>
+        <p>New Windows service registration — pair with `sc.exe` cmdline check.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where ActionType == &quot;RegistryKeyCreated&quot;
+| where RegistryKey startswith @&quot;HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\&quot;
+| project Timestamp, DeviceName, RegistryKey, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Browser extension installs</h4>
+        <p>Watch the extension policy keys.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceRegistryEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where RegistryKey has_any (@&quot;\Software\Google\Chrome\Extensions\&quot;,
+                              @&quot;\Software\Microsoft\Edge\Extensions\&quot;,
+                              @&quot;\Software\Mozilla\Firefox\Extensions\&quot;)
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName,
+          RegistryValueData, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceEvents" data-table="DeviceEvents">
+  <header class="table-header">
+    <h2>DeviceEvents</h2>
+    <p class="muted">43 columns · 5 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ActionType</code> · <code>FileName</code> · <code>FolderPath</code> · <code>SHA1</code> · <code>SHA256</code> · <code>MD5</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountSid</code> · <code>RemoteUrl</code> · <code>RemoteDeviceName</code> · <code>ProcessId</code> · <code>ProcessCommandLine</code> · <code>ProcessCreationTime</code> · <code>LogonId</code> · <code>RegistryKey</code> · <code>RegistryValueName</code> · <code>RegistryValueData</code> · <code>RemoteIP</code> · <code>RemotePort</code> · <code>LocalIP</code> · <code>LocalPort</code> · <code>FileOriginUrl</code> · <code>AdditionalFields</code> · <code>InitiatingProcessAccountDomain</code> · <code>InitiatingProcessAccountName</code> · <code>InitiatingProcessAccountSid</code> · <code>InitiatingProcessSHA1</code> · <code>InitiatingProcessSHA256</code> · <code>InitiatingProcessMD5</code> · <code>InitiatingProcessFileName</code> · <code>InitiatingProcessId</code> · <code>InitiatingProcessCommandLine</code> · <code>InitiatingProcessCreationTime</code> · <code>InitiatingProcessFolderPath</code> · <code>InitiatingProcessParentId</code> · <code>InitiatingProcessParentFileName</code> · <code>InitiatingProcessParentCreationTime</code> · <code>ReportId</code> · <code>AppGuardContainerId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>AMSI scan results — flagged content</h4>
+        <p>AMSI providers scan in-memory script payloads; non-clean ScanResult is high-signal.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;AmsiScanResult&quot;
+| extend Result = tostring(parse_json(AdditionalFields).ScanResult),
+         Content = tostring(parse_json(AdditionalFields).ContentName)
+| where Result != &quot;Clean&quot;
+| project Timestamp, DeviceName, InitiatingProcessFileName, Content, Result
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>DNS queries to suspect TLDs</h4>
+        <p>TLD-based heuristic.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;DnsQueryResponse&quot;
+| extend Q = tostring(parse_json(AdditionalFields).QueryName)
+| where Q endswith &quot;.onion&quot; or Q endswith &quot;.ru&quot; or Q endswith &quot;.su&quot; or Q endswith &quot;.cn&quot;
+| project Timestamp, DeviceName, Q, InitiatingProcessFileName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>LSASS process access (credential dumping)</h4>
+        <p>Anything opening LSASS that isn&#x27;t a Microsoft signed component is suspect.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;OpenProcessApiCall&quot;
+| where FileName =~ &quot;lsass.exe&quot;
+| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;csrss.exe&quot;,
+                                          &quot;svchost.exe&quot;,&quot;wininit.exe&quot;,&quot;services.exe&quot;,
+                                          &quot;lsm.exe&quot;,&quot;SearchProtocolHost.exe&quot;)
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>USB drive insertion / new external storage</h4>
+        <p>Data-loss-prevention hunt.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;UsbDriveMount&quot;,&quot;UsbDriveDriveLetterChanged&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          AdditionalFields
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>PowerShell ScriptBlock log — suspicious content</h4>
+        <p>Defender records ScriptBlock content for risky payloads.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;PowerShellCommand&quot;
+| extend Cmd = tostring(parse_json(AdditionalFields).Command)
+| where Cmd matches regex @&quot;(?i)downloadstring|frombase64string|invoke-expression|new-object\s+net\.webclient&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessCommandLine, Cmd
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceInfo" data-table="DeviceInfo">
+  <header class="table-header">
+    <h2>DeviceInfo</h2>
+    <p class="muted">26 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>ClientVersion</code> · <code>PublicIP</code> · <code>OSArchitecture</code> · <code>OSPlatform</code> · <code>OSBuild</code> · <code>OSVersion</code> · <code>OSRevision</code> · <code>MachineGroup</code> · <code>ReportId</code> · <code>JoinType</code> · <code>AadDeviceId</code> · <code>LoggedOnUsers</code> · <code>RegistryDeviceTag</code> · <code>OSVersionInfo</code> · <code>AdditionalFields</code> · <code>DeviceCategory</code> · <code>DeviceType</code> · <code>DeviceSubtype</code> · <code>Model</code> · <code>Vendor</code> · <code>OSDistribution</code> · <code>IsAzureADJoined</code> · <code>IsInternetFacing</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Inventory: OS distribution</h4>
+        <p>Snapshot of OS spread.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceInfo
+| where Timestamp &gt; ago(1d)
+| summarize Devices = dcount(DeviceName) by OSPlatform, OSVersion
+| order by Devices desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Internet-facing devices</h4>
+        <p>Pivot for prioritising vulnerability triage.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceInfo
+| where Timestamp &gt; ago(1d)
+| where IsInternetFacing == true
+| project DeviceName, OSPlatform, OSVersion, PublicIP, MachineGroup</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Find a device by partial name</h4>
+        <p>Replace `&lt;substring&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceInfo
+| where Timestamp &gt; ago(1d)
+| where DeviceName has &quot;&lt;substring&gt;&quot;
+| project DeviceName, OSPlatform, OSVersion, MachineGroup, JoinType, IsAzureADJoined</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Build dynamic device set for filtering</h4>
+        <p>Use this snippet to scope another query to (e.g.) only Win10 hosts.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let win10 = DeviceInfo
+    | where Timestamp &gt; ago(1d)
+    | where OSPlatform == &quot;Windows10&quot;
+    | summarize make_set(DeviceName);
+DeviceProcessEvents
+| where DeviceName in (win10)
+| where FileName =~ &quot;&lt;binary&gt;&quot;</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceNetworkInfo" data-table="DeviceNetworkInfo">
+  <header class="table-header">
+    <h2>DeviceNetworkInfo</h2>
+    <p class="muted">15 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>NetworkAdapterName</code> · <code>NetworkAdapterType</code> · <code>NetworkAdapterStatus</code> · <code>TunnelType</code> · <code>MacAddress</code> · <code>IPAddresses</code> · <code>IPv4Dhcp</code> · <code>IPv6Dhcp</code> · <code>DefaultGateways</code> · <code>DnsAddresses</code> · <code>ConnectedNetworks</code> · <code>ReportId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Recent IP changes per device</h4>
+        <p>Useful for tracking dynamic-IP movement of a target host.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkInfo
+| where Timestamp &gt; ago(7d)
+| mv-expand IP = parse_json(IPAddresses)
+| project Timestamp, DeviceName, NetworkAdapterName, IP = tostring(IP.IPAddress)
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>VPN-tunnel adapters</h4>
+        <p>Adapters indicating tunnel software in play.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceNetworkInfo
+| where Timestamp &gt; ago(1d)
+| where TunnelType !in (&quot;None&quot;,&quot;&quot;)
+| project DeviceName, NetworkAdapterName, TunnelType, NetworkAdapterStatus</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-EmailEvents" data-table="EmailEvents">
+  <header class="table-header">
+    <h2>EmailEvents</h2>
+    <p class="muted">37 columns · 5 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>NetworkMessageId</code> · <code>InternetMessageId</code> · <code>SenderMailFromAddress</code> · <code>SenderFromAddress</code> · <code>SenderDisplayName</code> · <code>SenderObjectId</code> · <code>SenderMailFromDomain</code> · <code>SenderFromDomain</code> · <code>SenderIPv4</code> · <code>SenderIPv6</code> · <code>RecipientEmailAddress</code> · <code>RecipientObjectId</code> · <code>Subject</code> · <code>EmailClusterId</code> · <code>EmailLanguage</code> · <code>EmailDirection</code> · <code>DeliveryAction</code> · <code>DeliveryLocation</code> · <code>PhishConfidenceLevel</code> · <code>ThreatTypes</code> · <code>ThreatNames</code> · <code>DetectionMethods</code> · <code>ConfidenceLevel</code> · <code>EmailAction</code> · <code>EmailActionPolicy</code> · <code>EmailActionPolicyGuid</code> · <code>AttachmentCount</code> · <code>UrlCount</code> · <code>OrgLevelAction</code> · <code>OrgLevelPolicy</code> · <code>UserLevelAction</code> · <code>UserLevelPolicy</code> · <code>ReportId</code> · <code>AdditionalFields</code> · <code>Connectors</code> · <code>AuthenticationDetails</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Inbound mail to a recipient</h4>
+        <p>Replace `&lt;user@domain&gt;` to triage one user&#x27;s mailbox traffic.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(24h)
+| where EmailDirection == &quot;Inbound&quot;
+| where RecipientEmailAddress =~ &quot;&lt;user@domain&gt;&quot;
+| project Timestamp, SenderFromAddress, Subject, DeliveryAction,
+          DeliveryLocation, NetworkMessageId
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Phish blocked vs delivered for a sender</h4>
+        <p>Sender-level triage. Replace `&lt;sender@domain&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(7d)
+| where SenderFromAddress =~ &quot;&lt;sender@domain&gt;&quot;
+| summarize Count = count() by DeliveryAction, EmailDirection
+| order by Count desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Senders with high recipient fan-out</h4>
+        <p>Mass-mail / spam-spike pattern.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(24h)
+| where EmailDirection == &quot;Inbound&quot;
+| where DeliveryAction == &quot;Delivered&quot;
+| summarize Recipients = dcount(RecipientEmailAddress)
+            by SenderFromAddress, SenderFromDomain
+| where Recipients &gt; 25                      // threshold tuneable
+| order by Recipients desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Authentication-fail mail (SPF/DKIM/DMARC)</h4>
+        <p>Spoofed envelope vs header. Inspect the AuthenticationDetails JSON.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(7d)
+| where EmailDirection == &quot;Inbound&quot;
+| where AuthenticationDetails has_any (&quot;SPF=fail&quot;,&quot;DKIM=fail&quot;,&quot;DMARC=fail&quot;)
+| project Timestamp, SenderMailFromAddress, SenderFromAddress,
+          RecipientEmailAddress, Subject, AuthenticationDetails
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Phish + URL + click — full chain</h4>
+        <p>Joins the three phishing tables for end-to-end correlation.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(7d)
+| where EmailDirection == &quot;Inbound&quot; and DeliveryAction == &quot;Delivered&quot;
+| join kind=inner (
+    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+  ) on NetworkMessageId
+| join kind=inner (
+    UrlClickEvents
+    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
+    | project NetworkMessageId, ClickTime = Timestamp, AccountUpn
+  ) on NetworkMessageId
+| project Timestamp, ClickTime, SenderFromAddress, RecipientEmailAddress,
+          Subject, Url, UrlDomain, AccountUpn</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-EmailUrlInfo" data-table="EmailUrlInfo">
+  <header class="table-header">
+    <h2>EmailUrlInfo</h2>
+    <p class="muted">6 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>NetworkMessageId</code> · <code>Url</code> · <code>UrlDomain</code> · <code>UrlLocation</code> · <code>ReportId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>URLs in mail to a recipient</h4>
+        <p>Useful for retro phish-URL retrieval. Replace `&lt;user@domain&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailEvents
+| where Timestamp &gt; ago(7d)
+| where RecipientEmailAddress =~ &quot;&lt;user@domain&gt;&quot;
+| join kind=inner (
+    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain, UrlLocation
+  ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, Subject, Url, UrlDomain, UrlLocation
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>All URLs from a specific domain in inbound mail</h4>
+        <p>Replace `&lt;bad-domain.com&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailUrlInfo
+| where Timestamp &gt; ago(30d)
+| where UrlDomain =~ &quot;&lt;bad-domain.com&gt;&quot;
+| project Timestamp, NetworkMessageId, Url, UrlDomain, UrlLocation
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-EmailAttachmentInfo" data-table="EmailAttachmentInfo">
+  <header class="table-header">
+    <h2>EmailAttachmentInfo</h2>
+    <p class="muted">14 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>NetworkMessageId</code> · <code>SenderFromAddress</code> · <code>RecipientEmailAddress</code> · <code>FileName</code> · <code>FileType</code> · <code>SHA256</code> · <code>FileSize</code> · <code>MalwareFilterVerdict</code> · <code>MalwareDetectionMethod</code> · <code>ThreatTypes</code> · <code>ThreatNames</code> · <code>DetectionMethods</code> · <code>ReportId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Malicious attachments delivered to mailbox</h4>
+        <p>Defender-verdicted Malware that still landed in user inbox = high-priority remediation.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailAttachmentInfo
+| where Timestamp &gt; ago(7d)
+| where MalwareFilterVerdict == &quot;Malware&quot;
+| project Timestamp, SenderFromAddress, RecipientEmailAddress,
+          FileName, FileType, FileSize, SHA256, ThreatNames
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Specific file-type attachments</h4>
+        <p>Hunt for risky attachment types — ISO, IMG, ZIP, HTML.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailAttachmentInfo
+| where Timestamp &gt; ago(7d)
+| where FileType in~ (&quot;ISO&quot;,&quot;IMG&quot;,&quot;ZIP&quot;,&quot;RAR&quot;,&quot;HTML&quot;,&quot;HTM&quot;,&quot;DOCM&quot;,&quot;XLSM&quot;)
+| project Timestamp, SenderFromAddress, RecipientEmailAddress,
+          FileName, FileType, FileSize, SHA256
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Attachment SHA256 sweep across endpoints</h4>
+        <p>Match attachment hashes against endpoint file-write telemetry.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let MalHashes = EmailAttachmentInfo
+    | where Timestamp &gt; ago(7d)
+    | where MalwareFilterVerdict == &quot;Malware&quot;
+    | summarize make_set(SHA256);
+DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where SHA256 in (MalHashes)
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-EmailPostDeliveryEvents" data-table="EmailPostDeliveryEvents">
+  <header class="table-header">
+    <h2>EmailPostDeliveryEvents</h2>
+    <p class="muted">10 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>NetworkMessageId</code> · <code>InternetMessageId</code> · <code>Action</code> · <code>ActionType</code> · <code>ActionTrigger</code> · <code>ActionResult</code> · <code>DeliveryLocation</code> · <code>RecipientEmailAddress</code> · <code>ReportId</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>ZAP (Zero-hour Auto Purge) actions</h4>
+        <p>Defender retroactively yanked a delivered message.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailPostDeliveryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;ZAP&quot;
+| project Timestamp, NetworkMessageId, Action, ActionTrigger,
+          ActionResult, DeliveryLocation, RecipientEmailAddress
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>User-initiated message deletes</h4>
+        <p>Sometimes a user reports phish themselves; this surfaces those signals.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>EmailPostDeliveryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionTrigger == &quot;User&quot;
+| where Action in (&quot;Delete&quot;,&quot;MoveToJunk&quot;)
+| project Timestamp, NetworkMessageId, Action, RecipientEmailAddress
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-UrlClickEvents" data-table="UrlClickEvents">
+  <header class="table-header">
+    <h2>UrlClickEvents</h2>
+    <p class="muted">13 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>Url</code> · <code>ActionType</code> · <code>AccountUpn</code> · <code>Workload</code> · <code>NetworkMessageId</code> · <code>ThreatTypes</code> · <code>DetectionMethods</code> · <code>IPAddress</code> · <code>IsClickedThrough</code> · <code>UrlChain</code> · <code>ReportId</code> · <code>Application</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>All Safe-Links click-throughs (user bypass)</h4>
+        <p>Inherently rare and high-fidelity — Safe Links warned and the user proceeded.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>UrlClickEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType == &quot;ClickedThrough&quot;
+| project Timestamp, AccountUpn, IPAddress, Url, Workload, NetworkMessageId
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Clicks on a domain pattern</h4>
+        <p>Hunt clicks on a brand-impersonation pattern.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>UrlClickEvents
+| where Timestamp &gt; ago(30d)
+| where Url has &quot;&lt;suspect-domain-pattern&gt;&quot;
+| project Timestamp, AccountUpn, IPAddress, Url, ActionType, Workload, NetworkMessageId
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Clicks on URLs not from email (Teams / Office)</h4>
+        <p>Clicks delivered via Teams chat or Office docs, not just mail.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>UrlClickEvents
+| where Timestamp &gt; ago(7d)
+| where Workload != &quot;Email&quot;
+| project Timestamp, AccountUpn, IPAddress, Url, Workload, ActionType
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-IdentityLogonEvents" data-table="IdentityLogonEvents">
+  <header class="table-header">
+    <h2>IdentityLogonEvents</h2>
+    <p class="muted">26 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>ActionType</code> · <code>Application</code> · <code>LogonType</code> · <code>Protocol</code> · <code>FailureReason</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountUpn</code> · <code>AccountSid</code> · <code>AccountObjectId</code> · <code>AccountDisplayName</code> · <code>DeviceName</code> · <code>DeviceType</code> · <code>OSPlatform</code> · <code>IPAddress</code> · <code>Port</code> · <code>DestinationDeviceName</code> · <code>DestinationIPAddress</code> · <code>DestinationPort</code> · <code>TargetDeviceName</code> · <code>TargetAccountUpn</code> · <code>Location</code> · <code>IsLocalAdmin</code> · <code>ReportId</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Failed Kerberos auth (T1110 brute-force)</h4>
+        <p>Repeated failures from one source = spray candidate.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityLogonEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;LogonFailed&quot;
+| where Protocol == &quot;Kerberos&quot;
+| where AccountName !endswith &quot;$&quot;
+| summarize FailCount = count(),
+            Targets = dcount(AccountUpn)
+            by IPAddress, FailureReason
+| where FailCount &gt; 10
+| order by FailCount desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>NTLM where Kerberos is expected</h4>
+        <p>NTLM RemoteInteractive on a domain-joined estate is unusual and worth review.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where Protocol == &quot;NTLM&quot; and LogonType == &quot;RemoteInteractive&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, AccountUpn, DeviceName, IPAddress, LogonType, Protocol
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Service-account interactive logons</h4>
+        <p>Service accounts shouldn&#x27;t sit at a console. Tune the prefix list.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityLogonEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LogonSuccess&quot;
+| where LogonType in (&quot;Interactive&quot;,&quot;RemoteInteractive&quot;)
+| where AccountName startswith &quot;svc-&quot; or AccountName startswith &quot;sa-&quot;
+| project Timestamp, AccountUpn, DeviceName, IPAddress, LogonType
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-IdentityQueryEvents" data-table="IdentityQueryEvents">
+  <header class="table-header">
+    <h2>IdentityQueryEvents</h2>
+    <p class="muted">17 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>ActionType</code> · <code>Query</code> · <code>QueryTarget</code> · <code>QueryType</code> · <code>Protocol</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountUpn</code> · <code>AccountSid</code> · <code>AccountObjectId</code> · <code>DeviceName</code> · <code>IPAddress</code> · <code>Port</code> · <code>ReportId</code> · <code>AdditionalFields</code> · <code>Application</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>BloodHound-style enumeration</h4>
+        <p>All-users LDAP query — recon tooling signature.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityQueryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LDAPQuery&quot;
+| where Query has &quot;(samAccountType=805306368)&quot;        // user objects
+| summarize Count = count() by AccountName, IPAddress, DeviceName
+| where Count &gt; 1
+| order by Count desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Kerberoasting recon — SPN enumeration</h4>
+        <p>Querying for accounts with servicePrincipalName.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityQueryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;LDAPQuery&quot;
+| where Query has &quot;servicePrincipalName&quot;
+| project Timestamp, AccountName, DeviceName, IPAddress, Query
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>LDAP query volume per source</h4>
+        <p>Outlier-volume detection.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityQueryEvents
+| where Timestamp &gt; ago(24h)
+| where ActionType == &quot;LDAPQuery&quot;
+| summarize Queries = count() by AccountName, DeviceName, IPAddress, bin(Timestamp, 1h)
+| where Queries &gt; 200
+| order by Queries desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-IdentityDirectoryEvents" data-table="IdentityDirectoryEvents">
+  <header class="table-header">
+    <h2>IdentityDirectoryEvents</h2>
+    <p class="muted">19 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>ActionType</code> · <code>Application</code> · <code>TargetAccountDisplayName</code> · <code>TargetAccountUpn</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountUpn</code> · <code>AccountObjectId</code> · <code>AccountDisplayName</code> · <code>DeviceName</code> · <code>IPAddress</code> · <code>Port</code> · <code>DestinationDeviceName</code> · <code>DestinationIPAddress</code> · <code>Location</code> · <code>Protocol</code> · <code>ReportId</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Privileged-group membership changes</h4>
+        <p>Adds to Domain Admins / Enterprise Admins / DnsAdmins are crown-jewel events.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityDirectoryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;Group Membership changed&quot;
+| where AdditionalFields has_any (&quot;Domain Admins&quot;,&quot;Enterprise Admins&quot;,&quot;DnsAdmins&quot;,
+                                    &quot;Schema Admins&quot;,&quot;Account Operators&quot;)
+| project Timestamp, ActionType, AccountUpn,
+          TargetAccountUpn, AdditionalFields
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Forced password resets</h4>
+        <p>Common pre-impersonation step.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityDirectoryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;Forced password reset&quot;
+| project Timestamp, AccountUpn, TargetAccountUpn,
+          DestinationDeviceName, DestinationIPAddress
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>New account creation from non-admin source</h4>
+        <p>Account creation outside helpdesk / IT-admin endpoints.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityDirectoryEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;Account created&quot;
+| project Timestamp, AccountUpn, TargetAccountUpn,
+          DestinationDeviceName, DestinationIPAddress, AdditionalFields
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-IdentityInfo" data-table="IdentityInfo">
+  <header class="table-header">
+    <h2>IdentityInfo</h2>
+    <p class="muted">28 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>AccountObjectId</code> · <code>AccountUpn</code> · <code>AccountSid</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountDisplayName</code> · <code>City</code> · <code>Country</code> · <code>Department</code> · <code>EmailAddress</code> · <code>GivenName</code> · <code>JobTitle</code> · <code>Manager</code> · <code>Phone</code> · <code>Surname</code> · <code>Title</code> · <code>OnPremSid</code> · <code>ReportId</code> · <code>DeletedDateTime</code> · <code>BlockedDateTime</code> · <code>PrivacySetting</code> · <code>AzureADGroup</code> · <code>OrgGroup</code> · <code>EmployeeId</code> · <code>AssignedRoles</code> · <code>Type</code> · <code>IsAccountEnabled</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Disabled accounts that have signed in recently</h4>
+        <p>A disabled account producing sign-in events is a major red flag.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where ErrorCode == 0
+| join kind=inner (
+    IdentityInfo | project AccountUpn, IsAccountEnabled, JobTitle, Department
+  ) on AccountUpn
+| where IsAccountEnabled == false
+| project Timestamp, AccountUpn, JobTitle, Department, IPAddress, Application
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Privileged-role members</h4>
+        <p>Enrich with role title / department for triage.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>IdentityInfo
+| where Timestamp &gt; ago(1d)
+| where JobTitle has_any (&quot;CEO&quot;,&quot;CFO&quot;,&quot;CISO&quot;,&quot;CIO&quot;,&quot;Director&quot;,&quot;VP&quot;,&quot;Admin&quot;)
+| project AccountUpn, JobTitle, Department, City, Country, IsAccountEnabled</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-AADSignInEventsBeta" data-table="AADSignInEventsBeta">
+  <header class="table-header">
+    <h2>AADSignInEventsBeta</h2>
+    <p class="muted">47 columns · 6 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>Application</code> · <code>ApplicationId</code> · <code>LogonType</code> · <code>ErrorCode</code> · <code>AccountDisplayName</code> · <code>AccountObjectId</code> · <code>AccountUpn</code> · <code>IsExternalUser</code> · <code>IsGuestUser</code> · <code>AlternateSignInName</code> · <code>LastPasswordChangeTimestamp</code> · <code>ResourceDisplayName</code> · <code>ResourceId</code> · <code>ResourceTenantId</code> · <code>DeviceName</code> · <code>AadDeviceId</code> · <code>OSPlatform</code> · <code>DeviceTrustType</code> · <code>Browser</code> · <code>IPAddress</code> · <code>Country</code> · <code>State</code> · <code>City</code> · <code>Latitude</code> · <code>Longitude</code> · <code>NetworkLocationDetails</code> · <code>RequestId</code> · <code>ReportId</code> · <code>ConditionalAccessPolicies</code> · <code>ConditionalAccessStatus</code> · <code>RiskLevelAggregated</code> · <code>RiskLevelDuringSignIn</code> · <code>RiskState</code> · <code>UserAgent</code> · <code>ClientAppUsed</code> · <code>Status</code> · <code>AuthenticationDetails</code> · <code>AuthenticationProcessingDetails</code> · <code>AuthenticationRequirement</code> · <code>TokenIssuerType</code> · <code>IsInteractive</code> · <code>ErrorDetails</code> · <code>AdditionalFields</code> · <code>AppDisplayName</code> · <code>IsAnonymousProxy</code> · <code>IsCompliantUser</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Failed sign-ins by user</h4>
+        <p>Replace `&lt;user@domain&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(24h)
+| where AccountUpn =~ &quot;&lt;user@domain&gt;&quot;
+| where ErrorCode != 0
+| project Timestamp, IPAddress, Country, Application, ErrorCode, RiskLevelDuringSignIn
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Impossible travel</h4>
+        <p>Two successful sign-ins from different countries within 60 minutes.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let WindowMinutes = 60;
+AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where ErrorCode == 0
+| where isnotempty(Country)
+| project Timestamp, AccountUpn, Country, City, IPAddress, Application
+| order by AccountUpn asc, Timestamp asc
+| extend PrevCountry = prev(Country),
+         PrevCity    = prev(City),
+         PrevTime    = prev(Timestamp),
+         PrevAccount = prev(AccountUpn)
+| where AccountUpn == PrevAccount
+   and Country != PrevCountry
+   and datetime_diff(&#x27;minute&#x27;, Timestamp, PrevTime) &lt;= WindowMinutes
+| project AccountUpn,
+          From = PrevCountry, FromTime = PrevTime,
+          To = Country, ToTime = Timestamp,
+          MinutesDelta = datetime_diff(&#x27;minute&#x27;, Timestamp, PrevTime),
+          IPAddress, Application
+| order by ToTime desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Legacy auth still in use</h4>
+        <p>`Other clients` = legacy protocols (POP/IMAP/SMTP basic). Should be zero in modern tenants.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where ClientAppUsed == &quot;Other clients&quot;
+| where ErrorCode == 0
+| summarize Sessions = count() by AccountUpn, IPAddress, Application
+| order by Sessions desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Sign-ins from anonymous proxy / Tor</h4>
+        <p>IsAnonymousProxy is M365D&#x27;s tag.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where IsAnonymousProxy == true
+| project Timestamp, AccountUpn, IPAddress, Country, Application,
+          ErrorCode, RiskLevelDuringSignIn
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>MFA Challenge failed (push fatigue)</h4>
+        <p>Repeated MFA challenges to the same user from the same IP — push-bombing.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(24h)
+| where ErrorCode == 50158                    // MFA Challenge required / failed
+| summarize Attempts = count() by AccountUpn, IPAddress, bin(Timestamp, 5m)
+| where Attempts &gt; 3
+| order by Attempts desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>New AAD application — first-seen org-wide</h4>
+        <p>First sign-in to an AAD app the tenant has never touched before — illicit-consent risk.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where ErrorCode == 0
+| where Application !in~ (&quot;Microsoft Authenticator&quot;,&quot;Office 365&quot;,&quot;Microsoft Office&quot;,
+                            &quot;Microsoft Teams&quot;,&quot;Microsoft Edge&quot;,&quot;Outlook&quot;)
+| where ResourceId == &quot;00000003-0000-0000-c000-000000000000&quot;   // Microsoft Graph
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            UserCount = dcount(AccountUpn)
+            by Application, ApplicationId
+| where FirstSeen &gt; ago(2h)
+| order by FirstSeen desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-AlertInfo" data-table="AlertInfo">
+  <header class="table-header">
+    <h2>AlertInfo</h2>
+    <p class="muted">8 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>AlertId</code> · <code>Title</code> · <code>Category</code> · <code>Severity</code> · <code>ServiceSource</code> · <code>DetectionSource</code> · <code>AttackTechniques</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>New alert titles last 24h</h4>
+        <p>Detection-rule volume / variety.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertInfo
+| where Timestamp &gt; ago(24h)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Count = count()
+            by Title, Category, Severity
+| order by Count desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>High / critical alerts only</h4>
+        <p>Severity-scoped triage feed.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertInfo
+| where Timestamp &gt; ago(7d)
+| where Severity in (&quot;High&quot;,&quot;Medium&quot;)
+| project Timestamp, AlertId, Title, Category, Severity, ServiceSource, DetectionSource
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Top MITRE techniques observed</h4>
+        <p>Unique-technique frequency.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertInfo
+| where Timestamp &gt; ago(7d)
+| mv-expand todynamic(AttackTechniques)
+| extend Technique = tostring(AttackTechniques)
+| summarize Count = count() by Technique
+| order by Count desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-AlertEvidence" data-table="AlertEvidence">
+  <header class="table-header">
+    <h2>AlertEvidence</h2>
+    <p class="muted">22 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>AlertId</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>EntityType</code> · <code>EvidenceRole</code> · <code>EvidenceDirection</code> · <code>FileName</code> · <code>FolderPath</code> · <code>SHA1</code> · <code>SHA256</code> · <code>FileSize</code> · <code>ThreatFamily</code> · <code>RemoteIP</code> · <code>RemoteUrl</code> · <code>AccountName</code> · <code>AccountDomain</code> · <code>AccountSid</code> · <code>AccountUpn</code> · <code>AccountObjectId</code> · <code>ProcessCommandLine</code> · <code>AdditionalFields</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Per-alert entity summary</h4>
+        <p>BluRaven course&#x27;s alert-context query — answers the analyst&#x27;s first questions.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertEvidence
+| where Timestamp &gt; ago(7d)
+| join kind=inner AlertInfo on AlertId
+| summarize Count = count(),
+            FirstTriggered = min(Timestamp),
+            LastTriggered  = max(Timestamp),
+            DeviceCount    = dcountif(DeviceName, EntityType == &quot;Machine&quot;),
+            Devices        = make_set_if(DeviceName, EntityType == &quot;Machine&quot;, 50),
+            UserCount      = dcountif(AccountUpn, EntityType == &quot;User&quot;),
+            Users          = make_set_if(AccountUpn, EntityType == &quot;User&quot;, 50),
+            Files          = make_set_if(FileName, EntityType == &quot;File&quot;, 50),
+            IPs            = make_set_if(RemoteIP, EntityType == &quot;Ip&quot;, 50)
+            by Title, Severity, Category
+| order by Count desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Alerts on a specific device</h4>
+        <p>Pivot to one machine.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertEvidence
+| where Timestamp &gt; ago(7d)
+| where DeviceName =~ &quot;&lt;DeviceName&gt;&quot;
+| join kind=inner AlertInfo on AlertId
+| project Timestamp, Title, Severity, EntityType, EvidenceRole,
+          FileName, RemoteUrl, AccountName
+| order by Timestamp desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>All file IOCs across active alerts</h4>
+        <p>Pivot for sweep against `DeviceFileEvents`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>AlertEvidence
+| where Timestamp &gt; ago(7d)
+| where EntityType == &quot;File&quot; and isnotempty(SHA256)
+| summarize Alerts = dcount(AlertId), FirstSeen = min(Timestamp)
+            by FileName, SHA256
+| order by Alerts desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-CloudAppEvents" data-table="CloudAppEvents">
+  <header class="table-header">
+    <h2>CloudAppEvents</h2>
+    <p class="muted">28 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>ActionType</code> · <code>Application</code> · <code>ApplicationId</code> · <code>AccountObjectId</code> · <code>AccountId</code> · <code>AccountDisplayName</code> · <code>IsAdminOperation</code> · <code>DeviceType</code> · <code>OSPlatform</code> · <code>IPAddress</code> · <code>IsAnonymousProxy</code> · <code>CountryCode</code> · <code>City</code> · <code>ISP</code> · <code>UserAgent</code> · <code>ActivityType</code> · <code>ActivityObjects</code> · <code>ObjectName</code> · <code>ObjectType</code> · <code>ObjectId</code> · <code>ReportId</code> · <code>RawEventData</code> · <code>AdditionalFields</code> · <code>AccountType</code> · <code>RequestId</code> · <code>AppInstanceId</code> · <code>IPTags</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>New external-domain user activity in OneDrive</h4>
+        <p>External-collaboration risk.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Microsoft OneDrive for Business&quot;
+| where AccountDisplayName !endswith &quot;@yourdomain.com&quot;
+| project Timestamp, ActionType, AccountDisplayName, ObjectName, IPAddress, CountryCode</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Admin actions from anonymous proxy</h4>
+        <p>Admin operation + anonymous source = compromise red-flag.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where IsAdminOperation == true
+| where IsAnonymousProxy == true
+| project Timestamp, AccountDisplayName, ActionType, Application,
+          IPAddress, CountryCode, UserAgent</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Newly authorised SaaS app</h4>
+        <p>First-seen application in tenant audit.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| summarize FirstSeen = min(Timestamp), Activities = count(),
+            Users = dcount(AccountObjectId)
+            by Application, ApplicationId
+| where FirstSeen &gt; ago(1d)
+| order by Activities desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceTvmSoftwareInventory" data-table="DeviceTvmSoftwareInventory">
+  <header class="table-header">
+    <h2>DeviceTvmSoftwareInventory</h2>
+    <p class="muted">10 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>OSPlatform</code> · <code>OSVersion</code> · <code>SoftwareVendor</code> · <code>SoftwareName</code> · <code>SoftwareVersion</code> · <code>EndOfSupportStatus</code> · <code>EndOfSupportDate</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Outdated browsers on production hosts</h4>
+        <p>Tune `&lt;min-version&gt;` to your target threshold.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(1d)
+| where SoftwareName has_any (&quot;chrome&quot;,&quot;msedge&quot;,&quot;firefox&quot;)
+| where SoftwareVersion &lt; &quot;&lt;min-version&gt;&quot;
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>End-of-support OSes</h4>
+        <p>Where you&#x27;re knowingly running risk.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(1d)
+| where EndOfSupportStatus != &quot;Supported&quot;
+| project DeviceName, OSPlatform, OSVersion, SoftwareName,
+          SoftwareVersion, EndOfSupportStatus, EndOfSupportDate</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceTvmSoftwareVulnerabilities" data-table="DeviceTvmSoftwareVulnerabilities">
+  <header class="table-header">
+    <h2>DeviceTvmSoftwareVulnerabilities</h2>
+    <p class="muted">13 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>Timestamp</code> · <code>DeviceId</code> · <code>DeviceName</code> · <code>OSPlatform</code> · <code>OSVersion</code> · <code>SoftwareVendor</code> · <code>SoftwareName</code> · <code>SoftwareVersion</code> · <code>CveId</code> · <code>VulnerabilitySeverityLevel</code> · <code>RecommendedSecurityUpdate</code> · <code>RecommendedSecurityUpdateId</code> · <code>AffectedSoftwareSku</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Devices vulnerable to a specific CVE</h4>
+        <p>Replace `&lt;CVE-id&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId =~ &quot;&lt;CVE-id&gt;&quot;
+| project DeviceName, OSPlatform, SoftwareName, SoftwareVersion,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Critical CVEs unpatched</h4>
+        <p>Severity-driven priority list.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where VulnerabilitySeverityLevel == &quot;Critical&quot;
+| summarize DeviceCount = dcount(DeviceName) by CveId, SoftwareName
+| order by DeviceCount desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="table-DeviceTvmSoftwareVulnerabilitiesKB" data-table="DeviceTvmSoftwareVulnerabilitiesKB">
+  <header class="table-header">
+    <h2>DeviceTvmSoftwareVulnerabilitiesKB</h2>
+    <p class="muted">8 columns · 2 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>CveId</code> · <code>CvssScore</code> · <code>IsExploitAvailable</code> · <code>VulnerabilitySeverityLevel</code> · <code>LastModifiedTime</code> · <code>PublishedDate</code> · <code>VulnerabilityDescription</code> · <code>AffectedSoftware</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Critical CVEs published in the last 30 days</h4>
+        <p>Patch-priority feed.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>DeviceTvmSoftwareVulnerabilitiesKB
+| where PublishedDate &gt; ago(30d)
+| where VulnerabilitySeverityLevel == &quot;Critical&quot;
+| project CveId, CvssScore, IsExploitAvailable, PublishedDate
+| order by PublishedDate desc</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>CVEs with public exploit + active in env</h4>
+        <p>Join KB with per-device coverage.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>let KnownExploited = DeviceTvmSoftwareVulnerabilitiesKB
+    | where IsExploitAvailable == true
+    | project CveId;
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in (KnownExploited)
+| summarize DeviceCount = dcount(DeviceName), AffectedSoftware = make_set(SoftwareName)
+            by CveId, VulnerabilitySeverityLevel
+| order by DeviceCount desc</code></pre>
+      </div>
+    </article>
+
+</section>
+
+    </main>
+  </div>
+</div>
+
+<div id="pane-spl" class="tab-pane">
+  <div class="cs-main" style="max-width:680px;margin:48px auto">
+    <div class="placeholder-pane">
+      <h2>SPL cheat sheet — under progress</h2>
+      <p>The Splunk SPL counterpart to this catalog is in active build-out. The
+      project's curated UCs already include a CIM-conformant <code>splunk_spl</code>
+      block per use case — expect a focused, schema-aware SPL cheat sheet here
+      shortly.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  // Tab switching
+  const tabs = document.querySelectorAll('.cs-tab');
+  const panes = document.querySelectorAll('.tab-pane');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.pane;
+      tabs.forEach(t => t.classList.toggle('active', t === tab));
+      panes.forEach(p => p.classList.toggle('active', p.id === 'pane-' + target));
+    });
+  });
+
+  // Copy buttons
+  document.querySelectorAll('.copy').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const code = btn.parentElement.querySelector('code').innerText;
+      try {
+        await navigator.clipboard.writeText(code);
+        btn.classList.add('copied');
+        const orig = btn.textContent;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1500);
+      } catch (e) {
+        btn.textContent = 'Copy failed';
+      }
+    });
+  });
+
+  // Sidebar filter
+  const filter = document.getElementById('tableFilter');
+  const items = document.querySelectorAll('#tableList li');
+  if (filter) {
+    filter.addEventListener('input', () => {
+      const q = filter.value.toLowerCase().trim();
+      items.forEach(li => {
+        const t = li.querySelector('.t').textContent.toLowerCase();
+        li.style.display = (!q || t.includes(q)) ? '' : 'none';
+      });
+    });
+  }
+
+  // Highlight active table on scroll
+  const sections = document.querySelectorAll('.table-section');
+  const sidebarLinks = document.querySelectorAll('#tableList a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const t = e.target.dataset.table;
+      sidebarLinks.forEach(a => a.classList.toggle('active', a.dataset.table === t));
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+  sections.forEach(s => obs.observe(s));
+})();
+</script>
+</body>
+</html>

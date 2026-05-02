@@ -3192,6 +3192,22 @@ body:not(.view-actors-active)   .stats-actors{
   color:var(--muted); font-weight:600;
 }
 
+/* SOC Cheat Sheet button — opens cheatsheet.html in a new window. */
+.cheatsheet-btn{
+  display:inline-flex; align-items:center; gap:8px;
+  padding:8px 14px; border-radius:var(--r-md);
+  background:linear-gradient(180deg, rgba(113,112,255,0.14), rgba(113,112,255,0.06));
+  border:1px solid rgba(113,112,255,0.30);
+  color:var(--text); font-family:inherit; font-size:12.5px; font-weight:500;
+  cursor:pointer; transition:all 0.15s; text-decoration:none; white-space:nowrap;
+}
+.cheatsheet-btn:hover{
+  background:linear-gradient(180deg, rgba(113,112,255,0.22), rgba(113,112,255,0.10));
+  border-color:rgba(113,112,255,0.55);
+  box-shadow:0 0 0 3px rgba(113,112,255,0.10);
+}
+.cheatsheet-btn svg{stroke:var(--accent-2);flex-shrink:0;}
+
 /* ----- Filter bar ---------------------------------------------------- */
 .filter-row{
   margin:0; padding:14px 28px 0;
@@ -4682,6 +4698,11 @@ ul.intel-types-doc code{
       <span class="search-placeholder">Search articles, techniques, CVEs</span>
       <span class="search-shortcut"><kbd id="searchShortcutKey">Ctrl</kbd><kbd>K</kbd></span>
     </div>
+    <a href="cheatsheet.html" target="_blank" rel="noopener" class="cheatsheet-btn"
+       title="Open the SOC analyst KQL cheat sheet in a new window">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8 H16 M8 12 H16 M8 16 H13"/></svg>
+      <span>SOC Cheat Sheet</span>
+    </a>
   </div>
   <div class="topbar-inner" style="padding-top:0; gap:14px;">
     <div class="view-tabs" role="tablist">
