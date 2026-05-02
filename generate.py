@@ -2967,6 +2967,50 @@ body{
 .brand .logo svg{width:32px;height:32px;color:var(--accent);position:relative;z-index:1;}
 .brand-text{display:flex;flex-direction:column;line-height:1.2;}
 .brand-text > span:first-child{font-size:20px; font-weight:600; letter-spacing:-0.018em;}
+.brand-tagline{
+  font-size:11.5px; font-weight:400; color:var(--muted);
+  letter-spacing:0.001em; margin-top:2px;
+  max-width:520px;
+}
+@media (max-width: 760px) {
+  .brand-tagline{display:none;}
+}
+
+/* First-visit welcome banner — dismissed forever via localStorage. */
+.first-visit-banner{
+  display:none;          /* JS un-hides on first visit */
+  margin:0; padding:10px 28px;
+  background:linear-gradient(180deg, rgba(113,112,255,0.08), rgba(113,112,255,0.03));
+  border-bottom:1px solid rgba(113,112,255,0.20);
+  font-size:13px; color:var(--text);
+  align-items:center; gap:14px; flex-wrap:wrap;
+}
+.first-visit-banner.show{display:flex;}
+.first-visit-banner b{color:var(--accent-2); font-weight:600;}
+.first-visit-banner .banner-stats{
+  color:var(--muted); font-family:var(--mono); font-size:11.5px;
+}
+.first-visit-banner .banner-cta{
+  margin-left:auto; display:inline-flex; align-items:center; gap:6px;
+  color:var(--accent-2); font-weight:500; cursor:pointer;
+  padding:5px 12px; border-radius:var(--r-sm);
+  border:1px solid rgba(113,112,255,0.30);
+  transition:all 0.15s; text-decoration:none;
+}
+.first-visit-banner .banner-cta:hover{
+  background:rgba(113,112,255,0.12); border-color:rgba(113,112,255,0.55);
+  color:var(--text);
+}
+.first-visit-banner .banner-close{
+  background:transparent; color:var(--muted); border:0;
+  font-size:18px; cursor:pointer; padding:2px 8px; line-height:1;
+  border-radius:var(--r-sm); transition:all 0.15s;
+}
+.first-visit-banner .banner-close:hover{color:var(--text); background:rgba(255,255,255,0.05);}
+@media (max-width: 760px) {
+  .first-visit-banner{padding:10px 14px;}
+  .first-visit-banner .banner-cta{margin-left:0; flex:1; justify-content:center;}
+}
 
 /* All three stats bars share ONE centred slot — they overlap via
    absolute positioning inside .stats-wrap so the visible one always
@@ -4824,7 +4868,8 @@ ul.intel-types-doc code{
         </svg>
       </button>
       <div class="brand-text">
-        <span>Clankerusecase</span>
+        <span class="brand-name">Clankerusecase</span>
+        <span class="brand-tagline">A threat-led detection library — production-ready queries for SOC, threat hunters, and CTI teams.</span>
       </div>
     </div>
     <div class="stats-wrap">
@@ -4861,6 +4906,13 @@ ul.intel-types-doc code{
     </div>
   </div>
 </header>
+
+<div class="first-visit-banner" id="firstVisitBanner" role="region" aria-label="Welcome">
+  <span><b>New here?</b> We turn daily threat-intel articles into ready-to-deploy SOC detections — every 2 hours.</span>
+  <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
+  <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
+  <button class="banner-close" id="firstVisitClose" aria-label="Dismiss welcome banner" title="Dismiss">×</button>
+</div>
 
 <div id="view-articles" class="view active">
 <main class="width-wide">
@@ -5981,6 +6033,31 @@ function showView(name) {
 // Apply default state on page load — Articles tab starts active.
 document.body.classList.add('view-articles-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+// =================================================================
+// First-visit welcome banner — shown until user clicks × or the tour link.
+// State persisted in localStorage so repeat visitors never see it again.
+// =================================================================
+(function () {
+  const banner = document.getElementById('firstVisitBanner');
+  if (!banner) return;
+  const KEY = 'cuc_welcome_dismissed_v1';
+  const dismissed = (function () {
+    try { return localStorage.getItem(KEY) === '1'; } catch (_) { return false; }
+  })();
+  if (!dismissed) banner.classList.add('show');
+  function dismiss() {
+    banner.classList.remove('show');
+    try { localStorage.setItem(KEY, '1'); } catch (_) {}
+  }
+  document.getElementById('firstVisitClose')?.addEventListener('click', dismiss);
+  document.getElementById('firstVisitTour')?.addEventListener('click', e => {
+    e.preventDefault();
+    dismiss();
+    showView('workflow');   // reuse the existing Workflow tab as the "tour"
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+})();
 
 // =================================================================
 // Logo lightbox — click the topbar Clanker to see him full size.
