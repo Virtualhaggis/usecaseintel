@@ -29,23 +29,51 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).parent
-SCHEMA_PATH = ROOT / "data_sources" / "defender_spec_tables.json"
+DEFENDER_SCHEMA_PATH = ROOT / "data_sources" / "defender_spec_tables.json"
+SENTINEL_SCHEMA_PATH = ROOT / "data_sources" / "sentinel_spec_tables.json"
 
 
 # =============================================================================
-# Canonical schema load
+# Canonical schema load — Defender + Sentinel
 # =============================================================================
 
-def _load_schema() -> dict[str, list[str]]:
+def _load_schema_file(path: Path) -> dict[str, list[str]]:
     """Return {TableName: [Column, ...]} — drops `_comment`/`_source` meta keys."""
-    if not SCHEMA_PATH.exists():
+    if not path.exists():
         return {}
-    raw = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+    raw = json.loads(path.read_text(encoding="utf-8"))
     return {k: v for k, v in raw.items() if not k.startswith("_") and isinstance(v, list)}
 
 
-SCHEMA = _load_schema()
+DEFENDER_SCHEMA = _load_schema_file(DEFENDER_SCHEMA_PATH)
+SENTINEL_SCHEMA = _load_schema_file(SENTINEL_SCHEMA_PATH)
+
+
+def _merge(*schemas: dict[str, list[str]]) -> dict[str, list[str]]:
+    """Combine schemas by taking the UNION of columns per table.
+    A table that appears in multiple platforms (e.g. `IdentityInfo`) gets
+    every column known anywhere — the cost is some missed cross-platform
+    column-mismatch checks; the gain is no false positives when the
+    validator can't tell which platform a query targets."""
+    out: dict[str, list[str]] = {}
+    for s in schemas:
+        for table, cols in s.items():
+            seen = set(out.setdefault(table, []))
+            for c in cols:
+                if c not in seen:
+                    out[table].append(c)
+                    seen.add(c)
+    return out
+
+
+SCHEMA = _merge(DEFENDER_SCHEMA, SENTINEL_SCHEMA)
 ALL_TABLES = set(SCHEMA.keys())
+
+# Per-platform owners — used for richer error messages.
+PLATFORM_TABLES: dict[str, set[str]] = {
+    "defender": set(DEFENDER_SCHEMA.keys()),
+    "sentinel": set(SENTINEL_SCHEMA.keys()),
+}
 
 
 # =============================================================================

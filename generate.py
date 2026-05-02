@@ -669,6 +669,7 @@ def _load_kql_knowledge() -> str:
                   "kql_scalar_functions.md", "kql_combining_data.md",
                   "kql_aggregation_anomaly.md",
                   "kql_patterns.md", "kql_tables.md",
+                  "kql_sentinel_tables.md", "kql_translation.md",
                   "kql_antipatterns.md", "kql_examples.md"):
         p = KNOWLEDGE_DIR / fname
         if p.exists():
@@ -682,11 +683,11 @@ def _load_kql_knowledge() -> str:
 _KQL_KNOWLEDGE_BLOCK = _load_kql_knowledge()
 
 
-def _load_defender_schema_block() -> str:
-    """Render data_sources/defender_spec_tables.json into a compact text
-    block — one line per table, columns comma-separated. Injected into
-    the LLM prompt so the model never has to guess at column names."""
-    schema_path = Path(__file__).parent / "data_sources" / "defender_spec_tables.json"
+def _load_schema_block(filename: str) -> str:
+    """Render a data_sources/*.json schema into a compact text block —
+    one line per table, columns comma-separated. Injected into the LLM
+    prompt so the model never has to guess at column names."""
+    schema_path = Path(__file__).parent / "data_sources" / filename
     if not schema_path.exists():
         return ""
     try:
@@ -705,7 +706,8 @@ def _load_defender_schema_block() -> str:
     return "\n".join(lines)
 
 
-_DEFENDER_SCHEMA_BLOCK = _load_defender_schema_block()
+_DEFENDER_SCHEMA_BLOCK = _load_schema_block("defender_spec_tables.json")
+_SENTINEL_SCHEMA_BLOCK = _load_schema_block("sentinel_spec_tables.json")
 
 
 # ---- Schema-field validator (canonical Defender table columns) -------------
@@ -717,9 +719,14 @@ except Exception:
     _validate_kql_fields = None  # type: ignore[assignment]
 
 
-def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql") -> int:
-    """Run the schema validator on uc_dict[kql_key] and attach
-    `_field_issues` to the dict in-place. Returns the issue count."""
+def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
+                          issues_key: str = "_field_issues") -> int:
+    """Run the schema validator on uc_dict[kql_key] and attach issues
+    to uc_dict[issues_key]. Returns the issue count.
+
+    Different platforms get different issues_key values so a UC with
+    both `defender_kql` + `sentinel_kql` can carry separate audit
+    trails (`_field_issues` + `_sentinel_field_issues`)."""
     if _validate_kql_fields is None:
         return 0
     kql = uc_dict.get(kql_key) or ""
@@ -729,11 +736,11 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql") -> int:
         issues = _validate_kql_fields(kql)
     except Exception as e:
         # Validator must never crash the pipeline.
-        uc_dict["_field_issues"] = [{"kind": "validator_error", "message": str(e)[:200]}]
+        uc_dict[issues_key] = [{"kind": "validator_error", "message": str(e)[:200]}]
         return 1
     if issues:
         # Trim to plain dicts in case Issue subclass shows up oddly in JSON.
-        uc_dict["_field_issues"] = [dict(i) for i in issues]
+        uc_dict[issues_key] = [dict(i) for i in issues]
     return len(issues)
 
 
@@ -770,7 +777,8 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "techniques": [{"id":"T####.###","name":"<technique name>"}],
       "data_models": ["<Splunk CIM dataset names e.g. Endpoint.Processes, Network_Traffic.All_Traffic>"],
       "splunk_spl": "<full Splunk SPL using CIM tstats syntax. Reference SPECIFIC binaries/paths/cmdline strings from the article. Use macros like `summariesonly` and `drop_dm_object_name(<DM>)`.>",
-      "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings.>",
+      "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings. Use `Timestamp` (NOT TimeGenerated) — Defender column is Timestamp.>",
+      "sentinel_kql": "<full Microsoft Sentinel KQL targeting the SAME detection but on Sentinel's schema. Use SecurityEvent / SigninLogs / AuditLogs / AzureActivity / OfficeActivity / CommonSecurityLog / Syslog / ASIM Im* tables. Use `TimeGenerated` (NOT Timestamp) — Sentinel column is TimeGenerated. If the detection genuinely cannot be expressed on Sentinel telemetry available in this tenant, leave as empty string and explain in `rationale`.>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
       "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"]
     }
@@ -804,6 +812,7 @@ Advanced Hunting table you may use. When you write `defender_kql`:
   • Use ONLY columns that appear in this list for the table you are querying.
   • Do NOT invent column names. If the field you want isn't in the
     table, either pick a different table or restructure the query.
+  • Defender uses `Timestamp` (NOT TimeGenerated).
   • Common pitfall: `DeviceFileEvents` and `DeviceNetworkEvents` do NOT have
     `AccountName` or `ProcessCommandLine` directly — those are on the
     initiating-process side: `InitiatingProcessAccountName`,
@@ -815,14 +824,40 @@ Advanced Hunting table you may use. When you write `defender_kql`:
 <<DEFENDER_SCHEMA>>
 
 ================================================================
+CANONICAL MICROSOFT SENTINEL SCHEMA
+================================================================
+Below is the column list for the most-used Microsoft Sentinel tables.
+When you write `sentinel_kql`:
+
+  • Use ONLY columns that appear in this list for the table you are querying.
+  • Sentinel uses `TimeGenerated` (NOT Timestamp). Every where/project
+    needs `TimeGenerated`.
+  • Schema differs from Defender XDR even when the concept is the same.
+    AAD sign-ins live in `SigninLogs` (not AADSignInEventsBeta) and the
+    column is `UserPrincipalName` (not AccountUpn). Windows process
+    events come via `SecurityEvent | where EventID == 4688` (not
+    DeviceProcessEvents) — column is `NewProcessName` (not FileName),
+    `CommandLine` (not ProcessCommandLine).
+  • Prefer ASIM (`Im*`) tables for cross-vendor portability when
+    available: ImProcessCreate, ImNetworkSession, ImAuthentication,
+    ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent.
+  • If the detection cannot be expressed on Sentinel telemetry (rare —
+    e.g. depends on UrlClickEvents which has no clean Sentinel
+    equivalent), leave `sentinel_kql` as empty string.
+
+<<SENTINEL_SCHEMA>>
+
+================================================================
 KQL DETECTION-ENGINEERING KNOWLEDGE BASE
 ================================================================
-The following reference is the house style for Defender KQL queries
-on this site. Use these patterns / table recipes / anti-pattern
-guidance when shaping the `defender_kql` body in your output.
-Match the style of the annotated examples — time bounds first,
-case-insensitive equality (=~), token-aligned matches (has),
-process-tree pivots, and explicit machine-account exclusion.
+The following reference is the house style for both Defender and
+Sentinel KQL queries on this site. Use these patterns / table recipes
+/ anti-pattern guidance when shaping the `defender_kql` AND
+`sentinel_kql` bodies in your output. Match the style of the
+annotated examples — time bounds first, case-insensitive equality
+(=~), token-aligned matches (has), process-tree pivots, and explicit
+machine-account exclusion. The translation reference shows how to
+port a Defender query to Sentinel and vice versa.
 
 <<KQL_KNOWLEDGE>>
 ================================================================
@@ -991,6 +1026,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<BODY>>",        body)
               .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
+              .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     if use_oauth:
@@ -1020,12 +1056,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
             print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
             return []
     # Schema-field validation — flag any column the LLM invented or used on
-    # the wrong table. Issues are attached to each UC in the cache so a later
-    # `validate_kql_knowledge.py --score` run can audit corpus correctness.
+    # the wrong table for either platform. Issues are attached per-platform
+    # to each UC in the cache for later auditing via validate_kql_knowledge.py.
     total_issues = 0
     for uc in data.get("ucs") or []:
         if isinstance(uc, dict):
             total_issues += _attach_field_issues(uc, "defender_kql")
+            total_issues += _attach_field_issues(uc, "sentinel_kql",
+                                                  issues_key="_sentinel_field_issues")
     if total_issues:
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(data.get('ucs') or [])} UC(s)")
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
@@ -1056,7 +1094,8 @@ Reply with JSON only, no commentary, this exact shape:
       "techniques": [{"id":"T####", "name":"<official MITRE name>"}, ...],
       "data_models": ["Endpoint.Processes", ...],
       "splunk_spl": "<full SPL query>",
-      "defender_kql": "<full KQL query>",
+      "defender_kql": "<full Microsoft Defender Advanced Hunting KQL — uses `Timestamp`>",
+      "sentinel_kql": "<full Microsoft Sentinel KQL targeting the same detection — uses `TimeGenerated`. Empty string if not expressible on Sentinel telemetry.>",
       "confidence": "high | medium | low",
       "tier": "alerting | hunting",
       "fp_rate_estimate": "low | medium | high",
@@ -1090,6 +1129,7 @@ Advanced Hunting table you may use. When you write `defender_kql`:
   • Use ONLY columns that appear in this list for the table you are querying.
   • Do NOT invent column names. If the field you want isn't in the
     table, either pick a different table or restructure the query.
+  • Defender uses `Timestamp` (NOT TimeGenerated).
   • Common pitfall: `DeviceFileEvents` and `DeviceNetworkEvents` do NOT have
     `AccountName` or `ProcessCommandLine` directly — those are on the
     initiating-process side: `InitiatingProcessAccountName`,
@@ -1101,14 +1141,40 @@ Advanced Hunting table you may use. When you write `defender_kql`:
 <<DEFENDER_SCHEMA>>
 
 ================================================================
+CANONICAL MICROSOFT SENTINEL SCHEMA
+================================================================
+Below is the column list for the most-used Microsoft Sentinel tables.
+When you write `sentinel_kql`:
+
+  • Use ONLY columns that appear in this list for the table you are querying.
+  • Sentinel uses `TimeGenerated` (NOT Timestamp). Every where/project
+    needs `TimeGenerated`.
+  • Schema differs from Defender XDR even when the concept is the same.
+    AAD sign-ins live in `SigninLogs` (not AADSignInEventsBeta) and the
+    column is `UserPrincipalName` (not AccountUpn). Windows process
+    events come via `SecurityEvent | where EventID == 4688` (not
+    DeviceProcessEvents) — column is `NewProcessName` (not FileName),
+    `CommandLine` (not ProcessCommandLine).
+  • Prefer ASIM (`Im*`) tables for cross-vendor portability when
+    available: ImProcessCreate, ImNetworkSession, ImAuthentication,
+    ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent.
+  • If the detection cannot be expressed on Sentinel telemetry (rare —
+    e.g. depends on UrlClickEvents which has no clean Sentinel
+    equivalent), leave `sentinel_kql` as empty string.
+
+<<SENTINEL_SCHEMA>>
+
+================================================================
 KQL DETECTION-ENGINEERING KNOWLEDGE BASE
 ================================================================
-The following reference is the house style for Defender KQL queries
-on this site. Use these patterns / table recipes / anti-pattern
-guidance when shaping the `defender_kql` body in your output.
-Match the style of the annotated examples — time bounds first,
-case-insensitive equality (=~), token-aligned matches (has),
-process-tree pivots, and explicit machine-account exclusion.
+The following reference is the house style for both Defender and
+Sentinel KQL queries on this site. Use these patterns / table recipes
+/ anti-pattern guidance when shaping the `defender_kql` AND
+`sentinel_kql` bodies in your output. Match the style of the
+annotated examples — time bounds first, case-insensitive equality
+(=~), token-aligned matches (has), process-tree pivots, and explicit
+machine-account exclusion. The translation reference shows how to
+port a Defender query to Sentinel and vice versa.
 
 <<KQL_KNOWLEDGE>>
 ================================================================
@@ -1155,6 +1221,7 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<DESCRIPTION>>", description or "(no description in MITRE bundle)")
               .replace("<<TECHNIQUES>>", ", ".join(techs[:60]))
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
+              .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     try:
@@ -1207,12 +1274,16 @@ def _llm_generate_actor_ucs(actor: dict):
             "is_mitre_match": False,
             "splunk": d.get("splunk_spl") or "",
             "kql": d.get("defender_kql") or "",
+            "sentinel_kql": d.get("sentinel_kql") or "",
             "rationale": (d.get("rationale") or "")[:400],
         })
-    # Schema-field validation. Actor cache stores `kql` (not `defender_kql`).
+    # Schema-field validation per platform. Actor cache stores `kql`
+    # (Defender) and `sentinel_kql` separately.
     total_issues = 0
     for uc in out_ucs:
         total_issues += _attach_field_issues(uc, "kql")
+        total_issues += _attach_field_issues(uc, "sentinel_kql",
+                                              issues_key="_sentinel_field_issues")
     if total_issues:
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(out_ucs)} actor UC(s)")
     cache_path.write_text(json_lib.dumps({"name": name, "ucs": out_ucs}, indent=2), encoding="utf-8")
@@ -1262,6 +1333,7 @@ def _uc_from_llm_dict(d: dict):
         data_models=list(d.get("data_models") or []),
         splunk_spl=spl,
         defender_kql=kql,
+        sentinel_kql=(d.get("sentinel_kql") or ""),
         confidence=(d.get("confidence") or "Medium"),
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -1500,6 +1572,7 @@ class UseCase:
     data_models: list  # ["Endpoint.Processes", "Network_Traffic"]
     splunk_spl: str
     defender_kql: str
+    sentinel_kql: str = ""           # Microsoft Sentinel KQL — uses TimeGenerated
     confidence: str = "Medium"
     # Tier classification:
     #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
@@ -1587,6 +1660,12 @@ def _load_uc_from_yaml(path):
     techs = [(t["id"], t["name"]) for t in (doc.get("mitre_attack") or [])]
     spl = (doc.get("splunk_spl") or "") if "splunk" in impls else ""
     kql = (doc.get("defender_kql") or "") if "defender" in impls else ""
+    # Sentinel is a separate platform — accept it as an `implementations` value
+    # OR as an explicit `sentinel_kql` field (back-compat with legacy UCs that
+    # only carried Defender + Splunk).
+    sentinel_kql = (doc.get("sentinel_kql") or "")
+    if sentinel_kql and "sentinel" not in impls:
+        impls.add("sentinel")
     confidence = doc.get("confidence", "Medium")
     # Tier: explicit field wins; otherwise infer from query shape.
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
@@ -1606,6 +1685,7 @@ def _load_uc_from_yaml(path):
         data_models=flat_dms,
         splunk_spl=spl,
         defender_kql=kql,
+        sentinel_kql=sentinel_kql,
         confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -7199,6 +7279,7 @@ def render_killchain(art_id: str, hit: set, inferred: set,
 def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     spl = parameterize(uc.splunk_spl, ind)
     kql = parameterize(uc.defender_kql, ind)
+    skql = parameterize(uc.sentinel_kql, ind) if uc.sentinel_kql else ""
     techs = " ".join(
         f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
         for tid, name in uc.techniques
@@ -7209,6 +7290,19 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     uid = f"{art_id}-uc{idx}"
     phase_name = next((n for p, n, _ in KILL_CHAIN_PHASES if p == uc.kill_chain), uc.kill_chain)
     conf_cls = uc.confidence.lower()
+    # Build the tabs dynamically — Sentinel only appears when the UC carries
+    # a sentinel_kql body. SPL stays last for backward compat with existing
+    # querystring deep-links.
+    sentinel_tab_btn = (
+        f'<button class="tab-btn" data-target="{uid}-sentinel">Sentinel KQL</button>'
+        if skql else ""
+    )
+    sentinel_tab_pane = (
+        f'<div class="tab-content" id="{uid}-sentinel">'
+        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(skql)}</code></pre>'
+        f'</div>'
+        if skql else ""
+    )
     return f"""
 <details class="uc"{ ' open' if idx == 0 else '' }>
   <summary>
@@ -7222,11 +7316,13 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     <div class="uc-meta"><span class="ind-label">Data sources</span>{dms}</div>
     <div class="tabs">
       <button class="tab-btn active" data-target="{uid}-kql">Defender KQL</button>
+      {sentinel_tab_btn}
       <button class="tab-btn" data-target="{uid}-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="{uid}-kql">
       <pre><button class="copy-btn">COPY</button><code>{html.escape(kql)}</code></pre>
     </div>
+    {sentinel_tab_pane}
     <div class="tab-content" id="{uid}-spl">
       <pre><button class="copy-btn">COPY</button><code>{html.escape(spl)}</code></pre>
     </div>
@@ -8112,7 +8208,10 @@ def _write_rule_packs(generated_iso):
             splunk_lines.append("")
 
         # ---- Sentinel analytics rule (Microsoft.SecurityInsights JSON) ----
-        if uc.defender_kql:
+        # Prefer the Sentinel-shape KQL (uses TimeGenerated + Sentinel tables);
+        # fall back to defender_kql for legacy UCs that haven't been ported yet.
+        sentinel_rule_kql = uc.sentinel_kql or uc.defender_kql
+        if sentinel_rule_kql:
             sentinel_rule = {
                 "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
@@ -8126,7 +8225,7 @@ def _write_rule_packs(generated_iso):
                         "description": uc.description or uc.title,
                         "severity": "High" if tier == "alerting" else "Low",
                         "enabled": False,  # ALWAYS off until reviewed
-                        "query": uc.defender_kql,
+                        "query": sentinel_rule_kql,
                         "queryFrequency": "PT1H" if tier == "alerting" else "PT1D",
                         "queryPeriod": "PT24H",
                         "triggerOperator": "GreaterThan",

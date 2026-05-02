@@ -163,19 +163,27 @@ def _build_prompt(article: dict, ind: dict) -> str:
             .replace("<<BODY>>",        body)
             .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
             .replace("<<DEFENDER_SCHEMA>>", generate._DEFENDER_SCHEMA_BLOCK)
+            .replace("<<SENTINEL_SCHEMA>>", generate._SENTINEL_SCHEMA_BLOCK)
             .replace("<<KQL_KNOWLEDGE>>", generate._KQL_KNOWLEDGE_BLOCK))
 
 
 def run_prompt_shape() -> int:
     """Return shell exit code: 0 = pass, 1 = fail."""
     print(f"Knowledge block:  {len(generate._KQL_KNOWLEDGE_BLOCK):,} bytes")
-    print(f"Schema block:     {len(generate._DEFENDER_SCHEMA_BLOCK):,} bytes")
-    # Sanity-check the schema block contains the canonical-pitfall callouts.
+    print(f"Defender schema:  {len(generate._DEFENDER_SCHEMA_BLOCK):,} bytes")
+    print(f"Sentinel schema:  {len(generate._SENTINEL_SCHEMA_BLOCK):,} bytes")
+    # Sanity-check the schema blocks contain the canonical-pitfall callouts.
     if "DeviceProcessEvents" not in generate._DEFENDER_SCHEMA_BLOCK:
-        print("FAIL: schema block is missing DeviceProcessEvents")
+        print("FAIL: Defender schema is missing DeviceProcessEvents")
         return 1
     if "InitiatingProcessAccountName" not in generate._DEFENDER_SCHEMA_BLOCK:
-        print("FAIL: schema block is missing InitiatingProcessAccountName")
+        print("FAIL: Defender schema is missing InitiatingProcessAccountName")
+        return 1
+    if "SecurityEvent" not in generate._SENTINEL_SCHEMA_BLOCK:
+        print("FAIL: Sentinel schema is missing SecurityEvent")
+        return 1
+    if "SigninLogs" not in generate._SENTINEL_SCHEMA_BLOCK:
+        print("FAIL: Sentinel schema is missing SigninLogs")
         return 1
     print(f"Running {len(TEST_ARTICLES)} prompt-shape tests:\n")
     failures = 0
