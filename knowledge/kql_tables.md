@@ -248,3 +248,415 @@ DeviceEvents
 **Gotchas**:
 - The `AdditionalFields` JSON shape changes per `ActionType`. There's no single schema.
 - This table is huge — always filter by `ActionType` first.
+
+<!-- ============================================================== -->
+
+## table-DeviceLogonEvents
+
+**Use cases**: Windows interactive/network logons at the host level (mirror of `IdentityLogonEvents` but client-side, with extra context like `IsLocalAdmin` and `LogonId`).
+
+**Columns that matter**:
+- `Timestamp`, `DeviceName`, `DeviceId`.
+- `AccountName`, `AccountDomain`, `AccountSid` — the user logging on.
+- `LogonType` — `Interactive`, `RemoteInteractive` (RDP), `Network`, `Service`, `Batch`, `NetworkCleartext`, `Unlock`, `CachedInteractive`.
+- `ActionType` — `LogonSuccess`, `LogonFailed`, `LogonAttempted`.
+- `Protocol` — `Kerberos`, `NTLM`, etc.
+- `FailureReason` — populated when `ActionType == "LogonFailed"`.
+- `RemoteIP`, `RemoteIPType`, `RemoteDeviceName`, `RemotePort` — origin of the auth.
+- `IsLocalAdmin` — bool. Useful pivot for privilege detection.
+- `LogonId`, `ReportId` — joins back to other identity / process tables.
+- `InitiatingProcess*` — the process that triggered the logon (rare but useful).
+
+**Common predicates**:
+```kql
+| where ActionType == "LogonSuccess" and LogonType == "RemoteInteractive"   // RDP
+| where ActionType == "LogonFailed"  and FailureReason has "BadPassword"     // brute-force
+| where Protocol == "NTLM" and LogonType == "RemoteInteractive"              // NTLM-over-RDP smell
+| where IsLocalAdmin == true and LogonType in ("Interactive","Network")      // privilege use
+```
+
+**Gotchas**:
+- High-volume — service accounts log on repeatedly. Always exclude with `AccountName !endswith "$"` and / or `LogonType !in ("Service","Batch")`.
+- `RemoteDeviceName` is sometimes empty for cloud-AAD logons; use `RemoteIP` as fallback.
+
+<!-- ============================================================== -->
+
+## table-DeviceImageLoadEvents
+
+**Use cases**: DLL / module loads — DLL hijack, side-loading, unsigned-DLL hunting, AMSI bypass detection.
+
+**Columns that matter**:
+- `Timestamp`, `DeviceName`, `DeviceId`, `ActionType` (always `ImageLoaded`).
+- `FileName`, `FolderPath`, `SHA1`, `SHA256`, `MD5`, `FileSize` — the loaded DLL.
+- `InitiatingProcessFileName`, `InitiatingProcessFolderPath`, `InitiatingProcessSHA256`, `InitiatingProcessCommandLine`, `InitiatingProcessAccountName` — the process that loaded it.
+
+**Common predicates**:
+```kql
+// Side-loaded DLL adjacent to an unsigned binary
+| where InitiatingProcessFolderPath has @"\AppData\Local\Temp\"
+| where FolderPath =~ InitiatingProcessFolderPath
+   and SHA256 != InitiatingProcessSHA256
+
+// Suspicious DLL loaded by lsass.exe (credential theft tooling)
+| where InitiatingProcessFileName =~ "lsass.exe"
+| where FolderPath !startswith @"C:\Windows\"
+```
+
+**Gotchas**:
+- Extremely high volume — 1000+ loads per minute per host is normal. Always pre-filter by parent process or path.
+- `InitiatingProcessSHA256` is the loader; `SHA256` is the loaded module. Don't confuse them.
+
+<!-- ============================================================== -->
+
+## table-DeviceInfo
+
+**Use cases**: device inventory snapshot — used as a join source to filter by OS, group, or join-state. Daily heartbeat row.
+
+**Columns that matter**:
+- `DeviceId`, `DeviceName`, `Timestamp`.
+- `OSPlatform` — `Windows10`, `Windows11`, `WindowsServer2019`, `Linux`, `MacOS`, etc.
+- `OSVersion`, `OSBuild`, `OSArchitecture`, `OSDistribution`.
+- `Model`, `Vendor`, `DeviceCategory`, `DeviceType`, `DeviceSubtype`.
+- `MachineGroup` — Defender-side tagging.
+- `JoinType` — `AzureAD`, `Hybrid`, `Workgroup`.
+- `IsAzureADJoined`, `IsInternetFacing` — bool pivots.
+- `LoggedOnUsers` — JSON array of currently signed-in users.
+- `PublicIP`, `AadDeviceId`.
+
+**Common pattern — dynamic device-set filter**:
+```kql
+let win10 = DeviceInfo
+    | where OSPlatform == "Windows10"
+    | summarize make_set(DeviceName);
+DeviceProcessEvents
+| where DeviceName in (win10)
+| where FileName =~ "sethc.exe"
+```
+
+**Gotchas**:
+- One row per device per day — don't `count()` events here, that's not what it represents.
+- `LoggedOnUsers` is JSON; use `parse_json(LoggedOnUsers)` then `mv-expand`.
+
+<!-- ============================================================== -->
+
+## table-DeviceNetworkInfo
+
+**Use cases**: network-adapter inventory — mainly for joining VPN/IP context to other tables.
+
+**Columns that matter**:
+- `DeviceId`, `DeviceName`, `Timestamp`.
+- `NetworkAdapterName`, `NetworkAdapterType`, `NetworkAdapterStatus`.
+- `MacAddress`, `IPAddresses` (dynamic), `IPv4Dhcp`, `IPv6Dhcp`.
+- `DnsAddresses`, `DefaultGateways`.
+- `ConnectedNetworks`, `TunnelType`.
+
+**Gotchas**:
+- Daily-ish snapshot, not real-time — don't expect to see every IP change.
+- `IPAddresses` is a dynamic array; `mv-expand` to flatten.
+
+<!-- ============================================================== -->
+
+## table-EmailUrlInfo
+
+**Use cases**: every URL inside every inbound/outbound message — the join partner for `EmailEvents` when you want URL details.
+
+**Columns that matter**:
+- `Timestamp`, `NetworkMessageId` — the join key into `EmailEvents` and `UrlClickEvents`.
+- `Url`, `UrlDomain` — the destination.
+- `UrlLocation` — `Body`, `Subject`, `Header`, `Attachment` — where it was found.
+- `ReportId`.
+
+**Common join (the canonical phishing pattern)**:
+```kql
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| join kind=inner (
+    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+  ) on NetworkMessageId
+```
+
+**Gotchas**:
+- One message can have many URLs — `NetworkMessageId` is many-to-many.
+- `UrlDomain` is pre-extracted by Defender; trust it, don't re-parse from `Url`.
+
+<!-- ============================================================== -->
+
+## table-EmailAttachmentInfo
+
+**Use cases**: attachment metadata + Defender's malware verdict on each attachment.
+
+**Columns that matter**:
+- `Timestamp`, `NetworkMessageId` — join into `EmailEvents`.
+- `SenderFromAddress`, `RecipientEmailAddress`.
+- `FileName`, `FileType`, `FileSize`, `SHA256`.
+- `MalwareFilterVerdict` — `Malware`, `Phish`, `Spam`, `None`, etc.
+- `MalwareDetectionMethod`, `ThreatTypes`, `ThreatNames`, `DetectionMethods`.
+
+**Common predicates**:
+```kql
+// Malicious attachments delivered to mailbox
+| where MalwareFilterVerdict == "Malware"
+| where FileType in~ ("DOC","DOCX","XLS","XLSM","ISO","IMG","ZIP","RAR","HTML")
+```
+
+**Gotchas**:
+- `SHA256` here is the attachment hash — pivot to `DeviceFileEvents` to see if it actually wrote to disk.
+
+<!-- ============================================================== -->
+
+## table-EmailPostDeliveryEvents
+
+**Use cases**: post-delivery actions — ZAP (Zero-hour Auto Purge), manual move-to-junk, soft-delete by user.
+
+**Columns that matter**:
+- `Timestamp`, `NetworkMessageId`, `InternetMessageId`.
+- `Action` — what happened (`Delete`, `MoveToJunk`, etc.).
+- `ActionType` — `Manual`, `ZAP`, `Auto`.
+- `ActionTrigger` — what initiated the action (`User`, `System`, `Admin`).
+- `ActionResult` — success/fail.
+- `DeliveryLocation`, `RecipientEmailAddress`.
+
+**Gotchas**:
+- Post-delivery isn't the same as deletion — the message may still be in another folder; only `Delete` actions remove it.
+
+<!-- ============================================================== -->
+
+## table-UrlClickEvents
+
+**Use cases**: Safe-Links click telemetry — when a user actually opened a URL from email/Teams. The signal that turns "phish was delivered" into "phish was clicked".
+
+**Columns that matter**:
+- `Timestamp`, `Url`, `AccountUpn` — who clicked, when.
+- `ActionType` — `ClickAllowed`, `ClickedThrough`, `ClickBlocked`, `Blocked`.
+  - `ClickAllowed` = Safe Links allowed it; user reached the URL.
+  - `ClickedThrough` = user bypassed a Safe-Links warning.
+- `NetworkMessageId` — joins back to `EmailEvents` to get the message context.
+- `Workload` — `Email`, `Teams`, `Office`.
+- `ThreatTypes`, `DetectionMethods`.
+- `IsClickedThrough` (bool).
+- `IPAddress`, `UrlChain` (redirect chain), `ReportId`, `Application`.
+
+**Common pattern — full phishing-to-process correlation**:
+```kql
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| join kind=inner (EmailUrlInfo | project NetworkMessageId, Url) on NetworkMessageId
+| join kind=inner (
+    UrlClickEvents
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | project NetworkMessageId, ClickTime = Timestamp, AccountUpn
+  ) on NetworkMessageId
+```
+
+**Gotchas**:
+- Click data only exists for tenants with Safe Links (Defender for O365 P1+).
+- `ClickedThrough == true` is a high-fidelity user-bypass signal — pair with subsequent process spawn.
+
+<!-- ============================================================== -->
+
+## table-IdentityQueryEvents
+
+**Use cases**: LDAP/SAMR query telemetry — recon detection (BloodHound, ADRecon, kerberoasting prelude).
+
+**Columns that matter**:
+- `Timestamp`, `ActionType` — `LDAPQuery`, `SAMRQuery`, `DNSQuery`, etc.
+- `Query` — the actual LDAP filter string.
+- `QueryTarget` — what's being queried.
+- `QueryType`, `Protocol`.
+- `AccountName`, `AccountDomain`, `AccountUpn`.
+- `DeviceName`, `IPAddress` — origin host.
+
+**Common predicates**:
+```kql
+// BloodHound-style enumeration of all users
+| where ActionType == "LDAPQuery"
+| where Query has "(samAccountType=805306368)"           // user objects
+
+// Kerberoasting recon — querying SPNs
+| where Query has "servicePrincipalName"
+```
+
+**Gotchas**:
+- High-volume on DCs; bin and aggregate by `AccountName` to find outliers.
+- LDAP queries are OFTEN benign — pair with rare-source-host or unusual-time signal.
+
+<!-- ============================================================== -->
+
+## table-IdentityDirectoryEvents
+
+**Use cases**: Active Directory / Entra ID directory changes — group membership, password resets, account creation, MFA changes.
+
+**Columns that matter**:
+- `Timestamp`, `ActionType` — long enum: `Group Membership changed`, `Password change attempt`, `User Account modified`, `Forced password reset`, `Account created`, etc.
+- `Application` — `Active Directory`, `Azure AD`.
+- `TargetAccountDisplayName`, `TargetAccountUpn` — the account being acted on.
+- `AccountName`, `AccountUpn`, `AccountObjectId` — who did it.
+- `DestinationDeviceName`, `DestinationIPAddress`.
+- `AdditionalFields` — variant JSON, payload depends on `ActionType`.
+
+**Common predicates**:
+```kql
+// Privilege escalation — added to Domain Admins
+| where ActionType == "Group Membership changed"
+| where AdditionalFields has "Domain Admins"
+
+// Forced password reset — common pre-impersonation step
+| where ActionType == "Forced password reset"
+```
+
+**Gotchas**:
+- `AdditionalFields` shape varies per `ActionType` — check Microsoft docs before assuming a field exists.
+- Many AAD changes are admin-driven and benign; pair with off-hours / unusual-actor signal.
+
+<!-- ============================================================== -->
+
+## table-IdentityInfo
+
+**Use cases**: identity inventory — used as a join source to enrich logon/sign-in events with role, department, account state.
+
+**Columns that matter**:
+- `AccountObjectId`, `AccountUpn`, `AccountSid`, `AccountName`, `AccountDomain`.
+- `JobTitle`, `Department`, `Manager`, `City`, `Country`, `OfficeLocation`.
+- `IsAccountEnabled` — has the account been disabled?
+- `MailAddress`, `Phone`, `EmailAddress`.
+
+**Common pattern — enrich a sign-in with identity context**:
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(1d) and ErrorCode == 0
+| join kind=leftouter (IdentityInfo | project AccountUpn, JobTitle, Department, IsAccountEnabled) on AccountUpn
+| where IsAccountEnabled == false                  // sign-in by a disabled account!
+```
+
+**Gotchas**:
+- Daily-ish snapshot — recently created accounts may not appear yet.
+
+<!-- ============================================================== -->
+
+## table-AlertInfo
+
+**Use cases**: alert-level metadata — title, severity, category, ATT&CK techniques. The "what kind of alert" lookup.
+
+**Columns that matter**:
+- `Timestamp`, `AlertId` — primary key, joins to `AlertEvidence`.
+- `Title` — same for every alert from the same detection rule.
+- `Category` — `Execution`, `LateralMovement`, `Collection`, etc.
+- `Severity` — `Informational`, `Low`, `Medium`, `High`.
+- `ServiceSource` — `Microsoft Defender for Endpoint`, `Microsoft Defender for Identity`, etc.
+- `DetectionSource` — `EDR`, `WindowsDefenderAv`, `AutomatedInvestigation`, `Manual`, etc.
+- `AttackTechniques` — array of MITRE technique IDs.
+
+**Common predicates**:
+```kql
+| where Severity in ("High","Medium")
+| where Category == "Execution"
+| mv-expand todynamic(AttackTechniques) | extend Technique = tostring(AttackTechniques)
+```
+
+<!-- ============================================================== -->
+
+## table-AlertEvidence
+
+**Use cases**: per-entity evidence rows for every alert — the canonical join target for "what entities triggered which alerts".
+
+**Columns that matter**:
+- `Timestamp`, `AlertId` — joins to `AlertInfo`.
+- `EntityType` — `Machine`, `User`, `Process`, `File`, `Url`, `Ip`, `RegistryKey`, `RegistryValue`, etc.
+- `EvidenceRole` — `Impacted`, `Related`.
+- `EvidenceDirection` — `Source`, `Destination`.
+- `DeviceId`, `DeviceName`, `RemoteIP`, `RemoteUrl`.
+- `FileName`, `FolderPath`, `SHA1`, `SHA256`, `FileSize`.
+- `AccountName`, `AccountDomain`, `AccountUpn`, `AccountSid`, `AccountObjectId`.
+- `ProcessCommandLine`, `ThreatFamily`, `AdditionalFields`.
+
+**Common pattern — alert-context summary**:
+```kql
+AlertEvidence
+| where Timestamp > ago(7d)
+| join kind=inner AlertInfo on AlertId
+| summarize Count = count(),
+            Devices = make_set_if(DeviceName, EntityType == "Machine"),
+            Users   = make_set_if(AccountUpn,  EntityType == "User"),
+            Files   = make_set_if(FileName,    EntityType == "File")
+            by Title, Severity
+```
+
+**Gotchas**:
+- One alert produces multiple rows (one per entity). Always filter `EntityType` or aggregate via `*_if`.
+- Same `Title` may share alert IDs across days — the rule, not the incident.
+
+<!-- ============================================================== -->
+
+## table-CloudAppEvents
+
+**Use cases**: Defender for Cloud Apps (MCAS) audit log — SaaS application activity (Office 365, Salesforce, OneDrive, AWS, GCP, third-party connectors).
+
+**Columns that matter**:
+- `Timestamp`, `ActionType` — long enum specific to each app.
+- `Application`, `ApplicationId` — the SaaS app.
+- `AccountObjectId`, `AccountId`, `AccountDisplayName`, `AccountType`.
+- `IsAdminOperation` (bool) — admin-portal action.
+- `IPAddress`, `CountryCode`, `City`, `ISP`, `IsAnonymousProxy`.
+- `UserAgent`, `DeviceType`, `OSPlatform`.
+- `ActivityType`, `ActivityObjects` (dynamic), `ObjectName`, `ObjectType`, `ObjectId`.
+- `RawEventData`, `AdditionalFields` — variant JSON; structure depends on `Application`.
+
+**Common predicates**:
+```kql
+// External-domain user accessing OneDrive
+| where Application == "Microsoft OneDrive for Business"
+| where AccountDisplayName !endswith "@yourdomain.com"
+
+// Admin-level action from anonymous proxy
+| where IsAdminOperation == true and IsAnonymousProxy == true
+```
+
+**Gotchas**:
+- `ActionType` semantics differ per `Application`. Always group by both before aggregating.
+- `RawEventData` shape is app-specific JSON — never assume keys.
+
+<!-- ============================================================== -->
+
+## table-DeviceTvmSoftwareInventory
+
+**Use cases**: Threat-and-Vulnerability-Management software inventory — what's installed where.
+
+**Columns that matter**:
+- `DeviceId`, `DeviceName`, `OSPlatform`, `OSVersion`.
+- `SoftwareVendor`, `SoftwareName`, `SoftwareVersion`.
+- `EndOfSupportStatus`, `EndOfSupportDate`.
+
+**Gotcha**: this is a snapshot, not an event log — `count()` over time is meaningless.
+
+<!-- ============================================================== -->
+
+## table-DeviceTvmSoftwareVulnerabilities
+
+**Use cases**: per-device CVE coverage — which CVE affects which device on which version.
+
+**Columns that matter**:
+- `DeviceId`, `DeviceName`, `OSPlatform`, `OSVersion`.
+- `SoftwareVendor`, `SoftwareName`, `SoftwareVersion`.
+- `CveId`, `VulnerabilitySeverityLevel`.
+- `RecommendedSecurityUpdate`, `RecommendedSecurityUpdateId`.
+
+**Common pattern — devices vulnerable to a specific CVE**:
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2024-1234"
+| project DeviceName, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
+```
+
+<!-- ============================================================== -->
+
+## table-DeviceTvmSoftwareVulnerabilitiesKB
+
+**Use cases**: CVE knowledge base — CVSS, exploit availability, severity. Reference table without device context.
+
+**Columns that matter**:
+- `CveId`, `CvssScore`, `IsExploitAvailable`, `VulnerabilitySeverityLevel`.
+- `LastModifiedTime`, `PublishedDate`.
+
+**Gotcha**: no `DeviceId` here — join with `DeviceTvmSoftwareVulnerabilities` on `CveId` for device-scoped views.

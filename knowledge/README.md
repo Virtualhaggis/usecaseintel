@@ -15,6 +15,11 @@ Designed to be:
 
 | File | Purpose |
 |---|---|
+| `kql_fundamentals.md` | Three statement types, pipe semantics, data types, exploration operators, project family. (Course Section 3.) |
+| `kql_searching_filtering.md` | The 4-character index rule, search operator, has/contains/matches-regex semantics, where vs. and, timestamp-first ordering. (Course Section 4.) |
+| `kql_scalar_functions.md` | isempty / isnull, ipv4 family, path & regex escaping, JSON bracket vs. dot, parse_json. (Course Section 5.) |
+| `kql_combining_data.md` | union (with kind=, isfuzzy, withsource), join — picking the right `kind=`, M365D process-key joins. (Course Sections 6 + 7.) |
+| `kql_aggregation_anomaly.md` | externaldata feeds, time-traveling sets, summarize/arg_max/conditional aggregation, mv-expand, render charts, alert-context query, static & dynamic anomaly detection, series_decompose_anomalies. (Course Sections 8 – 13.) |
 | `kql_patterns.md` | Reusable query shapes — process-tree pivots, time-window joins, behavioural baselining. |
 | `kql_tables.md` | Per-table recipes (DeviceProcessEvents, EmailEvents, IdentityLogonEvents, etc.). What columns matter, common predicates, joins. |
 | `kql_antipatterns.md` | Common mistakes the course flags + how to fix them. |
