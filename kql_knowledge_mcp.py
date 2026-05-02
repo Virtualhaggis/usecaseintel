@@ -38,6 +38,7 @@ from mcp.types import TextContent, Tool
 
 
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
+SIGMA_DIR = Path(__file__).parent / "sigma_rules"
 
 # ---- knowledge index --------------------------------------------------------
 
@@ -87,6 +88,26 @@ def _build_index(files: dict[str, str]) -> dict[str, tuple[str, str]]:
 
 _FILES = _load_files()
 _INDEX = _build_index(_FILES)
+
+
+def _load_sigma_rules() -> dict[str, str]:
+    """Return {rule_id: file_text} for every kill_chain/<rule>.yml under sigma_rules/.
+
+    The rule_id is the path relative to sigma_rules/ without the .yml extension.
+    """
+    out: dict[str, str] = {}
+    if not SIGMA_DIR.exists():
+        return out
+    for p in sorted(SIGMA_DIR.rglob("*.yml")):
+        try:
+            rel = p.relative_to(SIGMA_DIR).with_suffix("").as_posix()
+            out[rel] = p.read_text(encoding="utf-8")
+        except Exception:
+            continue
+    return out
+
+
+_SIGMA = _load_sigma_rules()
 
 
 # ---- search -----------------------------------------------------------------
@@ -204,6 +225,32 @@ async def _list_tools() -> list[Tool]:
                 "required": ["filename"],
             },
         ),
+        Tool(
+            name="list_sigma_rules",
+            description=(
+                "List every Sigma rule shipped under sigma_rules/. Returns one "
+                "line per rule in the format `<rule_id>  <title>  [<level>]`."
+            ),
+            inputSchema={"type": "object", "properties": {}, "required": []},
+        ),
+        Tool(
+            name="get_sigma_rule",
+            description=(
+                "Fetch a Sigma rule's full YAML by rule_id (e.g. "
+                "'exploit/UC_OFFICE_CHILD'). The rule_id is the path under "
+                "sigma_rules/ without the .yml extension."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "rule_id": {
+                        "type": "string",
+                        "description": "Rule path like 'kill_chain/UC_NAME'.",
+                    }
+                },
+                "required": ["rule_id"],
+            },
+        ),
     ]
 
 
@@ -258,6 +305,30 @@ async def _call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             available = ", ".join(sorted(_FILES))
             return [TextContent(type="text", text=f"Unknown filename '{fname}'. Available: {available}")]
         return [TextContent(type="text", text=text)]
+
+    if name == "list_sigma_rules":
+        if not _SIGMA:
+            return [TextContent(type="text", text="(sigma_rules/ is empty or missing)")]
+        import yaml as _yaml
+        lines = []
+        for rule_id, body in sorted(_SIGMA.items()):
+            try:
+                meta = _yaml.safe_load(body) or {}
+            except Exception:
+                meta = {}
+            title = meta.get("title", "(no title)")
+            level = meta.get("level", "—")
+            lines.append(f"  {rule_id}  {title}  [{level}]")
+        return [TextContent(type="text", text="\n".join(lines))]
+
+    if name == "get_sigma_rule":
+        rid = (arguments or {}).get("rule_id", "").strip()
+        body = _SIGMA.get(rid)
+        if body is None:
+            close = [r for r in _SIGMA if rid and rid in r][:5]
+            hint = f" Did you mean: {', '.join(close)}?" if close else ""
+            return [TextContent(type="text", text=f"Unknown rule_id '{rid}'.{hint}")]
+        return [TextContent(type="text", text=body)]
 
     return [TextContent(type="text", text=f"Unknown tool: {name}")]
 

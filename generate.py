@@ -718,6 +718,12 @@ try:
 except Exception:
     _validate_kql_fields = None  # type: ignore[assignment]
 
+# Sigma rule validator. Optional dependency — pysigma may not be installed.
+try:
+    from sigma_export import validate_sigma as _validate_sigma_yaml
+except Exception:
+    _validate_sigma_yaml = None  # type: ignore[assignment]
+
 
 def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
                           issues_key: str = "_field_issues") -> int:
@@ -741,6 +747,25 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
     if issues:
         # Trim to plain dicts in case Issue subclass shows up oddly in JSON.
         uc_dict[issues_key] = [dict(i) for i in issues]
+    return len(issues)
+
+
+def _attach_sigma_issues(uc_dict: dict, sigma_key: str = "sigma_yaml") -> int:
+    """Validate uc_dict[sigma_key] via pysigma. Attach issues to
+    `_sigma_issues`. Empty / missing sigma_yaml is fine — Sigma is
+    optional. Returns the issue count."""
+    if _validate_sigma_yaml is None:
+        return 0
+    body = uc_dict.get(sigma_key) or ""
+    if not body.strip():
+        return 0
+    try:
+        issues = _validate_sigma_yaml(body)
+    except Exception as e:
+        uc_dict["_sigma_issues"] = [f"validator error: {str(e)[:200]}"]
+        return 1
+    if issues:
+        uc_dict["_sigma_issues"] = list(issues)
     return len(issues)
 
 
@@ -779,6 +804,7 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "splunk_spl": "<full Splunk SPL using CIM tstats syntax. Reference SPECIFIC binaries/paths/cmdline strings from the article. Use macros like `summariesonly` and `drop_dm_object_name(<DM>)`.>",
       "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings. Use `Timestamp` (NOT TimeGenerated) — Defender column is Timestamp.>",
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the SAME detection but on Sentinel's schema. Use SecurityEvent / SigninLogs / AuditLogs / AzureActivity / OfficeActivity / CommonSecurityLog / Syslog / ASIM Im* tables. Use `TimeGenerated` (NOT Timestamp) — Sentinel column is TimeGenerated. If the detection genuinely cannot be expressed on Sentinel telemetry available in this tenant, leave as empty string and explain in `rationale`.>",
+      "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule (https://sigmahq.io). Emit ONLY when the detection is single-event-shape (one selection block + condition). Skip Sigma — leave empty string — for: counts/thresholds, time-window correlation, cross-table joins, statistical anomaly, multi-stage chains. Required fields: title, id (UUID), description, references, author, date (YYYY/MM/DD), tags (`attack.t####`), logsource (category + product), detection (selection blocks + condition), level. Use logsource categories: process_creation, file_event, file_access, network_connection, registry_event, dns, image_load, process_access; or product+service for cloud (azure auditlogs / signinlogs / etc.).>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
       "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"]
     }
@@ -1059,13 +1085,17 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # the wrong table for either platform. Issues are attached per-platform
     # to each UC in the cache for later auditing via validate_kql_knowledge.py.
     total_issues = 0
+    total_sigma_issues = 0
     for uc in data.get("ucs") or []:
         if isinstance(uc, dict):
             total_issues += _attach_field_issues(uc, "defender_kql")
             total_issues += _attach_field_issues(uc, "sentinel_kql",
                                                   issues_key="_sentinel_field_issues")
+            total_sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
     if total_issues:
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(data.get('ucs') or [])} UC(s)")
+    if total_sigma_issues:
+        print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(data.get('ucs') or [])} UC(s)")
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
 
@@ -1096,6 +1126,7 @@ Reply with JSON only, no commentary, this exact shape:
       "splunk_spl": "<full SPL query>",
       "defender_kql": "<full Microsoft Defender Advanced Hunting KQL — uses `Timestamp`>",
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the same detection — uses `TimeGenerated`. Empty string if not expressible on Sentinel telemetry.>",
+      "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule. Emit only for single-event-shape detections; empty string otherwise. See article-prompt guidance for the field schema.>",
       "confidence": "high | medium | low",
       "tier": "alerting | hunting",
       "fp_rate_estimate": "low | medium | high",
@@ -1275,17 +1306,22 @@ def _llm_generate_actor_ucs(actor: dict):
             "splunk": d.get("splunk_spl") or "",
             "kql": d.get("defender_kql") or "",
             "sentinel_kql": d.get("sentinel_kql") or "",
+            "sigma_yaml": d.get("sigma_yaml") or "",
             "rationale": (d.get("rationale") or "")[:400],
         })
-    # Schema-field validation per platform. Actor cache stores `kql`
-    # (Defender) and `sentinel_kql` separately.
+    # Schema-field + Sigma validation per platform. Actor cache stores
+    # `kql` (Defender), `sentinel_kql`, `sigma_yaml` separately.
     total_issues = 0
+    total_sigma_issues = 0
     for uc in out_ucs:
         total_issues += _attach_field_issues(uc, "kql")
         total_issues += _attach_field_issues(uc, "sentinel_kql",
                                               issues_key="_sentinel_field_issues")
+        total_sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
     if total_issues:
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(out_ucs)} actor UC(s)")
+    if total_sigma_issues:
+        print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(out_ucs)} actor UC(s)")
     cache_path.write_text(json_lib.dumps({"name": name, "ucs": out_ucs}, indent=2), encoding="utf-8")
     return out_ucs
 
@@ -1334,6 +1370,7 @@ def _uc_from_llm_dict(d: dict):
         splunk_spl=spl,
         defender_kql=kql,
         sentinel_kql=(d.get("sentinel_kql") or ""),
+        sigma_yaml=(d.get("sigma_yaml") or ""),
         confidence=(d.get("confidence") or "Medium"),
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -1573,6 +1610,7 @@ class UseCase:
     splunk_spl: str
     defender_kql: str
     sentinel_kql: str = ""           # Microsoft Sentinel KQL — uses TimeGenerated
+    sigma_yaml: str = ""              # Optional platform-neutral Sigma rule
     confidence: str = "Medium"
     # Tier classification:
     #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
@@ -1666,6 +1704,17 @@ def _load_uc_from_yaml(path):
     sentinel_kql = (doc.get("sentinel_kql") or "")
     if sentinel_kql and "sentinel" not in impls:
         impls.add("sentinel")
+    # Sigma is optional. UCs that don't fit Sigma's single-event model
+    # leave the field empty; UCs that do, can either embed the Sigma
+    # body inline or point at sigma_rules/<file>.yml via `sigma_id`.
+    sigma_yaml = (doc.get("sigma_yaml") or "")
+    sigma_id = (doc.get("sigma_id") or "").strip()
+    if not sigma_yaml and sigma_id:
+        sigma_path = Path(__file__).parent / "sigma_rules" / f"{sigma_id}.yml"
+        if sigma_path.exists():
+            sigma_yaml = sigma_path.read_text(encoding="utf-8")
+    if sigma_yaml and "sigma" not in impls:
+        impls.add("sigma")
     confidence = doc.get("confidence", "Medium")
     # Tier: explicit field wins; otherwise infer from query shape.
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
@@ -1686,6 +1735,7 @@ def _load_uc_from_yaml(path):
         splunk_spl=spl,
         defender_kql=kql,
         sentinel_kql=sentinel_kql,
+        sigma_yaml=sigma_yaml,
         confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -7280,6 +7330,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     spl = parameterize(uc.splunk_spl, ind)
     kql = parameterize(uc.defender_kql, ind)
     skql = parameterize(uc.sentinel_kql, ind) if uc.sentinel_kql else ""
+    sigma = uc.sigma_yaml or ""        # Sigma rules don't take parameter substitution
     techs = " ".join(
         f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
         for tid, name in uc.techniques
@@ -7290,9 +7341,9 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     uid = f"{art_id}-uc{idx}"
     phase_name = next((n for p, n, _ in KILL_CHAIN_PHASES if p == uc.kill_chain), uc.kill_chain)
     conf_cls = uc.confidence.lower()
-    # Build the tabs dynamically — Sentinel only appears when the UC carries
-    # a sentinel_kql body. SPL stays last for backward compat with existing
-    # querystring deep-links.
+    # Build the tabs dynamically — Sentinel/Sigma only appear when the UC
+    # carries a body for them. SPL stays last for backward compat with
+    # existing querystring deep-links.
     sentinel_tab_btn = (
         f'<button class="tab-btn" data-target="{uid}-sentinel">Sentinel KQL</button>'
         if skql else ""
@@ -7302,6 +7353,16 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         f'<pre><button class="copy-btn">COPY</button><code>{html.escape(skql)}</code></pre>'
         f'</div>'
         if skql else ""
+    )
+    sigma_tab_btn = (
+        f'<button class="tab-btn" data-target="{uid}-sigma">Sigma</button>'
+        if sigma else ""
+    )
+    sigma_tab_pane = (
+        f'<div class="tab-content" id="{uid}-sigma">'
+        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(sigma)}</code></pre>'
+        f'</div>'
+        if sigma else ""
     )
     return f"""
 <details class="uc"{ ' open' if idx == 0 else '' }>
@@ -7317,12 +7378,14 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     <div class="tabs">
       <button class="tab-btn active" data-target="{uid}-kql">Defender KQL</button>
       {sentinel_tab_btn}
+      {sigma_tab_btn}
       <button class="tab-btn" data-target="{uid}-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="{uid}-kql">
       <pre><button class="copy-btn">COPY</button><code>{html.escape(kql)}</code></pre>
     </div>
     {sentinel_tab_pane}
+    {sigma_tab_pane}
     <div class="tab-content" id="{uid}-spl">
       <pre><button class="copy-btn">COPY</button><code>{html.escape(spl)}</code></pre>
     </div>
