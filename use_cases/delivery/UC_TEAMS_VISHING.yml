@@ -2,10 +2,13 @@ id: UC_TEAMS_VISHING
 title: Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 kill_chain: delivery
 confidence: High
-description: External Teams chat where displayName contains 'helpdesk' or 'IT support' — common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.
+description: External Teams chat where displayName contains 'helpdesk' or 'IT support'
+  — common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model
+  maps to Teams chats; uses raw O365 audit logs.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1566.004
   name: 'Phishing: Spearphishing Voice'
@@ -15,7 +18,12 @@ data_models:
   splunk: []
   defender:
   - CloudAppEvents
-splunk_spl: "`o365_management_activity`\n  Workload=MicrosoftTeams Operation=MessageSent\n  ExternalParticipants=*\n| where match(SenderDisplayName, \"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\")\n| stats count, earliest(_time) as firstTime, latest(_time) as lastTime\n    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId"
+  sentinel:
+  - OfficeActivity
+splunk_spl: "`o365_management_activity`\n  Workload=MicrosoftTeams Operation=MessageSent\n\
+  \  ExternalParticipants=*\n| where match(SenderDisplayName, \"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\"\
+  )\n| stats count, earliest(_time) as firstTime, latest(_time) as lastTime\n    by\
+  \ SenderUpn, SenderDisplayName, RecipientUpn, ChatId"
 defender_kql: 'CloudAppEvents
 
   | where Timestamp > ago(7d)
@@ -30,9 +38,17 @@ defender_kql: 'CloudAppEvents
 
   | where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
 
-  | project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData'
+  | project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName,
+  RawEventData'
 tier: hunting
 fp_rate_estimate: medium
 required_telemetry:
 - Microsoft 365 audit logs (Teams workload)
 - CloudAppEvents
+sentinel_kql: "// External Teams chat — Teams audit lives in OfficeActivity.\nOfficeActivity\n\
+  | where TimeGenerated > ago(7d)\n| where OfficeWorkload == \"MicrosoftTeams\"\n\
+  | where Operation in~ (\"MessageSent\",\"ChatCreated\",\"TeamsImpersonationDetected\"\
+  )\n| where isnotempty(UserId)\n| where Subject has_any (\"IT\",\"helpdesk\",\"support\"\
+  ,\"password\",\"verify\")\n   or Recipients has_any (\"IT\",\"helpdesk\")\n| project\
+  \ TimeGenerated, UserId, Operation, Subject, Recipients,\n          ClientIP, UserAgent\n\
+  | order by TimeGenerated desc\n"

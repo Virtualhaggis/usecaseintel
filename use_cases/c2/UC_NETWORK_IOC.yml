@@ -6,6 +6,7 @@ description: Outbound traffic to attacker infrastructure named in the article.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1071
   name: Application Layer Protocol
@@ -16,11 +17,28 @@ data_models:
   - Network_Resolution.DNS
   defender:
   - DeviceNetworkEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.dest IN (__IP_LIST__)\n    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port\n| `drop_dm_object_name(All_Traffic)`\n| append\n    [| tstats `summariesonly` count from datamodel=Web\n        where Web.dest IN (__DOMAIN_LIST__)\n        by Web.src, Web.dest, Web.url, Web.user\n     | `drop_dm_object_name(Web)`]\n| append\n    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS\n        where DNS.query IN (__DOMAIN_LIST__)\n        by DNS.src, DNS.query, DNS.answer\n     | `drop_dm_object_name(DNS)`]"
-defender_kql: "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName, InitiatingProcessCommandLine"
+  sentinel:
+  - ImNetworkSession
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.dest\
+  \ IN (__IP_LIST__)\n    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port\n\
+  | `drop_dm_object_name(All_Traffic)`\n| append\n    [| tstats `summariesonly` count\
+  \ from datamodel=Web\n        where Web.dest IN (__DOMAIN_LIST__)\n        by Web.src,\
+  \ Web.dest, Web.url, Web.user\n     | `drop_dm_object_name(Web)`]\n| append\n  \
+  \  [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS\n     \
+  \   where DNS.query IN (__DOMAIN_LIST__)\n        by DNS.src, DNS.query, DNS.answer\n\
+  \     | `drop_dm_object_name(DNS)`]"
+defender_kql: "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP\
+  \ in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp,\
+  \ DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName,\
+  \ InitiatingProcessCommandLine"
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - Network firewall / proxy logs
 - Defender DeviceNetworkEvents
 - DNS logs (CIM Network_Resolution)
+sentinel_kql: "let BadIPs     = dynamic([__IP_LIST__]);\nlet BadDomains = dynamic([__DOMAIN_LIST__]);\n\
+  ImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstIpAddr in (BadIPs)\n\
+  \   or Url has_any (BadDomains)\n| project TimeGenerated, DvcHostname, DstIpAddr,\
+  \ DstPortNumber, Url, NetworkProtocol\n| order by TimeGenerated desc\n"

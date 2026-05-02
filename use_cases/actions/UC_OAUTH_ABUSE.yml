@@ -6,6 +6,7 @@ description: 'Cloud identity abuse: app gets high-priv scopes, often via consent
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1528
   name: Steal Application Access Token
@@ -16,10 +17,27 @@ data_models:
   - Authentication.Authentication
   defender:
   - CloudAppEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Authentication.Authentication\n    where Authentication.action=\"success\"\n      AND Authentication.signature IN (\n        \"Consent to application\",\n        \"Add app role assignment grant to user\",\n        \"Add OAuth2PermissionGrant\",\n        \"Add delegated permission grant\")\n    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature\n| `drop_dm_object_name(Authentication)`"
-defender_kql: "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent"
+  sentinel:
+  - AuditLogs
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Authentication.Authentication\n    where Authentication.action=\"\
+  success\"\n      AND Authentication.signature IN (\n        \"Consent to application\"\
+  ,\n        \"Add app role assignment grant to user\",\n        \"Add OAuth2PermissionGrant\"\
+  ,\n        \"Add delegated permission grant\")\n    by Authentication.user, Authentication.app,\
+  \ Authentication.src, Authentication.signature\n| `drop_dm_object_name(Authentication)`"
+defender_kql: "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in\
+  \ (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission\
+  \ grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n\
+  \          ActivityObjects, IPAddress, UserAgent"
 tier: alerting
 fp_rate_estimate: medium
 required_telemetry:
 - Entra ID audit logs
 - CloudAppEvents (Consent to application)
+sentinel_kql: "// Entra ID directory audit — user / admin consent to a third-party\
+  \ app.\nAuditLogs\n| where TimeGenerated > ago(7d)\n| where OperationName has \"\
+  Consent to application\"\n| where Result =~ \"success\"\n| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),\n\
+  \         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),\n   \
+  \      User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)\n\
+  | project TimeGenerated, OperationName, User, AppName, AppId, Result\n| order by\
+  \ TimeGenerated desc\n"

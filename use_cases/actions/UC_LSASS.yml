@@ -6,6 +6,7 @@ description: Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening 
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1003.001
   name: LSASS Memory
@@ -16,6 +17,8 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceEvents
+  sentinel:
+  - SecurityEvent
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
   \ lastTime\n    from datamodel=Endpoint.Processes\n    where (Processes.process=\"\
   *lsass*\" OR Processes.process=\"*sekurlsa*\"\n        OR Processes.process=\"*MiniDump*\"\
@@ -37,3 +40,9 @@ required_telemetry:
 - Sysmon EID 10 (ProcessAccess)
 - Defender DeviceEvents (OpenProcessApiCall)
 - EDR LSASS-access telemetry
+sentinel_kql: "// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40\
+  \ / 0x1010\n// indicate read access to lsass.exe — credential-dump signature. Audit\n\
+  // Object Access > Audit File System policy required.\nSecurityEvent\n| where TimeGenerated\
+  \ > ago(7d)\n| where EventID == 4663\n| where ObjectName endswith \"\\lsass.exe\"\
+  \n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account, ObjectName,\
+  \ ProcessName,\n          AccessMask, AccessReason\n| order by TimeGenerated desc\n"

@@ -6,6 +6,7 @@ description: Match vulnerability scanner output to the CVE(s) named in the artic
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1190
   name: Exploit Public-Facing Application
@@ -15,18 +16,40 @@ data_models:
   defender:
   - DeviceInfo
   - DeviceTvmSoftwareVulnerabilities
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Vulnerabilities\n    where Vulnerabilities.signature IN (__CVE_LIST__)\n    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve\n| `drop_dm_object_name(Vulnerabilities)`\n| sort - severity"
-defender_kql: |
-  // TVM tables are daily snapshots — pin a 1-day window so the engine
+  sentinel:
+  - Heartbeat
+  - Update
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Vulnerabilities\n    where Vulnerabilities.signature\
+  \ IN (__CVE_LIST__)\n    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity,\
+  \ Vulnerabilities.cve\n| `drop_dm_object_name(Vulnerabilities)`\n| sort - severity"
+defender_kql: '// TVM tables are daily snapshots — pin a 1-day window so the engine
+
   // partitions on Timestamp instead of scanning the full retention.
+
   DeviceTvmSoftwareVulnerabilities
+
   | where Timestamp > ago(1d)
+
   | where CveId in~ (__CVE_LIST__)
+
   | join kind=inner (DeviceInfo | where Timestamp > ago(1d)) on DeviceId
+
   | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+
   | order by VulnerabilitySeverityLevel asc, DeviceName asc
+
+  '
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - Tenable / Qualys / Rapid7 (CIM Vulnerabilities)
 - Defender TVM (DeviceTvmSoftwareVulnerabilities)
+sentinel_kql: "// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,\n\
+  // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has\n// no\
+  \ Sentinel translation — track via Update / Heartbeat OS-version\n// gaps as a coarse\
+  \ approximation.\nDeviceTvmSoftwareVulnerabilities\n| where TimeGenerated > ago(1d)\n\
+  | where CveId in~ (__CVE_LIST__)\n| join kind=inner (DeviceInfo | where TimeGenerated\
+  \ > ago(1d)) on DeviceId\n| project DeviceName, OSPlatform, CveId,\n          VulnerabilitySeverityLevel,\
+  \ RecommendedSecurityUpdate\n| order by VulnerabilitySeverityLevel asc, DeviceName\
+  \ asc\n"

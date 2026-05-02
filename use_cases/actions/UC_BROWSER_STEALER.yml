@@ -2,10 +2,12 @@ id: UC_BROWSER_STEALER
 title: Infostealer — non-browser process accessing browser cookie/login DBs
 kill_chain: actions
 confidence: High
-description: Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.
+description: Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite
+  from Chrome/Edge/Firefox.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1539
   name: Steal Web Session Cookie
@@ -16,18 +18,47 @@ data_models:
   - Endpoint.Filesystem
   defender:
   - DeviceFileEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Google\\Chrome\\User Data\\*\\Cookies*\"\n        OR Filesystem.file_path=\"*\\Microsoft\\Edge\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\logins.json*\"\n        OR Filesystem.file_path=\"*\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite*\")\n      AND NOT Filesystem.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`"
-defender_kql: |
-  DeviceFileEvents
+  sentinel:
+  - ImFileEvent
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"\
+  *\\Google\\Chrome\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"\
+  *\\Google\\Chrome\\User Data\\*\\Cookies*\"\n        OR Filesystem.file_path=\"\
+  *\\Microsoft\\Edge\\User Data\\*\\Login Data*\"\n        OR Filesystem.file_path=\"\
+  *\\Mozilla\\Firefox\\Profiles\\*\\logins.json*\"\n        OR Filesystem.file_path=\"\
+  *\\Mozilla\\Firefox\\Profiles\\*\\cookies.sqlite*\")\n      AND NOT Filesystem.process_name\
+  \ IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\"\
+  )\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n\
+  | `drop_dm_object_name(Filesystem)`"
+defender_kql: 'DeviceFileEvents
+
   | where Timestamp > ago(7d)
+
   | where InitiatingProcessAccountName !endswith "$"
-  | where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+
+  | where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User
+  Data\", @"\Mozilla\Firefox\Profiles\")
+
   | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+
   | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+  FolderPath, FileName, ActionType
+
+  '
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - Sysmon EID 11 (FileCreate)
 - Defender DeviceFileEvents
 - EDR file-access telemetry
+sentinel_kql: "// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud,\
+  \ etc.\nImFileEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith\
+  \ \"$\"\n| where TargetFilePath has_any (@\"\\Google\\Chrome\\User Data\\\",\n \
+  \                                 @\"\\Microsoft\\Edge\\User Data\\\",\n       \
+  \                           @\"\\Mozilla\\Firefox\\Profiles\\\")\n| where TargetFileName\
+  \ in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where ActingProcessName\
+  \ !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\"\
+  )\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n   \
+  \       TargetFilePath, TargetFileName, EventType\n"

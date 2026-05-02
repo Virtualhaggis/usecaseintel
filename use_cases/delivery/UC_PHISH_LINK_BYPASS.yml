@@ -11,6 +11,7 @@ description: 'Microsoft Safe Links rendered a warning page for a URL and the use
   high-signal. Investigate every hit; the URL was flagged for a reason.'
 implementations:
 - defender
+- sentinel
 mitre_attack:
 - id: T1566.002
   name: Spearphishing Link
@@ -21,31 +22,45 @@ data_models:
   - UrlClickEvents
   - EmailEvents
   - EmailUrlInfo
-defender_kql: |
-  // Safe Links assessed the URL as risky, showed a warning page, and the
-  // user proceeded anyway. ClickedThrough events are inherently rare —
-  // every hit deserves analyst review. UrlDomain isn't on UrlClickEvents
-  // or EmailEvents — it's only on EmailUrlInfo, so we left-outer join it.
-  UrlClickEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "ClickedThrough"
-  | join kind=leftouter (
-      EmailEvents
-      | where Timestamp > ago(30d)
-      | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
-                RecipientEmailAddress, EmailDirection
-    ) on NetworkMessageId
-  | join kind=leftouter (
-      EmailUrlInfo
-      | where Timestamp > ago(30d)
-      | project NetworkMessageId, Url, UrlDomain
-    ) on NetworkMessageId, Url
-  | project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
-            EmailDirection, SenderFromAddress, SenderFromDomain,
-            RecipientEmailAddress, Subject, Workload
-  | order by Timestamp desc
+  sentinel:
+  - SecurityAlert
+defender_kql: "// Safe Links assessed the URL as risky, showed a warning page, and\
+  \ the\n// user proceeded anyway. ClickedThrough events are inherently rare —\n//\
+  \ every hit deserves analyst review. UrlDomain isn't on UrlClickEvents\n// or EmailEvents\
+  \ — it's only on EmailUrlInfo, so we left-outer join it.\nUrlClickEvents\n| where\
+  \ Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter\
+  \ (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId,\
+  \ Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress,\
+  \ EmailDirection\n  ) on NetworkMessageId\n| join kind=leftouter (\n    EmailUrlInfo\n\
+  \    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Url, UrlDomain\n\
+  \  ) on NetworkMessageId, Url\n| project Timestamp, AccountUpn, IPAddress, Url,\
+  \ UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n \
+  \         RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc\n"
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - UrlClickEvents (ClickedThrough)
 - Microsoft Defender for Office 365 Safe Links
+sentinel_kql: '// No native equivalent in Sentinel — UrlClickEvents.ActionType ==
+
+  // "ClickedThrough" is M365-Defender-only. If you have Defender for Office
+
+  // streaming into Sentinel, the equivalent table is `UrlClickEventsBeta`.
+
+  // Otherwise this UC has no Sentinel translation; surface via the SecurityAlert
+
+  // table when Defender raises an alert.
+
+  SecurityAlert
+
+  | where TimeGenerated > ago(30d)
+
+  | where ProviderName has "MDATP" or ProviderName has "Office365"
+
+  | where AlertName has "Safe Links" or AlertName has "ClickedThrough"
+
+  | project TimeGenerated, AlertName, AlertSeverity, CompromisedEntity, Description
+
+  | order by TimeGenerated desc
+
+  '

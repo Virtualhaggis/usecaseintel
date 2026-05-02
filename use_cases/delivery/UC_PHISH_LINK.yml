@@ -24,6 +24,7 @@ description: 'User received an external email containing a URL, clicked it, and 
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1566.002
   name: Spearphishing Link
@@ -41,6 +42,9 @@ data_models:
   - EmailUrlInfo
   - UrlClickEvents
   - DeviceProcessEvents
+  sentinel:
+  - OfficeActivity
+  - SecurityEvent
 splunk_spl: "``` Phishing-link click that drives endpoint execution within 60s ```\n\
   | tstats `summariesonly` earliest(_time) AS click_time\n    from datamodel=Web\n\
   \    where Web.action=\"allowed\"\n    by Web.src, Web.user, Web.dest, Web.url\n\
@@ -99,3 +103,21 @@ required_telemetry:
 - EmailUrlInfo
 - UrlClickEvents
 - Defender DeviceProcessEvents
+sentinel_kql: "// UrlClickEvents has no clean Sentinel-native equivalent. The detection\n\
+  // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a\n// non-browser\
+  \ child process. Lower fidelity than the Defender version.\nlet LookbackDays = 7d;\n\
+  let SuspectMailUsers = OfficeActivity\n    | where TimeGenerated > ago(LookbackDays)\n\
+  \    | where OfficeWorkload == \"Exchange\"\n    | where Operation =~ \"Receive\"\
+  \n    | summarize Subject = any(Subject), Sender = any(Sender)\n               \
+  \ by MailboxOwnerUPN, MessageId, EmailTime = bin(TimeGenerated, 1m);\nSecurityEvent\n\
+  | where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where ParentProcessName\
+  \ has_any (\"\\chrome.exe\",\"\\msedge.exe\",\n                                \
+  \     \"\\firefox.exe\",\"\\outlook.exe\",\"\\brave.exe\")\n| where NewProcessName\
+  \ has_any (\"\\powershell.exe\",\"\\pwsh.exe\",\"\\cmd.exe\",\n                \
+  \                  \"\\mshta.exe\",\"\\rundll32.exe\",\"\\regsvr32.exe\",\n    \
+  \                              \"\\wscript.exe\",\"\\cscript.exe\",\"\\bitsadmin.exe\"\
+  ,\n                                  \"\\certutil.exe\",\"\\curl.exe\",\"\\wget.exe\"\
+  )\n| join kind=inner SuspectMailUsers on $left.Account == $right.MailboxOwnerUPN\n\
+  | where TimeGenerated between (EmailTime .. EmailTime + 60s)\n| project TimeGenerated,\
+  \ EmailTime, Computer, Account, ParentProcessName,\n          NewProcessName, CommandLine,\
+  \ Sender, Subject\n| order by TimeGenerated desc\n"

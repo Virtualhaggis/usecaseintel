@@ -8,6 +8,7 @@ description: Service install with binPath pointing to user-writeable path or LOL
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1543.003
   name: Windows Service
@@ -17,6 +18,8 @@ data_models:
   - Endpoint.Registry
   defender:
   - DeviceProcessEvents
+  sentinel:
+  - SecurityEvent
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
   \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"\
   sc.exe\" AND Processes.process=\"*create*\"\n      AND (Processes.process=\"*\\\
@@ -46,3 +49,14 @@ required_telemetry:
 - Windows Event ID 7045
 - Sysmon EID 1
 - Defender DeviceProcessEvents
+sentinel_kql: "// EventID 4697 is \"Service installed\" — direct signal, no cmdline-regex\
+  \ needed.\nunion\n    ( SecurityEvent\n        | where TimeGenerated > ago(7d)\n\
+  \        | where EventID == 4697\n        | where SubjectUserName !endswith \"$\"\
+  \n        | project TimeGenerated, Computer, Account = SubjectUserName,\n      \
+  \            Detail = strcat(\"ServiceName=\", ServiceName, \" | Image=\", ServiceFileName)\
+  \ ),\n    ( SecurityEvent\n        | where TimeGenerated > ago(7d)\n        | where\
+  \ EventID == 4688\n        | where Account !endswith \"$\"\n        | where NewProcessName\
+  \ endswith \"\\sc.exe\" and CommandLine has \"create\"\n        | where CommandLine\
+  \ matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n    \
+  \    | project TimeGenerated, Computer, Account,\n                  Detail = strcat(\"\
+  4688 sc.exe create: \", CommandLine) )\n| order by TimeGenerated desc\n"

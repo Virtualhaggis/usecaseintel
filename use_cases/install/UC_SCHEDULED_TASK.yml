@@ -7,6 +7,7 @@ description: schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 469
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1053.005
   name: Scheduled Task
@@ -15,6 +16,8 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceProcessEvents
+  sentinel:
+  - SecurityEvent
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
   \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name=\"\
   schtasks.exe\" AND Processes.process=\"*/create*\"\n      AND (Processes.process=\"\
@@ -42,3 +45,10 @@ required_telemetry:
 - Windows Event ID 4698
 - Sysmon EID 1
 - Defender DeviceProcessEvents
+sentinel_kql: "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID ==\
+  \ 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\schtasks.exe\"\
+  \n| where CommandLine has \"/create\"\n| where CommandLine has_any (\"powershell\"\
+  ,\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\n                           \
+  \   \"\\Users\\Public\", \"\\AppData\\\")\n| project TimeGenerated, Computer, Account,\
+  \ CommandLine,\n          ParentProcessName, NewProcessName\n| order by TimeGenerated\
+  \ desc\n"

@@ -17,6 +17,7 @@ description: 'User clicked an inbound-email URL where the URL host is unrelated 
   for the higher-confidence variant.'
 implementations:
 - defender
+- sentinel
 mitre_attack:
 - id: T1566.002
   name: Spearphishing Link
@@ -29,12 +30,58 @@ data_models:
   - UrlClickEvents
   - EmailEvents
   - EmailUrlInfo
-defender_kql: "// Click on inbound-email URL where url-domain != sender-domain.\n// The sender-domain root and url-domain root are extracted then\n// compared; a mismatch on a cheap-TLD url-domain is the high-signal\n// case. Tune the legit-marketer allowlist to your environment to\n// suppress the residual newsletter / vendor-tracker noise.\nlet LookbackDays = 7d;\nlet LegitTrackers = dynamic([\"mailchimp.com\",\"sendgrid.net\",\"sendgrid.com\",\n    \"constantcontact.com\",\"hubspotlinks.com\",\"hubspot.com\",\"mktoresp.com\",\n    \"marketo.com\",\"pardot.com\",\"exacttarget.com\",\"klaviyomail.com\",\n    \"list-manage.com\",\"createsend1.com\",\"createsend.com\",\"sg.actblue.com\",\n    \"ml-attach.com\",\"emltrk.com\",\"amazonses.com\",\"amazon.com\",\"sndarsffrt.com\",\n    \"salesforce.com\",\"force.com\",\"docusign.net\",\"echosign.com\",\n    \"office365.com\",\"microsoft.com\",\"onmicrosoft.com\",\"linkedin.com\",\n    \"github.com\",\"githubusercontent.com\",\"atlassian.net\"\
-  ,\"jira.com\"]);\nlet CheapTlds = dynamic([\"sbs\",\"life\",\"top\",\"icu\",\"cyou\",\"gdn\",\"click\",\"loan\",\n    \"rest\",\"monster\",\"work\",\"cn\",\"ru\",\"tk\",\"ml\",\"cf\",\"ga\"]);\nEmailEvents\n| where Timestamp > ago(LookbackDays)\n| where DeliveryAction == \"Delivered\" and EmailDirection == \"Inbound\"\n| extend SenderRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, tolower(SenderFromDomain))\n| join kind=inner (\n    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n  ) on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ClickAllowed\",\"ClickedThrough\")\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on Url\n| extend UrlDomLower = tolower(UrlDomain)\n| extend UrlRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, UrlDomLower)\n| extend UrlTld = extract(@\"\\.([a-zA-Z]+)$\", 1, UrlDomLower)\n| where UrlRoot != SenderRoot\n   and UrlRoot !in (LegitTrackers)\n   and\
-  \ UrlDomLower !endswith \".microsoft.com\"\n   and UrlDomLower !endswith \".office.com\"\n   and UrlDomLower !endswith \".sharepoint.com\"\n| extend RiskScore = case(UrlTld in (CheapTlds), 3,\n                          UrlRoot endswith \".ru\" or UrlRoot endswith \".cn\", 2,\n                          1)\n| where RiskScore >= 2\n| project ClickTimestamp, AccountUpn, IPAddress, RecipientEmailAddress,\n          SenderFromAddress, SenderRoot, UrlDomain, UrlRoot, UrlTld,\n          RiskScore, Subject, Url\n| order by RiskScore desc, ClickTimestamp desc"
+  sentinel:
+  - SecurityAlert
+defender_kql: "// Click on inbound-email URL where url-domain != sender-domain.\n\
+  // The sender-domain root and url-domain root are extracted then\n// compared; a\
+  \ mismatch on a cheap-TLD url-domain is the high-signal\n// case. Tune the legit-marketer\
+  \ allowlist to your environment to\n// suppress the residual newsletter / vendor-tracker\
+  \ noise.\nlet LookbackDays = 7d;\nlet LegitTrackers = dynamic([\"mailchimp.com\"\
+  ,\"sendgrid.net\",\"sendgrid.com\",\n    \"constantcontact.com\",\"hubspotlinks.com\"\
+  ,\"hubspot.com\",\"mktoresp.com\",\n    \"marketo.com\",\"pardot.com\",\"exacttarget.com\"\
+  ,\"klaviyomail.com\",\n    \"list-manage.com\",\"createsend1.com\",\"createsend.com\"\
+  ,\"sg.actblue.com\",\n    \"ml-attach.com\",\"emltrk.com\",\"amazonses.com\",\"\
+  amazon.com\",\"sndarsffrt.com\",\n    \"salesforce.com\",\"force.com\",\"docusign.net\"\
+  ,\"echosign.com\",\n    \"office365.com\",\"microsoft.com\",\"onmicrosoft.com\"\
+  ,\"linkedin.com\",\n    \"github.com\",\"githubusercontent.com\",\"atlassian.net\"\
+  ,\"jira.com\"]);\nlet CheapTlds = dynamic([\"sbs\",\"life\",\"top\",\"icu\",\"cyou\"\
+  ,\"gdn\",\"click\",\"loan\",\n    \"rest\",\"monster\",\"work\",\"cn\",\"ru\",\"\
+  tk\",\"ml\",\"cf\",\"ga\"]);\nEmailEvents\n| where Timestamp > ago(LookbackDays)\n\
+  | where DeliveryAction == \"Delivered\" and EmailDirection == \"Inbound\"\n| extend\
+  \ SenderRoot = extract(@\"([^.]+\\.[a-zA-Z]+)$\", 1, tolower(SenderFromDomain))\n\
+  | join kind=inner (\n    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n\
+  \  ) on NetworkMessageId\n| join kind=inner (\n    UrlClickEvents\n    | where Timestamp\
+  \ > ago(LookbackDays)\n    | where ActionType in (\"ClickAllowed\",\"ClickedThrough\"\
+  )\n    | project Url, ClickTimestamp = Timestamp, AccountUpn, IPAddress\n  ) on\
+  \ Url\n| extend UrlDomLower = tolower(UrlDomain)\n| extend UrlRoot = extract(@\"\
+  ([^.]+\\.[a-zA-Z]+)$\", 1, UrlDomLower)\n| extend UrlTld = extract(@\"\\.([a-zA-Z]+)$\"\
+  , 1, UrlDomLower)\n| where UrlRoot != SenderRoot\n   and UrlRoot !in (LegitTrackers)\n\
+  \   and UrlDomLower !endswith \".microsoft.com\"\n   and UrlDomLower !endswith \"\
+  .office.com\"\n   and UrlDomLower !endswith \".sharepoint.com\"\n| extend RiskScore\
+  \ = case(UrlTld in (CheapTlds), 3,\n                          UrlRoot endswith \"\
+  .ru\" or UrlRoot endswith \".cn\", 2,\n                          1)\n| where RiskScore\
+  \ >= 2\n| project ClickTimestamp, AccountUpn, IPAddress, RecipientEmailAddress,\n\
+  \          SenderFromAddress, SenderRoot, UrlDomain, UrlRoot, UrlTld,\n        \
+  \  RiskScore, Subject, Url\n| order by RiskScore desc, ClickTimestamp desc"
 tier: hunting
 fp_rate_estimate: medium
 required_telemetry:
 - Microsoft 365 EmailEvents
 - EmailUrlInfo
 - UrlClickEvents
+sentinel_kql: '// Same constraint as UC_PHISH_LINK_BYPASS — UrlClickEvents is MDE-side
+  only.
+
+  // Best-effort via SecurityAlert when MDE raises a phish alert.
+
+  SecurityAlert
+
+  | where TimeGenerated > ago(30d)
+
+  | where AlertName has_any ("Phish","Suspicious URL","Malicious link")
+
+  | project TimeGenerated, AlertName, AlertSeverity, CompromisedEntity, Description
+
+  | order by TimeGenerated desc
+
+  '

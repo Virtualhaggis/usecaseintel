@@ -6,6 +6,7 @@ description: Match SHA256/SHA1/MD5 named in the article against EDR file/process
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1027
   name: Obfuscated Files or Information
@@ -16,27 +17,45 @@ data_models:
   defender:
   - DeviceFileEvents
   - DeviceProcessEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.file_hash IN (__HASH_LIST__)\n    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash\n| `drop_dm_object_name(Filesystem)`\n| append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Processes\n        where Processes.process_hash IN (__HASH_LIST__)\n        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash\n     | `drop_dm_object_name(Processes)`]"
-defender_kql: |
-  // Pre-filter each table BEFORE the union — the engine cannot push
-  // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-  // (Initiating only) so column-projection has to differ per side.
-  union
-      ( DeviceFileEvents
-          | where Timestamp > ago(7d)
-          | where InitiatingProcessAccountName !endswith "$"
-          | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
-          | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                    Cmd = InitiatingProcessCommandLine, Source = "DeviceFileEvents" ),
-      ( DeviceProcessEvents
-          | where Timestamp > ago(7d)
-          | where AccountName !endswith "$"
-          | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)
-          | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                    Cmd = ProcessCommandLine, Source = "DeviceProcessEvents" )
-  | order by Timestamp desc
+  sentinel:
+  - ImFileEvent
+  - ImProcessCreate
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Filesystem\n    where Filesystem.file_hash\
+  \ IN (__HASH_LIST__)\n    by Filesystem.dest, Filesystem.user, Filesystem.file_path,\
+  \ Filesystem.file_name, Filesystem.file_hash\n| `drop_dm_object_name(Filesystem)`\n\
+  | append\n    [| tstats `summariesonly` count from datamodel=Endpoint.Processes\n\
+  \        where Processes.process_hash IN (__HASH_LIST__)\n        by Processes.dest,\
+  \ Processes.user, Processes.process_name, Processes.process_hash\n     | `drop_dm_object_name(Processes)`]"
+defender_kql: "// Pre-filter each table BEFORE the union — the engine cannot push\n\
+  // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine\n//\
+  \ (Initiating only) so column-projection has to differ per side.\nunion\n    ( DeviceFileEvents\n\
+  \        | where Timestamp > ago(7d)\n        | where InitiatingProcessAccountName\
+  \ !endswith \"$\"\n        | where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__)\
+  \ or MD5 in~ (__HASH_LIST__)\n        | project Timestamp, DeviceName, ActionType,\
+  \ FileName, FolderPath, SHA256,\n                  Cmd = InitiatingProcessCommandLine,\
+  \ Source = \"DeviceFileEvents\" ),\n    ( DeviceProcessEvents\n        | where Timestamp\
+  \ > ago(7d)\n        | where AccountName !endswith \"$\"\n        | where SHA256\
+  \ in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)\n \
+  \       | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,\n\
+  \                  Cmd = ProcessCommandLine, Source = \"DeviceProcessEvents\" )\n\
+  | order by Timestamp desc\n"
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - EDR file/process hash telemetry
 - Defender DeviceFileEvents + DeviceProcessEvents
+sentinel_kql: "// Pre-filter both ASIM tables before the union — same pattern as the\n\
+  // Defender version so the engine can push hash predicates per-side.\nlet BadHashes\
+  \ = dynamic([__HASH_LIST__]);\nunion\n    ( ImFileEvent\n        | where TimeGenerated\
+  \ > ago(7d)\n        | where ActorUsername !endswith \"$\"\n        | where TargetFileSHA256\
+  \ in~ (BadHashes)\n           or TargetFileSHA1 in~ (BadHashes)\n           or TargetFileMD5\
+  \ in~ (BadHashes)\n        | project TimeGenerated, DvcHostname, EventType,\n  \
+  \                TargetFileName, TargetFilePath, TargetFileSHA256,\n           \
+  \       Cmd = ActingProcessName, Source = \"ImFileEvent\" ),\n    ( ImProcessCreate\n\
+  \        | where TimeGenerated > ago(7d)\n        | where ActorUsername !endswith\
+  \ \"$\"\n        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~\
+  \ (BadHashes)\n        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,\n\
+  \                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,\n\
+  \                  TargetFileSHA256 = SHA256,\n                  Cmd = TargetProcessCommandLine,\
+  \ Source = \"ImProcessCreate\" )\n| order by TimeGenerated desc\n"

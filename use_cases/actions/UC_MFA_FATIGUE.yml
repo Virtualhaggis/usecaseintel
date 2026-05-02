@@ -2,10 +2,12 @@ id: UC_MFA_FATIGUE
 title: MFA fatigue / push-bombing
 kill_chain: actions
 confidence: High
-description: Many MFA pushes to same user in short window — suggests adversary attempting approval-fatigue.
+description: Many MFA pushes to same user in short window — suggests adversary attempting
+  approval-fatigue.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1621
   name: Multi-Factor Authentication Request Generation
@@ -14,10 +16,25 @@ data_models:
   - Authentication.Authentication
   defender:
   - AADSignInEventsBeta
-splunk_spl: "| tstats `summariesonly` count from datamodel=Authentication.Authentication\n    where Authentication.action=\"failure\" AND Authentication.signature=\"*MFA*\"\n    by _time span=5m, Authentication.user, Authentication.src\n| `drop_dm_object_name(Authentication)`\n| where count > 10"
-defender_kql: "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc"
+  sentinel:
+  - SigninLogs
+splunk_spl: "| tstats `summariesonly` count from datamodel=Authentication.Authentication\n\
+  \    where Authentication.action=\"failure\" AND Authentication.signature=\"*MFA*\"\
+  \n    by _time span=5m, Authentication.user, Authentication.src\n| `drop_dm_object_name(Authentication)`\n\
+  | where count > 10"
+defender_kql: "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode\
+  \ in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement\
+  \ == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(),\
+  \ distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where\
+  \ attempts > 10\n| order by attempts desc"
 tier: alerting
 fp_rate_estimate: medium
 required_telemetry:
 - AADSignInEventsBeta
 - Microsoft 365 sign-in logs
+sentinel_kql: "SigninLogs\n| where TimeGenerated > ago(24h)\n| where ResultType ==\
+  \ 50158        // MFA Challenge required / failed\n| summarize Attempts = count(),\n\
+  \            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n\
+  \            IPs       = make_set(IPAddress, 5)\n            by UserPrincipalName,\
+  \ bin(TimeGenerated, 5m)\n| where Attempts > 3               // tune to baseline\n\
+  | order by Attempts desc\n"

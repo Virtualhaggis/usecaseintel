@@ -2,10 +2,12 @@ id: UC_CRYPTO_WALLET
 title: Crypto-wallet file/keystore access by non-wallet process
 kill_chain: actions
 confidence: High
-description: Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.
+description: Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic,
+  Phantom data.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1005
   name: Data from Local System
@@ -14,16 +16,44 @@ data_models:
   - Endpoint.Filesystem
   defender:
   - DeviceFileEvents
-splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Ethereum\\keystore\\*\"\n        OR Filesystem.file_path=\"*\\Bitcoin\\wallet.dat\"\n        OR Filesystem.file_path=\"*\\Exodus\\exodus.wallet*\"\n        OR Filesystem.file_path=\"*\\Electrum\\wallets\\*\"\n        OR Filesystem.file_path=\"*\\MetaMask\\*\"\n        OR Filesystem.file_path=\"*\\Phantom\\*\"\n        OR Filesystem.file_path=\"*\\Atomic\\Local Storage\\*\")\n      AND NOT Filesystem.process_name IN (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`"
-defender_kql: |
-  DeviceFileEvents
+  sentinel:
+  - ImFileEvent
+splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
+  \ lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"\
+  *\\Ethereum\\keystore\\*\"\n        OR Filesystem.file_path=\"*\\Bitcoin\\wallet.dat\"\
+  \n        OR Filesystem.file_path=\"*\\Exodus\\exodus.wallet*\"\n        OR Filesystem.file_path=\"\
+  *\\Electrum\\wallets\\*\"\n        OR Filesystem.file_path=\"*\\MetaMask\\*\"\n\
+  \        OR Filesystem.file_path=\"*\\Phantom\\*\"\n        OR Filesystem.file_path=\"\
+  *\\Atomic\\Local Storage\\*\")\n      AND NOT Filesystem.process_name IN (\"MetaMask.exe\"\
+  ,\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\"\
+  )\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n\
+  | `drop_dm_object_name(Filesystem)`"
+defender_kql: 'DeviceFileEvents
+
   | where Timestamp > ago(7d)
+
   | where InitiatingProcessAccountName !endswith "$"
-  | where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
+
+  | where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\",
+  @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
+
   | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+  FolderPath, FileName, ActionType
+
+  '
 tier: alerting
 fp_rate_estimate: low
 required_telemetry:
 - Sysmon EID 11
 - Defender DeviceFileEvents
+sentinel_kql: "ImFileEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername\
+  \ !endswith \"$\"\n| where TargetFilePath has_any (@\"\\Ethereum\\keystore\\\",\
+  \ @\"\\Bitcoin\\\",\n                                  @\"\\Exodus\\\", @\"\\Electrum\\\
+  wallets\\\",\n                                  @\"\\MetaMask\\\", @\"\\Phantom\\\
+  \",\n                                  @\"\\Atomic\\Local Storage\\\")\n| where\
+  \ ActingProcessName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\n    \
+  \                              \"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\"\
+  )\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n   \
+  \       TargetFilePath, TargetFileName, EventType\n"

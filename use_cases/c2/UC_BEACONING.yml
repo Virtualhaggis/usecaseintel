@@ -1,11 +1,13 @@
 id: UC_BEACONING
-title: Beaconing — periodic outbound to small set of destinations
+title: Beaconing â€” periodic outbound to small set of destinations
 kill_chain: c2
 confidence: Medium
-description: C2 channel detection via inter-beacon-time stddev / fan-out to single dest.
+description: C2 channel detection via inter-beacon-time stddev / fan-out to single
+  dest.
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1071.001
   name: Web Protocols
@@ -16,11 +18,33 @@ data_models:
   - Network_Traffic.All_Traffic
   defender:
   - DeviceNetworkEvents
-splunk_spl: "| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports\n    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.action=\"allowed\" AND All_Traffic.dest_category!=\"internal\"\n    by _time span=10s, All_Traffic.src, All_Traffic.dest\n| `drop_dm_object_name(All_Traffic)`\n| streamstats current=f last(_time) AS prev_time by src, dest\n| eval delta = _time - prev_time\n| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest\n| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600\n| sort - count"
-defender_kql: "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP, RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc"
+  sentinel:
+  - ImNetworkSession
+splunk_spl: "| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports\n\
+  \    from datamodel=Network_Traffic.All_Traffic\n    where All_Traffic.action=\"\
+  allowed\" AND All_Traffic.dest_category!=\"internal\"\n    by _time span=10s, All_Traffic.src,\
+  \ All_Traffic.dest\n| `drop_dm_object_name(All_Traffic)`\n| streamstats current=f\
+  \ last(_time) AS prev_time by src, dest\n| eval delta = _time - prev_time\n| stats\
+  \ avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest\n| where count\
+  \ > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600\n| sort - count"
+defender_kql: "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType\
+  \ == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP,\
+  \ RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc,\
+  \ Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP,\
+  \ 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n\
+  | where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n\
+  | extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count\
+  \ = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by\
+  \ DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between\
+  \ (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc"
 tier: alerting
 fp_rate_estimate: medium
 required_telemetry:
 - Network firewall logs (CIM Network_Traffic)
 - Zeek / Suricata
 - Defender DeviceNetworkEvents
+sentinel_kql: "ImNetworkSession\n| where TimeGenerated > ago(2h)\n| where DvcAction\
+  \ != \"Block\"\n| where ipv4_is_private(DstIpAddr) == false\n| summarize ConnCount\
+  \ = count(),\n            DistinctMinutes = dcount(bin(TimeGenerated, 1m))\n   \
+  \         by DvcHostname, DstIpAddr, DstPortNumber\n| where ConnCount > 50 and DistinctMinutes\
+  \ > 30   // sustained, not bursty\n| order by ConnCount desc\n"

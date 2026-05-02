@@ -7,6 +7,7 @@ description: Side-loaded / unsigned extensions, often masquerading as wallets, p
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1176
   name: Browser Extensions
@@ -15,6 +16,8 @@ data_models:
   - Endpoint.Registry
   defender:
   - DeviceRegistryEvents
+  sentinel:
+  - ImRegistryEvent
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
   \ lastTime\n    from datamodel=Endpoint.Registry\n    where (Registry.registry_path=\"\
   *\\Software\\Google\\Chrome\\Extensions\\*\"\n        OR Registry.registry_path=\"\
@@ -31,3 +34,10 @@ fp_rate_estimate: high
 required_telemetry:
 - Sysmon EID 13 (RegistryValueSet)
 - Defender DeviceRegistryEvents
+sentinel_kql: "ImRegistryEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername\
+  \ !endswith \"$\"\n| where RegistryKey has_any (@\"\\Software\\Google\\Chrome\\\
+  Extensions\\\",\n                              @\"\\Software\\Microsoft\\Edge\\\
+  Extensions\\\",\n                              @\"\\Software\\Mozilla\\Firefox\\\
+  Extensions\\\")\n| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,\n\
+  \          RegistryValue, RegistryValueData, ActingProcessName\n| order by TimeGenerated\
+  \ desc\n"

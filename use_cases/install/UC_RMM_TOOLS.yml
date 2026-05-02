@@ -8,6 +8,7 @@ description: ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installe
 implementations:
 - splunk
 - defender
+- sentinel
 mitre_attack:
 - id: T1219
   name: Remote Access Software
@@ -16,6 +17,8 @@ data_models:
   - Endpoint.Processes
   defender:
   - DeviceProcessEvents
+  sentinel:
+  - SecurityEvent
 splunk_spl: "| tstats `summariesonly` count min(_time) as firstTime max(_time) as\
   \ lastTime\n    from datamodel=Endpoint.Processes\n    where Processes.process_name\
   \ IN (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"\
@@ -35,3 +38,13 @@ required_telemetry:
 - Sysmon EID 1
 - Defender DeviceProcessEvents
 - Software inventory (CMDB)
+sentinel_kql: "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID ==\
+  \ 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\AnyDesk.exe\"\
+  \n   or NewProcessName endswith \"\\TeamViewer.exe\"\n   or NewProcessName endswith\
+  \ \"\\TeamViewer_Service.exe\"\n   or NewProcessName endswith \"\\ScreenConnect.ClientService.exe\"\
+  \n   or NewProcessName endswith \"\\ConnectWiseControl.ClientService.exe\"\n   or\
+  \ NewProcessName endswith \"\\atera_agent.exe\"\n   or NewProcessName endswith \"\
+  \\SplashtopStreamer.exe\"\n   or NewProcessName endswith \"\\RustDesk.exe\"\n  \
+  \ or NewProcessName endswith \"\\NinjaOne.exe\"\n| project TimeGenerated, Computer,\
+  \ Account, NewProcessName,\n          CommandLine, ParentProcessName\n| order by\
+  \ TimeGenerated desc\n"
