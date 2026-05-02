@@ -3390,6 +3390,183 @@ body:not(.view-actors-active)   .stats-actors{
 }
 .cheatsheet-btn svg{stroke:var(--accent-2);flex-shrink:0;}
 
+/* Tour replay button — quieter than the cheat-sheet CTA. */
+.tour-trigger{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:8px 12px; border-radius:var(--r-md);
+  background:transparent; color:var(--muted);
+  border:1px solid var(--border);
+  font-family:inherit; font-size:12.5px; font-weight:500;
+  cursor:pointer; transition:all 0.15s; white-space:nowrap;
+}
+.tour-trigger:hover{
+  border-color:rgba(113,112,255,0.45);
+  color:var(--text);
+  background:rgba(113,112,255,0.06);
+}
+.tour-trigger svg{flex-shrink:0;}
+
+/* =================================================================
+   Guided tour — full-page overlay, spotlight, floating card.
+   ================================================================= */
+.tour-overlay{
+  position:fixed; inset:0;
+  background:rgba(8,9,10,0.72);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  z-index:9000;
+  opacity:0; pointer-events:none;
+  transition:opacity 0.22s ease-out;
+}
+body.tour-on .tour-overlay{opacity:1; pointer-events:auto;}
+
+/* Box-shadow spotlight: a 9999px outer-spread shadow on the target
+   element creates the "punch hole" effect. The element appears to
+   float above the dimmed page. No DOM gymnastics needed. */
+.tour-spotlight{
+  position:relative !important;
+  z-index:9050 !important;
+  box-shadow:
+    0 0 0 4px rgba(113,112,255,0.55),
+    0 0 0 9px rgba(113,112,255,0.18),
+    0 0 0 9999px rgba(8,9,10,0.78) !important;
+  border-radius:var(--r-md);
+  transition:box-shadow 0.3s ease-out;
+  animation:tour-pulse 2.4s ease-in-out infinite;
+}
+@keyframes tour-pulse{
+  0%, 100% { box-shadow:
+    0 0 0 4px rgba(113,112,255,0.55),
+    0 0 0 9px rgba(113,112,255,0.18),
+    0 0 0 9999px rgba(8,9,10,0.78) !important; }
+  50% { box-shadow:
+    0 0 0 4px rgba(113,112,255,0.85),
+    0 0 0 14px rgba(113,112,255,0.10),
+    0 0 0 9999px rgba(8,9,10,0.78) !important; }
+}
+/* Block clicks on everything except the spotlight + tour card while
+   tour is on. Lets the user navigate the tour without accidentally
+   clicking through to the underlying view. */
+body.tour-on{overflow:hidden;}
+body.tour-on .topbar,
+body.tour-on .view{pointer-events:none;}
+body.tour-on .tour-spotlight,
+body.tour-on .tour-spotlight *,
+body.tour-on .tour-card,
+body.tour-on .tour-card *{pointer-events:auto;}
+
+/* Floating tour card */
+.tour-card{
+  position:fixed; left:50%; bottom:32px;
+  transform:translateX(-50%) translateY(8px);
+  width:min(420px, calc(100vw - 32px));
+  background:linear-gradient(180deg, var(--panel-elev), var(--panel));
+  border:1px solid rgba(113,112,255,0.40);
+  border-radius:var(--r-lg);
+  padding:18px 20px 14px;
+  box-shadow:
+    0 24px 48px rgba(0,0,0,0.40),
+    0 4px 12px rgba(0,0,0,0.32),
+    0 0 0 1px rgba(255,255,255,0.04) inset;
+  z-index:9100;
+  opacity:0;
+  transition:transform 0.28s cubic-bezier(0.2,0.8,0.2,1.0), opacity 0.22s ease-out;
+}
+body.tour-on .tour-card{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+.tour-card[hidden]{display:none;}
+.tour-card-header{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:6px;
+}
+.tour-section{
+  font-family:var(--mono); font-size:10.5px; font-weight:600;
+  letter-spacing:0.05em; text-transform:uppercase;
+  color:var(--accent-2);
+  padding:2px 8px; border-radius:99px;
+  background:rgba(113,112,255,0.12);
+  border:1px solid rgba(113,112,255,0.30);
+}
+.tour-counter{
+  font-family:var(--mono); font-size:10.5px;
+  color:var(--muted-2); margin-left:auto;
+}
+.tour-skip{
+  background:transparent; border:0; color:var(--muted);
+  font:inherit; font-size:11.5px; cursor:pointer;
+  padding:2px 4px; border-radius:var(--r-sm);
+  transition:color 0.15s;
+}
+.tour-skip:hover{color:var(--bad);}
+.tour-title{
+  margin:0 0 6px;
+  font-size:16px; font-weight:600; letter-spacing:-0.018em;
+  color:var(--text);
+}
+.tour-body{
+  margin:0 0 14px;
+  font-size:13px; line-height:1.55;
+  color:var(--muted);
+}
+.tour-body b{color:var(--text); font-weight:500;}
+.tour-progress{
+  display:flex; gap:5px; justify-content:center;
+  margin:0 0 14px;
+}
+.tour-progress span{
+  width:6px; height:6px; border-radius:99px;
+  background:rgba(255,255,255,0.10);
+  transition:all 0.2s;
+}
+.tour-progress span.done{background:rgba(113,112,255,0.50);}
+.tour-progress span.active{
+  background:var(--accent);
+  width:18px;
+  box-shadow:0 0 8px rgba(113,112,255,0.55);
+}
+.tour-actions{
+  display:flex; gap:8px;
+}
+.tour-btn{
+  flex:1;
+  padding:8px 14px; border-radius:var(--r-sm);
+  font:inherit; font-size:12.5px; font-weight:500;
+  cursor:pointer; transition:all 0.15s;
+}
+.tour-btn.tour-back{
+  background:transparent; color:var(--muted);
+  border:1px solid var(--border-2);
+}
+.tour-btn.tour-back:hover:not(:disabled){
+  color:var(--text); border-color:var(--accent-2);
+}
+.tour-btn.tour-back:disabled{
+  opacity:0.35; cursor:not-allowed;
+}
+.tour-btn.tour-next{
+  background:linear-gradient(180deg, var(--accent), #5e5dd4);
+  color:#fff; border:1px solid rgba(113,112,255,0.65);
+  box-shadow:0 1px 0 rgba(255,255,255,0.10) inset, 0 2px 4px rgba(94,93,212,0.35);
+}
+.tour-btn.tour-next:hover{
+  background:linear-gradient(180deg, #8281ff, var(--accent));
+}
+.tour-hint{
+  margin:10px 0 0; padding:0;
+  text-align:center; font-size:10.5px;
+  color:var(--muted-2); font-family:var(--mono);
+  letter-spacing:0.02em;
+}
+@media (max-width: 640px){
+  .tour-card{
+    bottom:14px; padding:14px 16px 12px;
+    width:calc(100vw - 24px);
+  }
+  .tour-spotlight{animation:none;}
+}
+
 /* ----- Filter bar ---------------------------------------------------- */
 .filter-row{
   margin:0; padding:14px 28px 0;
@@ -4902,6 +5079,11 @@ ul.intel-types-doc code{
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8 H16 M8 12 H16 M8 16 H13"/></svg>
       <span>SOC Cheat Sheet</span>
     </a>
+    <button type="button" class="tour-trigger" id="tourTrigger"
+            title="Take the guided tour of the site (Esc to skip, ← → to navigate)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9 a3 3 0 1 1 4.5 2.5 c-1 0.7 -1.5 1 -1.5 2.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
+      <span>Tour</span>
+    </button>
   </div>
   <div class="topbar-inner" style="padding-top:0; gap:14px;">
     <div class="view-tabs" role="tablist">
@@ -4921,6 +5103,26 @@ ul.intel-types-doc code{
   <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
   <button class="banner-close" id="firstVisitClose" aria-label="Dismiss welcome banner" title="Dismiss">×</button>
+</div>
+
+<!-- =================================================================
+     Guided tour — overlay + card. Inert until startTour() is called.
+     ================================================================= -->
+<div class="tour-overlay" id="tourOverlay" aria-hidden="true"></div>
+<div class="tour-card" id="tourCard" role="dialog" aria-modal="true" aria-labelledby="tourCardTitle" hidden>
+  <div class="tour-card-header">
+    <span class="tour-section" id="tourSection">Section</span>
+    <span class="tour-counter" id="tourCounter">1 / 12</span>
+    <button type="button" class="tour-skip" id="tourSkip" aria-label="Skip tour">Skip ×</button>
+  </div>
+  <h3 class="tour-title" id="tourCardTitle">Step title</h3>
+  <p class="tour-body" id="tourBody">Step body text.</p>
+  <div class="tour-progress" id="tourProgress" aria-hidden="true"></div>
+  <div class="tour-actions">
+    <button type="button" class="tour-btn tour-back" id="tourBack">← Back</button>
+    <button type="button" class="tour-btn tour-next" id="tourNext">Next →</button>
+  </div>
+  <p class="tour-hint">Esc to skip · ← → to navigate</p>
 </div>
 
 <div id="view-articles" class="view active">
@@ -6044,8 +6246,7 @@ document.body.classList.add('view-articles-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
 
 // =================================================================
-// First-visit welcome banner — shown until user clicks × or the tour link.
-// State persisted in localStorage so repeat visitors never see it again.
+// First-visit welcome banner — dismissed forever via localStorage.
 // =================================================================
 (function () {
   const banner = document.getElementById('firstVisitBanner');
@@ -6063,10 +6264,143 @@ viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)
   document.getElementById('firstVisitTour')?.addEventListener('click', e => {
     e.preventDefault();
     dismiss();
-    showView('workflow');   // reuse the existing Workflow tab as the "tour"
-    window.scrollTo({top: 0, behavior: 'smooth'});
+    startTour();
   });
 })();
+
+// =================================================================
+// Guided tour — switches views, spotlights elements, narrates each.
+// Esc skips, ← / → navigate, Enter advances.
+// Replay anytime via the "Tour" button in the topbar.
+// =================================================================
+const TOUR_STEPS = [
+  { section: "Articles", view: "articles",
+    target: "#articles .article", fallback: "#articles",
+    title: "Daily threat-intel feed",
+    body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with ready-to-deploy detection queries. Refreshes every 2 hours." },
+  { section: "Articles", view: "articles",
+    target: "#articles .article details.uc", fallback: "#articles .article",
+    title: "Multi-platform queries on every UC",
+    body: "Open any use case to see four detection languages: <b>Defender KQL</b>, <b>Sentinel KQL</b>, <b>Sigma</b>, and <b>Splunk SPL</b> — each with a one-click copy. Sigma rules also pre-compile to Elastic, QRadar, and CrowdStrike." },
+  { section: "Articles", view: "articles",
+    target: "#searchTrigger",
+    title: "Search the entire corpus",
+    body: "Hit <b>Ctrl/⌘ + K</b> (or click here) to filter by technique ID, CVE, severity, or any string in an article body. The search index covers all 430+ articles and 2,300+ detections." },
+
+  { section: "ATT&CK Matrix", view: "matrix",
+    target: "#matrixGrid", fallback: "#view-matrix",
+    title: "Coverage-by-technique heatmap",
+    body: "All 14 MITRE tactics, every non-deprecated technique. <b>Cell intensity</b> shows how many of your detections cover that technique. <b>Click any cell</b> for the drawer of UCs and articles." },
+  { section: "ATT&CK Matrix", view: "matrix",
+    target: "#matrixGrid .tech-cell .pl-badges", fallback: "#matrixGrid .tech-cell",
+    title: "Per-platform coverage badges",
+    body: "<b>D / S / Σ / P</b> — shows which detection languages cover this technique: Defender KQL, Sentinel KQL, Sigma, Splunk SPL. Useful for spotting where a Sigma migration would close gaps." },
+  { section: "ATT&CK Matrix", view: "matrix",
+    target: "#matrixPlatforms",
+    title: "Filter by platform",
+    body: "Pin the matrix to a single platform — say, only show techniques that have a Sigma rule. Combines with the search box for fast scoping." },
+
+  { section: "Threat Intel", view: "intel",
+    target: "#view-intel",
+    title: "IOC aggregator",
+    body: "Every IP, domain, hash, URL, and email mentioned across the article corpus, deduplicated. <b>Filter by type</b>, then export to CSV / JSON / Splunk lookup." },
+
+  { section: "Threat Actors", view: "actors",
+    target: "#view-actors",
+    title: "187 tracked actors on a 3D globe",
+    body: "Every MITRE-tracked APT and e-crime crew, mapped by attribution country. <b>Click any country dot</b> to see actors operating from there." },
+  { section: "Threat Actors", view: "actors",
+    target: "#view-actors",
+    title: "Per-actor bespoke detections",
+    body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template." },
+
+  { section: "Workflow", view: "workflow",
+    target: "#view-workflow",
+    title: "How the pipeline works",
+    body: "RSS in → ATT&CK mapping → LLM enrichment with the schema-aware prompt → multi-platform validators → live render. End-to-end every 2 hours." },
+
+  { section: "SOC Cheat Sheet", view: "articles",
+    target: ".cheatsheet-btn",
+    title: "Analyst-ready query catalogue",
+    body: "Opens in a new tab. <b>96 Defender + 56 Sentinel queries + 15 Sigma rules</b>, all with copy buttons. Sigma rules compile to KQL, SPL, and Lucene at build time — no toolchain needed on your laptop." },
+
+  { section: "All set", view: "articles", target: null,
+    title: "That's the tour.",
+    body: "Everything you saw is open source — repo at <b>github.com/Virtualhaggis/usecaseintel</b>. Click the <b>Tour</b> button in the topbar any time to replay." }
+];
+
+let _tourIndex = 0;
+
+function startTour() {
+  _tourIndex = 0;
+  document.body.classList.add('tour-on');
+  const card = document.getElementById('tourCard');
+  if (card) card.hidden = false;
+  const prog = document.getElementById('tourProgress');
+  if (prog) prog.innerHTML = TOUR_STEPS.map(() => '<span></span>').join('');
+  tourGoto(0);
+}
+function endTour() {
+  document.body.classList.remove('tour-on');
+  document.querySelectorAll('.tour-spotlight').forEach(el => el.classList.remove('tour-spotlight'));
+  const card = document.getElementById('tourCard');
+  if (card) card.hidden = true;
+}
+function _tourSpotlight(target, fallback) {
+  document.querySelectorAll('.tour-spotlight').forEach(el => el.classList.remove('tour-spotlight'));
+  if (!target) return null;
+  let el = document.querySelector(target);
+  if (!el && fallback) el = document.querySelector(fallback);
+  if (!el) return null;
+  el.classList.add('tour-spotlight');
+  const rect = el.getBoundingClientRect();
+  const viewportH = window.innerHeight;
+  if (rect.top < 100 || rect.bottom > viewportH - 240) {
+    el.scrollIntoView({behavior: 'smooth', block: 'center'});
+  }
+  return el;
+}
+function tourGoto(i) {
+  if (i < 0 || i >= TOUR_STEPS.length) return;
+  _tourIndex = i;
+  const step = TOUR_STEPS[i];
+  if (step.view) showView(step.view);
+  setTimeout(() => _tourSpotlight(step.target, step.fallback), 220);
+  document.getElementById('tourSection').textContent = step.section;
+  document.getElementById('tourCounter').textContent = `${i + 1} / ${TOUR_STEPS.length}`;
+  document.getElementById('tourCardTitle').textContent = step.title;
+  document.getElementById('tourBody').innerHTML = step.body;
+  const prog = document.getElementById('tourProgress');
+  if (prog) {
+    [...prog.children].forEach((dot, idx) => {
+      dot.classList.toggle('done', idx < i);
+      dot.classList.toggle('active', idx === i);
+    });
+  }
+  const back = document.getElementById('tourBack');
+  const next = document.getElementById('tourNext');
+  back.disabled = i === 0;
+  next.textContent = (i === TOUR_STEPS.length - 1) ? 'Done ✓' : 'Next →';
+}
+function tourNext() {
+  if (_tourIndex >= TOUR_STEPS.length - 1) { endTour(); return; }
+  tourGoto(_tourIndex + 1);
+}
+function tourBack() {
+  if (_tourIndex <= 0) return;
+  tourGoto(_tourIndex - 1);
+}
+document.getElementById('tourTrigger')?.addEventListener('click', startTour);
+document.getElementById('tourSkip')?.addEventListener('click', endTour);
+document.getElementById('tourNext')?.addEventListener('click', tourNext);
+document.getElementById('tourBack')?.addEventListener('click', tourBack);
+document.getElementById('tourOverlay')?.addEventListener('click', endTour);
+document.addEventListener('keydown', e => {
+  if (!document.body.classList.contains('tour-on')) return;
+  if (e.key === 'Escape') { e.preventDefault(); endTour(); }
+  else if (e.key === 'ArrowRight' || e.key === 'Enter') { e.preventDefault(); tourNext(); }
+  else if (e.key === 'ArrowLeft') { e.preventDefault(); tourBack(); }
+});
 
 // =================================================================
 // Logo lightbox — click the topbar Clanker to see him full size.
