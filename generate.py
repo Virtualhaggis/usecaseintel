@@ -6650,9 +6650,19 @@ const LIB_STATE = {
 const SEV_ORDER = {crit: 4, critical: 4, high: 3, med: 2, medium: 2, low: 1, info: 0};
 const SEV_NORM = {crit:'crit', critical:'crit', high:'high', med:'med', medium:'med', low:'low', info:'low'};
 
-const TACTIC_NAME = (typeof MATRIX !== 'undefined' && MATRIX && MATRIX.tactics)
-  ? Object.fromEntries(MATRIX.tactics.map(t => [t.short, t.name]))
-  : {};
+// Friendly tactic display lifted from the matrix view. Populated lazily
+// on first library render — the MATRIX const lives later in this script
+// block and accessing it at top-level here would hit the TDZ and halt
+// the rest of the script (which silently breaks every tab click).
+const TACTIC_NAME = {};
+function _libPopulateTactics() {
+  if (Object.keys(TACTIC_NAME).length) return;
+  try {
+    if (MATRIX && MATRIX.tactics) {
+      for (const t of MATRIX.tactics) TACTIC_NAME[t.short] = t.name;
+    }
+  } catch (_) { /* MATRIX not initialised yet */ }
+}
 
 // Heuristic application/binary tags surfaced as filters and pills so an
 // analyst can ask "show me everything that mentions powershell".
@@ -6725,8 +6735,12 @@ function _libSourceFromArtId(art) {
 
 function _libPrepare() {
   if (LIB_STATE.prepared) return LIB_STATE.prepared;
-  if (typeof MATRIX === 'undefined' || !MATRIX || !Array.isArray(MATRIX.ucs)) return [];
-  const arts = MATRIX.arts || [];
+  _libPopulateTactics();
+  // Defensive — MATRIX is declared elsewhere; guard against it being missing.
+  let M;
+  try { M = MATRIX; } catch (_) { return []; }
+  if (!M || !Array.isArray(M.ucs)) return [];
+  const arts = M.arts || [];
 
   const ucDom = new Map();
   document.querySelectorAll('#articles .article details.uc').forEach(d => {
@@ -6761,7 +6775,7 @@ function _libPrepare() {
     ucDom.set(title, {tabs, queries});
   });
 
-  const prepared = MATRIX.ucs.map(uc => {
+  const prepared = M.ucs.map(uc => {
     const ucArts = (uc.arts || []).map(i => arts[i]).filter(Boolean);
     let maxSev = 0; let sevTag = 'low';
     for (const a of ucArts) {
@@ -6782,7 +6796,7 @@ function _libPrepare() {
 
     const tacticSet = new Set();
     for (const tid of (uc.techs || [])) {
-      const t = MATRIX.techniques?.[tid];
+      const t = M.techniques?.[tid];
       if (t && t.tactics) for (const tac of t.tactics) tacticSet.add(tac);
     }
 
