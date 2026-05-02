@@ -4528,6 +4528,22 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
   color:var(--muted-2); font-variant-numeric:tabular-nums;}
 .tech-cell .sub-marker{color:var(--accent-2); font-size:9px; font-weight:700;}
 .tech-cell .uc-count{color:var(--accent-3); font-weight:700;}
+/* Platform-coverage badges on each technique cell. Tiny pill per
+   platform that has at least one UC for that technique. */
+.tech-cell .pl-badges{display:inline-flex; gap:2px; margin-left:4px;}
+.pl-badge{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:14px; height:14px; border-radius:3px;
+  font-family:var(--mono); font-size:8.5px; font-weight:700;
+  letter-spacing:0; line-height:1;
+  border:1px solid var(--border-2);
+}
+.pl-badge.pl-def  { background:rgba(113,112,255,0.18); color:#9b8afb; border-color:rgba(113,112,255,0.40); }
+.pl-badge.pl-sent { background:rgba(64,160,255,0.18);  color:#7fb6ff; border-color:rgba(64,160,255,0.40); }
+.pl-badge.pl-sigma{ background:rgba(155,138,251,0.18); color:#cbb6ff; border-color:rgba(155,138,251,0.40); font-size:9.5px; }
+.pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
+/* Matrix platform-filter dim — applied to cells lacking the active filter. */
+.tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
 .tech-cell.cov-1{background:linear-gradient(180deg, rgba(54,224,192,0.10), rgba(54,224,192,0.02));}
 .tech-cell.cov-2{background:linear-gradient(180deg, rgba(54,224,192,0.18), rgba(54,224,192,0.04));}
@@ -4931,6 +4947,13 @@ ul.intel-types-doc code{
         <button data-mode="heat">Heat</button>
         <button data-mode="all">All</button>
       </div>
+      <div class="matrix-mode" id="matrixPlatforms" title="Filter techniques to those covered by a specific platform">
+        <button class="on" data-pl="all">All platforms</button>
+        <button data-pl="def" title="Defender Advanced Hunting KQL">Defender</button>
+        <button data-pl="sent" title="Microsoft Sentinel KQL">Sentinel</button>
+        <button data-pl="sigma" title="Platform-neutral Sigma">Sigma</button>
+        <button data-pl="spl" title="Splunk SPL">SPL</button>
+      </div>
       <div class="matrix-stats" id="matrixStats"></div>
     </div>
     <div class="matrix-legend" id="matrixLegend">
@@ -4957,6 +4980,14 @@ ul.intel-types-doc code{
         <span class="lg-chip"><b style="color:var(--accent-3);">3 UC</b> = 3 use cases mapped</span>
         <span class="lg-chip"><b style="color:var(--warn);">8 art</b> = 8 articles cite it</span>
         <span class="lg-note">click any cell for the full drawer</span>
+      </div>
+      <div class="lg-row">
+        <span class="lg-label">Platform coverage</span>
+        <span class="lg-chip"><span class="pl-badge pl-def">D</span> Defender Advanced Hunting KQL</span>
+        <span class="lg-chip"><span class="pl-badge pl-sent">S</span> Sentinel KQL</span>
+        <span class="lg-chip"><span class="pl-badge pl-sigma">Σ</span> Sigma rule</span>
+        <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
+        <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
     <div class="matrix-grid" id="matrixGrid"></div>
@@ -6010,13 +6041,33 @@ function tidCellHtml(tid, isSub) {
   if (isSub) cls += ' is-sub';
   if (matrixMode === 'coverage') cls += ' ' + covClassFor(ucs.length);
   else if (matrixMode === 'heat') cls += ' ' + heatClassFor(arts.length);
-  return `<div class="${cls}" data-tid="${tid}" tabindex="0">
+  // Platform-coverage flags — aggregate the `pl` field across every UC
+  // attached to this technique. `pl` is a 4-char string "dsgp": d=Defender,
+  // s=Sentinel, g=Sigma, p=SPL. A position is `-` if that UC lacks that
+  // platform body. The matrix shows a small badge for each platform that
+  // at least one UC on this technique covers.
+  let plDef=false, plSent=false, plSigma=false, plSpl=false;
+  for (let u of ucs) {
+    const rec = MATRIX.ucs[u];
+    if (!rec || !rec.pl) continue;
+    if (rec.pl[0] === 'd') plDef = true;
+    if (rec.pl[1] === 's') plSent = true;
+    if (rec.pl[2] === 'g') plSigma = true;
+    if (rec.pl[3] === 'p') plSpl = true;
+  }
+  const platforms = [];
+  if (plDef)   platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
+  if (plSent)  platforms.push('<span class="pl-badge pl-sent" title="Sentinel KQL">S</span>');
+  if (plSigma) platforms.push('<span class="pl-badge pl-sigma" title="Sigma rule">Σ</span>');
+  if (plSpl)   platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
       ${subCount ? `<span class="sub-marker">▾${subCount}</span>` : ''}
       ${ucs.length ? `<span class="uc-count">${ucs.length} UC</span>` : ''}
       ${arts.length ? `<span style="color:var(--warn)">${arts.length} art</span>` : ''}
+      ${platforms.length ? `<span class="pl-badges">${platforms.join('')}</span>` : ''}
     </div>
   </div>`;
 }
@@ -6074,6 +6125,23 @@ document.getElementById('matrixModes').addEventListener('click', e => {
     const arts = MATRIX.tech_arts[tid] || [];
     if (matrixMode === 'coverage' && ucs.length) cell.classList.add(covClassFor(ucs.length));
     else if (matrixMode === 'heat' && arts.length) cell.classList.add(heatClassFor(arts.length));
+  });
+});
+
+// Platform-coverage filter (Defender / Sentinel / Sigma / SPL)
+let matrixPlatform = 'all';
+document.getElementById('matrixPlatforms')?.addEventListener('click', e => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  matrixPlatform = btn.dataset.pl;
+  document.querySelectorAll('#matrixPlatforms button').forEach(b => b.classList.toggle('on', b === btn));
+  document.querySelectorAll('#matrixGrid .tech-cell').forEach(cell => {
+    if (matrixPlatform === 'all') {
+      cell.classList.remove('pl-filter-dim');
+      return;
+    }
+    const flag = cell.dataset['pl' + matrixPlatform.charAt(0).toUpperCase() + matrixPlatform.slice(1)];
+    cell.classList.toggle('pl-filter-dim', flag !== '1');
   });
 });
 
@@ -7621,6 +7689,15 @@ def build_matrix_data(articles_meta):
         idx = len(uc_records)
         seen_uc_ids[name] = idx
         uc_techs = [t for t, _ in uc.techniques]
+        # Platform coverage — `pl` is a 4-bit string flagging which
+        # platform queries this UC ships. Front-end uses it for badges
+        # on the matrix and for the "Sigma-only" / "Sentinel-only" filters.
+        pl = "".join([
+            "d" if uc.defender_kql else "-",
+            "s" if uc.sentinel_kql else "-",
+            "g" if getattr(uc, "sigma_yaml", "") else "-",
+            "p" if uc.splunk_spl else "-",
+        ])
         uc_records.append({
             "i": idx,
             "n": name,
@@ -7629,6 +7706,7 @@ def build_matrix_data(articles_meta):
             "ph": uc.kill_chain,
             "src": "internal",
             "tier": getattr(uc, "tier", "hunting"),
+            "pl": pl,                    # platform coverage flags d/s/g/p
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
         })
@@ -7681,6 +7759,7 @@ def build_matrix_data(articles_meta):
             "ph": ph_short,
             "src": "escu",
             "tier": tier,
+            "pl": "---p",                # ESCU = Splunk SPL-only
             "techs": tech_ids,
             "arts": [],
         })

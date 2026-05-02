@@ -12,12 +12,16 @@ them aside so they can be restored if anything goes wrong).
 Decision rule (a cache file is invalidated if):
   - any UC in it has at least one field-schema issue, OR
   - any UC in it lacks a time-bound predicate (full retention scan), OR
-  - any UC in it scores below the configurable style cutoff (default 60%).
+  - any UC in it scores below the configurable style cutoff (default 60%), OR
+  - --require-sentinel is set and any UC lacks `sentinel_kql`, OR
+  - --require-sigma is set and any UC lacks `sigma_yaml`.
 
 Run:
-    python invalidate_problem_uc_cache.py             # dry-run
-    python invalidate_problem_uc_cache.py --apply     # actually rename
+    python invalidate_problem_uc_cache.py                  # dry-run, quality-only
+    python invalidate_problem_uc_cache.py --apply
     python invalidate_problem_uc_cache.py --apply --style-cutoff 0.7
+    python invalidate_problem_uc_cache.py --require-sentinel
+    python invalidate_problem_uc_cache.py --require-sentinel --require-sigma --apply
 """
 from __future__ import annotations
 
@@ -38,7 +42,9 @@ CACHE_DIRS = [
 ]
 
 
-def file_has_problems(path: Path, style_cutoff: float) -> tuple[bool, list[str]]:
+def file_has_problems(path: Path, style_cutoff: float,
+                       require_sentinel: bool = False,
+                       require_sigma: bool = False) -> tuple[bool, list[str]]:
     """Return (problematic, reasons) for a cache file."""
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -69,6 +75,11 @@ def file_has_problems(path: Path, style_cutoff: float) -> tuple[bool, list[str]]
             reasons.append(f"UC#{i+1} no time-bound predicate")
         if score < int(MAX_SCORE * style_cutoff):
             reasons.append(f"UC#{i+1} style score {score}/{MAX_SCORE} below cutoff")
+        # Multi-platform completeness — only flagged when caller asks.
+        if require_sentinel and not uc.get("sentinel_kql"):
+            reasons.append(f"UC#{i+1} missing sentinel_kql")
+        if require_sigma and not uc.get("sigma_yaml"):
+            reasons.append(f"UC#{i+1} missing sigma_yaml")
     return bool(reasons), reasons
 
 
@@ -78,6 +89,10 @@ def main() -> int:
                     help="Actually rename the affected files (default: dry-run).")
     ap.add_argument("--style-cutoff", type=float, default=0.6,
                     help="Style-score cutoff as fraction of max (default 0.6).")
+    ap.add_argument("--require-sentinel", action="store_true",
+                    help="Also flag any UC missing sentinel_kql (forces regen with new prompt).")
+    ap.add_argument("--require-sigma", action="store_true",
+                    help="Also flag any UC missing sigma_yaml (forces regen with new prompt).")
     args = ap.parse_args()
 
     suffix = ".invalidated-" + time.strftime("%Y%m%d-%H%M%S")
@@ -95,7 +110,11 @@ def main() -> int:
         problems_in_dir = 0
         for path in files:
             total_files += 1
-            problematic, reasons = file_has_problems(path, args.style_cutoff)
+            problematic, reasons = file_has_problems(
+                path, args.style_cutoff,
+                require_sentinel=args.require_sentinel,
+                require_sigma=args.require_sigma,
+            )
             if not problematic:
                 continue
             problems_in_dir += 1
