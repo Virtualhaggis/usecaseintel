@@ -2987,8 +2987,16 @@ body{
 }
 .first-visit-banner.show{display:flex;}
 .first-visit-banner b{color:var(--accent-2); font-weight:600;}
+.first-visit-banner .banner-quote{
+  font-style:italic; color:var(--text); font-weight:500;
+  padding-right:14px; border-right:2px solid rgba(113,112,255,0.45);
+  letter-spacing:-0.005em;
+}
 .first-visit-banner .banner-stats{
   color:var(--muted); font-family:var(--mono); font-size:11.5px;
+}
+@media (max-width: 760px) {
+  .first-visit-banner .banner-quote{border-right:0; border-bottom:1px solid rgba(113,112,255,0.30); padding-right:0; padding-bottom:6px; width:100%;}
 }
 .first-visit-banner .banner-cta{
   margin-left:auto; display:inline-flex; align-items:center; gap:6px;
@@ -4908,7 +4916,8 @@ ul.intel-types-doc code{
 </header>
 
 <div class="first-visit-banner" id="firstVisitBanner" role="region" aria-label="Welcome">
-  <span><b>New here?</b> We turn daily threat-intel articles into ready-to-deploy SOC detections — every 2 hours.</span>
+  <span class="banner-quote">“A go-to resource SOC engineers actually use daily.”</span>
+  <span class="banner-explainer"><b>New here?</b> We turn daily threat-intel articles into ready-to-deploy SOC detections — every 2 hours.</span>
   <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
   <button class="banner-close" id="firstVisitClose" aria-label="Dismiss welcome banner" title="Dismiss">×</button>
