@@ -9,3 +9,11 @@ pyyaml>=6.0
 # Pipeline runs without either; LLM UCs just don't get generated.
 anthropic>=0.30; python_version >= "3.9"
 claude-agent-sdk>=0.1; python_version >= "3.10"
+
+# Sigma rule tooling. Core pysigma parses + validates rules; backends are
+# optional and only required if you want to compile rules to a target
+# platform (cheat-sheet "compile to..." button uses these). Each backend
+# is its own pip package.
+pysigma>=0.10
+pysigma-backend-microsoft365defender>=0.1; python_version >= "3.9"
+pysigma-backend-splunk>=1.0; python_version >= "3.9"
