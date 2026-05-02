@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).parent
 OUT = ROOT / "cheatsheet.html"
 SCHEMA = json.loads((ROOT / "data_sources" / "defender_spec_tables.json").read_text(encoding="utf-8"))
+SENTINEL_SCHEMA = json.loads((ROOT / "data_sources" / "sentinel_spec_tables.json").read_text(encoding="utf-8"))
 
 
 # =============================================================================
@@ -1084,6 +1085,659 @@ DeviceTvmSoftwareVulnerabilities
 
 
 # =============================================================================
+# Sentinel — per-table query bundles
+# =============================================================================
+# Sentinel uses TimeGenerated, not Timestamp. Schema differs from Defender.
+# These follow the same BluRaven house style as the Defender ones.
+
+SENTINEL_QUERIES: dict[str, list[tuple[str, str, str]]] = {
+
+    "SigninLogs": [
+        ("Failed sign-ins for a user",
+         "Replace `<user@domain>`. Useful for triaging an account-takeover ticket.",
+         '''SigninLogs
+| where TimeGenerated > ago(24h)
+| where UserPrincipalName =~ "<user@domain>"
+| where ResultType != 0
+| project TimeGenerated, IPAddress, AppDisplayName, ResultType,
+          ResultDescription, RiskLevelDuringSignIn,
+          ConditionalAccessStatus, ClientAppUsed
+| order by TimeGenerated desc'''),
+
+        ("Impossible travel — same user, two countries within 60 minutes",
+         "Successful sign-ins from geographically impossible locations — pivot for compromised credentials.",
+         '''let WindowMinutes = 60;
+SigninLogs
+| where TimeGenerated > ago(7d)
+| where ResultType == 0
+| extend Country = tostring(parse_json(LocationDetails).countryOrRegion)
+| where isnotempty(Country)
+| project TimeGenerated, UserPrincipalName, Country, IPAddress, AppDisplayName
+| order by UserPrincipalName asc, TimeGenerated asc
+| extend Prev = prev(Country),
+         PrevTime = prev(TimeGenerated),
+         PrevAcct = prev(UserPrincipalName)
+| where UserPrincipalName == PrevAcct
+   and Country != Prev
+   and datetime_diff('minute', TimeGenerated, PrevTime) <= WindowMinutes
+| project UserPrincipalName, From = Prev, FromTime = PrevTime,
+          To = Country, ToTime = TimeGenerated,
+          MinutesDelta = datetime_diff('minute', TimeGenerated, PrevTime),
+          IPAddress, AppDisplayName
+| order by ToTime desc'''),
+
+        ("Legacy authentication still in use",
+         "`Other clients` = POP/IMAP/SMTP basic-auth. Should be zero in modern tenants.",
+         '''SigninLogs
+| where TimeGenerated > ago(7d)
+| where ClientAppUsed == "Other clients"
+| where ResultType == 0
+| summarize Sessions = count() by UserPrincipalName, IPAddress, AppDisplayName
+| order by Sessions desc'''),
+
+        ("Risky sign-ins (Identity Protection)",
+         "Medium / high risk surfaced by AAD risk scoring.",
+         '''SigninLogs
+| where TimeGenerated > ago(7d)
+| where RiskLevelDuringSignIn in ("medium","high")
+| where ResultType == 0
+| project TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName,
+          RiskLevelDuringSignIn, RiskState, RiskEventTypes_V2
+| order by TimeGenerated desc'''),
+
+        ("Conditional-Access blocked sign-ins",
+         "CA Failures — useful for spotting attacker workflows that hit your gates.",
+         '''SigninLogs
+| where TimeGenerated > ago(7d)
+| where ConditionalAccessStatus == "Failure"
+| project TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName,
+          ResultDescription, ConditionalAccessPolicies
+| order by TimeGenerated desc'''),
+
+        ("MFA challenge failures (push-bombing detector)",
+         "Repeated MFA challenges to the same user from the same source.",
+         '''SigninLogs
+| where TimeGenerated > ago(24h)
+| where ResultType == 50158        // MFA Challenge required / failed
+| summarize Attempts = count(), FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by UserPrincipalName, IPAddress, bin(TimeGenerated, 5m)
+| where Attempts > 3
+| order by Attempts desc'''),
+
+        ("First sign-in to a new SaaS app",
+         "App with zero history that suddenly gets a successful sign-in — illicit-consent risk.",
+         '''SigninLogs
+| where TimeGenerated > ago(7d)
+| where ResultType == 0
+| where AppDisplayName !in~ ("Microsoft Authenticator","Office 365","Microsoft Office",
+                              "Microsoft Teams","Microsoft Edge","Outlook")
+| summarize FirstSeen = min(TimeGenerated), Users = dcount(UserPrincipalName),
+            UserList = make_set(UserPrincipalName, 20)
+            by AppDisplayName, AppId
+| where FirstSeen > ago(2h)
+| order by FirstSeen desc'''),
+
+        ("Sign-ins from anonymous proxy IPs",
+         "Tor / VPN / abuse-listed sources.",
+         '''SigninLogs
+| where TimeGenerated > ago(7d)
+| where RiskEventTypes_V2 has_any ("anonymizedIPAddress","tor")
+| project TimeGenerated, UserPrincipalName, IPAddress, AppDisplayName,
+          ResultType, RiskLevelDuringSignIn
+| order by TimeGenerated desc'''),
+    ],
+
+    "SecurityEvent": [
+        ("Failed interactive logons (4625)",
+         "Brute-force / credential-spray triage. Excludes machine-accounts and service logons.",
+         '''SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4625
+| where Account !endswith "$"
+| where LogonType in (2, 10)        // Interactive, RemoteInteractive
+| summarize Failures = count(),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated),
+            Targets = dcount(Computer)
+            by Account, IpAddress, FailureReason
+| where Failures > 5
+| order by Failures desc'''),
+
+        ("New process creation (4688)",
+         "Requires Audit Process Creation policy + 'Include command line in process creation events'.",
+         '''SecurityEvent
+| where TimeGenerated > ago(24h)
+| where EventID == 4688
+| where Account !endswith "$"
+| project TimeGenerated, Computer, Account,
+          NewProcessName, CommandLine, ParentProcessName,
+          TokenElevationType
+| order by TimeGenerated desc'''),
+
+        ("Office app spawning a script host (4688)",
+         "Word/Excel/Outlook spawning powershell/cmd/wscript — macro-payload signature.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4688
+| where Account !endswith "$"
+| where ParentProcessName endswith "\\winword.exe"
+   or ParentProcessName endswith "\\excel.exe"
+   or ParentProcessName endswith "\\powerpnt.exe"
+   or ParentProcessName endswith "\\outlook.exe"
+| where NewProcessName endswith "\\powershell.exe"
+   or NewProcessName endswith "\\cmd.exe"
+   or NewProcessName endswith "\\wscript.exe"
+   or NewProcessName endswith "\\cscript.exe"
+   or NewProcessName endswith "\\mshta.exe"
+| project TimeGenerated, Computer, Account,
+          ParentProcessName, NewProcessName, CommandLine'''),
+
+        ("PowerShell with -EncodedCommand (decode inline)",
+         "Decodes the base64 payload right in the result — same as the Defender pattern.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4688
+| where Account !endswith "$"
+| where NewProcessName endswith "\\powershell.exe" or NewProcessName endswith "\\pwsh.exe"
+| where CommandLine has_any ("-EncodedCommand","-enc ","-EC ")
+| extend B64 = extract(@"(?i)(?:-(?:e(?:nc(?:odedcommand)?)?))\\s+([A-Za-z0-9+/=]{20,})", 1, CommandLine)
+| extend Decoded = base64_decode_tostring(B64)
+| project TimeGenerated, Computer, Account, CommandLine, B64, Decoded
+| order by TimeGenerated desc'''),
+
+        ("RDP from public IP (4624 LogonType 10)",
+         "Successful RemoteInteractive from a public source — high-priority review.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4624
+| where LogonType == 10            // RemoteInteractive (RDP)
+| where ipv4_is_private(IpAddress) == false
+| where Account !endswith "$"
+| project TimeGenerated, Computer, Account, IpAddress, WorkstationName,
+          AuthenticationPackageName
+| order by TimeGenerated desc'''),
+
+        ("Service installation (4697)",
+         "Direct service-install signal — pair with image path under user-writable dir for persistence.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4697
+| where SubjectUserName !endswith "$"
+| project TimeGenerated, Computer, SubjectUserName, ServiceName,
+          ServiceFileName, ServiceType, ServiceStartType, ServiceAccount
+| order by TimeGenerated desc'''),
+
+        ("LSASS object access (4663)",
+         "Anything reading LSASS memory that isn't a Microsoft signed component is suspect.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4663
+| where ObjectName endswith "\\lsass.exe"
+| where Account !endswith "$"
+| project TimeGenerated, Computer, Account, ObjectName, ProcessName,
+          AccessMask, AccessReason'''),
+
+        ("Account created (4720)",
+         "New local user account.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4720
+| project TimeGenerated, Computer, SubjectUserName, TargetUserName,
+          TargetDomainName'''),
+
+        ("After-hours interactive logon",
+         "Tune the hour bounds for your business. Default: 21:00–06:00 local.",
+         '''SecurityEvent
+| where TimeGenerated > ago(7d)
+| where EventID == 4624
+| where LogonType == 2           // Interactive
+| where Account !endswith "$"
+| extend Hour = datetime_part("hour", TimeGenerated)
+| where Hour >= 21 or Hour < 6
+| project TimeGenerated, Hour, Computer, Account, IpAddress
+| order by TimeGenerated desc'''),
+    ],
+
+    "AuditLogs": [
+        ("Privileged-role membership changes",
+         "Adds to Global Admin / Privileged Role Admin / App Admin.",
+         '''AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName has "Add member to role"
+| extend RoleName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         Member = tostring(parse_json(tostring(TargetResources))[1].displayName),
+         Initiator = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| where RoleName has_any ("Global Administrator","Privileged Role Administrator",
+                           "Application Administrator","User Access Administrator",
+                           "Cloud Application Administrator")
+| project TimeGenerated, Initiator, Member, RoleName, Result'''),
+
+        ("New OAuth app consent grants",
+         "User consenting to a third-party app — illicit-consent attack precursor.",
+         '''AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName has "Consent to application"
+| where Result =~ "success"
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         User = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, Result, AdditionalDetails
+| order by TimeGenerated desc'''),
+
+        ("Password resets (forced or self-service)",
+         "Common pre-impersonation step.",
+         '''AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName in~ ("Reset password (by admin)","Reset user password",
+                            "Self-service password reset")
+| extend Initiator = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName),
+         Target = tostring(parse_json(tostring(TargetResources))[0].userPrincipalName)
+| project TimeGenerated, OperationName, Initiator, Target, Result'''),
+
+        ("New service principal / application created",
+         "Pivot for OAuth-app-based persistence.",
+         '''AuditLogs
+| where TimeGenerated > ago(7d)
+| where OperationName in~ ("Add service principal","Add application")
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         User = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, Result'''),
+    ],
+
+    "OfficeActivity": [
+        ("New mailbox inbox rules",
+         "BEC artefact — attacker forwards / hides inbound mail.",
+         '''OfficeActivity
+| where TimeGenerated > ago(7d)
+| where OfficeWorkload == "Exchange"
+| where Operation in~ ("New-InboxRule","Set-InboxRule")
+| where ResultStatus == "Succeeded"
+| project TimeGenerated, UserId, ClientIP, Operation, Parameters
+| order by TimeGenerated desc'''),
+
+        ("Mass file download from SharePoint / OneDrive",
+         "Exfil via file-share. Tune the > 100 threshold to estate baseline.",
+         '''OfficeActivity
+| where TimeGenerated > ago(7d)
+| where OfficeWorkload in ("SharePoint","OneDrive")
+| where Operation =~ "FileDownloaded"
+| summarize Files = dcount(SourceFileName), Sites = make_set(Site_Url, 10)
+            by UserId, bin(TimeGenerated, 5m)
+| where Files > 100
+| order by Files desc'''),
+
+        ("External-domain user accessing internal SharePoint",
+         "External-collab risk.",
+         '''OfficeActivity
+| where TimeGenerated > ago(7d)
+| where OfficeWorkload == "SharePoint"
+| where Operation in~ ("FileAccessed","FileDownloaded","ListItemViewed")
+| where UserId !endswith "@yourdomain.com"
+| project TimeGenerated, UserId, Operation, Site_Url, SourceFileName, ClientIP'''),
+
+        ("Teams external-tenant chat",
+         "Tenant-boundary-crossing chats — potential vishing setup.",
+         '''OfficeActivity
+| where TimeGenerated > ago(7d)
+| where OfficeWorkload == "MicrosoftTeams"
+| where Operation in~ ("MessageSent","ChatCreated","TeamsImpersonationDetected")
+| project TimeGenerated, UserId, Operation, Subject, Recipients,
+          ClientIP, UserAgent
+| order by TimeGenerated desc'''),
+    ],
+
+    "AzureActivity": [
+        ("Role-assignment writes outside known IT",
+         "RBAC changes are crown-jewel events.",
+         '''AzureActivity
+| where TimeGenerated > ago(7d)
+| where OperationNameValue =~ "Microsoft.Authorization/roleAssignments/write"
+| where ActivityStatusValue == "Succeeded"
+| project TimeGenerated, Caller, CallerIpAddress, ResourceId,
+          OperationNameValue, Properties'''),
+
+        ("Key Vault secret reads",
+         "Frequent reads from a single caller can indicate credential-harvesting.",
+         '''AzureActivity
+| where TimeGenerated > ago(7d)
+| where OperationNameValue =~ "Microsoft.KeyVault/vaults/secrets/read"
+| where ActivityStatusValue == "Succeeded"
+| summarize Reads = count(), Vaults = dcount(ResourceId),
+            Secrets = dcount(tostring(parse_json(tostring(Properties)).resource))
+            by Caller, CallerIpAddress
+| order by Reads desc'''),
+
+        ("Storage account public-access changes",
+         "Storage-container public-blob exposure.",
+         '''AzureActivity
+| where TimeGenerated > ago(7d)
+| where OperationNameValue has "Microsoft.Storage/storageAccounts"
+| where OperationNameValue has "write"
+| project TimeGenerated, Caller, CallerIpAddress, ResourceId,
+          OperationNameValue, ActivityStatusValue, Properties
+| order by TimeGenerated desc'''),
+    ],
+
+    "Syslog": [
+        ("Failed sudo attempts",
+         "Linux brute-force / privilege-test signal.",
+         '''Syslog
+| where TimeGenerated > ago(24h)
+| where Facility =~ "authpriv"
+| where SyslogMessage has "sudo:" and SyslogMessage has "FAILED"
+| project TimeGenerated, Computer, HostIP, SyslogMessage
+| order by TimeGenerated desc'''),
+
+        ("SSH key-based logon",
+         "Tracks publickey auth — useful for pivoting on lateral movement.",
+         '''Syslog
+| where TimeGenerated > ago(7d)
+| where ProcessName =~ "sshd"
+| where SyslogMessage has "Accepted publickey"
+| extend SrcIp = extract(@"from\\s+(\\S+)", 1, SyslogMessage),
+         User  = extract(@"for\\s+(\\S+)\\s+from", 1, SyslogMessage)
+| project TimeGenerated, Computer, User, SrcIp, SyslogMessage'''),
+
+        ("Audit-policy / sudoers modifications",
+         "Tampering with audit infrastructure.",
+         '''Syslog
+| where TimeGenerated > ago(7d)
+| where Facility =~ "authpriv" or Facility =~ "auth"
+| where SyslogMessage has_any ("/etc/sudoers","/etc/audit","auditctl",
+                                "auditd","sudoers.d")
+| project TimeGenerated, Computer, ProcessName, SyslogMessage'''),
+    ],
+
+    "DnsEvents": [
+        ("Queries to suspect TLDs",
+         "Onion / russian / tonkin TLDs.",
+         '''DnsEvents
+| where TimeGenerated > ago(7d)
+| where Name endswith ".onion" or Name endswith ".duckdns.org"
+| project TimeGenerated, Computer, ClientIP, Name, QueryTypeName, ResultCodeName'''),
+
+        ("DNS-tunnel candidate (TXT-heavy)",
+         "Frequent TXT lookups from one source — DNS-tunneling exfil.",
+         '''DnsEvents
+| where TimeGenerated > ago(24h)
+| where QueryTypeName == "TXT"
+| summarize Queries = count(), DistinctNames = dcount(Name)
+            by ClientIP, bin(TimeGenerated, 5m)
+| where Queries > 200
+| order by Queries desc'''),
+    ],
+
+    "CommonSecurityLog": [
+        ("Firewall denies from public sources",
+         "Vendor-agnostic FW deny digest. Pin DeviceVendor + DeviceProduct first.",
+         '''CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where Activity has "deny" or DeviceAction has "deny"
+| where ipv4_is_private(SourceIP) == false
+| summarize Hits = count() by DeviceVendor, DeviceProduct,
+            SourceIP, DestinationIP, DestinationPort, DeviceAction
+| order by Hits desc'''),
+
+        ("Web-proxy threat-categorised hits",
+         "Vendor-specific category mapping — adjust to your tenant's connector.",
+         '''CommonSecurityLog
+| where TimeGenerated > ago(24h)
+| where DeviceVendor =~ "Zscaler"
+| where DeviceCustomString1 has_any ("malware","phishing","botnet","spyware")
+| project TimeGenerated, SourceIP, SourceUserName,
+          DestinationHostName, RequestURL, DeviceCustomString1'''),
+
+        ("File hash matches (NGFW IPS / Sandbox)",
+         "Replace `<bad-hash>`.",
+         '''CommonSecurityLog
+| where TimeGenerated > ago(7d)
+| where FileHash =~ "<bad-hash>"
+| project TimeGenerated, DeviceVendor, DeviceProduct, FileName, FileHash,
+          SourceIP, DestinationIP, RequestURL, Message'''),
+    ],
+
+    "ThreatIntelligenceIndicator": [
+        ("Active TI feed sweep against network logs",
+         "Pulls all active TI indicators and sweeps against CommonSecurityLog destinations.",
+         '''let Active = ThreatIntelligenceIndicator
+    | where TimeGenerated > ago(30d)
+    | where Active == true and ExpirationDateTime > now()
+    | summarize arg_max(TimeGenerated, *) by IndicatorId
+    | where isnotempty(NetworkIP);
+CommonSecurityLog
+| where TimeGenerated > ago(7d)
+| join kind=inner (Active | project NetworkIP, ThreatType, ConfidenceScore)
+    on $left.DestinationIP == $right.NetworkIP
+| project TimeGenerated, SourceIP, SourceUserName, DestinationIP,
+          ThreatType, ConfidenceScore, Activity'''),
+
+        ("File-hash IOC sweep",
+         "TI indicator hashes vs. SecurityEvent / ImFileEvent file telemetry.",
+         '''let BadHashes = ThreatIntelligenceIndicator
+    | where TimeGenerated > ago(30d)
+    | where Active == true
+    | where isnotempty(FileHashValue)
+    | distinct FileHashValue;
+ImFileEvent
+| where TimeGenerated > ago(7d)
+| where TargetFileSHA256 in (BadHashes) or TargetFileSHA1 in (BadHashes)
+   or TargetFileMD5 in (BadHashes)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFileName,
+          TargetFilePath, TargetFileSHA256'''),
+    ],
+
+    "SecurityAlert": [
+        ("High-severity alerts from MDE / Defender for Identity",
+         "Severity-scoped triage feed.",
+         '''SecurityAlert
+| where TimeGenerated > ago(24h)
+| where AlertSeverity in ("High","Medium")
+| where ProviderName has_any ("MDATP","AAD Identity Protection","Azure Sentinel",
+                                "MicrosoftDefenderForCloud","ASC")
+| project TimeGenerated, AlertName, AlertSeverity, ProviderName,
+          CompromisedEntity, Description'''),
+
+        ("Per-host incident summary",
+         "Group alerts by impacted host for triage.",
+         '''SecurityAlert
+| where TimeGenerated > ago(7d)
+| extend Hosts = parse_json(Entities)
+| mv-expand Hosts
+| where tostring(Hosts.Type) == "host"
+| extend Host = tostring(Hosts.HostName)
+| summarize Alerts = count(), Names = make_set(AlertName, 5),
+            FirstSeen = min(TimeGenerated)
+            by Host, AlertSeverity
+| order by Alerts desc'''),
+    ],
+
+    "ImProcessCreate": [
+        ("Cross-vendor process create — Office spawning script host",
+         "Same shape as the SecurityEvent 4688 query but vendor-agnostic via ASIM.",
+         '''ImProcessCreate
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where ParentProcessName in~ ("winword.exe","excel.exe","powerpnt.exe",
+                                 "outlook.exe","onenote.exe")
+| where TargetProcessName in~ ("powershell.exe","pwsh.exe","cmd.exe",
+                                 "wscript.exe","cscript.exe","mshta.exe")
+| project TimeGenerated, DvcHostname, ActorUsername,
+          ParentProcessName, TargetProcessName, TargetProcessCommandLine
+| order by TimeGenerated desc'''),
+
+        ("LOLBin executions (cross-vendor)",
+         "Living-off-the-land binaries normalised across MDE / Sysmon / AuditD / etc.",
+         '''ImProcessCreate
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where TargetProcessName in~ ("certutil.exe","bitsadmin.exe","mshta.exe",
+                                 "regsvr32.exe","rundll32.exe","wmic.exe",
+                                 "msbuild.exe","installutil.exe","cmstp.exe")
+| project TimeGenerated, DvcHostname, ActorUsername,
+          TargetProcessName, TargetProcessCommandLine, ParentProcessName'''),
+
+        ("PowerShell with suspicious flags",
+         "Hidden window, no-profile, bypass — common evasion combos.",
+         '''ImProcessCreate
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where TargetProcessName in~ ("powershell.exe","pwsh.exe")
+| where TargetProcessCommandLine matches regex @"(?i)-w(in)?(dow)?style?\\s+h(idden)?|-nop(rofile)?|-ep\\s+bypass|frombase64string|invoke-expression|iex\\s*\\(|net\\.webclient"
+| project TimeGenerated, DvcHostname, ActorUsername,
+          TargetProcessCommandLine, ParentProcessName'''),
+
+        ("Files run from temp / AppData",
+         "User-mode malware staging area.",
+         '''ImProcessCreate
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where TargetProcessName has_any (@"\\AppData\\Local\\Temp\\",
+                                     @"\\AppData\\Roaming\\",
+                                     @"\\Windows\\Temp\\",
+                                     @"\\Users\\Public\\")
+| project TimeGenerated, DvcHostname, ActorUsername,
+          TargetProcessName, TargetProcessCommandLine, SHA256'''),
+
+        ("Hash IOC sweep (cross-vendor)",
+         "Replace the dynamic list with article-specific hashes.",
+         '''let BadHashes = dynamic(["<sha256-1>","<sha256-2>"]);
+ImProcessCreate
+| where TimeGenerated > ago(7d)
+| where SHA256 in~ (BadHashes) or MD5 in~ (BadHashes) or SHA1 in~ (BadHashes)
+| project TimeGenerated, DvcHostname, ActorUsername,
+          TargetProcessName, TargetProcessCommandLine, SHA256'''),
+    ],
+
+    "ImNetworkSession": [
+        ("Egress to public IP",
+         "Internet-bound network sessions only.",
+         '''ImNetworkSession
+| where TimeGenerated > ago(24h)
+| where DvcAction != "Block"
+| where ipv4_is_private(DstIpAddr) == false
+| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr,
+          DstPortNumber, NetworkProtocol, NetworkBytes
+| order by TimeGenerated desc'''),
+
+        ("Beaconing detector",
+         "Sustained periodic outbound to one destination — C2 signature.",
+         '''ImNetworkSession
+| where TimeGenerated > ago(2h)
+| where ipv4_is_private(DstIpAddr) == false
+| summarize ConnCount = count(),
+            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
+            by DvcHostname, DstIpAddr, DstPortNumber
+| where ConnCount > 50 and DistinctMinutes > 30
+| order by ConnCount desc'''),
+
+        ("Connections to a domain pattern",
+         "Use Url field for HTTP-aware connectors. Replace `<pattern>`.",
+         '''ImNetworkSession
+| where TimeGenerated > ago(7d)
+| where Url has "<pattern>"
+| project TimeGenerated, DvcHostname, SrcIpAddr, Url,
+          DstIpAddr, DstPortNumber, NetworkProtocol'''),
+    ],
+
+    "ImAuthentication": [
+        ("Cross-vendor authentication failures",
+         "Aggregates failed auth across cloud + on-prem connectors.",
+         '''ImAuthentication
+| where TimeGenerated > ago(24h)
+| where EventResult == "Failure"
+| where TargetUsername !endswith "$"
+| summarize Failures = count(), FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by TargetUsername, SrcIpAddr, EventVendor
+| where Failures > 5
+| order by Failures desc'''),
+
+        ("Anomalous logon protocol",
+         "NTLM where Kerberos is expected — pivot signal.",
+         '''ImAuthentication
+| where TimeGenerated > ago(7d)
+| where EventResult == "Success"
+| where LogonProtocol =~ "NTLM"
+| where TargetUsername !endswith "$"
+| project TimeGenerated, DvcHostname, TargetUsername, SrcIpAddr,
+          LogonProtocol, LogonMethod, EventVendor
+| order by TimeGenerated desc'''),
+    ],
+
+    "ImFileEvent": [
+        ("File creates in suspect paths",
+         "User-mode malware staging.",
+         '''ImFileEvent
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where EventType == "FileCreated"
+| where TargetFilePath has_any (@"\\AppData\\Local\\Temp\\",
+                                  @"\\AppData\\Roaming\\",
+                                  @"\\Windows\\Temp\\")
+| where TargetFileName endswith ".exe" or TargetFileName endswith ".dll"
+   or TargetFileName endswith ".ps1"
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath,
+          TargetFileName, TargetFileSHA256'''),
+
+        ("Cross-vendor mass file rename (ransomware)",
+         "Threshold-based encryption signal across MDE / Sysmon / AuditD.",
+         '''ImFileEvent
+| where TimeGenerated > ago(1d)
+| where ActorUsername !endswith "$"
+| where EventType in ("FileRenamed","FileModified")
+| summarize files = dcount(TargetFileName)
+            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)
+| where files > 200
+| order by files desc'''),
+    ],
+
+    "ImDnsActivity": [
+        ("Cross-vendor DNS queries to suspect TLDs",
+         "Normalised across Win DNS, Sysmon EID 22, Linux dnsmasq.",
+         '''ImDnsActivity
+| where TimeGenerated > ago(7d)
+| where DnsQuery endswith ".onion"
+   or DnsQuery endswith ".ru"
+   or DnsQuery endswith ".su"
+| project TimeGenerated, DvcHostname, SrcIpAddr, DnsQuery,
+          DnsQueryTypeName, DnsResponseCodeName'''),
+
+        ("DNS-tunnel signature (TXT-heavy)",
+         "TXT-query volume per source.",
+         '''ImDnsActivity
+| where TimeGenerated > ago(24h)
+| where DnsQueryTypeName == "TXT"
+| summarize Queries = count(), DistinctNames = dcount(DnsQuery)
+            by SrcIpAddr, bin(TimeGenerated, 5m)
+| where Queries > 200
+| order by Queries desc'''),
+    ],
+
+    "ImRegistryEvent": [
+        ("Run / RunOnce changes",
+         "Persistence-key writes — cross-vendor normalisation.",
+         '''ImRegistryEvent
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where RegistryKey has_any (@"\\Run", @"\\RunOnce")
+| where ActingProcessName !in~ ("msiexec.exe","explorer.exe")
+| project TimeGenerated, DvcHostname, ActorUsername,
+          RegistryKey, RegistryValue, RegistryValueData, ActingProcessName'''),
+
+        ("IFEO debugger hijack",
+         "Image File Execution Options debugger override — classic evasion.",
+         '''ImRegistryEvent
+| where TimeGenerated > ago(7d)
+| where ActorUsername !endswith "$"
+| where RegistryKey has @"\\Image File Execution Options\\"
+| where RegistryValue =~ "Debugger"
+| project TimeGenerated, DvcHostname, RegistryKey, RegistryValueData,
+          ActingProcessName'''),
+    ],
+}
+
+
+# =============================================================================
 # Render
 # =============================================================================
 
@@ -1103,11 +1757,12 @@ def render_query(q: tuple[str, str, str], i: int) -> str:
 """
 
 
-def render_table_section(table: str, queries: list, columns: list[str]) -> str:
+def render_table_section(table: str, queries: list, columns: list[str],
+                          id_prefix: str = "table-") -> str:
     items = "\n".join(render_query(q, idx) for idx, q in enumerate(queries))
     cols_html = " · ".join(f"<code>{html.escape(c)}</code>" for c in columns)
     return f"""
-<section class="table-section" id="table-{table}" data-table="{table}">
+<section class="table-section" id="{id_prefix}{table}" data-table="{table}">
   <header class="table-header">
     <h2>{html.escape(table)}</h2>
     <p class="muted">{len(columns)} columns · {len(queries)} queries</p>
@@ -1121,36 +1776,42 @@ def render_table_section(table: str, queries: list, columns: list[str]) -> str:
 """
 
 
-def render_sidebar(tables_with_counts: list[tuple[str, int]]) -> str:
+def render_sidebar(tables_with_counts: list[tuple[str, int]],
+                   list_id: str, filter_id: str, id_prefix: str = "table-") -> str:
     items = "\n".join(
-        f'<li><a href="#table-{t}" data-table="{t}"><span class="t">{html.escape(t)}</span><span class="n">{n}</span></a></li>'
+        f'<li><a href="#{id_prefix}{t}" data-table="{t}"><span class="t">{html.escape(t)}</span><span class="n">{n}</span></a></li>'
         for t, n in tables_with_counts
     )
     return f"""
 <nav class="cs-sidebar">
-  <input type="search" id="tableFilter" placeholder="Filter tables…" autocomplete="off">
-  <ul id="tableList">
+  <input type="search" id="{filter_id}" placeholder="Filter tables…" autocomplete="off">
+  <ul id="{list_id}">
     {items}
   </ul>
 </nav>
 """
 
 
-def main() -> None:
-    # Order tables: documented (in QUERIES) first, then any leftovers.
-    ordered = list(QUERIES.keys())
-    leftovers = sorted(t for t in SCHEMA if not t.startswith("_") and t not in QUERIES)
-    sidebar_data = [(t, len(QUERIES.get(t, []))) for t in ordered + leftovers]
+def _build_pane(queries: dict, schema: dict, id_prefix: str,
+                list_id: str, filter_id: str) -> tuple[str, str, int, int, int]:
+    """Render the sidebar + section blocks for one platform.
+
+    `id_prefix` namespaces the section IDs so duplicate table names across
+    platforms (IdentityInfo, DeviceInfo) don't produce colliding HTML IDs.
+    """
+    ordered = list(queries.keys())
+    leftovers = sorted(t for t in schema if not t.startswith("_") and t not in queries
+                       and isinstance(schema.get(t), list))
+    sidebar_data = [(t, len(queries.get(t, []))) for t in ordered + leftovers]
 
     sections = []
     for t in ordered:
-        cols = SCHEMA.get(t, [])
-        sections.append(render_table_section(t, QUERIES[t], cols))
+        cols = schema.get(t, [])
+        sections.append(render_table_section(t, queries[t], cols, id_prefix=id_prefix))
     for t in leftovers:
-        cols = SCHEMA.get(t, [])
-        # Stub for tables we haven't curated yet — show schema, no queries.
+        cols = schema.get(t, [])
         sections.append(f"""
-<section class="table-section" id="table-{t}" data-table="{t}">
+<section class="table-section" id="{id_prefix}{t}" data-table="{t}">
   <header class="table-header">
     <h2>{html.escape(t)}</h2>
     <p class="muted">{len(cols)} columns · 0 queries (curation pending)</p>
@@ -1159,22 +1820,43 @@ def main() -> None:
 </section>
 """)
 
-    sidebar_html = render_sidebar(sidebar_data)
-    sections_html = "\n".join(sections)
+    return (
+        render_sidebar(sidebar_data, list_id=list_id, filter_id=filter_id, id_prefix=id_prefix),
+        "\n".join(sections),
+        len(queries),
+        sum(len(v) for v in queries.values()),
+        len(sidebar_data),
+    )
 
-    total_queries = sum(len(v) for v in QUERIES.values())
-    total_tables = len(QUERIES)
+
+def main() -> None:
+    (kql_sidebar, kql_sections,
+     kql_curated, kql_total_q, kql_schema_tables) = _build_pane(
+        QUERIES, SCHEMA, id_prefix="kql-table-",
+        list_id="tableList", filter_id="tableFilter")
+
+    (sent_sidebar, sent_sections,
+     sent_curated, sent_total_q, sent_schema_tables) = _build_pane(
+        SENTINEL_QUERIES, SENTINEL_SCHEMA, id_prefix="sentinel-table-",
+        list_id="sentinelTableList", filter_id="sentinelTableFilter")
 
     OUT.write_text(_TEMPLATE.format(
-        sidebar=sidebar_html,
-        sections=sections_html,
-        total_tables=total_tables,
-        total_queries=total_queries,
-        total_schema_tables=len(sidebar_data),
+        kql_sidebar=kql_sidebar,
+        kql_sections=kql_sections,
+        kql_curated=kql_curated,
+        kql_total_q=kql_total_q,
+        kql_schema_tables=kql_schema_tables,
+        sent_sidebar=sent_sidebar,
+        sent_sections=sent_sections,
+        sent_curated=sent_curated,
+        sent_total_q=sent_total_q,
+        sent_schema_tables=sent_schema_tables,
     ), encoding="utf-8")
     print(f"Wrote {OUT.relative_to(ROOT)}")
-    print(f"  {total_tables} tables curated, {total_queries} queries total")
-    print(f"  {len(sidebar_data) - total_tables} additional tables stubbed (schema only)")
+    print(f"  Defender:  {kql_curated} curated tables, {kql_total_q} queries "
+          f"(across {kql_schema_tables} schema tables)")
+    print(f"  Sentinel:  {sent_curated} curated tables, {sent_total_q} queries "
+          f"(across {sent_schema_tables} schema tables)")
 
 
 _TEMPLATE = r"""<!doctype html>
@@ -1333,26 +2015,47 @@ a{{color:inherit;text-decoration:none}}
 </header>
 
 <nav class="cs-tabs">
-  <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Microsoft Defender</span></button>
+  <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
+  <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
   <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
 </nav>
 
 <div id="pane-kql" class="tab-pane active">
   <div class="cs-layout">
-    {sidebar}
+    {kql_sidebar}
     <main class="cs-main">
       <div class="cs-intro">
         <h1>Microsoft 365 Defender · Advanced Hunting</h1>
-        <p>Pick a table from the sidebar (or scroll) — every query is schema-validated against the canonical column list and follows the BluRaven house style: time-bound first, machine-account excluded, case-insensitive equality, indexed token matching.</p>
+        <p>Pick a table from the sidebar (or scroll) — every query is schema-validated against the canonical column list and follows the BluRaven house style: time-bound first (<code>Timestamp</code>), machine-account excluded, case-insensitive equality, indexed token matching.</p>
         <div class="stats">
-          <span><strong>{total_tables}</strong> tables curated</span>
-          <span><strong>{total_queries}</strong> queries</span>
-          <span><strong>{total_schema_tables}</strong> schema tables</span>
+          <span><strong>{kql_curated}</strong> tables curated</span>
+          <span><strong>{kql_total_q}</strong> queries</span>
+          <span><strong>{kql_schema_tables}</strong> schema tables</span>
           <span>Click <strong>Copy</strong> on any query to paste into Defender Advanced Hunting.</span>
         </div>
       </div>
 
-      {sections}
+      {kql_sections}
+    </main>
+  </div>
+</div>
+
+<div id="pane-sentinel" class="tab-pane">
+  <div class="cs-layout">
+    {sent_sidebar}
+    <main class="cs-main">
+      <div class="cs-intro">
+        <h1>Microsoft Sentinel · KQL Search</h1>
+        <p>Sentinel speaks the same KQL but on a different schema — <code>TimeGenerated</code> instead of <code>Timestamp</code>, <code>SecurityEvent</code>/<code>SigninLogs</code>/<code>OfficeActivity</code>/<code>ASIM Im*</code> instead of the Defender <code>Device*</code> tables. Every query below is schema-validated against the canonical Sentinel column list.</p>
+        <div class="stats">
+          <span><strong>{sent_curated}</strong> tables curated</span>
+          <span><strong>{sent_total_q}</strong> queries</span>
+          <span><strong>{sent_schema_tables}</strong> schema tables</span>
+          <span>Click <strong>Copy</strong> on any query to paste into Log Analytics / Sentinel.</span>
+        </div>
+      </div>
+
+      {sent_sections}
     </main>
   </div>
 </div>
@@ -1382,7 +2085,7 @@ a{{color:inherit;text-decoration:none}}
     }});
   }});
 
-  // Copy buttons
+  // Copy buttons (works in any pane)
   document.querySelectorAll('.copy').forEach(btn => {{
     btn.addEventListener('click', async () => {{
       const code = btn.parentElement.querySelector('code').innerText;
@@ -1398,30 +2101,50 @@ a{{color:inherit;text-decoration:none}}
     }});
   }});
 
-  // Sidebar filter
-  const filter = document.getElementById('tableFilter');
-  const items = document.querySelectorAll('#tableList li');
-  if (filter) {{
-    filter.addEventListener('input', () => {{
-      const q = filter.value.toLowerCase().trim();
-      items.forEach(li => {{
-        const t = li.querySelector('.t').textContent.toLowerCase();
-        li.style.display = (!q || t.includes(q)) ? '' : 'none';
+  // Per-pane sidebar filter + scroll-active link highlighting.
+  function bindSidebar(paneId, filterId, listId) {{
+    const filter = document.getElementById(filterId);
+    const items  = document.querySelectorAll('#' + listId + ' li');
+    if (filter) {{
+      filter.addEventListener('input', () => {{
+        const q = filter.value.toLowerCase().trim();
+        items.forEach(li => {{
+          const t = li.querySelector('.t').textContent.toLowerCase();
+          li.style.display = (!q || t.includes(q)) ? '' : 'none';
+        }});
       }});
-    }});
+    }}
+    const pane = document.getElementById(paneId);
+    if (!pane) return;
+    const sections = pane.querySelectorAll('.table-section');
+    const links    = pane.querySelectorAll('#' + listId + ' a');
+    const obs = new IntersectionObserver(entries => {{
+      entries.forEach(e => {{
+        if (!e.isIntersecting) return;
+        const t = e.target.dataset.table;
+        links.forEach(a => a.classList.toggle('active', a.dataset.table === t));
+      }});
+    }}, {{ rootMargin: '-30% 0px -60% 0px', threshold: 0 }});
+    sections.forEach(s => obs.observe(s));
   }}
+  bindSidebar('pane-kql',      'tableFilter',         'tableList');
+  bindSidebar('pane-sentinel', 'sentinelTableFilter', 'sentinelTableList');
 
-  // Highlight active table on scroll
-  const sections = document.querySelectorAll('.table-section');
-  const sidebarLinks = document.querySelectorAll('#tableList a');
-  const obs = new IntersectionObserver(entries => {{
-    entries.forEach(e => {{
-      if (!e.isIntersecting) return;
-      const t = e.target.dataset.table;
-      sidebarLinks.forEach(a => a.classList.toggle('active', a.dataset.table === t));
+  // Make in-pane anchor links work even though both panes use `#table-X`
+  // ids. Browser default ignores the second one because of the duplicate;
+  // we fix this by scoping the scroll to the active pane.
+  document.querySelectorAll('.cs-sidebar a').forEach(a => {{
+    a.addEventListener('click', e => {{
+      const id = a.getAttribute('href');
+      if (!id || !id.startsWith('#')) return;
+      const pane = a.closest('.tab-pane');
+      if (!pane) return;
+      const target = pane.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      target.scrollIntoView({{behavior:'smooth', block:'start'}});
     }});
-  }}, {{ rootMargin: '-30% 0px -60% 0px', threshold: 0 }});
-  sections.forEach(s => obs.observe(s));
+  }});
 }})();
 </script>
 </body>
