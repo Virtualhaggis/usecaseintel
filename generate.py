@@ -651,6 +651,32 @@ LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
 LLM_ACTOR_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_actor_uc_cache"
 LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-haiku-4-5-20251001")
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
+KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
+
+
+def _load_kql_knowledge() -> str:
+    """Read every knowledge/*.md file and concatenate into a single
+    reference block. Loaded once at module import; included verbatim
+    in every LLM-driven UC-generation prompt so the model has anchor
+    patterns / anti-patterns / table recipes to hand. Cheap (~30 KB)
+    and a one-time prompt-cache hit per Claude session.
+    Falls back to empty string if the directory is missing — pipeline
+    keeps working, just without the knowledge anchors."""
+    if not KNOWLEDGE_DIR.exists():
+        return ""
+    parts = []
+    for fname in ("kql_patterns.md", "kql_tables.md",
+                  "kql_antipatterns.md", "kql_examples.md"):
+        p = KNOWLEDGE_DIR / fname
+        if p.exists():
+            try:
+                parts.append(p.read_text(encoding="utf-8"))
+            except Exception:
+                pass
+    return "\n\n".join(parts)
+
+
+_KQL_KNOWLEDGE_BLOCK = _load_kql_knowledge()
 
 
 _LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce 1-3 high-quality detection use cases that hunt the SPECIFIC attack described — NOT a generic technique template.
@@ -710,6 +736,19 @@ Article body:
 
 Pre-extracted IOCs from the article (use these in your queries where appropriate):
 <<IOC_SUMMARY>>
+
+================================================================
+KQL DETECTION-ENGINEERING KNOWLEDGE BASE
+================================================================
+The following reference is the house style for Defender KQL queries
+on this site. Use these patterns / table recipes / anti-pattern
+guidance when shaping the `defender_kql` body in your output.
+Match the style of the annotated examples — time bounds first,
+case-insensitive equality (=~), token-aligned matches (has),
+process-tree pivots, and explicit machine-account exclusion.
+
+<<KQL_KNOWLEDGE>>
+================================================================
 """
 
 
@@ -873,7 +912,8 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<TITLE>>",       article.get("title", "")[:200])
               .replace("<<URL>>",         url[:200])
               .replace("<<BODY>>",        body)
-              .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)"))
+              .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
+              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     if use_oauth:
         raw = _llm_call_via_oauth(prompt)
@@ -953,6 +993,19 @@ MITRE description:
 
 Top-known MITRE techniques (technique-id list, sample of full set):
 <<TECHNIQUES>>
+
+================================================================
+KQL DETECTION-ENGINEERING KNOWLEDGE BASE
+================================================================
+The following reference is the house style for Defender KQL queries
+on this site. Use these patterns / table recipes / anti-pattern
+guidance when shaping the `defender_kql` body in your output.
+Match the style of the annotated examples — time bounds first,
+case-insensitive equality (=~), token-aligned matches (has),
+process-tree pivots, and explicit machine-account exclusion.
+
+<<KQL_KNOWLEDGE>>
+================================================================
 """
 
 
@@ -994,7 +1047,8 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<MOTIVATION>>", actor.get("motivation", "unknown"))
               .replace("<<MITRE_ID>>", actor.get("mitre_id", ""))
               .replace("<<DESCRIPTION>>", description or "(no description in MITRE bundle)")
-              .replace("<<TECHNIQUES>>", ", ".join(techs[:60])))
+              .replace("<<TECHNIQUES>>", ", ".join(techs[:60]))
+              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
     raw = None
     try:
         if use_oauth:
