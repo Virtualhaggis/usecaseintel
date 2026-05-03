@@ -1,0 +1,77 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla ComRAT v4 / PowerStallion cloud-service C2 (Gmail + OneDrive dead-drops) from non-browser process",
+      "description": "Hunts Turla's signature post-2019 tradecraft of using legitimate consumer cloud services (Gmail web UI for ComRAT v4 tasking; OneDrive for the PowerStallion PowerShell backdoor) as a covert C2 channel. We surface PowerShell, rundll32, svchost children and other non-browser binaries that establish HTTPS sessions to mail.google.com / googleusercontent / OneDrive endpoints \u2014 a behavioural pattern documented by ESET and Microsoft (Secret Blizzard) for ComRAT v4 and PowerStallion.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1059.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port dc(_time) as conn_minutes from datamodel=Network_Traffic where (All_Traffic.dest IN (\"mail.google.com\",\"www.googleapis.com\",\"mail-attachment.googleusercontent.com\",\"gmail.com\",\"outlook.live.com\",\"onedrive.live.com\",\"api.onedrive.com\",\"graph.microsoft.com\") OR All_Traffic.dest=\"*.googleusercontent.com\") AND NOT (All_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"arc.exe\",\"outlook.exe\",\"onedrive.exe\",\"teams.exe\",\"ms-teams.exe\",\"explorer.exe\",\"searchapp.exe\",\"officeclicktorun.exe\",\"msoia.exe\",\"onedrivesetup.exe\",\"backgroundtaskhost.exe\")) by host All_Traffic.process_name All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | where count>=3 AND NOT match(user,\"\\$$\") | sort - lastTime",
+      "kql": "// Turla ComRAT v4 (Gmail) + PowerStallion (OneDrive) cloud-service C2\nlet CloudC2Hosts = dynamic([\n    \"mail.google.com\",\"www.googleapis.com\",\"mail-attachment.googleusercontent.com\",\n    \"gmail.com\",\"outlook.live.com\",\"onedrive.live.com\",\"api.onedrive.com\",\n    \"graph.microsoft.com\"\n]);\nlet _LegitBrowsers = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"arc.exe\",\"iexplore.exe\",\"opera.exe\",\n    \"outlook.exe\",\"onedrive.exe\",\"teams.exe\",\"ms-teams.exe\",\"searchapp.exe\",\n    \"explorer.exe\",\"onedrivesetup.exe\",\"msoia.exe\",\"officeclicktorun.exe\",\n    \"backgroundtaskhost.exe\",\"runtimebroker.exe\"\n]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl in~ (CloudC2Hosts) or RemoteUrl endswith \".googleusercontent.com\"\n| where InitiatingProcessFileName !in~ (_LegitBrowsers)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessAccountName !in~ (\"system\",\"local service\",\"network service\")\n| summarize ConnCount = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen = max(Timestamp),\n            DistinctMinutes = dcount(bin(Timestamp, 1m)),\n            SampleCmd = any(InitiatingProcessCommandLine),\n            RemoteIPs = make_set(RemoteIP, 10)\n            by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,\n               InitiatingProcessAccountName, RemoteUrl\n| where ConnCount >= 3                  // 3+ beacons distinguishes C2 from one-off probe\n| order by FirstSeen desc",
+      "sentinel_kql": "// Turla ComRAT v4 (Gmail) + PowerStallion (OneDrive) cloud-service C2 \u2014 ASIM port\nlet CloudC2Hosts = dynamic([\n    \"mail.google.com\",\"www.googleapis.com\",\"mail-attachment.googleusercontent.com\",\n    \"gmail.com\",\"outlook.live.com\",\"onedrive.live.com\",\"api.onedrive.com\",\n    \"graph.microsoft.com\"\n]);\nlet _LegitBrowsers = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"arc.exe\",\"iexplore.exe\",\"opera.exe\",\n    \"outlook.exe\",\"onedrive.exe\",\"teams.exe\",\"ms-teams.exe\",\"searchapp.exe\",\n    \"explorer.exe\",\"onedrivesetup.exe\",\"msoia.exe\",\"officeclicktorun.exe\",\n    \"backgroundtaskhost.exe\",\"runtimebroker.exe\"\n]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstHostname in~ (CloudC2Hosts)\n   or (isnotempty(Url) and Url has_any (CloudC2Hosts))\n   or DstHostname endswith \".googleusercontent.com\"\n| extend Proc = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| where Proc !in~ (_LegitBrowsers)\n| where SrcUsername !endswith \"$\"\n| summarize ConnCount = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen = max(TimeGenerated),\n            DistinctMinutes = dcount(bin(TimeGenerated, 1m)),\n            SampleCmd = any(ActingProcessCommandLine),\n            DstIPs = make_set(DstIpAddr, 10)\n            by DvcHostname, Proc, SrcUsername, DstHostname\n| where ConnCount >= 3\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Turla ComRAT v4 / PowerStallion Cloud-Service C2 (Non-Browser to Gmail/OneDrive)\nid: 7d4f4b0e-9a13-4a31-b1a7-7e3e4f7e9c77\nstatus: experimental\ndescription: Detects non-browser processes (PowerShell, rundll32, svchost descendants) initiating HTTPS sessions to Gmail / OneDrive / Graph endpoints used by Turla's ComRAT v4 (Gmail dead-drop) and PowerStallion (OneDrive C2) backdoors.\nreferences:\n  - https://attack.mitre.org/groups/G0010/\n  - https://www.welivesecurity.com/2020/05/26/agent-btz-comrat-v4-ten-year-journey/\n  - https://www.welivesecurity.com/2019/05/29/turla-powershell-usage/\nauthor: SOC Detection Engineering\ndate: 2024/05/09\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dst:\n    DestinationHostname:\n      - 'mail.google.com'\n      - 'www.googleapis.com'\n      - 'mail-attachment.googleusercontent.com'\n      - 'gmail.com'\n      - 'outlook.live.com'\n      - 'onedrive.live.com'\n      - 'api.onedrive.com'\n      - 'graph.microsoft.com'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\iexplore.exe'\n      - '\\outlook.exe'\n      - '\\onedrive.exe'\n      - '\\teams.exe'\n      - '\\ms-teams.exe'\n      - '\\explorer.exe'\n      - '\\searchapp.exe'\n      - '\\officeclicktorun.exe'\n  condition: selection_dst and not filter_browsers\nfalsepositives:\n  - Custom in-house automation that legitimately uses Graph/OneDrive APIs (allowlist by SHA256)\n  - Backup utilities authoring to OneDrive\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.g0010\n",
+      "rationale": "Other APTs use cloud services for exfil, but Turla is uniquely documented (ESET 2019/2020, Microsoft Secret Blizzard 2023) as operationalising Gmail's web UI as a bidirectional C2 channel via stolen cookies (ComRAT v4) AND OneDrive as a dead-drop for a PowerShell backdoor (PowerStallion). The behavioural fingerprint \u2014 non-browser binary speaking HTTPS to mail.google.com / api.onedrive.com \u2014 is hig",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Turla Snake/Uroburos kernel rootkit drop into legacy $NtUninstall* paths",
+      "description": "Catches Turla's flagship rootkit (Snake / Uroburos / Krypton) installation artefacts. Snake hides its kernel driver, virtual filesystem queue, and configuration inside Windows Update uninstaller folders such as %SystemRoot%\\$NtUninstallQ817473$\\ and uses very specific driver filenames (fdisk_mbr.sys, usbsndrv.sys, rkhdrv40.sys/rkhdrv32.sys). The May-2023 CISA / NSA / NCSC joint advisory on Snake calls these out as durable IOCs across 20+ years of the toolkit's evolution.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1014",
+        "T1543.003",
+        "T1027.005",
+        "T1564.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (\"fdisk_mbr.sys\",\"usbsndrv.sys\",\"rkhdrv40.sys\",\"rkhdrv32.sys\",\"termservice.sys\") OR Filesystem.file_path=\"*\\\\$NtUninstallQ817473$\\\\*\" OR Filesystem.file_path=\"*\\\\$NtUninstall*\\\\*.sys\") AND Filesystem.action IN (\"created\",\"modified\",\"renamed\") by host Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | where NOT process_name IN (\"TrustedInstaller.exe\",\"msiexec.exe\",\"TiWorker.exe\",\"WindowsUpdateBox.exe\",\"wuauclt.exe\") | sort - lastTime",
+      "kql": "// Turla Snake/Uroburos kernel rootkit artefacts\n// IOCs: CISA AA23-129A \u2014 Snake malware joint advisory\nlet SnakeFileNames = dynamic([\n    \"fdisk_mbr.sys\",\"usbsndrv.sys\",\"rkhdrv40.sys\",\"rkhdrv32.sys\",\n    \"termservice.sys\"\n]);\nlet SnakeFolderPatterns = dynamic([\n    @\"\\$NtUninstallQ817473$\\\",\n    @\"\\$NtUninstall\"\n]);\nlet _LegitInstallers = dynamic([\n    \"trustedinstaller.exe\",\"msiexec.exe\",\"tiworker.exe\",\n    \"wuauclt.exe\",\"windowsupdatebox.exe\",\"setuphost.exe\"\n]);\nDeviceFileEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n| where FileName in~ (SnakeFileNames)\n   or FolderPath has_any (SnakeFolderPatterns)\n   or (FileName endswith \".sys\" and FolderPath has @\"\\$NtUninstall\")\n| where InitiatingProcessFileName !in~ (_LegitInstallers)\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath,\n          SHA256, FileSize,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine, InitiatingProcessAccountName,\n          InitiatingProcessIntegrityLevel\n| order by Timestamp desc",
+      "sentinel_kql": "// Turla Snake/Uroburos kernel rootkit artefacts \u2014 ASIM port\nlet SnakeFileNames = dynamic([\n    \"fdisk_mbr.sys\",\"usbsndrv.sys\",\"rkhdrv40.sys\",\"rkhdrv32.sys\",\n    \"termservice.sys\"\n]);\nlet SnakeFolderPatterns = dynamic([\n    @\"\\$NtUninstallQ817473$\\\",\n    @\"\\$NtUninstall\"\n]);\nlet _LegitInstallers = dynamic([\n    \"trustedinstaller.exe\",\"msiexec.exe\",\"tiworker.exe\",\n    \"wuauclt.exe\",\"windowsupdatebox.exe\",\"setuphost.exe\"\n]);\nImFileEvent\n| where TimeGenerated > ago(30d)\n| where EventType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n| extend ProcLeaf = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| where TargetFileName in~ (SnakeFileNames)\n   or TargetFilePath has_any (SnakeFolderPatterns)\n   or (TargetFileName endswith \".sys\" and TargetFilePath has @\"\\$NtUninstall\")\n| where ProcLeaf !in~ (_LegitInstallers)\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, EventType, TargetFileName, TargetFilePath,\n          TargetFileSHA256, TargetFileSize,\n          ActingProcessName, ActingProcessCommandLine, ActorUsername\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Turla Snake/Uroburos Kernel Driver Drop in Legacy $NtUninstall Path\nid: 1f3a8e9c-2b4f-4d7a-9b7c-7f2c2b8e4a55\nstatus: experimental\ndescription: Detects file artefacts uniquely associated with Turla's Snake/Uroburos kernel rootkit \u2014 fdisk_mbr.sys / usbsndrv.sys / rkhdrv40.sys / rkhdrv32.sys, or any .sys dropped under %SystemRoot%\\$NtUninstall*\\ (per CISA AA23-129A IOCs).\nreferences:\n  - https://attack.mitre.org/groups/G0010/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-129a\n  - https://www.gov.uk/government/news/uk-and-allies-disclose-evolution-of-snake-malware\nauthor: SOC Detection Engineering\ndate: 2024/05/09\nlogsource:\n  category: file_event\n  product: windows\ndetection:\n  selection_known_names:\n    TargetFilename|endswith:\n      - '\\fdisk_mbr.sys'\n      - '\\usbsndrv.sys'\n      - '\\rkhdrv40.sys'\n      - '\\rkhdrv32.sys'\n  selection_path_marker:\n    TargetFilename|contains:\n      - '\\$NtUninstallQ817473$\\'\n  selection_path_sys:\n    TargetFilename|contains: '\\$NtUninstall'\n    TargetFilename|endswith: '.sys'\n  filter_legit:\n    Image|endswith:\n      - '\\TrustedInstaller.exe'\n      - '\\msiexec.exe'\n      - '\\TiWorker.exe'\n      - '\\WindowsUpdateBox.exe'\n  condition: (selection_known_names or selection_path_marker or selection_path_sys) and not filter_legit\nfalsepositives:\n  - Forensic / IR tools restoring legacy uninstall folders\n  - Pre-Windows 10 systems with original $NtUninstall* directories left in place\nlevel: critical\ntags:\n  - attack.persistence\n  - attack.defense_evasion\n  - attack.t1014\n  - attack.t1543.003\n  - attack.t1564.004\n  - attack.g0010\n",
+      "rationale": "These filenames and the $NtUninstallQ817473$ path are not generic \u2014 they are Snake-specific IOCs published by CISA, NSA, NCSC and CSE in the May 2023 Snake takedown advisory and have been observed across two decades of Turla operations (Uroburos \u2192 Snake). Modern Windows builds do not create $NtUninstall* uninstaller directories, so any .sys file appearing in such a path is a near-zero-FP signal of"
+    }
+  ]
+}

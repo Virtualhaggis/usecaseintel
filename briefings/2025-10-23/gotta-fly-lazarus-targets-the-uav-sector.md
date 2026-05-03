@@ -61,12 +61,11 @@ ESET researchers have recently observed a new instance of Operation DreamJob –
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1574.002** — DLL Side-Loading
-- **T1574.001** — DLL Search Order Hijacking
-- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1218** — System Binary Proxy Execution
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1584.006** — Compromise Infrastructure: Web Services
-- **T1102** — Web Service
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1584.004** — Compromise Infrastructure: Server
+- **T1027.009** — Embedded Payloads
 
 ## Kill chain phases observed
 
@@ -74,84 +73,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Lazarus DreamJob: wksprt.exe DLL side-loading of DroneEXEHijackingLoader / fake Webservices.dll
+### [LLM] Lazarus Operation DreamJob: wksprt.exe / wkspbroker.exe side-loading webservices.dll or radcui.dll outside System32
 
-`UC_306_6` · phase: **install** · confidence: **High**
+`UC_305_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.process_name="wksprt.exe" AND NOT (Processes.process_path IN ("*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*","*\\Windows\\WinSxS\\*")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("wksprt.exe","wkspbroker.exe") AND NOT (Processes.process_path="*\\Windows\\System32\\*" OR Processes.process_path="*\\Windows\\SysWOW64\\*" OR Processes.process_path="*\\Windows\\WinSxS\\*") by Processes.dest Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let suspectWksprt = DeviceProcessEvents
-| where FileName =~ "wksprt.exe"
-| where FolderPath !startswith @"C:\Windows\System32"
-   and FolderPath !startswith @"C:\Windows\SysWOW64"
-   and FolderPath !startswith @"C:\Windows\WinSxS"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let sideloadedDll = DeviceImageLoadEvents
-| where InitiatingProcessFileName =~ "wksprt.exe"
-| where FileName endswith ".dll"
-| where FolderPath !startswith @"C:\Windows\System32"
-   and FolderPath !startswith @"C:\Windows\SysWOW64"
-   and FolderPath !startswith @"C:\Windows\WinSxS"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessFolderPath;
-union suspectWksprt, sideloadedDll
-| sort by Timestamp desc
+// Lazarus DroneEXEHijackingLoader: legit Workspace runtime binaries
+// copied out of System32 to enable DLL side-loading.
+let _SuspectBins = dynamic(["wksprt.exe","wkspbroker.exe"]);
+let _SuspectDlls = dynamic(["webservices.dll","radcui.dll"]);
+let _Sysdirs    = dynamic([@"c:\windows\system32\",@"c:\windows\syswow64\",@"c:\windows\winsxs\"]);
+let ProcLeg = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ (_SuspectBins)
+    | extend FolderLower = tolower(FolderPath)
+    | where not(FolderLower has_any (_Sysdirs))
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA1, ParentBin = InitiatingProcessFileName;
+let ImgLoad = DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ (_SuspectBins)
+    | where FileName in~ (_SuspectDlls)
+    | extend DllFolderLower = tolower(FolderPath), ParentFolderLower = tolower(InitiatingProcessFolderPath)
+    | where not(DllFolderLower has_any (_Sysdirs)) or not(ParentFolderLower has_any (_Sysdirs))
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA1;
+union isfuzzy=true ProcLeg, ImgLoad
+| order by Timestamp desc
 ```
 
-### [LLM] ScoringMathTea / BinMergeLoader C2 callouts to Operation DreamJob 2025 infrastructure
+### [LLM] ScoringMathTea / BinMergeLoader C2 callouts to ESET-published Lazarus DreamJob 2025 infrastructure
 
-`UC_306_7` · phase: **c2** · confidence: **High**
+`UC_305_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("23.111.133.162","104.21.80.1","70.32.24.131","185.148.129.24","66.29.144.75","108.181.92.71","104.247.162.67","193.39.187.165","www.scoringmnmathleague.org","coralsunmarine.com","kazitradebd.com","oldlinewoodwork.com","www.mnmathleague.org","pierregems.com","www.scgestor.com.br","galaterrace.com") OR All_Traffic.dest_ip IN ("23.111.133.162","104.21.80.1","70.32.24.131","185.148.129.24","66.29.144.75","108.181.92.71","104.247.162.67","193.39.187.165")) by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_ip All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.dest_port) as dest_port values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("23.111.133.162","104.21.80.1","70.32.24.131","185.148.129.24","66.29.144.75","108.181.92.71","104.247.162.67","193.39.187.165") OR All_Traffic.dest_host IN ("www.scoringmnmathleague.org","coralsunmarine.com","kazitradebd.com","oldlinewoodwork.com","www.mnmathleague.org","pierregems.com","www.scgestor.com.br","galaterrace.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let dreamjob_ips = dynamic(["23.111.133.162","104.21.80.1","70.32.24.131","185.148.129.24","66.29.144.75","108.181.92.71","104.247.162.67","193.39.187.165"]);
-let dreamjob_domains = dynamic(["www.scoringmnmathleague.org","coralsunmarine.com","kazitradebd.com","oldlinewoodwork.com","www.mnmathleague.org","pierregems.com","www.scgestor.com.br","galaterrace.com"]);
+// Lazarus DreamJob 2025 / ScoringMathTea C2 IOC sweep (ESET, Oct 2025).
+let _C2_IPs = dynamic(["23.111.133.162","104.21.80.1","70.32.24.131","185.148.129.24","66.29.144.75","108.181.92.71","104.247.162.67","193.39.187.165"]);
+let _C2_Hosts = dynamic(["www.scoringmnmathleague.org","coralsunmarine.com","kazitradebd.com","oldlinewoodwork.com","www.mnmathleague.org","pierregems.com","www.scgestor.com.br","galaterrace.com"]);
 DeviceNetworkEvents
-| where RemoteIP in (dreamjob_ips)
-   or RemoteUrl has_any (dreamjob_domains)
-   or tostring(parse_url(RemoteUrl).Host) in~ (dreamjob_domains)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA1, InitiatingProcessAccountName
-| sort by Timestamp desc
+| where Timestamp > ago(30d)
+| where RemoteIP in (_C2_IPs)
+     or RemoteUrl has_any (_C2_Hosts)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA1,
+          InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
-### [LLM] Trojanized OSS plugin/loader artifacts (ComparePlus, NPPHexEditor, WinMerge, MuPDF, libpcre, dinput) outside install paths
+### [LLM] DroneEXEHijackingLoader DLL hash / internal-name observation
 
-`UC_306_8` · phase: **delivery** · confidence: **Medium**
+`UC_305_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_hash) as hashes values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("ComparePlus.dll","NPPHexEditor.dll","DisplayBinaryFiles.dll","HideFirstLetter.dll","DroneEXEHijackingLoader.dll","dinput.dll","pcre.dll","libpcre.dll","SampleIMESimplifiedQuanPin.txt") OR Filesystem.file_hash="03d9b8f0fcf9173d2964ce7173d21e681dfa8da4") AND NOT (Filesystem.file_path IN ("*\\Notepad++\\plugins\\*","*\\WinMerge\\MergePlugins\\*","*\\Program Files*\\TightVNC\\*","*\\Program Files*\\MuPDF\\*","*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*")) by Filesystem.dest Filesystem.file_name Filesystem.file_create_time | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_hash="03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4" by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_hash="03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4" by Processes.dest Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let known_artifacts = dynamic(["ComparePlus.dll","NPPHexEditor.dll","DisplayBinaryFiles.dll","HideFirstLetter.dll","DroneEXEHijackingLoader.dll","SampleIMESimplifiedQuanPin.txt"]);
-let legit_paths = dynamic([@"\Notepad++\plugins\", @"\WinMerge\MergePlugins\", @"\Program Files\TightVNC\", @"\Program Files (x86)\TightVNC\", @"\Program Files\MuPDF\", @"\Windows\System32\", @"\Windows\SysWOW64\"]);
-DeviceFileEvents
-| where SHA1 =~ "03d9b8f0fcf9173d2964ce7173d21e681dfa8da4"
-   or FileName in~ (known_artifacts)
-   or (FileName endswith "pcre.dll" and FolderPath !startswith @"C:\Program Files")
-| where not(FolderPath has_any (legit_paths))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RequestAccountName
-| union (
-DeviceImageLoadEvents
-| where SHA1 =~ "03d9b8f0fcf9173d2964ce7173d21e681dfa8da4"
-   or FileName in~ (known_artifacts)
-| where not(FolderPath has_any (legit_paths))
-| project Timestamp, DeviceName, ActionType="ImageLoad", FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RequestAccountName="")
-| sort by Timestamp desc
+// ESET-published DroneEXEHijackingLoader dropper hash + Lazarus campaign-name string.
+let _SHA1 = "03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4";
+let _Files = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 =~ _SHA1
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1,
+              InitiatingProcessFileName, InitiatingProcessAccountName, Source="DeviceFileEvents";
+let _Loads = DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 =~ _SHA1
+    | project Timestamp, DeviceName, ActionType="ImageLoaded", FileName, FolderPath, SHA1,
+              InitiatingProcessFileName, InitiatingProcessAccountName="", Source="DeviceImageLoadEvents";
+let _Procs = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 =~ _SHA1
+         or InitiatingProcessSHA1 =~ _SHA1
+         or InitiatingProcessVersionInfoInternalFileName has "DroneEXEHijacking"
+         or InitiatingProcessVersionInfoOriginalFileName has "DroneEXEHijacking"
+         or ProcessVersionInfoInternalFileName has "DroneEXEHijacking"
+         or ProcessVersionInfoOriginalFileName has "DroneEXEHijacking"
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath=InitiatingProcessFolderPath,
+              SHA1, InitiatingProcessFileName, InitiatingProcessAccountName=AccountName, Source="DeviceProcessEvents";
+union isfuzzy=true _Files, _Loads, _Procs
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -208,6 +225,7 @@ DeviceNetworkEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -232,6 +250,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -239,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gotta fly: Lazarus targets the UAV sector
 
-`UC_306_5` · phase: **exploit** · confidence: **High**
+`UC_305_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,4 +318,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

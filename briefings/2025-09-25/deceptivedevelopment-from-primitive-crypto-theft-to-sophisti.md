@@ -51,14 +51,18 @@ This blogpost introduces our latest white paper, presented at Virus Bulletin 202
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1566.002** — Phishing: Spearphishing Link
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
+- **T1219** — Remote Access Tools
 - **T1027.004** — Obfuscated Files or Information: Compile After Delivery
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1059** — Command and Scripting Interpreter
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1496.001** — Resource Hijacking: Compute Hijacking
 
 ## Kill chain phases observed
 
@@ -66,98 +70,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DeceptiveDevelopment AkdoorTea ClickFix chain via fake NVIDIA CUDA package
+### [LLM] DeceptiveDevelopment ClickFix lure: nvidiaRelease.zip + run.vbs/shell.bat Node.js BeaverTail loader and AkdoorTea drvUpdate.exe
 
-`UC_350_12` · phase: **install** · confidence: **High**
+`UC_349_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline values(Processes.process_name) as proc values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process IN ("*ClickFix-1.bat*","*nvidiaRelease.zip*","*\\run.vbs*","*\\shell.bat*","*\\main.js*","*drvUpdate.exe*") OR Processes.process_name="drvUpdate.exe") by host Processes.user Processes.dest
-| `drop_dm_object_name(Processes)`
-| eval chain_hits=mvcount(split(cmdline," ")) 
-| where match(cmdline,"ClickFix-1\.bat|nvidiaRelease\.zip|run\.vbs|shell\.bat|main\.js|drvUpdate\.exe")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ClickFix-1.bat","shell.bat","run.vbs","drvUpdate.exe") OR Processes.process IN ("*ClickFix-1.bat*","*nvidiaRelease.zip*","*\\run.vbs*","*\\shell.bat*","*main.js*","*drvUpdate.exe*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | where (parent_process_name IN ("wscript.exe","cscript.exe","cmd.exe","powershell.exe") OR process_name IN ("node.exe") OR process_path LIKE "%\\Users\\Public\\%" OR process_path LIKE "%\\AppData\\Local\\Temp\\%" OR process_path LIKE "%\\Downloads\\%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let iocs = dynamic(["ClickFix-1.bat","nvidiaRelease.zip","run.vbs","shell.bat","main.js","drvUpdate.exe"]);
-let ProcHits = DeviceProcessEvents
-| where FileName in~ ("drvUpdate.exe","run.vbs","shell.bat","main.js","ClickFix-1.bat")
-   or ProcessCommandLine has_any (iocs)
-   or InitiatingProcessCommandLine has_any (iocs)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-let FileHits = DeviceFileEvents
-| where FileName in~ ("nvidiaRelease.zip","ClickFix-1.bat","drvUpdate.exe","shell.bat","main.js","run.vbs")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-union ProcHits, FileHits
-| sort by Timestamp asc
+let _files = dynamic(["clickfix-1.bat","nvidiarelease.zip","run.vbs","shell.bat","main.js","drvupdate.exe"]);
+let _writes = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("FileCreated","FileRenamed")
+  | where tolower(FileName) in (_files)
+     or tolower(FileName) endswith "clickfix-1.bat"
+     or tolower(FileName) endswith "nvidiarelease.zip"
+  | project FileTime=Timestamp, DeviceId, DeviceName, FileName, FolderPath,
+            InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+let _execs = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where InitiatingProcessAccountName !endswith "$"
+  | where (FileName =~ "wscript.exe" and ProcessCommandLine has "run.vbs")
+       or (FileName =~ "cmd.exe" and ProcessCommandLine has_any ("ClickFix-1.bat","shell.bat"))
+       or (FileName =~ "node.exe" and ProcessCommandLine has "main.js")
+       or FileName =~ "drvUpdate.exe"
+       or InitiatingProcessFileName =~ "drvUpdate.exe"
+  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath,
+            ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+            InitiatingProcessFolderPath, SHA256;
+union isfuzzy=true _writes, _execs
+| order by Timestamp desc, FileTime desc
 ```
 
-### [LLM] WeaselStore/PylangGhost: on-host Go toolchain compiling source from user-writable path
+### [LLM] WeaselStore / GolangGhost / PylangGhost: Go toolchain shipped to victim and used to compile-and-run RAT from user-writable path
 
-`UC_350_13` · phase: **install** · confidence: **Medium**
+`UC_349_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("go.exe","go") AND Processes.process IN ("*build*","*run *") AND (Processes.process IN ("*\\AppData\\*","*\\Temp\\*","*\\Downloads\\*","*/tmp/*","*/Users/*/Downloads/*","*/Library/Caches/*") OR Processes.process_path IN ("*\\AppData\\*","*\\Temp\\*","*\\Downloads\\*")) by host Processes.user Processes.dest Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| where parent IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","node.exe","python.exe","python3","bash","zsh","sh","osascript","Terminal")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name IN ("go.exe","go") AND (Processes.process IN ("*go build*","*go run*","*go install*")) by Processes.dest Processes.user Processes.process_path Processes.parent_process_path | `drop_dm_object_name(Processes)` | where (process_path LIKE "%\\Users\\%\\AppData\\%" OR process_path LIKE "%\\Users\\%\\Downloads\\%" OR process_path LIKE "%\\Users\\Public\\%" OR process_path LIKE "%\\Temp\\%" OR process_path LIKE "/tmp/%" OR process_path LIKE "/Users/%/Downloads/%" OR process_path LIKE "/Users/Shared/%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _ioc_ips = dynamic(["103.231.75.101","176.223.112.74","164.132.209.191","199.188.200.147","116.125.126.38","45.159.248.110","45.8.146.93","86.104.72.247"]);
+let _go_compile = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where InitiatingProcessAccountName !endswith "$"
+  | where FileName in~ ("go.exe","go")
+  | where ProcessCommandLine has_any ("go build","go run","go install")
+  | where FolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\", "/tmp/", "/Users/Shared/")
+     or InitiatingProcessFolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\")
+  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath,
+            ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+            CompileTime=Timestamp;
+_go_compile
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIPType == "Public"
+    | where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\")
+        or RemoteIP in (_ioc_ips)
+    | project NetTime=Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+  ) on DeviceId
+| where NetTime between (CompileTime .. CompileTime + 30m)
+| project DeviceName, AccountName, CompileTime, NetTime, ProcessCommandLine,
+          CompiledBin=InitiatingProcessFileName1, CompiledFolder=InitiatingProcessFolderPath1,
+          RemoteIP, RemotePort, RemoteUrl
+| order by CompileTime desc
+```
+
+### [LLM] TsunamiKit TsunamiHardener: Defender exclusions added for TsunamiClient + XMRig/NBMiner cryptominer components
+
+`UC_349_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","powershell_ise.exe") AND Processes.process IN ("*Add-MpPreference*","*Set-MpPreference*") AND Processes.process IN ("*Exclusion*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(cmdline,"(?i)Tsunami|XMRig|NBMiner|System\s+Runtime\s+Monitor") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where FileName in~ ("go.exe","go")
-| where ProcessCommandLine has_any ("build"," run ")
-| where ProcessCommandLine has ".go" or ProcessCommandLine has_any ("main.go","-o ")
-| where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Downloads\", "/tmp/", "/Downloads/")
-   or InitiatingProcessFolderPath has_any (@"\AppData\", @"\Temp\", @"\Downloads\")
-| where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","node.exe","python.exe","bash","zsh","sh","osascript")
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| join kind=leftouter (
-    DeviceFileEvents | where FileName endswith ".go" or FileName in~ ("go.exe")
-    | summarize go_files=make_set(FileName, 25) by DeviceName, bin(Timestamp, 1h)
-) on DeviceName
+| where Timestamp > ago(30d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe","powershell_ise.exe","cmd.exe")
+| where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
+| where ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension")
+| where ProcessCommandLine matches regex @"(?i)(Tsunami|XMRig|NBMiner|System\s+Runtime\s+Monitor)"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Tropidoor downloader DLL (car.dll / img_layer_generate.dll) loaded via rundll32
-
-`UC_350_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="rundll32.exe" AND (Processes.process IN ("*car.dll*","*img_layer_generate.dll*"))) OR (Processes.process IN ("*\\car.dll*","*\\img_layer_generate.dll*")) by host Processes.user Processes.dest Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| append [
-  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("car.dll","img_layer_generate.dll") by host Filesystem.user Filesystem.dest
-  | `drop_dm_object_name(Filesystem)`
-]
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let dllNames = dynamic(["car.dll","img_layer_generate.dll"]);
-let UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36 Edg/112.0.1722.64";
-let badIPs = dynamic(["103.231.75.101","176.223.112.74","164.132.209.191","199.188.200.147","116.125.126.38","45.159.248.110","45.8.146.93","86.104.72.247"]);
-let ProcMatches = DeviceProcessEvents
-| where (FileName =~ "rundll32.exe" and ProcessCommandLine has_any (dllNames))
-   or ProcessCommandLine has_any (dllNames)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256;
-let ImgMatches = DeviceImageLoadEvents
-| where FileName in~ (dllNames)
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-let NetMatches = DeviceNetworkEvents
-| where RemoteIP in (badIPs)
-   or (AdditionalFields has "Edg/112.0.1722.64")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine;
-union ProcMatches, ImgMatches, NetMatches
-| sort by Timestamp asc
-```
-
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -214,10 +224,11 @@ DeviceNetworkEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -244,9 +255,10 @@ DeviceFileEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
 | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -299,6 +311,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -358,6 +371,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -389,6 +403,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -415,6 +430,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -443,6 +459,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -468,6 +485,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -493,6 +511,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -500,7 +519,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based dece
 
-`UC_350_11` · phase: **exploit** · confidence: **High**
+`UC_349_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -557,4 +576,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -35,12 +35,11 @@ The activity has been codenamed AccountDumpling by Guardio, with the scheme sell
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1656** — Impersonation
-- **T1583.006** — Acquire Infrastructure: Web Services
-- **T1102** — Web Service
 - **T1567** — Exfiltration Over Web Service
+- **T1656** — Impersonation
+- **T1102** — Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1583.001** — Acquire Infrastructure: Domains
-- **T1566.001** — Phishing: Spearphishing Attachment
 
 ## Kill chain phases observed
 
@@ -48,89 +47,96 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] AppSheet-relayed Meta/Facebook 'AccountDumpling' phishing email
+### [LLM] AccountDumpling – Inbound AppSheet relay email impersonating Meta/Facebook Support
 
-`UC_5_9` · phase: **delivery** · confidence: **High**
+`UC_14_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(All_Email.subject) as subject values(All_Email.recipient) as recipient values(All_Email.message_id) as msg_id from datamodel=Email where All_Email.src_user="noreply@appsheet.com" by All_Email.src_user All_Email.recipient 
-| `drop_dm_object_name(All_Email)` 
-| search subject IN ("*Meta*","*Facebook*","*account*appeal*","*will be deleted*","*copyright*","*blue badge*","*Privacy Center*","*verification*","*Business*account*","*disabled*") 
-| convert ctime(firstSeen) ctime(lastSeen)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.recipient) as recipient values(All_Email.message_id) as message_id from datamodel=Email where (All_Email.src_user="noreply@appsheet.com" OR All_Email.return_addr="noreply@appsheet.com") All_Email.direction="inbound" (All_Email.subject IN ("*Meta*","*Facebook*","*Page*","*Business*","*appeal*","*disabled*","*copyright*","*verification*","*blue badge*","*permanently deleted*","*login alert*","*ad account*")) by All_Email.src_user All_Email.recipient All_Email.subject All_Email.message_id | `drop_dm_object_name(All_Email)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// AccountDumpling – AppSheet relay impersonating Meta Support
+let _meta_lures = dynamic(["meta","facebook","page","business","appeal","disabled","copyright","verification","blue badge","permanently deleted","login alert","ad account","security check","privacy center","recruitment"]);
 EmailEvents
-| where Timestamp > ago(14d)
-| where SenderFromAddress =~ "noreply@appsheet.com" or SenderMailFromAddress =~ "noreply@appsheet.com"
-| where Subject matches regex @"(?i)(meta|facebook|business\s*account|appeal|will\s+be\s+(permanently\s+)?deleted|copyright|blue\s*badge|verification\s*review|privacy\s*center|account\s*disabled|login\s*alert)"
-| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, Url, DeliveryAction, DeliveryLocation, ThreatTypes
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound"
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")  // bypasses SPF/DKIM/DMARC because Google signs it
+| where SenderFromAddress =~ "noreply@appsheet.com"
+     or SenderMailFromAddress =~ "noreply@appsheet.com"
+     or SenderMailFromDomain =~ "appsheet.com"
+| where Subject has_any (_meta_lures)
+| join kind=leftouter (
+    EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+  ) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress,
+          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation,
+          Url, UrlDomain, AuthenticationDetails
 | order by Timestamp desc
 ```
 
-### [LLM] Browser visit to Netlify/Vercel Facebook lookalike followed by api.telegram.org exfil
+### [LLM] AccountDumpling – Click on AppSheet-delivered link landing on Netlify/Vercel/Google-Drive Meta-themed page
 
-`UC_5_10` · phase: **c2** · confidence: **Medium**
+`UC_14_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as landing_time values(Web.url) as landing_url from datamodel=Web where (Web.url="*.netlify.app*" OR Web.url="*.vercel.app*") AND (Web.url="*facebook*" OR Web.url="*meta*" OR Web.url="*fb-help*" OR Web.url="*privacy*center*" OR Web.url="*security*check*" OR Web.url="*blue*badge*" OR Web.url="*verify*") by Web.src Web.user 
-| `drop_dm_object_name(Web)` 
-| join type=inner src [| tstats summariesonly=true count as exfil_hits min(_time) as exfil_time values(Web.url) as exfil_url from datamodel=Web where Web.url="*api.telegram.org*" by Web.src | `drop_dm_object_name(Web)`] 
-| eval delta=exfil_time-landing_time 
-| where delta>=0 AND delta<=1800 
-| table src user landing_time landing_url exfil_time exfil_url delta
+| tstats `summariesonly` count from datamodel=Email where (All_Email.src_user="noreply@appsheet.com" OR All_Email.return_addr="noreply@appsheet.com") All_Email.direction="inbound" by All_Email.message_id All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)` | join type=inner message_id [| tstats `summariesonly` count values(Web.url) as url values(Web.dest) as dest min(_time) as click_time from datamodel=Web where (Web.url="*.netlify.app*" OR Web.url="*.vercel.app*" OR Web.url="drive.google.com/file/*" OR Web.url="docs.google.com/*") by Web.message_id Web.user | `drop_dm_object_name(Web)` | rename message_id as message_id] | table click_time recipient subject url dest user
 ```
 
 **Defender KQL:**
 ```kql
-let lures = dynamic(["facebook","meta","fb-help","fb-support","privacy-center","privacy_center","security-check","security_check","blue-badge","verification","appeal"]);
-let landings = DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| where RemoteUrl matches regex @"(?i)\.(netlify\.app|vercel\.app)"
-| where RemoteUrl has_any (lures)
-| project DeviceId, AccountName, LandingTime=Timestamp, LandingUrl=RemoteUrl, InitiatingProcessFileName;
-let exfil = DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "api.telegram.org" or RemoteUrl matches regex @"(?i)/bot[0-9]+:[A-Za-z0-9_-]+/(sendMessage|sendDocument|sendPhoto)"
-| project DeviceId, ExfilTime=Timestamp, ExfilUrl=RemoteUrl;
-landings
-| join kind=inner exfil on DeviceId
-| where ExfilTime between (LandingTime .. LandingTime + 30m)
-| project DeviceId, AccountName, LandingTime, LandingUrl, ExfilTime, ExfilUrl, InitiatingProcessFileName
-| order by LandingTime desc
+// AccountDumpling – AppSheet email + click landing on Netlify/Vercel/Google Drive
+let LookbackDays = 7d;
+let _hosts = dynamic([".netlify.app",".vercel.app","drive.google.com","docs.google.com"]);
+let AppSheetPhish = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where SenderFromAddress =~ "noreply@appsheet.com"
+         or SenderMailFromAddress =~ "noreply@appsheet.com"
+         or SenderMailFromDomain =~ "appsheet.com"
+    | project NetworkMessageId, EmailTime = Timestamp, RecipientEmailAddress,
+              Subject, SenderFromAddress;
+UrlClickEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any (_hosts)
+| join kind=inner AppSheetPhish on NetworkMessageId
+| extend ClickedThroughBypass = iif(ActionType == "ClickedThrough" or IsClickedThrough == true, "yes", "no")
+| project Timestamp, AccountUpn, IPAddress, Url, UrlChain, ClickedThroughBypass,
+          NetworkMessageId, EmailTime, SenderFromAddress, RecipientEmailAddress, Subject
+| order by Timestamp desc
 ```
 
-### [LLM] DNS/web hit on AccountDumpling operator infrastructure phamtaitan[.]vn
+### [LLM] AccountDumpling attribution – Endpoint connection to phamtaitan[.]vn (operator infrastructure)
 
-`UC_5_11` · phase: **recon** · confidence: **Medium**
+`UC_14_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-(
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution where DNS.query="*phamtaitan.vn*" by DNS.src DNS.query 
-| `drop_dm_object_name(DNS)`
-) 
-| append [| tstats summariesonly=true count values(Web.url) as url from datamodel=Web where Web.url="*phamtaitan.vn*" by Web.src Web.user | `drop_dm_object_name(Web)`] 
-| convert ctime(firstSeen) ctime(lastSeen)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.dest) as dest values(Web.src) as src values(Web.url) as url from datamodel=Web where (Web.url="*phamtaitan.vn*" OR Web.dest="phamtaitan.vn" OR Web.dest="*.phamtaitan.vn") by Web.src Web.user | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution where (Network_Resolution.DNS.query="phamtaitan.vn" OR Network_Resolution.DNS.query="*.phamtaitan.vn") by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name("Network_Resolution.DNS")`]
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has "phamtaitan.vn" or RemoteUrl endswith ".phamtaitan.vn"
-  | project Timestamp, DeviceId, DeviceName, AccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine ),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | where AdditionalFields has "phamtaitan.vn"
-  | project Timestamp, DeviceId, DeviceName, ActionType, AdditionalFields )
+// AccountDumpling operator-attribution domain pivot
+let _ad_domains = dynamic(["phamtaitan.vn"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (_ad_domains)
+    | project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, Source = "NetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has_any (_ad_domains)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              RemoteUrl = Q, RemoteIP = "", RemotePort = int(null),
+              InitiatingProcessFileName, InitiatingProcessCommandLine, Source = "DnsQuery" )
 | order by Timestamp desc
 ```
 
@@ -153,6 +159,7 @@ union
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -180,10 +187,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -236,6 +244,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -295,6 +304,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -326,6 +336,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -352,6 +363,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -376,6 +388,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -394,4 +407,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

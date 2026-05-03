@@ -39,13 +39,14 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1485** — Data Destruction
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1570** — Lateral Tool Transfer
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1090.001** — Proxy: Internal Proxy
 - **T1572** — Protocol Tunneling
 - **T1105** — Ingress Tool Transfer
-- **T1484.001** — Domain Policy Modification: Group Policy Modification
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1490** — Inhibit System Recovery
+- **T1529** — System Shutdown/Reboot
+- **T1491.001** — Defacement: Internal Defacement
 
 ## Kill chain phases observed
 
@@ -53,85 +54,118 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DynoWiper staging: execution of schtask.exe / *_update.exe from C:\inetpub\pub\
+### [LLM] DynoWiper drop in C:\inetpub\pub\ — schtask.exe / *_update.exe execution
 
-`UC_217_9` · phase: **install** · confidence: **High**
+`UC_216_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_path="*\\inetpub\\pub\\*" OR Processes.process_path="*\\inetpub\\pub\\*") AND (Processes.process_name IN ("schtask.exe","schtask2.exe") OR Processes.process_name="*_update.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_path="C:\\inetpub\\pub\\*" OR Processes.process="*\\inetpub\\pub\\schtask.exe*" OR Processes.process="*\\inetpub\\pub\\schtask2.exe*" OR Processes.process="*\\inetpub\\pub\\*_update.exe*") AND Processes.process_name!="schtasks.exe" by host Processes.process_name Processes.process_path Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where FolderPath has @"\inetpub\pub\"
-| where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, MD5
-| join kind=leftouter (DeviceFileEvents | where FolderPath has @"\inetpub\pub\" | where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe" | project DropSHA256=SHA256, DropDevice=DeviceName, DropTime=Timestamp, DropFile=FileName) on $left.SHA256 == $right.DropSHA256
-| sort by Timestamp asc
+// DynoWiper staging/execution from C:\inetpub\pub\ — schtask.exe (note: legit binary is schtasks.exe), schtask2.exe, *_update.exe
+let WindowDays = 30d;
+(union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(WindowDays)
+        | where FolderPath startswith @"C:\inetpub\pub\"
+            or InitiatingProcessFolderPath startswith @"C:\inetpub\pub\"
+        | where FileName in~ ("schtask.exe","schtask2.exe")
+            or FileName endswith "_update.exe"
+            or InitiatingProcessFileName in~ ("schtask.exe","schtask2.exe")
+        | extend Source = "DeviceProcessEvents"
+        | project Timestamp, DeviceName, AccountName, Source, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+    (DeviceFileEvents
+        | where Timestamp > ago(WindowDays)
+        | where FolderPath startswith @"C:\inetpub\pub\"
+        | where ActionType in ("FileCreated","FileRenamed","FileModified")
+        | where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe"
+        | extend Source = "DeviceFileEvents"
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine))
+| order by Timestamp desc
 ```
 
-### [LLM] Sandworm rsocx reverse SOCKS5 to compromised progamevl[.]ru host (31.172.71.5:8008)
+### [LLM] rsocx reverse SOCKS5 to 31.172.71.5:8008 (Sandworm Polish energy intrusion)
 
-`UC_217_10` · phase: **c2** · confidence: **High**
+`UC_216_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="* -r 31.172.71.5:8008*" OR Processes.process="*31.172.71[.]5:8008*" OR (Processes.process_name="r.exe" AND Processes.process_path="*\\Downloads\\*" AND Processes.process="* -r *")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="31.172.71.5" AND All_Traffic.dest_port=8008 by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_path="*\\Downloads\\r.exe" AND Processes.process="*-r *") OR (Processes.process="*-r 31.172.71.5:8008*") OR (Processes.process="*31.172.71.5:8008*") by host Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="31.172.71.5" by host All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let c2_ip = "31.172.71.5";
-let c2_port = 8008;
-DeviceProcessEvents
-| where (ProcessCommandLine has c2_ip and ProcessCommandLine has " -r ")
-   or (FileName =~ "r.exe" and FolderPath has @"\Downloads\" and ProcessCommandLine has " -r " and ProcessCommandLine has tostring(c2_port))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName
-| union (
-DeviceNetworkEvents
-| where RemoteIP == c2_ip and RemotePort == c2_port
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-)
-| sort by Timestamp asc
+// rsocx reverse SOCKS5 proxy: r.exe -r 31.172.71.5:8008 + outbound to that IP
+let C2_IP = "31.172.71.5";
+let C2_Port = 8008;
+let C2_Domain = "progamevl.ru";
+let WindowDays = 30d;
+(union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(WindowDays)
+        | where (FileName =~ "r.exe" and InitiatingProcessFolderPath has @"\Downloads\")
+            or FolderPath endswith @"\Downloads\r.exe"
+            or ProcessCommandLine has C2_IP
+            or ProcessCommandLine matches regex @"(?i)\\r\.exe\s+-r\s+\d{1,3}(\.\d{1,3}){3}:\d+"
+        | extend Source = "Process"
+        | project Timestamp, DeviceName, AccountName, Source, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256),
+    (DeviceNetworkEvents
+        | where Timestamp > ago(WindowDays)
+        | where RemoteIP == C2_IP or (RemoteUrl has C2_Domain)
+        | extend Source = "Network"
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source, FileName=InitiatingProcessFileName, FolderPath=InitiatingProcessFolderPath, ProcessCommandLine=InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl),
+    (DeviceEvents
+        | where Timestamp > ago(WindowDays)
+        | where ActionType == "DnsQueryResponse"
+        | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+        | where Q has C2_Domain
+        | extend Source = "DNS"
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source, FileName=InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, RemoteUrl=Q))
+| order by Timestamp desc
 ```
 
-### [LLM] GPO-staged scheduled task launching wiper from \\*\inetpub\pub\ across domain
+### [LLM] ZOV wiper post-wipe shell command + LocWall.jpg wallpaper drop (Sandworm)
 
-`UC_217_11` · phase: **install** · confidence: **Medium**
+`UC_216_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as users dc(Processes.dest) as host_count from datamodel=Endpoint.Processes where (Processes.process="*\\\\*\\inetpub\\pub\\*" OR Processes.process="*\\inetpub\\pub\\*.exe*" OR Processes.parent_process="*schtasks*\\inetpub\\pub*") by Processes.process_name Processes.process_path | where host_count >= 3 | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ search index=wineventlog (EventCode=4698 OR EventCode=4688) (TaskContent="*inetpub\\pub*" OR CommandLine="*New-GPO*" OR CommandLine="*Set-GPLink*" OR CommandLine="*Register-ScheduledTask*inetpub*") | stats count min(_time) as firstTime values(CommandLine) as cmd by host User TaskName ]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe") AND ( (Processes.process="*rmdir C:\\\\ /s /q*" AND Processes.process="*shutdown /r*") OR (Processes.process="*time /t*" AND Processes.process="*ver*" AND Processes.process="*rmdir*" AND Processes.process="*shutdown*") ) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name="LocWall.jpg" AND Filesystem.file_path="*\\AppData\\Roaming\\LocWall.jpg" by host Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let suspectShare = @"\inetpub\pub\";
-let wiper_exec =
-DeviceProcessEvents
-| where ProcessCommandLine has suspectShare or FolderPath has suspectShare
-| where FileName endswith ".exe"
-| summarize hosts=dcount(DeviceName), users=make_set(AccountName,10), files=make_set(FileName,10), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by FileName
-| where hosts >= 3;
-let gpo_or_sched =
-union
-  (DeviceProcessEvents
-   | where (ProcessCommandLine has_any ("New-GPO","Set-GPLink","Register-ScheduledTask","schtasks /create")
-            and ProcessCommandLine has "inetpub\\pub")
-   | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine),
-  (DeviceEvents
-   | where ActionType == "ScheduledTaskCreated"
-   | where AdditionalFields has "inetpub\\pub"
-   | project Timestamp, DeviceName, AccountName, AdditionalFields);
-wiper_exec
-| extend Source="endpoint_exec"
-| union (gpo_or_sched | extend Source="gpo_or_schedtask")
-| sort by Timestamp asc
+// ZOV wiper finishing chain: post-wipe shell command + LocWall.jpg wallpaper drop
+let WindowDays = 30d;
+(union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(WindowDays)
+        | where InitiatingProcessFileName !endswith "$"
+        | where ProcessCommandLine has "rmdir" and ProcessCommandLine has @"C:\" and ProcessCommandLine has "/s" and ProcessCommandLine has "/q"
+            and ProcessCommandLine has "shutdown" and ProcessCommandLine has "/r"
+            and ProcessCommandLine has_any ("time /t","ver "," ver&","& ver")
+        | extend Source = "WiperShellCmd"
+        | project Timestamp, DeviceName, AccountName, Source, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256),
+    (DeviceFileEvents
+        | where Timestamp > ago(WindowDays)
+        | where ActionType in ("FileCreated","FileModified")
+        | where FileName =~ "LocWall.jpg"
+        | where FolderPath has @"\AppData\Roaming\" or FolderPath endswith @"\Roaming"
+        | extend Source = "WallpaperDrop"
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+    (DeviceRegistryEvents
+        | where Timestamp > ago(WindowDays)
+        | where RegistryKey has @"\Control Panel\Desktop" and RegistryValueName =~ "Wallpaper"
+        | where RegistryValueData has "LocWall.jpg"
+        | extend Source = "WallpaperRegistry"
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source, FileName=InitiatingProcessFileName, FolderPath=InitiatingProcessFolderPath, SHA256=InitiatingProcessSHA256, RegistryKey, RegistryValueData))
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -186,6 +220,7 @@ DeviceNetworkEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -218,6 +253,7 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "schtasks.exe"
 | where ProcessCommandLine has "/create"
 | where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
@@ -246,6 +282,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -271,9 +308,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -295,9 +334,11 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -318,6 +359,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -325,7 +367,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_217_8` · phase: **exploit** · confidence: **High**
+`UC_216_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -382,4 +424,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

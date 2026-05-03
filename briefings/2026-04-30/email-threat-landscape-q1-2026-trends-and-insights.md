@@ -46,11 +46,10 @@ During the first quarter of 2026 (January-March), Microsoft Threat Intelligence 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
 - **T1566.001** — Phishing: Spearphishing Attachment
-- **T1557** — Adversary-in-the-Middle
-- **T1656** — Impersonation
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1583.001** — Acquire Infrastructure: Domains
+- **T1111** — Multi-Factor Authentication Interception
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -58,100 +57,72 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Storm-1747 Tycoon2FA Feb 2026 SVG campaign C2 hostname callout
+### [LLM] Tycoon2FA Q1 2026 SVG CAPTCHA campaign infrastructure (niovapahrm/hvishay/drilto)
 
-`UC_36_10` · phase: **delivery** · confidence: **High**
+`UC_40_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as resolved_ip from datamodel=Network_Resolution where DNS.query IN ("bouleversement.niovapahrm.com","haematogenesis.hvishay.com","ubiquitarianism.drilto.com","*.niovapahrm.com","*.hvishay.com","*.drilto.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count from datamodel=Web where Web.url IN ("*niovapahrm.com*","*hvishay.com*","*drilto.com*") by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user) as users values(Web.dest) as destinations from datamodel=Web where (Web.url IN ("*niovapahrm.com*","*hvishay.com*","*drilto.com*") OR Web.dest IN ("bouleversement.niovapahrm.com","haematogenesis.hvishay.com","ubiquitarianism.drilto.com","niovapahrm.com","hvishay.com","drilto.com")) by Web.src Web.dest host
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries values(DNS.src) as src_ips from datamodel=Network_Resolution where DNS.query IN ("*niovapahrm.com","*hvishay.com","*drilto.com") by DNS.query host | `drop_dm_object_name(DNS)` ]
 ```
 
 **Defender KQL:**
 ```kql
-let badHosts = dynamic(["bouleversement.niovapahrm.com","haematogenesis.hvishay.com","ubiquitarianism.drilto.com","niovapahrm.com","hvishay.com","drilto.com"]);
-let badRoots = dynamic(["niovapahrm.com","hvishay.com","drilto.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl in~ (badHosts)
-   or RemoteUrl has_any (badRoots)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| union (
-    EmailUrlInfo
+let CampaignBaseDomains = dynamic(["niovapahrm.com","hvishay.com","drilto.com"]);
+let CampaignHostnames = dynamic(["bouleversement.niovapahrm.com","haematogenesis.hvishay.com","ubiquitarianism.drilto.com"]);
+union isfuzzy=true
+(EmailUrlInfo
     | where Timestamp > ago(30d)
-    | where Url has_any (badRoots)
-    | join kind=inner (EmailEvents | where Timestamp > ago(30d)) on NetworkMessageId
-    | project Timestamp, RecipientEmailAddress, SenderFromAddress, Subject, Url, NetworkMessageId
-)
-| sort by Timestamp desc
+    | where UrlDomain has_any (CampaignBaseDomains) or Url has_any (CampaignHostnames)
+    | join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction) on NetworkMessageId
+    | extend EvidenceSource = "EmailUrlInfo"
+    | project Timestamp, EvidenceSource, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction, Url, UrlDomain),
+(UrlClickEvents
+    | where Timestamp > ago(30d)
+    | where Url has_any (CampaignBaseDomains)
+    | extend EvidenceSource = "UrlClickEvents"
+    | project Timestamp, EvidenceSource, NetworkMessageId, AccountUpn, IPAddress, Url, ActionType, IsClickedThrough),
+(DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (CampaignBaseDomains) or RemoteUrl in~ (CampaignHostnames)
+    | extend EvidenceSource = "DeviceNetworkEvents"
+    | project Timestamp, EvidenceSource, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort)
+| order by Timestamp desc
 ```
 
-### [LLM] Phishing SVG attachment named with Base64-encoded recipient email
+### [LLM] Inbound SVG attachment with Base64-encoded recipient email in filename
 
-`UC_36_11` · phase: **delivery** · confidence: **Medium**
+`UC_40_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.src_user) as sender values(All_Email.recipient) as recipient values(All_Email.subject) as subject values(All_Email.file_name) as files from datamodel=Email where All_Email.file_name="*.svg" by All_Email.message_id All_Email.file_name | `drop_dm_object_name(All_Email)` | rex field=file_name "(?<b64token>[A-Za-z0-9+/=]{20,})" | where isnotnull(b64token) | eval decoded=if(isnotnull(b64token),replace(b64token,"=+$",""),null()) | eval decoded=tostring(base64decode(decoded)) | where match(decoded,"@") OR match(file_name,"(?i)401[Kk]|PLAY_AUDIO_MESSAGE|Listen_\(|statements_inv|Check_\d+_Payment|INV#_\d+") | convert ctime(firstTime) ctime(lastTime) | sort - count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.src_user) as sender values(All_Email.subject) as subjects values(All_Email.recipient) as recipients from datamodel=Email where All_Email.file_name="*.svg" AND (All_Email.file_name="*_statements_inv_*" OR All_Email.file_name="*401K_copy_*" OR All_Email.file_name="*_Payment_Copy_*" OR All_Email.file_name="INV#_*" OR All_Email.file_name="Listen_(*).svg" OR All_Email.file_name="PLAY_AUDIO_MESSAGE*") by All_Email.file_name All_Email.recipient host
+| `drop_dm_object_name(All_Email)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let svgPattern = @"(?i)(401K|PLAY_AUDIO_MESSAGE|Listen_\(|statements_inv|Check_\d+_Payment_Copy|INV#_\d+)";
-let b64Pattern = @"[A-Za-z0-9+/]{16,}={0,2}";
+// Decodes the long Base64-looking token in SVG filenames and confirms it resolves to an email address.
 EmailAttachmentInfo
 | where Timestamp > ago(30d)
-| where FileName endswith ".svg"
-| where FileName matches regex svgPattern or FileName matches regex b64Pattern
-| join kind=inner (
+| where (FileType =~ "SVG" or FileName endswith ".svg")
+| extend B64Candidate = extract(@"([A-Za-z0-9+/]{20,}={0,2})", 1, FileName)
+| where isnotempty(B64Candidate)
+| extend Decoded = base64_decode_tostring(B64Candidate)
+| where Decoded matches regex @"^[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}$"
+| join kind=leftouter (
     EmailEvents
-    | where Timestamp > ago(30d)
-    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
-) on NetworkMessageId
-| project Timestamp, RecipientEmailAddress, SenderFromAddress, SenderIPv4, Subject, FileName, FileType, SHA256, NetworkMessageId
-| union (
-    DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName endswith ".svg"
-    | where FileName matches regex svgPattern
-         or (FileName matches regex b64Pattern and FileName !contains "thumbnail" and FileName !contains "icon")
-    | where InitiatingProcessFileName in~ ("outlook.exe","olk.exe","msedge.exe","chrome.exe","firefox.exe","thunderbird.exe")
-    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName
-)
-| sort by Timestamp desc
-```
-
-### [LLM] Browser-rendered SVG followed by outbound HTTPS to fresh .RU TLD landing page (post-takedown Tycoon2FA)
-
-`UC_36_12` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as svg_time from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.svg" Filesystem.file_path IN ("*\\AppData\\Local\\Temp\\*","*\\Downloads\\*","*\\INetCache\\*","*\\Outlook\\*") by Filesystem.dest Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | join type=inner dest [| tstats `summariesonly` count min(_time) as web_time values(Web.url) as urls values(Web.http_user_agent) as ua from datamodel=Web where Web.url="*.ru/*" Web.app IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe") by Web.dest Web.user Web.site | `drop_dm_object_name(Web)` | rename dest as dest] | eval delta=web_time-svg_time | where delta>=0 AND delta<=300 | convert ctime(svg_time) ctime(web_time) | table svg_time web_time delta dest user file_name site urls ua
-```
-
-**Defender KQL:**
-```kql
-let window = 5m;
-let svgOpens =
-    DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where FileName endswith ".svg"
-    | where FolderPath has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\INetCache\", @"\Content.Outlook\")
-    | where InitiatingProcessFileName in~ ("outlook.exe","olk.exe","msedge.exe","chrome.exe","firefox.exe")
-    | project SvgTime=Timestamp, DeviceId, DeviceName, SvgFile=FileName, SvgPath=FolderPath, SvgUser=InitiatingProcessAccountName;
-let ruCallouts =
-    DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe")
-    | where RemoteUrl endswith ".ru" or RemoteUrl matches regex @"\.ru(/|:|$)"
-    | where RemotePort in (443, 80)
-    | project NetTime=Timestamp, DeviceId, RemoteUrl, RemoteIP, BrowserProc=InitiatingProcessFileName, BrowserCmd=InitiatingProcessCommandLine;
-svgOpens
-| join kind=inner ruCallouts on DeviceId
-| where NetTime between (SvgTime .. SvgTime + window)
-| project SvgTime, NetTime, DeltaSec=datetime_diff('second', NetTime, SvgTime), DeviceName, SvgUser, SvgFile, SvgPath, RemoteUrl, RemoteIP, BrowserProc
-| sort by SvgTime desc
+    | project NetworkMessageId, SenderFromAddress, SenderMailFromAddress, Subject, EmailDirection, DeliveryAction, DeliveryLocation
+  ) on NetworkMessageId
+| where EmailDirection == "Inbound"
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, DecodedRecipientFromFilename = Decoded, Subject, FileName, FileSize, B64Candidate, DeliveryAction, DeliveryLocation, MalwareFilterVerdict
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -204,6 +175,7 @@ svgOpens
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -263,6 +235,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -294,6 +267,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -344,6 +318,7 @@ CloudAppEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -372,6 +347,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -397,9 +373,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -423,6 +401,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -452,9 +431,11 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -467,4 +448,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

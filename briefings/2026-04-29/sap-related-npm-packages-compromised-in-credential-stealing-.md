@@ -29,12 +29,10 @@ According to reports from Aikido Security , Onapsis , OX Security ,  SafeDep , 
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — JavaScript
-- **T1546.016** — Installer Packages
-- **T1102.002** — Bidirectional Communication: Web Service
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
 - **T1105** — Ingress Tool Transfer
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1546** — Event Triggered Execution
+- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
@@ -42,79 +40,63 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Compromised SAP CAP / mbt npm package preinstall dropping setup.mjs (Mini Shai-Hulud)
+### [LLM] Mini Shai-Hulud npm preinstall: Node spawns PowerShell -ExecutionPolicy Bypass to fetch Bun from GitHub Releases
 
-`UC_46_7` · phase: **install** · confidence: **High**
+`UC_48_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","bun.exe","corepack.exe") OR Processes.parent_process IN ("*npm*install*","*yarn*add*","*pnpm*install*")) AND (Processes.process IN ("*setup.mjs*","*execution.js*") OR Processes.process IN ("*\\node_modules\\@cap-js\\sqlite*","*\\node_modules\\@cap-js\\postgres*","*\\node_modules\\@cap-js\\db-service*","*\\node_modules\\mbt\\*","*/node_modules/@cap-js/sqlite*","*/node_modules/@cap-js/postgres*","*/node_modules/@cap-js/db-service*","*/node_modules/mbt/*")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("setup.mjs","execution.js") AND (Filesystem.file_hash IN ("4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95","eb6eb4154b03ec73218727dc643d26f4e14dfda2438112926bb5daf37ae8bcdb","80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac","35baf8316645372eea40b91d48acb067")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npx.exe","bun.exe","yarn.exe","pnpm.exe") OR Processes.parent_process="*npm-cli.js*" OR Processes.parent_process="*setup.mjs*") AND Processes.process_name="powershell.exe" AND Processes.process="*-ExecutionPolicy*Bypass*" AND (Processes.process="*github.com/oven-sh/bun*" OR Processes.process="*bun-windows*" OR Processes.process="*Expand-Archive*" OR Processes.process="*setup.mjs*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let bad_hashes = dynamic(["4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95","eb6eb4154b03ec73218727dc643d26f4e14dfda2438112926bb5daf37ae8bcdb","80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac"]);
-let bad_md5 = dynamic(["35baf8316645372eea40b91d48acb067"]);
-let bad_paths = dynamic(["@cap-js/sqlite","@cap-js/postgres","@cap-js/db-service","/mbt/","\\mbt\\"]);
+// Mini Shai-Hulud SAP npm supply chain — preinstall PowerShell drop of Bun runtime
+let _bun_indicators = dynamic(["github.com/oven-sh/bun","bun-windows-x64","bun-windows-aarch64","setup.mjs","execution.js","Expand-Archive"]);
 DeviceProcessEvents
-| where (ProcessCommandLine has_any ("setup.mjs","execution.js") and InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","bun.exe","corepack.exe"))
-   or (FolderPath has_any (bad_paths) and FileName in~ ("node.exe","bun.exe"))
-   or SHA256 in (bad_hashes) or MD5 in (bad_md5)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| union (DeviceFileEvents | where (FileName in~ ("setup.mjs","execution.js") and FolderPath has_any (bad_paths)) or SHA256 in (bad_hashes) or MD5 in (bad_md5) | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| where Timestamp > ago(7d)
+| where FileName =~ "powershell.exe"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npx.exe","bun.exe","yarn.exe","pnpm.exe","cmd.exe")
+   or InitiatingProcessCommandLine has_any ("npm-cli.js","setup.mjs","npm install","npm ci","preinstall")
+| where ProcessCommandLine has "-ExecutionPolicy" and ProcessCommandLine has "Bypass"
+| where ProcessCommandLine has_any (_bun_indicators)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImg = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandParent = InitiatingProcessParentFileName,
+          ChildCmd  = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud GitHub commit-search dead-drop C2 ('OhNoWhatsGoingOnWithGitHub')
+### [LLM] AI coding-agent persistence: .claude/settings.json or .vscode/tasks.json written by node/bun/npm (Mini Shai-Hulud)
 
-`UC_46_8` · phase: **c2** · confidence: **High**
+`UC_48_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*OhNoWhatsGoingOnWithGitHub*" OR Web.url="*api.github.com/search/commits*OhNoWhatsGoingOnWithGitHub*" OR Web.http_user_agent="*Bun/1.3.13*") by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | where firstTime != ""
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.action) as actions values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.claude\\settings.json" OR Filesystem.file_path="*/.claude/settings.json" OR Filesystem.file_path="*\\.vscode\\tasks.json" OR Filesystem.file_path="*/.vscode/tasks.json") AND Filesystem.process_name IN ("node.exe","npm.exe","bun.exe","npx.exe","yarn.exe","pnpm.exe","git.exe","powershell.exe","cmd.exe","node","bun","git") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where RemoteUrl has_any ("OhNoWhatsGoingOnWithGitHub", "api.github.com/search/commits")
-| where RemoteUrl has "OhNoWhatsGoingOnWithGitHub"
-   or (RemoteUrl has "api.github.com/search/commits" and InitiatingProcessFileName in~ ("bun.exe","node.exe"))
-| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| union (
-DeviceEvents
-| where ActionType == "BrowserLaunchedToOpenUrl" or ActionType == "NetworkConnectionEvents"
-| where AdditionalFields has "OhNoWhatsGoingOnWithGitHub"
-)
+// Mini Shai-Hulud — AI agent / VS Code config persistence written by JS runtime
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("settings.json","tasks.json")
+| where FolderPath has_any (@"\.claude\", @"\.vscode\", "/.claude/", "/.vscode/")
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","bun.exe","npx.exe","yarn.exe","pnpm.exe","git.exe","powershell.exe","cmd.exe","node","bun","git")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName,
+          FolderPath, FileName, SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Bun v1.3.13 runtime fetched from npm/node install context (Mini Shai-Hulud dropper)
-
-`UC_46_9` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*github.com/oven-sh/bun/releases/download/bun-v1.3.13*" by Web.src Web.user Web.url Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` | join type=outer src [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name="bun.exe" AND (Processes.process IN ("*execution.js*","*\\.claude\\*","*\\.vscode\\setup.mjs*")) by Processes.dest Processes.user Processes.parent_process Processes.process | rename Processes.dest as src | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-let bun_dl =
-DeviceNetworkEvents
-| where RemoteUrl has "github.com/oven-sh/bun/releases/download/bun-v1.3.13"
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","bun.exe","curl.exe","wget.exe","powershell.exe","pwsh.exe","cmd.exe")
-| project NetTime=Timestamp, DeviceName, AccountName, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName;
-let bun_exec =
-DeviceProcessEvents
-| where FileName =~ "bun.exe" or ProcessCommandLine matches regex @"(?i)\bbun\b.*(execution\.js|\.claude\\|\.vscode\\setup\.mjs)"
-| where ProcessCommandLine has_any ("execution.js",".claude\\",".vscode\\setup.mjs")
-| project ExecTime=Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath;
-bun_dl
-| join kind=inner (bun_exec) on DeviceName
-| where datetime_diff('minute', ExecTime, NetTime) between (-30 .. 30)
-| project NetTime, ExecTime, DeviceName, AccountName, RemoteUrl, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -168,6 +150,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -195,10 +178,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -223,6 +207,7 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -247,6 +232,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -254,7 +240,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SAP-Related npm Packages Compromised in Credential-Stealing Supply Chain Attack
 
-`UC_46_6` · phase: **exploit** · confidence: **High**
+`UC_48_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -311,4 +297,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -39,14 +39,6 @@ Multiple documents associated…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
-- **T1221** — Template Injection
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1567** — Exfiltration Over Web Service
-- **T1564.003** — Hide Artifacts: Hidden Window
-- **T1102** — Web Service
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
@@ -54,91 +46,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] APT28 MacroMaze: Word/Excel fetches webhook.site docopened.jpg tracking pixel
-
-`UC_200_10` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest values(Web.user) as user from datamodel=Web where Web.app IN ("winword.exe","excel.exe","powerpnt.exe","WINWORD.EXE","EXCEL.EXE") AND (Web.url="*webhook.site*" OR Web.dest="webhook.site") by Web.app Web.src Web.url Web.http_method | `drop_dm_object_name(Web)` | where match(url,"webhook\.site/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/docopened\.jpg") OR match(url,"webhook\.site/[0-9a-f-]{30,}/.*\.jpg") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe")
-| where RemoteUrl has "webhook.site" or RemoteUrl has "webhook[.]site"
-| where RemoteUrl matches regex @"webhook\.site/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/.*\.(jpg|jpeg|png)"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RequestMethod, AccountName
-| join kind=leftouter (DeviceFileEvents | where FileName endswith ".doc" or FileName endswith ".docm" | project Timestamp, DeviceName, DocFile=FileName, SHA256) on DeviceName
-| where SHA256 in ("df60fa6008b1a0b79c394b42d3ada6bab18b798f3c2ca1530a3e0cb4fbbbe9f6","c3b617e0c6b8f01cf628a2b3db40e8d06ef20a3c71365ccc1799787119246010","58cfb8b9fee1caa94813c259901dc1baa96bae7d30d79b79a7d441d0ee4e577e","9097d9cf5e6659e869bf2edf766741b687e3d8570036d853c0ca59ae72f9e9fc","ed8f20bbab18b39a67e4db9a03090e5af8dc8ec24fe1ddf3521b3f340a8318c1") or isempty(SHA256)
-```
-
-### [LLM] APT28 MacroMaze: msedge launched off-screen / headless to render local exfil HTML to webhook.site
-
-`UC_200_11` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="msedge.exe" AND Processes.parent_process_name IN ("cmd.exe","wscript.exe","cscript.exe","powershell.exe") AND (Processes.process="*--window-position=10000,10000*" OR Processes.process="*--window-size=1,1*" OR (Processes.process="*--headless=new*" AND Processes.process="*\\Downloads\\*") OR (Processes.process="*--ignore-certificate-errors*" AND Processes.process="*webhook.site*")) by host Processes.process_name Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let edge_anomaly = DeviceProcessEvents
-| where FileName =~ "msedge.exe"
-| where InitiatingProcessFileName in~ ("cmd.exe","wscript.exe","cscript.exe","powershell.exe")
-| where ProcessCommandLine has_any ("--window-position=10000,10000","--window-size=1,1","--headless=new","--ignore-certificate-errors")
-| where ProcessCommandLine has_any ("webhook.site", @"\Downloads\", @"\Users\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, EdgePid=ProcessId;
-edge_anomaly
-| join kind=inner (
-    DeviceNetworkEvents
-    | where InitiatingProcessFileName =~ "msedge.exe"
-    | where RemoteUrl has "webhook.site"
-    | project NetTime=Timestamp, DeviceName, RemoteUrl, RemoteIP, RequestMethod, EdgePid=InitiatingProcessId
-) on DeviceName, EdgePid
-| where NetTime between (Timestamp .. Timestamp + 5m)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, RemoteUrl, RequestMethod
-```
-
-### [LLM] APT28 MacroMaze: schtasks registers GUID-named VBS wrapper from %USERPROFILE% on 20/30/61-minute trigger
-
-`UC_200_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND Processes.process="*/xml*" AND (Processes.parent_process_name IN ("cmd.exe","wscript.exe","cscript.exe")) by host Processes.process_name Processes.parent_process_name Processes.user Processes.process | `drop_dm_object_name(Processes)` | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("wscript.exe","cscript.exe") AND Processes.parent_process_name="svchost.exe" AND (Processes.process="*\\Users\\*\\*.vbs*" AND Processes.process="*.bat*") by host Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename process as wscript_cmd] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let task_install = DeviceProcessEvents
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create" and ProcessCommandLine has "/xml"
-| where InitiatingProcessFileName in~ ("cmd.exe","wscript.exe","cscript.exe")
-| project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessCommandLine, AccountName;
-let task_xml = DeviceFileEvents
-| where FileName endswith ".xml"
-| where FolderPath has_any (@"\Users\", @"\AppData\")
-| where InitiatingProcessFileName in~ ("cmd.exe","wscript.exe");
-let beacon_run = DeviceProcessEvents
-| where FileName in~ ("wscript.exe","cscript.exe")
-| where InitiatingProcessFileName =~ "svchost.exe"
-| where ProcessCommandLine matches regex @"(?i)\\Users\\[^\\]+\\[A-Za-z0-9\-]{6,}\.vbs.*\.(bat|cmd)"
-| project BeaconTime=Timestamp, DeviceName, ProcessCommandLine, AccountName;
-task_install
-| join kind=inner beacon_run on DeviceName
-| where BeaconTime between (Timestamp .. Timestamp + 2h)
-| union (DeviceFileEvents
-    | where FileName matches regex @"(?i)[A-Fa-f0-9\-]{8,}\.(vbs|bat|cmd|htm|xhtml)"
-    | where FolderPath has @"\Users\"
-    | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","cmd.exe")
-    | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, SHA256
-    | where SHA256 in ("5486107244ecaa3a0824895fa432827cc12df69620ca94aaa4ad75f39ac79588","b0f9f0a34ccab1337fbcca24b4f894de8d6d3a6f5db2e0463e2320215e4262e4") or isempty(SHA256))
-```
-
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -195,10 +103,11 @@ DeviceNetworkEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -251,6 +160,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -310,6 +220,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -341,6 +252,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -367,6 +279,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "schtasks.exe"
 | where ProcessCommandLine has "/create"
 | where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
@@ -394,6 +307,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -402,7 +316,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation MacroMaze: new APT28  campaign using basic tooling and legit infrastru
 
-`UC_200_9` · phase: **exploit** · confidence: **High**
+`UC_199_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,4 +376,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

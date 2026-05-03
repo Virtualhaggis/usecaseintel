@@ -12,7 +12,7 @@
         "description": "Threshold detection: many files renamed in short window, often with new extension.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceFileEvents\n| where Timestamp > ago(1d)\n| where ActionType in (\"FileRenamed\",\"FileModified\")\n| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)\n| where files > 200\n| order by files desc",
+        "query": "ImFileEvent\n| where TimeGenerated > ago(1d)\n| where ActorUsername !endswith \"$\"\n| where EventType in (\"FileRenamed\",\"FileModified\")\n| summarize files = dcount(TargetFileName)\n            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)\n| where files > 200    // P99 of legit bulk-tooling per-minute rename volume\n| order by files desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

@@ -43,6 +43,7 @@ _(none detected from narrative keywords)_
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -68,6 +69,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine

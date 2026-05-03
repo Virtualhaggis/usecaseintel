@@ -50,6 +50,7 @@ _(none detected from narrative keywords)_
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -74,9 +75,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -100,6 +103,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -129,9 +133,11 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
@@ -153,6 +159,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")

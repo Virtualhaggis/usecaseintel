@@ -31,12 +31,12 @@ However, t…
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1583.001** — Acquire Infrastructure: Domains
 - **T1056.003** — Input Capture: Web Portal Capture
-- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1555.005** — Credentials from Password Stores: Password Managers
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1102** — Web Service
-- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
+- **T1071.002** — Application Layer Protocol: File Transfer Protocols
 
 ## Kill chain phases observed
 
@@ -44,66 +44,117 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Password manager typosquat phishing domains (the1password / appbitwarden malvertising)
+### [LLM] Typosquat domains impersonating 1Password / Bitwarden (the1password.com, app1password.com, appbitwarden.com)
 
-`UC_285_6` · phase: **delivery** · confidence: **High**
+`UC_284_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where Web.url IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*","*bitwardenlogin.com*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com","*.the1password.com","*.app1password.com","*.appbitwarden.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | stats count values(*) as * by src
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest from datamodel=Web where Web.url IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*") by Web.src host Web.action | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count values(Network_Traffic.dest) as dest values(Network_Traffic.app) as app from datamodel=Network_Traffic where Network_Traffic.dest IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*") by Network_Traffic.src _time | `drop_dm_object_name(Network_Traffic)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let typo_domains = dynamic(["the1password.com","app1password.com","appbitwarden.com","bitwardenlogin.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (typo_domains) or tostring(AdditionalFields) has_any (typo_domains)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AccountName
-| union (DeviceEvents | where ActionType == "BrowserLaunchedToOpenUrl" | where RemoteUrl has_any (typo_domains) | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, AccountName)
+let _PMTyposquats = dynamic(["the1password.com","app1password.com","appbitwarden.com"]);
+union isfuzzy=true
+    ( DeviceNetworkEvents
+      | where Timestamp > ago(7d)
+      | where RemoteUrl has_any (_PMTyposquats)
+      | project Timestamp, Source="NetworkEvent", DeviceName, AccountName=InitiatingProcessAccountName,
+                Process=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
+                Indicator=RemoteUrl, RemoteIP ),
+    ( DeviceEvents
+      | where Timestamp > ago(7d)
+      | where ActionType == "DnsQueryResponse"
+      | extend QName = tostring(parse_json(AdditionalFields).QueryName)
+      | where QName has_any (_PMTyposquats)
+      | project Timestamp, Source="DnsQuery", DeviceName, AccountName=InitiatingProcessAccountName,
+                Process=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
+                Indicator=QName, RemoteIP="" ),
+    ( EmailUrlInfo
+      | where Timestamp > ago(7d)
+      | where UrlDomain has_any (_PMTyposquats)
+      | project Timestamp, Source="EmailUrl", DeviceName="", AccountName="",
+                Process="", ProcessCmd="", Indicator=Url, RemoteIP="" ),
+    ( UrlClickEvents
+      | where Timestamp > ago(7d)
+      | where Url has_any (_PMTyposquats)
+      | project Timestamp, Source="UrlClick", DeviceName="", AccountName=AccountUpn,
+                Process="", ProcessCmd="", Indicator=Url, RemoteIP=IPAddress )
+| order by Timestamp desc
 ```
 
-### [LLM] InvisibleFerret Python loader modules (bow.py / pay.py / adc.py / .npl) execution
+### [LLM] InvisibleFerret 'ssh_zcp' module reads 1Password / Dashlane extension storage
 
-`UC_285_7` · phase: **install** · confidence: **High**
+`UC_284_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3","python") OR Processes.parent_process_name IN ("python.exe","pythonw.exe")) AND (Processes.process IN ("*bow.py*","*pay.py*","*pay_u2GgOA8.py*","*adc.py*","*.npl*") OR Processes.process="*p.zip*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("bow.py","pay.py","pay_u2GgOA8.py","adc.py","p.zip") OR Filesystem.file_name="*.npl" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3.exe") OR Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe")) AND (Processes.process IN ("*bow.py*","*pay.py*","*adc.py*","*ssh_zcp*","*aeblfdkhhhdcdjpifhhbdiojplfjncoa*","*fdjamakpfbbddfjaooikfcpapjohcfmg*","*dppgmdbiimibapkepcbdbmkaabgiofem*","*\\AppData\\Roaming\\1Password*","*\\AppData\\Roaming\\Dashlane*")) by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let if_files = dynamic(["bow.py","pay.py","pay_u2GgOA8.py","adc.py"]);
-let p_zip_sha = "6a104f07ab6c5711b6bc8bf6ff956ab8cd597a388002a966e980c5ec9678b5b0";
+// InvisibleFerret password-manager exfil — python interpreter touching 1Password / Dashlane stores
+let _PyInterpreters = dynamic(["python.exe","pythonw.exe","python3.exe","py.exe"]);
+let _IFModules     = dynamic(["bow.py","pay.py","adc.py","ssh_zcp"]);
+let _PMArtefacts   = dynamic([
+    @"\Local Extension Settings\aeblfdkhhhdcdjpifhhbdiojplfjncoa",   // 1Password 8 (Chrome)
+    @"\Local Extension Settings\dppgmdbiimibapkepcbdbmkaabgiofem",   // 1Password (Edge)
+    @"\Local Extension Settings\fdjamakpfbbddfjaooikfcpapjohcfmg",   // Dashlane (Chrome)
+    @"\AppData\Roaming\1Password",
+    @"\AppData\Roaming\Dashlane",
+    @"\AppData\Local\1Password",
+    @"\AppData\Local\Dashlane"
+]);
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("python.exe","pythonw.exe","python","python3") and (ProcessCommandLine has_any (if_files) or ProcessCommandLine has ".npl"))
-   or InitiatingProcessSHA256 == p_zip_sha
-   or SHA256 == p_zip_sha
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| union (DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ (if_files) or FileName endswith ".npl" or SHA256 == p_zip_sha | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName)
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where (FileName in~ (_PyInterpreters)
+      or InitiatingProcessFileName in~ (_PyInterpreters))
+| where ProcessCommandLine has_any (_IFModules)
+      or ProcessCommandLine has_any (_PMArtefacts)
+| project Timestamp, DeviceName, AccountName,
+          Process       = FileName,
+          ProcessCmd    = ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd     = InitiatingProcessCommandLine,
+          ParentFolder  = InitiatingProcessFolderPath,
+          SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] InvisibleFerret C2 callback (DeceptiveDevelopment IPs / endpoints :1244 :1245)
+### [LLM] Python interpreter egress to api.telegram.org / DeceptiveDevelopment C2 IPs
 
-`UC_285_8` · phase: **c2** · confidence: **High**
+`UC_284_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101") OR All_Traffic.dest_port IN (1244,1245) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Web where Web.url IN ("*:1244/keys*","*:1244/pdown*","*:1245/brow*","*:1245/bow*","*:1245/adc*") OR (Web.dest IN ("147.124.214.129","173.211.106.101") AND Web.uri_path IN ("/keys","/pdown","/brow","/bow","/adc")) by Web.src Web.dest Web.url Web.uri_path | `drop_dm_object_name(Web)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port values(All_Traffic.app) as app values(All_Traffic.process_name) as proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe") AND (All_Traffic.dest IN ("api.telegram.org","95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56") OR All_Traffic.dest_port IN (21,990)) by All_Traffic.src host All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let if_c2_ips = dynamic(["95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56","173.211.106.101"]);
-let if_paths = dynamic(["/keys","/pdown","/brow","/bow","/adc"]);
+// InvisibleFerret exfil channels — python interpreter to Telegram API or DeceptiveDevelopment C2 IPs
+let _PyInterpreters = dynamic(["python.exe","pythonw.exe","python3.exe","py.exe"]);
+let _DDC2 = dynamic([
+    "95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194",
+    "147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56"
+]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (if_c2_ips) or RemotePort in (1244,1245)
-   or (RemoteUrl has_any (if_paths) and (RemotePort in (1244,1245) or RemoteIP in (if_c2_ips)))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","node.exe","npm.exe") or RemoteUrl has_any (if_paths)
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ (_PyInterpreters)
+| where InitiatingProcessAccountName !endswith "$"
+| where RemoteIPType == "Public"
+| where RemoteUrl has "api.telegram.org"
+     or RemoteIP in (_DDC2)
+     or RemotePort in (21, 990)        // FTP / FTPS — the article's other named exfil channel
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+          Process=InitiatingProcessFileName,
+          ProcessCmd=InitiatingProcessCommandLine,
+          ProcessFolder=InitiatingProcessFolderPath,
+          RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -125,6 +176,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -152,10 +204,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -208,6 +261,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -267,6 +321,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -298,6 +353,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine

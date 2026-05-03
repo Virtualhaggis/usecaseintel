@@ -40,13 +40,15 @@ Trend Micro has attributed the activity to a threat activity cluster it tracks u
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1574.002** — DLL Side-Loading
-- **T1105** — Ingress Tool Transfer
 - **T1505.003** — Server Software Component: Web Shell
-- **T1059.003** — Windows Command Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1572** — Protocol Tunneling
 - **T1090** — Proxy
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1021.002** — Remote Services: SMB/Windows Admin Shares
+- **T1570** — Lateral Tool Transfer
 
 ## Kill chain phases observed
 
@@ -54,46 +56,80 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ShadowPad DLL side-load via AnyDesk binary launched outside install path
+### [LLM] Godzilla web shell on IIS/Exchange — w3wp.exe spawning recon/cmd children (SHADOW-EARTH-053)
 
-`UC_14_12` · phase: **install** · confidence: **Medium**
+`UC_23_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="AnyDesk.exe" AND NOT (Processes.process_path IN ("*\\Program Files (x86)\\AnyDesk\\*","*\\Program Files\\AnyDesk\\*","*\\AppData\\Roaming\\AnyDesk\\*","*\\ProgramData\\AnyDesk\\*")) by Processes.dest Processes.user Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` | join type=left dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("*.dll") AND Filesystem.file_path IN ("*\\Temp\\*","*\\PerfLogs\\*","*\\Users\\Public\\*","*\\ProgramData\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename file_path as dll_drop_path file_name as dll_dropped] | where isnotnull(dll_drop_path) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","systeminfo.exe","hostname.exe","whoami.exe","ipconfig.exe","tasklist.exe","ping.exe","quser.exe","nltest.exe","wmic.exe","certutil.exe","bitsadmin.exe","rundll32.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let suspectAnydesk = DeviceProcessEvents | where FileName =~ "AnyDesk.exe" | where FolderPath !startswith "C:\\Program Files (x86)\\AnyDesk\\" and FolderPath !startswith "C:\\Program Files\\AnyDesk\\" and FolderPath !contains "\\AppData\\Roaming\\AnyDesk\\" and FolderPath !contains "\\ProgramData\\AnyDesk\\" | project Timestamp, DeviceId, DeviceName, AnyDeskPath=FolderPath, ProcessId=ProcessId, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath; let sideloadDlls = DeviceImageLoadEvents | where InitiatingProcessFileName =~ "AnyDesk.exe" | where FolderPath !startswith "C:\\Windows\\" and FolderPath !startswith "C:\\Program Files (x86)\\AnyDesk\\" and FolderPath !startswith "C:\\Program Files\\AnyDesk\\" | where FileName endswith ".dll" | project Timestamp, DeviceId, DllName=FileName, DllFolderPath=FolderPath, InitiatingProcessFolderPath; suspectAnydesk | join kind=inner sideloadDlls on DeviceId | where InitiatingProcessFolderPath1 == AnyDeskPath | project Timestamp, DeviceName, AccountName, AnyDeskPath, DllName, DllFolderPath
+// Godzilla on IIS/Exchange — w3wp.exe spawning Godzilla's documented recon/cmd children
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","net.exe","net1.exe","systeminfo.exe","hostname.exe","whoami.exe","ipconfig.exe","tasklist.exe","ping.exe","quser.exe","nltest.exe","wmic.exe","certutil.exe","bitsadmin.exe","rundll32.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Godzilla webshell artefacts on Exchange/IIS w3wp.exe (post ProxyLogon-style chain)
+### [LLM] AnyDesk.exe staged from writable path — SHADOW-EARTH-053 ShadowPad DLL side-load
 
-`UC_14_13` · phase: **install** · confidence: **High**
+`UC_23_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-(`tstats` `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\inetpub\\wwwroot\\*","*\\Exchange Server\\*\\FrontEnd\\HttpProxy\\*","*\\Exchange Server\\*\\ClientAccess\\*") AND Filesystem.file_name IN ("error.aspx","warn.aspx","TimeinLogout.aspx","tunnel.ashx","*.ashx","*.aspx") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)`) | append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","whoami.exe","net.exe","ipconfig.exe","nltest.exe","tasklist.exe","systeminfo.exe","wmic.exe") by Processes.dest Processes.user Processes.parent_process_path Processes.process_name Processes.process | `drop_dm_object_name(Processes)`] | stats values(*) as * by dest
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="AnyDesk.exe" AND NOT (Processes.process_path="*\\Program Files\\AnyDesk\\*" OR Processes.process_path="*\\Program Files (x86)\\AnyDesk\\*" OR Processes.process_path="*\\ProgramData\\AnyDesk\\*") AND (Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\AppData\\Roaming\\*" OR Processes.process_path="*\\Windows\\Temp\\*" OR Processes.process_path="*\\PerfLogs\\*" OR Processes.process_path="*\\Intel\\*" OR Processes.process_path="*\\ProgramData\\Microsoft\\*" OR Processes.process_path="*\\Downloads\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let webshellDrops = DeviceFileEvents | where ActionType in ("FileCreated","FileModified") | where FolderPath has_any ("\\inetpub\\wwwroot\\","\\FrontEnd\\HttpProxy\\","\\ClientAccess\\","\\Exchange Server\\") | where FileName endswith ".aspx" or FileName endswith ".ashx" or FileName in~ ("error.aspx","warn.aspx","TimeinLogout.aspx","tunnel.ashx") | project Timestamp, DeviceName, DropPath=FolderPath, DroppedFile=FileName, InitiatingProcessFileName, InitiatingProcessAccountName; let w3wpRecon = DeviceProcessEvents | where InitiatingProcessFileName =~ "w3wp.exe" | where FileName in~ ("cmd.exe","powershell.exe","whoami.exe","net.exe","ipconfig.exe","nltest.exe","tasklist.exe","systeminfo.exe","wmic.exe","net1.exe","hostname.exe") | project Timestamp, DeviceName, ChildProcess=FileName, ProcessCommandLine, InitiatingProcessCommandLine, AccountName; union webshellDrops, w3wpRecon | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ChildProcs=make_set(ChildProcess), Drops=make_set(DroppedFile) by DeviceName
+// SHADOW-EARTH-053 — AnyDesk.exe staged in writable path for ShadowPad DLL side-load
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "AnyDesk.exe"
+| where not(FolderPath startswith @"C:\Program Files\AnyDesk")
+   and not(FolderPath startswith @"C:\Program Files (x86)\AnyDesk")
+   and not(FolderPath startswith @"C:\ProgramData\AnyDesk")
+| where FolderPath has_any (@"\Users\Public\", @"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Windows\Temp\", @"\PerfLogs\", @"\Intel\", @"\ProgramData\Microsoft\", @"\Downloads\")
+| join kind=leftouter (
+    DeviceImageLoadEvents
+    | where Timestamp > ago(14d)
+    | where InitiatingProcessFileName =~ "AnyDesk.exe"
+    | where FileName endswith ".dll"
+    | where FolderPath !startswith @"C:\Windows\"
+    | summarize SideloadedDlls = make_set(strcat(FolderPath, FileName), 20) by DeviceId, InitiatingProcessId
+  ) on DeviceId, $left.ProcessId == $right.InitiatingProcessId
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, SideloadedDlls
+| order by Timestamp desc
 ```
 
-### [LLM] GOST / Wstunnel / IOX tunneling binaries used by SHADOW-EARTH-053 for C2 relay
+### [LLM] SHADOW-EARTH-053 tunneling & lateral-movement toolkit (GOST / IOX / Wstunnel / Sharp-SMBExec / RingQ)
 
-`UC_14_14` · phase: **c2** · confidence: **Medium**
+`UC_23_14` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process IN ("*wstunnel*client*wss://*","*wstunnel*server*","*wstunnel*-L*","*wstunnel*--upgrade-path*") OR Processes.process IN ("*gost*-L=*-F=*","*gost*-L tcp://*","*gost*-F=ssh://*","*gost*relay*") OR Processes.process IN ("*iox*fwd*-l*-r*","*iox*proxy*-l*-r*","*iox*-k *") OR Processes.process_name IN ("wstunnel.exe","gost.exe","iox.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("gost.exe","iox.exe","wstunnel.exe","wst.exe","ringq.exe","Sharp-SMBExec.exe","SMBExec.exe") OR Processes.process="*gost* -L *" OR Processes.process="*gost* -R *" OR Processes.process="*iox* fwd *" OR Processes.process="*iox* proxy *" OR Processes.process="*wstunnel* --server*" OR Processes.process="*wstunnel* -L*" OR Processes.process="*wss://*" OR Processes.process="*Sharp-SMBExec*" OR Processes.process="*Invoke-SMBExec*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents | where (FileName in~ ("wstunnel.exe","gost.exe","iox.exe")) or (ProcessCommandLine has_any ("wstunnel client wss://","wstunnel server","--upgrade-path")) or (ProcessCommandLine matches regex @"(?i)\bgost\b.*-L=.*-F=") or (ProcessCommandLine matches regex @"(?i)\biox\b.*\b(fwd|proxy)\b.*-l\s+\d+.*-r\s+") | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine | join kind=leftouter (DeviceNetworkEvents | where RemoteUrl != "" or RemotePort in (443,80,8080,8443) | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName) on DeviceName, InitiatingProcessFileName | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Cmds=make_set(ProcessCommandLine), Remotes=make_set(strcat(RemoteIP,":",tostring(RemotePort))) by DeviceName, FileName, AccountName
+// SHADOW-EARTH-053 named tunneling & lateral-movement tools
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where FileName in~ ("gost.exe","iox.exe","wstunnel.exe","wst.exe","ringq.exe","Sharp-SMBExec.exe","SMBExec.exe")
+   or ProcessCommandLine has_any ("Sharp-SMBExec","Invoke-SMBExec")
+   or (ProcessCommandLine has "gost" and ProcessCommandLine matches regex @"(?i)\s-(L|R)\s+[a-z]+://")
+   or (ProcessCommandLine has "iox" and ProcessCommandLine has_any (" fwd "," proxy "))
+   or (ProcessCommandLine has "wstunnel" and ProcessCommandLine has_any ("--server"," -L ","wss://"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -115,6 +151,7 @@ DeviceProcessEvents | where (FileName in~ ("wstunnel.exe","gost.exe","iox.exe"))
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -142,10 +179,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### LSASS process access / dump (credential theft)
@@ -168,6 +206,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -229,6 +268,7 @@ DeviceEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -288,6 +328,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -319,6 +360,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -342,9 +384,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### OAuth consent / suspicious app grant
@@ -395,6 +439,7 @@ CloudAppEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -420,6 +465,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -445,6 +491,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -460,4 +507,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 15 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 15 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -12,7 +12,7 @@
         "description": "Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc",
+        "query": "// ASIM ImDnsActivity normalises Windows DNS, Sysmon EID 22, Linux dnsmasq, etc.\nImDnsActivity\n| where TimeGenerated > ago(24h)\n| where DnsQueryTypeName == \"TXT\"\n| summarize Queries = count(), DistinctNames = dcount(DnsQuery)\n            by SrcIpAddr, bin(TimeGenerated, 5m)\n| where Queries > 200    // tune to TXT-query baseline for environment\n| order by Queries desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

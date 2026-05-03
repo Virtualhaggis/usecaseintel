@@ -1,0 +1,96 @@
+{
+  "name": "Lazarus Group",
+  "ucs": [
+    {
+      "title": "[LLM] Lazarus / Diamond Sleet 'Operation DreamJob' \u2014 DLL side-loading by trojanized open-source binaries (PuTTY/KiTTY/SumatraPDF/TightVNC)",
+      "description": "Hunts the signature Diamond Sleet (ZINC / Labyrinth Chollima) initial-access chain where a LinkedIn 'job offer' delivers an ISO/ZIP containing a re-signed copy of a legitimate open-source utility (PuTTY, KiTTY, SumatraPDF, TightVNC, muPDF, FortiClient, AmazonVNC, etc.) that DLL-side-loads a malicious payload (commonly version.dll, colorui.dll, dbghelp.dll, sqlite3.dll, wtsapi32.dll, msvcr100.dll). Microsoft and Mandiant have repeatedly attributed this exact tradecraft to Lazarus subclusters across the 2022\u20132024 DreamJob, AIRDRY.V2 and 3CX waves.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1574.002",
+        "T1036.005",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"putty.exe\",\"kitty.exe\",\"sumatrapdf.exe\",\"tightvnc.exe\",\"amazonvnc.exe\",\"forticlient.exe\",\"mupdf.exe\",\"clientvpn.exe\",\"amazon_assessment.exe\")) AND (Processes.process_path=\"*\\\\Downloads\\\\*\" OR Processes.process_path=\"*\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\*\" OR Processes.process_path=\"*\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\Desktop\\\\*\" OR Processes.process_path=\"*\\\\$RECYCLE.BIN\\\\*\" OR Processes.process_path=\"*\\\\Volume{*\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.process_hash Processes.parent_process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` | join type=left dest process_path [| tstats summariesonly=true count as DllSideLoadCount values(Filesystem.file_name) as side_loaded_dll values(Filesystem.file_hash) as side_loaded_hash from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"version.dll\",\"colorui.dll\",\"colorcpl.dll\",\"dbghelp.dll\",\"sqlite3.dll\",\"sqlite3-x64.dll\",\"msvcr100.dll\",\"wtsapi32.dll\",\"secur32.dll\",\"vcruntime140.dll\") by Filesystem.dest Filesystem.file_path | rename Filesystem.dest as dest Filesystem.file_path as process_path] | where DllSideLoadCount>0 | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Lazarus Group / Diamond Sleet (G0032) \u2014 DreamJob trojanized OSS DLL side-loading\nlet _trojanized_apps = dynamic([\n    \"putty.exe\",\"kitty.exe\",\"sumatrapdf.exe\",\"tightvnc.exe\",\n    \"amazonvnc.exe\",\"mupdf.exe\",\"forticlient.exe\",\"clientvpn.exe\",\n    \"amazon_assessment.exe\",\"amazon_video.exe\",\"vncviewer.exe\"\n]);\nlet _siphoned_dlls = dynamic([\n    \"version.dll\",\"colorui.dll\",\"colorcpl.dll\",\"dbghelp.dll\",\n    \"mscoree.dll\",\"sqlite3.dll\",\"sqlite3-x64.dll\",\"msvcr100.dll\",\n    \"wtsapi32.dll\",\"secur32.dll\",\"vcruntime140.dll\"\n]);\nlet _user_writable = dynamic([@\"\\Users\\\",@\"\\Downloads\\\",@\"\\Temp\\\",@\"\\AppData\\\",@\"\\Public\\\",@\"\\Desktop\\\",@\"\\$RECYCLE.BIN\\\",@\"\\ProgramData\\\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName in~ (_trojanized_apps)\n| where FileName in~ (_siphoned_dlls)\n// Side-loaded DLL is NOT in the legitimate system DLL search path\n| where FolderPath !startswith @\"C:\\Windows\\\"\n   and FolderPath !startswith @\"C:\\Program Files\\\"\n   and FolderPath !startswith @\"C:\\Program Files (x86)\\\"\n// Loader binary itself launched from a user-writable path (DreamJob ISO/ZIP/Downloads pattern)\n| where InitiatingProcessFolderPath has_any (_user_writable)\n// Side-loaded DLL is in the SAME folder as the exe (classic search-order hijack)\n| extend SideLoadInExeFolder = (FolderPath =~ InitiatingProcessFolderPath)\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          LoaderProcess = InitiatingProcessFileName,\n          LoaderPath    = InitiatingProcessFolderPath,\n          LoaderSHA256  = InitiatingProcessSHA256,\n          SideLoadedDll      = FileName,\n          SideLoadedDllPath  = FolderPath,\n          SideLoadedDllSHA256 = SHA256,\n          SideLoadInExeFolder\n| order by Timestamp desc",
+      "sentinel_kql": "// Lazarus Group / Diamond Sleet (G0032) \u2014 DreamJob trojanized OSS DLL side-loading\n// Requires Microsoft Defender for Endpoint connector \u2192 Sentinel (DeviceImageLoadEvents table).\nlet _trojanized_apps = dynamic([\n    \"putty.exe\",\"kitty.exe\",\"sumatrapdf.exe\",\"tightvnc.exe\",\n    \"amazonvnc.exe\",\"mupdf.exe\",\"forticlient.exe\",\"clientvpn.exe\",\n    \"amazon_assessment.exe\",\"amazon_video.exe\",\"vncviewer.exe\"\n]);\nlet _siphoned_dlls = dynamic([\n    \"version.dll\",\"colorui.dll\",\"colorcpl.dll\",\"dbghelp.dll\",\n    \"mscoree.dll\",\"sqlite3.dll\",\"sqlite3-x64.dll\",\"msvcr100.dll\",\n    \"wtsapi32.dll\",\"secur32.dll\",\"vcruntime140.dll\"\n]);\nlet _user_writable = dynamic([@\"\\Users\\\",@\"\\Downloads\\\",@\"\\Temp\\\",@\"\\AppData\\\",@\"\\Public\\\",@\"\\Desktop\\\",@\"\\$RECYCLE.BIN\\\",@\"\\ProgramData\\\"]);\nDeviceImageLoadEvents\n| where TimeGenerated > ago(30d)\n| where InitiatingProcessFileName in~ (_trojanized_apps)\n| where FileName in~ (_siphoned_dlls)\n| where FolderPath !startswith @\"C:\\Windows\\\"\n   and FolderPath !startswith @\"C:\\Program Files\\\"\n   and FolderPath !startswith @\"C:\\Program Files (x86)\\\"\n| where InitiatingProcessFolderPath has_any (_user_writable)\n| extend SideLoadInExeFolder = (FolderPath =~ InitiatingProcessFolderPath)\n| project TimeGenerated, DeviceName, InitiatingProcessAccountName,\n          LoaderProcess = InitiatingProcessFileName,\n          LoaderPath    = InitiatingProcessFolderPath,\n          LoaderSHA256  = InitiatingProcessSHA256,\n          SideLoadedDll      = FileName,\n          SideLoadedDllPath  = FolderPath,\n          SideLoadedDllSHA256 = SHA256,\n          SideLoadInExeFolder\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Lazarus Diamond Sleet - Trojanized OSS Binary DLL Side-Load (DreamJob)\nid: 6f8a2e4c-5b9d-4a7e-9c3b-d4f2e1a8b7c5\nstatus: experimental\ndescription: Detects DLL side-loading by trojanized signed open-source binaries (PuTTY, KiTTY, SumatraPDF, TightVNC, FortiClient, etc.) running from user-writable paths - the canonical Operation DreamJob initial-access chain attributed to Lazarus Group / Diamond Sleet / ZINC / Labyrinth Chollima.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2023/10/18/multiple-north-korean-threat-actors-exploiting-the-teamcity-cve-2023-42793-vulnerability/\n  - https://www.mandiant.com/resources/blog/lazarus-3cx-supply-chain\n  - https://attack.mitre.org/groups/G0032/\nauthor: Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.defense_evasion\n  - attack.t1566.001\n  - attack.t1574.002\n  - attack.t1036.005\n  - attack.g0032\nlogsource:\n  category: image_load\n  product: windows\ndetection:\n  selection_loader:\n    Image|endswith:\n      - '\\putty.exe'\n      - '\\kitty.exe'\n      - '\\sumatrapdf.exe'\n      - '\\tightvnc.exe'\n      - '\\amazonvnc.exe'\n      - '\\mupdf.exe'\n      - '\\forticlient.exe'\n      - '\\clientvpn.exe'\n      - '\\amazon_assessment.exe'\n      - '\\vncviewer.exe'\n  selection_dll:\n    ImageLoaded|endswith:\n      - '\\version.dll'\n      - '\\colorui.dll'\n      - '\\colorcpl.dll'\n      - '\\dbghelp.dll'\n      - '\\sqlite3.dll'\n      - '\\sqlite3-x64.dll'\n      - '\\msvcr100.dll'\n      - '\\wtsapi32.dll'\n      - '\\secur32.dll'\n      - '\\vcruntime140.dll'\n  filter_system:\n    ImageLoaded|startswith:\n      - 'C:\\Windows\\'\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n  selection_loader_path:\n    Image|contains:\n      - '\\Users\\'\n      - '\\Downloads\\'\n      - '\\Temp\\'\n      - '\\AppData\\'\n      - '\\Public\\'\n      - '\\Desktop\\'\n      - '\\$RECYCLE.BIN\\'\n      - '\\ProgramData\\'\n  condition: selection_loader and selection_dll and selection_loader_path and not filter_system\nfalsepositives:\n  - Portable copies of these utilities run from a user profile - validate the SHA256 of the side-loaded DLL against vendor distributions.\nlevel: high",
+      "rationale": "This is not a generic 'DLL side-loading' detection \u2014 it is bracketed by THREE Lazarus-specific anchors at the same time: (a) the loader is one of the named open-source utilities Microsoft/Mandiant explicitly attributed to Diamond Sleet trojanization (PuTTY, KiTTY, SumatraPDF, TightVNC, FortiClient, AmazonVNC), (b) the loaded DLL is one of the documented sideload-targets used by the LIDSHIFT/LIDSHO",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceImageLoadEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Lazarus FudModule / Diamond Sleet \u2014 Bring-Your-Own-Vulnerable-Driver service installation followed by EDR/AV tamper",
+      "description": "Hunts Lazarus's FudModule rootkit chain where a vulnerable signed kernel driver (dbutil_2_3.sys, dbk64.sys, ene.sys, RTCore64.sys, iqvw64e.sys, appid.sys, viragt64.sys, truesight.sys, procexp152.sys) is dropped to a user-writable path, registered as a Windows service, then loaded to disable Defender / EDR kernel callbacks. Microsoft, AhnLab and Avast have all attributed FudModule BYOVD exclusively to Lazarus subgroups (Diamond Sleet, Andariel) since 2022, including the appid.sys admin-to-kernel zero-day (CVE-2024-21338) patched by Microsoft as a Diamond Sleet exploit.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1543.003",
+        "T1068",
+        "T1014",
+        "T1562.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\\\\ImagePath\" AND Registry.registry_value_data=\"*.sys*\" AND (Registry.registry_value_data=\"*dbutil_2_3*\" OR Registry.registry_value_data=\"*dbk64*\" OR Registry.registry_value_data=\"*ene.sys*\" OR Registry.registry_value_data=\"*iqvw64e*\" OR Registry.registry_value_data=\"*RTCore64*\" OR Registry.registry_value_data=\"*truesight*\" OR Registry.registry_value_data=\"*procexp152*\" OR Registry.registry_value_data=\"*viragt64*\" OR Registry.registry_value_data=\"*gdrv.sys*\" OR Registry.registry_value_data=\"*\\\\Users\\\\*\" OR Registry.registry_value_data=\"*\\\\Temp\\\\*\" OR Registry.registry_value_data=\"*\\\\AppData\\\\*\" OR Registry.registry_value_data=\"*\\\\Public\\\\*\" OR Registry.registry_value_data=\"*\\\\ProgramData\\\\*\") by Registry.dest Registry.user Registry.process_name Registry.process Registry.registry_key_name Registry.registry_path Registry.registry_value_data | `drop_dm_object_name(Registry)` | rex field=registry_path \"\\\\\\\\Services\\\\\\\\(?<svc_name>[^\\\\\\\\]+)\\\\\\\\\" | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Lazarus Group / Diamond Sleet (G0032) \u2014 FudModule BYOVD service install\nlet _vuln_drivers = dynamic([\n    \"dbutil_2_3\",\"dbk64\",\"ene.sys\",\"iqvw64e\",\"rtcore64\",\n    \"truesight\",\"procexp152\",\"viragt64\",\"gdrv.sys\",\n    \"asusio2\",\"atillk64\",\"wnbios\",\"hw64\",\"appid.sys\"\n]);\nlet _user_writable = dynamic([@\"\\Users\\\",@\"\\Downloads\\\",@\"\\Temp\\\",@\"\\AppData\\\",@\"\\Public\\\",@\"\\Desktop\\\",@\"\\ProgramData\\\"]);\nlet ServiceInstalls =\n    DeviceRegistryEvents\n    | where Timestamp > ago(30d)\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where RegistryKey has @\"\\SYSTEM\\CurrentControlSet\\Services\"\n    | where RegistryValueName =~ \"ImagePath\"\n    | where RegistryValueData has \".sys\"\n    | where (tolower(RegistryValueData) has_any (_vuln_drivers))\n         or (RegistryValueData has_any (_user_writable))\n    | extend ServiceName = extract(@\"Services\\\\([^\\\\]+)\\\\\", 1, RegistryKey)\n    | project Timestamp, DeviceName, ServiceName,\n              DriverImagePath = RegistryValueData,\n              InitiatingProcessFileName, InitiatingProcessCommandLine,\n              InitiatingProcessAccountName, InitiatingProcessSHA256,\n              InitiatingProcessFolderPath;\n// Pivot 1 \u2014 driver was actually written to disk in a user-writable path within \u00b110 min of the service install\nlet DriverDrops =\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"FileCreated\"\n    | where FileName endswith \".sys\"\n    | where FolderPath has_any (_user_writable)\n         or tolower(FileName) has_any (_vuln_drivers)\n    | project DropTime = Timestamp, DeviceName, DroppedDriver = FileName,\n              DroppedDriverPath = FolderPath, DroppedDriverSHA256 = SHA256,\n              DroppingProcess = InitiatingProcessFileName,\n              DroppingProcessCmd = InitiatingProcessCommandLine;\nServiceInstalls\n| join kind=leftouter DriverDrops on DeviceName\n| where isnull(DropTime)\n      or abs(datetime_diff('minute', Timestamp, DropTime)) <= 10\n| project Timestamp, DeviceName, ServiceName, DriverImagePath,\n          DroppedDriver, DroppedDriverPath, DroppedDriverSHA256,\n          DroppingProcess, DroppingProcessCmd,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessAccountName\n| order by Timestamp desc",
+      "sentinel_kql": "// Lazarus Group / Diamond Sleet (G0032) \u2014 FudModule BYOVD service install\n// Uses ASIM ImRegistryEvent + ImFileEvent for cross-vendor coverage; falls back to MDE\u2192Sentinel tables when present.\nlet _vuln_drivers = dynamic([\n    \"dbutil_2_3\",\"dbk64\",\"ene.sys\",\"iqvw64e\",\"rtcore64\",\n    \"truesight\",\"procexp152\",\"viragt64\",\"gdrv.sys\",\n    \"asusio2\",\"atillk64\",\"wnbios\",\"hw64\",\"appid.sys\"\n]);\nlet _user_writable = dynamic([@\"\\Users\\\",@\"\\Downloads\\\",@\"\\Temp\\\",@\"\\AppData\\\",@\"\\Public\\\",@\"\\Desktop\\\",@\"\\ProgramData\\\"]);\nlet ServiceInstalls =\n    ImRegistryEvent\n    | where TimeGenerated > ago(30d)\n    | where RegistryKey has @\"\\SYSTEM\\CurrentControlSet\\Services\"\n    | where RegistryValue =~ \"ImagePath\"\n    | where RegistryValueData has \".sys\"\n    | where (tolower(RegistryValueData) has_any (_vuln_drivers))\n         or (RegistryValueData has_any (_user_writable))\n    | extend ServiceName = extract(@\"Services\\\\([^\\\\]+)\\\\\", 1, RegistryKey)\n    | project TimeGenerated, DvcHostname, ServiceName,\n              DriverImagePath = RegistryValueData,\n              ActingProcessName, ActingProcessCommandLine, ActorUsername;\nlet DriverDrops =\n    ImFileEvent\n    | where TimeGenerated > ago(30d)\n    | where EventType == \"FileCreated\"\n    | where TargetFileName endswith \".sys\"\n    | where TargetFilePath has_any (_user_writable)\n         or tolower(TargetFileName) has_any (_vuln_drivers)\n    | project DropTime = TimeGenerated, DvcHostname, DroppedDriver = TargetFileName,\n              DroppedDriverPath = TargetFilePath, DroppedDriverSHA256 = TargetFileSHA256,\n              DroppingProcess = ActingProcessName,\n              DroppingProcessCmd = ActingProcessCommandLine;\nServiceInstalls\n| join kind=leftouter DriverDrops on DvcHostname\n| where isnull(DropTime)\n      or abs(datetime_diff('minute', TimeGenerated, DropTime)) <= 10\n| project TimeGenerated, DvcHostname, ServiceName, DriverImagePath,\n          DroppedDriver, DroppedDriverPath, DroppedDriverSHA256,\n          DroppingProcess, DroppingProcessCmd,\n          ActingProcessName, ActingProcessCommandLine, ActorUsername\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "FudModule is the most distinctively Lazarus piece of tradecraft Microsoft has burned in the last three years (CVE-2024-21338 patch was titled with a Diamond Sleet attribution). The detection ANDs three pivots that crime crews almost never combine: (1) registration of a kernel-mode service with an ImagePath ending in .sys, (2) the .sys living in a user-writable path or matching one of the specific "
+    }
+  ]
+}

@@ -29,10 +29,12 @@ The war in Iran was less than 24 hours old when it produced a historic first: th
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1087** — Account Discovery
 - **T1199** — Trusted Relationship
-- **T1133** — External Remote Services
 - **T1621** — Multi-Factor Authentication Request Generation
-- **T1110.003** — Password Spraying
+- **T1110.003** — Brute Force: Password Spraying
 - **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
 - **T1098.005** — Account Manipulation: Device Registration
 
@@ -42,33 +44,77 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] MuddyWater MSP-pivot: SimpleHelp RMM client execution at non-MSP endpoints
+### [LLM] MuddyWater SimpleHelp RMM client spawning shell or recon LOLBin
 
-`UC_175_9` · phase: **install** · confidence: **Medium**
+`UC_174_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") OR Processes.process_path IN ("*\\JWrapper-Remote Access\\*","*\\SimpleHelp*\\*","*\\SimpleHelpRemoteAccess\\*") OR (Processes.process_name="java.exe" AND Processes.process="*Technician.jar*")) by Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | lookup approved_msp_endpoints dest OUTPUT msp_owner | where isnull(msp_owner) | join type=left dest [ | tstats `summariesonly` values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.dest) as remote_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8443,443) (All_Traffic.dest="*simple-help.com" OR All_Traffic.app="simplehelp") by All_Traffic.src | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("SimpleHelpCustomer.exe","Remote Access.exe","SimpleService.exe","JWrapper-Remote Access.exe") OR Processes.parent_process_path="*\\JWrapper-Remote Access\\*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","quser.exe","systeminfo.exe","ipconfig.exe","tasklist.exe") by host Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let proc = DeviceProcessEvents | where Timestamp > ago(14d) | where FileName in~ ("Remote Access.exe","RemoteAccess.exe","SimpleService.exe","SimpleHelpRemoteAccess.exe","SimpleGatewayServer.exe") or FolderPath matches regex @"(?i)\\(SimpleHelp|JWrapper-Remote Access|SimpleHelpRemoteAccess)\\" or (FileName =~ "java.exe" and ProcessCommandLine has_cs "Technician.jar") or ProcessVersionInfoCompanyName has "JWrapper" | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountName, SHA256; let net = DeviceNetworkEvents | where Timestamp > ago(14d) | where RemoteUrl has "simple-help.com" or (RemotePort in (8443,443) and InitiatingProcessFileName in~ ("Remote Access.exe","SimpleService.exe","java.exe")) | project NetTime=Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName; proc | join kind=leftouter net on DeviceId | where DeviceName !in ((externaldata(d:string)[@"https://approved-msp-list.csv"] with (format="csv")))  // replace with internal approved-MSP allowlist
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, SHA256
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("SimpleHelpCustomer.exe","Remote Access.exe","SimpleService.exe","JWrapper-Remote Access.exe")
+   or InitiatingProcessFolderPath has @"\JWrapper-Remote Access\"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","quser.exe","systeminfo.exe","ipconfig.exe","tasklist.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Iranian APT MFA push-bombing followed by attacker-controlled MFA registration change
+### [LLM] Iran-aligned MFA push-bombing followed by new auth method registered (AA24-290A)
 
-`UC_175_10` · phase: **install** · confidence: **High**
+`UC_174_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as mfa_challenges values(Authentication.src) as src_ips dc(Authentication.src) as dc_src min(_time) as first_attempt max(_time) as last_attempt from datamodel=Authentication where Authentication.action="failure" (Authentication.signature="*MFA*" OR Authentication.signature_id IN ("50074","50158","500121","530003") OR Authentication.authentication_method="MFA") by Authentication.user span=30m | `drop_dm_object_name(Authentication)` | where mfa_challenges >= 10 | join type=inner user [ | tstats `summariesonly` min(_time) as success_time from datamodel=Authentication where Authentication.action="success" Authentication.authentication_method="MFA" by Authentication.user | `drop_dm_object_name(Authentication)` ] | where success_time >= first_attempt AND success_time <= (last_attempt + 3600) | join type=inner user [ | tstats `summariesonly` min(_time) as reg_change_time values(All_Changes.object) as changed_object values(All_Changes.action) as change_action from datamodel=Change.Account_Management where (All_Changes.object_category="user" AND (All_Changes.action="updated" OR All_Changes.action="created") AND (All_Changes.object_attrs="*StrongAuthentication*" OR All_Changes.object_attrs="*authenticationMethod*" OR All_Changes.object_attrs="*PhoneAuthentication*")) by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename All_Changes.user as user ] | where reg_change_time >= success_time AND reg_change_time <= (success_time + 86400) | table user first_attempt last_attempt mfa_challenges src_ips success_time reg_change_time changed_object change_action
+| tstats `summariesonly` count as FailCount min(_time) as FirstFail max(_time) as LastFail values(Authentication.src) as SrcIPs from datamodel=Authentication where Authentication.action=failure Authentication.signature_id IN ("500121","50074","50076","50097","50158") by Authentication.user | `drop_dm_object_name(Authentication)` | where FailCount>=5 | rename user as upn | join type=inner upn [| tstats `summariesonly` min(_time) as RegTime values(All_Changes.command) as Operation values(All_Changes.src) as RegSrcIP from datamodel=Change.All_Changes where All_Changes.object_category=user (All_Changes.command="User registered security info" OR All_Changes.command="Admin registered security info" OR All_Changes.command="User registered all required security info" OR All_Changes.command="Update user") by All_Changes.object | `drop_dm_object_name(All_Changes)` | rename object as upn] | where RegTime>=LastFail AND RegTime<=LastFail+7200 | table upn FailCount FirstFail LastFail SrcIPs RegTime Operation RegSrcIP
 ```
 
 **Defender KQL:**
 ```kql
-let bombing = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode in (50074, 50158, 500121, 530003) or (Status has "MFA" and ConditionalAccessStatus != "success") | summarize FailedMFA=count(), FirstAttempt=min(Timestamp), LastAttempt=max(Timestamp), SrcIPs=make_set(IPAddress, 25), DistinctSrcIPs=dcount(IPAddress) by AccountUpn, AccountObjectId, bin(Timestamp, 1h) | where FailedMFA >= 10; let approved = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode == 0 and AuthenticationRequirement =~ "multiFactorAuthentication" | project SuccessTime=Timestamp, AccountObjectId, ApprovedFromIP=IPAddress, ApprovedDevice=DeviceName; let regChange = CloudAppEvents | where Timestamp > ago(7d) | where Application has_any ("Microsoft Entra","Azure Active Directory") | where ActionType has_any ("Update user","Add registered security info","Update authentication method","User registered security info","User changed default security info","Reset user password") | project RegChangeTime=Timestamp, AccountObjectId, ActionType, RegInitiatedBy=tostring(RawEventData.InitiatedBy), RegFromIP=IPAddress; bombing | join kind=inner approved on AccountObjectId | where SuccessTime between (FirstAttempt .. (LastAttempt + 1h)) | join kind=inner regChange on AccountObjectId | where RegChangeTime between (SuccessTime .. (SuccessTime + 24h)) | project AccountUpn, FirstAttempt, LastAttempt, FailedMFA, DistinctSrcIPs, SrcIPs, SuccessTime, ApprovedFromIP, RegChangeTime, ActionType, RegFromIP
+let LookbackHours = 24h;
+let WindowMin = 120;
+let BombingThreshold = 5;
+// MFA-friction failure codes per Entra docs
+let MfaFailCodes = dynamic([500121, 50074, 50076, 50097, 50158]);
+let Bombed = AADSignInEventsBeta
+    | where Timestamp > ago(LookbackHours)
+    | where ErrorCode in (MfaFailCodes)
+    | summarize FailCount = count(),
+                FirstFail = min(Timestamp),
+                LastFail  = max(Timestamp),
+                SourceIPs = make_set(IPAddress, 25),
+                SourceCountries = make_set(Country, 10)
+                by AccountUpn, AccountObjectId
+    | where FailCount >= BombingThreshold;
+let MFAReg = CloudAppEvents
+    | where Timestamp > ago(LookbackHours)
+    | where ApplicationId == 11161  // Office 365 / Azure AD audit feed
+    | where ActionType has_any ("User registered security info",
+                                "Admin registered security info",
+                                "User registered all required security info",
+                                "User started security info registration",
+                                "Update user")
+    | extend TargetUpn = tostring(parse_json(tostring(ActivityObjects))[0].name)
+    | where isnotempty(TargetUpn)
+    | project RegTime = Timestamp, TargetUpn, ActionType, RegIP = IPAddress,
+              ActorDisplayName = AccountDisplayName;
+Bombed
+| join kind=inner MFAReg on $left.AccountUpn == $right.TargetUpn
+| where RegTime between (LastFail .. LastFail + WindowMin * 1m)
+| project AccountUpn, FailCount, FirstFail, LastFail, RegTime,
+          MinutesAfterBombing = datetime_diff('minute', RegTime, LastFail),
+          ActionType, RegIP, SourceIPs, SourceCountries
+| order by RegTime desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -121,6 +167,7 @@ let bombing = AADSignInEventsBeta | where Timestamp > ago(7d) | where ErrorCode 
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -180,6 +227,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -211,6 +259,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -237,6 +286,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -262,9 +312,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -288,6 +340,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -317,9 +370,11 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
@@ -341,6 +396,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -366,6 +422,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -374,4 +431,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -132,9 +132,11 @@ DeviceNetworkEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -159,6 +161,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -167,7 +170,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast16 | Mystery ShadowBrokers Reference Reveals High-Precision Software Sabotag
 
-`UC_86_4` · phase: **exploit** · confidence: **High**
+`UC_88_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

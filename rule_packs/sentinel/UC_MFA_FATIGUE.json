@@ -12,7 +12,7 @@
         "description": "Many MFA pushes to same user in short window \u2014 suggests adversary attempting approval-fatigue.",
         "severity": "High",
         "enabled": false,
-        "query": "AADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc",
+        "query": "SigninLogs\n| where TimeGenerated > ago(24h)\n| where ResultType == 50158        // MFA Challenge required / failed\n| summarize Attempts = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            IPs       = make_set(IPAddress, 5)\n            by UserPrincipalName, bin(TimeGenerated, 5m)\n| where Attempts > 3               // tune to baseline\n| order by Attempts desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

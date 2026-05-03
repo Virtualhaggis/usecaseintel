@@ -12,7 +12,7 @@
         "description": "schtasks.exe /create or Microsoft-Windows-TaskScheduler EventID 4698 with LOLBin actions.",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName",
+        "query": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\schtasks.exe\"\n| where CommandLine has \"/create\"\n| where CommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\n                              \"\\Users\\Public\", \"\\AppData\\\")\n| project TimeGenerated, Computer, Account, CommandLine,\n          ParentProcessName, NewProcessName\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

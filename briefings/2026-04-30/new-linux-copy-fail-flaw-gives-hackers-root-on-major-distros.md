@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Copy Fail: setuid-root binary modified by non-package-manager process
 
-`UC_39_2` · phase: **exploit** · confidence: **High**
+`UC_41_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceFileEvents
 
 ### [LLM] Copy Fail: algif_aead kernel module load by unprivileged or unexpected process
 
-`UC_39_3` · phase: **exploit** · confidence: **Medium**
+`UC_41_3` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Copy Fail: setuid binary executed within minutes of an out-of-band modification
 
-`UC_39_4` · phase: **exploit** · confidence: **High**
+`UC_41_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ Modified
 
 ### Article-specific behavioural hunt — New Linux ‘Copy Fail’ flaw gives hackers root on major distros
 
-`UC_39_1` · phase: **install** · confidence: **High**
+`UC_41_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

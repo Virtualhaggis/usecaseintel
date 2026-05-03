@@ -58,6 +58,7 @@ _(none detected from narrative keywords)_
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "sc.exe" and ProcessCommandLine has "create"
 | where ProcessCommandLine matches regex @"(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName

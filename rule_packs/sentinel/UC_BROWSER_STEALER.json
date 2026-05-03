@@ -12,7 +12,7 @@
         "description": "Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Google\\Chrome\\User Data\\\",\"\\Microsoft\\Edge\\User Data\\\",\"\\Mozilla\\Firefox\\Profiles\\\")\n| where FileName in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType",
+        "query": "// ASIM ImFileEvent \u2014 covers MDE, Sysmon, AuditD, Defender for Cloud, etc.\nImFileEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith \"$\"\n| where TargetFilePath has_any (@\"\\Google\\Chrome\\User Data\\\",\n                                  @\"\\Microsoft\\Edge\\User Data\\\",\n                                  @\"\\Mozilla\\Firefox\\Profiles\\\")\n| where TargetFileName in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where ActingProcessName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n          TargetFilePath, TargetFileName, EventType\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

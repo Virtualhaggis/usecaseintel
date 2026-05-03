@@ -48,10 +48,8 @@ When researching the boundaries of cloud services, two of the main asp…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1611** — Escape to Host (sandbox escape)
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1580** — Cloud Infrastructure Discovery
-- **T1213** — Data from Information Repositories
+- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted/Obfuscated
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -59,58 +57,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] AWS AgentCore Code Interpreter DNS tunneling to dnshook.site / high-entropy subdomains
+### [LLM] DNS queries to dnshook.site (Unit42/BeyondTrust AgentCore sandbox-escape PoC domain)
 
-`UC_147_9` · phase: **c2** · confidence: **High**
+`UC_146_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answers values(DNS.src) as src from datamodel=Network_Resolution where (DNS.src_category="aws_agentcore" OR DNS.src="169.254.169.253" OR DNS.vendor_product="AWS Route53 Resolver") AND (DNS.query="*.dnshook.site" OR (len(DNS.query)>60 AND DNS.query!="*.amazonaws.com" AND DNS.query!="*.aws.dev" AND DNS.query!="*.amazon.com")) by DNS.query DNS.src DNS.record_type | `drop_dm_object_name(DNS)` | eval label=mvindex(split(query,"."),0) | eval label_len=len(label) | where label_len>=20 AND match(label,"^[A-Za-z0-9+/=_-]+$") | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Network_Resolution.query) as queries values(Network_Resolution.answer) as answers from datamodel=Network_Resolution where (Network_Resolution.query="dnshook.site" OR Network_Resolution.query="*.dnshook.site") by Network_Resolution.src Network_Resolution.dest_domain Network_Resolution.record_type | `drop_dm_object_name(Network_Resolution)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// Requires AWS Route53/VPC DNS logs ingested via Sentinel AWS connector or CloudAppEvents
-let agentcoreSources = dynamic(["AmazonBedrock-AgentCore","AgentCore-CodeInterpreter","AgentCore-Runtime"]);
-CloudAppEvents
-| where Application has_any ("AWS","Amazon Web Services")
-| where ActionType in ("DnsQuery","Route53ResolverQuery")
-| extend query = tostring(RawEventData.queryName), src = tostring(RawEventData.srcIds)
-| where src has_any (agentcoreSources) or RawEventData.vpcEndpointId has "agentcore"
-| extend firstLabel = tostring(split(query, ".")[0])
-| where query endswith "dnshook.site"
-   or (strlen(firstLabel) >= 20 and firstLabel matches regex @"^[A-Za-z0-9+/=_-]+$"
-       and not(query endswith ".amazonaws.com") and not(query endswith ".amazon.com") and not(query endswith ".aws.dev"))
-| summarize Queries=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), sample=any(query) by src, RawEventData.queryName
-| sort by Queries desc
+// AgentCore sandbox-escape PoC domain (Unit 42 + BeyondTrust corroborated)
+let _pocDomain = "dnshook.site";
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
+| where QueryName == _pocDomain or QueryName endswith strcat(".", _pocDomain)
+| project Timestamp, DeviceName, DeviceId, QueryName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, AdditionalFields
+| order by Timestamp desc
 ```
 
-### [LLM] AgentCore microVM MMDS access to undocumented aws_presigned-log-url / kms-key tag paths
+### [LLM] AgentCore-style DNS tunnelling: high-volume long-label subdomain queries to a single parent domain
 
-`UC_147_10` · phase: **recon** · confidence: **High**
+`UC_146_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as ua values(Web.src) as src from datamodel=Web where Web.dest="169.254.169.254" AND (Web.url="*tags/instance/aws_presigned-log-url*" OR Web.url="*tags/instance/aws_presigned-log-kms-key*" OR Web.url="*latest/meta-data/tags/instance/*") by Web.src Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | eval mmds_v1_no_token=if(http_method="GET" AND NOT match(http_user_agent,"(?i)x-aws-ec2-metadata-token"),1,0) | where mmds_v1_no_token=1 OR match(url,"aws_presigned-log")
+| tstats `summariesonly` count as queryCount values(Network_Resolution.query) as sampleQueries dc(Network_Resolution.query) as distinctSubdomains from datamodel=Network_Resolution where Network_Resolution.record_type IN ("A","AAAA","TXT","CNAME") by Network_Resolution.src _time span=10m | `drop_dm_object_name(Network_Resolution)` | eval parentDomain=mvindex(split(mvindex(sampleQueries,0),"."),-2)+"."+mvindex(split(mvindex(sampleQueries,0),"."),-1) | stats sum(queryCount) as totalQueries sum(distinctSubdomains) as totalDistinct values(sampleQueries) as sampleQueries by src parentDomain | eval avgLabelLen=mvindex(mvfilter(len(sampleQueries)>30),0) | where totalDistinct >= 50 AND totalQueries >= 100 AND len(parentDomain) > 5 | sort - totalDistinct
 ```
 
 **Defender KQL:**
 ```kql
-// On hosts running AgentCore SDK / Strands locally, OR via Defender for Cloud cloud-workload telemetry
-let mmdsPaths = dynamic(["/latest/meta-data/tags/instance/aws_presigned-log-url","/latest/meta-data/tags/instance/aws_presigned-log-kms-key","/latest/meta-data/tags/instance/"]);
-union isfuzzy=true
-(DeviceNetworkEvents
-| where RemoteIP == "169.254.169.254"
-| where RequestUrl has_any (mmdsPaths) or RequestUrl has "aws_presigned-log"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RequestUrl, RemoteIP),
-(DeviceProcessEvents
-| where (ProcessCommandLine has "169.254.169.254" and ProcessCommandLine has_any ("aws_presigned-log-url","aws_presigned-log-kms-key","tags/instance"))
-  or (InitiatingProcessCommandLine has_any ("socket.gethostbyname_ex","dnshook.site") and ProcessCommandLine has "python")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine)
-| sort by Timestamp desc
+// AgentCore-style DNS exfil pattern: many long-label subdomains under one parent
+let _windowMin = 10m;
+let _minDistinctLabels = 50;     // article: each query encodes a chunk
+let _minLabelLen = 30;            // base64 chunks are typically long
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "DnsQueryResponse"
+| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
+| where isnotempty(QueryName) and QueryName contains "."
+| extend Labels = split(QueryName, ".")
+| where array_length(Labels) >= 3
+| extend ParentDomain = strcat(tostring(Labels[array_length(Labels)-2]), ".", tostring(Labels[array_length(Labels)-1]))
+| extend FirstLabel = tostring(Labels[0])
+| extend FirstLabelLen = strlen(FirstLabel)
+| where FirstLabelLen >= _minLabelLen
+| where FirstLabel matches regex @"^[A-Za-z0-9+/=_-]+$"      // base64-ish / hex / b32
+| summarize DistinctSubdomains = dcount(QueryName),
+            QueryCount = count(),
+            MaxLabelLen = max(FirstLabelLen),
+            SampleQueries = make_set(QueryName, 5),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceId, DeviceName, ParentDomain, InitiatingProcessFileName, bin(Timestamp, _windowMin)
+| where DistinctSubdomains >= _minDistinctLabels
+| where ParentDomain !endswith ".amazonaws.com"
+      and ParentDomain !endswith ".microsoft.com"
+      and ParentDomain !endswith ".windowsupdate.com"
+      and ParentDomain !endswith ".akadns.net"          // CDN/ESI noise suppression
+      and ParentDomain !endswith ".akamaiedge.net"
+      and ParentDomain !endswith ".cloudfront.net"
+| order by DistinctSubdomains desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -167,10 +181,11 @@ DeviceNetworkEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### DNS tunneling / TXT-heavy domain queries
@@ -256,6 +271,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -311,6 +327,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -339,6 +356,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -363,6 +381,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -381,4 +400,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

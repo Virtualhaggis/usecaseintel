@@ -12,7 +12,7 @@
         "description": "External Teams chat where displayName contains 'helpdesk' or 'IT support' \u2014 common 2024+ vishing pattern (Storm-1811, Black Basta, UNC6692). No CIM data model maps to Teams chats; uses raw O365 audit logs.",
         "severity": "Low",
         "enabled": false,
-        "query": "CloudAppEvents\n| where Timestamp > ago(7d)\n| where Application == \"Microsoft Teams\"\n| where ActionType == \"MessageSent\"\n| where RawEventData has \"ExternalParticipants\"\n| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)\n| where SenderDisplayName matches regex @\"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)\"\n| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData",
+        "query": "// External Teams chat \u2014 Teams audit lives in OfficeActivity.\nOfficeActivity\n| where TimeGenerated > ago(7d)\n| where OfficeWorkload == \"MicrosoftTeams\"\n| where Operation in~ (\"MessageSent\",\"ChatCreated\",\"TeamsImpersonationDetected\")\n| where isnotempty(UserId)\n| where Subject has_any (\"IT\",\"helpdesk\",\"support\",\"password\",\"verify\")\n   or Recipients has_any (\"IT\",\"helpdesk\")\n| project TimeGenerated, UserId, Operation, Subject, Recipients,\n          ClientIP, UserAgent\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

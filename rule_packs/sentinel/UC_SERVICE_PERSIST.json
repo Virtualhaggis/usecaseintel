@@ -12,7 +12,7 @@
         "description": "Service install with binPath pointing to user-writeable path or LOLBin. Detects via process telemetry (sc.exe create) and registry (HKLM\\SYSTEM\\CurrentControlSet\\Services\\* writes).",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"sc.exe\" and ProcessCommandLine has \"create\"\n| where ProcessCommandLine matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName",
+        "query": "// EventID 4697 is \"Service installed\" \u2014 direct signal, no cmdline-regex needed.\nunion\n    ( SecurityEvent\n        | where TimeGenerated > ago(7d)\n        | where EventID == 4697\n        | where SubjectUserName !endswith \"$\"\n        | project TimeGenerated, Computer, Account = SubjectUserName,\n                  Detail = strcat(\"ServiceName=\", ServiceName, \" | Image=\", ServiceFileName) ),\n    ( SecurityEvent\n        | where TimeGenerated > ago(7d)\n        | where EventID == 4688\n        | where Account !endswith \"$\"\n        | where NewProcessName endswith \"\\sc.exe\" and CommandLine has \"create\"\n        | where CommandLine matches regex @\"(?i)(\\Users\\|\\AppData\\|\\ProgramData\\|\\Temp\\)\"\n        | project TimeGenerated, Computer, Account,\n                  Detail = strcat(\"4688 sc.exe create: \", CommandLine) )\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

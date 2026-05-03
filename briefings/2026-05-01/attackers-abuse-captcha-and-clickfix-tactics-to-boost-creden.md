@@ -32,12 +32,9 @@ During Q1 2026, Microsoft Threat Intelligence tracked approximately 8.3 billion 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1218.005** — System Binary Proxy Execution: Mshta
-- **T1566.001** — Phishing: Spearphishing Attachment
-- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
-- **T1557** — Adversary-in-the-Middle
-- **T1539** — Steal Web Session Cookie
+- **T1027.006** — HTML Smuggling
+- **T1218.005** — Mshta
+- **T1112** — Modify Registry
 
 ## Kill chain phases observed
 
@@ -45,103 +42,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ClickFix CAPTCHA execution: RunMRU populated with LOLBin command followed by explorer-spawned exec
+### [LLM] SVG email attachment opened by browser from Outlook cache (Q1 2026 CAPTCHA phishing wave)
 
-`UC_15_7` · phase: **exploit** · confidence: **High**
+`UC_21_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstSeen from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU*" (Registry.registry_value_data="*powershell*" OR Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*curl*" OR Registry.registry_value_data="*iwr *" OR Registry.registry_value_data="*iex *" OR Registry.registry_value_data="*Invoke-WebRequest*" OR Registry.registry_value_data="*Invoke-Expression*" OR Registry.registry_value_data="*FromBase64String*" OR Registry.registry_value_data="*-w hidden*" OR Registry.registry_value_data="*-nop*" OR Registry.registry_value_data="*msiexec*" OR Registry.registry_value_data="*certutil*" OR Registry.registry_value_data="*\\\\*@SSL*" OR Registry.registry_value_data="*webdav*" OR Registry.registry_value_data="*net use*") by Registry.dest Registry.user Registry.registry_value_data
-| `drop_dm_object_name(Registry)`
-| join type=inner dest [ | tstats `summariesonly` count values(Processes.process) as cmdline values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","wscript.exe","cscript.exe","curl.exe","msiexec.exe","certutil.exe","rundll32.exe") by Processes.dest Processes.user _time | `drop_dm_object_name(Processes)` | rename _time as execTime ]
-| where execTime>=firstSeen AND execTime<=firstSeen+300
-| table firstSeen execTime dest user registry_value_data process_name cmdline
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.process_name=outlook.exe Filesystem.file_name="*.svg" Filesystem.file_path IN ("*\\Content.Outlook\\*","*\\INetCache\\Content.Outlook\\*","*\\Temporary Internet Files\\Content.Outlook\\*") by host Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | join type=inner host [| tstats `summariesonly` count values(Processes.process) as svg_open_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name=outlook.exe Processes.process_name IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe") Processes.process="*.svg*" by host Processes.user | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let RunMRUWrites = DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where ActionType == "RegistryValueSet"
-| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU"
-| where RegistryValueData has_any ("powershell","mshta"," curl "," iwr "," iex ","Invoke-WebRequest","Invoke-Expression","FromBase64String","-w hidden","-nop","msiexec","certutil","webdav","net use \\\\")
-| project RegTime=Timestamp, DeviceId, DeviceName, InitiatingProcessAccountName, RegistryValueData;
-let RunBoxExec = DeviceProcessEvents
-| where Timestamp > ago(7d)
+let LookbackDays = 7d;
+let OutlookSvgDrops = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "FileCreated"
+    | where InitiatingProcessFileName =~ "outlook.exe"
+    | where FileName endswith ".svg"
+    | where FolderPath has_any (@"\Content.Outlook\", @"\INetCache\Content.Outlook\", @"\Temporary Internet Files\Content.Outlook\")
+    | project DropTime = Timestamp, DeviceId, DeviceName,
+              SvgPath = FolderPath, SvgName = FileName, SvgSha256 = SHA256,
+              UserName = InitiatingProcessAccountName;
+OutlookSvgDrops
+| join kind=inner (
+    DeviceProcessEvents
+    | where Timestamp > ago(LookbackDays)
+    | where InitiatingProcessFileName =~ "outlook.exe"
+    | where FileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe")
+    | where ProcessCommandLine has ".svg"
+    | where ProcessCommandLine has_any (@"\Content.Outlook\", @"\INetCache\Content.Outlook\")
+    | project BrowserTime = Timestamp, DeviceId, DeviceName,
+              BrowserCmd = ProcessCommandLine, BrowserBin = FileName,
+              UserName = AccountName
+  ) on DeviceId
+| where BrowserTime between (DropTime .. DropTime + 5m)
+| project DropTime, BrowserTime,
+          DelaySec = datetime_diff('second', BrowserTime, DropTime),
+          DeviceName, UserName, SvgName, SvgPath, SvgSha256,
+          BrowserBin, BrowserCmd
+| order by BrowserTime desc
+```
+
+### [LLM] ClickFix RunMRU paste correlated to LOLBin spawn from explorer.exe within 60s
+
+`UC_21_8` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd values(Processes.parent_process) as parent_cmd values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where Processes.parent_process_name=explorer.exe Processes.process_name IN ("mshta.exe","powershell.exe","pwsh.exe","cmd.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","finger.exe","msiexec.exe") (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*iwr *" OR Processes.process="*irm *" OR Processes.process="*iex*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*DownloadString*" OR Processes.process="*FromBase64String*" OR Processes.process="*-enc*" OR Processes.process="*-EncodedCommand*") by host Processes.user Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | join type=inner host [| tstats `summariesonly` count values(Registry.registry_value_data) as runmru_value from datamodel=Endpoint.Registry where Registry.action=modified Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\RunMRU*" (Registry.registry_value_data="*http*" OR Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*powershell*" OR Registry.registry_value_data="*curl *" OR Registry.registry_value_data="*certutil*" OR Registry.registry_value_data="*rundll32*") by host Registry.user] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let WindowSec = 60;
+let RunMRUClickFix = DeviceRegistryEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "RegistryValueSet"
+    | where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU"
+    | where RegistryValueName !~ "MRUList"
+    | where RegistryValueData has_any ("http://","https://","mshta","powershell","pwsh","curl ","wget ","certutil","bitsadmin","rundll32","regsvr32","cscript","wscript","finger ","%comspec%","\\1")  // \\1 = the trailing MRU char
+    | project RegTime = Timestamp, DeviceId, DeviceName,
+              RunMRUUser = InitiatingProcessAccountName,
+              RunMRUValue = RegistryValueData;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
 | where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","wscript.exe","cscript.exe","curl.exe","msiexec.exe","certutil.exe","rundll32.exe")
-| project ExecTime=Timestamp, DeviceId, AccountName, FileName, ProcessCommandLine;
-RunMRUWrites
-| join kind=inner RunBoxExec on DeviceId
-| where ExecTime between (RegTime .. RegTime + 5m)
-| project RegTime, ExecTime, DeviceName, AccountName=InitiatingProcessAccountName, RegistryValueData, FileName, ProcessCommandLine
-```
-
-### [LLM] SVG email attachment opened in browser from Outlook temp dir then beacons to external CAPTCHA host
-
-`UC_15_8` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen from datamodel=Endpoint.Processes where Processes.process_name IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe") (Processes.process="*.svg*") (Processes.process="*\\INetCache\\Content.Outlook\\*" OR Processes.process="*\\AppData\\Local\\Microsoft\\Olk\\Attachments\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\Downloads\\*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| rename process as svg_cmdline
-| join type=inner dest [ | tstats `summariesonly` count values(All_Traffic.dest) as remote_dest values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe") All_Traffic.dest_port IN (80,443) NOT (All_Traffic.dest="*.microsoft.com" OR All_Traffic.dest="*.office.com" OR All_Traffic.dest="*.microsoftonline.com") by All_Traffic.dest All_Traffic.src _time | `drop_dm_object_name(All_Traffic)` | rename src as dest_ip _time as netTime ]
-| where netTime>=firstSeen AND netTime<=firstSeen+120
-| table firstSeen netTime dest user svg_cmdline remote_dest
-```
-
-**Defender KQL:**
-```kql
-let SvgOpens = DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe")
-| where ProcessCommandLine has ".svg"
-| where ProcessCommandLine has_any (@"\INetCache\Content.Outlook\", @"\AppData\Local\Microsoft\Olk\Attachments\", @"\AppData\Local\Temp\", @"\Downloads\")
-| project SvgTime=Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, BrowserPid=ProcessId;
-let ExtFetch = DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe")
-| where RemotePort in (80,443)
-| where not(RemoteUrl has_any ("microsoft.com","office.com","microsoftonline.com","office365.com","live.com","bing.com","windows.net"))
-| project NetTime=Timestamp, DeviceId, BrowserPid=InitiatingProcessId, RemoteUrl, RemoteIP;
-SvgOpens
-| join kind=inner ExtFetch on DeviceId, BrowserPid
-| where NetTime between (SvgTime .. SvgTime + 2m)
-| summarize firstSeen=min(SvgTime), urls=make_set(RemoteUrl,25) by DeviceName, AccountName, ProcessCommandLine
-```
-
-### [LLM] Local HTML attachment launches browser then redirects to Tycoon2FA-pattern .ru AiTM landing
-
-`UC_15_9` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as htmlOpenTime from datamodel=Endpoint.Processes where Processes.process_name IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe") (Processes.process="*.htm *" OR Processes.process="*.html *" OR Processes.process="*.htm\"*" OR Processes.process="*.html\"*") (Processes.process="*\\INetCache\\Content.Outlook\\*" OR Processes.process="*\\AppData\\Local\\Microsoft\\Olk\\Attachments\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*") by Processes.dest Processes.user Processes.process Processes.process_name
-| `drop_dm_object_name(Processes)`
-| join type=inner dest [ | tstats `summariesonly` count values(Web.url) as urls from datamodel=Web where (Web.url="*.ru/*" OR Web.url="*captcha*" OR Web.url="*verify*" OR Web.url="*human-check*" OR Web.url="*challenge*") Web.app IN ("msedge.exe","chrome.exe","firefox.exe","brave.exe") by Web.dest Web.url _time | `drop_dm_object_name(Web)` | rename _time as webTime ]
-| where webTime>=htmlOpenTime AND webTime<=htmlOpenTime+180
-| stats min(htmlOpenTime) as firstSeen values(process) as html_path values(urls) as visited_urls by dest user
-```
-
-**Defender KQL:**
-```kql
-let HtmlOpens = DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe")
-| where ProcessCommandLine matches regex @"\.html?[\s\"']"
-| where ProcessCommandLine has_any (@"\INetCache\Content.Outlook\", @"\AppData\Local\Microsoft\Olk\Attachments\", @"\AppData\Local\Temp\")
-| project HtmlTime=Timestamp, DeviceId, DeviceName, AccountName, ProcessCommandLine, BrowserPid=ProcessId;
-let SuspectFetch = DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe")
-| where RemoteUrl matches regex @"\.ru(/|:|$)" or RemoteUrl has_any ("captcha","human-verify","challenge-platform","verify-you")
-| project NetTime=Timestamp, DeviceId, BrowserPid=InitiatingProcessId, RemoteUrl, RemoteIP;
-HtmlOpens
-| join kind=inner SuspectFetch on DeviceId, BrowserPid
-| where NetTime between (HtmlTime .. HtmlTime + 3m)
-| summarize firstSeen=min(HtmlTime), urls=make_set(RemoteUrl,25), htmlPath=any(ProcessCommandLine) by DeviceName, AccountName
-| extend Comment="Possible Tycoon2FA/Kratos/EvilTokens AiTM landing via HTML attachment chain"
+| where AccountName !endswith "$"
+| where FileName in~ ("mshta.exe","powershell.exe","pwsh.exe","cmd.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","finger.exe","msiexec.exe")
+| where ProcessCommandLine has_any ("http://","https://","iwr ","irm ","iex","Invoke-Expression","DownloadString","DownloadFile","FromBase64String","-enc","-EncodedCommand","-w hidden","-WindowStyle Hidden")
+| join kind=inner RunMRUClickFix on DeviceId
+| where Timestamp between (RegTime .. RegTime + WindowSec * 1s)
+| project RegTime, ProcTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, RegTime),
+          DeviceName, AccountName,
+          ChildBin = FileName, ChildCmd = ProcessCommandLine,
+          RunMRUValue, RunMRUUser
+| order by ProcTime desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -194,6 +171,7 @@ HtmlOpens
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -253,6 +231,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -284,6 +263,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -310,6 +290,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -335,9 +316,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -361,6 +344,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -390,12 +374,14 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

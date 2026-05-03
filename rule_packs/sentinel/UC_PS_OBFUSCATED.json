@@ -12,7 +12,7 @@
         "description": "Encoded or obfuscated PowerShell \u2014 common across loaders, recon, and post-exploitation.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\\s+hidden|invoke-expression|iex\\s*\\(|downloadstring|net\\.webclient)\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine",
+        "query": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\powershell.exe\"\n   or NewProcessName endswith \"\\pwsh.exe\"\n| where CommandLine matches regex @\"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\\s+hidden|invoke-expression|iex\\s*\\(|downloadstring|net\\.webclient)\"\n| project TimeGenerated, Computer, Account, NewProcessName,\n          CommandLine, ParentProcessName\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

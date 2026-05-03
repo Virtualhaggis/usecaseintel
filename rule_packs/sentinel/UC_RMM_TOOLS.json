@@ -12,7 +12,7 @@
         "description": "ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"AnyDesk.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\n        \"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.ClientService.exe\",\n        \"atera_agent.exe\",\"SplashtopStreamer.exe\",\"RustDesk.exe\",\"NinjaOne.exe\")\n   or FileName matches regex @\"(?i)kaseya.*\\.exe\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine",
+        "query": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\AnyDesk.exe\"\n   or NewProcessName endswith \"\\TeamViewer.exe\"\n   or NewProcessName endswith \"\\TeamViewer_Service.exe\"\n   or NewProcessName endswith \"\\ScreenConnect.ClientService.exe\"\n   or NewProcessName endswith \"\\ConnectWiseControl.ClientService.exe\"\n   or NewProcessName endswith \"\\atera_agent.exe\"\n   or NewProcessName endswith \"\\SplashtopStreamer.exe\"\n   or NewProcessName endswith \"\\RustDesk.exe\"\n   or NewProcessName endswith \"\\NinjaOne.exe\"\n| project TimeGenerated, Computer, Account, NewProcessName,\n          CommandLine, ParentProcessName\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

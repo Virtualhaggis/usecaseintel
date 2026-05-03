@@ -36,7 +36,7 @@
     "tier:hunting",
     "install"
   ],
-  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName\n```",
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine has_any (\"powershell\",\"cmd.exe\",\"rundll32\",\"-enc\",\"FromBase64\",\"\\Users\\Public\",\"\\AppData\\\")\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName\n```",
   "references": [
     "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_SCHEDULED_TASK.yml"
   ],

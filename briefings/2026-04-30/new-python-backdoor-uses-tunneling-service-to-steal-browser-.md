@@ -43,15 +43,15 @@ Cybersecurity researchers have disclosed details of a stealthy Python-based back
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1059.003** — Windows Command Shell
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1027.009** — Embedded Payloads
 - **T1572** — Protocol Tunneling
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1090** — Proxy
-- **T1102** — Web Service
-- **T1059.006** — Python
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1546.003** — WMI Event Subscription
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1546.003** — Event Triggered Execution: WMI Event Subscription
 
 ## Kill chain phases observed
 
@@ -59,86 +59,107 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DEEP#DOOR install_obf.bat self-extracting Python via #PYTHON_START/#PYTHON_END delimiters
+### [LLM] DEEP#DOOR Python backdoor C2 via bore.pub Rust tunneling service
 
-`UC_40_15` · phase: **install** · confidence: **High**
+`UC_42_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent values(Processes.process_name) as proc from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*PYTHON_START*" OR Processes.process="*PYTHON_END*" OR Processes.process="*install_obf*" OR (Processes.process="*%~f0*" AND Processes.parent_process_name="cmd.exe" AND Processes.parent_process="*.bat*")) by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*bore.pub*" OR All_Traffic.dest_host="*bore.pub*") by All_Traffic.src All_Traffic.user host | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query="*bore.pub*" by DNS.src host | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
-| where ProcessCommandLine has_any ("#PYTHON_START","#PYTHON_END","install_obf","install_obf.bat")
-   or (ProcessCommandLine has "%~f0" and InitiatingProcessFileName =~ "cmd.exe" and InitiatingProcessCommandLine has ".bat")
-| project Timestamp,DeviceName,AccountName,FileName,ProcessCommandLine,InitiatingProcessFileName,InitiatingProcessCommandLine,SHA256
+let _suspect_hosts = "bore.pub";
+let _network = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemoteUrl has _suspect_hosts or RemoteUrl endswith ".bore.pub"
+    | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName;
+let _dns = DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has "bore.pub"
+    | project Timestamp, DeviceName, RemoteUrl=Q, RemoteIP="", RemotePort=int(0),
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName=tostring("");
+union _network, _dns
 | order by Timestamp desc
 ```
 
-### [LLM] DEEP#DOOR C2 over bore.pub Rust TCP tunnel from Python interpreter
+### [LLM] DEEP#DOOR dropper artefacts: install_obf.bat execution and svc.py extraction
 
-`UC_40_16` · phase: **c2** · confidence: **High**
+`UC_42_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="bore.pub" OR All_Traffic.dest_host="bore.pub" OR All_Traffic.dest_port=7835) by host All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="bore.pub" OR DNS.query="*.bore.pub" by host DNS.src DNS.query | `drop_dm_object_name(DNS)`] | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe") AND (Processes.process="*bore.pub*" OR Processes.process="*svc.py*") by host Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process="*install_obf.bat*" OR Processes.process_name IN ("python.exe","pythonw.exe") AND Processes.process="*svc.py*") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("install_obf.bat","svc.py") by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let suspectHosts = DeviceNetworkEvents
-| where RemoteUrl has "bore.pub" or RemotePort == 7835
-| project Timestamp,DeviceId,DeviceName,InitiatingProcessFileName,InitiatingProcessCommandLine,RemoteIP,RemoteUrl,RemotePort;
-let suspectDns = DeviceEvents
-| where ActionType == "DnsQueryResponse" and AdditionalFields has "bore.pub"
-| project Timestamp,DeviceId,DeviceName,InitiatingProcessFileName,AdditionalFields;
-let suspectProc = DeviceProcessEvents
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe") or FileName in~ ("python.exe","pythonw.exe")
-| where ProcessCommandLine has_any ("bore.pub","svc.py")
-| project Timestamp,DeviceId,DeviceName,FileName,ProcessCommandLine,InitiatingProcessFileName,InitiatingProcessCommandLine;
-union suspectHosts, suspectDns, suspectProc
+let _proc = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where AccountName !endswith "$"
+    | where (ProcessCommandLine has "install_obf.bat")
+         or (FileName in~ ("python.exe","pythonw.exe") and ProcessCommandLine has "svc.py")
+         or (InitiatingProcessCommandLine has "install_obf.bat")
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+              ProcessCommandLine, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, SHA256;
+let _file = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("install_obf.bat","svc.py")
+    | project Timestamp, DeviceName,
+              AccountName=InitiatingProcessAccountName,
+              FileName, FolderPath=FolderPath,
+              ProcessCommandLine=InitiatingProcessCommandLine,
+              InitiatingProcessFileName,
+              InitiatingProcessCommandLine=InitiatingProcessCommandLine,
+              SHA256;
+union _proc, _file
 | order by Timestamp desc
 ```
 
-### [LLM] DEEP#DOOR watchdog: Python process creates Startup + Run key + Scheduled Task in burst
+### [LLM] DEEP#DOOR persistence: python.exe registered as Run key / Startup / Scheduled task
 
-`UC_40_17` · phase: **install** · confidence: **Medium**
+`UC_42_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" AND Filesystem.process_name IN ("python.exe","pythonw.exe") by host Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*" AND Registry.process_name IN ("python.exe","pythonw.exe") by host | `drop_dm_object_name(Registry)` | rename count as reg_count] | join type=inner host [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process="*Register-ScheduledTask*" OR Processes.process="*__EventFilter*") AND Processes.parent_process_name IN ("python.exe","pythonw.exe") by host | `drop_dm_object_name(Processes)` | rename count as task_count] | where firstTime>=relative_time(now(),"-1h@h")
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_path) as path values(Registry.registry_value_data) as value values(Registry.process_name) as process from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Microsoft\\Windows\\CurrentVersion\\Run*" OR Registry.registry_path="*\\Microsoft\\Windows\\CurrentVersion\\RunOnce*") AND (Registry.registry_value_data="*python.exe*" OR Registry.registry_value_data="*pythonw.exe*" OR Registry.registry_value_data="*svc.py*") by Registry.dest Registry.user Registry.registry_value_name | `drop_dm_object_name(Registry)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*") AND (Filesystem.file_name="*.py" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.lnk") by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let win = 30m;
-let startup = DeviceFileEvents
-| where FolderPath has "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\"
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| project DeviceId,DeviceName,t1=Timestamp,startupFile=FileName,InitiatingProcessCommandLine;
-let runkey = DeviceRegistryEvents
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has_any ("\\Software\\Microsoft\\Windows\\CurrentVersion\\Run","\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce")
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe")
-| project DeviceId,t2=Timestamp,RegistryKey,RegistryValueName,RegistryValueData;
-let sched = DeviceProcessEvents
-| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create")
-   or ProcessCommandLine has_any ("Register-ScheduledTask","__EventFilter","ActiveScriptEventConsumer","CommandLineEventConsumer")
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe") or InitiatingProcessParentFileName in~ ("python.exe","pythonw.exe")
-| project DeviceId,t3=Timestamp,FileName,ProcessCommandLine;
-startup
-| join kind=inner runkey on DeviceId
-| where abs(datetime_diff('second',t1,t2)) <= 1800
-| join kind=inner sched on DeviceId
-| where abs(datetime_diff('second',t1,t3)) <= 1800
-| project DeviceName,t1,startupFile,RegistryKey,RegistryValueData,ProcessCommandLine,InitiatingProcessCommandLine
-| order by t1 desc
+let _registry = DeviceRegistryEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has_any (@"\Microsoft\Windows\CurrentVersion\Run",
+                                  @"\Microsoft\Windows\CurrentVersion\RunOnce")
+    | where RegistryValueData has_any ("python.exe","pythonw.exe","svc.py","install_obf.bat")
+    | where InitiatingProcessFileName !in~ ("msiexec.exe","setup.exe","OfficeClickToRun.exe")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              RegistryKey, RegistryValueName, RegistryValueData,
+              InitiatingProcessFileName, InitiatingProcessCommandLine;
+let _startup = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | where FolderPath has @"\Start Menu\Programs\Startup\"
+    | where FileName endswith ".py" or FileName endswith ".bat"
+        or FileName endswith ".lnk" or FileName endswith ".vbs"
+    | project Timestamp, DeviceName,
+              InitiatingProcessAccountName,
+              RegistryKey=FolderPath, RegistryValueName=FileName,
+              RegistryValueData=tostring(""),
+              InitiatingProcessFileName, InitiatingProcessCommandLine;
+union _registry, _startup
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -192,6 +213,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -219,10 +241,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -275,6 +298,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -334,6 +358,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -365,6 +390,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -388,9 +414,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Scheduled task created with suspicious image / encoded args
@@ -414,6 +442,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "schtasks.exe"
 | where ProcessCommandLine has "/create"
 | where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
@@ -441,6 +470,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -469,6 +499,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -494,6 +525,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -519,6 +551,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -526,7 +559,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Python Backdoor Uses Tunneling Service to Steal Browser and Cloud Credential
 
-`UC_40_14` · phase: **exploit** · confidence: **High**
+`UC_42_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

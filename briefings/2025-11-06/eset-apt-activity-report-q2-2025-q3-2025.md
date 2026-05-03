@@ -26,12 +26,10 @@ During the monitore…
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1547.001** — Registry Run Keys / Startup Folder
 - **T1203** — Exploitation for Client Execution
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1564.004** — Hide Artifacts: NTFS File Attributes
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1021.001** — Remote Services: Remote Desktop Protocol
-- **T1090.003** — Proxy: Multi-hop Proxy (Tor)
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -39,56 +37,67 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] RomCom CVE-2025-8088 WinRAR ADS path-traversal drops payload into Startup
+### [LLM] Archive utility writing LNK/DLL/EXE to Windows Startup folder (RomCom CVE-2025-8088)
 
-`UC_290_6` · phase: **delivery** · confidence: **High**
+`UC_289_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("WinRAR.exe","Rar.exe","UnRAR.exe","7zFM.exe","WinRAR.SFX.exe") AND (Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*") AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.cmd" OR Filesystem.file_name="*.bat")) OR Filesystem.file_name IN ("Adverse_Effect_Medical_Records_2025.rar","cv_submission.rar","JobDocs_July2025.rar","Recruitment_Dossier_July_2025.rar") OR Filesystem.file_hash IN ("371A5B8BA86FBCAB80D4E0087D2AA0D8FFDDC70B","D43F49E6A586658B5422EDC647075FFD405D6741") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.process_name IN ("winrar.exe","rar.exe","unrar.exe","7z.exe","7zg.exe","7zfm.exe","winzip32.exe","winzip64.exe","wzzip.exe")) AND Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.cmd") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let romcom_archives = dynamic(["Adverse_Effect_Medical_Records_2025.rar","cv_submission.rar","JobDocs_July2025.rar","Recruitment_Dossier_July_2025.rar"]);
-let romcom_hashes = dynamic(["371a5b8ba86fbcab80d4e0087d2aa0d8ffddc70b","d43f49e6a586658b5422edc647075ffd405d6741"]);
-let rar_procs = dynamic(["winrar.exe","rar.exe","unrar.exe","7zfm.exe","winrar.sfx.exe"]);
+// CVE-2025-8088 / RomCom — archive utility silently writes a persistence artefact
+// into the per-user Startup folder during what looks like a routine extraction.
 DeviceFileEvents
-| where (InitiatingProcessFileName in~ (rar_procs)
-         and FolderPath has @"\Start Menu\Programs\Startup\"
-         and FileName endswith_cs ".lnk" or FileName endswith_cs ".exe" or FileName endswith_cs ".dll" or FileName endswith_cs ".cmd" or FileName endswith_cs ".bat")
-   or FileName in~ (romcom_archives)
-   or tolower(SHA1) in (romcom_hashes)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA1, SHA256, ActionType
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName in~ ("winrar.exe","rar.exe","unrar.exe","7z.exe","7zg.exe","7zfm.exe","winzip32.exe","winzip64.exe","wzzip.exe")
+| where FolderPath has @"\Start Menu\Programs\Startup\"
+| where FileName endswith ".lnk"
+      or FileName endswith ".dll"
+      or FileName endswith ".exe"
+      or FileName endswith ".bat"
+      or FileName endswith ".cmd"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          Archiver = InitiatingProcessFileName,
+          ArchiverCmd = InitiatingProcessCommandLine,
+          DroppedFile = FileName,
+          DroppedPath = FolderPath,
+          SHA256, MD5, FileSize
+| order by Timestamp desc
 ```
 
-### [LLM] InedibleOchotense fake-ESET installer beaconing to spoofed esetsmart/esetscanner/esetremover domains
+### [LLM] Python interpreter executed from %TEMP% / Public — RomCom DLL side-load chain (CVE-2025-8088)
 
-`UC_290_7` · phase: **install** · confidence: **High**
+`UC_289_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-(| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("esetsmart.com","esetscanner.com","esetremover.com","*.esetsmart.com","*.esetscanner.com","*.esetremover.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`) 
-| append [| tstats `summariesonly` count from datamodel=Web.Web where Web.url IN ("*esetsmart.com*","*esetscanner.com*","*esetremover.com*") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)`] 
-| append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("ESETAVRemover.exe","ESETOnlineScanner.exe","esetsmart*.exe","esetscanner*.exe","esetremover*.exe") AND (Processes.process_name IN ("reg.exe","powershell.exe","cmd.exe","sc.exe","netsh.exe","ssh.exe","sshd.exe") OR Processes.process="*fDenyTSConnections*" OR Processes.process="*OpenSSH*" OR Processes.process="*Add-WindowsCapability*OpenSSH*" OR Processes.process="*Tor*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3.exe","python310.exe","python311.exe","python312.exe","python313.exe")) AND (Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Windows\\Temp\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\AppData\\Roaming\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let spoofed = dynamic(["esetsmart.com","esetscanner.com","esetremover.com"]);
-let net = DeviceNetworkEvents
-| where RemoteUrl has_any (spoofed) or tolower(RemoteUrl) endswith "esetsmart.com" or tolower(RemoteUrl) endswith "esetscanner.com" or tolower(RemoteUrl) endswith "esetremover.com"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType;
-let kalambur_post = DeviceProcessEvents
-| where InitiatingProcessFileName matches regex @"(?i)^eset(smart|scanner|remover|avremover|onlinescanner).*\.exe$"
-      or InitiatingProcessParentFileName matches regex @"(?i)^eset(smart|scanner|remover).*\.exe$"
-| where ProcessCommandLine has_any ("fDenyTSConnections","Add-WindowsCapability","OpenSSH","sshd","netsh advfirewall firewall add rule","3389","Tor")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine;
-let rdp_reg = DeviceRegistryEvents
-| where RegistryKey has @"\CurrentControlSet\Control\Terminal Server" and RegistryValueName == "fDenyTSConnections" and RegistryValueData == "0"
-| where InitiatingProcessFileName matches regex @"(?i)^eset(smart|scanner|remover).*\.exe$"
-| project Timestamp, DeviceName, InitiatingProcessFileName, RegistryKey, RegistryValueName, RegistryValueData;
-union net, kalambur_post, rdp_reg
+// RomCom CVE-2025-8088 stage-2 — signed Python launched from a transient path so the
+// adversary's adjacent malicious python3xx.dll satisfies the import search order.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "python.exe"
+      or FileName =~ "pythonw.exe"
+      or FileName matches regex @"(?i)^python3\d{1,2}\.exe$"
+| where FolderPath has_any (@"\AppData\Local\Temp\", @"\Windows\Temp\", @"\Users\Public\", @"\AppData\Roaming\")
+// suppress the rare legit case of a Python installer extracting itself
+| where InitiatingProcessFileName !in~ ("msiexec.exe")
+| project Timestamp, DeviceName, AccountName,
+          PythonImage = strcat(FolderPath, "\\", FileName),
+          ProcessCommandLine, SHA256,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -141,6 +150,7 @@ union net, kalambur_post, rdp_reg
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -200,6 +210,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -231,6 +242,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -254,9 +266,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -280,6 +294,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -305,6 +320,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -315,4 +331,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

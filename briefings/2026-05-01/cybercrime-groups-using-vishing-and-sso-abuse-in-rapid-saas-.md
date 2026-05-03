@@ -34,13 +34,16 @@ The clusters, Cordial Spider (aka BlackFile, CL-CRI-1116, O-UNC-045, and UNC6671
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
 - **T1098.005** — Account Manipulation: Device Registration
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1621** — Multi-Factor Authentication Request Generation
 - **T1564.008** — Hide Artifacts: Email Hiding Rules
 - **T1098** — Account Manipulation
-- **T1567** — Exfiltration Over Web Service
+- **T1562.006** — Impair Defenses: Indicator Blocking
 - **T1530** — Data from Cloud Storage
-- **T1213.002** — Data from Information Repositories: SharePoint
+- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1090.002** — Proxy: External Proxy
 
 ## Kill chain phases observed
 
@@ -48,92 +51,94 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Cordial/Snarky Spider: MFA device deleted then new device registered within short window
+### [LLM] Cordial/Snarky Spider MFA bypass: auth device removed then new device registered within 30 min by same actor
 
-`UC_12_9` · phase: **install** · confidence: **High**
+`UC_21_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as firstTime max(_time) as lastTime values(All_Changes.action) as actions values(All_Changes.object) as objects values(All_Changes.src) as src_ips values(All_Changes.user_agent) as ua from datamodel=Change.Account_Management where All_Changes.object_category="User" (All_Changes.action="Delete device" OR All_Changes.action="Update user" OR All_Changes.action="Register device" OR All_Changes.action="Add registered owner to device" OR All_Changes.action="User registered security info" OR All_Changes.action="User deleted security info") by All_Changes.user _time span=1m | `drop_dm_object_name(All_Changes)` | eventstats values(action) as window_actions by user | where like(window_actions,"%Delete%") AND (like(window_actions,"%Register%") OR like(window_actions,"%registered security info%")) | transaction user maxspan=15m | where eventcount>=2 | table firstTime lastTime user actions src_ips ua
+| tstats `summariesonly` count min(_time) as removed_time from datamodel=Change where (All_Changes.action IN ("deleted","removed","disabled")) AND (All_Changes.object_category="user" OR All_Changes.object_category="device") AND (All_Changes.command IN ("Delete device","Remove registered owner from device","Delete strong authentication method","Disable Strong Authentication","User deleted security info")) by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | rename src as removed_ip, object as removed_object | join type=inner user [| tstats `summariesonly` count min(_time) as added_time from datamodel=Change where (All_Changes.action IN ("created","added","enabled","modified")) AND (All_Changes.command IN ("Add device","Register device","Add registered owner to device","Add strong authentication method","User registered security info","Update authentication method")) by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | rename src as added_ip, object as added_object] | where added_time>=removed_time AND added_time<=removed_time+1800 | eval delay_sec=added_time-removed_time | table user removed_time removed_object removed_ip added_time added_object added_ip delay_sec | sort - removed_time
 ```
 
 **Defender KQL:**
 ```kql
-// Cordial/Snarky Spider MFA swap: delete then add device for same identity within 15 min
-let window = 15m;
-let deletes = CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application in ("Microsoft Azure","Office 365","Microsoft Entra ID")
-| where ActionType in ("Delete device.","Delete device","User deleted security info.","Disable Strong Authentication.","Update user.")
-| extend Upn = tolower(tostring(AccountObjectId)), DelTime = Timestamp, DelAction = ActionType, DelIP = IPAddress;
-let adds = CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application in ("Microsoft Azure","Office 365","Microsoft Entra ID")
-| where ActionType in ("Register device.","Add registered owner to device.","User registered security info.","Add user.","Update user.")
-| extend Upn = tolower(tostring(AccountObjectId)), AddTime = Timestamp, AddAction = ActionType, AddIP = IPAddress;
-deletes
-| join kind=inner adds on Upn
-| where AddTime between (DelTime .. (DelTime + window))
-| project DelTime, AddTime, AccountUpn=AccountDisplayName, Upn, DelAction, AddAction, DelIP, AddIP
-| extend NewIPDiffersFromOld = tostring(DelIP) != tostring(AddIP)
+let Window = 30m;
+let RemovalActions = dynamic(["Delete device","Remove device","Remove registered owner from device","Delete strong authentication method","Disable Strong Authentication","User deleted security info"]);
+let AddActions = dynamic(["Add device","Register device","Add registered owner to device","Add strong authentication method","User registered security info","Update authentication method","Enable Strong Authentication"]);
+let Removed = CloudAppEvents
+    | where Timestamp > ago(7d)
+    | where Application has_any ("Microsoft Entra ID","Office 365","Azure Active Directory","Microsoft Graph")
+    | where ActionType in~ (RemovalActions)
+    | project RemovedTime = Timestamp, AccountObjectId, AccountDisplayName, RemovedAction = ActionType, RemovedIp = IPAddress, RemovedISP = ISP, RemovedObject = ObjectName;
+let Added = CloudAppEvents
+    | where Timestamp > ago(7d)
+    | where Application has_any ("Microsoft Entra ID","Office 365","Azure Active Directory","Microsoft Graph")
+    | where ActionType in~ (AddActions)
+    | project AddedTime = Timestamp, AccountObjectId, AccountDisplayName, AddedAction = ActionType, AddedIp = IPAddress, AddedISP = ISP, AddedObject = ObjectName;
+Removed
+| join kind=inner Added on AccountObjectId
+| where AddedTime between (RemovedTime .. RemovedTime + Window)
+| project AccountObjectId, AccountDisplayName, RemovedTime, RemovedAction, RemovedObject, RemovedIp, RemovedISP, AddedTime, AddedAction, AddedObject, AddedIp, AddedISP,
+          DelaySec = datetime_diff('second', AddedTime, RemovedTime)
+| order by RemovedTime desc
 ```
 
-### [LLM] Inbox rule auto-deleting Entra/Exchange MFA & device-registration notifications
+### [LLM] Inbox rule auto-deleting Microsoft account-security / new-device-registration notifications (Cordial/Snarky Spider TTP)
 
-`UC_12_10` · phase: **install** · confidence: **High**
+`UC_21_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as cmd values(All_Changes.src) as src values(All_Changes.user_agent) as ua from datamodel=Change.All_Changes where All_Changes.object_category="InboxRule" (All_Changes.action="created" OR All_Changes.action="modified" OR All_Changes.command="New-InboxRule" OR All_Changes.command="Set-InboxRule" OR All_Changes.command="UpdateInboxRules") by All_Changes.user All_Changes.object | `drop_dm_object_name(All_Changes)` | rex field=cmd "(?i)(?<rule_body>SubjectContainsWords|BodyContainsWords|SubjectOrBodyContainsWords)[^\"]*\"(?<rule_keywords>[^\"]+)\"" | rex field=cmd "(?i)(?<rule_action>DeleteMessage|MoveToFolder|MarkAsRead)" | where match(rule_keywords,"(?i)security info|MFA|multi.?factor|device.?regist|unusual sign|new sign.?in|microsoft account|verification code|authenticator|Okta|Duo|conditional access") AND isnotnull(rule_action) | table firstTime user object rule_keywords rule_action src ua
+| tstats `summariesonly` count from datamodel=Change where All_Changes.command IN ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Update-InboxRule") by _time All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.object_attrs | `drop_dm_object_name(All_Changes)` | where match(object_attrs,"(?i)(device registered|security info|unfamiliar (sign\-in|device)|accountprotection\.microsoft\.com|account\.microsoft\.com|new sign\-in|security alert|verify your identity|registered a new|your security info changed|account\-security\-noreply)") AND match(object_attrs,"(?i)(DeleteMessage|MoveToFolder|MarkAsRead|Deleted Items|RSS Feeds|Junk|Archive|Conversation History)") | table _time user src command object object_attrs | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
-// Inbox rules silencing identity / MFA / device-registration alert mail
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application in ("Microsoft Exchange Online","Office 365")
-| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules","New-MailboxRule")
-| extend Params = tostring(RawEventData)
-| where Params has_any ("DeleteMessage","MoveToFolder","MarkAsRead")
-| where Params matches regex @"(?i)security ?info|MFA|multi.?factor|device ?regist|unusual sign.?in|new sign.?in|microsoft account team|verification code|authenticator|conditional access|Okta|Duo|sign.?in activity"
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, IPAddress, UserAgent, ISP, CountryCode, Params
-| join kind=leftouter (
-    AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | summarize SignInIPs=make_set(IPAddress), ASNs=make_set(NetworkLocationDetails) by AccountObjectId
-) on AccountObjectId
+| where ActionType in~ ("New-InboxRule","Set-InboxRule","UpdateInboxRules","Update-InboxRule")
+| extend Raw = tostring(RawEventData)
+| where Raw matches regex @"(?i)(device registered|security info|unfamiliar (sign-in|device)|accountprotection\.microsoft\.com|account\.microsoft\.com|new sign-in|security alert|verify your identity|registered a new|your security info changed|account-security-noreply)"
+| where Raw matches regex @"(?i)(DeleteMessage|MoveToFolder|MarkAsRead|Deleted Items|RSS Feeds|Junk|Archive|Conversation History)"
+| project Timestamp, AccountObjectId, AccountDisplayName, IPAddress, ISP, CountryCode, IsAnonymousProxy, UserAgent, ActionType, ObjectName, Raw
+| order by Timestamp desc
 ```
 
-### [LLM] Bulk SaaS data export from Salesforce/SharePoint/HubSpot/Google Workspace within 1h of new MFA device
+### [LLM] Rapid SaaS bulk exfil from anonymous/residential-proxy IP within 1 hour of SSO sign-in (Snarky/Cordial Spider speedrun)
 
-`UC_12_11` · phase: **actions** · confidence: **High**
+`UC_21_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as regTime values(All_Changes.src) as reg_src from datamodel=Change.Account_Management where (All_Changes.action="Register device" OR All_Changes.action="User registered security info" OR All_Changes.action="Add registered owner to device") by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename user as actor | join type=inner actor [| tstats `summariesonly` count sum(Web.bytes_out) as bytes_out values(Web.url) as urls values(Web.dest) as dest from datamodel=Web where Web.app IN ("salesforce","sharepoint","hubspot","google-drive","google-workspace","gws") (Web.action="download" OR Web.action="export" OR Web.http_method="GET") by Web.user _time span=10m | `drop_dm_object_name(Web)` | rename user as actor | where count>=50 OR bytes_out>=104857600] | eval delta=(_time-regTime) | where delta>=0 AND delta<=3600 | table regTime _time actor reg_src dest count bytes_out urls
+| tstats `summariesonly` min(_time) as signin_time from datamodel=Authentication where Authentication.action="success" AND (Authentication.signature_id="AnonymousProxy" OR Authentication.risk_level IN ("medium","high") OR Authentication.tag="anonymous_ip") by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | rename src as signin_ip, app as signin_app | join type=inner user [| tstats `summariesonly` count dc(All_Changes.object) as file_count values(All_Changes.object) as files values(All_Changes.src) as download_ips min(_time) as first_download max(_time) as last_download from datamodel=Change where All_Changes.action IN ("read","downloaded") AND All_Changes.command IN ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","FilePreviewed","ExportFile","Reports.Export","Object.Download") AND All_Changes.dest IN ("SharePoint","OneDrive","HubSpot","Salesforce","Google Workspace","Google Drive") by All_Changes.user | `drop_dm_object_name(All_Changes)`] | where first_download>=signin_time AND first_download<=signin_time+3600 AND file_count>=25 | table user signin_time signin_ip signin_app first_download last_download file_count download_ips files | sort - first_download
 ```
 
 **Defender KQL:**
 ```kql
-// Mass SaaS export within 1h of new MFA device registration
-let window = 1h;
-let newDevice = CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Register device.","Add registered owner to device.","User registered security info.")
-| project RegTime=Timestamp, AccountObjectId, RegIP=IPAddress, RegISP=ISP;
-let exfil = CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application in ("Salesforce","Microsoft SharePoint Online","Microsoft OneDrive for Business","HubSpot","Google Drive","Google Workspace")
-| where ActionType has_any ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","Report Export","DataExport","BulkApi","download","Export","drive.files.download")
-| summarize ActionCount=count(), Apps=make_set(Application), Files=make_set(ObjectName, 100), ExfilIPs=make_set(IPAddress), ExfilISPs=make_set(ISP) by AccountObjectId, bin(Timestamp, 10m)
-| where ActionCount >= 50;
-newDevice
-| join kind=inner exfil on AccountObjectId
-| where Timestamp between (RegTime .. (RegTime + window))
-| extend MinutesAfterReg = datetime_diff('minute', Timestamp, RegTime)
-| project RegTime, ExfilStart=Timestamp, MinutesAfterReg, AccountObjectId, RegIP, RegISP, ExfilIPs, ExfilISPs, Apps, ActionCount, Files
-| order by ExfilStart desc
+let Window = 1h;
+let MinFiles = 25;
+let RiskySignIns = AADSignInEventsBeta
+    | where Timestamp > ago(1d)
+    | where ErrorCode == 0
+    | where IsAnonymousProxy == true or RiskLevelDuringSignIn in ("medium","high") or RiskState in ("atRisk","confirmedCompromised")
+    | project SignInTime = Timestamp, AccountObjectId, AccountUpn, SignInIp = IPAddress, SignInCountry = Country, SignInApp = Application;
+let SaaSReads = CloudAppEvents
+    | where Timestamp > ago(1d)
+    | where Application in~ ("Microsoft SharePoint Online","Microsoft OneDrive for Business","HubSpot","Salesforce","Google Workspace","Google Drive")
+    | where ActionType has_any ("FileDownloaded","FileSyncDownloadedFull","FileAccessed","FilePreviewed","ExportFile","Reports.Export","Object.Download","Download")
+    | project DownloadTime = Timestamp, AccountObjectId, DownloadApp = Application, DownloadIp = IPAddress, DownloadISP = ISP, DownloadObject = ObjectName, DownloadIsAnonProxy = IsAnonymousProxy;
+RiskySignIns
+| join kind=inner SaaSReads on AccountObjectId
+| where DownloadTime between (SignInTime .. SignInTime + Window)
+| summarize FileCount = dcount(DownloadObject),
+            SampleFiles = make_set(DownloadObject, 25),
+            DownloadIps = make_set(DownloadIp, 5),
+            DownloadISPs = make_set(DownloadISP, 5),
+            FirstDownload = min(DownloadTime),
+            LastDownload = max(DownloadTime)
+            by AccountObjectId, AccountUpn, DownloadApp, SignInTime, SignInIp, SignInCountry
+| where FileCount >= MinFiles
+| order by FirstDownload desc
 ```
 
 ### Suspicious browser extension installation
@@ -155,6 +160,7 @@ newDevice
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -182,10 +188,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -238,6 +245,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -297,6 +305,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -328,6 +337,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -378,6 +388,7 @@ CloudAppEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -403,6 +414,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -418,4 +430,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

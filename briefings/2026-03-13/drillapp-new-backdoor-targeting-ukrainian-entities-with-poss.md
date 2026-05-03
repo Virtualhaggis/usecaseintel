@@ -49,15 +49,15 @@ LAB52, the intelligence team at S2 Group, has identified a new campaign targetin
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1218** — System Binary Proxy Execution
+- **T1185** — Browser Session Hijacking
 - **T1123** — Audio Capture
 - **T1125** — Video Capture
 - **T1113** — Screen Capture
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102.001** — Web Service: Dead Drop Resolver
-- **T1105** — Ingress Tool Transfer
+- **T1090.004** — Proxy: Domain Fronting
 - **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1218.002** — System Binary Proxy Execution: Control Panel
 
 ## Kill chain phases observed
 
@@ -65,74 +65,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Edge/Chromium headless launched with media-capture & local-file-access flags (DRILLAPP)
+### [LLM] Microsoft Edge/Chromium launched with DRILLAPP headless media-capture & sandbox-disable flag combo
 
-`UC_172_4` · phase: **install** · confidence: **High**
+`UC_171_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("msedge.exe","msedgewebview2.exe","chrome.exe","brave.exe") Processes.process="*--headless*" (Processes.process="*--use-fake-ui-for-media-stream*" OR Processes.process="*--auto-select-screen-capture-source*" OR Processes.process="*--disable-user-media-security*") (Processes.process="*--allow-file-access-from-files*" OR Processes.process="*--disable-web-security*" OR Processes.process="*--no-sandbox*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | where match(parent_process_name,"(?i)cmd\.exe|powershell\.exe|wscript\.exe|cscript\.exe|mshta\.exe|control\.exe|rundll32\.exe|explorer\.exe") OR match(process,"(?i)file:///.*\\(Temp|AppData)\\")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="msedge.exe" OR Processes.process_name="chrome.exe" OR Processes.process_name="msedgewebview2.exe") Processes.process="*--use-fake-ui-for-media-stream*" Processes.process="*--auto-select-screen-capture-source*" Processes.process="*--disable-web-security*" (Processes.process="*--allow-file-access-from-files*" OR Processes.process="*--disable-user-media-security*" OR Processes.process="*--no-sandbox*" OR Processes.process="*--remote-debugging-port*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// DRILLAPP — headless Edge/Chromium spawned as the backdoor host
 DeviceProcessEvents
-| where FileName in~ ("msedge.exe","msedgewebview2.exe","chrome.exe","brave.exe")
-| where ProcessCommandLine has "--headless"
-| where ProcessCommandLine has_any ("--use-fake-ui-for-media-stream","--auto-select-screen-capture-source","--disable-user-media-security")
-| where ProcessCommandLine has_any ("--allow-file-access-from-files","--disable-web-security","--no-sandbox")
-| extend SuspiciousParent = InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","control.exe","rundll32.exe","explorer.exe")
-| extend LoadsLocalFile = ProcessCommandLine has_any ("\\Temp\\","\\AppData\\Local\\Temp\\","file:///")
-| where SuspiciousParent or LoadsLocalFile
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| where Timestamp > ago(7d)
+| where FileName in~ ("msedge.exe","chrome.exe","msedgewebview2.exe")
+| where ProcessCommandLine has "--use-fake-ui-for-media-stream"
+   and  ProcessCommandLine has "--auto-select-screen-capture-source"
+   and  ProcessCommandLine has "--disable-web-security"
+| where ProcessCommandLine has_any ("--allow-file-access-from-files","--disable-user-media-security","--no-sandbox","--remote-debugging-port")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ParentName  = InitiatingProcessFileName,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] Browser process fetching DRILLAPP staging URL on pastefy.app/raw or contacting C2 80.89.224.13 / 188.137.228.162
+### [LLM] Edge/Chromium fetch of pastefy.app/raw or DRILLAPP C2 IPs (dead-drop WebSocket resolver)
 
-`UC_172_5` · phase: **c2** · confidence: **High**
+`UC_171_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user_agent) as user_agent values(Web.dest) as dest values(Web.dest_ip) as dest_ip from datamodel=Web.Web where (Web.url IN ("*pastefy.app/f69UjsFE/raw*","*pastefy.app/nkjTcFw3/raw*") OR Web.url="*pastefy.app/*/raw*" OR Web.url="*short-link.net/*" OR Web.url="*iili.io/*" OR Web.dest_ip IN ("80.89.224.13","188.137.228.162")) by Web.src Web.user Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | append [ | tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("80.89.224.13","188.137.228.162") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` ]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as urls values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app="msedge.exe" OR All_Traffic.app="chrome.exe" OR All_Traffic.app="msedgewebview2.exe") AND (All_Traffic.dest_ip="80.89.224.13" OR All_Traffic.dest_ip="188.137.228.162" OR All_Traffic.url="*pastefy.app/f69UjsFE/raw*" OR All_Traffic.url="*pastefy.app/nkjTcFw3/raw*" OR All_Traffic.url="*short-link.net/ZVMEq*" OR All_Traffic.url="*short-link.net/KCVTt*" OR All_Traffic.url="*short-link.net/HdviE*" OR All_Traffic.url="*iili.io/fphPR3b.jpg*" OR All_Traffic.url="*iili.io/q995YYu.jpg*" OR All_Traffic.url="*iili.io/q995zhl.jpg*" OR All_Traffic.url="*iili.io/q995IQ2.jpg*" OR All_Traffic.url="*iili.io/qKOFGe4.jpg*") by All_Traffic.src All_Traffic.user All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badIps = dynamic(["80.89.224.13","188.137.228.162"]);
-let stagingHosts = dynamic(["pastefy.app","short-link.net","iili.io"]);
-let stagingPaths = dynamic(["/f69UjsFE/raw","/nkjTcFw3/raw","/ZVMEq","/KCVTt","/HdviE","fphPR3b.jpg","q995YYu.jpg","q995zhl.jpg","q995IQ2.jpg","qKOFGe4.jpg"]);
+// DRILLAPP — browser-driven dead-drop resolution + C2
+let drillapp_ips = dynamic(["80.89.224.13","188.137.228.162"]);
+let drillapp_url_terms = dynamic([
+    "pastefy.app/f69UjsFE/raw",
+    "pastefy.app/nkjTcFw3/raw",
+    "short-link.net/ZVMEq",
+    "short-link.net/KCVTt",
+    "short-link.net/HdviE",
+    "iili.io/fphPR3b.jpg",
+    "iili.io/q995YYu.jpg",
+    "iili.io/q995zhl.jpg",
+    "iili.io/q995IQ2.jpg",
+    "iili.io/qKOFGe4.jpg"
+  ]);
 DeviceNetworkEvents
-| where RemoteIP in (badIps)
-   or (RemoteUrl has_any (stagingHosts) and (RemoteUrl has "/raw" or RemoteUrl has_any (stagingPaths)))
-| where InitiatingProcessFileName in~ ("msedge.exe","msedgewebview2.exe","chrome.exe","cmd.exe","mshta.exe","rundll32.exe","control.exe","powershell.exe","wscript.exe","cscript.exe")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","msedgewebview2.exe")
+| where RemoteIP in (drillapp_ips)
+   or RemoteUrl has_any (drillapp_url_terms)
+   or (RemoteUrl has "pastefy.app/" and RemoteUrl has "/raw"
+        and InitiatingProcessCommandLine has_any (
+            "--use-fake-ui-for-media-stream","--remote-debugging-port","--no-sandbox","--allow-file-access-from-files"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
 ```
 
-### [LLM] LNK persistence: bulk .lnk drop into Startup by LNK/CPL handler chain (DRILLAPP variant 1)
+### [LLM] DRILLAPP variant 1 persistence: bulk .lnk drop into user Startup folder
 
-`UC_172_6` · phase: **install** · confidence: **Medium**
+`UC_171_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" Filesystem.file_name="*.lnk" Filesystem.process_name IN ("cmd.exe","xcopy.exe","robocopy.exe","powershell.exe","wscript.exe","cscript.exe","rundll32.exe","control.exe") by Filesystem.dest Filesystem.user Filesystem.process_name _time span=10m | `drop_dm_object_name(Filesystem)` | stats sum(count) as lnk_count values(file_name) as lnk_files values(process_name) as writer by dest user | where lnk_count >= 2
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime dc(Filesystem.file_name) as lnk_count values(Filesystem.file_name) as lnk_files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" Filesystem.file_name="*.lnk" Filesystem.process_name!="explorer.exe" Filesystem.process_name!="msiexec.exe" Filesystem.process_name!="setup.exe" Filesystem.process_name!="OneDrive.exe" Filesystem.process_name!="OneDriveSetup.exe" Filesystem.process_name!="OneNoteM.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where lnk_count >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// DRILLAPP variant 1 — persistence via mass LNK copy into Startup folder
+let allowed_writers = dynamic([
+    "explorer.exe","msiexec.exe","setup.exe","OneDriveSetup.exe",
+    "OneDrive.exe","OneNoteM.exe","TrustedInstaller.exe","svchost.exe"]);
 DeviceFileEvents
+| where Timestamp > ago(1d)
 | where ActionType in ("FileCreated","FileRenamed","FileModified")
 | where FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup"
 | where FileName endswith ".lnk"
-| where InitiatingProcessFileName in~ ("cmd.exe","xcopy.exe","robocopy.exe","powershell.exe","wscript.exe","cscript.exe","rundll32.exe","control.exe")
-| summarize lnk_count = dcount(FileName), lnk_files = make_set(FileName,25), writers = make_set(InitiatingProcessFileName,5), cmds = make_set(InitiatingProcessCommandLine,5), firstSeen=min(Timestamp), lastSeen=max(Timestamp) by DeviceId, DeviceName, InitiatingProcessAccountName, bin(Timestamp, 10m)
-| where lnk_count >= 2
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where FileName in~ ("msedge.exe","chrome.exe")
-    | where ProcessCommandLine has "--headless"
-    | project DeviceId, EdgeHeadlessTime=Timestamp, EdgeCmd=ProcessCommandLine
-) on DeviceId
-| where isnull(EdgeHeadlessTime) or abs(datetime_diff('minute', lastSeen, EdgeHeadlessTime)) <= 30
+| where InitiatingProcessFileName !in~ (allowed_writers)
+| where InitiatingProcessAccountName !endswith "$"
+| summarize LnkCount   = dcount(FileName),
+            LnkSamples = make_set(FileName, 20),
+            FirstSeen  = min(Timestamp),
+            LastSeen   = max(Timestamp)
+            by DeviceName, InitiatingProcessAccountName,
+               InitiatingProcessFileName, InitiatingProcessFolderPath,
+               InitiatingProcessCommandLine, InitiatingProcessSHA256
+| where LnkCount >= 2     // mass-copy threshold — single startup LNK is too noisy
+| order by FirstSeen desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -157,6 +189,7 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -165,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_172_3` · phase: **install** · confidence: **High**
+`UC_171_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

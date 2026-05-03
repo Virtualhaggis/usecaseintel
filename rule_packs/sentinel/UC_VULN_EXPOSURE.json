@@ -12,7 +12,7 @@
         "description": "Match vulnerability scanner output to the CVE(s) named in the article.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceTvmSoftwareVulnerabilities\n| where CveId in~ (__CVE_LIST__)\n| join kind=inner DeviceInfo on DeviceId\n| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate",
+        "query": "// Sentinel has no native TVM table. If MDE\u2192Sentinel streaming is enabled,\n// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has\n// no Sentinel translation \u2014 track via Update / Heartbeat OS-version\n// gaps as a coarse approximation.\nDeviceTvmSoftwareVulnerabilities\n| where TimeGenerated > ago(1d)\n| where CveId in~ (__CVE_LIST__)\n| join kind=inner (DeviceInfo | where TimeGenerated > ago(1d)) on DeviceId\n| project DeviceName, OSPlatform, CveId,\n          VulnerabilitySeverityLevel, RecommendedSecurityUpdate\n| order by VulnerabilitySeverityLevel asc, DeviceName asc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

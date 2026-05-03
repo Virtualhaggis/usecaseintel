@@ -34,11 +34,11 @@ ESET Research has discovered a new variant of the NGate malware family that abus
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1660** — Phishing (Mobile)
 - **T1646** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1456** — Drive-By Compromise (Mobile)
-- **T1404** — Exploitation for Privilege Escalation (Mobile)
+- **T1437.001** — Application Layer Protocol: Web Protocols
+- **T1660** — Phishing
+- **T1456** — Drive-By Compromise
+- **T1417.002** — Input Capture: GUI Input Capture
 
 ## Kill chain phases observed
 
@@ -46,54 +46,85 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NGate HandyPay C&C beacon / distribution traffic (protecaocartao.online, 108.165.230.223)
+### [LLM] NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_110_5` · phase: **c2** · confidence: **High**
+`UC_110_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("108.165.230.223","104.21.91.170") by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" by Web.src Web.user Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="*protecaocartao.online*" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="108.165.230.223" by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceNetworkEvents
-    | where RemoteIP in ("108.165.230.223","104.21.91.170")
-         or RemoteUrl has "protecaocartao.online"
-    | project Timestamp, DeviceName, DeviceId, ActionType, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol),
-  (DeviceEvents
-    | where ActionType in ("DnsQueryResponse","ConnectionSuccess")
-    | where AdditionalFields has "protecaocartao.online"
-    | project Timestamp, DeviceName, ActionType, AdditionalFields)
+let _ngate_c2_ip = "108.165.230.223";
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == _ngate_c2_ip
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType, LocalIP, Protocol
 | order by Timestamp desc
 ```
 
-### [LLM] Trojanized HandyPay APK delivery (PROTECAO_CARTAO.apk / Rio_de_Premios_Pagamento.apk hash hits)
+### [LLM] Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
 `UC_110_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C") OR Filesystem.file_name IN ("PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_hash Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*protecaocartao.online*" AND Web.url="*.apk*" by Web.src Web.user Web.url Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.http_user_agent) as ua from datamodel=Web.Web where Web.url="*protecaocartao.online*" OR Web.dest="protecaocartao.online" OR Web.dest="104.21.91.170" by Web.src Web.user Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query="*protecaocartao.online*" by DNS.src | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) ]
 ```
 
 **Defender KQL:**
 ```kql
-let badHashes = dynamic(["48A0DE6A43FC6E49318AD6873EA63FE325200DBC","A4F793539480677241EF312150E9C02E324C0AA2","94AF94CA818697E1D99123F69965B11EAD9F010C"]);
-let badNames  = dynamic(["PROTECAO_CARTAO.apk","Rio_de_Premios_Pagamento.apk","Rio_de_Prêmios_Pagamento.apk"]);
-union
-  (DeviceFileEvents
-    | where SHA1 in~ (badHashes) or FileName in~ (badNames) or FileName endswith ".apk" and FolderPath has_any ("Download","WhatsApp")
-    | where SHA1 in~ (badHashes) or FileName in~ (badNames)
-    | project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, RequestSourceIP),
+let _ngate_domain = "protecaocartao.online";
+let _ngate_distrib_ip = "104.21.91.170";
+union isfuzzy=true
   (DeviceNetworkEvents
-    | where RemoteUrl has "protecaocartao.online" and RemoteUrl has ".apk"
-    | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessAccountName)
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has _ngate_domain or RemoteIP == _ngate_distrib_ip
+    | project Timestamp, Source="NetConn", DeviceName, DeviceId, InitiatingProcessFileName, RemoteIP, RemoteUrl, RemotePort, ActionType, FileName=tostring(dynamic(null)), SHA1=tostring(dynamic(null)), FileOriginUrl=tostring(dynamic(null))),
+  (DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName has _ngate_domain
+    | project Timestamp, Source="DNS", DeviceName, DeviceId, InitiatingProcessFileName, RemoteIP=tostring(dynamic(null)), RemoteUrl=QueryName, RemotePort=int(null), ActionType, FileName=tostring(dynamic(null)), SHA1=tostring(dynamic(null)), FileOriginUrl=tostring(dynamic(null))),
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName endswith ".apk"
+    | where FileOriginUrl has _ngate_domain or FileOriginIP == _ngate_distrib_ip
+    | project Timestamp, Source="FileDrop", DeviceName, DeviceId, InitiatingProcessFileName, RemoteIP=FileOriginIP, RemoteUrl=FileOriginUrl, RemotePort=int(null), ActionType, FileName, SHA1, FileOriginUrl)
 | order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### [LLM] Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
+
+`UC_110_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("48a0de6a43fc6e49318ad6873ea63fe325200dbc","a4f793539480677241ef312150e9c02e324c0aa2","94af94ca818697e1d99123f69965b11ead9f010c") OR Filesystem.file_name IN ("PROTECAO_CARTAO.apk","Rio_de_Prêmios_Pagamento.apk")) by Filesystem.dest Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _ngate_apk_sha1 = dynamic([
+  "48a0de6a43fc6e49318ad6873ea63fe325200dbc",
+  "a4f793539480677241ef312150e9c02e324c0aa2",
+  "94af94ca818697e1d99123f69965b11ead9f010c"
+]);
+let _ngate_apk_names = dynamic(["PROTECAO_CARTAO.apk","Rio_de_Prêmios_Pagamento.apk","Rio_de_Premios_Pagamento.apk"]);
+DeviceFileEvents
+| where Timestamp > ago(60d)
+| where (FileName endswith ".apk")
+| where tolower(SHA1) in (_ngate_apk_sha1)
+   or FileName in~ (_ngate_apk_names)
+| project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA1, SHA256, FileSize, FileOriginUrl, FileOriginIP, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -178,6 +209,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -237,6 +269,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -268,6 +301,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -283,4 +317,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

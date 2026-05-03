@@ -12,7 +12,7 @@
         "description": "psexec / paexec / smbexec / wmic /node \u2014 service install over SMB from remote host.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (\"psexec.exe\",\"psexesvc.exe\",\"paexec.exe\",\"smbexec.py\")\n   or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"/node:\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine",
+        "query": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688            // process-create (audit-policy required)\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\psexec.exe\"\n   or NewProcessName endswith \"\\psexesvc.exe\"\n   or NewProcessName endswith \"\\paexec.exe\"\n   or (NewProcessName endswith \"\\wmic.exe\" and CommandLine has \"/node:\")\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,\n          ParentProcessName\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

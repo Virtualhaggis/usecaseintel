@@ -12,7 +12,7 @@
         "description": "Cloud identity abuse: app gets high-priv scopes, often via consent phishing.",
         "severity": "High",
         "enabled": false,
-        "query": "CloudAppEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"Consent to application.\",\"Add OAuth2PermissionGrant.\",\"Add delegated permission grant.\")\n| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,\n          ActivityObjects, IPAddress, UserAgent",
+        "query": "// Entra ID directory audit \u2014 user / admin consent to a third-party app.\nAuditLogs\n| where TimeGenerated > ago(7d)\n| where OperationName has \"Consent to application\"\n| where Result =~ \"success\"\n| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),\n         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),\n         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)\n| project TimeGenerated, OperationName, User, AppName, AppId, Result\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

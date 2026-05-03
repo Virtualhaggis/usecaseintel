@@ -47,11 +47,10 @@ In March 2026, we discovered an active campaign promoting previously unknown m
 - **T1204.002** — User Execution: Malicious File
 - **T1140** — Deobfuscate/Decode Files or Information
 - **T1074.001** — Local Data Staging
-- **T1546** — Event Triggered Execution
-- **T1565.002** — Transmitted Data Manipulation
+- **T1185** — Browser Session Hijacking
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1095** — Non-Application Layer Protocol
-- **T1571** — Non-Standard Port
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -59,93 +58,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] CrystalX RAT ChromeElevator drop to %TEMP%\svc[N].exe with co[N] staging dir
+### [LLM] CrystalX RAT — ChromeElevator stealer drop in %TEMP% (svc[digits].exe + co[digits])
 
-`UC_154_7` · phase: **actions** · confidence: **High**
+`UC_153_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as creator from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\Temp\\svc*.exe","*\\Temp\\co*\\*") by Filesystem.dest Filesystem.user _time span=5m | `drop_dm_object_name(Filesystem)` | rex field=file_path "(?i)\\\\Temp\\\\(?<artifact>(svc\d+\.exe|co\d+))" | stats count dc(artifact) as distinct_artifacts values(file_path) as paths values(creator) as creator min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where distinct_artifacts>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*\\Temp\\svc*.exe" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\svc*.exe") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where match(file_name, "(?i)^svc\d+\.exe$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let window = 10m;
-let svcDrops = DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FolderPath has "\\Temp\\" and FileName matches regex @"(?i)^svc\d+\.exe$"
-| project DeviceId, DeviceName, Svctime=Timestamp, SvcFile=FolderPath, SvcCreator=InitiatingProcessFileName;
-let coDirs = DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath matches regex @"(?i)\\Temp\\co\d+\\"
-| project DeviceId, CoTime=Timestamp, CoPath=FolderPath, CoCreator=InitiatingProcessFileName;
-svcDrops
-| join kind=inner coDirs on DeviceId
-| where abs(datetime_diff('second', Svctime, CoTime)) <= 600
-| project DeviceName, DeviceId, Svctime, SvcFile, CoPath, SvcCreator, CoCreator
-| summarize FirstSeen=min(Svctime), Drops=make_set(SvcFile,5), StagingDirs=make_set(CoPath,5), Creators=make_set(SvcCreator,5) by DeviceName, DeviceId
+// CrystalX RAT — ChromeElevator stealer drop
+let _crystalx_drops = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "FileCreated"
+    | where FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\")
+    | where FileName matches regex @"(?i)^svc\d+\.exe$"
+    | project DropTime=Timestamp, DeviceId, DeviceName, DroppedPath=FolderPath, DroppedName=FileName,
+              DropperProcess=InitiatingProcessFileName, DropperCmd=InitiatingProcessCommandLine,
+              DropperSHA256=InitiatingProcessSHA256, AccountName=InitiatingProcessAccountName;
+let _crystalx_execs = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\")
+    | where FileName matches regex @"(?i)^svc\d+\.exe$"
+    | project ExecTime=Timestamp, DeviceId, DeviceName, AccountName,
+              ExecPath=FolderPath, ExecName=FileName, ExecCmd=ProcessCommandLine, SHA256;
+union _crystalx_drops, _crystalx_execs
+| order by DeviceName, coalesce(DropTime, ExecTime) asc
 ```
 
-### [LLM] CrystalX clipper extension dropped to %LOCALAPPDATA%\Microsoft\Edge\ExtSvc
+### [LLM] CrystalX RAT — clipper extension drop to Microsoft\Edge\ExtSvc and CDP injection
 
-`UC_154_8` · phase: **install** · confidence: **High**
+`UC_153_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Local\\Microsoft\\Edge\\ExtSvc\\*" (Filesystem.file_name="content.js" OR Filesystem.file_name="manifest.json") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=outer dest [| tstats `summariesonly` values(Processes.process) as cdp_cmdline from datamodel=Endpoint.Processes where (Processes.process_name=chrome.exe OR Processes.process_name=msedge.exe) Processes.process IN ("*--remote-debugging-port=*","*--remote-debugging-pipe*") by Processes.dest | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_path="*\\AppData\\Local\\Microsoft\\Edge\\ExtSvc\\*" (Filesystem.file_name="content.js" OR Filesystem.file_name="manifest.json") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="msedge.exe" OR Processes.process_name="chrome.exe") Processes.process="*--remote-debugging-port=*" (Processes.parent_process_name!="explorer.exe" AND Processes.parent_process_name!="msedge.exe" AND Processes.parent_process_name!="chrome.exe" AND Processes.parent_process_name!="OUTLOOK.EXE") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let extDrop = DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FolderPath has @"\AppData\Local\Microsoft\Edge\ExtSvc"
-| where FileName in~ ("content.js","manifest.json")
-| project DropTime=Timestamp, DeviceId, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-let cdpLaunch = DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("chrome.exe","msedge.exe")
-| where ProcessCommandLine has_any ("--remote-debugging-port","--remote-debugging-pipe")
-| project CdpTime=Timestamp, DeviceId, BrowserCmd=ProcessCommandLine;
-extDrop
-| join kind=leftouter cdpLaunch on DeviceId
-| where isnull(CdpTime) or abs(datetime_diff('minute', DropTime, CdpTime)) <= 30
-| summarize FirstSeen=min(DropTime), Files=make_set(FileName), Writers=make_set(InitiatingProcessFileName), CdpCmd=make_set(BrowserCmd,3) by DeviceName, DeviceId, FolderPath
+// CrystalX RAT clipper extension drop & CDP injection
+let _ext_drop = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "FileCreated"
+    | where FolderPath has @"\AppData\Local\Microsoft\Edge\ExtSvc"
+    | where FileName in~ ("content.js","manifest.json")
+    | project Timestamp, DeviceName, FolderPath, FileName,
+              Dropper=InitiatingProcessFileName, DropperCmd=InitiatingProcessCommandLine,
+              DropperSHA256=InitiatingProcessSHA256,
+              AccountName=InitiatingProcessAccountName, Source="ExtSvc_Drop";
+let _cdp_inject = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ ("msedge.exe","chrome.exe")
+    | where ProcessCommandLine has_any ("--remote-debugging-port","--load-extension=","ExtSvc")
+    | where InitiatingProcessFileName !in~ ("explorer.exe","msedge.exe","chrome.exe","setup.exe","msiexec.exe","OfficeClickToRun.exe")
+    | where InitiatingProcessFolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\", @"\Users\Public\", @"\ProgramData\")
+    | project Timestamp, DeviceName, AccountName,
+              Browser=FileName, BrowserCmd=ProcessCommandLine,
+              Parent=InitiatingProcessFileName, ParentPath=InitiatingProcessFolderPath,
+              ParentCmd=InitiatingProcessCommandLine, Source="CDP_Injection";
+union _ext_drop, _cdp_inject
+| order by Timestamp desc
 ```
 
-### [LLM] CrystalX RAT C2 beaconing to webcrystal[.]lol / webcrystal[.]sbs / crystalxrat[.]top
+### [LLM] CrystalX / Webcrystal RAT C2 + implant hash IOC sweep
 
-`UC_154_9` · phase: **c2** · confidence: **High**
+`UC_153_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query IN ("webcrystal.lol","*.webcrystal.lol","webcrystal.sbs","*.webcrystal.sbs","crystalxrat.top","*.crystalxrat.top") by DNS.dest | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host IN ("webcrystal.lol","webcrystal.sbs","crystalxrat.top") OR All_Traffic.url="*webcrystal.*" OR All_Traffic.url="*crystalxrat.top*" by All_Traffic.dest_host All_Traffic.app] | append [| tstats `summariesonly` count values(Processes.process) as process values(Processes.process_hash) as md5 from datamodel=Endpoint.Processes where Processes.process_hash IN ("47ACCB0ECFE8CCD466752DDE1864F3B0","2DBE6DE177241C144D06355C381B868C","49C74B302BFA32E45B7C1C5780DD0976","88C60DF2A1414CBF24430A74AE9836E0","E540E9797E3B814BFE0A82155DFE135D","1A68AE614FB2D8875CB0573E6A721B46") by Processes.dest Processes.user | `drop_dm_object_name(Processes)`] | stats values(*) as * min(firstTime) as firstTime max(lastTime) as lastTime by src dest | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("47ACCB0ECFE8CCD466752DDE1864F3B0","2DBE6DE177241C144D06355C381B868C","49C74B302BFA32E45B7C1C5780DD0976","88C60DF2A1414CBF24430A74AE9836E0","E540E9797E3B814BFE0A82155DFE135D","1A68AE614FB2D8875CB0573E6A721B46") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("webcrystal.lol","webcrystal.sbs","crystalxrat.top","*.webcrystal.lol","*.webcrystal.sbs","*.crystalxrat.top") by DNS.src DNS.query DNS.answer] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN ("*webcrystal.lol*","*webcrystal.sbs*","*crystalxrat.top*") by Web.src Web.dest Web.url Web.user] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badDomains = dynamic(["webcrystal.lol","webcrystal.sbs","crystalxrat.top"]);
-let badMD5 = dynamic(["47ACCB0ECFE8CCD466752DDE1864F3B0","2DBE6DE177241C144D06355C381B868C","49C74B302BFA32E45B7C1C5780DD0976","88C60DF2A1414CBF24430A74AE9836E0","E540E9797E3B814BFE0A82155DFE135D","1A68AE614FB2D8875CB0573E6A721B46"]);
-let net = DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (badDomains) or tostring(parse_url(RemoteUrl)["Host"]) in~ (badDomains)
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source="DeviceNetworkEvents";
-let hashHits = DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where tolower(MD5) in (badMD5) or tolower(InitiatingProcessMD5) in (badMD5)
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName=FileName, InitiatingProcessCommandLine=ProcessCommandLine, RemoteUrl="", RemoteIP="", RemotePort=int(null), Source="DeviceProcessEvents-MD5";
-let fileHits = DeviceFileEvents
-| where Timestamp > ago(30d)
-| where tolower(MD5) in (badMD5)
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine=FolderPath, RemoteUrl="", RemoteIP="", RemotePort=int(null), Source="DeviceFileEvents-MD5";
-union net, hashHits, fileHits
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Sources=make_set(Source), URLs=make_set(RemoteUrl,5), IPs=make_set(RemoteIP,5), Procs=make_set(InitiatingProcessFileName,5) by DeviceName, DeviceId
-| order by FirstSeen asc
+// CrystalX RAT IOC sweep — C2 domains + implant MD5s
+let _crystalx_md5 = dynamic(["47ACCB0ECFE8CCD466752DDE1864F3B0","2DBE6DE177241C144D06355C381B868C","49C74B302BFA32E45B7C1C5780DD0976","88C60DF2A1414CBF24430A74AE9836E0","E540E9797E3B814BFE0A82155DFE135D","1A68AE614FB2D8875CB0573E6A721B46"]);
+let _crystalx_c2 = dynamic(["webcrystal.lol","webcrystal.sbs","crystalxrat.top"]);
+union isfuzzy=true
+    ( DeviceProcessEvents
+        | where Timestamp > ago(30d)
+        | where MD5 in~ (_crystalx_md5) or InitiatingProcessMD5 in~ (_crystalx_md5)
+        | project Timestamp, DeviceName, AccountName, FileName, FolderPath, MD5,
+                  ProcessCommandLine, Parent=InitiatingProcessFileName, Source="Process_HashMatch" ),
+    ( DeviceNetworkEvents
+        | where Timestamp > ago(30d)
+        | where RemoteUrl has_any (_crystalx_c2)
+        | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+                  InitiatingProcessFileName, InitiatingProcessCommandLine, Source="Net_C2_URL" ),
+    ( DeviceEvents
+        | where Timestamp > ago(30d)
+        | where ActionType == "DnsQueryResponse"
+        | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+        | where Q has_any (_crystalx_c2)
+        | project Timestamp, DeviceName, InitiatingProcessFileName, Query=Q, Source="DNS_C2" )
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -199,6 +211,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -226,10 +239,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -256,14 +270,15 @@ DeviceFileEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
 | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Article-specific behavioural hunt — A laughing RAT: CrystalX combines spyware, stealer, and prankware features
 
-`UC_154_6` · phase: **exploit** · confidence: **High**
+`UC_153_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -323,4 +338,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

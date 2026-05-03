@@ -51,12 +51,13 @@ Our first article about the boundar…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1213.003** — Code Repositories
 - **T1530** — Data from Cloud Storage
-- **T1213.003** — Data from Information Repositories: Code Repositories
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1552.007** — Container API
 - **T1213** — Data from Information Repositories
-- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1565.001** — Stored Data Manipulation
 - **T1548** — Abuse Elevation Control Mechanism
+- **T1078.004** — Cloud Accounts
 - **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
@@ -65,86 +66,97 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] AgentCore SDK auto-create runtime role pulling ECR images (cross-account image exfil)
+### [LLM] Bedrock AgentCore execution role pulls ECR image of a different agent
 
-`UC_145_9` · phase: **actions** · confidence: **High**
+`UC_144_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as ecr_targets values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages") by All_Changes.user All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=ecr_targets max_match=0 "repository/(?<repo_names>[^\"\s,]+)"
-| eval distinct_repos=mvcount(mvdedup(repo_names))
-| where (mvfind(commands,"BatchGetImage")>=0 OR mvfind(commands,"GetDownloadUrlForLayer")>=0) AND (distinct_repos>1 OR mvfind(commands,"DescribeRepositories")>=0)
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as repos values(All_Changes.src) as src_ip values(All_Changes.command) as commands from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("BatchGetImage","GetDownloadUrlForLayer","GetAuthorizationToken") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=10m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand repos | rex field=repos "repository/(?<repo_name>[^/\s\"]+)" | where isnotnull(role_agent) AND isnotnull(repo_name) AND NOT match(repo_name, role_agent) | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(repo_name) as cross_agent_repos values(action) as actions values(src_ip) as src_ip by role_name | where mvcount(cross_agent_repos)>=1
 ```
 
 **Defender KQL:**
 ```kql
+// Requires Microsoft Defender for Cloud Apps AWS connector — Bedrock AgentCore role pulls a non-self ECR repo
+let window = 30m;
+let ecr_actions = dynamic(["GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","BatchCheckLayerAvailability"]);
 CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","DescribeRepositories","ListImages")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend TargetRepo = extract(@"repository/([A-Za-z0-9._/-]+)", 1, tostring(Raw.requestParameters))
-| summarize Commands=make_set(ActionType), Repos=make_set(TargetRepo), DistinctRepos=dcount(TargetRepo), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where Commands has_any ("BatchGetImage","GetDownloadUrlForLayer") and (DistinctRepos > 1 or Commands has "DescribeRepositories")
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (ecr_actions)
+| extend RoleArn = tostring(parse_json(tostring(RawEventData)).userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend RepoArn = tostring(parse_json(tostring(RawEventData)).requestParameters.repositoryName)
+| where ActionType != "GetAuthorizationToken"  // pair the token grab with a subsequent image pull
+| where isnotempty(RepoArn) and isnotempty(RoleAgentTag)
+| where not(RepoArn has RoleAgentTag)
+| project Timestamp, AccountDisplayName, RoleArn, RoleAgentTag, ActionType, TargetRepository = RepoArn, IPAddress, CountryCode
+| order by Timestamp desc
 ```
 
-### [LLM] AgentCore execution role reading memory resources of another agent
+### [LLM] Cross-agent Bedrock AgentCore memory access (GetMemory / RetrieveMemoryRecords)
 
-`UC_145_10` · phase: **actions** · confidence: **High**
+`UC_144_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands values(All_Changes.object) as memory_arns from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent") by All_Changes.user All_Changes.src All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=memory_arns max_match=0 "memory/(?<memory_ids>[A-Za-z0-9_-]+)"
-| eval distinct_memories=mvcount(mvdedup(memory_ids))
-| where distinct_memories>1 OR mvfind(commands,"ListMemoryRecords")>=0
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as memory_arns values(All_Changes.src) as src_ip from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("GetMemory","RetrieveMemoryRecords","ListMemoryRecords","DeleteMemoryRecord") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=10m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand memory_arns | rex field=memory_arns "memory/(?<memory_id>[^/\s\"]+)" | rex field=memory_id "(?<memory_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)_mem-" | where isnotnull(role_agent) AND isnotnull(memory_agent) AND role_agent!=memory_agent | stats count values(action) as actions values(memory_id) as cross_agent_memory_ids values(src_ip) as src_ip min(firstTime) as firstTime max(lastTime) as lastTime by role_name role_agent
 ```
 
 **Defender KQL:**
 ```kql
+// Requires Defender for Cloud Apps AWS connector ingesting bedrock-agentcore data-plane CloudTrail events
+let memory_actions = dynamic(["GetMemory","RetrieveMemoryRecords","ListMemoryRecords","DeleteMemoryRecord","PutMemoryRecord"]);
 CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("GetMemoryRecord","RetrieveMemoryRecords","ListMemoryRecords","ListSessions","ListEvents","ListActors","GetEvent")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend MemoryId = coalesce(tostring(Raw.requestParameters.memoryId), extract(@"memory/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
-| summarize Commands=make_set(ActionType), Memories=make_set(MemoryId), DistinctMemories=dcount(MemoryId), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where DistinctMemories > 1 or Commands has "ListMemoryRecords"
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (memory_actions)
+| extend Raw = parse_json(tostring(RawEventData))
+| extend EventSource = tostring(Raw.eventSource)
+| where EventSource == "bedrock-agentcore.amazonaws.com"
+| extend RoleArn = tostring(Raw.userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend MemoryId = tostring(coalesce(Raw.requestParameters.memoryId, Raw.requestParameters.MemoryId))
+| extend MemoryAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)_mem-", 1, MemoryId))
+| where isnotempty(RoleAgentTag) and isnotempty(MemoryAgentTag)
+| where RoleAgentTag != MemoryAgentTag
+| project Timestamp, RoleArn, RoleAgentTag, ActionType, TargetMemoryId = MemoryId, MemoryAgentTag, IPAddress, CountryCode
+| order by Timestamp desc
 ```
 
-### [LLM] AgentCore SDK runtime role invoking a foreign Bedrock AgentCore runtime
+### [LLM] Bedrock AgentCore lateral pivot via InvokeAgentRuntime / InvokeCodeInterpreter
 
-`UC_145_11` · phase: **actions** · confidence: **Medium**
+`UC_144_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as runtime_arns values(All_Changes.src) as src_ips from datamodel=Change where (All_Changes.vendor_product="AWS CloudTrail" OR sourcetype="aws:cloudtrail") All_Changes.user="AmazonBedrockAgentCoreSDKRuntime-*" All_Changes.command IN ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters") by All_Changes.user All_Changes.command All_Changes.vendor_account span=1h
-| `drop_dm_object_name(All_Changes)`
-| rex field=user "AmazonBedrockAgentCoreSDKRuntime-(?<role_region>[^-]+)-(?<role_hash>[a-z0-9]{10})"
-| rex field=runtime_arns max_match=0 "runtime/(?<target_runtime>[A-Za-z0-9_-]+)"
-| eval distinct_targets=mvcount(mvdedup(target_runtime))
-| where (command="InvokeAgentRuntime" AND distinct_targets>=1) OR command IN ("ListAgentRuntimes","ListCodeInterpreters")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as target_arns values(All_Changes.src) as src_ip from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListCodeInterpreters","ListAgentRuntimes") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=15m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand target_arns | rex field=target_arns "(?:runtime|code-interpreter)/(?<target_id>[^/\s\"]+)" | rex field=target_id "(?<target_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | where isnotnull(role_agent) AND isnotnull(target_agent) AND role_agent!=target_agent | stats count dc(target_id) as distinct_targets values(action) as actions values(target_id) as cross_agent_targets by role_name role_agent | where distinct_targets>=1
 ```
 
 **Defender KQL:**
 ```kql
+// Requires Defender for Cloud Apps AWS connector
+let pivot_actions = dynamic(["InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListCodeInterpreters","ListAgentRuntimes"]);
 CloudAppEvents
-| where Application has "Amazon Web Services" or ApplicationId == 11161
-| where ActionType in ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListAgentRuntimes","ListCodeInterpreters")
-| extend Raw = todynamic(RawEventData)
-| extend SessionRole = tostring(Raw.userIdentity.sessionContext.sessionIssuer.userName)
-| where SessionRole startswith "AmazonBedrockAgentCoreSDKRuntime-"
-| extend TargetRuntime = coalesce(tostring(Raw.requestParameters.agentRuntimeArn), tostring(Raw.requestParameters.codeInterpreterIdentifier), extract(@"runtime/([A-Za-z0-9_-]+)", 1, tostring(Raw.requestParameters)))
-| summarize Commands=make_set(ActionType), Targets=make_set(TargetRuntime), DistinctTargets=dcount(TargetRuntime), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by SessionRole, IPAddress, AccountObjectId
-| where DistinctTargets >= 1 or Commands has_any ("ListAgentRuntimes","ListCodeInterpreters")
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (pivot_actions)
+| extend Raw = parse_json(tostring(RawEventData))
+| where tostring(Raw.eventSource) == "bedrock-agentcore.amazonaws.com"
+| extend RoleArn = tostring(Raw.userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend TargetArn = tostring(coalesce(Raw.requestParameters.agentRuntimeArn, Raw.requestParameters.codeInterpreterIdentifier, Raw.requestParameters.runtimeArn))
+| extend TargetAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, TargetArn))
+| where isnotempty(RoleAgentTag) and isnotempty(TargetAgentTag)
+| where RoleAgentTag != TargetAgentTag
+| summarize Calls = count(), Targets = make_set(TargetArn, 25), Actions = make_set(ActionType) by RoleArn, RoleAgentTag, IPAddress, bin(Timestamp, 15m)
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -169,10 +181,11 @@ CloudAppEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### DNS tunneling / TXT-heavy domain queries
@@ -226,9 +239,11 @@ DeviceNetworkEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -281,6 +296,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -336,6 +352,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -364,6 +381,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -389,6 +407,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -414,6 +433,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -429,4 +449,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

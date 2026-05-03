@@ -40,16 +40,15 @@ A significant proportion of cyberincidents are linked to supply chain attacks, a
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1568** — Dynamic Resolution
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1546.016** — Event Triggered Execution: Installer Packages
-- **T1560.001** — Archive Collected Data: Archive via Utility
 - **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1611** — Escape to Host
-- **T1610** — Deploy Container
-- **T1053.006** — Scheduled Task/Job: Systemd Timers
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms (typosquat variant)
+- **T1041** — Exfiltration Over C2 Channel
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
 
 ## Kill chain phases observed
 
@@ -57,72 +56,95 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] LiteLLM/TeamPCP C2 beacon to checkmarx.zone/raw and models.litellm.cloud
+### [LLM] TeamPCP sysmon.py systemd persistence drop on Linux / Kubernetes node
 
-`UC_158_7` · phase: **c2** · confidence: **High**
+`UC_157_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as user_agents from datamodel=Web where Web.url IN ("*checkmarx.zone/raw*","*checkmarx.zone/static/checkmarx-util*","*checkmarx.zone/static/*.tgz","*models.litellm.cloud*") OR Web.dest IN ("checkmarx.zone","models.litellm.cloud") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | append [| tstats summariesonly=true count from datamodel=Network_Resolution where Network_Resolution.DNS.query IN ("checkmarx.zone","*.checkmarx.zone","models.litellm.cloud") by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name(Network_Resolution.DNS)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND Filesystem.file_name="sysmon.py" AND (Filesystem.file_path="*/.config/sysmon/sysmon.py" OR Filesystem.file_path="/root/.config/sysmon/sysmon.py") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceNetworkEvents
-  | where RemoteUrl has_any ("checkmarx.zone/raw","checkmarx.zone/static/checkmarx-util","models.litellm.cloud")
-     or RemoteUrl matches regex @"checkmarx\.zone/static/.*\.tgz"
-  | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-( DeviceEvents
-  | where ActionType == "DnsQueryResponse" and AdditionalFields has_any ("checkmarx.zone","models.litellm.cloud")
-  | project Timestamp, DeviceName, ActionType, AdditionalFields, InitiatingProcessFileName )
-| sort by Timestamp desc
-```
-
-### [LLM] Trojanised LiteLLM dropper artefacts (litellm_init.pth, p.py, session.key, tpcp.tar.gz)
-
-`UC_158_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_id) as pids from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("litellm_init.pth","p.py","session.key","tpcp.tar.gz")) OR (Filesystem.file_path="*site-packages/litellm/proxy/proxy_server.py" AND Filesystem.action="modified") by host Filesystem.dest Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | stats dc(file_name) as distinct_artifacts values(file_name) as artifacts values(paths) as paths min(firstTime) as firstTime max(lastTime) as lastTime by host dest user | where distinct_artifacts>=2 OR match(artifacts,"litellm_init\.pth|tpcp\.tar\.gz") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
+// TeamPCP sysmon.py systemd persistence — LiteLLM / Checkmarx supply chain, March 2026
 DeviceFileEvents
-| where FileName in~ ("litellm_init.pth","p.py","session.key","tpcp.tar.gz")
-   or (FileName == "proxy_server.py" and FolderPath has "site-packages/litellm/proxy" and ActionType == "FileModified")
-| extend Artifact = FileName
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Artifacts=make_set(Artifact), Paths=make_set(FolderPath), Procs=make_set(InitiatingProcessFileName), Cmds=make_set(InitiatingProcessCommandLine) by DeviceId, DeviceName, InitiatingProcessAccountName
-| where array_length(Artifacts) >= 2 or Artifacts has_any ("litellm_init.pth","tpcp.tar.gz")
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "sysmon.py"
+| where FolderPath has @"/.config/sysmon"           // matches both /root/.config/sysmon and /home/<u>/.config/sysmon
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, MD5,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
-### [LLM] TeamPCP sysmon.py systemd persistence and Kubernetes node foothold
+### [LLM] TeamPCP C2 callback to checkmarx[.]zone or models[.]litellm[.]cloud
 
-`UC_158_9` · phase: **install** · confidence: **High**
+`UC_157_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_path) as parent_proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*/.config/sysmon/sysmon.py","/root/.config/sysmon/sysmon.py","/tmp/.pg_state","/tmp/pglog")) OR (Filesystem.file_path IN ("/etc/systemd/system/sysmon.service","*/.config/systemd/user/sysmon.service")) by host Filesystem.dest Filesystem.file_name Filesystem.user | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process IN ("*systemctl* enable *sysmon*","*systemctl* start *sysmon*","*chmod +x /tmp/pglog*","*kubectl* create *--privileged*") by host Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("checkmarx.zone","models.litellm.cloud","*.checkmarx.zone","*.models.litellm.cloud") OR All_Traffic.dest_ip="83.142.209.11") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*checkmarx.zone" OR DNS.query="*models.litellm.cloud") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` ]
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceFileEvents
-  | where (FolderPath endswith "/.config/sysmon" and FileName == "sysmon.py")
-       or (FolderPath in ("/tmp","/tmp/") and FileName in ("pglog",".pg_state"))
-       or (FileName == "sysmon.service" and FolderPath has_any ("/etc/systemd/system","/.config/systemd/user"))
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-( DeviceProcessEvents
-  | where ProcessCommandLine has_any ("systemctl enable sysmon","systemctl start sysmon","chmod +x /tmp/pglog")
-       or (ProcessCommandLine has "kubectl" and ProcessCommandLine has_all ("--privileged","hostPath"))
-  | project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName )
-| sort by Timestamp desc
+// TeamPCP C2 — checkmarx[.]zone (83.142.209.11) and models[.]litellm[.]cloud
+let TeamPCP_Domains = dynamic(["checkmarx.zone","models.litellm.cloud"]);
+let TeamPCP_IPs     = dynamic(["83.142.209.11"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where (RemoteUrl has_any (TeamPCP_Domains)) or (RemoteIP in (TeamPCP_IPs))
+    | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              SourceTable = "DeviceNetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has_any (TeamPCP_Domains)
+    | project Timestamp, DeviceName, Q, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              SourceTable = "DeviceEvents.DnsQueryResponse" )
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### [LLM] Trojanized LiteLLM staging artefacts (p.py / session.key / tpcp.tar.gz) written by Python
+
+`UC_157_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true values(Filesystem.file_name) as artifacts dc(Filesystem.file_name) as artifact_count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") AND Filesystem.file_name IN ("p.py","session.key","tpcp.tar.gz") AND (Filesystem.process_name IN ("python","python2","python3","uwsgi","gunicorn","uvicorn") OR Filesystem.process="*litellm*" OR Filesystem.process="*proxy_server*") by Filesystem.dest Filesystem.user Filesystem.process_name | where artifact_count >= 2 OR mvfind(artifacts,"tpcp.tar.gz")>=0 | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Trojanized LiteLLM 1.82.7 / 1.82.8 — staging artefacts dropped by python interpreter
+let StageArtifacts = dynamic(["p.py","session.key","tpcp.tar.gz"]);
+let PyHosts = dynamic(["python","python2","python3","uwsgi","gunicorn","uvicorn"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ (StageArtifacts)
+| where InitiatingProcessFileName has_any (PyHosts)
+      or InitiatingProcessCommandLine has_any ("litellm","proxy_server","litellm_init.pth")
+| summarize ArtifactSet  = make_set(FileName, 16),
+            ArtifactCount = dcount(FileName),
+            FirstSeen    = min(Timestamp),
+            LastSeen     = max(Timestamp),
+            DropProc     = any(InitiatingProcessFileName),
+            DropCmd      = any(InitiatingProcessCommandLine),
+            FolderSet    = make_set(FolderPath, 16)
+            by DeviceName, InitiatingProcessAccountName
+| where ArtifactCount >= 2 or ArtifactSet has "tpcp.tar.gz"   // tpcp.tar.gz alone is conclusive
+| order by LastSeen desc
+```
+
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -181,9 +203,10 @@ DeviceNetworkEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
 | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -208,10 +231,11 @@ DeviceFileEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -232,6 +256,7 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -239,7 +264,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An AI gateway designed to steal your data
 
-`UC_158_6` · phase: **exploit** · confidence: **High**
+`UC_157_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,4 +324,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -36,12 +36,10 @@ Wind…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1543.003** — Persistence (article-specific)
-- **T1134.001** — Token Impersonation/Theft
+- **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
 - **T1068** — Exploitation for Privilege Escalation
-- **T1134.002** — Create Process with Token
-- **T1059.003** — Windows Command Shell
-- **T1559** — Inter-Process Communication
-- **T1574** — Hijack Execution Flow
+- **T1484.001** — Domain or Tenant Policy Modification: Group Policy Modification
+- **T1134.002** — Access Token Manipulation: Create Process with Token
 
 ## Kill chain phases observed
 
@@ -49,67 +47,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PhantomRPC coercion: gpupdate.exe /force spawned by service-account process (IIS/SQL/etc.)
+### [LLM] PhantomRPC coercion: Network Service / Local Service context spawning gpupdate.exe /force or ipconfig
 
-`UC_81_2` · phase: **exploit** · confidence: **High**
+`UC_83_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=gpupdate.exe Processes.process="*/force*" (Processes.parent_process_name IN (w3wp.exe,sqlservr.exe,httpd.exe,nginx.exe,tomcat*.exe,javaw.exe,java.exe,php-cgi.exe,node.exe,inetinfo.exe) OR Processes.parent_process_name=svchost.exe) by Processes.dest Processes.parent_process_name Processes.parent_process Processes.process_name Processes.user | `drop_dm_object_name(Processes)` | where match(user,"(?i)NETWORK SERVICE|LOCAL SERVICE|IUSR|IIS APPPOOL")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as process_id values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name="gpupdate.exe" AND Processes.process="*/force*") OR Processes.process_name="ipconfig.exe" (Processes.parent_user_id IN ("S-1-5-19","S-1-5-20") OR Processes.parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") OR Processes.parent_process_name IN ("w3wp.exe","svchost.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_user | `drop_dm_object_name(Processes)` | where parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where FileName =~ "gpupdate.exe" and ProcessCommandLine has "/force"
-| where InitiatingProcessAccountName in~ ("network service","local service") 
-   or InitiatingProcessFileName in~ ("w3wp.exe","sqlservr.exe","httpd.exe","nginx.exe","php-cgi.exe","node.exe","inetinfo.exe","tomcat9.exe","javaw.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, AccountName, ProcessIntegrityLevel
-| sort by Timestamp desc
+| where Timestamp > ago(7d)
+| where (FileName =~ "gpupdate.exe" and ProcessCommandLine has "/force")
+   or FileName =~ "ipconfig.exe"
+// Initiating process is running as Network Service or Local Service — the SeImpersonatePrivilege-holding accounts targeted by PhantomRPC
+| where InitiatingProcessAccountName in~ ("network service", "local service", "iusr")
+   or InitiatingProcessAccountSid in ("S-1-5-19", "S-1-5-20")
+// Exclude legitimate SYSTEM-driven gpupdate (scheduled task)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, AccountSid,
+          FileName, ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentAccount = InitiatingProcessAccountName,
+          ParentSid = InitiatingProcessAccountSid,
+          ParentFolderPath = InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
-### [LLM] PhantomRPC token theft: SYSTEM-integrity shell spawned by Network/Local Service parent shortly after gpupdate
+### [LLM] PhantomRPC post-impersonation pivot: SYSTEM child process spawned by Network Service / Local Service parent
 
-`UC_81_3` · phase: **install** · confidence: **High**
+`UC_83_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,conhost.exe) Processes.parent_process_name IN (w3wp.exe,sqlservr.exe,httpd.exe,nginx.exe,php-cgi.exe,node.exe,inetinfo.exe,svchost.exe,tomcat9.exe,javaw.exe) Processes.user IN ("NT AUTHORITY\\SYSTEM","SYSTEM") by Processes.dest Processes.parent_process_name Processes.parent_process_id Processes.process_name Processes.process Processes.user Processes.parent_process_path | `drop_dm_object_name(Processes)` | join type=inner dest parent_process_id [| tstats `summariesonly` values(Processes.user) as parent_user from datamodel=Endpoint.Processes where Processes.process_name IN (w3wp.exe,sqlservr.exe,httpd.exe,nginx.exe,php-cgi.exe,node.exe,inetinfo.exe,svchost.exe,tomcat9.exe,javaw.exe) by Processes.dest Processes.process_id as parent_process_id | `drop_dm_object_name(Processes)` | where match(parent_user,"(?i)NETWORK SERVICE|LOCAL SERVICE")]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as process_id values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.user IN ("NT AUTHORITY\\SYSTEM","SYSTEM") Processes.parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","net.exe","net1.exe","reg.exe","sc.exe","taskkill.exe","whoami.exe") by Processes.dest Processes.user Processes.parent_user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let parents = DeviceProcessEvents
-| where InitiatingProcessAccountName in~ ("network service","local service")
-| where FileName in~ ("w3wp.exe","sqlservr.exe","httpd.exe","nginx.exe","php-cgi.exe","node.exe","inetinfo.exe","tomcat9.exe","javaw.exe","svchost.exe")
-| project ParentTime=Timestamp, DeviceId, ParentPid=ProcessId, ParentName=FileName, ParentAccount=AccountName, ParentInitAccount=InitiatingProcessAccountName;
 DeviceProcessEvents
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
-| where AccountName =~ "system" or ProcessIntegrityLevel =~ "System"
-| join kind=inner parents on $left.DeviceId == $right.DeviceId, $left.InitiatingProcessId == $right.ParentPid
-| where Timestamp between (ParentTime .. (ParentTime + 5m))
-| project Timestamp, DeviceName, ParentName, ParentInitAccount, FileName, ProcessCommandLine, AccountName, ProcessIntegrityLevel, InitiatingProcessCommandLine
-| sort by Timestamp desc
-```
-
-### [LLM] PhantomRPC hunt: rogue process binding TermSrvApi RPC interface (UUID bde95fdf-eee0-45de-9e12-e5a61cd0d4fe)
-
-`UC_81_4` · phase: **weapon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-index=etw_rpc (InterfaceUuid="bde95fdf-eee0-45de-9e12-e5a61cd0d4fe" OR Endpoint="TermSrvApi" OR Endpoint="ncalrpc:[TermSrvApi]") EventName IN ("RpcServerRegisterIf*","RpcServerUseProtseqEp*","AlpcCreatePort") | stats min(_time) as firstTime max(_time) as lastTime values(ProcessName) as ProcessName values(ProcessId) as ProcessId values(UserName) as UserName by host InterfaceUuid Endpoint | where NOT (match(ProcessName,"(?i)svchost\\.exe$") AND match(UserName,"(?i)NETWORK SERVICE"))
-```
-
-**Defender KQL:**
-```kql
-// Requires ETW-RPC forwarded into a custom table; example assumes 'RpcEvents_CL'
-RpcEvents_CL
-| where InterfaceUuid_s =~ "bde95fdf-eee0-45de-9e12-e5a61cd0d4fe" or Endpoint_s has "TermSrvApi"
-| where EventName_s in~ ("RpcServerRegisterIf","RpcServerRegisterIf2","RpcServerRegisterIf3","RpcServerUseProtseqEp","AlpcCreatePort")
-| where not(ProcessName_s has "svchost.exe" and InitiatingAccountName_s has "network service")
-| project TimeGenerated, DeviceName_s, ProcessName_s, ProcessId_d, InitiatingAccountName_s, InterfaceUuid_s, Endpoint_s
-| sort by TimeGenerated desc
+| where Timestamp > ago(7d)
+// Child runs as SYSTEM
+| where AccountSid == "S-1-5-18" or AccountName =~ "system"
+// Parent was running as Network Service or Local Service — the privilege boundary that PhantomRPC crosses
+| where InitiatingProcessAccountSid in ("S-1-5-19", "S-1-5-20")
+   or InitiatingProcessAccountName in~ ("network service", "local service")
+// Focus on hands-on-keyboard / discovery-flavoured children typical of post-LPE confirmation
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "rundll32.exe",
+                       "regsvr32.exe", "net.exe", "net1.exe", "reg.exe",
+                       "sc.exe", "taskkill.exe", "whoami.exe", "wmic.exe",
+                       "mshta.exe", "bitsadmin.exe", "certutil.exe")
+// Filter expected svchost-hosted SYSTEM behaviour (legitimate service spawns SYSTEM child via service start, not as a Network/Local Service parent)
+| where InitiatingProcessFileName !in~ ("services.exe", "wininit.exe", "smss.exe", "csrss.exe")
+| project Timestamp, DeviceName, ChildAccount = AccountName, ChildSid = AccountSid,
+          ChildProcess = FileName, ChildCmd = ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentAccount = InitiatingProcessAccountName,
+          ParentSid = InitiatingProcessAccountSid,
+          ParentIntegrity = InitiatingProcessIntegrityLevel,
+          ChildIntegrity = ProcessIntegrityLevel,
+          ChildElevation = ProcessTokenElevation
+| order by Timestamp desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -134,6 +136,7 @@ RpcEvents_CL
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -142,7 +145,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PhantomRPC: A new privilege escalation technique in Windows RPC
 
-`UC_81_1` · phase: **exploit** · confidence: **High**
+`UC_83_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,4 +195,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

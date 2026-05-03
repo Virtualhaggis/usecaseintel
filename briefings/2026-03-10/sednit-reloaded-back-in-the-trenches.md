@@ -38,11 +38,13 @@ Since April 2024, Sednit’s advanced development team has reemerged with a mode
 - **T1027** — Obfuscated Files or Information
 - **T1102.002** — Web Service: Bidirectional Communication
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1568** — Dynamic Resolution
-- **T1056.001** — Input Capture: Keylogging
-- **T1115** — Clipboard Data
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1546.015** — Event Triggered Execution: Component Object Model Hijacking
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1027.010** — Obfuscated Files or Information: Command Obfuscation / Steganography
 - **T1113** — Screen Capture
+- **T1056.001** — Input Capture: Keylogging
+- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
 
 ## Kill chain phases observed
 
@@ -50,116 +52,82 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Sednit BeardShell C2 over Icedrive cloud storage from non-browser process
+### [LLM] APT28/Sednit BeardShell & Covenant C2 to Icedrive/Filen/Koofr cloud APIs from non-browser process
 
-`UC_177_9` · phase: **c2** · confidence: **High**
+`UC_176_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*.icedrive.net" OR All_Traffic.dest_host="icedrive.net" OR All_Traffic.dest_host="*.icedrive.com") by All_Traffic.src All_Traffic.dest_host host All_Traffic.process_name
-| `drop_dm_object_name("All_Traffic")`
-| where NOT match(process_name, "(?i)(chrome|msedge|firefox|iexplore|brave|opera|safari|icedrive)\\.exe$")
-| join type=outer host [| tstats `summariesonly` values(Processes.process) as process values(Processes.process_name) as proc_name from datamodel=Endpoint.Processes where (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="dotnet.exe" OR Processes.process_name="InstallUtil.exe" OR Processes.parent_process_name="w3wp.exe") by host | `drop_dm_object_name("Processes")`]
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as process values(All_Traffic.user) as user values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where (All_Traffic.dest_host IN ("api.icedrive.net","gateway.filen.io","egest.filen.io","ingest.filen.io","app.koofr.net") OR All_Traffic.dest_host="*.filen.io") AND All_Traffic.app!="msedge.exe" AND All_Traffic.app!="chrome.exe" AND All_Traffic.app!="firefox.exe" AND All_Traffic.app!="brave.exe" AND All_Traffic.app!="iexplore.exe" AND All_Traffic.app!="opera.exe" AND All_Traffic.app!="icedrive.exe" AND All_Traffic.app!="filen.exe" AND All_Traffic.app!="koofr.exe" by host All_Traffic.dest_host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let icedriveDomains = dynamic(["icedrive.net","icedrive.com","api.icedrive.net"]);
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","iexplore.exe","brave.exe","opera.exe","safari.exe","Icedrive.exe","icedrive.exe"]);
+let SednitC2Hosts = dynamic(["api.icedrive.net","gateway.filen.io","egest.filen.io","ingest.filen.io","app.koofr.net"]);
+let LegitClients = dynamic(["msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","safari.exe","icedrive.exe","filen.exe","koofr.exe","onedrive.exe"]);
 DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where (RemoteUrl has_any (SednitC2Hosts)) or (RemoteUrl endswith ".filen.io") or (RemoteUrl endswith ".icedrive.net")
+| where InitiatingProcessFileName !in~ (LegitClients)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] APT28/Sednit COM hijack persistence via Shell.Explorer CLSID InProcServer32
+
+`UC_176_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as registry_value_data values(Registry.process_name) as process_name values(Registry.user) as user from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Classes\\CLSID\\{2227A280-3AEA-1069-A2DE-08002B30309D}\\InProcServer32*" AND Registry.action="modified" AND Registry.process_name!="msiexec.exe" AND Registry.process_name!="TrustedInstaller.exe" AND Registry.process_name!="explorer.exe" by host Registry.user Registry.process_name Registry.process_path Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (icedriveDomains) or tostring(parse_url(RemoteUrl).Host) has_any (icedriveDomains)
-| where InitiatingProcessFileName !in~ (browsers)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("powershell.exe","pwsh.exe","dotnet.exe","InstallUtil.exe","RegAsm.exe","RegSvcs.exe")
-    | project DeviceName, ProcContext=ProcessCommandLine, ProcTime=Timestamp
-) on DeviceName
-| where ProcTime between (Timestamp - 1h .. Timestamp + 1h) or isempty(ProcContext)
-| summarize hits=count(), firstSeen=min(Timestamp), lastSeen=max(Timestamp), processes=make_set(InitiatingProcessFileName, 16), urls=make_set(RemoteUrl, 16) by DeviceName
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Software\Classes\CLSID\{2227A280-3AEA-1069-A2DE-08002B30309D}\InProcServer32"
+| where InitiatingProcessFileName !in~ ("msiexec.exe","TrustedInstaller.exe","explorer.exe","setup.exe","installer.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          RegistryKey, RegistryValueName, RegistryValueData, ActionType
+| order by Timestamp desc
 ```
 
-### [LLM] Sednit modified-Covenant C2 over Filen / pCloud / Koofr cloud storage
+### [LLM] Sednit on-disk artifacts: prnfldr.dll in ProgramData, windows.png stego carrier, SlimAgent screenshot files
 
-`UC_177_10` · phase: **c2** · confidence: **High**
+`UC_176_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*.filen.io" OR All_Traffic.dest_host="*.filen.net" OR All_Traffic.dest_host="*.pcloud.com" OR All_Traffic.dest_host="api.pcloud.com" OR All_Traffic.dest_host="*.koofr.net" OR All_Traffic.dest_host="app.koofr.net") by All_Traffic.src host All_Traffic.dest_host All_Traffic.process_name All_Traffic.user
-| `drop_dm_object_name("All_Traffic")`
-| where NOT match(process_name, "(?i)(chrome|msedge|firefox|iexplore|brave|opera|safari|filen|pcloud|koofr)\\.exe$")
-| eval beacon_minutes=round((lastTime-firstTime)/60,0)
-| where beacon_minutes>30 OR count>20
-| join type=outer host [| tstats `summariesonly` values(Processes.process_name) as parent_proc values(Processes.process) as proc_cmd from datamodel=Endpoint.Processes where (Processes.process_name IN ("dotnet.exe","powershell.exe","pwsh.exe","InstallUtil.exe","RegAsm.exe","RegSvcs.exe","MSBuild.exe")) by host | `drop_dm_object_name("Processes")`]
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND ((Filesystem.file_path="C:\\ProgramData\\prnfldr.dll") OR (Filesystem.file_name="windows.png" AND Filesystem.file_path="*\\AppData\\Local\\windows.png") OR (Filesystem.file_name="Desktop_*.svc" AND Filesystem.file_path="*\\Temp\\Desktop_*.svc")) by host Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let covenantC2 = dynamic(["filen.io","api.filen.io","gateway.filen.io","egest.filen.io","ingest.filen.io","filen.net","pcloud.com","api.pcloud.com","eapi.pcloud.com","koofr.net","app.koofr.net","api.koofr.net"]);
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","iexplore.exe","brave.exe","opera.exe","safari.exe","Filen.exe","pCloud.exe","koofr.exe"]);
-let netHits = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | extend hostName = tostring(parse_url(RemoteUrl).Host)
-    | where RemoteUrl has_any (covenantC2) or hostName has_any (covenantC2)
-    | where InitiatingProcessFileName !in~ (browsers)
-    | summarize firstSeen=min(Timestamp), lastSeen=max(Timestamp), conns=count(), urls=make_set(RemoteUrl,16) by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256
-    | extend durationMin = datetime_diff('minute', lastSeen, firstSeen)
-    | where durationMin > 30 or conns > 20;
-netHits
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("dotnet.exe","powershell.exe","pwsh.exe","InstallUtil.exe","RegAsm.exe","RegSvcs.exe","MSBuild.exe")
-    | summarize dotnetProcs=make_set(ProcessCommandLine, 8) by DeviceName
-) on DeviceName
-| project DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, conns, durationMin, firstSeen, lastSeen, urls, dotnetProcs
-```
-
-### [LLM] SlimAgent keylogger HTML log artefacts (Xagent-derived color scheme)
-
-`UC_177_11` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.html" OR Filesystem.file_name="*.htm" OR Filesystem.file_name="*.log" OR Filesystem.file_name="*.dat") AND (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Public\\*") by host Filesystem.process_name Filesystem.user Filesystem.file_name Filesystem.file_path
-| `drop_dm_object_name("Filesystem")`
-| where NOT match(process_name, "(?i)(chrome|msedge|firefox|outlook|winword|excel|onenote)\\.exe$")
-| join type=inner host file_name [search index=* sourcetype="WinEventLog:Microsoft-Windows-Sysmon/Operational" EventCode=11 (TargetFilename="*.html" OR TargetFilename="*.log")
-  | rex field=_raw "(?i)(?<color_blue><font[^>]*color=[\"']?(?:blue|#0000ff)[\"']?[^>]*>)"
-  | rex field=_raw "(?i)(?<color_red><font[^>]*color=[\"']?(?:red|#ff0000)[\"']?[^>]*>)"
-  | rex field=_raw "(?i)(?<color_green><font[^>]*color=[\"']?(?:green|#00ff00|#008000)[\"']?[^>]*>)"
-  | where isnotnull(color_blue) AND isnotnull(color_red) AND isnotnull(color_green)
-  | rename TargetFilename as file_path, ComputerName as host | fields host file_path]
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let suspectPaths = dynamic([@"\AppData\",@"\ProgramData\",@"\Temp\",@"\Public\",@"\Windows\Tasks\"]);
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","iexplore.exe","outlook.exe","winword.exe","excel.exe","onenote.exe"]);
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where FileName endswith ".html" or FileName endswith ".htm" or FileName endswith ".log" or FileName endswith ".dat"
-| where FolderPath has_any (suspectPaths)
-| where InitiatingProcessFileName !in~ (browsers)
-| where InitiatingProcessFolderPath !startswith @"C:\Program Files"
-| join kind=inner (
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has_any ("GetForegroundWindow","SetWindowsHookEx","<font color=\"blue\"","<font color=\"red\"","<font color=\"green\"")
-    | project DeviceName, ProcCmd=ProcessCommandLine, ProcTime=Timestamp
-) on DeviceName
-| where ProcTime between (Timestamp - 24h .. Timestamp + 24h)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, FolderPath, FileName, SHA256, ProcCmd
-| summarize files=make_set(strcat(FolderPath,FileName), 16), procs=make_set(InitiatingProcessFileName, 8) by DeviceName, bin(Timestamp, 1d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where (FolderPath =~ @"C:\ProgramData\prnfldr.dll")
+    or (FileName =~ "prnfldr.dll" and FolderPath =~ @"C:\ProgramData")
+    or (FileName =~ "windows.png" and FolderPath endswith @"\AppData\Local\windows.png")
+    or (FileName matches regex @"(?i)^Desktop_\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2}\.svc$")
+| where InitiatingProcessFileName !in~ ("msiexec.exe","TrustedInstaller.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          FolderPath, FileName, SHA256, MD5, ActionType
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -244,6 +212,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -303,6 +272,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -334,6 +304,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -360,6 +331,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -388,6 +360,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -396,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_177_8` · phase: **exploit** · confidence: **High**
+`UC_176_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,4 +429,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -32,14 +32,11 @@ This is not just a malware story. It is a warning about how the spyware business
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
-- **T1660** — Phishing (Mobile)
-- **T1404** — Exploitation for Privilege Escalation (Mobile)
-- **T1407** — Download New Code at Runtime (Mobile)
-- **T1626.001** — Abuse Elevation Control Mechanism: Device Administrator Permissions
-- **T1517** — Access Notifications
-- **T1437.001** — Application Layer Protocol: Web Protocols
-- **T1398** — Boot or Logon Initialization Scripts
-- **T1655.001** — Masquerading: Match Legitimate Name or Location
+- **T1626.001** — Abuse Elevation Control Mechanism: Device Administrator Permissions (Mobile)
+- **T1417.001** — Input Capture: Keylogging (Mobile)
+- **T1429** — Audio Capture (Mobile)
+- **T1430** — Location Tracking (Mobile)
+- **T1624.001** — Event Triggered Execution: Broadcast Receivers (Mobile)
 
 ## Kill chain phases observed
 
@@ -47,52 +44,56 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] KidsProtect Android stalkerware APK by SHA-256 hash on endpoint filesystem
+### [LLM] KidsProtect Android stalkerware APK SHA256 match (Certo / com.example.parentguard)
 
-`UC_11_6` · phase: **delivery** · confidence: **High**
+`UC_20_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("9864db6b5800d9e03b747c46fdef988e035cadde83077a41c5610d5d89f753a0","1b1d9b260deec0c612ec67579fd36fec7722b2b8446ab32284a08f44f4ea64da","f4e9733d93ce35ecd3c83f18addf77f8ff49444d09847eaeef9c8e87837d0165","17817d9e29920493bb20ed626c3026e3c29eb6f1d56ef9462c306066ce2ad171","f0d01b28ddfdbefe0697994a6b30f2b8a4e39ef1ad6c9427b921b2ccd945a8c5")) OR (Filesystem.file_name="*.apk" AND match(Filesystem.file_name,"(?i)wifi[ ]?service|parentguard|kidsprotect")) by host Filesystem.dest Filesystem.file_hash Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("9864db6b5800d9e03b747c46fdef988e035cadde83077a41c5610d5d89f753a0","1b1d9b260deec0c612ec67579fd36fec7722b2b8446ab32284a08f44f4ea64da","f4e9733d93ce35ecd3c83f18addf77f8ff49444d09847eaeef9c8e87837d0165","17817d9e29920493bb20ed626c3026e3c29eb6f1d56ef9462c306066ce2ad171","f0d01b28ddfdbefe0697994a6b30f2b8a4e39ef1ad6c9427b921b2ccd945a8c5") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | eval source_view="endpoint_file_write" | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where Email.file_hash IN ("9864db6b5800d9e03b747c46fdef988e035cadde83077a41c5610d5d89f753a0","1b1d9b260deec0c612ec67579fd36fec7722b2b8446ab32284a08f44f4ea64da","f4e9733d93ce35ecd3c83f18addf77f8ff49444d09847eaeef9c8e87837d0165","17817d9e29920493bb20ed626c3026e3c29eb6f1d56ef9462c306066ce2ad171","f0d01b28ddfdbefe0697994a6b30f2b8a4e39ef1ad6c9427b921b2ccd945a8c5") by Email.src_user Email.recipient Email.file_name Email.file_hash Email.subject | `drop_dm_object_name(Email)` | eval source_view="email_attachment"] | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_content_type="application/vnd.android.package-archive" OR Web.url="*.apk*" by Web.src Web.dest Web.url Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | eval source_view="proxy_apk_download" ] | convert ctime(firstTime) ctime(lastTime) | table source_view firstTime lastTime dest user src recipient file_name file_path file_hash url subject http_user_agent count
 ```
 
 **Defender KQL:**
 ```kql
-let kidsprotect_hashes = dynamic(["9864db6b5800d9e03b747c46fdef988e035cadde83077a41c5610d5d89f753a0","1b1d9b260deec0c612ec67579fd36fec7722b2b8446ab32284a08f44f4ea64da","f4e9733d93ce35ecd3c83f18addf77f8ff49444d09847eaeef9c8e87837d0165","17817d9e29920493bb20ed626c3026e3c29eb6f1d56ef9462c306066ce2ad171","f0d01b28ddfdbefe0697994a6b30f2b8a4e39ef1ad6c9427b921b2ccd945a8c5"]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (kidsprotect_hashes)
-   or (FileName endswith ".apk" and (FileName matches regex @"(?i)wifi[\s]?service|parentguard|kidsprotect"))
-| project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, OSVersion, DeviceType) by DeviceId) on DeviceId
-```
-
-### [LLM] KidsProtect package com.example.parentguard installed or active on managed Android device
-
-`UC_11_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.os="Android" AND (Processes.process_name="com.example.parentguard" OR Processes.process_path="*com.example.parentguard*" OR Processes.process="*WiFiService Assistant*" OR Processes.process="*WiFiService Monitor*" OR Processes.process="*WiFiService Installer*" OR Processes.process="*MyDeviceAdminReceiver*") by host Processes.dest Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
+// KidsProtect Android stalkerware APK — SHA256 hits across file events + email attachments
+let kidsprotect_sha256 = dynamic([
+  "9864db6b5800d9e03b747c46fdef988e035cadde83077a41c5610d5d89f753a0",
+  "1b1d9b260deec0c612ec67579fd36fec7722b2b8446ab32284a08f44f4ea64da",
+  "f4e9733d93ce35ecd3c83f18addf77f8ff49444d09847eaeef9c8e87837d0165",
+  "17817d9e29920493bb20ed626c3026e3c29eb6f1d56ef9462c306066ce2ad171",
+  "f0d01b28ddfdbefe0697994a6b30f2b8a4e39ef1ad6c9427b921b2ccd945a8c5"
+]);
 union isfuzzy=true
-(
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FolderPath has "com.example.parentguard" or ProcessCommandLine has "com.example.parentguard" or InitiatingProcessFolderPath has "com.example.parentguard"
-| project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName
-),
-(
-DeviceEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("AccessibilityServiceEnabled","DeviceAdminEnabled","PackageInstalled","AppInstalled")
-| where AdditionalFields has_any ("com.example.parentguard","WiFiService Assistant","WiFiService Monitor","WiFiService Installer","MyDeviceAdminReceiver")
-| project Timestamp, DeviceId, DeviceName, ActionType, AdditionalFields
-)
-| join kind=leftouter (DeviceInfo | where OSPlatform == "Android" | summarize arg_max(Timestamp, OSPlatform, OSVersion, DeviceType, LoggedOnUsers) by DeviceId) on DeviceId
+  ( DeviceFileEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (kidsprotect_sha256)
+      | project Timestamp,
+                Source         = "DeviceFileEvents",
+                DeviceName,
+                FileName,
+                FolderPath,
+                SHA256,
+                FileOriginUrl,
+                Initiator      = InitiatingProcessFileName,
+                InitiatorCmd   = InitiatingProcessCommandLine,
+                InitiatorUser  = InitiatingProcessAccountName,
+                Recipient      = "",
+                Sender         = "" ),
+  ( EmailAttachmentInfo
+      | where Timestamp > ago(30d)
+      | where SHA256 in (kidsprotect_sha256)
+      | project Timestamp,
+                Source         = "EmailAttachmentInfo",
+                DeviceName     = "",
+                FileName,
+                FolderPath     = "",
+                SHA256,
+                FileOriginUrl  = "",
+                Initiator      = "",
+                InitiatorCmd   = "",
+                InitiatorUser  = "",
+                Recipient      = RecipientEmailAddress,
+                Sender         = SenderFromAddress )
 | order by Timestamp desc
 ```
 
@@ -117,6 +118,7 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "schtasks.exe"
 | where ProcessCommandLine has "/create"
 | where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
@@ -151,6 +153,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "sc.exe" and ProcessCommandLine has "create"
 | where ProcessCommandLine matches regex @"(?i)(\Users\|\AppData\|\ProgramData\|\Temp\)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
@@ -175,9 +178,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -201,6 +206,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -230,9 +236,11 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -245,4 +253,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

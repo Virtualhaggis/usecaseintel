@@ -12,7 +12,7 @@
         "description": "Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (__VENDOR_BINS__)\n| where FileName in~ (\"powershell.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"bitsadmin.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine",
+        "query": "// Replace `__VENDOR_BINS__` with the vendor binaries observed in the\n// article (matching shape with the Defender query).\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where ParentProcessName has_any (__VENDOR_BINS__)\n| where NewProcessName endswith \"\\powershell.exe\"\n   or NewProcessName endswith \"\\cmd.exe\"\n   or NewProcessName endswith \"\\rundll32.exe\"\n   or NewProcessName endswith \"\\regsvr32.exe\"\n   or NewProcessName endswith \"\\mshta.exe\"\n   or NewProcessName endswith \"\\wscript.exe\"\n   or NewProcessName endswith \"\\cscript.exe\"\n   or NewProcessName endswith \"\\wmic.exe\"\n   or NewProcessName endswith \"\\bitsadmin.exe\"\n| project TimeGenerated, Computer, Account, ParentProcessName,\n          NewProcessName, CommandLine\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

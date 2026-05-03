@@ -48,15 +48,11 @@ If I haven’t said it in a newsletter before, I'll say it now: If you want 
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1056.003** — Input Capture: Web Portal Capture
-- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1656** — Impersonation
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1555.006** — Credentials from Password Stores: Cloud Secrets Management Stores
 - **T1083** — File and Directory Discovery
-- **T1588.002** — Obtain Capabilities: Tool
-- **T1133** — External Remote Services
-- **T1542.005** — Pre-OS Boot: TFTP Boot
-- **T1205** — Traffic Signaling
+- **T1526** — Cloud Service Discovery
+- **T1564.006** — Hide Artifacts: Run Virtual Instance
 
 ## Kill chain phases observed
 
@@ -64,103 +60,105 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Access to Softr-hosted credential-harvesting page mimicking OWA/Exchange
+### [LLM] Inbound email link to Softr-hosted credential harvesting page (UAT Q1 2026)
 
-`UC_89_11` · phase: **delivery** · confidence: **Medium**
+`UC_91_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*softr.app*" OR Web.url="*softr.io*" OR Web.site="*.softr.app" OR Web.site="*.softr.io") by Web.src Web.user Web.dest Web.site
-| `drop_dm_object_name(Web)`
-| eval suspicious=if(match(urls,"(?i)(login|sign[-_]?in|owa|outlook|exchange|auth|verify|mail)") OR match(methods,"POST"),1,0)
-| where suspicious=1
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.src_user) as src_user values(All_Email.recipient) as recipient values(All_Email.url) as url from datamodel=Email where All_Email.direction="inbound" All_Email.action="delivered" (All_Email.url="*.softr.app*" OR All_Email.url="*softr.io*") by All_Email.message_id All_Email.recipient | `drop_dm_object_name(All_Email)` | join type=inner message_id [| tstats `summariesonly` count values(Web.user) as click_user values(Web.url) as clicked_url min(_time) as click_time from datamodel=Web where (Web.url="*.softr.app*" OR Web.url="*softr.io*") Web.action IN ("allowed","clickthrough") by Web.message_id | `drop_dm_object_name(Web)` | rename message_id as message_id]
 ```
 
 **Defender KQL:**
 ```kql
-let softrDomains = dynamic(["softr.app","softr.io","softr.dev"]);
-let softrHits = DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (softrDomains)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP;
-let emailDelivery = EmailUrlInfo
-| where Url has_any (softrDomains)
-| join kind=inner EmailEvents on NetworkMessageId
-| project NetworkMessageId, Url, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction;
-softrHits
-| join kind=leftouter emailDelivery on $left.RemoteUrl == $right.Url
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction
+let LookbackDays = 7d;
+let SoftrEmails = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | join kind=inner (
+        EmailUrlInfo
+        | where Timestamp > ago(LookbackDays)
+        | where UrlDomain endswith ".softr.app"
+           or UrlDomain endswith "softr.io"
+           or Url has_any ("softr.app","softr.io")
+        | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId
+    | project NetworkMessageId, EmailTime = Timestamp, SenderFromAddress,
+              RecipientEmailAddress, Subject, Url, UrlDomain;
+UrlClickEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any ("softr.app","softr.io")
+| join kind=leftouter SoftrEmails on NetworkMessageId
+| project Timestamp, AccountUpn, ActionType, IsClickedThrough, Url,
+          UrlDomain, SenderFromAddress, Subject, EmailTime, NetworkMessageId
 | order by Timestamp desc
 ```
 
-### [LLM] Adversarial TruffleHog execution scanning for cloud / repo secrets
+### [LLM] TruffleHog secret-scanning binary executed on endpoint by non-developer account
 
-`UC_89_12` · phase: **actions** · confidence: **Medium**
+`UC_91_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog.exe" OR Processes.process_name="trufflehog" OR Processes.process="*trufflehog *" OR Processes.original_file_name="trufflehog*") by Processes.dest Processes.user Processes.process_name
-| `drop_dm_object_name(Processes)`
-| eval scan_target=case(match(cmdline,"(?i) filesystem "),"filesystem", match(cmdline,"(?i) (github|gitlab|git) "),"repo", match(cmdline,"(?i) (s3|gcs|azure) "),"cloud-bucket", match(cmdline,"(?i) docker "),"docker", true(),"other")
-| where scan_target!="other" OR match(cmdline,"(?i)(--no-verification|--results|--json)")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog*" OR Processes.process="*trufflehog*" OR Processes.process IN ("*trufflehog git *","*trufflehog github *","*trufflehog gitlab *","*trufflehog s3 *","*trufflehog gcs *","*trufflehog filesystem *","*trufflehog docker *")) Processes.user!="*$" by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "trufflehog.exe" or FileName =~ "trufflehog"
-      or ProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
-      or InitiatingProcessCommandLine matches regex @"(?i)\btrufflehog(\.exe)?\b"
-| extend ScanTarget = case(
-    ProcessCommandLine has_cs " filesystem ", "filesystem",
-    ProcessCommandLine has_any (" github ", " gitlab ", " git "), "repo",
-    ProcessCommandLine has_any (" s3 ", " gcs ", " azure "), "cloud-bucket",
-    ProcessCommandLine has " docker ", "docker",
-    ProcessCommandLine has_any ("--no-verification","--results","--json"), "flagged",
-    "other")
-| where ScanTarget != "other"
-| where not(InitiatingProcessFolderPath has_any ("\\agent\\","\\runners\\","\\jenkins\\","\\azure-pipelines\\"))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, ScanTarget
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where AccountName !in~ ("system","local service","network service")
+| where FileName =~ "trufflehog.exe"
+   or FileName =~ "trufflehog"
+   or ProcessCommandLine matches regex @"(?i)(^|[\s\\"/])trufflehog(\.exe)?(\s|$)"
+   or ProcessCommandLine has_any (
+       "trufflehog git ","trufflehog github","trufflehog gitlab",
+       "trufflehog s3 ","trufflehog gcs ","trufflehog filesystem",
+       "trufflehog docker","trufflehog circleci","trufflehog jenkins")
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256,
+          ProcessCommandLine,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          IsRemoteSession = InitiatingProcessTokenElevation
 | order by Timestamp desc
 ```
 
-### [LLM] UAT-4356 FIRESTARTER exploitation of Cisco ASA/Firepower WebVPN (CVE-2025-20333 / CVE-2025-20362)
+### [LLM] QEMU machine emulator launched on user-class Windows endpoint (ransomware hidden-VM staging)
 
-`UC_89_13` · phase: **exploit** · confidence: **Medium**
+`UC_91_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_content_type) as content_types from datamodel=Web where (Web.url="*/+CSCOE+/*" OR Web.url="*/+webvpn+/*" OR Web.url="*/+CSCOE+/logon.html*" OR Web.url="*/+CSCOE+/saml/sp/acs*" OR Web.url="*/+webvpn+/index.html*") AND Web.http_method="POST" by Web.src Web.dest
-| `drop_dm_object_name(Web)`
-| eval external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),0,1)
-| where external_src=1
-| eval cve=case(match(urls,"(?i)logon\.html|saml|webvpn/index"),"CVE-2025-20333/20362-candidate", true(),"unknown")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as path values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("qemu-system-x86_64.exe","qemu-system-i386.exe","qemu-system-aarch64.exe","qemu-system-arm.exe","qemu-img.exe") OR Processes.process="*qemu-system-*" OR Processes.process IN ("* -hda *","* -drive file=*","* -netdev *")) Processes.user!="*$" by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process,"(?i)qemu")
 ```
 
 **Defender KQL:**
 ```kql
-// Defender Advanced Hunting has no native Cisco ASA telemetry; this looks for internal hosts pivoting to ASA WebVPN URIs (post-compromise lateral) and for Cisco-flagged file artifacts referenced by Talos. Pair with Sentinel CommonSecurityLog for true exploit-traffic visibility.
-let asaUriIndicators = dynamic(["+CSCOE+","+webvpn+","/+CSCOE+/","/+webvpn+/","+CSCOE+/logon.html","+CSCOE+/saml"]);
-let known_firestarter_hashes = dynamic([
-    "9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507",
-    "96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974",
-    "90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (asaUriIndicators)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
-| union (
-    DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (known_firestarter_hashes)
-    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-)
+let _vm_host_groups = dynamic(["VM-Hosts","DevWorkstations-Virt"]);
+let _vm_hosts = DeviceInfo
+    | where Timestamp > ago(1d)
+    | where MachineGroup in (_vm_host_groups)
+    | summarize by DeviceName;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where DeviceName !in (_vm_hosts)
+| where FileName matches regex @"(?i)^qemu-system-.*\.exe$"
+   or FileName =~ "qemu-img.exe"
+   or FileName =~ "qemu-ga.exe"
+   or ProcessCommandLine has_any ("qemu-system-x86_64","qemu-system-i386",
+                                  "qemu-system-aarch64","qemu-system-arm")
+   or ProcessCommandLine matches regex @"(?i)\s-hda\s|\s-drive\s+file=|\s-netdev\s"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256,
+          ProcessCommandLine,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ParentSHA  = InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
@@ -214,6 +212,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -273,6 +272,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -304,6 +304,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -327,9 +328,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -353,6 +356,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -378,9 +382,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -404,6 +410,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -434,6 +441,7 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -443,7 +451,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — It pays to be a forever student
 
-`UC_89_10` · phase: **exploit** · confidence: **High**
+`UC_91_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -503,4 +511,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

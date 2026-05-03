@@ -27,10 +27,12 @@ This represents a 60% surge in losses compared to the previous year, fueled by c
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1219** — Remote Access Software
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1111** — Multi-Factor Authentication Interception
+- **T1219** — Remote Access Software
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
+- **T1588.002** — Obtain Capabilities: Tool
 
 ## Kill chain phases observed
 
@@ -38,65 +40,77 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Diesel Vortex post-phish RMM install on freight/logistics endpoints (ScreenConnect, SimpleHelp, PDQ Connect, N-able, GoTo Resolve)
+### [LLM] RMM installer download from Diesel Vortex cargo-theft staging domains
 
-`UC_32_3` · phase: **install** · confidence: **High**
+`UC_36_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("ScreenConnect.ClientSetup.exe","ScreenConnect.WindowsClient.exe","SimpleHelpCustomer.exe","Remote Access.exe","PDQConnectAgent.exe","PDQConnectAgent-Setup.exe","GoToResolve.exe","GoToAssist.exe","N-able_Take_Control_Setup.exe","BASupSrvc.exe","BASupSrvcCnfg.exe") OR Processes.process IN ("*ScreenConnect.ClientSetup*","*SimpleHelp*Customer*","*PDQConnectAgent*","*GoToResolve*","*N-able*Take*Control*")) by host Processes.user Processes.process Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","outlook.exe","explorer.exe","OneDrive.exe") OR like(process,"%\\Downloads\\%") OR like(process,"%\\AppData\\Local\\Temp\\%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*nextgen1.net*" OR Web.url="*carrier-packets.net*" OR Web.url="*brokerpackets.com*" OR Web.url="*carriersetup.net*" OR Web.url="*dwssa.top*" OR Web.url="*officews101.com*") AND (Web.url="*.exe" OR Web.url="*.msi") by Web.dest Web.src Web.user Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | rename firstTime as first_seen lastTime as last_seen | convert ctime(first_seen) ctime(last_seen)
 ```
 
 **Defender KQL:**
 ```kql
-let rmm_binaries = dynamic(["screenconnect.clientsetup.exe","screenconnect.windowsclient.exe","simplehelpcustomer.exe","remote access.exe","pdqconnectagent.exe","pdqconnectagent-setup.exe","gotoresolve.exe","gotoassist.exe","n-able_take_control_setup.exe","basupsrvc.exe","basupsrvccnfg.exe"]);
+let _staging = dynamic(["nextgen1.net","carrier-packets.net","brokerpackets.com","carriersetup.net","dwssa.top","officews101.com"]);
+let _rmm = dynamic(["screenconnect.clientsetup.exe","screenconnect.windowsclient.exe","remote workforce client.exe","simplehelpcustomer.exe","simplehelpservice.exe","simple-service.exe","pdq-agent.exe","fleetdeck.installer.exe","fleetdeck.agent.exe","n-able-take-control.exe","logmeinrescuecalling.exe","client32.exe","strwinclt.exe"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where (FileName endswith ".exe" or FileName endswith ".msi")
+| where FileOriginUrl has_any (_staging) or FileOriginReferrerUrl has_any (_staging)
+| extend IsKnownRMM = iif(FileName has_any (_rmm), "yes", "no")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          FileName, FolderPath, SHA256, FileOriginUrl, FileOriginReferrerUrl, IsKnownRMM
+| order by Timestamp desc
+```
+
+### [LLM] ScreenConnect / SimpleHelp C2 to cargo-theft cluster infrastructure
+
+`UC_36_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("185.80.234.36","147.45.218.66") OR All_Traffic.dest IN ("dwssa.top","officews101.com","instance-hirb01-relay.screenconnect.com")) by All_Traffic.src All_Traffic.src_ip All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | rename firstTime as first_seen lastTime as last_seen | convert ctime(first_seen) ctime(last_seen)
+```
+
+**Defender KQL:**
+```kql
+let _c2_domains = dynamic(["dwssa.top","officews101.com","instance-hirb01-relay.screenconnect.com"]);
+let _c2_ips = dynamic(["185.80.234.36","147.45.218.66"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any (_c2_domains)) or (RemoteIP in (_c2_ips))
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessSHA256, RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] NirSoft WebBrowserPassView spawned by RMM agent on logistics endpoint
+
+`UC_36_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="WebBrowserPassView.exe" OR Processes.original_file_name="WebBrowserPassView.exe" OR Processes.process IN ("*WebBrowserPassView*","* /stext *","* /scomma *","* /shtml *")) AND Processes.parent_process_name IN ("ScreenConnect.WindowsClient.exe","ScreenConnect.ClientService.exe","Remote Workforce Client.exe","SimpleHelpCustomer.exe","SimpleHelpService.exe","pdq-agent.exe","FleetDeck.Agent.exe","LogMeInRescueCalling.exe","client32.exe","strwinclt.exe","WindowsAgent.exe","Take Control Agent.exe") by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rename firstTime as first_seen lastTime as last_seen | convert ctime(first_seen) ctime(last_seen)
+```
+
+**Defender KQL:**
+```kql
+let _rmm_processes = dynamic(["screenconnect.windowsclient.exe","screenconnect.clientservice.exe","remote workforce client.exe","simplehelpcustomer.exe","simplehelpservice.exe","pdq-agent.exe","fleetdeck.agent.exe","logmeinrescuecalling.exe","client32.exe","strwinclt.exe","windowsagent.exe","take control agent.exe"]);
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ (rmm_binaries) or ProcessCommandLine has_any ("ScreenConnect.ClientSetup","SimpleHelpCustomer","PDQConnectAgent","GoToResolve","N-able","Take Control")
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","outlook.exe","explorer.exe","onedrive.exe")
-   or FolderPath has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\AppData\Roaming\")
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, DeviceName) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| sort by Timestamp desc
-```
-
-### [LLM] Diesel Vortex load-board phishing — typosquat navigation to DAT / Truckstop / Penske / EFS / Timocom lookalikes
-
-`UC_32_4` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.src) as src from datamodel=Web.Web where Web.url IN ("*dat-one*","*datone-*","*dat-truckstop*","*truckstop-*","*-truckstop*","*penske-*","*-penske*","*efs-llc*","*efsllc-*","*-efsllc*","*timocom-*","*-timocom*","*loadboard-*","*-loadboard*","*ratecon-*","*-ratecon*") AND NOT Web.url IN ("*.dat.com*","*.truckstop.com*","*.penskelogistics.com*","*.efsllc.com*","*.timocom.com*") by Web.dest Web.url Web.user Web.http_referrer Web.http_user_agent | `drop_dm_object_name(Web)` | rex field=url "https?://(?<host>[^/]+)" | eval brand=case(match(host,"(?i)dat[-_.]?(one|truck)"),"DAT", match(host,"(?i)truckstop"),"Truckstop", match(host,"(?i)penske"),"Penske", match(host,"(?i)efs[-_.]?llc|electronicfunds"),"EFS", match(host,"(?i)timocom"),"Timocom", true(),"loadboard-generic") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let brand_terms = dynamic(["dat-one","datone-","dat-truckstop","truckstop-","-truckstop","penske-","-penske","efs-llc","efsllc-","-efsllc","timocom-","-timocom","loadboard-","-loadboard","ratecon-","-ratecon"]);
-let legit = dynamic(["dat.com","truckstop.com","penskelogistics.com","efsllc.com","timocom.com","timocom.de"]);
-let hits =
-  union
-  (DeviceNetworkEvents
-     | where Timestamp > ago(30d)
-     | where ActionType in ("ConnectionSuccess","HttpConnectionInspected","DnsConnectionInspected")
-     | extend host = tolower(coalesce(RemoteUrl, RemoteIP))
-     | where host has_any (brand_terms)
-     | where not(host has_any (legit))
-     | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, host, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (UrlClickEvents
-     | where Timestamp > ago(30d)
-     | extend host = tolower(tostring(parse_url(Url).Host))
-     | where host has_any (brand_terms)
-     | where not(host has_any (legit))
-     | project Timestamp, DeviceName="", AccountName=AccountUpn, host, RemoteUrl=Url, InitiatingProcessFileName="email-click", InitiatingProcessCommandLine=Url);
-hits
-| extend brand = case(host has_any ("dat-one","datone","dat-truckstop"),"DAT",
-                     host has "truckstop","Truckstop",
-                     host has "penske","Penske",
-                     host has_any ("efs","electronicfunds"),"EFS",
-                     host has "timocom","Timocom",
-                     "loadboard-generic")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(), Users=make_set(AccountName,25), Processes=make_set(InitiatingProcessFileName,10) by DeviceName, host, brand
-| sort by FirstSeen desc
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "WebBrowserPassView.exe"
+    or ProcessVersionInfoOriginalFileName =~ "WebBrowserPassView.exe"
+    or ProcessVersionInfoFileDescription has "WebBrowserPassView"
+    or (ProcessVersionInfoCompanyName has "NirSoft" and ProcessCommandLine has_any ("/stext","/scomma","/shtml"))
+    or ProcessCommandLine has_any ("WebBrowserPassView"," /stext "," /scomma "," /shtml ")
+| where InitiatingProcessFileName in~ (_rmm_processes) or InitiatingProcessParentFileName in~ (_rmm_processes)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -149,6 +163,7 @@ hits
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -208,6 +223,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -239,6 +255,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -247,4 +264,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

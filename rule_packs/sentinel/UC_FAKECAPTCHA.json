@@ -12,7 +12,7 @@
         "description": "Browser-pasted PowerShell launched from explorer/Run dialog \u2014 ClickFix social engineering.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"RuntimeBroker.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )\"\n| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine",
+        "query": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where ParentProcessName endswith \"\\explorer.exe\"\n   or ParentProcessName endswith \"\\RuntimeBroker.exe\"\n| where NewProcessName endswith \"\\powershell.exe\"\n   or NewProcessName endswith \"\\pwsh.exe\"\n   or NewProcessName endswith \"\\mshta.exe\"\n| where CommandLine matches regex @\"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )\"\n| project TimeGenerated, Computer, Account, ParentProcessName,\n          NewProcessName, CommandLine\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

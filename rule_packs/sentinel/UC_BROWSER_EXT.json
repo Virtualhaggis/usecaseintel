@@ -12,7 +12,7 @@
         "description": "Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.",
         "severity": "Low",
         "enabled": false,
-        "query": "DeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where RegistryKey has_any (\"\\Software\\Google\\Chrome\\Extensions\\\",\"\\Software\\Microsoft\\Edge\\Extensions\\\",\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessAccountName",
+        "query": "ImRegistryEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith \"$\"\n| where RegistryKey has_any (@\"\\Software\\Google\\Chrome\\Extensions\\\",\n                              @\"\\Software\\Microsoft\\Edge\\Extensions\\\",\n                              @\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey,\n          RegistryValue, RegistryValueData, ActingProcessName\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1D",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

@@ -47,63 +47,12 @@ Security is always a moving target. Millions of serv…
 - **T1003** — OS Credential Dumping
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1552.001** — Credentials In Files
-- **T1567** — Exfiltration Over Web Service
-- **T1546.016** — Event Triggered Execution: Installer Packages
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1543.003** — Create or Modify System Process: Windows Service
-- **T1105** — Ingress Tool Transfer
-- **T1219** — Remote Access Software
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Malicious 'tanstack' npm brand-squat (v2.0.4-2.0.7) postinstall .env exfiltration
-
-`UC_38_15` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","node.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | regex process="(?i)(install|\sadd\s|\si\s)\s+tanstack(@2\.0\.[4-7])?(\s|$)" | search NOT process="*@tanstack/*" | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app="node*" OR All_Traffic.process="*node*") AND (All_Traffic.url="*src_3387PLMB2uhXOBe3Q8sHu*" OR All_Traffic.dest="api.svix.com") by All_Traffic.src All_Traffic.dest All_Traffic.url All_Traffic.user | `drop_dm_object_name(All_Traffic)`] | sort - count
-```
-
-**Defender KQL:**
-```kql
-let installs = DeviceProcessEvents | where ProcessCommandLine matches regex @"(?i)(?:npm|yarn|pnpm|npx)\b.*?\b(install|add|\bi\b)\s+tanstack(?:@2\.0\.[4-7])?(?:\s|$)" | where ProcessCommandLine !contains "@tanstack/" | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, FolderPath; let beacons = DeviceNetworkEvents | where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe") | where RemoteUrl has_any ("api.svix.com","src_3387PLMB2uhXOBe3Q8sHu") or RemoteUrl matches regex @"svix(\.com|cdn)" | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessCommandLine; installs | union beacons | sort by Timestamp desc
-```
-
-### [LLM] elementary-data PyPI 0.23.3 backdoored release - elementary.pth dropper
-
-`UC_38_16` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-(| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="elementary.pth" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search file_path="*site-packages*" OR file_path="*dist-packages*") | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip","pip3","pip3.exe","python.exe","python","python3","poetry","poetry.exe","uv","uv.exe")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | regex process="(?i)elementary[-_]data\s*==\s*0\.23\.3|elementary[-_]data@0\.23\.3|elementary-data-0\.23\.3-"] | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let pth_drop = DeviceFileEvents | where FileName =~ "elementary.pth" | where FolderPath has_any ("site-packages","dist-packages",@"\Lib\site-packages",@"/site-packages/") | project Timestamp, DeviceName, AccountName=RequestAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine; let bad_install = DeviceProcessEvents | where ProcessCommandLine matches regex @"(?i)elementary[-_]data\s*==?\s*0\.23\.3|elementary-data-0\.23\.3-" | where ProcessCommandLine has_any ("pip install","pip3 install","-m pip install","poetry add","poetry install","uv pip install","uv add") | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, FolderPath; pth_drop | union bad_install | sort by Timestamp desc
-```
-
-### [LLM] Komari C2 agent deployment - NSSM-wrapped 'Windows Update Service' persistence
-
-`UC_38_17` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="komari-agent.exe" OR Processes.process="*komari-agent*" OR Processes.process="*komari-monitor/komari-agent*" OR Processes.process="*vomtLDXyggveYfjFxdoo7Z*" OR (Processes.process_name="nssm.exe" AND Processes.process="*komari*") OR (Processes.process="*raw.githubusercontent.com/komari-monitor*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="komari-agent.exe" OR (Filesystem.file_path="*\\Windows\\System32\\komari-agent.exe")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | append [| tstats summariesonly=true count from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Services\\Windows Update Service*" AND (Registry.registry_value_data="*komari-agent*" OR Registry.registry_value_data="*nssm.exe*")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)`] | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let proc = DeviceProcessEvents | where FileName =~ "komari-agent.exe" or ProcessCommandLine has_any ("komari-agent","komari-monitor/komari-agent","vomtLDXyggveYfjFxdoo7Z") or (FileName =~ "nssm.exe" and ProcessCommandLine has "komari") or (ProcessCommandLine has "raw.githubusercontent.com/komari-monitor") | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine; let files = DeviceFileEvents | where FileName =~ "komari-agent.exe" or (FolderPath startswith @"C:\Windows\System32" and FileName has "komari") or SHA256 == "039e659ade3aa8ee7758c11fdb8fbfffd2491920046d638413cea2042f6d584c" | project Timestamp, DeviceName, AccountName=RequestAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine; let reg = DeviceRegistryEvents | where RegistryKey has @"\Services\Windows Update Service" | where RegistryValueData has_any ("komari-agent","nssm.exe") | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine; let net = DeviceNetworkEvents | where InitiatingProcessFileName =~ "komari-agent.exe" or RemoteUrl has "komari-monitor/komari-agent" or RemoteUrl has "raw.githubusercontent.com/komari-monitor" | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine; proc | union files | union reg | union net | sort by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -124,6 +73,7 @@ let proc = DeviceProcessEvents | where FileName =~ "komari-agent.exe" or Process
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -151,10 +101,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -181,9 +132,10 @@ DeviceFileEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Ethereum\keystore\","\Bitcoin\","\Exodus\","\Electrum\wallets\","\MetaMask\","\Phantom\","\Atomic\Local Storage\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
 | where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -236,6 +188,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -295,6 +248,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -326,6 +280,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -349,9 +304,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -375,6 +332,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -403,6 +361,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -428,9 +387,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -454,6 +415,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -483,6 +445,7 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -490,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay Bulletin: SMS Blaster Busts, OpenEMR Flaws, 600K Roblox Hacks and 25
 
-`UC_38_14` · phase: **exploit** · confidence: **High**
+`UC_41_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -550,4 +513,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -36,12 +36,12 @@ Rather than using mass phishing or broad spam waves, threat actors behind this o
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1547.001** — Persistence (article-specific)
-- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1564.003** — Hide Artifacts: Hidden Window
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1547.001** — Registry Run Keys / Startup Folder
 - **T1218.007** — System Binary Proxy Execution: Msiexec
-- **T1140** — Deobfuscate/Decode Files or Information
+- **T1027.010** — Obfuscated Files or Information: Command Obfuscation
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1102.001** — Web Service: Dead Drop Resolver
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
@@ -52,68 +52,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] EtherRAT persistence: conhost.exe launching node.exe in headless mode
+### [LLM] EtherRAT Stage 3: conhost.exe --headless launching node.exe payload
 
-`UC_8_10` · phase: **install** · confidence: **High**
+`UC_17_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name="conhost.exe" Processes.process_name="node.exe" (Processes.process="*headless*" OR Processes.process="*--headless*" OR Processes.process="*.dat*") by Processes.dest Processes.process_id Processes.parent_process_id | `drop_dm_object_name(Processes)` | where NOT match(image, "(?i)\\\\Program Files\\\\nodejs\\\\") | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.process_path) as path values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=conhost.exe (Processes.process="*--headless*" OR Processes.process="*-headless*") (Processes.process="*node.exe*" OR Processes.process="*\\node.exe*" OR Processes.process="*.dat*") by host Processes.process_name Processes.process_id Processes.parent_process_name Processes.dest | `drop_dm_object_name(Processes)` | where NOT match(user, "(?i)^(NT AUTHORITY|SYSTEM|LOCAL SERVICE|NETWORK SERVICE)$") OR like(parent, "%msiexec%") | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where InitiatingProcessFileName =~ "conhost.exe"
-| where FileName =~ "node.exe"
-| where ProcessCommandLine has_any ("--headless", " headless ", ".dat")
-| where not(FolderPath has_any (@"\Program Files\nodejs\", @"\Program Files (x86)\nodejs\"))
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+// EtherRAT Stage 3 — conhost.exe spawned with --headless that hosts node.exe
+// Atos / Sysdig 2026 — JavaScript RAT runs persistently inside conhost to avoid Task Manager visibility
+let _lookback = 14d;
+let _conhost_headless = DeviceProcessEvents
+    | where Timestamp > ago(_lookback)
+    | where FileName =~ "conhost.exe"
+    | where ProcessCommandLine has_any ("--headless","-headless")
+    | project Timestamp, DeviceId, DeviceName, AccountName,
+              ConhostPid = ProcessId, ConhostCmd = ProcessCommandLine,
+              ConhostParent = InitiatingProcessFileName,
+              ConhostParentCmd = InitiatingProcessCommandLine;
+// Either the conhost cmdline itself references node.exe, OR a node.exe child appears within 5s on the same host
+_conhost_headless
+| where ConhostCmd has_any ("node.exe",".dat","AppData\\Roaming","AppData\\Local\\Temp")
+| union (
+    _conhost_headless
+    | join kind=inner (
+        DeviceProcessEvents
+        | where Timestamp > ago(_lookback)
+        | where InitiatingProcessFileName =~ "conhost.exe"
+        | where FileName =~ "node.exe"
+        | project NodeTime = Timestamp, DeviceId, NodeParentPid = InitiatingProcessId,
+                  NodeCmd = ProcessCommandLine, NodePath = FolderPath, NodeSha256 = SHA256
+      ) on $left.DeviceId == $right.DeviceId and $left.ConhostPid == $right.NodeParentPid
+    | where NodeTime between (Timestamp .. Timestamp + 5s)
+)
+| project Timestamp, DeviceName, AccountName, ConhostCmd, ConhostParent, ConhostParentCmd, NodeCmd, NodePath, NodeSha256
+| order by Timestamp desc
 ```
 
-### [LLM] Trojanised admin-tool MSI Custom Action drops obfuscated batch + Node stager
+### [LLM] EtherRAT Stage 1: msiexec SYSTEM-spawned cmd.exe with SET-concatenation obfuscation of curl/tar/cmd
 
-`UC_8_11` · phase: **delivery** · confidence: **Medium**
+`UC_17_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent from datamodel=Endpoint.Processes where Processes.parent_process_name="msiexec.exe" (Processes.process_name="cmd.exe" OR Processes.process_name="node.exe") Processes.user="*SYSTEM*" by Processes.dest Processes.process_id Processes.parent_process_id Processes.process_name | `drop_dm_object_name(Processes)` | where match(parent, "(?i)(PsExec|AzCopy|Sysmon|LAPS|KustoExplorer|Tftpd64|ProcessExplorer|TCPView).*\.msi") OR match(cmdline, "(?i)set\s+\w+=.{1,3}&.*set\s+\w+=") | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_path) as path values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=msiexec.exe Processes.process_name IN (cmd.exe, conhost.exe) (Processes.process="*set *" Processes.process="*curl*" OR Processes.process="*set *" Processes.process="*tar*" OR Processes.process="*&&set *") by host Processes.process_name Processes.parent_process_name Processes.process_id Processes.dest | `drop_dm_object_name(Processes)` | eval set_count=mvcount(split(lower(cmd),"set "))-1 | where set_count >= 5 AND match(user, "(?i)(SYSTEM|S-1-5-18)") | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// EtherRAT Stage 1 — msiexec Custom Action launches obfuscated cmd.exe at SYSTEM
+// Article: 'splits all sensitive command names, including curl, tar, copy, start, and cmd, across multiple SET variable assignments'
+let _lookback = 14d;
+let _impersonated_tools = dynamic(["psexec","azcopy","sysmon","laps","kustoexplorer","tftpd64","procexp","tcpview"]);
 DeviceProcessEvents
+| where Timestamp > ago(_lookback)
 | where InitiatingProcessFileName =~ "msiexec.exe"
-| where FileName in~ ("cmd.exe", "node.exe")
-| where AccountName has_any ("SYSTEM", "system")
-| where InitiatingProcessCommandLine matches regex @"(?i)(PsExec|AzCopy|Sysmon|LAPS|KustoExplorer|Tftpd64|ProcessExplorer|TCPView)[^\\]*\.msi"
-   or ProcessCommandLine matches regex @"(?i)set\s+\w+=.{1,3}\s*&.*set\s+\w+="
-| project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, AccountName, InitiatingProcessFolderPath
+| where FileName in~ ("cmd.exe","conhost.exe")
+| where ProcessIntegrityLevel in ("System","high")
+   or InitiatingProcessIntegrityLevel == "System"
+// SET-concat obfuscation: many SET= assignments inside one cmd-line
+| extend SetCount = countof(tolower(ProcessCommandLine), "set ")
+| where SetCount >= 5
+   or ProcessCommandLine matches regex @"(?i)set\s+\w+=\w?\s*&\s*set\s+\w+=\w?\s*&\s*set\s+\w+="
+// Either references the obfuscated tokens directly OR the parent MSI impersonates an admin tool
+| extend MsiPath = tolower(InitiatingProcessCommandLine)
+| where ProcessCommandLine has_any ("curl","tar","%comspec%","!cmd!","!curl!","!tar!")
+   or MsiPath has_any (_impersonated_tools)
+| project Timestamp, DeviceName, AccountName, ProcessIntegrityLevel,
+          MsiCmd = InitiatingProcessCommandLine,
+          MsiSha256 = InitiatingProcessSHA256,
+          BatchCmd = ProcessCommandLine,
+          SetCount
+| order by Timestamp desc
 ```
 
-### [LLM] Endpoint beaconing to public Ethereum JSON-RPC endpoints (EtherHiding C2 resolver)
+### [LLM] EtherRAT C2 lookup: node.exe / conhost.exe contacting public Ethereum JSON-RPC endpoints
 
-`UC_8_12` · phase: **c2** · confidence: **Medium**
+`UC_17_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="mainnet.infura.io" OR All_Traffic.dest="cloudflare-eth.com" OR All_Traffic.dest="ethereum.publicnode.com" OR All_Traffic.dest="eth.llamarpc.com" OR All_Traffic.dest="rpc.ankr.com" OR All_Traffic.dest="*.quiknode.pro" OR All_Traffic.dest="*.alchemy.com") by All_Traffic.src All_Traffic.app All_Traffic.process_name _time span=5m | `drop_dm_object_name(All_Traffic)` | stats dc(_time) as bucket_count min(firstTime) as firstTime max(lastTime) as lastTime values(dest) as dest values(process_name) as process by src | where bucket_count >= 6 AND match(process, "(?i)(node|conhost)\.exe") | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (node.exe, conhost.exe) (All_Traffic.dest IN ("cloudflare-eth.com","mainnet.infura.io","eth.llamarpc.com","ethereum-rpc.publicnode.com","rpc.ankr.com","eth.public-rpc.com","rpc.flashbots.net","eth.drpc.org","rpc.builder0x69.io") OR All_Traffic.url IN ("*eth_call*","*jsonrpc*")) by host All_Traffic.src All_Traffic.process_name All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | stats count as conn_count dc(dest) as distinct_eth_rpcs values(dest) as endpoints min(firstTime) as first max(lastTime) as last by host process_name | where conn_count >= 3 AND distinct_eth_rpcs >= 2 | sort - last
 ```
 
 **Defender KQL:**
 ```kql
-let ethRpc = dynamic(["mainnet.infura.io","cloudflare-eth.com","ethereum.publicnode.com","eth.llamarpc.com","rpc.ankr.com","quiknode.pro","alchemy.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any (ethRpc) or tostring(parse_url(RemoteUrl).Host) has_any (ethRpc)
-| where InitiatingProcessFileName in~ ("node.exe", "conhost.exe", "cmd.exe", "msiexec.exe")
-| summarize hits=count(), buckets=dcount(bin(Timestamp,5m)), firstSeen=min(Timestamp), lastSeen=max(Timestamp), urls=make_set(RemoteUrl,10)
-    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
-| where buckets >= 6
-| order by buckets desc
+// EtherRAT C2 — node.exe / headless-conhost contacting public Ethereum RPC endpoints to read C2 from a smart contract
+// Article: 'periodic outbound requests (every ~5 minutes) to public ETH RPC endpoints'
+let _lookback = 7d;
+let _eth_rpc_hosts = dynamic([
+    "cloudflare-eth.com",
+    "mainnet.infura.io",
+    "eth.llamarpc.com",
+    "ethereum-rpc.publicnode.com",
+    "rpc.ankr.com",
+    "eth.public-rpc.com",
+    "rpc.flashbots.net",
+    "eth.drpc.org",
+    "rpc.builder0x69.io",
+    "api.mycryptoapi.com",
+    "rpc.payload.de"
+]);
+let _eth_callers = DeviceNetworkEvents
+    | where Timestamp > ago(_lookback)
+    | where InitiatingProcessFileName in~ ("node.exe","conhost.exe","wscript.exe","cscript.exe")
+    | where RemoteIPType == "Public"
+    | where RemoteUrl has_any (_eth_rpc_hosts) or RemoteUrl has "jsonrpc";
+_eth_callers
+| summarize ConnCount = count(),
+            DistinctRpcs = dcount(RemoteUrl),
+            DistinctMinutes = dcount(bin(Timestamp, 1m)),
+            FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            SampleEndpoints = make_set(RemoteUrl, 10),
+            SampleParentCmds = make_set(InitiatingProcessCommandLine, 5)
+            by DeviceId, DeviceName, InitiatingProcessFileName,
+               InitiatingProcessAccountName
+| where ConnCount >= 3 and DistinctRpcs >= 2     // the implant queries multiple RPCs in parallel; >=2 distinct + repeat is the signal
+   or DistinctMinutes >= 3                        // OR sustained ~5-min cadence over >=15 min
+| order by LastSeen desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -198,6 +262,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -257,6 +322,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -288,6 +354,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -311,9 +378,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -337,6 +406,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -365,6 +435,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -390,9 +461,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -416,6 +489,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -429,7 +503,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — EtherRAT Campaign Uses SEO Poisoning and GitHub Facades to Target Enterprise Adm
 
-`UC_8_9` · phase: **exploit** · confidence: **High**
+`UC_17_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

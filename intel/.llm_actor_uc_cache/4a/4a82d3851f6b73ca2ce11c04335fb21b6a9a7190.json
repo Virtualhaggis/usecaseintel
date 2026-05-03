@@ -1,0 +1,71 @@
+{
+  "name": "Storm-1849",
+  "ucs": [
+    {
+      "title": "[LLM] Storm-1849 (ArcaneDoor / UAT4356) \u2014 lateral movement from Cisco ASA VPN pool after Line Dancer cookie theft",
+      "description": "After Storm-1849 (Microsoft cluster name; tracked by Cisco Talos as UAT4356, campaign ArcaneDoor) exploits a Cisco ASA via CVE-2024-20353 / CVE-2024-20359 and deploys the Line Dancer in-memory shellcode loader + Line Runner persistence implant, the operators harvest active AnyConnect/WebVPN session cookies (T1539) and replay them to pivot into the internal estate from VPN-pool addresses. This UC fans-out detection on a single source IP from the VPN pool authenticating to N+ distinct internal hosts inside a short window with a privileged account \u2014 the hallmark post-ArcaneDoor pivot.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1133",
+        "T1539",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count, dc(Authentication.dest) AS hosts_touched, values(Authentication.dest) AS hosts, values(Authentication.signature_id) AS signature_ids, min(_time) AS first_seen, max(_time) AS last_seen FROM datamodel=Authentication WHERE Authentication.action=success AND (Authentication.signature_id=4624 OR Authentication.app=\"win:remote\") BY Authentication.user, Authentication.src, _time span=30m | `drop_dm_object_name(Authentication)` | eval is_machine=if(match(user,\"\\$$\"),1,0) | search is_machine=0 | where cidrmatch(\"10.200.0.0/16\",src) OR cidrmatch(\"10.201.0.0/16\",src) | where hosts_touched>=5 | sort - hosts_touched",
+      "kql": "let VpnPoolCidrs = dynamic([\"10.200.0.0/16\",\"10.201.0.0/16\"]);   // <-- AnyConnect / WebVPN address pools\nlet Window  = 30m;\nlet MinHosts = 5;\nlet KnownAdminPivots = dynamic([\"svc-vpngw\",\"jumpbox-rdp\"]);    // benign pivots, prune as needed\nDeviceLogonEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"LogonSuccess\"\n| where LogonType in (\"Network\",\"RemoteInteractive\",\"Interactive\")\n| where AccountName !endswith \"$\"                              // skip machine accounts\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where DeviceName !in~ (KnownAdminPivots)\n| where ipv4_is_in_any_range(RemoteIP, VpnPoolCidrs)\n| summarize HostsTouched = dcount(DeviceId),\n            Hosts        = make_set(DeviceName, 25),\n            LogonTypes   = make_set(LogonType),\n            Protocols    = make_set(Protocol),\n            FirstSeen    = min(Timestamp),\n            LastSeen     = max(Timestamp)\n            by AccountName, RemoteIP, bin(Timestamp, Window)\n| where HostsTouched >= MinHosts                               // single VPN IP, many internal hosts \u2192 fan-out\n| order by HostsTouched desc, LastSeen desc",
+      "sentinel_kql": "let VpnPoolCidrs = dynamic([\"10.200.0.0/16\",\"10.201.0.0/16\"]);   // AnyConnect / WebVPN address pools\nlet Window  = 30m;\nlet MinHosts = 5;\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4624                                         // successful logon\n| where LogonType in (3, 10, 2)                                 // Network, RemoteInteractive, Interactive\n| where AccountType == \"User\"\n| where TargetUserName !endswith \"$\"                            // skip machine accounts\n| where isnotempty(IpAddress) and IpAddress != \"-\"\n| where ipv4_is_in_any_range(IpAddress, VpnPoolCidrs)\n| summarize HostsTouched = dcount(Computer),\n            Hosts        = make_set(Computer, 25),\n            LogonTypes   = make_set(LogonTypeName),\n            AuthPkgs     = make_set(AuthenticationPackageName),\n            FirstSeen    = min(TimeGenerated),\n            LastSeen     = max(TimeGenerated)\n            by TargetUserName, IpAddress, bin(TimeGenerated, Window)\n| where HostsTouched >= MinHosts\n| order by HostsTouched desc, LastSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Generic VPN-then-pivot detections do not target Storm-1849 \u2014 what does is the combination of (a) traffic originating from the corporate VPN pool, (b) using a privileged human account, and (c) fanning out to many internal hosts in a short window. ArcaneDoor's Line Dancer exists specifically to harvest live AnyConnect sessions and Line Runner ensures the WebVPN persistence survives reboot \u2014 both of "
+    },
+    {
+      "title": "[LLM] Storm-1849 ArcaneDoor \u2014 Cisco ASA AAA tampering & syslog suppression (Line Dancer indicator-blocking)",
+      "description": "Line Dancer hooks the ASA AAA module and disables/filters syslog (T1562.006 + T1562.001) before the operator runs commands so that crashinfo, AAA-auth, and connection-build messages disappear from the SIEM. Hunt the CEF feed coming off the ASA cluster for the specific message-IDs and config-write activity that ArcaneDoor leaves behind, plus a sudden drop in baseline %ASA-6-302* connection volume from the same chassis.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1562.001",
+        "T1562.006",
+        "T1070",
+        "T1505.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "`cisco_asa` (eventtype=cisco_asa_config OR signature_id IN (\"111008\",\"111010\",\"199019\",\"505005\",\"505007\",\"509001\",\"725007\",\"716001\",\"716002\")) | rex field=_raw \"(?i)(?<asa_action>no logging|disable logging|aaa authentication|aaa-server|webvpn|import webvpn|lua_clientupdate|client-services|crashinfo)\" | where isnotnull(asa_action) | stats count, values(asa_action) AS actions, values(signature_id) AS sigs, values(user) AS users, values(src) AS src_ips, min(_time) AS first_seen, max(_time) AS last_seen by host | append [ search `cisco_asa` signature_id=302* earliest=-14d@d latest=-1d@d | bucket _time span=1h | stats count AS baseline_conn by host, _time | stats avg(baseline_conn) AS baseline_avg, stdev(baseline_conn) AS baseline_sd by host ] | append [ search `cisco_asa` signature_id=302* earliest=-1h@h | stats count AS recent_conn by host ] | stats values(*) AS * by host | eval anomaly=if(recent_conn < (baseline_avg - 3*baseline_sd),1,0) | where count>0 OR anomaly=1",
+      "kql": "// ArcaneDoor implants live in ASA memory \u2014 Defender XDR has no direct visibility on ASA control-plane.\n// This companion query catches ENDPOINT-side staging: any internal host pushing config / SSH to the\n// ASA management interface from a process other than the sanctioned admin tooling.\nlet AsaMgmtIPs = dynamic([\"10.10.10.1\",\"10.10.10.2\"]);                  // ASA mgmt interfaces\nlet KnownMgmtBins = dynamic([\"putty.exe\",\"plink.exe\",\"ssh.exe\",\"mstsc.exe\",\"ansible-playbook.exe\",\"prime-infrastructure.exe\",\"asdm-launcher.exe\"]);\nlet KnownAdminHosts = dynamic([\"jumpbox-net-01\",\"jumpbox-net-02\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (AsaMgmtIPs)\n| where RemotePort in (22, 443, 23)                                        // SSH / HTTPS-mgmt / Telnet\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| where DeviceName !in~ (KnownAdminHosts)\n| where InitiatingProcessFileName !in~ (KnownMgmtBins)\n   or InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"python.exe\",\"curl.exe\",\"rundll32.exe\",\"mshta.exe\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          RemoteIP, RemotePort, ActionType\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays  = 14d;\nlet RecentWindow  = 1h;\nlet AsaProducts   = dynamic([\"ASA\",\"Adaptive Security Appliance\",\"ASA 5500\",\"FTD\",\"Firepower\"]);\n// 1) Suspicious config / AAA / WebVPN write activity on the ASA\nlet ConfigSignals =\n    CommonSecurityLog\n    | where TimeGenerated > ago(LookbackDays)\n    | where DeviceVendor =~ \"Cisco\" and DeviceProduct in~ (AsaProducts)\n    | where DeviceEventClassID in (\"111008\",\"111010\",\"199019\",\"505005\",\"505007\",\"509001\",\"725007\",\"716001\",\"716002\")\n         or Message has_any (\"no logging\",\"disable logging\",\"aaa authentication\",\"aaa-server\",\n                              \"webvpn\",\"import webvpn\",\"lua_clientupdate\",\"client-services\",\n                              \"show memory region\",\"show process\",\"crashinfo\")\n    | extend Indicator = case(\n        Message has \"lua_clientupdate\",                 \"LineRunner_lua_persistence\",\n        Message has_any (\"no logging\",\"disable logging\"),\"LineDancer_logging_disable\",\n        Message has_any (\"aaa authentication\",\"aaa-server\"),\"AAA_modification\",\n        Message has_any (\"webvpn\",\"import webvpn\",\"client-services\"),\"WebVPN_modification\",\n        Message has_any (\"show memory region\",\"crashinfo\"),\"Recon_or_AntiForensics\",\n        \"Other\")\n    | project TimeGenerated, Computer, DeviceProduct, DeviceEventClassID,\n              SourceUserName, SourceIP, Indicator, Activity, Message;\n// 2) Sudden collapse of normal connection-build telemetry on the same chassis (Line Dancer mutes syslog)\nlet Baseline =\n    CommonSecurityLog\n    | where TimeGenerated between (ago(LookbackDays) .. ago(RecentWindow))\n    | where DeviceVendor =~ \"Cisco\" and DeviceProduct in~ (AsaProducts)\n    | where DeviceEventClassID startswith \"302\"\n    | summarize HourlyCount = count() by Computer, bin(TimeGenerated, 1h)\n    | summarize BaselineAvg = avg(HourlyCount), BaselineSd = stdev(HourlyCount) by Computer;\nlet Recent =\n    CommonSecurityLog\n    | where TimeGenerated > ago(RecentWindow)\n    | where DeviceVendor =~ \"Cisco\" and DeviceProduct in~ (AsaProducts)\n    | where DeviceEventClassID startswith \"302\"\n    | summarize RecentCount = count() by Computer;\nlet TelemetryGap =\n    Baseline\n    | join kind=leftouter Recent on Computer\n    | extend RecentCount = coalesce(RecentCount, 0)\n    | where RecentCount < (BaselineAvg - 3 * BaselineSd) and BaselineAvg > 50\n    | extend Indicator = \"LineDancer_telemetry_blackout\", TimeGenerated = now()\n    | project TimeGenerated, Computer, Indicator, BaselineAvg, BaselineSd, RecentCount;\nunion ConfigSignals, TelemetryGap\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "ArcaneDoor's two implants are public-knowledge: Line Dancer mutates AAA + suppresses syslog from inside the ASA process; Line Runner uses the WebVPN client-services lua_clientupdate hook to survive reboot. Generic firewall-config-change rules will not catch this \u2014 you need to (a) look for the specific message-IDs and config keywords ArcaneDoor touches and (b) treat a sudden telemetry blackout from",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "Computer",
+          "tables_in_scope": [
+            "CommonSecurityLog"
+          ],
+          "exists_on": [
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "AKSAudit",
+            "DnsEvents",
+            "W3CIISLog",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate"
+          ],
+          "message": "`Computer` is not a column of CommonSecurityLog; it does exist on SecurityEvent, WindowsEvent, Event, Syslog, AKSAudit, DnsEvents, W3CIISLog, Heartbeat, Update, ImProcessCreate."
+        }
+      ]
+    }
+  ]
+}

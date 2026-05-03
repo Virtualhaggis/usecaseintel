@@ -149,14 +149,14 @@ In December 2025, we detected …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
-- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1112** — Modify Registry
-- **T1614.001** — System Location Discovery: System Language Discovery / Geofencing
+- **T1614.001** — System Location Discovery: System Language Discovery
 - **T1016** — System Network Configuration Discovery
-- **T1497.001** — Virtualization/Sandbox Evasion: System Checks
+- **T1480.001** — Execution Guardrails: Environmental Keying
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
 - **T1571** — Non-Standard Port
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -164,81 +164,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Silver Fox RustSL Phantom Persistence via RunOnce 'Application Restart' key from suspicious path
+### [LLM] Silver Fox RustSL Phantom Persistence — RunOnce 'Application Restart #' registered by csrss.exe pointing to user-writable path
 
-`UC_44_10` · phase: **install** · confidence: **High**
+`UC_46_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as target values(Registry.process_guid) as proc_guid from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\*" Registry.registry_value_name="Application Restart*" by Registry.dest Registry.user Registry.registry_value_name Registry.process_name | `drop_dm_object_name(Registry)` | where process_name="csrss.exe" AND (match(target,"(?i)\\\\Users\\\\[^\\\\]+\\\\(AppData|Downloads|Desktop|Documents)\\\\") OR match(target,"(?i)\\\\Windows\\\\Temp\\\\") OR match(target,"(?i)\\\\ProgramData\\\\") OR match(target,"(?i)\\\\Public\\\\")) | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as registry_value_data values(Registry.process_name) as process_name from datamodel=Endpoint.Registry where Registry.registry_path="*\\Microsoft\\Windows\\CurrentVersion\\RunOnce*" Registry.registry_value_name="Application Restart #*" by Registry.dest Registry.registry_key_name Registry.registry_value_name Registry.user | `drop_dm_object_name(Registry)` | where NOT match(registry_value_data, "(?i)^\"?(C:\\\\Program Files|C:\\\\Program Files \\(x86\\)|C:\\\\Windows\\\\System32|C:\\\\Windows\\\\SysWOW64|C:\\\\Windows\\\\Microsoft\\.NET)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// Silver Fox / RustSL Phantom Persistence — csrss.exe writes RunOnce 'Application Restart #N' on behalf of the malware
+let _trusted_prefixes = dynamic([@"C:\Program Files\", @"C:\Program Files (x86)\", @"C:\Windows\System32\", @"C:\Windows\SysWOW64\", @"C:\Windows\Microsoft.NET\"]);
 DeviceRegistryEvents
+| where Timestamp > ago(7d)
 | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey endswith @"\Software\Microsoft\Windows\CurrentVersion\RunOnce"
-| where RegistryValueName startswith "Application Restart"
-| where InitiatingProcessFileName =~ "csrss.exe"
-| extend target = tolower(RegistryValueData)
-| where target matches regex @"\\users\\[^\\]+\\(appdata|downloads|desktop|documents)\\"
-     or target contains @"\windows\temp\"
-     or target contains @"\programdata\"
-     or target contains @"\users\public\"
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
-```
-
-### [LLM] Silver Fox RustSL geofencing — single non-browser process queries 3+ of 5 specific IP-lookup APIs
-
-`UC_44_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(DNS.query) as queries dc(DNS.query) as unique_q min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("ip-api.com","ipwho.is","ipinfo.io","ipapi.co","www.geoplugin.net","geoplugin.net") by DNS.src DNS.process_name DNS.process_guid span=5m | `drop_dm_object_name(DNS)` | where unique_q>=3 AND NOT match(process_name,"(?i)(chrome|msedge|firefox|brave|opera|iexplore|svchost)\\.exe$") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let geo_apis = dynamic(["ip-api.com","ipwho.is","ipinfo.io","ipapi.co","geoplugin.net","www.geoplugin.net"]);
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any (geo_apis) or tolower(RemoteUrl) matches regex @"^(https?://)?(ip-api\.com|ipwho\.is|ipinfo\.io|ipapi\.co|(www\.)?geoplugin\.net)"
-| extend host = tolower(tostring(parse_url(RemoteUrl).Host))
-| summarize hosts = make_set(host), n = dcount(host), first=min(Timestamp), last=max(Timestamp)
-  by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, bin(Timestamp, 5m)
-| where n >= 3
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","svchost.exe")
-| project first, last, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, n, hosts
-```
-
-### [LLM] ValleyRAT/Winos 4.0 C2 callback to Silver Fox tax-campaign infrastructure
-
-`UC_44_12` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest IN ("207.56.138.28","154.82.81.205","45.118.133.203","108.187.37.85","108.187.42.63","108.187.41.221","154.82.81.192","139.180.128.251")) OR (All_Traffic.dest="207.56.138.28" AND All_Traffic.dest_port IN (6666,8888)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN ("*abc.haijing88.com*","*mcagov.cc*","*abc.fetish-friends.com*","*vnc.kcii2.com*","*abc.3mkorealtd.com*") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let c2_ips = dynamic(["207.56.138.28","154.82.81.205","45.118.133.203","108.187.37.85","108.187.42.63","108.187.41.221","154.82.81.192","139.180.128.251"]);
-let c2_domains = dynamic(["abc.haijing88.com","mcagov.cc","abc.fetish-friends.com","vnc.kcii2.com","abc.3mkorealtd.com"]);
-let net_hits = DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteIP in (c2_ips)
-     or (RemoteIP == "207.56.138.28" and RemotePort in (6666, 8888))
-     or (isnotempty(RemoteUrl) and tolower(RemoteUrl) has_any (c2_domains));
-let dns_hits = DeviceEvents
-  | where ActionType == "DnsQueryResponse" or ActionType == "DnsQuery"
-  | where tolower(AdditionalFields) has_any (c2_domains);
-union isfuzzy=true
-  (net_hits | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType),
-  (dns_hits | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields, ActionType)
+| where RegistryKey has @"\Microsoft\Windows\CurrentVersion\RunOnce"
+| where RegistryValueName startswith "Application Restart #"
+| where InitiatingProcessFileName =~ "csrss.exe"   // Phantom Persistence triggers csrss to write the RunOnce on behalf of the abuser
+| extend ValueLower = tolower(RegistryValueData)
+| where not(ValueLower startswith @"""c:\program files")
+   and not(ValueLower startswith @"""c:\program files (x86)")
+   and not(ValueLower startswith @"c:\program files\")
+   and not(ValueLower startswith @"c:\program files (x86)\")
+   and not(ValueLower startswith @"c:\windows\system32\")
+   and not(ValueLower startswith @"c:\windows\syswow64\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### [LLM] RustSL guard.rs geofencing — single process queries 3+ public IP-geolocation services in a short window
+
+`UC_46_11` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Web.url) as urls dc(Web.url) as service_count from datamodel=Web.Web where (Web.url="*ip-api.com*" OR Web.url="*ipwho.is*" OR Web.url="*ipinfo.io*" OR Web.url="*ipapi.co*" OR Web.url="*geoplugin.net*") by Web.dest Web.src Web.process Web.user _time span=5m | `drop_dm_object_name(Web)` | eval distinct_geo_services=mvcount(mvdedup(mvfilter(match(urls, "(ip-api\.com|ipwho\.is|ipinfo\.io|ipapi\.co|geoplugin\.net)")))) | where service_count>=3
+```
+
+**Defender KQL:**
+```kql
+// RustSL guard.rs — same process pings 3+ of the article's IP-geolocation reflectors within 5 minutes
+let _services = dynamic(["ip-api.com","ipwho.is","ipinfo.io","ipapi.co","geoplugin.net"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIPType == "Public"
+| where isnotempty(RemoteUrl)
+| extend Service = case(
+    RemoteUrl has "ip-api.com", "ip-api.com",
+    RemoteUrl has "ipwho.is", "ipwho.is",
+    RemoteUrl has "ipinfo.io", "ipinfo.io",
+    RemoteUrl has "ipapi.co", "ipapi.co",
+    RemoteUrl has "geoplugin.net", "geoplugin.net",
+    "")
+| where Service != ""
+| summarize Services = make_set(Service),
+            ServiceCount = dcount(Service),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            ConnCount = count()
+            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessFolderPath, bin(Timestamp, 5m)
+| where ServiceCount >= 3                       // 3+ of the 5 reflectors guard.rs uses
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","safari.exe","iexplore.exe","curl.exe")  // browser noise
+| order by FirstSeen desc
+```
+
+### [LLM] Silver Fox January-2026 campaign IOC sweep — ValleyRAT C2 207.56.138.28:6666 + RustSL distribution domains/hashes
+
+`UC_46_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="207.56.138.28" OR All_Traffic.dest_ip="154.82.81.205" OR All_Traffic.dest_ip="154.82.81.192" OR All_Traffic.dest_ip="45.118.133.203" OR All_Traffic.dest_ip="108.187.37.85" OR All_Traffic.dest_ip="108.187.42.63" OR All_Traffic.dest_ip="108.187.41.221" OR All_Traffic.dest_ip="139.180.128.251") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("e6362a81991323e198a463a8ce255533","2c5a1dd4cb53287fe0ed14e0b7b7b1b7","fc546acf1735127db05fb5bc354093e0","4a5195a38a458cdd2c1b5ab13af3b393","e66bae6e8621db2a835fa6721c3e5bbe","2375193669e243e830ef5794226352e7","5b998a5bc5ad1c550564294034d4a62c","c50c980d3f4b7ed970f083b0d37a6a6a")) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)`] | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="abc.haijing88.com" OR DNS.query="mcagov.cc" OR DNS.query="abc.fetish-friends.com" OR DNS.query="vnc.kcii2.com" OR DNS.query="abc.3mkorealtd.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Silver Fox Jan-2026 IOC sweep — C2 IPs, RustSL distribution domains, and loader hashes
+let _ips = dynamic(["207.56.138.28","154.82.81.205","154.82.81.192","45.118.133.203","108.187.37.85","108.187.42.63","108.187.41.221","139.180.128.251"]);
+let _domains = dynamic(["abc.haijing88.com","mcagov.cc","abc.fetish-friends.com","vnc.kcii2.com","abc.3mkorealtd.com"]);
+let _md5s = dynamic(["e6362a81991323e198a463a8ce255533","2c5a1dd4cb53287fe0ed14e0b7b7b1b7","fc546acf1735127db05fb5bc354093e0","4a5195a38a458cdd2c1b5ab13af3b393","e66bae6e8621db2a835fa6721c3e5bbe","2375193669e243e830ef5794226352e7","5b998a5bc5ad1c550564294034d4a62c","c50c980d3f4b7ed970f083b0d37a6a6a"]);
+let _net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (_ips) or (isnotempty(RemoteUrl) and _domains has_any (RemoteUrl))
+    | project Timestamp, DeviceName, AccountUpn=InitiatingProcessAccountUpn, IndicatorType="network", Indicator=coalesce(RemoteUrl, RemoteIP), RemotePort, ProcImage=InitiatingProcessFolderPath, ProcCmd=InitiatingProcessCommandLine, SHA256=InitiatingProcessSHA256;
+let _proc = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where MD5 in (_md5s) or InitiatingProcessMD5 in (_md5s)
+    | project Timestamp, DeviceName, AccountUpn, IndicatorType="process_hash", Indicator=coalesce(MD5, InitiatingProcessMD5), RemotePort=int(null), ProcImage=FolderPath, ProcCmd=ProcessCommandLine, SHA256;
+let _file = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where MD5 in (_md5s)
+    | project Timestamp, DeviceName, AccountUpn=InitiatingProcessAccountUpn, IndicatorType="file_hash", Indicator=MD5, RemotePort=int(null), ProcImage=FolderPath, ProcCmd=InitiatingProcessCommandLine, SHA256;
+union _net, _proc, _file
+| order by Timestamp desc
+```
+
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -323,6 +346,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -382,6 +406,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -413,6 +438,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -439,6 +465,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName =~ "schtasks.exe"
 | where ProcessCommandLine has "/create"
 | where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
@@ -466,6 +493,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -494,6 +522,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -502,7 +531,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Silver Fox uses the new ABCDoor backdoor to target organizations in Russia and I
 
-`UC_44_9` · phase: **exploit** · confidence: **High**
+`UC_46_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

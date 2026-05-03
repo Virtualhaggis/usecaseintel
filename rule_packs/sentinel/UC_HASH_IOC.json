@@ -12,7 +12,7 @@
         "description": "Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.",
         "severity": "High",
         "enabled": false,
-        "query": "union DeviceFileEvents, DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where SHA256 in~ (__HASH_LIST__) or SHA1 in~ (__HASH_LIST__) or MD5 in~ (__HASH_LIST__)\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, ProcessCommandLine",
+        "query": "// Pre-filter both ASIM tables before the union \u2014 same pattern as the\n// Defender version so the engine can push hash predicates per-side.\nlet BadHashes = dynamic([__HASH_LIST__]);\nunion\n    ( ImFileEvent\n        | where TimeGenerated > ago(7d)\n        | where ActorUsername !endswith \"$\"\n        | where TargetFileSHA256 in~ (BadHashes)\n           or TargetFileSHA1 in~ (BadHashes)\n           or TargetFileMD5 in~ (BadHashes)\n        | project TimeGenerated, DvcHostname, EventType,\n                  TargetFileName, TargetFilePath, TargetFileSHA256,\n                  Cmd = ActingProcessName, Source = \"ImFileEvent\" ),\n    ( ImProcessCreate\n        | where TimeGenerated > ago(7d)\n        | where ActorUsername !endswith \"$\"\n        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)\n        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,\n                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,\n                  TargetFileSHA256 = SHA256,\n                  Cmd = TargetProcessCommandLine, Source = \"ImProcessCreate\" )\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

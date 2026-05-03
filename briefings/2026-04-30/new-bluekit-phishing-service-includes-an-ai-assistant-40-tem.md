@@ -29,71 +29,12 @@ What makes the kit stand out is the pre…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1567** — Exfiltration Over Web Service
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1557** — Adversary-in-the-Middle
-- **T1539** — Steal Web Session Cookie
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Endpoint traffic to known Bluekit PhaaS operator/panel infrastructure (bluekit.pk/.su/.cc)
-
-`UC_29_4` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as ua from datamodel=Web.Web where (Web.dest IN ("bluekit.pk","bluekit.su","bluekit.cc") OR Web.url="*bluekit.pk*" OR Web.url="*bluekit.su*" OR Web.url="*bluekit.cc*") by Web.src Web.user Web.dest | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query IN ("bluekit.pk","*.bluekit.pk","bluekit.su","*.bluekit.su","bluekit.cc","*.bluekit.cc") by DNS.src DNS.query | `drop_dm_object_name(DNS)` ]
-```
-
-**Defender KQL:**
-```kql
-let bluekit_hosts = dynamic(["bluekit.pk","bluekit.su","bluekit.cc"]);
-union
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has_any (bluekit_hosts) or tolower(RemoteUrl) matches regex @"(^|//|\.)bluekit\.(pk|su|cc)(/|:|$)"
-  | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName
-),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse" or ActionType startswith "Dns"
-  | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-  | where QueryName has_any (bluekit_hosts)
-  | project Timestamp, DeviceName, ActionType, QueryName, InitiatingProcessFileName, AccountName=InitiatingProcessAccountName
-)
-```
-
-### [LLM] Lookalike-domain visits impersonating Bluekit's distinctive brand template set (Ledger/ProtonMail/Zoho/Zara)
-
-`UC_29_5` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web.Web where Web.dest!="" by Web.src Web.user Web.dest | `drop_dm_object_name(Web)` | eval dest_lc=lower(dest) | where match(dest_lc,"(^|[.-])(ledger|protonmail|proton-mail|zoho|zara|icloud|appleid|apple-id|github|gmail|outlook|hotmail|yahoo|twitter)([.-]|$)") | where NOT match(dest_lc,"(^|\.)(ledger\.com|ledger\.fr|proton\.me|protonmail\.com|zoho\.com|zoho\.eu|zara\.com|inditex\.com|icloud\.com|apple\.com|github\.com|githubusercontent\.com|gmail\.com|google\.com|googleusercontent\.com|outlook\.com|live\.com|office\.com|microsoft\.com|hotmail\.com|yahoo\.com|twitter\.com|x\.com)$") | where NOT match(dest_lc,"(akamai|cloudfront|cloudflare|fastly|azureedge|edgekey)") | join type=left dest [ | tstats summariesonly=true min(_time) as domain_first_seen from datamodel=Web.Web by Web.dest | `drop_dm_object_name(Web)` ] | eval age_days=round((firstTime-domain_first_seen)/86400,1) | where domain_first_seen >= relative_time(now(),"-14d") | table firstTime lastTime src user dest age_days count urls | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-let brand_regex = @"(^|[.\-])(ledger|protonmail|proton-mail|zoho|zara|icloud|appleid|apple-id|github|gmail|outlook|hotmail|yahoo|twitter)([.\-]|$)";
-let legit_suffixes = dynamic(["ledger.com","ledger.fr","proton.me","protonmail.com","zoho.com","zoho.eu","zara.com","inditex.com","icloud.com","apple.com","github.com","githubusercontent.com","gmail.com","google.com","googleusercontent.com","outlook.com","live.com","office.com","microsoft.com","hotmail.com","yahoo.com","twitter.com","x.com"]);
-let cdn_tokens = dynamic(["akamai","cloudfront","cloudflare","fastly","azureedge","edgekey"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| where isnotempty(RemoteUrl)
-| extend host = tolower(tostring(parse_url(RemoteUrl).Host))
-| where host matches regex brand_regex
-| where not(host has_any (legit_suffixes))
-| where not(host has_any (cdn_tokens))
-| summarize first_seen=min(Timestamp), last_seen=max(Timestamp), hits=count(), users=make_set(InitiatingProcessAccountName,5), procs=make_set(InitiatingProcessFileName,5) by DeviceName, host
-| where first_seen > ago(14d)  // emphasise newly-seen lookalikes
-| order by first_seen asc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -145,6 +86,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -204,6 +146,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -235,6 +178,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -261,6 +205,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -270,4 +215,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

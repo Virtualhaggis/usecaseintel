@@ -34,74 +34,12 @@ One such case was recently detailed in the latest  Cisco Talos Incident Respons
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
-- **T1190** — Exploit Public-Facing Application
-- **T1505.003** — Server Software Component: Web Shell
-- **T1098.005** — Account Manipulation: Device Registration
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] ToolShell SharePoint RCE: spinstall webshell drop in LAYOUTS directory
-
-`UC_58_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\TEMPLATE\\LAYOUTS\\*" (Filesystem.file_name="spinstall*.aspx" OR Filesystem.file_name="spupdate*.aspx" OR Filesystem.file_name="SpLogoutLayout*.aspx" OR Filesystem.file_name="SP.UI.TitleView*.aspx") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | eval toolshell_known_hash=if(file_hash=="92bb4ddb98eeaf11fc15bb32e71d0a63256a0ed826a03ba293ce3a8bf057a514","yes","no") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FolderPath has @"\TEMPLATE\LAYOUTS\"
-| where FileName matches regex @"(?i)^(spinstall|spupdate|SpLogoutLayout|SP\.UI\.TitleView).*\.aspx$"
-| extend ToolShellKnownHash = iif(SHA256 == "92bb4ddb98eeaf11fc15bb32e71d0a63256a0ed826a03ba293ce3a8bf057a514", "yes", "no")
-| join kind=leftouter (
-    DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where InitiatingProcessFileName =~ "w3wp.exe"
-    | where RemoteUrl has "/_layouts/15/ToolPane.aspx" or RemoteUrl has "DisplayMode=Edit"
-    | project DeviceId, ToolPaneTime=Timestamp, RemoteIP, RemoteUrl
-) on DeviceId
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, ToolShellKnownHash, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
-```
-
-### [LLM] Adversary-registered MFA method followed by sign-in from same new device
-
-`UC_58_8` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as regTime from datamodel=Change where Change.change_type="AAD" (Change.action="User registered security info" OR Change.action="Register device" OR Change.action="Add registered owner to device" OR Change.action="Add registered users to device") by Change.user Change.src Change.object | `drop_dm_object_name(Change)` | rename user as reg_user, src as reg_src | join type=inner reg_user [| tstats summariesonly=t count min(_time) as authTime from datamodel=Authentication where Authentication.action=success Authentication.signature="UserLoggedIn" Authentication.authentication_method="MFA" by Authentication.user Authentication.src Authentication.app | `drop_dm_object_name(Authentication)` | rename user as reg_user, src as auth_src] | where authTime>=regTime AND authTime<=regTime+3600 AND reg_src=auth_src
-```
-
-**Defender KQL:**
-```kql
-let window = 14d;
-let regs = CloudAppEvents
-| where Timestamp > ago(window)
-| where Application in ("Office 365", "Microsoft Entra ID", "Azure Active Directory")
-| where ActionType in~ ("User registered security info", "Register device", "Add registered owner to device", "Add registered users to device", "Update user")
-| extend Target = tostring(parse_json(tostring(RawEventData.Target))[0].ID)
-| extend RegIP = IPAddress
-| project RegTime=Timestamp, AccountObjectId, AccountUpn=AccountDisplayName, RegIP, RegAction=ActionType;
-let signins = AADSignInEventsBeta
-| where Timestamp > ago(window)
-| where ErrorCode == 0
-| where AuthenticationRequirement == "multiFactorAuthentication"
-| project SignInTime=Timestamp, AccountObjectId, SignInIP=IPAddress, Country, DeviceName, Application, ResourceDisplayName;
-regs
-| join kind=inner signins on AccountObjectId
-| where SignInTime between (RegTime .. RegTime + 1h)
-| where SignInIP == RegIP
-| project RegTime, SignInTime, AccountUpn, RegAction, RegIP, SignInIP, Country, DeviceName, Application, ResourceDisplayName
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -153,6 +91,7 @@ regs
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -212,6 +151,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -243,6 +183,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -266,9 +207,11 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -290,9 +233,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -316,6 +261,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -346,6 +292,7 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -356,4 +303,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

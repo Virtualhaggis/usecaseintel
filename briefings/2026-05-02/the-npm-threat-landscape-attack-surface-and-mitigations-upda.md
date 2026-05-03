@@ -55,15 +55,6 @@ The security of…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1105** — Ingress Tool Transfer
-- **T1546.016** — Event Triggered Execution: Installer Packages
-- **T1098.004** — Account Manipulation: SSH Authorized Keys (analogue: CI workflow injection)
-- **T1567.001** — Exfiltration Over Web Service: Exfiltration to Code Repository
-- **T1554** — Compromise Host Software Binary
-- **T1199** — Trusted Relationship
 
 ## Kill chain phases observed
 
@@ -71,83 +62,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Bitwarden CLI npm worm C2 beacon to audit.checkmarx[.]cx
-
-`UC_2_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as url values(All_Traffic.app) as app from datamodel=Network_Traffic where (All_Traffic.dest IN ("94.154.172.43","91.195.240.123") OR All_Traffic.dest_host IN ("audit.checkmarx.cx","checkmarx.cx") OR All_Traffic.url="*audit.checkmarx.cx*" OR All_Traffic.url="*/v1/telemetry*") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where dest_port=443 OR isnull(dest_port) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let c2_ips = dynamic(["94.154.172.43","91.195.240.123"]);
-let c2_hosts = dynamic(["audit.checkmarx.cx","checkmarx.cx"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (c2_ips) or RemoteUrl has_any (c2_hosts) or RemoteUrl has "/v1/telemetry"
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| union (DeviceEvents | where ActionType == "DnsQueryResponse" and AdditionalFields has_any (c2_hosts) | project Timestamp, DeviceName, ActionType, AdditionalFields, InitiatingProcessFileName, InitiatingProcessCommandLine)
-```
-
-### [LLM] @bitwarden/cli 2026.4.0 preinstall: node bw_setup.js → Bun download → bw1.js / setup.mjs
-
-`UC_2_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe","bun","bun.exe","yarn","pnpm") AND (Processes.process="*bw_setup.js*" OR Processes.process="*bw1.js*" OR Processes.process="*setup.mjs*" OR Processes.process="*@bitwarden/cli@2026.4.0*" OR Processes.process="*preinstall*node setup.mjs*")) OR Processes.process_hash IN ("f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d","18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let bad_hashes = dynamic(["f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d","18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad"]);
-let bad_strings = dynamic(["bw_setup.js","bw1.js","setup.mjs","@bitwarden/cli@2026.4.0","@bitwarden/cli/2026.4.0"]);
-union isfuzzy=true
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (bad_hashes)
-     or ProcessCommandLine has_any (bad_strings)
-     or InitiatingProcessCommandLine has_any (bad_strings)
-     or (InitiatingProcessFileName in~ ("node.exe","npm.exe","bun.exe","node","npm","bun") and ProcessCommandLine has "oven-sh/bun" and ProcessCommandLine has "v1.3.13")
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256),
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FileName in~ ("bw_setup.js","bw1.js","setup.mjs") or SHA256 in (bad_hashes)
-  | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
-```
-
-### [LLM] Shai-Hulud worm: format-check.yml workflow drop + LongLiveTheResistanceAgainstMachines commit
-
-`UC_2_12` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_guid) as process_guid from datamodel=Endpoint.Filesystem where Filesystem.file_name="format-check.yml" AND (Filesystem.file_path="*/.github/workflows/*" OR Filesystem.file_path="*\\.github\\workflows\\*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | append [ search index=github_audit OR sourcetype=github:* ("LongLiveTheResistanceAgainstMachines" OR "Shai-Hulud: The Third Coming" OR "Checkmarx Configuration Storage" OR "beautifulcastle") | stats count min(_time) as firstTime max(_time) as lastTime values(repo) as repo by actor message ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let worm_strings = dynamic(["LongLiveTheResistanceAgainstMachines","Shai-Hulud: The Third Coming","Checkmarx Configuration Storage","beautifulcastle"]);
-union isfuzzy=true
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FileName =~ "format-check.yml"
-  | where FolderPath has ".github" and FolderPath has "workflows"
-  | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName),
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where ProcessCommandLine has_any (worm_strings) or InitiatingProcessCommandLine has_any (worm_strings)
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where (FileName in~ ("bun.exe","bun","npm.exe","npm") and ProcessCommandLine has "publish")
-     and InitiatingProcessCommandLine has_any ("_authToken=npm_",".npmrc")
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine)
-```
-
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -204,10 +119,11 @@ DeviceNetworkEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -260,6 +176,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -315,6 +232,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -343,6 +261,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -367,6 +286,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -374,7 +294,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_11_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,4 +357,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

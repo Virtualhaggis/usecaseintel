@@ -12,7 +12,7 @@
         "description": "Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where FolderPath has_any (\"\\Ethereum\\keystore\\\",\"\\Bitcoin\\\",\"\\Exodus\\\",\"\\Electrum\\wallets\\\",\"\\MetaMask\\\",\"\\Phantom\\\",\"\\Atomic\\Local Storage\\\")\n| where InitiatingProcessFileName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType",
+        "query": "ImFileEvent\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith \"$\"\n| where TargetFilePath has_any (@\"\\Ethereum\\keystore\\\", @\"\\Bitcoin\\\",\n                                  @\"\\Exodus\\\", @\"\\Electrum\\wallets\\\",\n                                  @\"\\MetaMask\\\", @\"\\Phantom\\\",\n                                  @\"\\Atomic\\Local Storage\\\")\n| where ActingProcessName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\n                                  \"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n          TargetFilePath, TargetFileName, EventType\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

@@ -1,0 +1,24 @@
+title: File hash IOCs — endpoint file/process match
+id: UC_HASH_IOC
+status: experimental
+description: Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_HASH_IOC.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1027
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'DeviceFileEvents'
+      - 'DeviceProcessEvents'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

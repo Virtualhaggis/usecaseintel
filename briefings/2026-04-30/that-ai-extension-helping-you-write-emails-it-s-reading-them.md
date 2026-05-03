@@ -64,12 +64,10 @@ Threat Re…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1176** — Software Extensions: Browser Extensions
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
+- **T1567** — Exfiltration Over Web Service
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1546** — Event Triggered Execution
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
@@ -77,80 +75,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Unit42 GenAI extension campaign — beacon to qubecare.ai / reverserecruiting.io / browser.cash
+### [LLM] Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_28_11` · phase: **c2** · confidence: **High**
+`UC_32_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query IN ("mcp-browser.qubecare.ai","*.qubecare.ai","api.reverserecruiting.io","*.reverserecruiting.io","chatgptforchrome.com","*.chatgptforchrome.com","xuix.top","*.xuix.top","newextensioninstallweb.com","*.newextensioninstallweb.com","huiyiai.net","*.huiyiai.net","yiban.io","*.yiban.io","browser.cash","*.browser.cash") by DNS.query DNS.src host | `drop_dm_object_name("DNS")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.url) as url from datamodel=Web where Web.dest IN ("mcp-browser.qubecare.ai","api.reverserecruiting.io","chatgptforchrome.com","xuix.top","newextensioninstallweb.com","huiyiai.net","yiban.io","browser.cash") OR Web.url IN ("*api.reverserecruiting.io/v1/profile/sync*","*mcp-browser.qubecare.ai/chrome*") by Web.dest Web.src Web.user host | `drop_dm_object_name("Web")`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("chrome.exe","msedge.exe","brave.exe","chrome","msedge")) AND (All_Traffic.dest IN ("mcp-browser.qubecare.ai","api.reverserecruiting.io","chatgptforchrome.com","xuix.top","newextensioninstallweb.com","huiyiai.net","yiban.io","browser.cash") OR All_Traffic.dest_ip IN ("158.160.66.115","199.80.55.27")) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let c2Domains = dynamic(["mcp-browser.qubecare.ai","qubecare.ai","api.reverserecruiting.io","reverserecruiting.io","chatgptforchrome.com","xuix.top","newextensioninstallweb.com","huiyiai.net","yiban.io","browser.cash"]);
-let c2Ips = dynamic(["158.160.66.115","199.80.55.27"]);
+let _bad_hosts = dynamic(["mcp-browser.qubecare.ai","api.reverserecruiting.io","chatgptforchrome.com","xuix.top","newextensioninstallweb.com","huiyiai.net","yiban.io","browser.cash"]);
+let _bad_ips = dynamic(["158.160.66.115","199.80.55.27"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (RemoteUrl has_any (c2Domains)) or (RemoteIP in (c2Ips))
-   or (InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe") and RemoteUrl matches regex @"(?i)(qubecare|reverserecruiting|chatgptforchrome|xuix\.top|newextensioninstallweb|huiyiai|yiban\.io|browser\.cash)")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
-| union (DeviceEvents | where ActionType == "BrowserLaunchedToOpenUrl" and RemoteUrl has_any (c2Domains) | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl)
-```
-
-### [LLM] Malicious GenAI Chrome extension installed (Unit42 Apr-2026 IDs on disk)
-
-`UC_28_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\Google\\Chrome\\User Data\\*\\Extensions\\fpeabamapgecnidibdmjoepaiehokgda\\*","*\\Google\\Chrome\\User Data\\*\\Extensions\\eebihieclccoidddmjcencomodomdoei\\*","*\\Google\\Chrome\\User Data\\*\\Extensions\\iefpkdilnfhogjbkhgnliaomoldgkdlj\\*","*\\Google\\Chrome\\User Data\\*\\Extensions\\jhhjbaicgmecddbaobeobkikgmfffaeg\\*","*/Google/Chrome/*/Extensions/fpeabamapgecnidibdmjoepaiehokgda/*","*/Google/Chrome/*/Extensions/eebihieclccoidddmjcencomodomdoei/*","*/Google/Chrome/*/Extensions/iefpkdilnfhogjbkhgnliaomoldgkdlj/*","*/Google/Chrome/*/Extensions/jhhjbaicgmecddbaobeobkikgmfffaeg/*") by host Filesystem.file_name Filesystem.process_name | `drop_dm_object_name("Filesystem")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let badExtIds = dynamic(["fpeabamapgecnidibdmjoepaiehokgda","eebihieclccoidddmjcencomodomdoei","iefpkdilnfhogjbkhgnliaomoldgkdlj","jhhjbaicgmecddbaobeobkikgmfffaeg"]);
-let badHashes = dynamic(["0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5","ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02","604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3","dfe307d957724ebe32331f92d53e366b7fa85968a9564c2285c5a0142ac9e1bb","4e38bee33237a8c8b17a2504013e506ca7cbf667a7f68a2d94d75db505c2149f","c9754454efede2dec2fcb856faa40424b8df378706b664a5ae4847fcd0336b53"]);
-DeviceFileEvents
-| where Timestamp > ago(60d)
-| where (FolderPath has_any (badExtIds))
-     or (FolderPath has "Chrome\\User Data" and FolderPath has "Extensions" and FolderPath matches regex strcat("(?i)(", strcat_array(badExtIds, "|"), ")"))
-     or (SHA256 in (badHashes))
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), FileCount=count() by DeviceName, InitiatingProcessAccountName, FolderPath, SHA256
-```
-
-### [LLM] AI provider API keys exfiltrated via Reverse-Recruiting custom HTTP headers
-
-`UC_28_13` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as ua values(Web.bytes_out) as bytes_out from datamodel=Web where Web.dest="api.reverserecruiting.io" OR Web.url="*reverserecruiting.io/v1/profile/sync*" OR Web.url="*reverserecruiting.io/v1/*" by Web.src Web.user host | `drop_dm_object_name("Web")` | eval risk="AI API key + PII exfil to Reverse Recruiting C2" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe")
-| where RemoteUrl has "reverserecruiting.io"
-     or RemoteUrl has_any ("/v1/profile/sync","optimized-api")
-| extend KeyHeaderHint = case(
-    RemoteUrl has "openai", "openai-key-suspect",
-    RemoteUrl has "gemini", "gemini-key-suspect",
-    RemoteUrl has "claude" or RemoteUrl has "anthropic", "claude-key-suspect",
-    "profile-pii")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, KeyHeaderHint
-| join kind=leftouter (
-    DeviceFileEvents
-    | where FolderPath has "iefpkdilnfhogjbkhgnliaomoldgkdlj"
-    | project DeviceName, ExtInstalled=FolderPath, ExtTime=Timestamp
-  ) on DeviceName
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","vivaldi.exe")
+| where RemoteUrl has_any (_bad_hosts)
+   or RemoteIP in (_bad_ips)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
 | order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### [LLM] Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
+
+`UC_32_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\Extensions\\fpeabamapgecnidibdmjoepaiehokgda\\*","*\\Extensions\\eebihieclccoidddmjcencomodomdoei\\*","*\\Extensions\\iefpkdilnfhogjbkhgnliaomoldgkdlj\\*","*\\Extensions\\jhhjbaicgmecddbaobeobkikgmfffaeg\\*") OR Filesystem.file_hash IN ("0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5","ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02","604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3","dfe307d957724ebe32331f92d53e366b7fa85968a9564c2285c5a0142ac9e1bb","4e38bee33237a8c8b17a2504013e506ca7cbf667a7f68a2d94d75db505c2149f","c9754454efede2dec2fcb856faa40424b8df378706b664a5ae4847fcd0336b53")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _bad_extension_ids = dynamic(["fpeabamapgecnidibdmjoepaiehokgda","eebihieclccoidddmjcencomodomdoei","iefpkdilnfhogjbkhgnliaomoldgkdlj","jhhjbaicgmecddbaobeobkikgmfffaeg"]);
+let _bad_hashes = dynamic(["0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5","ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02","604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3","dfe307d957724ebe32331f92d53e366b7fa85968a9564c2285c5a0142ac9e1bb","4e38bee33237a8c8b17a2504013e506ca7cbf667a7f68a2d94d75db505c2149f","c9754454efede2dec2fcb856faa40424b8df378706b664a5ae4847fcd0336b53"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has_any (_bad_extension_ids))
+   or SHA256 in (_bad_hashes)
+| extend MatchedExtensionId = tostring(extract(@"Extensions[\\/]([a-p]{32})", 1, FolderPath))
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          FileName, FolderPath, SHA256, MatchedExtensionId, ActionType
+| order by Timestamp desc
+```
+
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -204,6 +177,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -231,10 +205,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -287,6 +262,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -342,6 +318,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -370,6 +347,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -394,6 +372,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -401,7 +380,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_28_10` · phase: **exploit** · confidence: **High**
+`UC_32_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -464,4 +443,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

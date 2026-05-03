@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_430 per-article briefings — auto-generated from articles in the rolling 365-day window._
+_429 per-article briefings — auto-generated from articles in the rolling 365-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,35 +8,41 @@ _430 per-article briefings — auto-generated from articles in the rolling 365-d
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-03
+- [cisa adds actively exploited linux root access bug cve 2026 ](./2026-05-03/cisa-adds-actively-exploited-linux-root-access-bug-cve-2026-.md)
+
 ## 2026-05-02
+- [attackers abuse google appsheet netlify and telegram in face](./2026-05-02/attackers-abuse-google-appsheet-netlify-and-telegram-in-face.md)
+- [attackers deploy aitm phishing pages to access sharepoint hu](./2026-05-02/attackers-deploy-aitm-phishing-pages-to-access-sharepoint-hu.md)
+- [consentfix v3 attacks target azure with automated oauth abus](./2026-05-02/consentfix-v3-attacks-target-azure-with-automated-oauth-abus.md)
 - [cpanelsniper poc exploit disclosed for cpanel vulnerability ](./2026-05-02/cpanelsniper-poc-exploit-disclosed-for-cpanel-vulnerability-.md)
+- [critrical cpanel flaw mass exploited in sorry ransomware att](./2026-05-02/critrical-cpanel-flaw-mass-exploited-in-sorry-ransomware-att.md)
+- [cve 2026 31431 copy fail vulnerability enables linux root pr](./2026-05-02/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-pr.md)
+- [hackers breach government and military servers by exploiting](./2026-05-02/hackers-breach-government-and-military-servers-by-exploiting.md)
 - [microsoft tests modern windows run says it s faster than leg](./2026-05-02/microsoft-tests-modern-windows-run-says-it-s-faster-than-leg.md)
+- [multiple exim mail server vulnerabilities leads to crash wit](./2026-05-02/multiple-exim-mail-server-vulnerabilities-leads-to-crash-wit.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-05-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
+- [trellix confirms source code breach with unauthorized reposi](./2026-05-02/trellix-confirms-source-code-breach-with-unauthorized-reposi.md)
 
 ## 2026-05-01
 - [15 year old detained over french govt agency data breach](./2026-05-01/15-year-old-detained-over-french-govt-agency-data-breach.md)
 - [30 000 facebook accounts hacked via google appsheet phishing](./2026-05-01/30-000-facebook-accounts-hacked-via-google-appsheet-phishing.md)
-- [attackers abuse captcha and clickfix tactics to boost creden](./2026-05-01/attackers-abuse-captcha-and-clickfix-tactics-to-boost-creden.md)
 - [china linked hackers target asian governments nato state jou](./2026-05-01/china-linked-hackers-target-asian-governments-nato-state-jou.md)
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
 - [criminal ip and securonix threatq collaborate to enhance thr](./2026-05-01/criminal-ip-and-securonix-threatq-collaborate-to-enhance-thr.md)
 - [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
-- [deep door stealer harvests browser passwords cloud tokens ss](./2026-05-01/deep-door-stealer-harvests-browser-passwords-cloud-tokens-ss.md)
 - [edu tech firm instructure discloses cyber incident probes im](./2026-05-01/edu-tech-firm-instructure-discloses-cyber-incident-probes-im.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
 - [etherrat campaign uses seo poisoning and github facades to t](./2026-05-01/etherrat-campaign-uses-seo-poisoning-and-github-facades-to-t.md)
 - [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
 - [microsoft fixes remote desktop warnings displaying incorrect](./2026-05-01/microsoft-fixes-remote-desktop-warnings-displaying-incorrect.md)
 - [microsoft now lets admins choose pre installed store apps to](./2026-05-01/microsoft-now-lets-admins-choose-pre-installed-store-apps-to.md)
-- [new ddos malware exploits jenkins to attack valve source eng](./2026-05-01/new-ddos-malware-exploits-jenkins-to-attack-valve-source-eng.md)
 - [new spyware platform lets buyers rebrand and resell android ](./2026-05-01/new-spyware-platform-lets-buyers-rebrand-and-resell-android-.md)
 - [poisoned ruby gems and go modules exploit ci pipelines for c](./2026-05-01/poisoned-ruby-gems-and-go-modules-exploit-ci-pipelines-for-c.md)
-- [ransomware victims jump to 7 831 as ai crime tools scale glo](./2026-05-01/ransomware-victims-jump-to-7-831-as-ai-crime-tools-scale-glo.md)
 - [story retracted](./2026-05-01/story-retracted.md)
 - [the agency mirage why ai needs real engineering not just hyp](./2026-05-01/the-agency-mirage-why-ai-needs-real-engineering-not-just-hyp.md)
 - [top five sales challenges costing msps cybersecurity revenue](./2026-05-01/top-five-sales-challenges-costing-msps-cybersecurity-revenue.md)
 - [two cybersecurity professionals get 4 year sentences in blac](./2026-05-01/two-cybersecurity-professionals-get-4-year-sentences-in-blac.md)
-- [ubuntu website and canonical web services hit by ddos attack](./2026-05-01/ubuntu-website-and-canonical-web-services-hit-by-ddos-attack.md)
 - [us ransomware negotiators get 4 years in prison over blackca](./2026-05-01/us-ransomware-negotiators-get-4-years-in-prison-over-blackca.md)
 - [windows 11 kb5083631 update released with 34 changes and fix](./2026-05-01/windows-11-kb5083631-update-released-with-34-changes-and-fix.md)
 
@@ -49,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google fixes cvss 10 gemini cli ci rce and cursor flaws enab](./2026-04-30/google-fixes-cvss-10-gemini-cli-ci-rce-and-cursor-flaws-enab.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
 - [new bluekit phishing service includes an ai assistant 40 tem](./2026-04-30/new-bluekit-phishing-service-includes-an-ai-assistant-40-tem.md)
-- [new linux copy fail flaw gives hackers root on major distros](./2026-04-30/new-linux-copy-fail-flaw-gives-hackers-root-on-major-distros.md)
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
@@ -57,7 +62,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 - [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
-- [what happens in the first 24 hours after a new asset goes li](./2026-04-30/what-happens-in-the-first-24-hours-after-a-new-asset-goes-li.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
 
 ## 2026-04-29
@@ -111,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tropic trooper uses trojanized sumatrapdf and github to depl](./2026-04-24/tropic-trooper-uses-trojanized-sumatrapdf-and-github-to-depl.md)
 
 ## 2026-04-23
-- [apple fixes ios flaw that let fbi recover deleted signal mes](./2026-04-23/apple-fixes-ios-flaw-that-let-fbi-recover-deleted-signal-mes.md)
 - [bitwarden cli compromised in ongoing checkmarx supply chain ](./2026-04-23/bitwarden-cli-compromised-in-ongoing-checkmarx-supply-chain-.md)
 - [can ai attack the cloud lessons from building an autonomous ](./2026-04-23/can-ai-attack-the-cloud-lessons-from-building-an-autonomous-.md)
 - [china linked gopherwhisper infects 12 mongolian government s](./2026-04-23/china-linked-gopherwhisper-infects-12-mongolian-government-s.md)
@@ -124,7 +127,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [threatsday bulletin 290m defi hack macos lotl abuse proxysma](./2026-04-23/threatsday-bulletin-290m-defi-hack-macos-lotl-abuse-proxysma.md)
 - [uat 4356 s targeting of cisco firepower devices](./2026-04-23/uat-4356-s-targeting-of-cisco-firepower-devices.md)
 - [unc6692 impersonates it help desk via microsoft teams to dep](./2026-04-23/unc6692-impersonates-it-help-desk-via-microsoft-teams-to-dep.md)
-- [vercel finds more compromised accounts in context ai linked ](./2026-04-23/vercel-finds-more-compromised-accounts-in-context-ai-linked-.md)
 - [webinar mythos reality check beating automated exploitation ](./2026-04-23/webinar-mythos-reality-check-beating-automated-exploitation-.md)
 
 ## 2026-04-22
@@ -157,7 +159,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cross tenant helpdesk impersonation to data exfiltration a h](./2026-04-18/cross-tenant-helpdesk-impersonation-to-data-exfiltration-a-h.md)
 
 ## 2026-04-17
-- [containing a domain compromise how predictive shielding shut](./2026-04-17/containing-a-domain-compromise-how-predictive-shielding-shut.md)
 - [that data breach alert might be a trap](./2026-04-17/that-data-breach-alert-might-be-a-trap.md)
 - [threat brief escalation of cyber risk related to iran update](./2026-04-17/threat-brief-escalation-of-cyber-risk-related-to-iran-update.md)
 

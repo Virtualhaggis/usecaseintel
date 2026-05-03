@@ -49,80 +49,12 @@ However, it’s not a pure marketing ploy. It all started in 1995, when collea
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
-- **T1212** — Exploitation for Credential Access
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1496** — Resource Hijacking
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] LiteLLM pre-auth SQL injection via crafted Authorization header (CVE-2026-42208)
-
-`UC_30_10` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.src) as src values(Web.dest) as dest values(Web.status) as status from datamodel=Web where (Web.url="*/chat/completions*" OR Web.url="*/v1/chat/completions*" OR Web.url="*/v1/embeddings*" OR Web.url="*/v1/completions*" OR Web.url="*/key/generate*" OR Web.url="*/model/info*") by Web.http_method Web.user Web.dest Web.src | `drop_dm_object_name(Web)` | eval auth_hdr=coalesce('http_header.Authorization','authorization','request_header') | search auth_hdr IN ("*UNION*SELECT*","*' OR *","*--*","*/*!*/*","*sleep(*","*pg_sleep*","*litellm_credentials*","*litellm_config*","*credential_values*","*xp_cmdshell*","*0x*UNION*","*CONVERT(*","*'+OR+'*") | where status<500 | table firstTime lastTime src dest url http_method status auth_hdr ua
-```
-
-**Defender KQL:**
-```kql
-// Two-prong: (1) inbound HTTP to LiteLLM hosts on port 4000 from non-trusted sources (2) LiteLLM python/uvicorn process anomalies post-request
-let litellm_hosts = DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where ProcessCommandLine has_any ("litellm","litellm.proxy","litellm-proxy","uvicorn litellm")
-  | summarize by DeviceId, DeviceName;
-DeviceNetworkEvents
-  | where Timestamp > ago(24h)
-  | where DeviceId in (litellm_hosts)
-  | where ActionType == "InboundConnectionAccepted"
-  | where LocalPort in (4000, 8000, 8080, 443)
-  | where RemoteIPType !in ("Private","Loopback")
-  | join kind=leftouter (
-      DeviceProcessEvents
-      | where Timestamp > ago(24h)
-      | where InitiatingProcessCommandLine has_any ("litellm","uvicorn")
-      | where ProcessCommandLine has_any ("sh","bash","curl","wget","python -c","base64 -d","nc ","/dev/tcp")
-      | project DeviceId, ChildTime=Timestamp, ChildCmd=ProcessCommandLine, ChildName=FileName
-  ) on DeviceId
-  | where isnotempty(ChildCmd) and datetime_diff('minute', ChildTime, Timestamp) between (0 .. 5)
-  | project Timestamp, DeviceName, RemoteIP, RemoteUrl, LocalPort, ChildTime, ChildName, ChildCmd
-```
-
-### [LLM] Talos weekly top-prevalence malware hash sighting (Coinminer / Injector / Dropper.Miner)
-
-`UC_30_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","c2efb2dcacba6d3ccc175b6ce1b7ed0a","41444d7018601b599beac0c60ed1bf83","7bdbd180c081fa63ca94f9c22c457376","dbd8dbecaa80795c135137d69921fdba") by Processes.dest Processes.user Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | table firstTime lastTime dest user process_name process_hash file_name file_path
-```
-
-**Defender KQL:**
-```kql
-let badHashes = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba"]);
-let badMd5 = dynamic(["2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","c2efb2dcacba6d3ccc175b6ce1b7ed0a","41444d7018601b599beac0c60ed1bf83","7bdbd180c081fa63ca94f9c22c457376","dbd8dbecaa80795c135137d69921fdba"]);
-let badNames = dynamic(["VID001.exe","APQ9305.dll","u992574.dll","content.js"]);
-union
-  (DeviceProcessEvents
-    | where Timestamp > ago(14d)
-    | where SHA256 in (badHashes) or MD5 in (badMd5) or FileName in~ (badNames)
-    | project Timestamp, DeviceName, AccountName, Source="ProcessExec", FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName),
-  (DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where SHA256 in (badHashes) or MD5 in (badMd5) or FileName in~ (badNames)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, MD5, ActionType, InitiatingProcessFileName),
-  (DeviceImageLoadEvents
-    | where Timestamp > ago(14d)
-    | where SHA256 in (badHashes) or MD5 in (badMd5) or FileName in~ ("APQ9305.dll","u992574.dll")
-    | project Timestamp, DeviceName, Source="DllLoad", FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine)
-| sort by Timestamp desc
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -146,10 +78,11 @@ union
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -202,6 +135,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -261,6 +195,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -292,6 +227,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -316,9 +252,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -342,6 +280,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -371,14 +310,16 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — Great responsibility, without great power
 
-`UC_30_9` · phase: **exploit** · confidence: **High**
+`UC_34_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,4 +379,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -37,12 +37,11 @@ In recent years, EDR killers have become one of the most commonly seen tools in 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1543.003** — Persistence (article-specific)
+- **T1068** — Exploitation for Privilege Escalation
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1562.012** — Impair Defenses: Disable or Modify Linux Audit System
+- **T1014** — Rootkit
 - **T1562.004** — Impair Defenses: Disable or Modify System Firewall
-- **T1219** — Remote Access Software
-- **T1572** — Protocol Tunneling
-- **T1105** — Ingress Tool Transfer
+- **T1055** — Process Injection
 
 ## Kill chain phases observed
 
@@ -50,87 +49,120 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] EDR-Freeze: WerFaultSecure /type 268310 against protected security process
+### [LLM] BYOVD: Genshin Impact mhyprot.sys driver dropped/loaded outside legitimate game install (Embargo evil-mhyprot-cli)
 
-`UC_167_9` · phase: **install** · confidence: **High**
+`UC_166_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="WerFaultSecure.exe" AND Processes.process="*/encfile*" AND Processes.process="*/cancel*" AND Processes.process="*/type*" AND (Processes.process="*268310*" OR Processes.process="*0x4186*" OR Processes.process="*0x416d6*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name IN ("mhyprot.sys","mhyprot2.sys") by host Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.user | `drop_dm_object_name(Filesystem)` | search NOT (file_path="*\\Genshin Impact\\*" OR file_path="*\\miHoYo\\*" OR file_path="*\\HoYoPlay\\*") | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentControlSet\\Services\\mhyprot*" by host Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where FileName =~ "WerFaultSecure.exe"
-| where ProcessCommandLine has_all ("/encfile", "/cancel", "/type")
-| where ProcessCommandLine has_any ("268310", "0x4186", "0x416d6")
-| join kind=leftouter (
+let _legit_paths = dynamic([@"\Genshin Impact\", @"\miHoYo\", @"\HoYoPlay\"]);
+union
+(
+  DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "FileCreated"
+  | where FileName in~ ("mhyprot.sys","mhyprot2.sys")
+  | where not(FolderPath has_any (_legit_paths))
+  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+            InitiatingProcessFileName, InitiatingProcessCommandLine,
+            InitiatingProcessAccountName, Source="FileWrite"
+),
+(
+  DeviceRegistryEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+  | where RegistryKey has @"\CurrentControlSet\Services\mhyprot"
+      or (RegistryValueName =~ "ImagePath" and RegistryValueData has_any ("mhyprot.sys","mhyprot2.sys"))
+  | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData,
+            InitiatingProcessFileName, InitiatingProcessCommandLine,
+            InitiatingProcessAccountName, Source="ServiceReg"
+)
+| order by Timestamp desc
+```
+
+### [LLM] EDRSilencer-style WFP filter blocking outbound traffic from named EDR binaries
+
+`UC_166_10` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="EDRSilencer.exe" OR (Processes.process_name IN ("netsh.exe","powershell.exe","pwsh.exe") AND Processes.process IN ("*FwpmFilterAdd*","*Add-NetFirewallRule*MsSense*","*Add-NetFirewallRule*MsMpEng*","*New-NetFirewallRule*Block*Outbound*MsSense*","*FwpmEngineOpen*"))) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | append [search source="WinEventLog:Security" EventCode=5157 (Application="*\\MsMpEng.exe" OR Application="*\\MsSense.exe" OR Application="*\\SentinelAgent.exe" OR Application="*\\CSFalconService.exe" OR Application="*\\ekrn.exe" OR Application="*\\elastic-agent.exe" OR Application="*\\xagt.exe" OR Application="*\\CarbonBlack*" OR Application="*\\bdservicehost.exe") | bin _time span=10m | stats count dc(Application) as edr_binaries values(Application) as Apps by host _time | where count>20 OR edr_binaries>=2] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _edr_binaries = dynamic(["MsMpEng.exe","MsSense.exe","MsSenseS.exe","SenseIR.exe","SentinelAgent.exe","SentinelServiceHost.exe","CSFalconService.exe","CSFalconContainer.exe","ekrn.exe","egui.exe","elastic-agent.exe","xagt.exe","cb.exe","RepMgr.exe","bdservicehost.exe","cyserver.exe","cytray.exe","qualysagent.exe","TmListen.exe","PccNTMon.exe"]);
+let _edr_binaries_lower = _edr_binaries | mv-apply b=_edr_binaries to typeof(string) on (project tolower(b));
+union
+(
+  // Direct execution of the EDRSilencer tool / clones
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where FileName =~ "EDRSilencer.exe"
+     or ProcessCommandLine has_any ("FwpmFilterAdd0","FwpmEngineOpen0")
+     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_all ("New-NetFirewallRule","Block","Outbound") and ProcessCommandLine has_any (_edr_binaries))
+     or (FileName =~ "netsh.exe" and ProcessCommandLine has "wfp" and ProcessCommandLine has "add")
+  | project Timestamp, DeviceName, AccountName, FileName,
+            ProcessCommandLine, InitiatingProcessFileName,
+            InitiatingProcessCommandLine, Source="ToolExec"
+),
+(
+  // Non-EDR processes loading the WFP user-mode client (FWPUCLNT.DLL) - rare outside Defender/firewall control panel
+  DeviceImageLoadEvents
+  | where Timestamp > ago(7d)
+  | where FileName =~ "FWPUCLNT.DLL"
+  | where InitiatingProcessFolderPath !startswith @"C:\Windows\"
+      and InitiatingProcessFolderPath !startswith @"C:\Program Files\"
+  | where InitiatingProcessFileName !in~ ("netsh.exe","MsMpEng.exe","svchost.exe","explorer.exe","mmc.exe","WerFault.exe")
+  | project Timestamp, DeviceName, InitiatingProcessFileName,
+            InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+            InitiatingProcessAccountName, Source="WfpDllLoad"
+)
+| order by Timestamp desc
+```
+
+### [LLM] EDR-Freeze: WerFaultSecure.exe abused to suspend AV/EDR processes via MiniDumpWriteDump race
+
+`UC_166_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="WerFaultSecure.exe" AND NOT Processes.parent_process_name IN ("svchost.exe","wermgr.exe","WerFault.exe","services.exe","smss.exe","csrss.exe","taskhostw.exe") by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | search (process="*/dump*" OR process="*-pid*" OR process="* /shared *" OR process="*MiniDumpWriteDump*") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _trusted_wer_parents = dynamic(["svchost.exe","wermgr.exe","werfault.exe","services.exe","smss.exe","csrss.exe","taskhostw.exe","sihost.exe"]);
+let WerFaultSpawn =
     DeviceProcessEvents
-    | where FileName in~ ("MsMpEng.exe","MsSense.exe","SentinelAgent.exe","CSFalconService.exe","elastic-agent.exe","cyserver.exe","FortiEDR.exe","ekrn.exe")
-    | project SuspectPid = ProcessId, SuspectName = FileName, DeviceId
-) on DeviceId
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspectName
-```
-
-### [LLM] EDRSilencer-style WFP filter blocking EDR sensor outbound traffic
-
-`UC_167_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*EDRSilencer*","*blockedr*","*unblockedr*") OR (Processes.process_name="netsh.exe" AND Processes.process="*wfp*" AND Processes.process="*add*" AND Processes.process="*filter*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*New-NetFirewallRule*" AND Processes.process="*-Direction*Outbound*" AND Processes.process="*-Action*Block*" AND (Processes.process="*MsSense*" OR Processes.process="*MsMpEng*" OR Processes.process="*SentinelAgent*" OR Processes.process="*CSFalconService*" OR Processes.process="*cyserver*" OR Processes.process="*FortiEDR*" OR Processes.process="*ekrn*" OR Processes.process="*elastic-agent*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let edrImages = dynamic(["MsSense.exe","MsMpEng.exe","NisSrv.exe","SenseIR.exe","SentinelAgent.exe","SentinelServiceHost.exe","CSFalconService.exe","CSFalconContainer.exe","cyserver.exe","CylanceSvc.exe","FortiEDR.exe","fortiedrcollectorservice.exe","ekrn.exe","egui.exe","elastic-agent.exe","xagt.exe","TmCCSF.exe"]);
-DeviceProcessEvents
-| where ProcessCommandLine has_any ("EDRSilencer", "blockedr", "unblockedr")
-   or (FileName =~ "netsh.exe" and ProcessCommandLine has "wfp" and ProcessCommandLine has "add" and ProcessCommandLine has "filter")
-   or (FileName in~ ("powershell.exe","pwsh.exe")
-       and ProcessCommandLine has "New-NetFirewallRule"
-       and ProcessCommandLine has "Outbound"
-       and ProcessCommandLine has "Block"
-       and ProcessCommandLine has_any (edrImages))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| union (
-DeviceEvents
-| where ActionType in ("FirewallOutboundConnectionBlocked","FirewallServiceStopped","WfpFilterAdd","FirewallRuleAdded")
-| where InitiatingProcessFileName has_any (edrImages) or AdditionalFields has_any (edrImages)
-| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, AdditionalFields
-)
-```
-
-### [LLM] Warlock-style chain: Velociraptor agent followed by VS Code (code.exe) tunnel
-
-`UC_167_11` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("velociraptor.exe","velociraptor_client.exe") OR Processes.process="*velociraptor*--config*" OR (Processes.process_name="msiexec.exe" AND Processes.process="*velociraptor*")) OR (Processes.process_name IN ("Code.exe","code.exe","code-tunnel.exe") AND (Processes.process="*tunnel*" OR Processes.process="*--accept-server-license-terms*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | eventstats values(process_name) as host_procs by dest | where mvfind(host_procs,"velociraptor")>=0 AND mvfind(host_procs,"[Cc]ode")>=0 | sort 0 dest _time
-```
-
-**Defender KQL:**
-```kql
-let veloHosts = DeviceProcessEvents
-    | where Timestamp > ago(14d)
-    | where FileName has "velociraptor" or ProcessCommandLine has "velociraptor" or (FileName =~ "msiexec.exe" and ProcessCommandLine has "velociraptor")
-    | summarize firstVelo=min(Timestamp) by DeviceId, DeviceName;
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("Code.exe","code.exe","code-tunnel.exe")
-   and (ProcessCommandLine has "tunnel" or ProcessCommandLine has "--accept-server-license-terms")
-| join kind=inner veloHosts on DeviceId
-| where Timestamp between (firstVelo .. (firstVelo + 7d))
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, firstVelo
-| union (
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any ("global.rel.tunnels.api.visualstudio.com","vscode.dev","tunnels.api.visualstudio.com")
-| join kind=inner veloHosts on DeviceId
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
-)
+    | where Timestamp > ago(7d)
+    | where FileName =~ "WerFaultSecure.exe"
+    | where InitiatingProcessFileName !in~ (_trusted_wer_parents)
+    | where AccountName !endswith "$"
+    | project Timestamp, DeviceName, AccountName,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine,
+              ParentFolder = InitiatingProcessFolderPath,
+              ChildCmd = ProcessCommandLine,
+              ChildPid = ProcessId, Signal="WerFaultSecure_unusual_parent";
+let SuspendOnWer =
+    DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("OpenProcessApiCall","SuspendThread","ProcessPrimaryTokenModified")
+    | where FileName =~ "WerFaultSecure.exe"      // target was WerFaultSecure
+    | where InitiatingProcessFileName !in~ (_trusted_wer_parents)
+    | where InitiatingProcessFolderPath !startswith @"C:\Windows\System32"
+    | project Timestamp, DeviceName, ActionType,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName,
+              Signal="Suspend_against_WerFaultSecure";
+union WerFaultSpawn, SuspendOnWer
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -183,6 +215,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -242,6 +275,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -273,6 +307,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -299,6 +334,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -327,6 +363,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -352,9 +389,11 @@ DeviceProcessEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
 | where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, AccountName, bin(Timestamp, 1m)
-| where files > 200
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
 | order by files desc
 ```
 
@@ -378,6 +417,7 @@ DeviceFileEvents
 ```kql
 DeviceEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where ActionType == "OpenProcessApiCall"
 | where FileName =~ "lsass.exe"
 | where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
@@ -407,14 +447,16 @@ DeviceEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_167_8` · phase: **exploit** · confidence: **High**
+`UC_166_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -464,4 +506,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

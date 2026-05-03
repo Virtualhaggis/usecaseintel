@@ -12,7 +12,7 @@
         "description": "Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"OpenProcessApiCall\"\n| where FileName =~ \"lsass.exe\"\n| where InitiatingProcessFileName !in~ (\"MsSense.exe\",\"MsMpEng.exe\",\"csrss.exe\",\n                                          \"svchost.exe\",\"wininit.exe\",\"services.exe\",\n                                          \"lsm.exe\",\"SearchProtocolHost.exe\")\n| project Timestamp, DeviceName, ActionType, FileName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessFolderPath, AccountName\n| order by Timestamp desc",
+        "query": "// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010\n// indicate read access to lsass.exe \u2014 credential-dump signature. Audit\n// Object Access > Audit File System policy required.\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4663\n| where ObjectName endswith \"\\lsass.exe\"\n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account, ObjectName, ProcessName,\n          AccessMask, AccessReason\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

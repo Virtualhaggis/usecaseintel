@@ -7337,19 +7337,36 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill">lsass</span>' },
 
   { section: "ATT&CK Matrix", view: "matrix",
-    target: "#matrixGrid", fallback: "#view-matrix",
+    // Spotlight the wrap, NOT #matrixGrid — the grid has overflow-x:auto
+    // and a 14×150px = 2,100px min-width, so a position:relative spotlight
+    // on the grid disrupts its sticky tactic-headers and shows a punch-
+    // hole that extends off-screen. The wrap is viewport-bounded.
+    target: ".matrix-wrap", fallback: "#view-matrix",
     title: "Coverage-by-technique heatmap",
     body: "All 14 MITRE tactics, every non-deprecated technique. <b>Cell intensity</b> shows how many of your detections cover that technique. <b>Click any cell</b> for the drawer of UCs and articles.",
-    preview: '<span class="tour-preview-meta">222 techniques · 475 sub-techniques · 14 tactics</span>' },
+    preview: '<span class="tour-preview-meta">222 techniques · 475 sub-techniques · 14 tactics</span>',
+    onShow: () => {
+      const grid = document.getElementById('matrixGrid');
+      if (grid) grid.scrollLeft = 0;
+      window.scrollTo({top: document.querySelector('.matrix-toolbar')?.offsetTop - 80 || 0, behavior:'smooth'});
+    } },
   { section: "ATT&CK Matrix", view: "matrix",
     target: "#matrixModes", fallback: "#view-matrix .matrix-toolbar",
     title: "Coverage vs Heat — switch the lens",
-    body: "<b>Coverage</b> shades cells by how many of your detections fire on that technique. <b>Heat</b> shades them by how many recent articles cite it. <b>All</b> shows both.",
+    body: "<b>Coverage</b> shades cells by how many of your detections fire on that technique. <b>Heat</b> shades them by how many recent articles cite it. <b>All</b> shows both — watch.",
     preview: '<span class="tour-preview-pill">Coverage</span>' +
              '<span class="tour-preview-meta">·</span>' +
              '<span class="tour-preview-pill">Heat</span>' +
              '<span class="tour-preview-meta">·</span>' +
-             '<span class="tour-preview-pill">All</span>' },
+             '<span class="tour-preview-pill">All</span>',
+    // Live demo — pause 1 s, click Heat, pause 1 s, click All.
+    onShow: (stepIndex) => {
+      const click = (sel) => { const b = document.querySelector(sel); if (b) b.click(); };
+      const myIndex = stepIndex;
+      const stillHere = () => _tourIndex === myIndex;
+      setTimeout(() => { if (stillHere()) click('#matrixModes [data-mode="heat"]'); }, 1000);
+      setTimeout(() => { if (stillHere()) click('#matrixModes [data-mode="all"]'); }, 2000);
+    } },
 
   { section: "Detection Library", view: "library",
     target: "#libGrid .lib-card", fallback: "#libGrid",
@@ -7396,20 +7413,6 @@ const TOUR_STEPS = [
     body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template.",
     preview: '<span class="tour-preview-meta">e.g.</span>' +
              '<span class="tour-preview-pill">APT28 → INCLUDEPICTURE webhooks</span>' },
-
-  { section: "Workflow", view: "workflow",
-    target: "#view-workflow",
-    title: "How the pipeline works",
-    body: "RSS in → ATT&CK mapping → LLM enrichment with the schema-aware prompt → multi-platform validators → live render. End-to-end every 2 hours.",
-    preview: '<span class="tour-preview-pill">RSS</span>' +
-             '<span class="tour-preview-meta">→</span>' +
-             '<span class="tour-preview-pill">ATT&amp;CK</span>' +
-             '<span class="tour-preview-meta">→</span>' +
-             '<span class="tour-preview-pill">LLM</span>' +
-             '<span class="tour-preview-meta">→</span>' +
-             '<span class="tour-preview-pill">Validate</span>' +
-             '<span class="tour-preview-meta">→</span>' +
-             '<span class="tour-preview-pill">Ship</span>' },
 
   { section: "SOC Cheat Sheet", view: "articles",
     target: ".cheatsheet-btn",
@@ -7489,6 +7492,10 @@ function tourGoto(i) {
     // Re-check placement once scroll settles — getBoundingClientRect
     // immediately after scrollIntoView returns the pre-scroll rect.
     setTimeout(() => _placeTourCard(el), 380);
+    // Step-specific live demo (e.g. clicking matrix-mode buttons).
+    if (typeof step.onShow === 'function') {
+      try { step.onShow(i); } catch (_) {}
+    }
   }, delay);
   document.getElementById('tourSection').textContent = step.section;
   document.getElementById('tourCounter').textContent = `${i + 1} / ${TOUR_STEPS.length}`;

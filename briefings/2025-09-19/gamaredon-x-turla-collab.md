@@ -57,14 +57,15 @@ In February 2025, we discovered that the Gamaredon tool PteroGraphin was used to
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102.002** — Web Service: Bidirectional Communication
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1140** — Deobfuscate/Decode Files or Information
+- **T1132.001** — Data Encoding: Standard Encoding
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1102** — Web Service
+- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
 - **T1041** — Exfiltration Over C2 Channel
+- **T1102** — Web Service
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -72,49 +73,114 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PteroGraphin/PteroOdd PowerShell pulls encrypted payload from api.telegra.ph getPage
+### [LLM] Gamaredon PteroGraphin/PteroOdd C2 — PowerShell GET to api.telegra.ph/getPage
 
-`UC_353_8` · phase: **c2** · confidence: **High**
+`UC_352_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest from datamodel=Web where Web.url="*api.telegra.ph/getPage/*return_content=true*" by Web.src Web.app | `drop_dm_object_name(Web)` | join type=inner src [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name="powershell.exe" (Processes.process="*EncodedCommand*" OR Processes.process="*-enc *" OR Processes.process="*windowStyle hidden*") by Processes.dest Processes.user Processes.process Processes.parent_process_name | rename Processes.dest as src | `drop_dm_object_name(Processes)`] | where lastTime - firstTime < 600
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*api.telegra.ph/getPage*" OR Processes.process="*telegra.ph*getPage*return_content=true*" OR Processes.process="*SecurityHealthSystray-*" OR Processes.process="*dinoasjdnl-*" OR Processes.process="*canposgam-*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Web.Web where Web.url="*api.telegra.ph/getPage*" AND Web.url="*return_content=true*" by Web.src Web.user Web.url Web.app | `drop_dm_object_name(Web)`]
 ```
 
 **Defender KQL:**
 ```kql
-let telegraph = DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has "api.telegra.ph/getPage/" and RemoteUrl has "return_content=true" | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","powershell_ise.exe") | project NetTime=Timestamp, DeviceId, DeviceName, RemoteUrl, InitiatingProcessId, InitiatingProcessCommandLine; let encps = DeviceProcessEvents | where Timestamp > ago(30d) | where FileName in~ ("powershell.exe","pwsh.exe") | where ProcessCommandLine has_any ("-EncodedCommand"," -enc "," -e ") and ProcessCommandLine has "windowStyle hidden" | project ExecTime=Timestamp, DeviceId, ChildPid=ProcessId, ChildCmd=ProcessCommandLine, ParentProcess=InitiatingProcessFileName; telegraph | join kind=inner (encps) on DeviceId | where abs(datetime_diff('second', ExecTime, NetTime)) < 600
+let lookback = 7d;
+let TelegraphPS = DeviceProcessEvents
+    | where Timestamp > ago(lookback)
+    | where InitiatingProcessAccountName !endswith "$"
+    | where FileName in~ ("powershell.exe","pwsh.exe")
+    | where ProcessCommandLine has "telegra.ph"
+    | where ProcessCommandLine has "getPage"
+          or ProcessCommandLine has "return_content=true"
+          or ProcessCommandLine has_any ("SecurityHealthSystray-","dinoasjdnl-","canposgam-")
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+let TelegraphNet = DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | where RemoteUrl has "api.telegra.ph" and RemoteUrl has "getPage"
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+    | project Timestamp, DeviceName, RemoteUrl, RemoteIP,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName;
+union TelegraphPS, TelegraphNet
+| order by Timestamp desc
 ```
 
-### [LLM] Kazuar v3 DLL side-load via vncutil64.exe in Sony Audio Drivers path or LaunchGFExperience.exe
+### [LLM] Turla Kazuar v3 launch — vncutil64.exe / LaunchGFExperience.exe side-load from user-writable path
 
-`UC_353_9` · phase: **install** · confidence: **High**
+`UC_352_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="vncutil64.exe" AND Processes.process_path="*\\AppData\\Local\\Programs\\Sony\\Audio\\Drivers\\*") OR (Processes.process_name="LaunchGFExperience.exe" AND Processes.parent_process_name IN ("powershell.exe","pwsh.exe","cmd.exe","explorer.exe")) by Processes.dest Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("LaunchGFExperienceLOC.dll","vncutil64.exe") AND Filesystem.file_path!="*\\Program Files\\NVIDIA*" by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="vncutil64.exe" OR Processes.process_name="LaunchGFExperience.exe") AND (Processes.process_path="*\\AppData\\Local\\Programs\\Sony\\Audio\\Drivers\\*" OR Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\ProgramData\\*") by host Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name="LaunchGFExperienceLOC.dll" by host Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)`]
 ```
 
 **Defender KQL:**
 ```kql
-let proc = DeviceProcessEvents | where Timestamp > ago(30d) | where (FileName =~ "vncutil64.exe" and FolderPath has @"\AppData\Local\Programs\Sony\Audio\Drivers\") or (FileName =~ "LaunchGFExperience.exe" and InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","explorer.exe")) | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine; let dll = DeviceImageLoadEvents | where Timestamp > ago(30d) | where FileName =~ "LaunchGFExperienceLOC.dll" or (FileName =~ "vncutil64.exe" and FolderPath has @"\Sony\Audio\Drivers\") | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath; let files = DeviceFileEvents | where Timestamp > ago(30d) | where FileName in~ ("LaunchGFExperienceLOC.dll","vncutil64.exe") and FolderPath !has @"\Program Files\NVIDIA" | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName; union proc, dll, files
+let lookback = 14d;
+let KazuarShells = dynamic(["vncutil64.exe","LaunchGFExperience.exe"]);
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(lookback)
+    | where FileName in~ (KazuarShells)
+    | where FolderPath has_any (@"\AppData\Local\Programs\Sony\Audio\Drivers\",
+                                 @"\AppData\Local\",
+                                 @"\AppData\Roaming\",
+                                 @"\Users\Public\",
+                                 @"\ProgramData\",
+                                 @"\Windows\Temp\")
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+let DllSideLoad = DeviceImageLoadEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "LaunchGFExperienceLOC.dll"
+          or (FileName =~ "LaunchGFExperience.exe" and FolderPath !startswith @"C:\Program Files\NVIDIA Corporation\")
+    | project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256;
+let DllDrop = DeviceFileEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "LaunchGFExperienceLOC.dll" or FileName =~ "vncutil64.exe"
+    | where FolderPath !startswith @"C:\Program Files\" and FolderPath !startswith @"C:\Program Files (x86)\"
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine;
+union ProcHits, DllSideLoad, DllDrop
+| order by Timestamp desc
 ```
 
-### [LLM] PowerShell beacon to Turla recon endpoints eset.ydns.eu, ekrn.ydns.eu and mopig92456 Cloudflare Worker
+### [LLM] Turla Kazuar exfil — POST to ESET-impersonating ydns.eu lookalikes / mopig92456 Cloudflare worker
 
-`UC_353_10` · phase: **c2** · confidence: **High**
+`UC_352_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query IN ("eset.ydns.eu","ekrn.ydns.eu","lucky-king-96d6.mopig92456.workers.dev","abrargeospatial.ir","www.brannenburger-nagelfluh.de","www.pizzeria-mercy.de") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count from datamodel=Web where (Web.url="*eset.ydns.eu/post.php*" OR Web.url="*ekrn.ydns.eu*" OR Web.url="*mopig92456.workers.dev*") by Web.src Web.url Web.http_method Web.user_agent | `drop_dm_object_name(Web)`] | append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*eset.ydns.eu*" OR Processes.process="*ekrn.ydns.eu*" OR Processes.process="*workers.dev*" OR Processes.process="*post.php*") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query IN ("eset.ydns.eu","ekrn.ydns.eu","lucky-king-96d6.mopig92456.workers.dev") OR DNS.query="*.mopig92456.workers.dev" by DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Web.Web where (Web.url="*eset.ydns.eu/post.php*" OR Web.url="*ekrn.ydns.eu*" OR Web.url="*mopig92456.workers.dev*") by Web.src Web.user Web.url Web.http_method Web.app | `drop_dm_object_name(Web)`] | append [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("91.231.182.187","64.176.173.164","85.13.145.231","185.118.115.15","77.46.148.242","168.119.152.19","217.160.0.33","217.160.0.159")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]
 ```
 
 **Defender KQL:**
 ```kql
-let badHosts = dynamic(["eset.ydns.eu","ekrn.ydns.eu","lucky-king-96d6.mopig92456.workers.dev","abrargeospatial.ir","www.brannenburger-nagelfluh.de","www.pizzeria-mercy.de"]); let badIps = dynamic(["91.231.182.187","64.176.173.164","85.13.145.231","185.118.115.15","77.46.148.242","168.119.152.19","217.160.0.33","217.160.0.159"]); DeviceNetworkEvents | where Timestamp > ago(45d) | where RemoteUrl has_any (badHosts) or RemoteIP in (badIps) or (RemoteUrl has "workers.dev" and RemoteUrl has "mopig92456") or (RemoteUrl has "eset.ydns.eu" and RemoteUrl has "post.php") | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName | union (DeviceProcessEvents | where Timestamp > ago(45d) | where FileName in~ ("powershell.exe","pwsh.exe") | where ProcessCommandLine has_any (badHosts) or ProcessCommandLine has "mopig92456.workers.dev" or ProcessCommandLine has "eset.ydns.eu/post.php" | project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessFileName)
+let lookback = 30d;
+let TurlaC2Domains = dynamic(["eset.ydns.eu","ekrn.ydns.eu","lucky-king-96d6.mopig92456.workers.dev"]);
+let TurlaC2IPs = dynamic(["91.231.182.187","64.176.173.164","85.13.145.231","185.118.115.15","77.46.148.242","168.119.152.19","217.160.0.33","217.160.0.159"]);
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | where (RemoteUrl in~ (TurlaC2Domains))
+          or (RemoteUrl endswith ".mopig92456.workers.dev")
+          or (RemoteUrl has "eset.ydns.eu" and RemoteUrl has "post.php")
+          or (RemoteIP in (TurlaC2IPs))
+    | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, InitiatingProcessFolderPath;
+let DnsHits = DeviceEvents
+    | where Timestamp > ago(lookback)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q in (TurlaC2Domains) or Q endswith ".mopig92456.workers.dev"
+    | project Timestamp, DeviceName, Q, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union NetHits, DnsHits
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -199,6 +265,7 @@ DeviceNetworkEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -258,6 +325,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -289,6 +357,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -315,6 +384,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -343,6 +413,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -351,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gamaredon X Turla collab
 
-`UC_353_7` · phase: **exploit** · confidence: **High**
+`UC_352_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -427,4 +498,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

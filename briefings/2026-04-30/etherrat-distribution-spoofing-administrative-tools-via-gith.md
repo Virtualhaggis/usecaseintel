@@ -35,14 +35,16 @@ A sophisticated, high-resilience malicious campaign was identified by Atos Threa
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
 - **T1218.007** — System Binary Proxy Execution: Msiexec
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1105** — Ingress Tool Transfer
+- **T1027.010** — Obfuscated Files or Information: Command Obfuscation
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1036.008** — Masquerading: Masquerade File Type
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 - **T1140** — Deobfuscate/Decode Files or Information
-- **T1568.003** — Dynamic Resolution: DNS Calculation / Dead Drop Resolver
-- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1620** — Reflective Code Loading
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -50,73 +52,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] EtherRAT MSI dropper: msiexec→cmd→curl staging Node.js to %LOCALAPPDATA%
+### [LLM] EtherRAT MSI dropper: msiexec-spawned cmd downloads Node.js runtime via curl to %LOCALAPPDATA%
 
-`UC_41_10` · phase: **install** · confidence: **High**
+`UC_43_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=curl.exe OR Processes.process_name=tar.exe) AND Processes.process IN ("*nodejs.org*","*node-v*win-x64*","*\\AppData\\Local\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | join type=left parent_process_guid [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name=cmd.exe AND Processes.parent_process_name=msiexec.exe by Processes.process_guid Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename process_guid as parent_process_guid] | where isnotnull(parent_process_name) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=curl.exe (Processes.parent_process_name=cmd.exe OR Processes.parent_process_name=msiexec.exe) Processes.process="*nodejs.org/dist/*" (Processes.process="*AppData\\Local\\*" OR Processes.process="*%LOCALAPPDATA%*" OR Processes.process="*-o *") by host Processes.process_name Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | where like(parent_cmd,"%msiexec%") OR like(parent_cmd,"%Installer%") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where FileName in~ ("curl.exe","tar.exe")
-| where ProcessCommandLine has_any ("nodejs.org","node-v",@"\AppData\Local\")
-| join kind=inner (
+// EtherRAT Stage-0 — curl pulling Node.js runtime under MSI ancestry
+let _suspicious_curl =
     DeviceProcessEvents
-    | where FileName =~ "cmd.exe" and InitiatingProcessFileName =~ "msiexec.exe"
-    | project cmdPGUID = ProcessId, cmdDevice = DeviceId, cmdTime = Timestamp, MsiCmdLine = ProcessCommandLine
-) on $left.InitiatingProcessId == $right.cmdPGUID, $left.DeviceId == $right.cmdDevice
-| where Timestamp between (cmdTime .. (cmdTime + 5m))
-| project Timestamp, DeviceName, AccountName, MsiCmdLine, ProcessCommandLine, FileName, FolderPath, InitiatingProcessCommandLine
+    | where Timestamp > ago(7d)
+    | where FileName =~ "curl.exe"
+    | where ProcessCommandLine has "nodejs.org"                      // article: download from official distribution endpoint
+    | where ProcessCommandLine has_any (@"\AppData\Local\", "%LOCALAPPDATA%")  // article: build-specific staging dir under LocalAppData
+    | where InitiatingProcessFileName =~ "cmd.exe"                   // article: heavily-obfuscated .cmd is the entry point
+    | project Timestamp, DeviceId, DeviceName, AccountName,
+              CurlCmd = ProcessCommandLine,
+              CmdParentCmd = InitiatingProcessCommandLine,
+              CmdParentId = InitiatingProcessId,
+              CmdGrandparent = InitiatingProcessParentFileName;
+_suspicious_curl
+| where CmdGrandparent =~ "msiexec.exe"                              // article: cmd launched by MSI CustomAction
+| project Timestamp, DeviceName, AccountName, CmdGrandparent,
+          CmdParentCmd, CurlCmd
 ```
 
-### [LLM] node.exe executing payload with non-.js extension (.bak/.cfg/.xml/.tmp/.dat) from %LOCALAPPDATA%
+### [LLM] EtherRAT Node.js loader executing AES-encrypted payload with non-script extension from %LOCALAPPDATA%
 
-`UC_41_11` · phase: **install** · confidence: **High**
+`UC_43_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name=node.exe AND Processes.process_path="*\\AppData\\Local\\*" AND (Processes.process="*.bak*" OR Processes.process="*.cfg*" OR Processes.process="*.xml*" OR Processes.process="*.tmp*" OR Processes.process="*.dat*" OR Processes.process="*.bin*" OR Processes.process="*.log*") AND NOT Processes.process="*\\package.json*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=node.exe Processes.parent_process_name=cmd.exe (Processes.process_path="*\\AppData\\Local\\*" OR Processes.process="*\\AppData\\Local\\*") (Processes.process="*.bak*" OR Processes.process="*.cfg*" OR Processes.process="*.xml*" OR Processes.process="*.tmp*" OR Processes.process="*.bin*" OR Processes.process="*.dat*" OR Processes.process="*.log*") by host Processes.process_name Processes.parent_process_name Processes.process_id | `drop_dm_object_name(Processes)` | rex field=cmdline "(?<payload_ext>\.(bak|cfg|xml|tmp|bin|dat|log))(?:\"|\s|$)" | where isnotnull(payload_ext) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+// EtherRAT Stage-1 — node.exe in LocalAppData fed a non-.js encrypted payload
 DeviceProcessEvents
+| where Timestamp > ago(7d)
 | where FileName =~ "node.exe"
-| where FolderPath has @"\AppData\Local\"
-| where ProcessCommandLine matches regex @"(?i)\.(bak|cfg|xml|tmp|dat|bin|log)(\s|""|$)"
-| where ProcessCommandLine !has "package.json" and ProcessCommandLine !has ".js "
-| extend ParentChain = strcat(InitiatingProcessParentFileName, " -> ", InitiatingProcessFileName, " -> ", FileName)
-| project Timestamp, DeviceName, AccountName, ParentChain, ProcessCommandLine, FolderPath, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| where InitiatingProcessFolderPath has @"\AppData\Local\" or InitiatingProcessFileName in~ ("cmd.exe","msiexec.exe")
+| where InitiatingProcessFileName =~ "cmd.exe"                       // article: stage 0 .cmd hands off to node.exe
+| where FolderPath has @"\AppData\Local\"                            // article: build-specific runtime subdir under LocalAppData
+| where ProcessCommandLine matches regex @"(?i)\.(bak|cfg|xml|tmp|bin|dat|log)(\"|\s|$)"  // article tables 1-4: per-sample randomised extensions for stage-1
+| project Timestamp, DeviceName, AccountName,
+          NodeImage = FolderPath,
+          NodeCmd  = ProcessCommandLine,
+          DropperCmd = InitiatingProcessCommandLine,
+          DropperParent = InitiatingProcessParentFileName
+| order by Timestamp desc
 ```
 
-### [LLM] EtherRAT EtherHiding: non-browser process querying public Ethereum JSON-RPC endpoints
+### [LLM] EtherRAT EtherHiding C2 — node.exe contacting public Ethereum JSON-RPC endpoints (eth_call DDR)
 
-`UC_41_12` · phase: **c2** · confidence: **Medium**
+`UC_43_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution where DNS.query IN ("*.infura.io","cloudflare-eth.com","*.alchemy.com","*.ankr.com","ethereum.publicnode.com","*.publicnode.com","eth.llamarpc.com","*.llamarpc.com","*.quicknode.com","*.blockpi.network","rpc.flashbots.net") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | join type=outer src [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name=node.exe AND Processes.process_path="*\\AppData\\Local\\*" by Processes.dest Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | rename dest as src] | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="135.125.255.55" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=node.exe OR All_Traffic.process_name=node.exe) (All_Traffic.dest="mainnet.infura.io" OR All_Traffic.dest="*.infura.io" OR All_Traffic.dest="rpc.ankr.com" OR All_Traffic.dest="*.ankr.com" OR All_Traffic.dest="cloudflare-eth.com" OR All_Traffic.dest="ethereum-rpc.publicnode.com" OR All_Traffic.dest="eth.llamarpc.com" OR All_Traffic.dest="eth.public-rpc.com" OR All_Traffic.dest="rpc.flashbots.net" OR All_Traffic.dest="ethereum.publicnode.com") by host All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let EthRpcHosts = dynamic(["mainnet.infura.io","cloudflare-eth.com","eth-mainnet.g.alchemy.com","rpc.ankr.com","ethereum.publicnode.com","eth.llamarpc.com","eth.merkle.io","rpc.flashbots.net","ethereum-rpc.publicnode.com"]);
-let Browserish = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe"]);
-DeviceNetworkEvents
-| where (RemoteUrl has_any (EthRpcHosts) or RemoteIP == "135.125.255.55")
-| where InitiatingProcessFileName !in~ (Browserish)
-| where InitiatingProcessFileName !in~ ("metamask.exe","ledger live.exe","exodus.exe")
-| extend Suspicious = iff(InitiatingProcessFolderPath has @"\AppData\Local\" or InitiatingProcessFileName =~ "node.exe" or InitiatingProcessParentFileName =~ "msiexec.exe", "high", "review")
-| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, Suspicious
-| sort by Suspicious asc, Timestamp desc
+// EtherRAT EtherHiding — public Ethereum JSON-RPC contact from node.exe (the deployed RAT)
+let _eth_rpc_fqdns = dynamic([
+    "mainnet.infura.io", "sepolia.infura.io", "goerli.infura.io",
+    "rpc.ankr.com", "eth.public-rpc.com",
+    "cloudflare-eth.com",
+    "ethereum-rpc.publicnode.com", "ethereum.publicnode.com",
+    "eth.llamarpc.com", "rpc.flashbots.net",
+    "eth-mainnet.g.alchemy.com"
+]);
+let _net = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName =~ "node.exe"                  // EtherRAT runtime is Node.js (article)
+    | where RemoteIPType == "Public"
+    | where RemoteUrl in~ (_eth_rpc_fqdns)
+       or _eth_rpc_fqdns has_any (RemoteUrl)
+    | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+              NodePath = InitiatingProcessFolderPath,
+              NodeCmd  = InitiatingProcessCommandLine;
+let _dns = DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | where InitiatingProcessFileName =~ "node.exe"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has_any (_eth_rpc_fqdns)
+    | project Timestamp, DeviceName, RemoteUrl=Q, RemoteIP="<dns>", RemotePort=53,
+              NodePath = InitiatingProcessFolderPath,
+              NodeCmd  = InitiatingProcessCommandLine;
+union isfuzzy=true _net, _dns
+| where NodePath has @"\AppData\Local\"                              // narrow to the EtherRAT staging location
+| order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -170,6 +205,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -197,10 +233,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Remote service execution — PsExec / SMB lateral movement
@@ -221,9 +258,11 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
    or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -248,6 +287,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("powershell.exe","pwsh.exe")
 | where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
@@ -273,6 +313,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
         "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
         "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
@@ -298,6 +339,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -305,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EtherRAT Distribution Spoofing Administrative Tools via GitHub Facades
 
-`UC_41_9` · phase: **exploit** · confidence: **High**
+`UC_43_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,4 +407,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

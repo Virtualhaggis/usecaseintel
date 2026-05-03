@@ -8,11 +8,11 @@
       "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_BEACONING')]",
       "kind": "Scheduled",
       "properties": {
-        "displayName": "Beaconing \u2014 periodic outbound to small set of destinations",
+        "displayName": "Beaconing \u00e2\u20ac\u201d periodic outbound to small set of destinations",
         "description": "C2 channel detection via inter-beacon-time stddev / fan-out to single dest.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP, RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc",
+        "query": "ImNetworkSession\n| where TimeGenerated > ago(2h)\n| where DvcAction != \"Block\"\n| where ipv4_is_private(DstIpAddr) == false\n| summarize ConnCount = count(),\n            DistinctMinutes = dcount(bin(TimeGenerated, 1m))\n            by DvcHostname, DstIpAddr, DstPortNumber\n| where ConnCount > 50 and DistinctMinutes > 30   // sustained, not bursty\n| order by ConnCount desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",

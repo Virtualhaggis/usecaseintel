@@ -26,14 +26,12 @@ Google has addressed a maximum severity security flaw in Gemini CLI -- the "@goo
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059** — Command and Scripting Interpreter
-- **T1611** — Escape to Host
-- **T1546** — Event Triggered Execution
-- **T1059.004** — Unix Shell
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
 - **T1204.002** — User Execution: Malicious File
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1555** — Credentials from Password Stores
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1005** — Data from Local System
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1204.003** — User Execution: Malicious Image
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -41,86 +39,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Gemini CLI headless workspace-trust RCE via attacker-controlled .gemini/ in CI runner
+### [LLM] Git hook execution from .git/hooks via Cursor agent autonomous git checkout (CVE-2026-26268)
 
-`UC_43_4` · phase: **exploit** · confidence: **High**
+`UC_45_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process IN ("*@google/gemini-cli*","*gemini-cli*","*run-gemini-cli*","*gemini *") OR Processes.parent_process_name IN ("gemini","gemini.exe")) AND Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","python","python3","node","node.exe","curl","wget") AND (Processes.parent_process IN ("*.gemini/*","*.gemini\\*","*GEMINI_TRUST_WORKSPACE*","*--yolo*","*headless*") OR Processes.process IN ("*.gemini/*","*.gemini\\*")) by host Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_current_directory | `drop_dm_object_name(Processes)` | where like(process_current_directory,"%/_work/%") OR like(process_current_directory,"%runner%") OR like(process_current_directory,"%actions-runner%") OR like(parent_process,"%run-gemini-cli%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=git.exe AND (Processes.process="*\\.git\\hooks\\*" OR Processes.process="*/.git/hooks/*" OR Processes.process_path="*\\.git\\hooks\\*" OR Processes.process_path="*/.git/hooks/*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval cursor_context=if(match(parent_process,"(?i)cursor") OR match(process_path,"(?i)cursor"),"yes","no")
 ```
 
 **Defender KQL:**
 ```kql
-let geminiParents = dynamic(["@google/gemini-cli","gemini-cli","run-gemini-cli","gemini.js"]);
-let shells = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","python.exe","python3","python","node.exe","node","curl.exe","wget.exe"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (InitiatingProcessCommandLine has_any (geminiParents) or InitiatingProcessFileName =~ "gemini" or InitiatingProcessParentFileName =~ "gemini")
-| where FileName in~ (shells)
-| where InitiatingProcessCommandLine has_any (".gemini/",".gemini\\","--yolo","headless","GEMINI_TRUST_WORKSPACE","run_shell_command")
-     or FolderPath has_any (".gemini/",".gemini\\")
-     or InitiatingProcessFolderPath has_any ("actions-runner","_work","/runner/")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFolderPath
-| join kind=leftouter (
-    DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where FolderPath has ".gemini" and FileName in~ (".env","settings.json","GEMINI.md")
-    | project DeviceName, GeminiCfgFile=FileName, GeminiCfgPath=FolderPath, GeminiCfgTime=Timestamp
-) on DeviceName
-| where isnotempty(GeminiCfgPath) or InitiatingProcessCommandLine has ".gemini"
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("git.exe","git")
+| where ProcessCommandLine has_any (@"\.git\hooks\", "/.git/hooks/")
+   or FolderPath has_any (@"\.git\hooks\", "/.git/hooks/")
+   or InitiatingProcessCommandLine has_any (@"\.git\hooks\", "/.git/hooks/")
+| extend CursorContext = iff(
+      InitiatingProcessParentFileName has "Cursor"
+      or InitiatingProcessCommandLine has_cs "Cursor"
+      or InitiatingProcessFolderPath has "Cursor", true, false)
+| project Timestamp, DeviceName, AccountName,
+          GrandParent = InitiatingProcessParentFileName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName, ChildCmd = ProcessCommandLine,
+          ChildFolder = FolderPath, SHA256, CursorContext
+| order by CursorContext desc, Timestamp desc
 ```
 
-### [LLM] Cursor IDE child process spawned from embedded bare-repo .git/hooks (CVE-2026-26268)
+### [LLM] Gemini CLI --yolo mode spawning shell child via run_shell_command (CVSS 10 workspace-trust bypass)
 
-`UC_43_5` · phase: **exploit** · confidence: **High**
+`UC_45_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Cursor.exe","Cursor","Cursor Helper","Cursor Helper (Plugin).exe","Cursor Helper (Renderer).exe") OR Processes.parent_process IN ("*Cursor.exe*","*/Cursor.app/*","*\\Cursor\\resources\\app*")) AND (Processes.process_path IN ("*\\.git\\hooks\\*","*/.git/hooks/*") OR Processes.process IN ("*post-checkout*","*pre-commit*","*post-commit*","*post-merge*","*pre-push*","*post-rewrite*") OR Processes.parent_process IN ("*git checkout*","*git --git-dir*")) by host Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_current_directory | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (node.exe,node) AND (Processes.parent_process="*@google/gemini-cli*" OR Processes.parent_process="*gemini-cli/dist*" OR Processes.parent_process="*gemini-cli/index*" OR Processes.parent_process="* gemini *") AND (Processes.parent_process="*--yolo*" OR Processes.parent_process="* -y *") AND Processes.process_name IN (sh.exe,bash.exe,cmd.exe,powershell.exe,pwsh.exe,sh,bash,zsh) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let cursorBins = dynamic(["Cursor.exe","Cursor","Cursor Helper","Cursor Helper (Plugin).exe","Cursor Helper (Renderer).exe"]);
-let hookNames = dynamic(["post-checkout","pre-commit","post-commit","post-merge","pre-push","post-rewrite","prepare-commit-msg"]);
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ (cursorBins)
-   or InitiatingProcessParentFileName in~ (cursorBins)
-   or InitiatingProcessFolderPath has_any ("\\Cursor\\","/Cursor.app/","/cursor/resources/app")
-| where FolderPath has_any ("\\.git\\hooks\\","/.git/hooks/")
-     or FileName in~ (hookNames)
-     or ProcessCommandLine has_any (".git/hooks/",".git\\hooks\\","git --git-dir","git checkout master")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine
-| join kind=leftouter (
-    DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where FileName =~ "AGENTS.md" or FolderPath has_any ("\\.git\\hooks\\","/.git/hooks/")
-    | summarize AgentsMdSeen=any(FileName=="AGENTS.md"), HookFileWritten=any(FolderPath has ".git/hooks" or FolderPath has ".git\\hooks\\") by DeviceName
-) on DeviceName
-```
-
-### [LLM] CursorJacking: non-Cursor process reading Cursor SQLite credential store (state.vscdb)
-
-`UC_43_6` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\Cursor\\User\\globalStorage\\state.vscdb*","*/Cursor/User/globalStorage/state.vscdb*","*/Library/Application Support/Cursor/User/globalStorage/state.vscdb*") OR Filesystem.file_name IN ("state.vscdb","state.vscdb.backup")) AND NOT Filesystem.process_name IN ("Cursor.exe","Cursor","Cursor Helper","Cursor Helper (Plugin).exe","Cursor Helper (Renderer).exe","Cursor Helper (GPU).exe") by host Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let cursorProcs = dynamic(["Cursor.exe","Cursor","Cursor Helper","Cursor Helper (Plugin).exe","Cursor Helper (Renderer).exe","Cursor Helper (GPU).exe"]);
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("state.vscdb","state.vscdb.backup")
-| where FolderPath has_any ("\\Cursor\\User\\globalStorage","/Cursor/User/globalStorage","/Library/Application Support/Cursor/User/globalStorage")
-| where InitiatingProcessFileName !in~ (cursorProcs)
-| where InitiatingProcessFolderPath !has "\\Cursor\\" and InitiatingProcessFolderPath !has "/Cursor.app/"
-| project Timestamp, DeviceName, AccountName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath
-| summarize Reads=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FolderPath
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where InitiatingProcessCommandLine has_any (
+      "@google/gemini-cli",
+      "gemini-cli/dist",
+      "gemini-cli/index",
+      "/gemini ",
+      "\\gemini ")
+| where InitiatingProcessCommandLine has_any ("--yolo"," -y ")
+| where FileName in~ ("sh.exe","bash.exe","cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh")
+| project Timestamp, DeviceName, AccountName,
+          GeminiCmd = InitiatingProcessCommandLine,
+          GeminiPath = InitiatingProcessFolderPath,
+          ChildShell = FileName,
+          ChildCmd = ProcessCommandLine,
+          ChildFolder = FolderPath,
+          IsRemoteSession = AdditionalFields
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -142,6 +122,7 @@ DeviceFileEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -169,10 +150,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -193,6 +175,7 @@ DeviceFileEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -208,4 +191,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

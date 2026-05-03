@@ -39,9 +39,8 @@ A cybercrime group of Brazilian origin has resurfaced after more than three year
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1095** — Non-Application Layer Protocol
 - **T1041** — Exfiltration Over C2 Channel
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1106** — Native API
 - **T1005** — Data from Local System
 
 ## Kill chain phases observed
@@ -50,65 +49,115 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] LofyStealer/GrabBot C2 beacon to 24.152.36.241:8080 with GrabBot/1.0 User-Agent
+### [LLM] LofyStealer C2 beacon to 24.152.36.241:8080 with GrabBot/1.0 user-agent
 
-`UC_56_12` · phase: **c2** · confidence: **High**
+`UC_58_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.dest="24.152.36.241" AND Web.dest_port=8080) OR Web.user_agent="GrabBot/1.0" OR (Web.url IN ("*/upload","*/time") AND Web.http_method IN ("POST","GET")) by Web.src, Web.user, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.user_agent, Web.http_content_type | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="24.152.36.241" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port host | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.url) as url from datamodel=Web where (Web.http_user_agent="GrabBot/1.0" OR (Web.dest="24.152.36.241" AND (Web.url="*/upload*" OR Web.url="*/time*"))) by Web.src Web.dest Web.http_user_agent Web.url Web.http_method | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceNetworkEvents
-   | where RemoteIP == "24.152.36.241" and RemotePort == 8080
-   | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl),
-  (DeviceEvents
-   | where ActionType == "ConnectionSuccess" or ActionType startswith "Network"
-   | where AdditionalFields has "GrabBot/1.0" or RemoteUrl has_any ("/upload","/time")
-   | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl, AdditionalFields)
+let CampaignIP = "24.152.36.241";
+let CampaignPort = 8080;
+let CampaignUA = "GrabBot/1.0";
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where (RemoteIP == CampaignIP and RemotePort == CampaignPort)
+         or (RemoteUrl has_any ("/upload","/time") and RemoteIP == CampaignIP)
+    | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256,
+              InitiatingProcessAccountName, Source = "DeviceNetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "BrowserLaunchedToOpenUrl" or ActionType == "ConnectionInspected" or ActionType == "HttpConnectionInspected"
+    | where RemoteIP == CampaignIP
+         or (RemoteUrl has CampaignIP)
+         or (parse_json(AdditionalFields)["UserAgent"] has CampaignUA)
+    | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256,
+              InitiatingProcessAccountName = InitiatingProcessAccountName, Source = "DeviceEvents" )
+| order by Timestamp desc
 ```
 
-### [LLM] Slinky Minecraft hack loader (load.exe pkg-Node) spawning chromeleveler/chromelevator stealer
+### [LLM] LofyStealer chromelevator.exe execution from user-writable path
 
-`UC_56_13` · phase: **install** · confidence: **High**
+`UC_58_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="load.exe" AND Processes.process_name IN ("chromeleveler.exe","chromelevator.exe")) OR (Processes.process_name IN ("chromeleveler.exe","chromelevator.exe")) OR (Processes.process_name="load.exe" AND Processes.process_path IN ("*\\Downloads\\*","*\\Temp\\*","*\\AppData\\*") AND Processes.process_path LIKE "%Slinky%") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process, Processes.process_path, Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="chromelevator.exe" OR Processes.process="*chromelevator.exe*" OR (Processes.parent_process_name="load.exe" AND Processes.process_name!="conhost.exe")) by host Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where (InitiatingProcessFileName =~ "load.exe" and FileName in~ ("chromeleveler.exe","chromelevator.exe"))
-   or FileName in~ ("chromeleveler.exe","chromelevator.exe")
-   or (FileName =~ "load.exe" and (FolderPath has_any ("\\Downloads\\","\\Temp\\","\\AppData\\") and (ProcessCommandLine has "Slinky" or InitiatingProcessCommandLine has "Slinky")))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "chromelevator.exe"
+   or InitiatingProcessFileName =~ "chromelevator.exe"
+   or (InitiatingProcessFileName =~ "load.exe"
+        and InitiatingProcessFolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\")
+        and FileName !in~ ("conhost.exe","WerFault.exe"))
+| extend SuspectFromTempPath = (FolderPath has_any (@"\Users\", @"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Downloads\"))
+| project Timestamp, DeviceName, AccountName,
+          ChildBinary = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine, ChildSHA256 = SHA256,
+          ParentBinary = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine, ParentSHA256 = InitiatingProcessSHA256,
+          SuspectFromTempPath
+| order by Timestamp desc
 ```
 
-### [LLM] GrabBot multi-browser credential harvest (Chrome/Edge/Brave/Opera/Firefox/Avast)
+### [LLM] Slinky Node.js loader (load.exe) followed by browser credential file access
 
-`UC_56_14` · phase: **actions** · confidence: **High**
+`UC_58_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Filesystem.file_path) as paths dc(Filesystem.file_path) as path_count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("chromeleveler.exe","chromelevator.exe","load.exe") AND (Filesystem.file_name IN ("Login Data","Cookies","Web Data","logins.json","cookies.sqlite","key4.db") OR Filesystem.file_path IN ("*\\Google\\Chrome\\*","*\\Microsoft\\Edge\\*","*\\BraveSoftware\\*","*\\Opera Software\\*","*\\Mozilla\\Firefox\\Profiles\\*","*\\AVAST Software\\Browser\\*")) by Filesystem.dest, Filesystem.user, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where path_count >= 2 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as loaderTime values(Processes.process) as loader_cmd from datamodel=Endpoint.Processes where (Processes.process_name="load.exe" OR Processes.process_name="chromelevator.exe") (Processes.process_path="*\\Users\\*" OR Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\Downloads\\*") by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | join host [ | tstats summariesonly=true count min(_time) as fileTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Login Data" OR Filesystem.file_name="cookies.sqlite" OR Filesystem.file_name="Local State" OR Filesystem.file_name="logins.json" OR Filesystem.file_name="key4.db" OR Filesystem.file_name="Cookies") by host Filesystem.process_name | `drop_dm_object_name(Filesystem)` ] | where (fileTime - loaderTime) >= 0 AND (fileTime - loaderTime) <= 300 | convert ctime(loaderTime) ctime(fileTime)
 ```
 
 **Defender KQL:**
 ```kql
+let WindowSec = 300;
+let Loader = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where (FileName =~ "load.exe" and FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\"))
+         or FileName =~ "chromelevator.exe"
+    | where AccountName !endswith "$"
+    | project LoaderTime = Timestamp, DeviceId, DeviceName, AccountName,
+              LoaderName = FileName, LoaderPath = FolderPath,
+              LoaderCmd = ProcessCommandLine, LoaderSHA256 = SHA256;
 DeviceFileEvents
-| where InitiatingProcessFileName in~ ("chromeleveler.exe","chromelevator.exe","load.exe")
-| where FileName in~ ("Login Data","Cookies","Web Data","logins.json","cookies.sqlite","key4.db")
-   or FolderPath has_any ("\\Google\\Chrome\\","\\Microsoft\\Edge\\","\\BraveSoftware\\","\\Opera Software\\","\\Mozilla\\Firefox\\Profiles\\","\\AVAST Software\\Browser\\")
-| summarize FileCount=dcount(FolderPath), Files=make_set(FileName,25), Browsers=make_set(FolderPath,25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName
-| where FileCount >= 2
+| where Timestamp > ago(7d)
+| where FileName in~ ("Login Data","Cookies","cookies.sqlite","Local State","logins.json","key4.db","key3.db","formhistory.sqlite","webappsstore.sqlite")
+   or FolderPath has_any (
+        @"\Google\Chrome\User Data\",
+        @"\Microsoft\Edge\User Data\",
+        @"\BraveSoftware\Brave-Browser\User Data\",
+        @"\Opera Software\Opera Stable\",
+        @"\Opera Software\Opera GX Stable\",
+        @"\Mozilla\Firefox\Profiles\",
+        @"\AVAST Software\Browser\User Data\")
+| where ActionType in ("FileCreated","FileModified","FileRenamed","FileCopied")
+| join kind=inner Loader on DeviceId
+| where Timestamp between (LoaderTime .. LoaderTime + WindowSec * 1s)
+| project LoaderTime, FileEventTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, LoaderTime),
+          DeviceName, AccountName, LoaderName, LoaderPath, LoaderSHA256,
+          BrowserArtifactName = FileName, BrowserArtifactPath = FolderPath,
+          AccessingProcess = InitiatingProcessFileName,
+          AccessingProcessPath = InitiatingProcessFolderPath,
+          AccessingProcessCmd = InitiatingProcessCommandLine
+| order by LoaderTime desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Beaconing â€” periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -162,6 +211,7 @@ DeviceNetworkEvents
 ```kql
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
 | where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
 | project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
           InitiatingProcessFileName, InitiatingProcessAccountName
@@ -189,10 +239,11 @@ DeviceRegistryEvents
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("\Google\Chrome\User Data\","\Microsoft\Edge\User Data\","\Mozilla\Firefox\Profiles\")
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -245,6 +296,7 @@ DeviceFileEvents
 let LookbackDays = 7d;
 let SuspectClicks = UrlClickEvents
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | where ActionType in ("ClickAllowed","ClickedThrough")
     | join kind=inner (
         EmailEvents
@@ -304,6 +356,7 @@ DeviceProcessEvents
 let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
     | project NetworkMessageId, RecipientEmailAddress,
               AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
 DeviceProcessEvents
@@ -335,6 +388,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
 | where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -388,6 +442,7 @@ CloudAppEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
 | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
 | where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
@@ -412,6 +467,7 @@ DeviceProcessEvents
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
+| where AccountName !endswith "$"
 | where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
 | where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
@@ -419,7 +475,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Brazilian LofyGang Resurfaces After Three Years With Minecraft LofyStealer Campa
 
-`UC_56_11` · phase: **exploit** · confidence: **High**
+`UC_58_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -479,4 +535,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

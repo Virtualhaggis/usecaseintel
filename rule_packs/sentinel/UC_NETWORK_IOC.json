@@ -12,7 +12,7 @@
         "description": "Outbound traffic to attacker infrastructure named in the article.",
         "severity": "High",
         "enabled": false,
-        "query": "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName, InitiatingProcessCommandLine",
+        "query": "let BadIPs     = dynamic([__IP_LIST__]);\nlet BadDomains = dynamic([__DOMAIN_LIST__]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstIpAddr in (BadIPs)\n   or Url has_any (BadDomains)\n| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol\n| order by TimeGenerated desc\n",
         "queryFrequency": "PT1H",
         "queryPeriod": "PT24H",
         "triggerOperator": "GreaterThan",
