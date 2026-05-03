@@ -3126,7 +3126,12 @@ body:not(.view-actors-active)   .stats-actors{
   main, main.width-compact, main.width-wide, main.width-full{
     padding:12px;
     gap:0;
-    grid-template-columns:1fr;
+    /* minmax(0, 1fr) — NOT plain 1fr — so the column actually shrinks
+       to fit the viewport. Plain 1fr defaults to min-content sizing,
+       and our <pre> blocks (KQL queries with long single lines) have
+       a min-content of ~4,400 px. That dragged the whole article view
+       to 4,500+ px wide on mobile. */
+    grid-template-columns:minmax(0, 1fr);
   }
   nav.toc{display:none;}
 
@@ -4003,7 +4008,9 @@ main:not(.width-compact):not(.width-wide):not(.width-full){
 }
 @media(max-width:980px){
   main, main.width-compact, main.width-wide, main.width-full{
-    grid-template-columns:1fr; padding:18px;
+    /* minmax(0, 1fr) so unwrappable <pre> KQL doesn't push the column
+       past the viewport. */
+    grid-template-columns:minmax(0, 1fr); padding:18px;
   }
 }
 
@@ -4442,6 +4449,10 @@ pre{
   line-height:1.65; margin:10px 0;
   position:relative;
   font-feature-settings:"calt" off;
+  /* Never let a long unbreakable KQL line burst out of its parent.
+     max-width:100% caps the box; min-width:0 lets it shrink inside
+     flex/grid items (which default min-width to min-content). */
+  max-width:100%; min-width:0;
 }
 pre::-webkit-scrollbar{height:8px;width:8px;}
 pre::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:4px;}
@@ -6867,7 +6878,7 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
   </div>`;
   const clear = `<button type="button" class="lib-clear-btn" id="libClearFilters">Clear all</button>`;
-  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, clear].join('\\n');
+  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, clear].join(' ');
 }
 
 function _libCardHtml(p) {
