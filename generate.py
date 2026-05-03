@@ -3782,7 +3782,11 @@ body.tour-on .tour-overlay{opacity:1; pointer-events:auto;}
 /* Block clicks on everything except the spotlight + tour card while
    tour is on. Lets the user navigate the tour without accidentally
    clicking through to the underlying view. */
-body.tour-on{overflow:hidden;}
+/* No overflow:hidden — the engine relies on scrollIntoView to bring
+   off-screen targets (actor cards, library cards) into view. The dim
+   is position:fixed so it stays glued to the viewport regardless of
+   scroll, and pointer-events:none on the .view blocks accidental
+   underlying clicks. */
 body.tour-on .topbar,
 body.tour-on .view{pointer-events:none;}
 body.tour-on .tour-spotlight,
