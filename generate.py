@@ -2972,7 +2972,11 @@ body{
   letter-spacing:0.001em; margin-top:2px;
   max-width:520px;
 }
-@media (max-width: 760px) {
+/* Hide the tagline early — it eats ~250 px of the topbar and the same
+   text reappears one row below in the welcome banner anyway. Removing
+   it on laptops (≤1500 px) gets the topbar back under one row without
+   the stats / search-bar overlap. */
+@media (max-width: 1500px) {
   .brand-tagline{display:none;}
 }
 
@@ -3022,6 +3026,12 @@ body{
   flex:1; position:relative;
   display:flex; justify-content:center; align-items:center;
   min-height:64px;
+  /* The stats children are position:absolute so they don't contribute
+     to flex sizing — without a min-width here, the wrap can shrink to
+     0 and the absolutely-positioned stats spill into the search bar
+     on laptop widths (1280-1700 px). 460 px is wide enough for the
+     widest stats variant (Articles: 5 columns × ~80 px). */
+  min-width:460px;
 }
 .stats{
   position:absolute; left:50%; top:50%;
