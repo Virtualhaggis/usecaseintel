@@ -7307,7 +7307,8 @@ document.getElementById('firstVisitTour')?.addEventListener('click', e => {
 // =================================================================
 const TOUR_STEPS = [
   { section: "Articles", view: "articles",
-    target: "#articles .article", fallback: "#articles",
+    // Article cards are <article class="card" id="art-XX"> — NOT .article.
+    target: "#articles article.card", fallback: "#articles",
     title: "Daily threat-intel feed",
     body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with ready-to-deploy detection queries. Refreshes every 2 hours.",
     preview: '<span class="tour-preview-meta">Sources →</span>' +
@@ -7317,7 +7318,7 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill">CISA KEV</span>' +
              '<span class="tour-preview-pill">+7 more</span>' },
   { section: "Articles", view: "articles",
-    target: "#articles .article details.uc", fallback: "#articles .article",
+    target: "#articles article.card details.uc", fallback: "#articles article.card",
     title: "Multi-platform queries on every UC",
     body: "Open any use case to see four detection languages — each with a one-click copy. Sigma rules also pre-compile to Elastic, QRadar, and CrowdStrike at build time.",
     preview: '<span class="tour-preview-pill platform-d">Defender KQL</span>' +
@@ -7451,16 +7452,34 @@ function _tourSpotlight(target, fallback) {
   let el = document.querySelector(target);
   if (!el && fallback) el = document.querySelector(fallback);
   if (!el) return null;
+  // Reject targets whose bounding box is wildly off-screen or absurdly
+  // tall — that's the classic "selector matched the wrapper section
+  // instead of a single card" failure mode and produces a punch-hole
+  // bigger than the viewport.
+  const rect = el.getBoundingClientRect();
+  if (rect.height > 4000 || rect.width > 4000) return null;
   el.classList.add('tour-spotlight');
   // Scroll target into upper-third of viewport so the bottom-anchored
   // tour card never obscures it. We do this BEFORE measuring for the
   // card-flip so positioning sees the post-scroll rect.
-  const rect = el.getBoundingClientRect();
   const viewportH = window.innerHeight;
   if (rect.top < 100 || rect.bottom > viewportH - 280) {
     el.scrollIntoView({behavior: 'smooth', block: 'center'});
   }
   return el;
+}
+// Retry for lazy-rendered targets (library / actor cards) — the
+// view's render function inserts them after a beat.
+function _tourSpotlightWithRetry(target, fallback, attempt = 0) {
+  const el = _tourSpotlight(target, fallback);
+  if (el) return el;
+  if (attempt >= 3) return null;
+  setTimeout(() => {
+    if (_tourIndex < 0) return;
+    const e = _tourSpotlightWithRetry(target, fallback, attempt + 1);
+    _placeTourCard(e);
+  }, 250 * (attempt + 1));
+  return null;
 }
 // Flip the tour card to the top of the viewport when the spotlight
 // target sits in the lower half — keeps the card from covering the
@@ -7487,12 +7506,9 @@ function tourGoto(i) {
   const needsRender = step.view === 'actors' || step.view === 'matrix' || step.view === 'intel' || step.view === 'library';
   const delay = needsRender ? 480 : 220;
   setTimeout(() => {
-    const el = _tourSpotlight(step.target, step.fallback);
+    const el = _tourSpotlightWithRetry(step.target, step.fallback);
     _placeTourCard(el);
-    // Re-check placement once scroll settles — getBoundingClientRect
-    // immediately after scrollIntoView returns the pre-scroll rect.
-    setTimeout(() => _placeTourCard(el), 380);
-    // Step-specific live demo (e.g. clicking matrix-mode buttons).
+    setTimeout(() => _placeTourCard(el || document.querySelector('.tour-spotlight')), 380);
     if (typeof step.onShow === 'function') {
       try { step.onShow(i); } catch (_) {}
     }
