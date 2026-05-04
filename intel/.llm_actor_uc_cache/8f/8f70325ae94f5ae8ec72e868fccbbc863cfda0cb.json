@@ -1,0 +1,146 @@
+{
+  "name": "TA551",
+  "ucs": [
+    {
+      "title": "[LLM] TA551 (Shathak) Office macro -> regsvr32/rundll32 DLL loader from AppData/Temp",
+      "description": "Hunts TA551's signature execution chain: a maldoc delivered via password-protected ZIP spawns regsvr32.exe or rundll32.exe to execute an IcedID/Qbot/Ursnif loader DLL from %AppData% or %Temp%, often with a non-standard export ordinal. This is the GOLD CABIN/Shathak distribution cluster's most consistent host-side artifact across IcedID, Valak, and Qbot campaigns documented by Unit 42 and Secureworks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1218.010",
+        "T1218.011",
+        "T1059.003",
+        "T1036"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\") Processes.process_name IN (\"regsvr32.exe\",\"rundll32.exe\") (Processes.process=\"*\\\\AppData\\\\*\" OR Processes.process=\"*\\\\Temp\\\\*\" OR Processes.process=\"*\\\\Public\\\\*\" OR Processes.process=\"*\\\\ProgramData\\\\*\") (Processes.process=\"*.dll*\" OR Processes.process=\"*.dat*\" OR Processes.process=\"*.tmp*\" OR Processes.process=\"*.jpg*\" OR Processes.process=\"*.png*\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.dest | `drop_dm_object_name(Processes)` | rex field=process \"(?i)(?<dll_path>[A-Z]:\\\\\\\\[^\\\"]*?\\.(dll|dat|tmp|jpg|png|txt))\" | rex field=process \"(?i)#?(?<export_ordinal>\\d+)\\s*$\" | where (NOT match(process,\"(?i)/i:http\")) | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(process) as cmdlines values(dll_path) as dll_paths values(export_ordinal) as exports by host user parent_process_name process_name | where count>0 | `security_content_ctime(firstTime)`",
+      "kql": "// TA551 (Shathak) loader chain: Office/scripting host -> regsvr32|rundll32 DLL from user-writable path\nlet _office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\"]);\nlet _user_writable = dynamic([@\"\\AppData\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Windows\\Temp\\\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where FileName in~ (\"regsvr32.exe\",\"rundll32.exe\")\n| where InitiatingProcessFileName in~ (_office_parents)\n   or InitiatingProcessParentFileName in~ (_office_parents)\n// TA551 drops loader DLLs to user-writable paths, often disguised with .dat/.tmp/.jpg/.txt/.dll\n| where ProcessCommandLine has_any (_user_writable)\n| where ProcessCommandLine matches regex @\"(?i)\\.(dll|dat|tmp|jpg|jpeg|png|txt|log)(\\\"|\\s|,|$)\"\n// classic TA551: regsvr32 /s /i:.. or rundll32 with explicit ordinal/export (e.g. #1, DllRegisterServer)\n| extend Export = extract(@\"(?i)(?:,|\\s)(#?\\d{1,4}|DllRegisterServer|PluginInit|StartW|Start)\\b\", 1, ProcessCommandLine)\n| extend RemoteSpawn = tostring(AdditionalFields)\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFileName,\n          GrandParent = InitiatingProcessParentFileName,\n          ParentCmd  = InitiatingProcessCommandLine,\n          ChildImage = FileName,\n          ChildCmd   = ProcessCommandLine,\n          Export, SHA256, InitiatingProcessSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// TA551 (Shathak) loader chain on Sentinel \u2014 SecurityEvent 4688\nlet _office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"cmd.exe\"]);\nlet _user_writable = dynamic([@\"\\AppData\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Windows\\Temp\\\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith @\"\\regsvr32.exe\" or NewProcessName endswith @\"\\rundll32.exe\"\n| extend ParentBin = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ParentBin in (_office_parents)\n| where CommandLine has_any (_user_writable)\n| where CommandLine matches regex @\"(?i)\\.(dll|dat|tmp|jpg|jpeg|png|txt|log)(\\\"|\\s|,|$)\"\n| extend Export = extract(@\"(?i)(?:,|\\s)(#?\\d{1,4}|DllRegisterServer|PluginInit|StartW|Start)\\b\", 1, CommandLine)\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, Export, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: TA551 Shathak Loader via Regsvr32 or Rundll32 from Office Parent\nid: 7c2c9d12-ta551-loader-officechain\nstatus: experimental\ndescription: Detects TA551 (Shathak / GOLD CABIN) IcedID/Qbot/Ursnif loader execution where Office, mshta, or scripting host spawns regsvr32.exe or rundll32.exe to load a DLL/disguised payload from a user-writable directory (AppData, Temp, Public, ProgramData).\nreferences:\n  - https://unit42.paloaltonetworks.com/ta551-shathak-icedid/\n  - https://www.secureworks.com/research/threat-profiles/gold-cabin\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.execution\n  - attack.defense_evasion\n  - attack.t1204.002\n  - attack.t1218.010\n  - attack.t1218.011\n  - threat.ta551\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent_office:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n      - '\\cmd.exe'\n  child_proxy:\n    Image|endswith:\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n  user_writable:\n    CommandLine|contains:\n      - '\\AppData\\'\n      - '\\Users\\Public\\'\n      - '\\ProgramData\\'\n      - '\\Windows\\Temp\\'\n  payload_ext:\n    CommandLine|re: '(?i)\\.(dll|dat|tmp|jpg|jpeg|png|txt|log)(\"|\\s|,|$)'\n  condition: parent_office and child_proxy and user_writable and payload_ext\nfalsepositives:\n  - Bespoke installer scripts that legitimately register DLLs from %AppData%\n  - Some IT automation that registers per-user COM components\nlevel: high",
+      "rationale": "TA551 has used the same Office-macro -> regsvr32/rundll32 -> %AppData%\\*.dll loader pattern across IcedID (2020-2021), Valak, Ursnif, and Qbot (2021-2022) per Unit 42 and Proofpoint reporting. Few legitimate workflows have winword/excel/mshta as the parent, regsvr32/rundll32 as the child, and a DLL/.dat path under AppData or Public \u2014 making the three-way constraint highly TA551-specific while stil",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "DllRegisterServer",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DllRegisterServer` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "PluginInit",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`PluginInit` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "StartW",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`StartW` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Start",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Start` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Export` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "DllRegisterServer",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`DllRegisterServer` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "PluginInit",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`PluginInit` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "StartW",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "Status",
+          "message": "`StartW` is not a canonical column of SecurityEvent. Did you mean `Status`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Start",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "Status",
+          "message": "`Start` is not a canonical column of SecurityEvent. Did you mean `Status`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "IpPort",
+          "message": "`Export` is not a canonical column of SecurityEvent. Did you mean `IpPort`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] TA551 password-protected ZIP delivery via hijacked email reply chain",
+      "description": "Hunts TA551's hallmark phishing delivery: a hijacked/replied email thread (Re:/Fwd: with prior conversation) containing a password-protected archive whose password is in the body. The combination of reply-chain hijacking plus password-protected archives is the Shathak/GOLD CABIN tradecraft fingerprint that Proofpoint, Unit 42, and IBM X-Force have tracked since 2019.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1027.003",
+        "T1589.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.file_name) as attachments values(All_Email.src_user) as senders from datamodel=Email where All_Email.action=\"delivered\" (All_Email.subject=\"Re:*\" OR All_Email.subject=\"RE:*\" OR All_Email.subject=\"Fwd:*\" OR All_Email.subject=\"FW:*\" OR All_Email.subject=\"AW:*\" OR All_Email.subject=\"R:*\") (All_Email.file_name=\"*.zip\" OR All_Email.file_name=\"*.rar\" OR All_Email.file_name=\"*.7z\" OR All_Email.file_name=\"*.iso\" OR All_Email.file_name=\"*.img\") by All_Email.recipient All_Email.src_user All_Email.message_id All_Email.subject All_Email.file_name | `drop_dm_object_name(All_Email)` | search (subject=\"*password*\" OR subject=\"*Password*\" OR subject=\"*PASSWORD*\") OR file_name=\"*pass*\" | stats count values(file_name) as attachments values(subject) as subjects min(firstTime) as firstTime max(lastTime) as lastTime by recipient src_user | where count>=1 | `security_content_ctime(firstTime)`",
+      "kql": "// TA551 (Shathak) \u2014 hijacked reply-chain phishing with password-protected archive\nlet _archive_ext = dynamic([\"zip\",\"rar\",\"7z\",\"iso\",\"img\"]);\nlet _password_terms = dynamic([\"password\",\"pass:\",\"pass is\",\"passcode\",\"\u043a\u043e\u0434\u043e\u0432\u043e\u0435\",\"\u30d1\u30b9\u30ef\u30fc\u30c9\",\"Kennwort\",\"contrase\u00f1a\",\"Passwort\"]);\nlet _reply_prefixes = dynamic([\"re:\",\"fwd:\",\"fw:\",\"aw:\",\"r:\",\"tr:\",\"rv:\"]);\nlet SuspectMessages = EmailEvents\n    | where Timestamp > ago(7d)\n    | where EmailDirection == \"Inbound\"\n    | where DeliveryAction in (\"Delivered\",\"DeliveredAsSpam\")\n    | extend SubjLower = tolower(Subject)\n    | where _reply_prefixes has_any (SubjLower) or SubjLower startswith \"re:\" or SubjLower startswith \"fwd:\" or SubjLower startswith \"fw:\" or SubjLower startswith \"aw:\"\n    | project NetworkMessageId, Timestamp, Subject, SenderFromAddress, SenderMailFromDomain,\n              SenderFromDomain, RecipientEmailAddress, AuthenticationDetails;\nlet ArchiveAtt = EmailAttachmentInfo\n    | where Timestamp > ago(7d)\n    | extend Ext = tolower(tostring(split(FileName, \".\")[-1]))\n    | where Ext in (_archive_ext)\n    | project NetworkMessageId, FileName, FileType, FileSize, SHA256;\nSuspectMessages\n| join kind=inner ArchiveAtt on NetworkMessageId\n// password hint either in the subject or the filename \u2014 TA551 commonly puts it in either\n| extend SubjHasPwd = SubjLower has_any (_password_terms),\n         FileHasPwd = tolower(FileName) has_any (dynamic([\"pass\",\"pwd\",\"protected\"]))\n| where SubjHasPwd or FileHasPwd\n// Sender domain mismatch is a strong reply-chain hijack signal (TA551 spoofs prior thread participants)\n| extend HeaderFromDomain = tolower(tostring(split(SenderFromAddress,\"@\")[-1]))\n| extend EnvFromDomain    = tolower(SenderMailFromDomain)\n| extend DomainMismatch   = HeaderFromDomain != EnvFromDomain and isnotempty(EnvFromDomain)\n| project Timestamp, SenderFromAddress, EnvFromDomain, HeaderFromDomain, DomainMismatch,\n          RecipientEmailAddress, Subject, FileName, FileType, FileSize, SHA256, NetworkMessageId\n| order by Timestamp desc",
+      "sentinel_kql": "// TA551 (Shathak) reply-chain phishing with password-protected archive \u2014 Sentinel OfficeActivity\nlet _archive_ext = dynamic([\".zip\",\".rar\",\".7z\",\".iso\",\".img\"]);\nlet _password_terms = dynamic([\"password\",\"pass:\",\"pass is\",\"passcode\",\"\u30d1\u30b9\u30ef\u30fc\u30c9\",\"Kennwort\",\"contrase\u00f1a\"]);\nOfficeActivity\n| where TimeGenerated > ago(7d)\n| where OfficeWorkload == \"Exchange\"\n| where Operation in~ (\"Receive\",\"Send\",\"MailItemsAccessed\")\n| extend SubjLower = tolower(tostring(Subject))\n| where SubjLower startswith \"re:\" or SubjLower startswith \"fwd:\" or SubjLower startswith \"fw:\" or SubjLower startswith \"aw:\"\n| extend AttachLower = tolower(tostring(ItemAttachments))\n| where AttachLower has_any (_archive_ext)\n| where SubjLower has_any (_password_terms) or AttachLower has_any (dynamic([\"pass\",\"pwd\",\"protected\"]))\n| project TimeGenerated, Sender, P2Sender, Recipients, MailboxOwnerUPN, Subject, ItemAttachments, ClientIP, MessageId, InternetMessageId\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "TA551/Shathak's distribution model is built on thread-hijack with password-protected ZIPs \u2014 both Unit 42 (Jan 2021) and Secureworks (GOLD CABIN profile) call out this combination as the cluster's signature. Generic phishing detections miss it because the secure-archive evades sandbox detonation and the reply-chain spoofs trust. Combining inbound + reply-prefix subject + archive attachment + in-ban"
+    }
+  ]
+}

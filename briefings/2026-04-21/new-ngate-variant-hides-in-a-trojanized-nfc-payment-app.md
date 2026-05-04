@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_110_5` · phase: **actions** · confidence: **High**
+`UC_111_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### [LLM] Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
-`UC_110_6` · phase: **delivery** · confidence: **High**
+`UC_111_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union isfuzzy=true
 
 ### [LLM] Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
 
-`UC_110_7` · phase: **install** · confidence: **High**
+`UC_111_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 

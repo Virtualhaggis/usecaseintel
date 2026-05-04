@@ -1,0 +1,84 @@
+{
+  "name": "Inception",
+  "ucs": [
+    {
+      "title": "[LLM] Inception / Cloud Atlas remote-template injection chain \u2014 Office fetches RTF/DOTM then spawns mshta/cscript/regsvr32",
+      "description": "Hunts the Cloud Atlas (G0100) signature delivery chain: a spear-phished Office document (T1566.001) pulls a remote template from an attacker-controlled HTTP endpoint (T1221) and the Office host process spawns mshta.exe / wscript.exe / cscript.exe / regsvr32.exe / EQNEDT32.exe (T1218.005, T1218.010, T1203, T1059.005) within a short window. Cloud Atlas has used this exact RTF-template-injection-into-VBShower/PowerShower handoff continuously since 2018 \u2014 winword.exe doing an HTTPS GET for a doc/dotm/xml followed seconds later by an mshta/cscript child is highly distinctive.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1221",
+        "T1566.001",
+        "T1203",
+        "T1204.002",
+        "T1218.005",
+        "T1218.010",
+        "T1059.005",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\") AND Processes.process_name IN (\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\"powershell.exe\",\"pwsh.exe\",\"eqnedt32.exe\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | rename firstTime as childFirstTime lastTime as childLastTime | join type=inner host [ | tstats summariesonly=true count min(_time) as fetchFirstTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") AND All_Traffic.dest_category!=\"internal\" by host All_Traffic.app All_Traffic.dest All_Traffic.url | `drop_dm_object_name(All_Traffic)` | where match(url,\"(?i)\\.(docx?|dotm?|rtf|xls[mx]?|ppt[mx]?|xml)(\\?|$)\") OR match(url,\"(?i)(cloudme|yandex|opendrive|carbonbox)\") | rename app as office_app dest as remote_host url as remote_url ] | eval delaySec = childFirstTime - fetchFirstTime | where delaySec >= 0 AND delaySec <= 300 | table childFirstTime fetchFirstTime delaySec host user office_app remote_host remote_url parent_process_name process_name process | sort - childFirstTime",
+      "kql": "let LookbackDays = 30d;\nlet CorrelationWindowSec = 300;\nlet OfficeApps = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\"]);\nlet StagingChildren = dynamic([\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\"powershell.exe\",\"pwsh.exe\",\"eqnedt32.exe\"]);\n// 1. Office host doing an outbound HTTP fetch of a template-shaped resource\nlet TemplateFetches = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (OfficeApps)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where RemoteUrl matches regex @\"(?i)\\.(docx?|dotm?|rtf|xls[mx]?|ppt[mx]?|xml)(\\?|$)\"\n         or RemoteUrl matches regex @\"(?i)(cloudme\\.com|yandex|opendrive|carbonbox)\"\n    | project FetchTime = Timestamp, DeviceId, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              OfficeBin   = InitiatingProcessFileName,\n              FetchUrl    = RemoteUrl, FetchIP = RemoteIP;\n// 2. Office spawns a known-lure interpreter within the correlation window\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (OfficeApps)\n| where FileName in~ (StagingChildren)\n| where AccountName !endswith \"$\"\n| join kind=inner TemplateFetches on DeviceId\n| where Timestamp between (FetchTime .. FetchTime + CorrelationWindowSec * 1s)\n| project FetchTime, ChildTime = Timestamp,\n          DelaySec = datetime_diff('second', Timestamp, FetchTime),\n          DeviceName, AccountName,\n          OfficeBin, FetchUrl, FetchIP,\n          ChildBin = FileName, ChildCmd = ProcessCommandLine,\n          ParentCmd = InitiatingProcessCommandLine\n| order by ChildTime desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nlet CorrelationWindowSec = 300;\nlet OfficeApps = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\"]);\nlet StagingChildren = dynamic([\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\"powershell.exe\",\"pwsh.exe\",\"eqnedt32.exe\"]);\n// Network fetches by Office processes (vendor-flexible via ASIM)\nlet TemplateFetches = ImNetworkSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where ActingProcessName has_any (OfficeApps) or tostring(parse_json(tostring(parse_json(EventOriginalUid)))) has_any (OfficeApps)\n    | where isnotempty(Url)\n    | where Url matches regex @\"(?i)\\.(docx?|dotm?|rtf|xls[mx]?|ppt[mx]?|xml)(\\?|$)\"\n         or Url matches regex @\"(?i)(cloudme\\.com|yandex|opendrive|carbonbox)\"\n    | project FetchTime = TimeGenerated, DvcHostname, FetchUrl = Url, FetchIP = DstIpAddr;\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| where ParentProcessName has_any (OfficeApps)\n| where TargetProcessName has_any (StagingChildren)\n| where ActorUsername !endswith \"$\"\n| join kind=inner TemplateFetches on DvcHostname\n| where TimeGenerated between (FetchTime .. FetchTime + CorrelationWindowSec * 1s)\n| project FetchTime, ChildTime = TimeGenerated,\n          DelaySec = datetime_diff('second', TimeGenerated, FetchTime),\n          DvcHostname, ActorUsername,\n          ParentProcessName, FetchUrl, FetchIP,\n          TargetProcessName, TargetProcessCommandLine, ParentProcessCommandLine\n| order by ChildTime desc",
+      "sigma_yaml": "title: Inception / Cloud Atlas Office-to-LOLBin Spawn Following Remote Template Fetch\nid: 8fbc3a82-7c1e-4b5d-9a1c-c0a710a59001\nstatus: experimental\ndescription: Detects the Cloud Atlas (G0100) staged-execution pattern where an Office product spawns mshta, regsvr32, wscript, cscript, powershell, or eqnedt32 \u2014 the canonical handoff after a remote-template-injection lure.\nreferences:\n  - https://attack.mitre.org/groups/G0100/\n  - https://unit42.paloaltonetworks.com/unit42-inception-attackers-target-europe-year-old-office-vulnerability/\n  - https://securelist.com/recent-cloud-atlas-activity/92016/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.execution\n  - attack.t1221\n  - attack.t1203\n  - attack.t1218.005\n  - attack.t1218.010\n  - attack.t1059.005\n  - attack.g0100\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\eqnedt32.exe'\n  selection_child:\n    Image|endswith:\n      - '\\mshta.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\regsvr32.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\eqnedt32.exe'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection_parent and selection_child and not filter_machine\nfalsepositives:\n  - Legacy line-of-business macros that legitimately invoke wscript/cscript helpers\n  - Software-deployment scripts launched from Outlook calendar mail-merge templates\nlevel: high",
+      "rationale": "Cloud Atlas is the originator and most prolific user of the RTF/DOCX-remote-template-injection \u2192 VBShower/PowerShower chain \u2014 Kaspersky, Unit 42 and Symantec have all documented this exact handoff (winword fetches a remote template, EQNEDT32 or wscript spawns, then PowerShower stages). Generic phishing actors typically deliver macros that spawn powershell directly; the *combination* of (Office \u2192 o"
+    },
+    {
+      "title": "[LLM] Inception / Cloud Atlas LOLBin C2 to legitimate cloud-storage providers (CloudMe, Yandex Disk, OpenDrive)",
+      "description": "Hunts Cloud Atlas's namesake C2 channel: PowerShower, VBShower, and the newer PowerShellRunner backdoors check in to legitimate WebDAV/cloud-storage providers (CloudMe, Yandex Disk, OpenDrive, Mail.ru cloud) over HTTPS to retrieve tasking and exfiltrate data (T1102 + T1071.001 + T1573.001). The high-fidelity pivot is a Windows scripting/LOLBin process \u2014 mshta.exe, wscript.exe, cscript.exe, powershell.exe, regsvr32.exe \u2014 making outbound HTTPS to one of these consumer cloud-storage endpoints from a corporate workstation that has no legitimate reason to use them.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102",
+        "T1071.001",
+        "T1573.001",
+        "T1090.003",
+        "T1059.001",
+        "T1059.005",
+        "T1218.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as urls dc(All_Traffic.url) as urlCount sum(All_Traffic.bytes_out) as bytesOut sum(All_Traffic.bytes_in) as bytesIn from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\") AND (All_Traffic.dest_host IN (\"*cloudme.com\",\"webdav.cloudme.com\",\"*.yandex.net\",\"*disk.yandex.*\",\"webdav.yandex.ru\",\"*.opendrive.com\",\"*cloud.mail.ru\",\"webdav.cloud.mail.ru\",\"*fex.net\",\"*carbonbox.org\") OR match(All_Traffic.url,\"(?i)(cloudme|webdav\\.yandex|disk\\.yandex|opendrive\\.com|cloud\\.mail\\.ru|fex\\.net|carbonbox)\")) by host All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where urlCount > 1 OR bytesOut > 50000 | sort - firstTime",
+      "kql": "let LookbackDays = 7d;\nlet CloudC2Hosts = dynamic([\n    \"cloudme.com\",\"webdav.cloudme.com\",\n    \"yandex.net\",\"yandex.ru\",\"disk.yandex\",\"webdav.yandex.ru\",\n    \"opendrive.com\",\n    \"cloud.mail.ru\",\"webdav.cloud.mail.ru\",\n    \"fex.net\",\"carbonbox\"\n]);\nlet ScriptingBins = dynamic([\n    \"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\n    \"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\"\n]);\n// 30-day per-host baseline of cloud-storage usage so we only alert on first-seen pairs\nlet Baseline = DeviceNetworkEvents\n    | where Timestamp between (ago(30d) .. ago(LookbackDays))\n    | where InitiatingProcessFileName in~ (ScriptingBins)\n    | where RemoteUrl has_any (CloudC2Hosts)\n    | summarize by DeviceId, RemoteUrl;\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (ScriptingBins)\n| where RemoteIPType == \"Public\"\n| where RemoteUrl has_any (CloudC2Hosts)\n| where InitiatingProcessAccountName !endswith \"$\"\n| join kind=leftanti Baseline on DeviceId, RemoteUrl\n| summarize ConnCount = count(),\n            DistinctMinutes = dcount(bin(Timestamp, 1m)),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            SampleCmd = any(InitiatingProcessCommandLine),\n            Urls      = make_set(RemoteUrl, 25)\n            by DeviceName, AccountName = InitiatingProcessAccountName,\n               InitiatingProcessFileName, RemoteIP, RemotePort\n| where ConnCount >= 3 or DistinctMinutes >= 2   // beacon-ish or sustained\n| order by FirstSeen desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet CloudC2Hosts = dynamic([\n    \"cloudme.com\",\"webdav.cloudme.com\",\n    \"yandex.net\",\"yandex.ru\",\"disk.yandex\",\"webdav.yandex.ru\",\n    \"opendrive.com\",\n    \"cloud.mail.ru\",\"webdav.cloud.mail.ru\",\n    \"fex.net\",\"carbonbox\"\n]);\nlet ScriptingBins = dynamic([\n    \"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\",\n    \"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\"\n]);\nlet Baseline = ImNetworkSession\n    | where TimeGenerated between (ago(30d) .. ago(LookbackDays))\n    | where ActingProcessName has_any (ScriptingBins)\n    | where Url has_any (CloudC2Hosts) or DstHostname has_any (CloudC2Hosts)\n    | summarize by DvcHostname, Url;\nImNetworkSession\n| where TimeGenerated > ago(LookbackDays)\n| where ActingProcessName has_any (ScriptingBins)\n| where (Url has_any (CloudC2Hosts) or DstHostname has_any (CloudC2Hosts))\n| where SrcUsername !endswith \"$\"\n| join kind=leftanti Baseline on DvcHostname, Url\n| summarize ConnCount = count(),\n            DistinctMinutes = dcount(bin(TimeGenerated, 1m)),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            SampleCmd = any(ActingProcessCommandLine),\n            Urls = make_set(Url, 25)\n            by DvcHostname, SrcUsername, ActingProcessName, DstIpAddr, DstPortNumber\n| where ConnCount >= 3 or DistinctMinutes >= 2\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Cloud Atlas earned its CrowdStrike/Kaspersky cluster name precisely because of this technique \u2014 they were among the first APTs to systematically use CloudMe (WebDAV) and Yandex Disk as their primary C2 channels for the PowerShower / VBShower implants, documented in Kaspersky's 2014 and 2019 reports and Symantec's 2018 Inception Framework write-up. A corporate workstation invoking mshta/wscript/reg",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

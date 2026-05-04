@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Maverick banker — WhatsApp Desktop drops LNK/ZIP followed by fileless PowerShell IEX execution
 
-`UC_145_5` · phase: **delivery** · confidence: **High**
+`UC_146_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### [LLM] Maverick WPPConnect self-propagation — WhatsApp Web traffic from non-browser process
 
-`UC_145_6` · phase: **c2** · confidence: **High**
+`UC_146_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

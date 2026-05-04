@@ -27,12 +27,87 @@ A joint research project between SentinelLABS and Censys reveals that open-sourc
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1133** — External Remote Services
+- **T1059** — Command and Scripting Interpreter
+- **T1496** — Resource Hijacking
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090** — Proxy
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Local Ollama service bound to non-loopback interface (joining exposed AI network on TCP/11434)
+
+`UC_218_3` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Ports where Ports.dest_port=11434 Ports.transport=tcp by Ports.dest, Ports.dest_ip, Ports.process_name, Ports.user, Ports.process_id | `drop_dm_object_name(Ports)` | where dest_ip!="127.0.0.1" AND dest_ip!="::1" AND (like(lower(process_name),"%ollama%") OR isnull(process_name)) | join type=outer dest [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name="ollama*" (Processes.process="*serve*" OR Processes.process="*OLLAMA_HOST=0.0.0.0*" OR Processes.process="*OLLAMA_HOST=*:*") by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest dest_ip user process_name process parent_process_name
+```
+
+**Defender KQL:**
+```kql
+// Listener-side: ollama opens TCP/11434 on a non-loopback interface
+let OllamaListeners = DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("ListeningConnectionCreated","InboundConnectionAccepted")
+| where LocalPort == 11434
+| where InitiatingProcessFileName has "ollama" or InitiatingProcessFolderPath has "ollama"
+| where LocalIP !in ("127.0.0.1","::1","0:0:0:0:0:0:0:1")
+| project Timestamp, DeviceName, DeviceId, LocalIP, LocalPort, RemoteIP,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName;
+// Process-side: ollama serve launched with public bind via OLLAMA_HOST
+let OllamaPublicServe = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName =~ "ollama" or FileName =~ "ollama.exe" or InitiatingProcessFileName has "ollama")
+| where ProcessCommandLine has "serve"
+| where ProcessCommandLine has_any ("OLLAMA_HOST=0.0.0.0","OLLAMA_HOST=*",
+        "--host 0.0.0.0","--host=0.0.0.0","-H 0.0.0.0")
+   or InitiatingProcessCommandLine has_any ("OLLAMA_HOST=0.0.0.0","--host 0.0.0.0")
+| project Timestamp, DeviceName, DeviceId, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName;
+union OllamaListeners, OllamaPublicServe
+| order by Timestamp desc
+```
+
+### [LLM] Endpoint outbound to public TCP/11434 — using or proxying through exposed Ollama nodes
+
+`UC_218_4` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in dc(All_Traffic.dest_ip) as distinct_dest_ips from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=11434 All_Traffic.transport=tcp All_Traffic.action!="blocked" by All_Traffic.src, All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.app, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | where !cidrmatch("10.0.0.0/8", dest_ip) AND !cidrmatch("172.16.0.0/12", dest_ip) AND !cidrmatch("192.168.0.0/16", dest_ip) AND !cidrmatch("127.0.0.0/8", dest_ip) AND !cidrmatch("169.254.0.0/16", dest_ip) AND !cidrmatch("100.64.0.0/10", dest_ip) | convert ctime(firstTime) ctime(lastTime) | sort - bytes_out
+```
+
+**Defender KQL:**
+```kql
+// 30-day baseline of any internal host that has previously talked to public TCP/11434
+let Baseline = DeviceNetworkEvents
+| where Timestamp between (ago(30d) .. ago(1d))
+| where RemotePort == 11434 and RemoteIPType == "Public"
+| summarize by DeviceId, RemoteIP;
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemotePort == 11434
+| where RemoteIPType == "Public"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where InitiatingProcessAccountName !endswith "$"
+| join kind=leftanti Baseline on DeviceId, RemoteIP        // first-time pair
+| summarize ConnCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            DistinctRemoteIPs = dcount(RemoteIP),
+            SampleRemoteIPs   = make_set(RemoteIP, 10),
+            SampleProcesses   = make_set(InitiatingProcessFileName, 10),
+            SampleCmdLines    = make_set(InitiatingProcessCommandLine, 5)
+            by DeviceName, InitiatingProcessAccountName
+| order by ConnCount desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -185,4 +260,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

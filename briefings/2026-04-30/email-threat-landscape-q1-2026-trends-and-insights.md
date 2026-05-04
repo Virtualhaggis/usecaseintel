@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Tycoon2FA Q1 2026 SVG CAPTCHA campaign infrastructure (niovapahrm/hvishay/drilto)
 
-`UC_40_10` · phase: **delivery** · confidence: **High**
+`UC_42_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ union isfuzzy=true
 
 ### [LLM] Inbound SVG attachment with Base64-encoded recipient email in filename
 
-`UC_40_11` · phase: **delivery** · confidence: **High**
+`UC_42_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

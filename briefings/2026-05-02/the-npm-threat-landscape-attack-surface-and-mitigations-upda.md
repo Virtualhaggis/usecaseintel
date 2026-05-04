@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -294,7 +294,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_11_9` · phase: **exploit** · confidence: **High**
+`UC_19_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser-mediated interactive sign-in to Azure CLI first-party app (ConsentFix v3)
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_13_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ AADSignInEventsBeta
 
 ### [LLM] Endpoint browser egress to Pipedream webhook after Azure CLI sign-in (ConsentFix v3 token exfil)
 
-`UC_3_6` · phase: **c2** · confidence: **Medium**
+`UC_13_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ PipedreamHits
 
 ### [LLM] Inbound phishing email containing DocSend-hosted PDF link (ConsentFix v3 lure)
 
-`UC_3_7` · phase: **delivery** · confidence: **Medium**
+`UC_13_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

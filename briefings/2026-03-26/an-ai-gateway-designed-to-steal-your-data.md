@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP sysmon.py systemd persistence drop on Linux / Kubernetes node
 
-`UC_157_7` · phase: **install** · confidence: **High**
+`UC_158_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP C2 callback to checkmarx[.]zone or models[.]litellm[.]cloud
 
-`UC_157_8` · phase: **c2** · confidence: **High**
+`UC_158_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ union isfuzzy=true
 
 ### [LLM] Trojanized LiteLLM staging artefacts (p.py / session.key / tpcp.tar.gz) written by Python
 
-`UC_157_9` · phase: **actions** · confidence: **High**
+`UC_158_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceFileEvents
 | order by LastSeen desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -264,7 +264,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — An AI gateway designed to steal your data
 
-`UC_157_6` · phase: **exploit** · confidence: **High**
+`UC_158_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

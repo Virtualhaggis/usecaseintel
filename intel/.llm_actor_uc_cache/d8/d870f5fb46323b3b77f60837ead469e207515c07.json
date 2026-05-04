@@ -1,0 +1,203 @@
+{
+  "name": "Daggerfly",
+  "ucs": [
+    {
+      "title": "[LLM] Daggerfly (Evasive Panda) MgBot loader: signed-app side-loaded DLL invoked via rundll32 from user-writable path",
+      "description": "Hunts the canonical Daggerfly / Evasive Panda (BRONZE HIGHLAND) MgBot delivery chain: a benign signed updater/utility (often dropped via MSI or hijacked software-update channel) side-loads a malicious DLL that is then re-entered through rundll32.exe pointing at a DLL inside %ProgramData%, %AppData%, %Public% or %Temp%. This combines T1574.001 (DLL Search Order Hijacking), T1218.011 (Rundll32) and T1036.003 (Rename System Utilities) and is the technique-set Symantec/ESET have repeatedly reported as exclusive to Daggerfly's MgBot framework.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1218.011",
+        "T1036.003",
+        "T1195.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=\"rundll32.exe\" (Processes.process=\"*\\\\ProgramData\\\\*\" OR Processes.process=\"*\\\\AppData\\\\*\" OR Processes.process=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process=\"*\\\\Temp\\\\*\") (Processes.process=\"*.dll*\" OR Processes.process=\"*.dat*\" OR Processes.process=\"*.tmp*\") NOT (Processes.parent_process_name IN (\"explorer.exe\",\"services.exe\",\"svchost.exe\",\"msiexec.exe\",\"setup.exe\")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | rex field=cmdline \"rundll32(?:\\.exe)?\\s+\\\"?(?<dll_loaded>[A-Z]:\\\\\\\\[^\\\",]+\\.(?:dll|dat|tmp))\\\"?,(?<export>[A-Za-z0-9_#@\\$]+)\" | search dll_loaded=\"*\" | join type=outer dest dll_loaded [| tstats summariesonly=true values(Filesystem.file_path) as drop_path values(Filesystem.process_name) as dropper_proc values(Filesystem.process_path) as dropper_path from datamodel=Endpoint.Filesystem where Filesystem.action=\"created\" Filesystem.file_name=\"*.dll\" by Filesystem.dest Filesystem.file_path | rename Filesystem.dest as dest Filesystem.file_path as dll_loaded] | where isnotnull(dropper_proc) | table firstTime lastTime dest user parent_name parent_cmd cmdline dll_loaded export dropper_proc dropper_path",
+      "kql": "let _lookback = 14d;\nlet _userpath_dll = DeviceProcessEvents\n    | where Timestamp > ago(_lookback)\n    | where FileName =~ \"rundll32.exe\"\n    | where AccountName !endswith \"$\"\n    // MgBot: DLL is loaded from a user-writable location, not System32/SysWOW64/Program Files\n    | extend _cmd = tolower(ProcessCommandLine)\n    | where _cmd matches regex @\"rundll32(?:\\.exe)?\\s+\\\"?[a-z]:\\\\(?:programdata|users\\\\[^\\\\]+\\\\appdata|users\\\\public|windows\\\\temp|temp)\\\\.+\\.(?:dll|dat|tmp|cpl|ocx)\\b\"\n    // Daggerfly often calls obscure ordinals or the masquerading export `DllRegisterServer` / `Init` / `Run`\n    | extend DllPath = extract(@\"(?i)rundll32(?:\\.exe)?\\s+\\\"?([A-Z]:\\\\[^\\\",]+\\.(?:dll|dat|tmp|cpl|ocx))\", 1, ProcessCommandLine)\n    | extend Export  = extract(@\"(?i)\\.(?:dll|dat|tmp|cpl|ocx)[\\\"\\s]*,\\s*([A-Za-z0-9_#@\\$]+)\", 1, ProcessCommandLine)\n    | where isnotempty(DllPath)\n    | project Timestamp, DeviceId, DeviceName, AccountName,\n              ParentName = InitiatingProcessFileName,\n              ParentPath = InitiatingProcessFolderPath,\n              ParentSigner = InitiatingProcessVersionInfoCompanyName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ProcessCommandLine, DllPath, Export;\n// Pivot to the dropper: who wrote that DLL? MgBot is dropped by an MSI / signed-loader chain.\nlet _drops = DeviceFileEvents\n    | where Timestamp > ago(_lookback)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n    | where FileName endswith \".dll\" or FileName endswith \".dat\"\n    | project DropTime = Timestamp, DeviceId, DroppedPath = FolderPath, DroppedFile = FileName,\n              DropperName = InitiatingProcessFileName,\n              DropperPath = InitiatingProcessFolderPath,\n              DropperSigner = InitiatingProcessVersionInfoCompanyName,\n              DropperCmd = InitiatingProcessCommandLine\n    | extend FullDrop = strcat(tolower(DroppedPath), \"\\\\\", tolower(DroppedFile));\n_userpath_dll\n| extend FullDrop = tolower(DllPath)\n| join kind=leftouter _drops on DeviceId, FullDrop\n| where DropTime <= Timestamp and DropTime > Timestamp - 7d\n// Daggerfly indicators: parent is a signed legitimate updater / scripting host that doesn't normally rundll32 user-path DLLs\n| where ParentName in~ (\n        \"msiexec.exe\",\"explorer.exe\",\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n        \"microsoftedgeupdate.exe\",\"setup.exe\",\"installer.exe\",\"qqupdate.exe\",\"sgtool.exe\",\n        \"livesrv.exe\",\"dhuploadertool2.exe\",\"meshagent.exe\",\"avastsvc.exe\",\"igcc.exe\",\n        \"ravbg64.exe\",\"avp.exe\",\"360se.exe\",\"360safe.exe\",\"baidup2psrv.exe\")\n   or DropperName in~ (\"msiexec.exe\",\"microsoftedgeupdate.exe\",\"qqupdate.exe\",\"sgtool.exe\",\n                       \"meshagent.exe\")\n   or (isnotempty(DropperSigner) and DropperSigner != \"Microsoft Corporation\"\n        and DropperPath has_any (@\"\\ProgramData\\\", @\"\\AppData\\\", @\"\\Public\\\", @\"\\Temp\\\"))\n| project Timestamp, DeviceName, AccountName, ParentName, ParentPath, ParentSigner, ParentCmd,\n          ProcessCommandLine, DllPath, Export,\n          DropTime, DroppedFile, DropperName, DropperPath, DropperSigner, DropperCmd\n| order by Timestamp desc",
+      "sentinel_kql": "let _lookback = 14d;\nlet _rundll = DeviceProcessEvents\n    | where TimeGenerated > ago(_lookback)\n    | where FileName =~ \"rundll32.exe\"\n    | where AccountName !endswith \"$\"\n    | extend _cmd = tolower(ProcessCommandLine)\n    | where _cmd matches regex @\"rundll32(?:\\.exe)?\\s+\\\"?[a-z]:\\\\(?:programdata|users\\\\[^\\\\]+\\\\appdata|users\\\\public|windows\\\\temp|temp)\\\\.+\\.(?:dll|dat|tmp|cpl|ocx)\\b\"\n    | extend DllPath = extract(@\"(?i)rundll32(?:\\.exe)?\\s+\\\"?([A-Z]:\\\\[^\\\",]+\\.(?:dll|dat|tmp|cpl|ocx))\", 1, ProcessCommandLine),\n             Export  = extract(@\"(?i)\\.(?:dll|dat|tmp|cpl|ocx)[\\\"\\s]*,\\s*([A-Za-z0-9_#@\\$]+)\", 1, ProcessCommandLine)\n    | where isnotempty(DllPath)\n    | project TimeGenerated, DeviceId, DeviceName, AccountName,\n              ParentName = InitiatingProcessFileName,\n              ParentPath = InitiatingProcessFolderPath,\n              ParentSigner = InitiatingProcessVersionInfoCompanyName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ProcessCommandLine, DllPath, Export;\nlet _drops = DeviceFileEvents\n    | where TimeGenerated > ago(_lookback)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n    | where FileName endswith \".dll\" or FileName endswith \".dat\"\n    | project DropTime = TimeGenerated, DeviceId, DroppedPath = FolderPath, DroppedFile = FileName,\n              DropperName = InitiatingProcessFileName,\n              DropperPath = InitiatingProcessFolderPath,\n              DropperSigner = InitiatingProcessVersionInfoCompanyName,\n              DropperCmd = InitiatingProcessCommandLine\n    | extend FullDrop = tolower(strcat(DroppedPath, \"\\\\\", DroppedFile));\n_rundll\n| extend FullDrop = tolower(DllPath)\n| join kind=leftouter _drops on DeviceId, FullDrop\n| where DropTime <= TimeGenerated and DropTime > TimeGenerated - 7d\n| where ParentName in~ (\n        \"msiexec.exe\",\"explorer.exe\",\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n        \"microsoftedgeupdate.exe\",\"setup.exe\",\"installer.exe\",\"qqupdate.exe\",\"sgtool.exe\",\n        \"livesrv.exe\",\"meshagent.exe\",\"avastsvc.exe\",\"igcc.exe\",\"ravbg64.exe\",\"avp.exe\",\n        \"360se.exe\",\"360safe.exe\",\"baidup2psrv.exe\")\n   or DropperName in~ (\"msiexec.exe\",\"microsoftedgeupdate.exe\",\"qqupdate.exe\",\"sgtool.exe\",\"meshagent.exe\")\n   or (isnotempty(DropperSigner) and DropperSigner != \"Microsoft Corporation\"\n        and DropperPath has_any (@\"\\ProgramData\\\", @\"\\AppData\\\", @\"\\Public\\\", @\"\\Temp\\\"))\n| project TimeGenerated, DeviceName, AccountName, ParentName, ParentPath, ParentSigner, ParentCmd,\n          ProcessCommandLine, DllPath, Export,\n          DropTime, DroppedFile, DropperName, DropperPath, DropperSigner, DropperCmd\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "Daggerfly is the only Chinese cluster repeatedly fingerprinted by Symantec (2023, 2024) and ESET (2023) as exclusively shipping the MgBot framework, and the framework's signature delivery primitive \u2014 a benign signed application side-loading a malicious DLL that re-enters through rundll32.exe at a non-standard export inside %ProgramData% / %AppData% \u2014 is uncommon enough that pairing the rundll32-fr",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "DllPath",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DllPath` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Export` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceFileEvents, DeviceProcessEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DllPath",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DllPath` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Export` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Daggerfly MgBot persistence: scheduled task launching rundll32 against user-writable DLL",
+      "description": "Catches Daggerfly / Evasive Panda's MgBot persistence pattern: a Scheduled Task is registered (T1053.005) whose action is `rundll32.exe <user-writable DLL>,<export>`, with the task name typically masquerading as a Windows or vendor-update task. This is the persistence half of the MgBot kill-chain and the artefact that survives reboot once the side-loaded loader has executed.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1053.005",
+        "T1218.011",
+        "T1136.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN (\"schtasks.exe\",\"powershell.exe\",\"pwsh.exe\") (Processes.process=\"*schtasks*/create*\" OR Processes.process=\"*Register-ScheduledTask*\" OR Processes.process=\"*New-ScheduledTask*\") Processes.process=\"*rundll32*\" (Processes.process=\"*ProgramData*\" OR Processes.process=\"*AppData*\" OR Processes.process=\"*Public*\" OR Processes.process=\"*\\\\Temp\\\\*\") by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=cmdline \"(?i)/tn\\s+\\\"?(?<task_name>[^\\\"\\s]+)\" | rex field=cmdline \"(?i)rundll32(?:\\.exe)?\\s+\\\"?(?<dll>[A-Z]:\\\\\\\\[^\\\",]+\\.(?:dll|dat|tmp|cpl)),?\\s*(?<export>[A-Za-z0-9_#@\\$]+)?\" | where isnotnull(dll) | table firstTime lastTime dest user parent process_name task_name dll export cmdline",
+      "kql": "let _lookback = 30d;\nDeviceProcessEvents\n| where Timestamp > ago(_lookback)\n| where AccountName !endswith \"$\"\n| where (FileName =~ \"schtasks.exe\" and ProcessCommandLine has_any (\"/create\",\"/CREATE\"))\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n         and ProcessCommandLine has_any (\"Register-ScheduledTask\",\"New-ScheduledTaskAction\"))\n| where tolower(ProcessCommandLine) has \"rundll32\"\n| extend _cmd = tolower(ProcessCommandLine)\n| where _cmd matches regex @\"rundll32(?:\\.exe)?[^\\\"]*[a-z]:\\\\(?:programdata|users\\\\[^\\\\]+\\\\appdata|users\\\\public|windows\\\\temp|temp)\\\\.+\\.(?:dll|dat|tmp|cpl|ocx)\"\n| extend TaskName = extract(@\"(?i)/tn\\s+\\\"?([^\\\"\\s]+)\", 1, ProcessCommandLine)\n| extend DllPath  = extract(@\"(?i)rundll32(?:\\.exe)?\\s+\\\"?([A-Z]:\\\\[^\\\",]+\\.(?:dll|dat|tmp|cpl|ocx))\", 1, ProcessCommandLine)\n| extend Export   = extract(@\"(?i)\\.(?:dll|dat|tmp|cpl|ocx)[\\\"\\s]*,\\s*([A-Za-z0-9_#@\\$]+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          FileName, ProcessCommandLine, TaskName, DllPath, Export,\n          IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "let _lookback = 30d;\nSecurityEvent\n| where TimeGenerated > ago(_lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where (NewProcessName endswith \"\\\\schtasks.exe\" and CommandLine has_any (\"/create\",\"/CREATE\"))\n     or (NewProcessName has_any (\"\\\\powershell.exe\",\"\\\\pwsh.exe\")\n         and CommandLine has_any (\"Register-ScheduledTask\",\"New-ScheduledTaskAction\"))\n| where tolower(CommandLine) has \"rundll32\"\n| extend _cmd = tolower(CommandLine)\n| where _cmd matches regex @\"rundll32(?:\\.exe)?[^\\\"]*[a-z]:\\\\(?:programdata|users\\\\[^\\\\]+\\\\appdata|users\\\\public|windows\\\\temp|temp)\\\\.+\\.(?:dll|dat|tmp|cpl|ocx)\"\n| extend TaskName = extract(@\"(?i)/tn\\s+\\\"?([^\\\"\\s]+)\", 1, CommandLine),\n         DllPath  = extract(@\"(?i)rundll32(?:\\.exe)?\\s+\\\"?([A-Z]:\\\\[^\\\",]+\\.(?:dll|dat|tmp|cpl|ocx))\", 1, CommandLine),\n         Export   = extract(@\"(?i)\\.(?:dll|dat|tmp|cpl|ocx)[\\\"\\s]*,\\s*([A-Za-z0-9_#@\\$]+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account, ParentProcessName,\n          NewProcessName, CommandLine, TaskName, DllPath, Export\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Daggerfly MgBot Scheduled-Task Persistence via Rundll32 of User-Path DLL\nid: 9f3d2a4b-4c70-4d5a-9b1f-2a8e3f1b7c91\nstatus: experimental\ndescription: Detects the MgBot persistence pattern attributed exclusively to Daggerfly / Evasive Panda \u2014 a scheduled task whose action invokes rundll32.exe against a DLL/DAT located in a user-writable directory (ProgramData, AppData, Public, Temp).\nreferences:\n    - https://attack.mitre.org/groups/G1034/\n    - https://symantec-enterprise-blogs.security.com/threat-intelligence/daggerfly-espionage-updated-toolset\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n    - attack.persistence\n    - attack.t1053.005\n    - attack.t1218.011\n    - attack.g1034\nlogsource:\n    category: process_creation\n    product: windows\ndetection:\n    selection_schtasks:\n        Image|endswith:\n            - '\\schtasks.exe'\n        CommandLine|contains:\n            - '/create'\n            - '/CREATE'\n    selection_ps:\n        Image|endswith:\n            - '\\powershell.exe'\n            - '\\pwsh.exe'\n        CommandLine|contains:\n            - 'Register-ScheduledTask'\n            - 'New-ScheduledTaskAction'\n    selection_payload:\n        CommandLine|contains: 'rundll32'\n    selection_userpath:\n        CommandLine|re|i: 'rundll32(?:\\.exe)?[^\\\"]*[a-z]:\\\\(?:programdata|users\\\\[^\\\\]+\\\\appdata|users\\\\public|windows\\\\temp|temp)\\\\.+\\.(?:dll|dat|tmp|cpl|ocx)'\n    condition: (selection_schtasks or selection_ps) and selection_payload and selection_userpath\nfields:\n    - User\n    - Image\n    - CommandLine\n    - ParentImage\nfalsepositives:\n    - Legitimate vendor installers that schedule update checks via rundll32 (rare and signable)\nlevel: high",
+      "rationale": "Persistence-via-scheduled-task is a generic MITRE technique, but the specific shape \u2014 schtasks/Register-ScheduledTask whose -tr/Execute argument is `rundll32.exe <ProgramData|AppData|Public|Temp DLL>,<export>` \u2014 is very nearly Daggerfly-only because (a) the legitimate vast majority of rundll32 persistence tasks created by Microsoft and tier-1 vendors point at System32/SysWOW64 DLLs, and (b) Symant",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "TaskName",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`TaskName` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DllPath",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DllPath` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Export` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "TaskName",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "Task",
+          "message": "`TaskName` is not a canonical column of SecurityEvent. Did you mean `Task`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DllPath",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "FilePath",
+          "message": "`DllPath` is not a canonical column of SecurityEvent. Did you mean `FilePath`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Export",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "IpPort",
+          "message": "`Export` is not a canonical column of SecurityEvent. Did you mean `IpPort`?"
+        }
+      ]
+    }
+  ]
+}

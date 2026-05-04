@@ -1,0 +1,84 @@
+{
+  "name": "Putter Panda",
+  "ucs": [
+    {
+      "title": "[LLM] Putter Panda (APT2 / MSUpdater) Run-key persistence invoking rundll32 against user-writable DLL",
+      "description": "Hunts the documented 4H RAT / 3PARA RAT / pngdowner persistence pattern where Putter Panda writes an HKCU/HKLM Run-key value that calls rundll32.exe against a DLL dropped in a user-writable directory (often paired with a stolen-cert signed loader). Combines T1547.001 with T1055.001 and the obfuscated-DLL drop typical of CrowdStrike's MSUpdater cluster.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1547.001",
+        "T1055.001",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*\",\"*\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Policies\\\\Explorer\\\\Run\\\\*\") (Registry.registry_value_data=\"*rundll32*\" OR Registry.registry_value_data=\"*regsvr32*\" OR Registry.registry_value_data=\"*\\\\Users\\\\*\" OR Registry.registry_value_data=\"*\\\\AppData\\\\*\" OR Registry.registry_value_data=\"*\\\\ProgramData\\\\*\" OR Registry.registry_value_data=\"*\\\\Temp\\\\*\" OR Registry.registry_value_data=\"*\\\\Public\\\\*\") by Registry.dest Registry.user Registry.process_id Registry.registry_path Registry.registry_value_name Registry.registry_value_data _time | `drop_dm_object_name(Registry)` | rex field=registry_value_data \"(?i)(?<dropped_path>(?:[A-Z]:)?\\\\\\\\(?:Users|AppData|ProgramData|Temp|Public|Intel|PerfLogs)\\\\\\\\[^\\\"]+\\.(?:dll|exe|dat|bin|tmp))\" | search dropped_path=* | join type=outer dest dropped_path [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.parent_process_name=\"rundll32.exe\" OR Processes.process_name=\"rundll32.exe\" by Processes.dest Processes.process Processes.parent_process Processes.user | `drop_dm_object_name(Processes)` | eval dropped_path=process] | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user registry_path registry_value_name registry_value_data dropped_path process",
+      "kql": "let _knownInstallers = dynamic([\"msiexec.exe\",\"setup.exe\",\"explorer.exe\",\"trustedinstaller.exe\",\"officeclicktorun.exe\",\"onedrivesetup.exe\"]);\nlet _runKeys = dynamic([@\"\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Microsoft\\Windows\\CurrentVersion\\RunOnce\", @\"\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run\"]);\nlet _userWritable = dynamic([@\"\\Users\\\", @\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\Intel\\\", @\"\\PerfLogs\\\"]);\nDeviceRegistryEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has_any (_runKeys)\n| where isnotempty(RegistryValueData)\n| where InitiatingProcessFileName !in~ (_knownInstallers)\n| where InitiatingProcessAccountName !endswith \"$\"\n| extend RVD = tolower(RegistryValueData)\n| where RVD has_any (\"rundll32\",\"regsvr32\")\n   or RVD matches regex @\"(?i)\\\\(users|appdata|programdata|temp|public|intel|perflogs)\\\\.+\\.(dll|exe|dat|bin|tmp)\"\n| extend DroppedPath = extract(@\"(?i)([a-z]:\\\\(?:Users|AppData|ProgramData|Temp|Public|Intel|PerfLogs)\\\\[^\\\"\\s,]+\\.(?:dll|exe|dat|bin|tmp))\", 1, RegistryValueData)\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"rundll32.exe\" or FileName =~ \"rundll32.exe\"\n    | project DeviceId, ProcTime = Timestamp, ProcCmd = ProcessCommandLine, ParentImg = InitiatingProcessFileName, ChildImg = FileName\n  ) on DeviceId\n| where isempty(DroppedPath) or ProcCmd has DroppedPath or ProcTime between (Timestamp - 5m .. Timestamp + 1d)\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData, DroppedPath, ProcTime, ProcCmd\n| order by Timestamp desc",
+      "sentinel_kql": "let _runKeys = dynamic([@\"\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Microsoft\\Windows\\CurrentVersion\\RunOnce\", @\"\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run\"]);\nlet _knownInstallers = dynamic([\"msiexec.exe\",\"setup.exe\",\"explorer.exe\",\"trustedinstaller.exe\",\"officeclicktorun.exe\",\"onedrivesetup.exe\"]);\nImRegistryEvent\n| where TimeGenerated > ago(30d)\n| where EventType in (\"RegistryKeyCreated\",\"RegistryValueSet\")\n| where RegistryKey has_any (_runKeys)\n| where isnotempty(RegistryValueData)\n| where ActingProcessName !in~ (_knownInstallers)\n| where ActorUsername !endswith \"$\"\n| extend RVD = tolower(RegistryValueData)\n| where RVD has_any (\"rundll32\",\"regsvr32\")\n   or RVD matches regex @\"(?i)\\\\(users|appdata|programdata|temp|public|intel|perflogs)\\\\.+\\.(dll|exe|dat|bin|tmp)\"\n| extend DroppedPath = extract(@\"(?i)([a-z]:\\\\(?:Users|AppData|ProgramData|Temp|Public|Intel|PerfLogs)\\\\[^\\\"\\s,]+\\.(?:dll|exe|dat|bin|tmp))\", 1, RegistryValueData)\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, RegistryKey, RegistryValue, RegistryValueData, DroppedPath\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Putter Panda Run-Key Persistence via rundll32 against User-Writable DLL\nid: 9f3a8e1c-2b4d-4f5a-9c7e-7a1b2c3d4e5f\nstatus: experimental\ndescription: Detects the Putter Panda (APT2 / MSUpdater) persistence pattern where a Run/RunOnce value is written that invokes rundll32 (or regsvr32) against a DLL/EXE staged in a user-writable directory. Pattern documented in CrowdStrike's Putter Panda report against 3PARA RAT, 4H RAT and pngdowner droppers.\nreferences:\n  - https://attack.mitre.org/groups/G0024/\n  - https://www.crowdstrike.com/wp-content/brochures/PutterPanda.pdf\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.persistence\n  - attack.t1547.001\n  - attack.defense_evasion\n  - attack.t1055.001\n  - attack.g0024\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection_run_key:\n    TargetObject|contains:\n      - '\\Microsoft\\Windows\\CurrentVersion\\Run\\'\n      - '\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\'\n      - '\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run\\'\n  selection_payload:\n    Details|contains:\n      - 'rundll32'\n      - 'regsvr32'\n      - '\\Users\\'\n      - '\\AppData\\'\n      - '\\ProgramData\\'\n      - '\\Temp\\'\n      - '\\Public\\'\n      - '\\Intel\\'\n      - '\\PerfLogs\\'\n  filter_installers:\n    Image|endswith:\n      - '\\msiexec.exe'\n      - '\\setup.exe'\n      - '\\TrustedInstaller.exe'\n      - '\\OfficeClickToRun.exe'\n      - '\\OneDriveSetup.exe'\n  condition: selection_run_key and selection_payload and not filter_installers\nfalsepositives:\n  - Niche third-party software installers writing autorun stubs into user-writable paths\n  - Developer tooling that registers per-user COM helpers via regsvr32\nlevel: high",
+      "rationale": "This is the literal MSUpdater / 4H RAT / 3PARA RAT install pattern documented in the CrowdStrike Putter Panda intelligence report attributing the activity to PLA Unit 61486 (12th Bureau, 3rd GSD): persistence registered under HKCU\\...\\Run pointing at rundll32 invoking a small encoded DLL dropped to %APPDATA%, %TEMP% or %ProgramData%. Generic Run-key alerts catch persistence broadly; this rule is h",
+      "_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ProcessCommandLine",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`ProcessCommandLine` is not a column of DeviceRegistryEvents; it does exist on DeviceProcessEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "FileName",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceFileEvents",
+            "DeviceImageLoadEvents",
+            "DeviceEvents",
+            "EmailAttachmentInfo",
+            "AlertEvidence",
+            "SecurityEvent",
+            "CommonSecurityLog",
+            "ThreatIntelligenceIndicator",
+            "ImWebSession",
+            "ASCDeviceEvents"
+          ],
+          "message": "`FileName` is not a column of DeviceRegistryEvents; it does exist on DeviceProcessEvents, DeviceFileEvents, DeviceImageLoadEvents, DeviceEvents, EmailAttachmentInfo, AlertEvidence, SecurityEvent, CommonSecurityLog, ThreatIntelligenceIndicator, ImWebSession, ASCDeviceEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Putter Panda DLL side-loading: signed binary executing from user-writable path with co-located unsigned DLL",
+      "description": "Hunts the Putter Panda / APT2 loader pattern where a legitimately-signed Microsoft / NVIDIA / Intel / security-vendor binary is copied into a user-writable directory and side-loads a malicious DLL placed alongside it (e.g. the MSUpdater trojan family). The pairing of (a) trusted-vendor signed loader, (b) execution from non-Program-Files path, and (c) adjacent non-Microsoft DLL load is the canonical Putter Panda staging signature.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1055.001",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=\"*\\\\Users\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\Intel\\\\*\") (Processes.process_company=\"Microsoft Corporation\" OR Processes.process_company=\"Adobe Systems Incorporated\" OR Processes.process_company=\"Hewlett-Packard\" OR Processes.process_company=\"Intel Corporation\" OR Processes.process_company=\"NVIDIA Corporation\" OR Processes.process_company=\"McAfee, Inc.\" OR Processes.process_company=\"Symantec Corporation\" OR Processes.process_company=\"Kaspersky Lab\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.process_company Processes.parent_process_name Processes.parent_process _time | `drop_dm_object_name(Processes)` | rename process_path as loader_path | join type=inner dest loader_path [| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" (Filesystem.file_path=\"*\\\\Users\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\Public\\\\*\" OR Filesystem.file_path=\"*\\\\Intel\\\\*\") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | eval loader_path=replace(file_path, \"\\\\\\\\[^\\\\\\\\]+\\.dll$\", \"\")] | where file_hash != process_hash | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user process_name loader_path process_hash process_company file_name file_hash parent_process_name",
+      "kql": "let _trustedVendors = dynamic([\"Microsoft Corporation\",\"Microsoft Windows\",\"Adobe Systems Incorporated\",\"Adobe Inc.\",\"Hewlett-Packard\",\"Intel Corporation\",\"NVIDIA Corporation\",\"McAfee, Inc.\",\"Symantec Corporation\",\"Kaspersky Lab\",\"Realtek Semiconductor Corp.\"]);\nlet _userWritable = dynamic([@\"\\Users\\\", @\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\Intel\\\", @\"\\PerfLogs\\\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessVersionInfoCompanyName in~ (_trustedVendors)\n| where InitiatingProcessFolderPath has_any (_userWritable)\n| where InitiatingProcessFolderPath !startswith @\"C:\\Program Files\"\n| where InitiatingProcessFolderPath !startswith @\"C:\\Windows\"\n| where FileName endswith \".dll\"\n| where SHA256 != InitiatingProcessSHA256\n| extend LoaderDir = tolower(InitiatingProcessFolderPath)\n| extend DllDir = tolower(FolderPath)\n| where DllDir startswith LoaderDir or LoaderDir startswith DllDir\n| where InitiatingProcessAccountName !endswith \"$\"\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"FileCreated\"\n    | where FileName endswith \".dll\"\n    | project DeviceId, DllSHA256 = SHA256, DllPath = FolderPath, DllDropProc = InitiatingProcessFileName, DropTime = Timestamp\n  ) on $left.DeviceId == $right.DeviceId, $left.SHA256 == $right.DllSHA256\n| project Timestamp, DeviceName, InitiatingProcessAccountName, LoaderImage = InitiatingProcessFileName, LoaderVendor = InitiatingProcessVersionInfoCompanyName, LoaderPath = InitiatingProcessFolderPath, LoaderSHA256 = InitiatingProcessSHA256, LoadedDll = FileName, LoadedDllPath = FolderPath, LoadedDllSHA256 = SHA256, DllDropProc, DropTime\n| order by Timestamp desc",
+      "sentinel_kql": "let _trustedVendors = dynamic([\"Microsoft Corporation\",\"Microsoft Windows\",\"Adobe Systems Incorporated\",\"Hewlett-Packard\",\"Intel Corporation\",\"NVIDIA Corporation\",\"McAfee, Inc.\",\"Symantec Corporation\",\"Kaspersky Lab\",\"Realtek Semiconductor Corp.\"]);\nlet _userWritable = dynamic([@\"\\Users\\\", @\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\Intel\\\", @\"\\PerfLogs\\\"]);\nWindowsEvent\n| where TimeGenerated > ago(7d)\n| where Provider == \"Microsoft-Windows-Sysmon\"\n| where EventID == 7\n| extend Image = tostring(EventData.Image),\n         ImageLoaded = tostring(EventData.ImageLoaded),\n         Signed = tostring(EventData.Signed),\n         SignatureStatus = tostring(EventData.SignatureStatus),\n         Company = tostring(EventData.Company),\n         User = tostring(EventData.User),\n         LoaderHash = tostring(EventData.Hashes),\n         DllHash = tostring(EventData.Hashes)\n| where Company in~ (_trustedVendors)\n| where Image has_any (_userWritable)\n| where Image !startswith @\"C:\\Program Files\" and Image !startswith @\"C:\\Windows\"\n| where ImageLoaded endswith \".dll\"\n| extend LoaderDir = tolower(strcat_array(array_slice(split(Image, @\"\\\"), 0, -2), @\"\\\")),\n         DllDir = tolower(strcat_array(array_slice(split(ImageLoaded, @\"\\\"), 0, -2), @\"\\\"))\n| where DllDir startswith LoaderDir or LoaderDir startswith DllDir\n| where User !endswith \"$\"\n| project TimeGenerated, Computer, User, LoaderImage = Image, LoaderVendor = Company, LoadedDll = ImageLoaded, LoaderHash, DllHash\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "Putter Panda's MSUpdater family and 4H RAT droppers are notorious for abusing legitimately-signed binaries (historically a Microsoft IME helper and security-vendor utilities) by relocating them to %APPDATA% or C:\\Intel and dropping a malicious sibling DLL whose name matches an import the loader expects. The CrowdStrike Putter Panda report explicitly documented the side-loading-from-user-path patte"
+    }
+  ]
+}

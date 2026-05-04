@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CORDIAL/SNARKY SPIDER inbox rule suppressing 'alert', 'incident', 'MFA' notifications
 
-`UC_6_5` · phase: **install** · confidence: **High**
+`UC_16_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ CloudAppEvents
 
 ### [LLM] Existing MFA method deleted then new method registered within 30 minutes (AiTM persistence)
 
-`UC_6_6` · phase: **install** · confidence: **High**
+`UC_16_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ MfaDeletes
 
 ### [LLM] SaaS sensitive-term search ('confidential','SSN','contracts','VPN') followed by bulk download <1h
 
-`UC_6_7` · phase: **actions** · confidence: **Medium**
+`UC_16_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

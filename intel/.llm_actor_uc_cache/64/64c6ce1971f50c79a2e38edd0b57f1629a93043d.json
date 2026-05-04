@@ -1,0 +1,68 @@
+{
+  "name": "SideCopy",
+  "ucs": [
+    {
+      "title": "[LLM] SideCopy (G1008) LNK\u2192mshta.exe remote-HTA stager fetching second-stage from attacker infrastructure",
+      "description": "Hunts SideCopy's signature initial-access chain \u2014 a spearphishing archive containing an LNK that invokes mshta.exe with a remote HTTP/HTTPS URL to fetch a malicious HTA stager (the technique it borrowed from / mimics Sidewinder, hence the name). The combination of mshta with an external URL parented by explorer.exe / archive extractors / Office is highly specific to this Pakistan-nexus crew.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1218.005",
+        "T1105",
+        "T1059.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user values(Processes.dest) as host from datamodel=Endpoint.Processes where Processes.process_name=\"mshta.exe\" (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\" OR Processes.process=\"*\\\\\\\\*\") (Processes.parent_process_name IN (\"explorer.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=cmdline \"(?<remote_url>https?://[^\\s\\\"']+|\\\\\\\\\\\\\\\\[^\\s\\\"']+)\" | where isnotnull(remote_url) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// SideCopy G1008 \u2014 mshta.exe loading a remote HTA (T1218.005) parented by explorer/archive/Office\nlet _archive_or_office = dynamic([\"explorer.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"thunderbird.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName =~ \"mshta.exe\"\n| where AccountName !endswith \"$\"\n// SideCopy stagers always pass an http(s) URL or UNC path as the first arg to mshta\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\"\\\\\\\\\")\n// parent narrows to user-driven launches typical of LNK-from-archive opens\n| where InitiatingProcessFileName in~ (_archive_or_office)\n| extend RemoteUrl = extract(@\"(?i)(https?://[^\\s\\\"']+|\\\\\\\\[^\\s\\\"']+)\", 1, ProcessCommandLine)\n// pivot: did mshta then talk out to that destination? high-confidence chain\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"mshta.exe\"\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl_net = RemoteUrl\n  ) on DeviceId\n| where isnull(NetTime) or NetTime between (Timestamp .. Timestamp + 2m)\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          MshtaCmd = ProcessCommandLine,\n          RemoteUrl, NetTime, RemoteIP, RemotePort, RemoteUrl_net,\n          SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// SideCopy G1008 \u2014 mshta.exe with remote URL spawned by explorer/archive/Office (4688)\nlet _archive_or_office = dynamic([\"explorer.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"thunderbird.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\mshta.exe\"\n| where Account !endswith \"$\"\n| where CommandLine has_any (\"http://\",\"https://\",\"\\\\\\\\\")\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ParentLeaf in (_archive_or_office)\n| extend RemoteUrl = extract(@\"(?i)(https?://[^\\s\\\"']+|\\\\\\\\[^\\s\\\"']+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, RemoteUrl, ProcessId, NewProcessId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: SideCopy mshta.exe remote HTA stager from archive or Office parent\nid: 8e7d4b1c-3a2f-4f4d-9c1d-sidecopy-g1008-uc1\nstatus: experimental\ndescription: Detects SideCopy (G1008) initial access where an LNK delivered via spearphishing archive launches mshta.exe with a remote HTTP(S) URL or UNC path. Parented by explorer.exe / archive utilities / Office / browser / mail client.\nreferences:\n  - https://attack.mitre.org/groups/G1008/\n  - https://www.malwarebytes.com/blog/news/2021/12/sidecopy-apt-targets-india\nauthor: detection-engineering\ndate: 2026/05/03\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1218.005\n  - attack.t1566.001\n  - attack.t1204.002\n  - attack.g1008\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith: '\\mshta.exe'\n  selection_remote:\n    CommandLine|contains:\n      - 'http://'\n      - 'https://'\n      - '\\\\\\\\'\n  selection_parent:\n    ParentImage|endswith:\n      - '\\explorer.exe'\n      - '\\winrar.exe'\n      - '\\7zfm.exe'\n      - '\\7zg.exe'\n      - '\\outlook.exe'\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: all of selection_* and not filter_machine_acct\nfalsepositives:\n  - Legacy enterprise apps that legitimately deploy HTA from intranet shares (allowlist by URL/UNC)\nlevel: high",
+      "rationale": "SideCopy's 2019-present infection chain is consistently: spearphish ZIP/RAR \u2192 LNK \u2192 mshta.exe https://<staged-domain>/<file>.hta \u2192 HTA drops the side-loading pair. Generic mshta detections fire on legacy admin scripts; demanding (a) a remote URL/UNC argument AND (b) a user-shell / archive / Office / browser parent surgically isolates the SideCopy pattern (and other LNK-borne mshta abusers like Sid",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of SecurityEvent; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] SideCopy (G1008) DLL side-loading: signed-binary loader running from user-writable path with co-located unsigned DLL",
+      "description": "Hunts SideCopy's hallmark second-stage delivery \u2014 they consistently drop a legitimate signed binary (Microsoft/Adobe/Citrix/Credential Manager helpers) into %TEMP% / %APPDATA% / %PUBLIC% alongside a malicious DLL whose name matches an import the binary search-order-loads. Catches Action RAT, ReverseRAT, AllaKore RAT delivery without relying on hash IOCs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1105",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as binary_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\AppData\\\\Roaming\\\\*\" OR Filesystem.file_path=\"*\\\\Users\\\\Public\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\") Filesystem.file_name IN (\"DUser.dll\",\"credwiz.exe\",\"CredentialUIBroker.exe\",\"WerFault.exe\",\"taskhostw.exe\",\"msiexec.exe\",\"DismHost.exe\",\"version.dll\",\"vcruntime140.dll\",\"WINMM.dll\",\"DUI70.dll\") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | join type=inner dest process_guid [| tstats `summariesonly` count values(Processes.process_name) as loader values(Processes.parent_process_name) as parent values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\Roaming\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" by Processes.dest Processes.process_guid | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// SideCopy G1008 \u2014 DLL side-loading: signed Microsoft/Adobe binary in user dir loading\n// an unsigned/different-author DLL from the SAME directory (T1574.001)\nlet _user_writable = dynamic([@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Downloads\\\"]);\n// SideCopy-favoured signed-binary lures (Action/Reverse/AllaKore loader vehicles)\nlet _abused_loaders = dynamic([\"credwiz.exe\",\"CredentialUIBroker.exe\",\"DismHost.exe\",\"WerFault.exe\",\"taskhostw.exe\",\"msiexec.exe\",\"PrintIsolationHost.exe\",\"vmtoolsd.exe\",\"DUser.dll-host\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(30d)\n// loader binary itself dropped into a user-writable path\n| where InitiatingProcessFolderPath has_any (_user_writable)\n| where InitiatingProcessFileName in~ (_abused_loaders)\n   or InitiatingProcessVersionInfoCompanyName has_any (\"Microsoft Corporation\",\"Adobe\",\"Citrix\",\"VMware\")\n// loaded module is also from the same user-writable path = classic side-load\n| where FolderPath has_any (_user_writable)\n| where FileName endswith \".dll\"\n// strip noise: same publisher / system DLLs / matching SHA256 (digest match = same file)\n| where SHA256 != InitiatingProcessSHA256\n| where FolderPath !startswith @\"C:\\Windows\\\"\n| project Timestamp, DeviceName,\n          LoaderImage = InitiatingProcessFileName,\n          LoaderPath = InitiatingProcessFolderPath,\n          LoaderCompany = InitiatingProcessVersionInfoCompanyName,\n          LoaderProduct = InitiatingProcessVersionInfoProductName,\n          LoaderSHA256 = InitiatingProcessSHA256,\n          LoaderCmd = InitiatingProcessCommandLine,\n          DllName = FileName, DllPath = FolderPath, DllSHA256 = SHA256, DllSize = FileSize,\n          User = InitiatingProcessAccountName\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"FileCreated\"\n    | where FolderPath has_any (_user_writable)\n    | project DropTime = Timestamp, DeviceName, DllPath = FolderPath, DllName = FileName,\n              DropProcess = InitiatingProcessFileName, DropParent = InitiatingProcessParentFileName\n  ) on DeviceName, DllName, DllPath\n| order by Timestamp desc",
+      "sentinel_kql": "// SideCopy G1008 \u2014 DLL side-load chain via Sysmon EID 7 (ImageLoad)\n// requires Sysmon with EID 7 enabled on endpoints; falls back to ImFileEvent for the drop side\nlet _user_writable = dynamic([@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Downloads\\\"]);\nlet _abused_loaders = dynamic([\"credwiz.exe\",\"CredentialUIBroker.exe\",\"DismHost.exe\",\"WerFault.exe\",\"taskhostw.exe\",\"msiexec.exe\",\"PrintIsolationHost.exe\",\"vmtoolsd.exe\"]);\nWindowsEvent\n| where TimeGenerated > ago(30d)\n| where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 7\n| extend Image = tostring(EventData.Image),\n         ImageLoaded = tostring(EventData.ImageLoaded),\n         Signed = tostring(EventData.Signed),\n         SignatureStatus = tostring(EventData.SignatureStatus),\n         Hashes = tostring(EventData.Hashes),\n         User = tostring(EventData.User),\n         Company = tostring(EventData.Company)\n| where Image has_any (_user_writable)\n| extend LoaderLeaf = tolower(tostring(split(Image, \"\\\\\")[-1]))\n| where LoaderLeaf in~ (_abused_loaders) or Company has_any (\"Microsoft\",\"Adobe\",\"Citrix\",\"VMware\")\n| where ImageLoaded has_any (_user_writable)\n| where ImageLoaded endswith \".dll\"\n| where ImageLoaded !startswith @\"C:\\Windows\\\"\n// flag if loaded DLL is unsigned or signature invalid\n| where Signed =~ \"false\" or SignatureStatus !~ \"Valid\" or isempty(SignatureStatus)\n| project TimeGenerated, Computer, User, Image, ImageLoaded, Company, Signed, SignatureStatus, Hashes\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "SideCopy's loader trinity (Action RAT, ReverseRAT, AllaKore RAT) is consistently delivered via DLL side-loading: a signed first-party binary is dropped to %TEMP% / Public / ProgramData and resolves a malicious adjacent DLL on import. Detecting this via image-load + path predicate (rather than file hashes) is durable across SideCopy campaigns because they rotate the malicious DLLs but keep re-using"
+    }
+  ]
+}

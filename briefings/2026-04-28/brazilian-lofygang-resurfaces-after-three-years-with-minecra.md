@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LofyStealer C2 beacon to 24.152.36.241:8080 with GrabBot/1.0 user-agent
 
-`UC_58_12` · phase: **c2** · confidence: **High**
+`UC_60_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ union isfuzzy=true
 
 ### [LLM] LofyStealer chromelevator.exe execution from user-writable path
 
-`UC_58_13` · phase: **install** · confidence: **High**
+`UC_60_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### [LLM] Slinky Node.js loader (load.exe) followed by browser credential file access
 
-`UC_58_14` · phase: **actions** · confidence: **High**
+`UC_60_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceFileEvents
 | order by LoaderTime desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -475,7 +475,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Brazilian LofyGang Resurfaces After Three Years With Minecraft LofyStealer Campa
 
-`UC_58_11` · phase: **exploit** · confidence: **High**
+`UC_60_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

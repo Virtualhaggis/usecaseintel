@@ -166,7 +166,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silver Fox RustSL Phantom Persistence — RunOnce 'Application Restart #' registered by csrss.exe pointing to user-writable path
 
-`UC_46_10` · phase: **install** · confidence: **High**
+`UC_48_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +196,7 @@ DeviceRegistryEvents
 
 ### [LLM] RustSL guard.rs geofencing — single process queries 3+ public IP-geolocation services in a short window
 
-`UC_46_11` · phase: **exploit** · confidence: **High**
+`UC_48_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -232,7 +232,7 @@ DeviceNetworkEvents
 
 ### [LLM] Silver Fox January-2026 campaign IOC sweep — ValleyRAT C2 207.56.138.28:6666 + RustSL distribution domains/hashes
 
-`UC_46_12` · phase: **c2** · confidence: **High**
+`UC_48_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -261,7 +261,7 @@ union _net, _proc, _file
 | order by Timestamp desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -531,7 +531,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Silver Fox uses the new ABCDoor backdoor to target organizations in Russia and I
 
-`UC_46_9` · phase: **exploit** · confidence: **High**
+`UC_48_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email link to Softr-hosted credential harvesting page (UAT Q1 2026)
 
-`UC_91_11` · phase: **delivery** · confidence: **High**
+`UC_93_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ UrlClickEvents
 
 ### [LLM] TruffleHog secret-scanning binary executed on endpoint by non-developer account
 
-`UC_91_12` · phase: **actions** · confidence: **Medium**
+`UC_93_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### [LLM] QEMU machine emulator launched on user-class Windows endpoint (ransomware hidden-VM staging)
 
-`UC_91_13` · phase: **install** · confidence: **High**
+`UC_93_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -451,7 +451,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — It pays to be a forever student
 
-`UC_91_10` · phase: **exploit** · confidence: **High**
+`UC_93_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

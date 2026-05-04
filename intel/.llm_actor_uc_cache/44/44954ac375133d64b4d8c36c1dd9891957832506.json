@@ -1,0 +1,176 @@
+{
+  "name": "PROMETHIUM",
+  "ucs": [
+    {
+      "title": "[LLM] PROMETHIUM/StrongPity trojanized-installer \u2192 masqueraded service drop chain",
+      "description": "Hunts the canonical StrongPity intrusion: a victim runs what looks like a legitimate installer (Notepad++, WinRAR, 7-Zip, CCleaner, FireFox, VPN client, IDE tooling) downloaded from an attacker-controlled watering hole, the installer side-loads a secondary PE into a user-writable directory (%AppData%, %ProgramData%, %Public%) and registers it as a Windows service for persistence. PROMETHIUM has used this exact T1189 \u2192 T1204.002 \u2192 T1543.003 chain for a decade against Turkish/Kurdish targets, with code-signed droppers (T1587.002/T1553.002) carrying real software bundled with the implant.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1189",
+        "T1204.002",
+        "T1543.003",
+        "T1036.005",
+        "T1553.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as install_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"npp.*Installer.exe\",\"notepad++*.exe\",\"winrar*.exe\",\"7z*.exe\",\"CCleaner*.exe\",\"Firefox*Setup*.exe\",\"VPNSetup*.exe\",\"setup.exe\",\"install.exe\") OR Processes.parent_process IN (\"*\\\\Downloads\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*\")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_id _time\n| `drop_dm_object_name(\"Processes\")`\n| rename parent_process_id as installer_pid\n| join type=inner dest installer_pid [\n    | tstats summariesonly=true count from datamodel=Endpoint.Services where Services.action=created AND (Services.service_path_name IN (\"*\\\\AppData\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\Temp\\\\*\") OR NOT Services.service_path_name IN (\"C:\\\\Windows\\\\System32\\\\*\",\"C:\\\\Windows\\\\SysWOW64\\\\*\",\"C:\\\\Program Files\\\\*\",\"C:\\\\Program Files (x86)\\\\*\")) by Services.dest Services.service_name Services.service_path_name Services.process_id _time\n    | `drop_dm_object_name(\"Services\")`\n    | rename process_id as installer_pid _time as svc_install_time\n]\n| eval delay_sec=svc_install_time-install_time\n| where delay_sec >= 0 AND delay_sec <= 600\n| table install_time svc_install_time delay_sec dest user parent_process_name service_name service_path_name",
+      "kql": "// PROMETHIUM / StrongPity \u2014 trojanized installer drops masqueraded service binary\nlet Lookback = 7d;\nlet WindowSec = 600;            // 10-min correlation: installer \u2192 service install\nlet InstallerNamePatterns = dynamic([\"npp\",\"notepad++\",\"winrar\",\"7z\",\"7-zip\",\"ccleaner\",\"firefox\",\"setup\",\"install\",\"vpn\",\"truecrypt\",\"veracrypt\",\"putty\",\"wireshark\",\"teamviewer\",\"anydesk\"]);\nlet UserWritablePaths = dynamic([@\"\\AppData\\Roaming\\\", @\"\\AppData\\Local\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\"]);\nlet Installers =\n    DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFolderPath has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n         or FolderPath has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n    | where FileName has_any (InstallerNamePatterns)\n    | project InstallerTime = Timestamp, DeviceId, DeviceName, AccountName,\n              InstallerName = FileName, InstallerPath = FolderPath,\n              InstallerCmd = ProcessCommandLine, InstallerSHA256 = SHA256;\n// Service installation event (ETW: services.exe ServiceInstalled / 7045-equivalent)\nlet ServiceInstalls =\n    DeviceEvents\n    | where Timestamp > ago(Lookback)\n    | where ActionType in (\"ServiceInstalled\",\"PowerShellCommand\")\n    | where ActionType == \"ServiceInstalled\"\n         or (InitiatingProcessFileName =~ \"sc.exe\" and InitiatingProcessCommandLine has \"create\")\n    | extend ImagePath = tostring(parse_json(AdditionalFields).ServiceImagePath),\n             SvcName   = tostring(parse_json(AdditionalFields).ServiceName)\n    | where isnotempty(ImagePath)\n    | where ImagePath has_any (UserWritablePaths)\n         or not(ImagePath startswith @\"C:\\Windows\\System32\\\")\n            and not(ImagePath startswith @\"C:\\Windows\\SysWOW64\\\")\n            and not(ImagePath startswith @\"C:\\Program Files\\\")\n            and not(ImagePath startswith @\"C:\\Program Files (x86)\\\")\n    | project SvcInstallTime = Timestamp, DeviceId, SvcName, ImagePath,\n              SvcInstaller = InitiatingProcessFileName,\n              SvcInstallerPath = InitiatingProcessFolderPath,\n              SvcInstallerCmd = InitiatingProcessCommandLine;\nInstallers\n| join kind=inner ServiceInstalls on DeviceId\n| where SvcInstallTime between (InstallerTime .. InstallerTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', SvcInstallTime, InstallerTime)\n| project InstallerTime, SvcInstallTime, DelaySec, DeviceName, AccountName,\n          InstallerName, InstallerPath, InstallerSHA256,\n          SvcName, ImagePath, SvcInstaller\n| order by InstallerTime desc",
+      "sentinel_kql": "// PROMETHIUM / StrongPity \u2014 installer-spawned service install (Sentinel via SecurityEvent 4688 + 7045)\nlet Lookback = 7d;\nlet WindowSec = 600;\nlet InstallerNamePatterns = dynamic([\"npp\",\"notepad++\",\"winrar\",\"7z\",\"7-zip\",\"ccleaner\",\"firefox\",\"setup.exe\",\"install.exe\",\"vpn\",\"truecrypt\",\"veracrypt\",\"putty\",\"wireshark\",\"teamviewer\",\"anydesk\"]);\nlet UserWritablePaths = dynamic([@\"\\AppData\\Roaming\\\", @\"\\AppData\\Local\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\"]);\nlet Installers =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where ParentProcessName has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n         or NewProcessName has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n    | where NewProcessName has_any (InstallerNamePatterns)\n    | project InstallerTime = TimeGenerated, Computer, Account,\n              InstallerImage = NewProcessName, InstallerCmd = CommandLine,\n              InstallerPid = NewProcessId;\n// 7045 = A service was installed in the system\nlet ServiceInstalls =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 7045\n    | extend SvcName  = tostring(extract(@\"Service Name:\\s*(\\S.*)\", 1, EventData)),\n             ImagePath = tostring(extract(@\"Service File Name:\\s*(\\S.*)\", 1, EventData))\n    | where isnotempty(ImagePath)\n    | where ImagePath has_any (UserWritablePaths)\n         or (not(ImagePath startswith @\"C:\\Windows\\System32\\\")\n             and not(ImagePath startswith @\"C:\\Windows\\SysWOW64\\\")\n             and not(ImagePath startswith @\"C:\\Program Files\\\")\n             and not(ImagePath startswith @\"C:\\Program Files (x86)\\\"))\n    | project SvcInstallTime = TimeGenerated, Computer, SvcName, ImagePath;\nInstallers\n| join kind=inner ServiceInstalls on Computer\n| where SvcInstallTime between (InstallerTime .. InstallerTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', SvcInstallTime, InstallerTime)\n| project InstallerTime, SvcInstallTime, DelaySec, Computer, Account,\n          InstallerImage, InstallerCmd, SvcName, ImagePath\n| order by InstallerTime desc",
+      "sigma_yaml": "",
+      "rationale": "Generic 'installer in Downloads' alerts and generic 'service installed' alerts both produce noise. The StrongPity tradecraft pivot is the same user-mode installer process that created the side-dropped PE then immediately registers it as a service in a non-System32 path within seconds. Joining the installer execution to the 7045/ServiceInstalled event on the same host within a 10-minute window repr"
+    },
+    {
+      "title": "[LLM] PROMETHIUM service masquerading legitimate Windows binary names from non-System32 path",
+      "description": "Catches StrongPity's persistence step in isolation when the installer chain UC misses the front half: a Windows service is installed whose ServiceName or ImagePath filename collides with a known Windows-resident binary (spoolsv, prntwsv, wndprbe, audiodg, lsass, svchost) but whose ImagePath sits in %AppData%, %ProgramData% or %Public%. PROMETHIUM specifically reuses near-namesake service binaries (T1036.005) to blend with legitimate svchost/print-spooler entries on Turkish-language Windows builds.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1543.003",
+        "T1036.005",
+        "T1036.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(Services.service_path_name) as image_path values(Services.user) as user from datamodel=Endpoint.Services where Services.action=created by Services.dest Services.service_name Services.service_dll\n| `drop_dm_object_name(\"Services\")`\n| eval svc_basename=lower(replace(service_path_name,\".*\\\\\\\\\",\"\"))\n| eval svc_basename=replace(svc_basename,\"\\\".*\",\"\")\n| eval masq_match=case(\n    match(svc_basename,\"^(spoolsv|prntwsv|wndprbe|svchost|services|lsass|winlogon|csrss|audiodg|sihost|taskhostw|wuauclt|smss)\\.exe$\"),\"true\",\n    match(service_name,\"(?i)(spool|print|wndprbe|defender|update|audio|task|win)\"),\"name_collision\",\n    1=1,\"false\")\n| eval path_lower=lower(image_path)\n| eval suspicious_path=if(match(path_lower,\"\\\\\\\\(appdata|programdata|users\\\\\\\\public|temp)\\\\\\\\\") OR NOT match(path_lower,\"^(c:\\\\\\\\windows\\\\\\\\system32|c:\\\\\\\\windows\\\\\\\\syswow64|c:\\\\\\\\program files)\"),\"true\",\"false\")\n| where (masq_match!=\"false\") AND suspicious_path=\"true\"\n| table first_seen dest service_name svc_basename image_path user masq_match",
+      "kql": "// PROMETHIUM / StrongPity \u2014 service masquerading common Windows binary, ImagePath outside System32\nlet Lookback = 14d;\nlet KnownWindowsBinaries = dynamic([\"spoolsv.exe\",\"prntwsv.exe\",\"wndprbe.exe\",\"svchost.exe\",\"services.exe\",\"lsass.exe\",\"winlogon.exe\",\"csrss.exe\",\"audiodg.exe\",\"sihost.exe\",\"taskhostw.exe\",\"wuauclt.exe\",\"smss.exe\",\"dllhost.exe\",\"conhost.exe\"]);\nlet TrustedPaths = dynamic([@\"c:\\windows\\system32\\\", @\"c:\\windows\\syswow64\\\", @\"c:\\program files\\\", @\"c:\\program files (x86)\\\"]);\nDeviceEvents\n| where Timestamp > ago(Lookback)\n| where ActionType == \"ServiceInstalled\"\n| extend ImagePath = tolower(tostring(parse_json(AdditionalFields).ServiceImagePath)),\n         SvcName   = tostring(parse_json(AdditionalFields).ServiceName),\n         SvcDisplay = tostring(parse_json(AdditionalFields).ServiceDisplayName)\n| extend SvcBase = tostring(extract(@\"([^\\\\\\\"]+\\.exe)\", 1, ImagePath))\n| where isnotempty(ImagePath)\n// Masquerade: filename collides with a known Windows binary\n| where SvcBase in~ (KnownWindowsBinaries)\n     or SvcDisplay has_any (\"Print Spooler\",\"Windows Defender\",\"Windows Update\",\"Audio\",\"Background\",\"Print Service\",\"Spooler\")\n// ImagePath sits outside trusted directories\n| where not(ImagePath has_any (TrustedPaths))\n| where ImagePath has_any (@\"\\appdata\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\temp\\\", @\"\\roaming\\\")\n     or not(ImagePath startswith @\"c:\\windows\\\")\n| project Timestamp, DeviceName, SvcName, SvcDisplay, ImagePath, SvcBase,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessAccountName\n| order by Timestamp desc",
+      "sentinel_kql": "// PROMETHIUM / StrongPity \u2014 masqueraded service install via 7045\nlet Lookback = 14d;\nlet KnownWindowsBinaries = dynamic([\"spoolsv.exe\",\"prntwsv.exe\",\"wndprbe.exe\",\"svchost.exe\",\"services.exe\",\"lsass.exe\",\"winlogon.exe\",\"csrss.exe\",\"audiodg.exe\",\"sihost.exe\",\"taskhostw.exe\",\"wuauclt.exe\",\"smss.exe\",\"dllhost.exe\",\"conhost.exe\"]);\nlet TrustedPaths = dynamic([@\"c:\\windows\\system32\\\", @\"c:\\windows\\syswow64\\\", @\"c:\\program files\\\", @\"c:\\program files (x86)\\\"]);\nSecurityEvent\n| where TimeGenerated > ago(Lookback)\n| where EventID == 7045\n| extend SvcName    = tostring(extract(@\"(?ms)Service Name:\\s*(\\S.*?)\\r?\\n\", 1, EventData)),\n         SvcDisplay = tostring(extract(@\"(?ms)Display Name:\\s*(\\S.*?)\\r?\\n\", 1, EventData)),\n         ImagePath  = tolower(tostring(extract(@\"(?ms)Service File Name:\\s*(\\S.*?)\\r?\\n\", 1, EventData)))\n| extend SvcBase = tostring(extract(@\"([^\\\\\\\"]+\\.exe)\", 1, ImagePath))\n| where isnotempty(ImagePath)\n| where SvcBase in~ (KnownWindowsBinaries)\n     or SvcDisplay has_any (\"Print Spooler\",\"Windows Defender\",\"Windows Update\",\"Audio\",\"Background\",\"Print Service\",\"Spooler\")\n| where not(ImagePath has_any (TrustedPaths))\n| where ImagePath has_any (@\"\\appdata\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\temp\\\", @\"\\roaming\\\")\n     or not(ImagePath startswith @\"c:\\windows\\\")\n| project TimeGenerated, Computer, SubjectUserName, SvcName, SvcDisplay, ImagePath, SvcBase\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: PROMETHIUM / StrongPity Masqueraded Service Install Outside System32\nid: 7c5b2f0e-6a3d-4f7e-9e2a-1d5c8a3b9e11\nstatus: experimental\ndescription: Detects Windows service installation where the service binary name collides with a legitimate Windows binary (spoolsv, prntwsv, wndprbe, svchost, lsass, audiodg, etc.) but the ImagePath resides outside trusted system directories (System32/SysWOW64/Program Files). This is the StrongPity / PROMETHIUM persistence pattern documented by Microsoft and Cisco Talos.\nreferences:\n  - https://attack.mitre.org/groups/G0056/\n  - https://blog.talosintelligence.com/promethium-extends-with-strongpity3/\nauthor: Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.persistence\n  - attack.t1543.003\n  - attack.defense_evasion\n  - attack.t1036.005\n  - attack.t1036.004\n  - attack.g0056\nlogsource:\n  product: windows\n  service: system\nselection:\n  Provider_Name: 'Service Control Manager'\n  EventID: 7045\nmasq_filename:\n  ImagePath|endswith:\n    - '\\spoolsv.exe'\n    - '\\prntwsv.exe'\n    - '\\wndprbe.exe'\n    - '\\svchost.exe'\n    - '\\services.exe'\n    - '\\lsass.exe'\n    - '\\winlogon.exe'\n    - '\\csrss.exe'\n    - '\\audiodg.exe'\n    - '\\taskhostw.exe'\n    - '\\wuauclt.exe'\n    - '\\smss.exe'\n    - '\\dllhost.exe'\nfilter_trusted_paths:\n  ImagePath|contains:\n    - 'C:\\Windows\\System32\\'\n    - 'C:\\Windows\\SysWOW64\\'\n    - 'C:\\Program Files\\'\n    - 'C:\\Program Files (x86)\\'\nuser_writable_path:\n  ImagePath|contains:\n    - '\\AppData\\'\n    - '\\ProgramData\\'\n    - '\\Users\\Public\\'\n    - '\\Temp\\'\n    - '\\Roaming\\'\ncondition: selection and masq_filename and user_writable_path and not filter_trusted_paths\nfields:\n  - Computer\n  - ServiceName\n  - ImagePath\n  - AccountName\nfalsepositives:\n  - Third-party software bundled with portable copies of system utilities (rare, generally allowlistable by ImagePath SHA256)\nlevel: high",
+      "rationale": "PROMETHIUM has consistently used service-name and binary-name collisions (e.g. wndprbe.exe, prntwsv.exe \u2014 near-clones of Windows spooler binaries) installed from %AppData%\\Roaming or %ProgramData%, exactly because most generic 'service installed' alerts ignore ImagePath. By gating on (collision against the known Windows binary list OR a display-name like 'Print Spooler/Windows Defender') AND (Imag",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Spooler",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Spooler` is not a canonical column of DeviceEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of DeviceEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Defender",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Defender` is not a canonical column of DeviceEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Audio",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Audio` is not a canonical column of DeviceEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Background",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Background` is not a canonical column of DeviceEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Service",
+          "tables_in_scope": [
+            "DeviceEvents",
+            "Update"
+          ],
+          "suggestion": "DeviceId",
+          "message": "`Service` is not a canonical column of DeviceEvents, Update. Did you mean `DeviceId`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Spooler",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Spooler` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Defender",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Defender` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Audio",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Audio` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Background",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Background` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Service",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": "ServiceSid",
+          "message": "`Service` is not a canonical column of SecurityEvent, Update. Did you mean `ServiceSid`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule must have a detection definitions"
+      ]
+    }
+  ]
+}

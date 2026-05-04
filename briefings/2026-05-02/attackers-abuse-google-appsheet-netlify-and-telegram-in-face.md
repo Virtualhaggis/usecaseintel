@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AccountDumpling: Inbound noreply@appsheet.com email containing Netlify/Vercel/Google-Drive lure URL
 
-`UC_7_7` · phase: **delivery** · confidence: **High**
+`UC_14_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ _appsheetMail
 
 ### [LLM] Browser process posts to api.telegram.org Bot API (AccountDumpling credential exfil channel)
 
-`UC_7_8` · phase: **actions** · confidence: **High**
+`UC_14_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### [LLM] Safe Links click-through on Netlify/Vercel/Drive lure originating from noreply@appsheet.com
 
-`UC_7_9` · phase: **exploit** · confidence: **High**
+`UC_14_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ UrlClickEvents
 | order by ClickTime desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 

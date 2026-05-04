@@ -34,6 +34,8 @@ PowMix embeds the …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1547.009** — Shortcut Modification
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -41,7 +43,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing â€” periodic outbound to small set of destinations
+### [LLM] PowMix persistence-firing chain: scheduled-task explorer.exe spawning PowerShell via ProgramData LNK
+
+`UC_129_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.parent_process="*\\ProgramData\\*.lnk*" by host Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where InitiatingProcessCommandLine has @"\ProgramData\" and InitiatingProcessCommandLine has ".lnk"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildCmd = ProcessCommandLine,
+          ChildSHA256 = SHA256,
+          GrandparentFile = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] PowMix C2 beacon: PowerShell egress to *.herokuapp.com
+
+`UC_129_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as urls dc(All_Traffic.url) as url_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("powershell.exe","pwsh.exe") AND (All_Traffic.dest_host="*.herokuapp.com" OR All_Traffic.url="*herokuapp.com*") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+| where RemoteUrl endswith "herokuapp.com" or RemoteUrl has ".herokuapp.com/"
+| where InitiatingProcessAccountName !endswith "$"
+| summarize ConnCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            UniqueUrls = dcount(RemoteUrl),
+            SampleUrls = make_set(RemoteUrl, 10),
+            DistinctMinutes = dcount(bin(Timestamp, 1m))
+            by DeviceName, InitiatingProcessAccountName, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by FirstSeen desc
+```
+
+### [LLM] PowMix scheduled-task creation - explorer.exe + ProgramData LNK action via PowerShell or schtasks
+
+`UC_129_10` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*Register-ScheduledTask*" AND Processes.process="*explorer*" AND Processes.process="*.lnk*") OR (Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND Processes.process="*explorer*" AND Processes.process="*.lnk*")) AND NOT Processes.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by host Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName =~ "schtasks.exe"
+         and ProcessCommandLine has_all ("/create", "explorer", ".lnk"))
+     or (FileName in~ ("powershell.exe","pwsh.exe")
+         and ProcessCommandLine has "Register-ScheduledTask"
+         and ProcessCommandLine has "explorer"
+         and ProcessCommandLine has ".lnk")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -311,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
 
-`UC_128_7` · phase: **exploit** · confidence: **High**
+`UC_129_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -361,4 +439,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

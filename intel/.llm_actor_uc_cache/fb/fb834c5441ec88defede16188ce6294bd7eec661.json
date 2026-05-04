@@ -1,0 +1,68 @@
+{
+  "name": "Sidewinder",
+  "ucs": [
+    {
+      "title": "[LLM] Sidewinder (Rattlesnake/T-APT-04) CVE-2017-11882 Equation Editor exploitation chain from RTF lure",
+      "description": "Hunts the Sidewinder hallmark of weaponised RTF spearphishing documents that exploit CVE-2017-11882 in Microsoft Equation Editor (EQNEDT32.EXE) to spawn LOLBin/scripting children \u2014 the primary initial-access pattern Sidewinder has used against South Asian government, military and diplomatic targets since 2017 and continues to use as recently as 2023-2024 against Pakistani and Nepalese government entities.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1203",
+        "T1204.002",
+        "T1059.001",
+        "T1218.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"EQNEDT32.EXE\" OR Processes.parent_process_name=\"eqnedt32.exe\") AND Processes.process_name IN (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"hh.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Sidewinder \u2014 EQNEDT32.EXE (CVE-2017-11882) spawning script/LOLBin child\nlet _suspicious_children = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"hh.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"EQNEDT32.EXE\"            // Equation Editor \u2014 only ever spawned by RTF exploit\n| where AccountName !endswith \"$\"\n| where FileName in~ (_suspicious_children)\n   or ProcessCommandLine has_any (\"http://\",\"https://\",\"-EncodedCommand\",\"FromBase64String\",\"DownloadString\",\"AppData\\\\Roaming\",\"\\\\Temp\\\\\")\n| project Timestamp, DeviceName, AccountName,\n          Parent      = InitiatingProcessFileName,\n          ParentPath  = InitiatingProcessFolderPath,\n          ParentSHA256= InitiatingProcessSHA256,\n          Child       = FileName,\n          ChildPath   = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          ChildSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Sidewinder \u2014 EQNEDT32.EXE child process via 4688\nlet _suspicious_children = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"hh.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where ParentProcessName endswith \"EQNEDT32.EXE\"\n| where Account !endswith \"$\"\n| extend ChildBin = tostring(split(NewProcessName, \"\\\\\")[-1])\n| where ChildBin in~ (_suspicious_children)\n   or CommandLine has_any (\"http://\",\"https://\",\"-EncodedCommand\",\"FromBase64String\",\"DownloadString\",\"AppData\\\\Roaming\",\"\\\\Temp\\\\\")\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, TokenElevationType",
+      "sigma_yaml": "title: Sidewinder CVE-2017-11882 Equation Editor Child Process\nid: 9b3d4f7e-1a2b-4c5d-8e9f-0a1b2c3d4e5f\nstatus: experimental\ndescription: Detects EQNEDT32.EXE spawning script interpreters or LOLBins, the canonical Sidewinder (T-APT-04 / Rattlesnake) RTF spearphishing initial-access chain.\nreferences:\n  - https://attack.mitre.org/groups/G0121/\n  - https://nvd.nist.gov/vuln/detail/CVE-2017-11882\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1203\n  - attack.t1566.001\n  - attack.g0121\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\EQNEDT32.EXE'\n  selection_child:\n    Image|endswith:\n      - '\\mshta.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\curl.exe'\n      - '\\wget.exe'\n      - '\\hh.exe'\n  condition: selection_parent and selection_child\nfalsepositives:\n  - Legitimate use of Equation Editor is essentially nil since Microsoft pulled it in Jan 2018 \u2014 any child process is highly suspicious\nlevel: high",
+      "rationale": "EQNEDT32.EXE is an obsolete component that Microsoft removed from Office in Jan 2018 (CVE-2017-11882 patch). Its presence as a parent process is itself anomalous, and Sidewinder is one of a very small set of actors who continue to weaponise CVE-2017-11882 via RTF lures (Trend Micro 2018, Group-IB 2022, BlackBerry 2023, Kaspersky/Securelist 2024 reporting on Sidewinder against Pakistan/Nepal/Sri La"
+    },
+    {
+      "title": "[LLM] Sidewinder mshta.exe staged HTA download chain from Office or scripting parent",
+      "description": "Hunts Sidewinder's secondary initial-access pattern: weaponised LNK or Office documents invoking mshta.exe with a remote .hta URL, which then drops their JavaScript/VBScript loader (e.g. SideTwist, Backdoor.Agent.Sidewinder, ModuleInstaller). This chain has been used in 2022-2024 campaigns against Pakistani military, Maldivian government, and Nepali Foreign Ministry targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1218.005",
+        "T1059.007",
+        "T1059.005",
+        "T1105",
+        "T1204.001",
+        "T1566.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name=\"mshta.exe\" AND (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\") OR Processes.parent_process_name=\"EQNEDT32.EXE\") AND (Processes.process=\"*http*\" OR Processes.process=\"*.hta*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=cmdline \"(?i)(?<remote_url>https?://[^\\\"\\s'>]+)\" | where isnotnull(remote_url) | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Sidewinder \u2014 Office/script parent \u2192 mshta.exe pulling remote HTA\nlet _office_or_script_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\",\"EQNEDT32.EXE\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName =~ \"mshta.exe\"\n| where InitiatingProcessFileName in~ (_office_or_script_parents)\n| where AccountName !endswith \"$\"\n| where ProcessCommandLine has_any (\"http://\",\"https://\")\n   or ProcessCommandLine matches regex @\"(?i)\\.hta(\\?|\\s|$|\"\")\"\n| extend RemoteUrl = extract(@\"(?i)(https?://[^\\s\"\"'>]+)\", 1, ProcessCommandLine)\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"mshta.exe\"\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrlNet = RemoteUrl\n  ) on DeviceId\n| where isnull(NetTime) or NetTime between (Timestamp - 30s .. Timestamp + 5m)\n| project Timestamp, DeviceName, AccountName,\n          Parent     = InitiatingProcessFileName,\n          ParentCmd  = InitiatingProcessCommandLine,\n          MshtaCmd   = ProcessCommandLine,\n          RemoteUrl, RemoteUrlNet, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "// Sentinel equivalent \u2014 relies on 4688 with command-line auditing\nlet _office_or_script_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"wscript.exe\",\"cscript.exe\",\"EQNEDT32.EXE\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ChildBin  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1]))\n| extend ParentBin = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ChildBin == \"mshta.exe\"\n| where ParentBin in~ (_office_or_script_parents)\n| where CommandLine has_any (\"http://\",\"https://\")\n   or CommandLine matches regex @\"(?i)\\.hta(\\?|\\s|$|\"\")\"\n| extend RemoteUrl = extract(@\"(?i)(https?://[^\\s\"\"'>]+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, RemoteUrl\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Sidewinder Office/Script Parent Spawning mshta.exe with Remote HTA URL\nid: 7e2c5b6a-3f4d-4e9a-b1c2-d3e4f5a6b7c8\nstatus: experimental\ndescription: Detects mshta.exe spawned from Office, Explorer, or scripting hosts with a remote http(s) URL or .hta in the command line \u2014 Sidewinder's (G0121) standard staged loader pattern.\nreferences:\n  - https://attack.mitre.org/groups/G0121/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.execution\n  - attack.defense_evasion\n  - attack.t1218.005\n  - attack.t1566.002\n  - attack.g0121\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_child:\n    Image|endswith: '\\mshta.exe'\n  selection_parent:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\explorer.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\EQNEDT32.EXE'\n  selection_remote:\n    CommandLine|contains:\n      - 'http://'\n      - 'https://'\n      - '.hta'\n  condition: selection_child and selection_parent and selection_remote\nfalsepositives:\n  - Rare in-house management scripts that legitimately invoke mshta with a UNC or HTTP URL \u2014 should be allowlisted by hash/path\nlevel: high",
+      "rationale": "Sidewinder's signature staging chain since at least 2020 \u2014 public reporting from Group-IB, BlackBerry and Kaspersky consistently shows weaponised LNK / RTF / DOC documents launching mshta.exe to fetch a remote .hta JS/VBS stager (often using Cloudflare Workers, free dynamic DNS, or government-themed lookalike domains). Pairing the Office/scripting parent with the remote URL in the command line \u2014 a",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of SecurityEvent; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        }
+      ]
+    }
+  ]
+}

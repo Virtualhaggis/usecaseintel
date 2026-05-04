@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DNS queries to dnshook.site (Unit42/BeyondTrust AgentCore sandbox-escape PoC domain)
 
-`UC_146_9` · phase: **c2** · confidence: **High**
+`UC_147_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceEvents
 
 ### [LLM] AgentCore-style DNS tunnelling: high-volume long-label subdomain queries to a single parent domain
 
-`UC_146_10` · phase: **c2** · confidence: **Medium**
+`UC_147_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceEvents
 | order by DistinctSubdomains desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 

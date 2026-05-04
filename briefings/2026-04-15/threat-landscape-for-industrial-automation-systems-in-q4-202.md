@@ -41,12 +41,87 @@ The percentage of ICS computers on which malicious objects were blocked has been
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1091** — Replication Through Removable Media
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Backdoor.MSIL.XWorm 'Curriculum Vitae-Catalina' resume-themed phishing attachment
+
+`UC_132_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.file_name) as file_name values(All_Email.subject) as subject values(All_Email.src_user) as sender values(All_Email.recipient) as recipient from datamodel=Email where (All_Email.subject IN ("*Resume*","*resume*","*Attached Resume*","*CV*","*Curriculum Vitae*","*curriculum vitae*")) AND (All_Email.file_name IN ("*Curriculum*Vitae*Catalina*.exe","*curriculum*vitae*catalina*.exe","*CurriculumVitaeCatalina*.exe") OR All_Email.file_name="*.exe" AND All_Email.file_name IN ("*Catalina*","*catalina*")) by All_Email.recipient All_Email.src_user All_Email.message_id
+| `drop_dm_object_name(All_Email)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let SuspectSubjects = dynamic(["resume","attached resume","cv","curriculum vitae","curriculum-vitae","job application"]);
+EmailAttachmentInfo
+| where Timestamp > ago(30d)
+| where FileName matches regex @"(?i)curriculum[\s\-_]*vitae[\s\-_]*catalina.*\.exe$"
+   or (FileName endswith ".exe" and FileName has "catalina")
+| project Timestamp, NetworkMessageId, AttachFileName = FileName, AttachSHA256 = SHA256, FileType, MalwareFilterVerdict
+| join kind=inner (
+    EmailEvents
+    | where Timestamp > ago(30d)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam","Replaced")
+    | where Subject matches regex @"(?i)\b(resume|attached\s+resume|cv|curriculum[\s\-]vitae|job\s+application)\b"
+    | project NetworkMessageId, Timestamp, Subject, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, DeliveryAction, DeliveryLocation, AuthenticationDetails
+  ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, AttachFileName, AttachSHA256, MalwareFilterVerdict, DeliveryAction, DeliveryLocation, NetworkMessageId
+| order by Timestamp desc
+```
+
+### [LLM] Execution or filesystem write of 'Curriculum Vitae-Catalina.exe' XWorm dropper
+
+`UC_132_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("Curriculum Vitae-Catalina.exe","Curriculum-Vitae-Catalina.exe","CurriculumVitaeCatalina.exe","Curriculum_Vitae_Catalina.exe") OR Processes.process="*Curriculum*Vitae*Catalina*.exe*" OR Processes.process="*curriculum*vitae*catalina*.exe*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| append [
+    | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Curriculum Vitae-Catalina.exe","Curriculum-Vitae-Catalina.exe","CurriculumVitaeCatalina.exe") OR Filesystem.file_name="*Curriculum*Vitae*Catalina*.exe") by Filesystem.dest Filesystem.file_name Filesystem.user
+    | `drop_dm_object_name(Filesystem)`
+  ]
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let CatalinaPattern = @"(?i)curriculum[\s\-_]*vitae[\s\-_]*catalina.*\.exe$";
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName matches regex CatalinaPattern
+         or InitiatingProcessFileName matches regex CatalinaPattern
+         or ProcessCommandLine matches regex @"(?i)curriculum[\s\-_]*vitae[\s\-_]*catalina.*\.exe"
+    | project Timestamp, EventKind = "ProcessExec", DeviceName, AccountName, FileName, FolderPath, SHA256,
+              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine;
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | where FileName matches regex CatalinaPattern
+    | project Timestamp, EventKind = strcat("File:", ActionType), DeviceName,
+              AccountName = InitiatingProcessAccountName, FileName, FolderPath, SHA256,
+              ProcessCommandLine = "", InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine;
+union ProcHits, FileHits
+| extend RemovableMediaSuspect = iff(FolderPath matches regex @"(?i)^[D-Z]:\\" and FolderPath !startswith @"C:\\", true, false)
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -310,7 +385,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Threat landscape for industrial automation systems in Q4 2025
 
-`UC_131_7` · phase: **exploit** · confidence: **High**
+`UC_132_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,4 +435,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

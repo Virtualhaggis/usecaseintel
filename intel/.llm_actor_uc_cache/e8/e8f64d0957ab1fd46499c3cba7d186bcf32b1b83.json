@@ -1,0 +1,144 @@
+{
+  "name": "Dark Caracal",
+  "ucs": [
+    {
+      "title": "[LLM] Dark Caracal Bandook RAT loader chain \u2014 Office/Outlook \u2192 mshta/PowerShell \u2192 Run-key persistence",
+      "description": "Hunts Dark Caracal's signature Bandook RAT staging pattern: a spearphished Office document (T1566.003 / T1204.002) spawns a script-host or HTA loader (T1059.003 / T1218.001) that drops a payload into a user-writable directory and pins it with a HKCU\\Run autorun (T1547.001) \u2014 all on the same host within a tight window. This is the chain documented by Lookout (2018) and Check Point (Bandook: Signed & Delivered, 2020-2023) for the GDGS-attributed crew tracked as Dark Caracal / Bandook Group.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1204.002",
+        "T1059.003",
+        "T1218.001",
+        "T1547.001",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as loader_time max(_time) as loader_last from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"mshta.exe\",\"hh.exe\")) AND (Processes.process_name IN (\"mshta.exe\",\"hh.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\")) AND NOT (Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename dest as host | join type=inner host [ | tstats summariesonly=t count min(_time) as reg_time from datamodel=Endpoint.Registry where (Registry.registry_path=\"*\\\\CurrentVersion\\\\Run\\\\*\" OR Registry.registry_path=\"*\\\\CurrentVersion\\\\RunOnce\\\\*\") AND (Registry.registry_value_data=\"*\\\\AppData\\\\*\" OR Registry.registry_value_data=\"*\\\\ProgramData\\\\*\" OR Registry.registry_value_data=\"*\\\\Public\\\\*\" OR Registry.registry_value_data=\"*\\\\Temp\\\\*\" OR Registry.registry_value_data=\"*.dll*\" OR Registry.registry_value_data=\"*.hta*\" OR Registry.registry_value_data=\"*.vbs*\") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | rename dest as host ] | eval delta=abs(reg_time-loader_time) | where delta < 1800 | table loader_time reg_time delta host user parent_process_name process_name process registry_path registry_value_name registry_value_data | sort - loader_time",
+      "kql": "let LookbackDays = 7d;\nlet CorrelationWindow = 30m;\nlet _office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"mshta.exe\",\"hh.exe\"]);\nlet _loaders = dynamic([\"mshta.exe\",\"hh.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet Loader = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (_office_parents)\n    | where FileName in~ (_loaders)\n    | where AccountName !endswith \"$\"\n    | project LoaderTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentFile = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildFile = FileName,\n              ChildCmd = ProcessCommandLine;\nDeviceRegistryEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has_any (@\"\\CurrentVersion\\Run\", @\"\\CurrentVersion\\RunOnce\")\n| where RegistryValueData has_any (@\"\\AppData\\\", @\"\\Public\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", \".dll\", \".hta\", \".vbs\", \".js\", \".bat\")\n| join kind=inner Loader on DeviceId\n| where Timestamp between (LoaderTime .. LoaderTime + CorrelationWindow)\n| extend DelaySec = datetime_diff('second', Timestamp, LoaderTime)\n| project LoaderTime, RunKeyTime = Timestamp, DelaySec,\n          DeviceName, AccountName,\n          ParentFile, ParentCmd, ChildFile, ChildCmd,\n          RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName\n| order by LoaderTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet CorrelationMin = 30;\nlet _office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"mshta.exe\",\"hh.exe\"]);\nlet _loaders = dynamic([\"mshta.exe\",\"hh.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet Loader = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where ActorUsername !endswith \"$\"\n    | extend ParentBin = tolower(tostring(split(ParentProcessName, '\\\\')[-1])),\n             ChildBin  = tolower(tostring(split(TargetProcessName, '\\\\')[-1]))\n    | where ParentBin in (_office_parents)\n    | where ChildBin in (_loaders)\n    | project LoaderTime = TimeGenerated, DvcHostname, ActorUsername,\n              ParentProcessName, ParentBin, TargetProcessName, ChildBin,\n              TargetProcessCommandLine, ParentProcessCommandLine;\nImRegistryEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventType has_any (\"RegistryValueSet\",\"RegistryKeyValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has_any (@\"\\CurrentVersion\\Run\", @\"\\CurrentVersion\\RunOnce\")\n| where RegistryValueData has_any (@\"\\AppData\\\", @\"\\Public\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", \".dll\", \".hta\", \".vbs\", \".js\", \".bat\")\n| join kind=inner Loader on $left.DvcHostname == $right.DvcHostname\n| where TimeGenerated between (LoaderTime .. LoaderTime + CorrelationMin * 1m)\n| extend DelaySec = datetime_diff('second', TimeGenerated, LoaderTime)\n| project LoaderTime, RunKeyTime = TimeGenerated, DelaySec,\n          DvcHostname, ActorUsername,\n          ParentBin, ChildBin, TargetProcessCommandLine,\n          RegistryKey, RegistryValue, RegistryValueData\n| order by LoaderTime desc",
+      "sigma_yaml": "",
+      "rationale": "Dark Caracal's Bandook tradecraft is a 3-event signature: (1) Office/Outlook spawns a script proxy after a Facebook/WhatsApp-delivered lure (T1566.003 is uniquely listed for them), (2) the loader stages a packed binary into AppData/ProgramData, (3) HKCU\\Run is set to that path within seconds. Generic 'Office spawns PowerShell' rules fire on every macro; this UC requires the Run-key drop on the SAM"
+    },
+    {
+      "title": "[LLM] Dark Caracal CHM (hh.exe) execution from user-writable path or remote URL \u2014 T1218.001",
+      "description": "Hunts the compiled-HTML-help abuse pattern Dark Caracal uses for both initial execution and second-stage delivery: hh.exe loading a .chm file from %TEMP%/AppData/Downloads or directly from an HTTP(S) URL. T1218.001 is explicitly on Dark Caracal's MITRE technique list and is otherwise rarely abused by commodity crews \u2014 making this a high-signal hunt for this specific actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1218.001",
+        "T1204.002",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where Processes.process_name=\"hh.exe\" AND NOT (Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\")) by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | search (cmdline=\"*\\\\AppData\\\\*\" OR cmdline=\"*\\\\Temp\\\\*\" OR cmdline=\"*\\\\Downloads\\\\*\" OR cmdline=\"*\\\\Public\\\\*\" OR cmdline=\"*\\\\ProgramData\\\\*\" OR cmdline=\"*http://*\" OR cmdline=\"*https://*\" OR cmdline=\"*\\\\\\\\*\\\\*\") | eval suspect_chm=if(match(cmdline,\"(?i)\\\\.chm\"),1,0) | where suspect_chm=1 | rename dest as host | table firstTime host user parent cmdline sha256 | sort - firstTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName =~ \"hh.exe\"\n| where AccountName !endswith \"$\"\n| where ProcessCommandLine has \".chm\"\n| where ProcessCommandLine has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\Downloads\\\", @\"\\Public\\\", @\"\\ProgramData\\\", \"http://\", \"https://\", @\"\\\\\")\n// Suppress legit help-file viewing from Program Files / Windows\n| where not (ProcessCommandLine has_any (@\"C:\\Program Files\\\", @\"C:\\Program Files (x86)\\\", @\"C:\\Windows\\Help\\\"))\n| extend ChmPath = extract(@\"(?i)([a-z]:\\\\[^\\\"\\s]+\\.chm|https?://[^\\\"\\s]+\\.chm|\\\\\\\\[^\\\"\\s]+\\.chm)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName, ChmPath,\n          ProcessCommandLine,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          GrandParent = InitiatingProcessParentFileName,\n          SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "ImProcessCreate\n| where TimeGenerated > ago(14d)\n| where ActorUsername !endswith \"$\"\n| extend ChildBin = tolower(tostring(split(TargetProcessName, '\\\\')[-1]))\n| where ChildBin == \"hh.exe\"\n| where TargetProcessCommandLine has \".chm\"\n| where TargetProcessCommandLine has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\Downloads\\\", @\"\\Public\\\", @\"\\ProgramData\\\", \"http://\", \"https://\", @\"\\\\\")\n| where not (TargetProcessCommandLine has_any (@\"C:\\Program Files\\\", @\"C:\\Program Files (x86)\\\", @\"C:\\Windows\\Help\\\"))\n| extend ChmPath = extract(@\"(?i)([a-z]:\\\\[^\\\"\\s]+\\.chm|https?://[^\\\"\\s]+\\.chm|\\\\\\\\[^\\\"\\s]+\\.chm)\", 1, TargetProcessCommandLine)\n| project TimeGenerated, DvcHostname, ActorUsername, ChmPath,\n          TargetProcessCommandLine,\n          ParentProcessName, ParentProcessCommandLine, SHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Dark Caracal CHM Proxy Execution from User-Writable Path\nid: a4f1b2c3-d5e6-47f8-9012-dcc1c0d4ec70\nstatus: experimental\ndescription: Detects hh.exe loading a .chm file from a user-writable directory or remote URL \u2014 T1218.001 abuse pattern associated with Dark Caracal (G0070) / Bandook Group operators.\nreferences:\n  - https://attack.mitre.org/groups/G0070/\n  - https://info.lookout.com/rs/051-ESQ-475/images/Lookout_Dark-Caracal_srr_20180118_us_v.1.0.pdf\nauthor: SOC Detection Engineering\ndate: 2026-05-03\ntags:\n  - attack.defense_evasion\n  - attack.t1218.001\n  - attack.execution\n  - attack.t1204.002\n  - attack.g0070\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith: '\\hh.exe'\n  selection_chm:\n    CommandLine|contains: '.chm'\n  selection_path:\n    CommandLine|contains:\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - '\\Downloads\\'\n      - '\\Public\\'\n      - '\\ProgramData\\'\n      - 'http://'\n      - 'https://'\n      - '\\\\'\n  filter_legit:\n    CommandLine|contains:\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n      - 'C:\\Windows\\Help\\'\n  condition: selection_img and selection_chm and selection_path and not filter_legit\nfalsepositives:\n  - Custom in-house help packages stored under user profiles\nlevel: high",
+      "rationale": "T1218.001 (CHM via hh.exe) is one of only ~12 ATT&CK techniques explicitly tracked for Dark Caracal \u2014 most adversaries don't touch CHM at all. Legit hh.exe almost always loads .chm files from C:\\Program Files\\* or C:\\Windows\\Help\\*; loading from %AppData%, %Temp%, Downloads, a UNC share, or directly from HTTP is overwhelmingly malicious and matches Lookout's documented Dark Caracal/Bandook deliver",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Program",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Program` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Files",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "FileSize",
+          "message": "`Files` is not a canonical column of DeviceProcessEvents. Did you mean `FileSize`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Help",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Help` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChmPath",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChmPath` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Program",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Program` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Files",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Files` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Help",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Help` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChmPath",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`ChmPath` is not a canonical column of ImProcessCreate."
+        }
+      ]
+    }
+  ]
+}

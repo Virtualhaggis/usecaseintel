@@ -1,0 +1,98 @@
+{
+  "name": "Cyber Av3ngers",
+  "ucs": [
+    {
+      "title": "[LLM] Cyber Av3ngers Unitronics Vision/Samba PLC targeting via PCOM TCP/20256",
+      "description": "Hunts TCP/20256 (Unitronics PCOM) traffic to/from the corporate IT estate \u2014 Cyber Av3ngers (IRGC-CEC) has consistently used this protocol/port to reach internet-exposed Unitronics Vision-series PLCs (e.g. Aliquippa, PA water authority, Nov-2023) and to fingerprint/deface devices with default password '1111'. Outbound 20256 from a Windows endpoint is overwhelmingly anomalous and a high-fidelity pivot signal that an IT host is being used as a foothold against OT.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1133",
+        "T0855"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count, values(All_Traffic.action) as action, values(All_Traffic.app) as app, min(_time) as firstSeen, max(_time) as lastSeen, dc(All_Traffic.dest_ip) as dst_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=20256 All_Traffic.transport=tcp by All_Traffic.src_ip All_Traffic.src All_Traffic.dest_ip All_Traffic.dest \n| `drop_dm_object_name(\"All_Traffic\")` \n| eval src_zone=case(cidrmatch(\"10.0.0.0/8\",src_ip) OR cidrmatch(\"172.16.0.0/12\",src_ip) OR cidrmatch(\"192.168.0.0/16\",src_ip),\"internal\",1=1,\"external\") \n| eval dst_zone=case(cidrmatch(\"10.0.0.0/8\",dest_ip) OR cidrmatch(\"172.16.0.0/12\",dest_ip) OR cidrmatch(\"192.168.0.0/16\",dest_ip),\"internal\",1=1,\"external\") \n| search NOT [ inputlookup ot_engineering_workstations.csv | fields src_ip ] \n| eval scenario=case(src_zone==\"internal\" AND dst_zone==\"external\",\"endpoint_pivot_to_internet_PLC\", src_zone==\"external\" AND dst_zone==\"internal\",\"inbound_PLC_targeting\", src_zone==\"internal\" AND dst_zone==\"internal\" AND dst_count>5,\"internal_PLC_sweep\") \n| where isnotnull(scenario) \n| sort - count",
+      "kql": "// Cyber Av3ngers \u2014 Unitronics PCOM (TCP/20256) traffic from the IT estate\nlet _ot_jumphost_devices = dynamic([\"OT-JUMP01\",\"OT-ENG01\"]);   // allowlist legitimate Unitronics VisiLogic / engineering hosts\nlet _suspicious_tools = dynamic([\"python.exe\",\"pwsh.exe\",\"powershell.exe\",\"nmap.exe\",\"masscan.exe\",\"curl.exe\",\"nc.exe\",\"ncat.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where Protocol =~ \"Tcp\"\n| where RemotePort == 20256                                          // Unitronics PCOM\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n| where DeviceName !in~ (_ot_jumphost_devices)\n| where InitiatingProcessAccountName !endswith \"$\"\n| extend SuspiciousTool = iff(InitiatingProcessFileName in~ (_suspicious_tools), \"yes\", \"no\")\n| summarize ConnCount = count(),\n            DistinctPLCs = dcount(RemoteIP),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            SamplePLCs = make_set(RemoteIP, 25),\n            SampleCmd  = any(InitiatingProcessCommandLine)\n          by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, RemoteIPType, SuspiciousTool\n| where DistinctPLCs >= 1                                            // any 20256 contact is anomalous; >=3 = sweep\n| order by DistinctPLCs desc, ConnCount desc",
+      "sentinel_kql": "// Cyber Av3ngers \u2014 Unitronics PCOM (TCP/20256) traffic \u2014 Sentinel via ASIM + perimeter CEF\nlet _ot_jumphost_ips = dynamic([\"10.50.10.21\",\"10.50.10.22\"]);\nlet endpoint_view = ImNetworkSession\n    | where TimeGenerated > ago(7d)\n    | where NetworkProtocol =~ \"TCP\"\n    | where DstPortNumber == 20256\n    | where SrcIpAddr !in (_ot_jumphost_ips)\n    | project TimeGenerated, Source=\"ASIM_NetworkSession\", DvcHostname, ActorUsername,\n              SrcIpAddr, DstIpAddr, DstPortNumber, NetworkProtocol,\n              ActingProcessName, ActingProcessCommandLine, DvcAction;\nlet perimeter_view = CommonSecurityLog\n    | where TimeGenerated > ago(7d)\n    | where DestinationPort == 20256\n    | where Protocol has \"tcp\"\n    | where SourceIP !in (_ot_jumphost_ips)\n    | project TimeGenerated, Source=\"PerimeterFW\", DvcHostname=DeviceName, ActorUsername=SourceUserName,\n              SrcIpAddr=SourceIP, DstIpAddr=DestinationIP, DstPortNumber=DestinationPort,\n              NetworkProtocol=Protocol, ActingProcessName=\"\", ActingProcessCommandLine=\"\",\n              DvcAction=DeviceAction;\nunion endpoint_view, perimeter_view\n| extend SrcZone = iff(ipv4_is_private(SrcIpAddr),\"internal\",\"external\"),\n         DstZone = iff(ipv4_is_private(DstIpAddr),\"internal\",\"external\")\n| extend Scenario = case(SrcZone==\"internal\" and DstZone==\"external\", \"endpoint_pivot_to_internet_PLC\",\n                          SrcZone==\"external\" and DstZone==\"internal\", \"inbound_PLC_targeting\",\n                          SrcZone==\"internal\" and DstZone==\"internal\", \"internal_PLC_sweep\",\n                          \"other\")\n| summarize Hits = count(), DistinctPLCs = dcount(DstIpAddr), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),\n            SamplePLCs = make_set(DstIpAddr, 25), Tools = make_set(ActingProcessName, 10)\n          by DvcHostname, SrcIpAddr, ActorUsername, Scenario\n| where DistinctPLCs >= 1\n| order by DistinctPLCs desc, Hits desc",
+      "sigma_yaml": "title: Unitronics PCOM (TCP/20256) Connection \u2014 Suspected Cyber Av3ngers Targeting\nid: 9d3f2c11-78a3-4a8e-9c2c-cyberav3ngersplc\nstatus: experimental\ndescription: Detects TCP/20256 (Unitronics PCOM) network connections from Windows endpoints. Cyber Av3ngers (IRGC-CEC) used this protocol/port to compromise and deface internet-exposed Unitronics Vision-series PLCs in late-2023 (e.g. Aliquippa water authority).\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-335a\n  - https://www.cisa.gov/news-events/alerts/2023/12/01/exploitation-unitronics-plcs-used-water-and-wastewater-systems\nauthor: SOC Detection Engineering\ndate: 2026/05/03\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    DestinationPort: 20256\n    Protocol: tcp\n    Initiated: 'true'\n  filter_engineering:\n    Image|endswith:\n      - '\\VisiLogic.exe'\n      - '\\UniLogic.exe'\n  condition: selection and not filter_engineering\nfields:\n  - Image\n  - SourceIp\n  - DestinationIp\n  - User\nfalsepositives:\n  - Authorised OT engineering workstations running Unitronics VisiLogic/UniLogic \u2014 should be allowlisted by host.\nlevel: high\ntags:\n  - attack.initial_access\n  - attack.t1190\n  - attack.t1133\n  - ics.t0855",
+      "rationale": "TCP/20256 PCOM is the unambiguous on-the-wire fingerprint of Cyber Av3ngers' Unitronics campaigns documented by CISA/FBI/NSA (AA23-335A). The port has no legitimate use outside Unitronics-aware engineering hosts, so any IT-side endpoint speaking 20256 is either a misplaced engineer or, more likely, an attacker pivoting toward OT \u2014 exactly the actor-specific behaviour. Generic ICS detections (Modbu",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "Protocol",
+          "tables_in_scope": [
+            "CommonSecurityLog",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "SecurityEvent"
+          ],
+          "message": "`Protocol` is not a column of CommonSecurityLog, ImNetworkSession; it does exist on DeviceNetworkEvents, DeviceLogonEvents, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "DeviceName",
+          "tables_in_scope": [
+            "CommonSecurityLog",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents",
+            "DeviceRegistryEvents",
+            "DeviceLogonEvents",
+            "DeviceImageLoadEvents",
+            "DeviceEvents",
+            "DeviceInfo",
+            "DeviceNetworkInfo",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "DeviceTvmSoftwareInventory",
+            "DeviceTvmSoftwareVulnerabilities",
+            "AlertEvidence",
+            "AADSignInEventsBeta",
+            "ASCDeviceEvents"
+          ],
+          "message": "`DeviceName` is not a column of CommonSecurityLog, ImNetworkSession; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents, DeviceRegistryEvents, DeviceLogonEvents, DeviceImageLoadEvents, DeviceEvents, DeviceInfo, DeviceNetworkInfo, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities, AlertEvidence, AADSignInEventsBeta, ASCDeviceEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Cyber Av3ngers IT-to-OT pivot: SMB admin-share wiper stage + remote service execution",
+      "description": "Hunts the actor's enterprise-side kill chain that precedes their PLC defacements: phishing/T1190 \u2192 credential theft (T1003/T1555.003) \u2192 SMB admin-share write of a payload to a remote host (T1021.002) \u2192 SYSTEM-context execution of that payload via services.exe (T1569.002), often a wiper or PLC-staging tool (T1486). Catches the write-and-execute pair that Cyber Av3ngers and other IRGC-aligned crews (linked to IOCONTROL / similar wipers) use to fan out before reaching the OT segment.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1021.002",
+        "T1569.002",
+        "T1486",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as fileWriteTime, values(Filesystem.file_name) as wiper_file, values(Filesystem.file_path) as wiper_path, values(Filesystem.file_hash) as wiper_hash, values(Filesystem.process_name) as writing_proc from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=\"*\\\\Windows\\\\*\" OR Filesystem.file_path=\"*\\\\PerfLogs\\\\*\" OR Filesystem.file_path=\"*\\\\Users\\\\Public\\\\*\") (Filesystem.file_name=\"*.exe\" OR Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.bat\" OR Filesystem.file_name=\"*.ps1\") Filesystem.process_name=\"System\" by Filesystem.dest \n| `drop_dm_object_name(\"Filesystem\")` \n| join type=inner dest [ \n    | tstats summariesonly=true min(_time) as svcStartTime, values(Processes.process) as svc_cmdline, values(Processes.process_name) as svc_child, values(Processes.process_path) as svc_child_path, values(Processes.user) as svc_user from datamodel=Endpoint.Processes where Processes.parent_process_name=services.exe (Processes.user=\"*SYSTEM*\" OR Processes.user=\"NT AUTHORITY\\\\SYSTEM\") (Processes.process_path=\"*\\\\Windows\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\") by Processes.dest \n    | `drop_dm_object_name(\"Processes\")` \n] \n| eval delta_sec = svcStartTime - fileWriteTime \n| where delta_sec >= 0 AND delta_sec <= 600 \n| where like(svc_child_path, wiper_path.\"%\") OR match(svc_cmdline, wiper_file) \n| table fileWriteTime, svcStartTime, delta_sec, dest, wiper_file, wiper_path, wiper_hash, svc_child, svc_cmdline, svc_user \n| sort - svcStartTime",
+      "kql": "// Cyber Av3ngers \u2014 SMB admin-share write followed by services.exe spawn of the same binary (lateral wiper stage)\nlet RecentDays = 14d;\nlet StagingPaths = dynamic([@\"\\Windows\\\", @\"\\Windows\\Temp\\\", @\"\\PerfLogs\\\", @\"\\Users\\Public\\\"]);\nlet RemoteSmbWrites =\n    DeviceFileEvents\n    | where Timestamp > ago(RecentDays)\n    | where ActionType == \"FileCreated\"\n    | where InitiatingProcessFileName =~ \"System\"                       // SMB writes show up as parent=System\n    | where FileName endswith \".exe\" or FileName endswith \".dll\" or FileName endswith \".bat\" or FileName endswith \".ps1\"\n    | where FolderPath has_any (StagingPaths)\n    | where isnotempty(RequestSourceIP) or RequestProtocol has \"SMB\"     // remote-origin write\n    | project WriteTime = Timestamp, DeviceId, DeviceName,\n              StagedFile = FileName, StagedFolder = FolderPath,\n              StagedSHA256 = SHA256, RemoteWriter = RequestSourceIP,\n              RemoteWriterAcct = RequestAccountName;\nDeviceProcessEvents\n| where Timestamp > ago(RecentDays)\n| where InitiatingProcessFileName =~ \"services.exe\"\n| where AccountName =~ \"system\"\n| where FolderPath has_any (StagingPaths)\n| join kind=inner RemoteSmbWrites on $left.DeviceId == $right.DeviceId,\n                                      $left.FolderPath == $right.StagedFolder,\n                                      $left.FileName == $right.StagedFile\n| where Timestamp between (WriteTime .. WriteTime + 10m)\n| extend DeltaSec = datetime_diff('second', Timestamp, WriteTime)\n| project WriteTime, ExecTime = Timestamp, DeltaSec,\n          DeviceName, RemoteWriter, RemoteWriterAcct,\n          StagedFile, StagedFolder, StagedSHA256,\n          ServiceCmd = ProcessCommandLine, ServiceFolder = FolderPath\n| order by ExecTime desc",
+      "sentinel_kql": "// Cyber Av3ngers \u2014 same detection on Sentinel via ASIM ImFileEvent + SecurityEvent 4688/7045\nlet RecentDays = 14d;\nlet StagingPaths = dynamic([@\"\\Windows\\\", @\"\\Windows\\Temp\\\", @\"\\PerfLogs\\\", @\"\\Users\\Public\\\"]);\nlet RemoteSmbWrites =\n    ImFileEvent\n    | where TimeGenerated > ago(RecentDays)\n    | where EventType == \"FileCreated\"\n    | where ActingProcessName has_any (\"System\",\"\\\\System\")\n    | where TargetFileName endswith \".exe\" or TargetFileName endswith \".dll\" or TargetFileName endswith \".bat\" or TargetFileName endswith \".ps1\"\n    | where TargetFilePath has_any (StagingPaths)\n    | project WriteTime = TimeGenerated, Computer = DvcHostname,\n              StagedFile = TargetFileName, StagedFolder = TargetFilePath, StagedSHA256 = TargetFileSHA256;\nSecurityEvent\n| where TimeGenerated > ago(RecentDays)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\services.exe\"\n| where SubjectUserSid == \"S-1-5-18\" or Account endswith \"\\\\SYSTEM\"\n| where NewProcessName has_any (StagingPaths)\n| extend Computer = tostring(Computer)\n| join kind=inner RemoteSmbWrites on Computer\n| where TimeGenerated between (WriteTime .. WriteTime + 10m)\n| where NewProcessName has StagedFile\n| extend DeltaSec = datetime_diff('second', TimeGenerated, WriteTime)\n| project WriteTime, ExecTime = TimeGenerated, DeltaSec, Computer,\n          StagedFile, StagedFolder, StagedSHA256,\n          NewProcessName, CommandLine\n| order by ExecTime desc",
+      "sigma_yaml": "",
+      "rationale": "Cyber Av3ngers / IRGC-CEC operations against Western water-utility and manufacturing networks have repeatedly chained corporate-IT compromise (T1566/T1190 \u2192 T1003 credential theft) into SMB admin-share lateral movement (T1021.002) and service-driven execution (T1569.002) of wiper/staging payloads (T1486) before pivoting to the OT segment. The detection is anchored on the temporal pair: a SMB-origi"
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "name": "Confucius",
+  "ucs": [
+    {
+      "title": "[LLM] Confucius lure-doc chain: Office template injection / Equation Editor spawning mshta.exe or PowerShell to fetch remote payload",
+      "description": "Hunts Confucius's signature initial-access-to-execution chain: a weaponised Office document (often Pakistan/India military or diplomatic-themed) abuses remote template injection (T1221) or CVE-2017-11882 in Equation Editor (eqnedt32.exe) to spawn mshta.exe or PowerShell with an external URL, downloading the next-stage RAT (Warzone, Quasar, or Confucius's bespoke loaders). This combination of Office parent + LOLBin child + outbound HTTP is the most consistent fingerprint of G0142 across TrendMicro/Uptycs reporting (2017-2021).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1221",
+        "T1203",
+        "T1218.005",
+        "T1059.001",
+        "T1566.001",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\") AND Processes.process_name IN (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(\"Processes\")` | where match(cmdline,\"(?i)https?:\\/\\/|\\\\\\\\[A-Za-z0-9._-]+\\\\\") OR match(cmdline,\"(?i)(DownloadString|IEX|Invoke-Expression|FromBase64String|-enc(?:odedcommand)?|hta:|javascript:|vbscript:)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 7d;\nlet OfficeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\"]);\nlet ScriptingChildren = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet SuspiciousChain = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ (OfficeParents)\n    | where FileName in~ (ScriptingChildren)\n    | where ProcessCommandLine matches regex @\"(?i)(https?://|\\\\\\\\[A-Za-z0-9._-]+\\\\|hta:|javascript:|vbscript:|DownloadString|Invoke-Expression|IEX|FromBase64String|-enc(odedcommand)?\\s)\"\n    | project Timestamp, DeviceId, DeviceName, AccountName,\n              Parent = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              Child = FileName,\n              ChildCmd = ProcessCommandLine,\n              ChildSHA256 = SHA256;\n// Enrich with the immediate outbound connection from that child process within 2 minutes\nSuspiciousChain\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\")\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort\n  ) on DeviceId\n| where isnull(NetTime) or (NetTime between (Timestamp .. Timestamp + 2m))\n| project Timestamp, DeviceName, AccountName, Parent, ParentCmd, Child, ChildCmd, ChildSHA256, RemoteIP, RemoteUrl, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet OfficeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\"]);\nlet ScriptingChildren = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ParentBin = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n         ChildBin  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1]))\n| where ParentBin in (OfficeParents)\n| where ChildBin in (ScriptingChildren)\n| where CommandLine matches regex @\"(?i)(https?://|\\\\\\\\[A-Za-z0-9._-]+\\\\|hta:|javascript:|vbscript:|DownloadString|Invoke-Expression|IEX|FromBase64String|-enc(odedcommand)?\\s)\"\n| project TimeGenerated, Computer, Account, ParentBin, ParentProcessName, ChildBin, NewProcessName, CommandLine, NewProcessId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Confucius APT - Office Application Spawns Scripting LOLBin With Remote URL\nid: 8f3c2b9c-5a4e-4f4a-9c2d-3a18a4e7e9d3\nstatus: experimental\ndescription: Detects the Confucius (G0142) initial-access chain where a weaponised Office document (template injection T1221 or CVE-2017-11882 via eqnedt32.exe) spawns mshta/PowerShell/wscript with an embedded remote URL or download primitive.\nreferences:\n  - https://attack.mitre.org/groups/G0142/\n  - https://www.trendmicro.com/en_us/research/21/h/confucius-uses-pegasus-spyware-related-lures-to-target-pakistani-military.html\nauthor: Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1221\n  - attack.t1203\n  - attack.t1218.005\n  - attack.t1059.001\n  - attack.g0142\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\eqnedt32.exe'\n  selection_child:\n    Image|endswith:\n      - '\\mshta.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n  selection_payload:\n    CommandLine|re|i:\n      - 'https?://'\n      - 'hta:'\n      - 'javascript:'\n      - 'vbscript:'\n      - 'DownloadString'\n      - 'Invoke-Expression'\n      - '\\bIEX\\b'\n      - 'FromBase64String'\n      - '-enc(odedcommand)?\\s'\n  condition: selection_parent and selection_child and selection_payload\nfalsepositives:\n  - Legitimate enterprise macros that fetch remote content (rare; should be allow-listed by hash)\n  - IT-managed mshta-driven onboarding scripts launched from Office\nlevel: high",
+      "rationale": "Confucius's tradecraft is unusually consistent: TrendMicro (Feb 2018, Aug 2021) and Uptycs (Jan 2021) all document the same chain \u2014 RTF/DOCX lure exploiting CVE-2017-11882 in Microsoft Equation Editor (eqnedt32.exe) or using OOXML remote-template injection (T1221), which spawns mshta.exe / PowerShell to retrieve their second-stage loaders (sometimes Warzone or Quasar variants). The eqnedt32.exe pa",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Parent",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Parent` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Child",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Child` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChildCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildSHA256",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "SHA256",
+          "message": "`ChildSHA256` is not a canonical column of DeviceProcessEvents. Did you mean `SHA256`?"
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Confucius staged exfil: archive of user docs followed by HTTPS upload to public cloud storage by non-browser process",
+      "description": "Hunts the Confucius collection-and-exfiltration tail: their custom RATs (and SunBird/Hornbill on mobile-adjacent endpoints) stage data into archives, then exfiltrate to legitimate web services (T1567.002) \u2014 Mega, Dropbox, OneDrive personal, Google Drive, anonfiles, transfer.sh \u2014 to blend with normal traffic. The actor specifically prefers cloud-storage exfil over custom C2 to evade egress filtering in South Asian government networks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1567.002",
+        "T1119",
+        "T1083",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN (\"ssl\",\"http\",\"https\") AND (All_Traffic.dest_host IN (\"*.mega.nz\",\"*.mega.co.nz\",\"*.dropbox.com\",\"*.dropboxusercontent.com\",\"*.googleapis.com\",\"*.anonfiles.com\",\"*.transfer.sh\",\"*.bashupload.com\",\"*.gofile.io\",\"*.pixeldrain.com\",\"*.file.io\",\"*.send.tresorit.com\") OR All_Traffic.url IN (\"*mega.nz*\",\"*dropbox*\",\"*anonfiles*\",\"*transfer.sh*\",\"*gofile.io*\"))) by All_Traffic.src host All_Traffic.process_name | `drop_dm_object_name(\"All_Traffic\")` | where process_name!=\"\" AND NOT match(process_name,\"(?i)(chrome|msedge|firefox|brave|opera|iexplore|safari|onedrive|teams|outlook|onedrivestandaloneupdater)\\.exe$\") | join type=outer host process_name [| tstats `summariesonly` count as archive_count values(Filesystem.file_path) as staged_files from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"*.zip\",\"*.rar\",\"*.7z\",\"*.cab\",\"*.tar\",\"*.gz\") AND Filesystem.action=\"created\" by Filesystem.dest host Filesystem.process_name | `drop_dm_object_name(\"Filesystem\")` | rename Filesystem.dest as src] | where archive_count>=1 OR bytes_out>1048576 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackHours = 24h;\nlet CloudExfilDomains = dynamic([\n    \"mega.nz\",\"mega.co.nz\",\"userstorage.mega.co.nz\",\n    \"dropbox.com\",\"content.dropboxapi.com\",\"dl.dropboxusercontent.com\",\n    \"anonfiles.com\",\"bayfiles.com\",\"transfer.sh\",\"bashupload.com\",\n    \"gofile.io\",\"pixeldrain.com\",\"file.io\",\"send.tresorit.com\",\n    \"upload.box.com\",\"uguu.se\",\"catbox.moe\"\n]);\nlet BrowserOrSyncClients = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\n    \"onedrive.exe\",\"onedrivestandaloneupdater.exe\",\"teams.exe\",\"outlook.exe\",\n    \"googledrivesync.exe\",\"dropbox.exe\",\"megasync.exe\"\n]);\n// Step 1: archive staging on the host within the last 24h\nlet ArchiveStaging = DeviceFileEvents\n    | where Timestamp > ago(LookbackHours)\n    | where ActionType == \"FileCreated\"\n    | where FileName matches regex @\"(?i)\\.(zip|rar|7z|cab|tar|gz|tar\\.gz|tgz)$\"\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | where InitiatingProcessFileName !in~ (BrowserOrSyncClients)\n    | summarize ArchiveCount = count(),\n                ArchiveSamples = make_set(FileName, 5),\n                FirstStaged = min(Timestamp),\n                LastStaged = max(Timestamp)\n                by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessAccountName\n    | where ArchiveCount >= 1;\n// Step 2: same non-browser process talks to a cloud-exfil host\nlet CloudUpload = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackHours)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where InitiatingProcessFileName !in~ (BrowserOrSyncClients)\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | extend MatchedDomain = tostring(extract(@\"(?i)([a-z0-9-]+\\.(?:mega\\.(?:nz|co\\.nz)|userstorage\\.mega\\.co\\.nz|dropbox\\.com|dropboxapi\\.com|dropboxusercontent\\.com|anonfiles\\.com|bayfiles\\.com|transfer\\.sh|bashupload\\.com|gofile\\.io|pixeldrain\\.com|file\\.io|tresorit\\.com|box\\.com|uguu\\.se|catbox\\.moe))\", 1, RemoteUrl))\n    | where isnotempty(MatchedDomain)\n    | summarize ConnCount = count(),\n                Hosts = make_set(MatchedDomain, 5),\n                FirstUpload = min(Timestamp),\n                LastUpload = max(Timestamp)\n                by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessAccountName;\n// Step 3: same process did both \u2014 that's the alert\nArchiveStaging\n| join kind=inner CloudUpload on DeviceId, InitiatingProcessFileName, InitiatingProcessSHA256\n| where LastStaged < LastUpload          // staging happened before upload\n| project DeviceName, AccountName = InitiatingProcessAccountName,\n          Process = InitiatingProcessFileName, ProcessHash = InitiatingProcessSHA256,\n          ArchiveCount, ArchiveSamples, FirstStaged, LastStaged,\n          ConnCount, ExfilHosts = Hosts, FirstUpload, LastUpload,\n          DwellSeconds = datetime_diff('second', LastUpload, LastStaged)\n| order by LastUpload desc",
+      "sentinel_kql": "let LookbackHours = 24h;\nlet CloudExfilHostRegex = @\"(?i)([a-z0-9-]+\\.(?:mega\\.(?:nz|co\\.nz)|dropbox\\.com|dropboxapi\\.com|dropboxusercontent\\.com|anonfiles\\.com|bayfiles\\.com|transfer\\.sh|bashupload\\.com|gofile\\.io|pixeldrain\\.com|file\\.io|tresorit\\.com|box\\.com|uguu\\.se|catbox\\.moe))\";\nlet BrowserOrSyncClients = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\n    \"onedrive.exe\",\"onedrivestandaloneupdater.exe\",\"teams.exe\",\"outlook.exe\",\n    \"googledrivesync.exe\",\"dropbox.exe\",\"megasync.exe\"\n]);\nlet ArchiveStaging = ImFileEvent\n    | where TimeGenerated > ago(LookbackHours)\n    | where EventType == \"FileCreated\"\n    | where TargetFileName matches regex @\"(?i)\\.(zip|rar|7z|cab|tar|gz|tgz)$\"\n    | where ActorUsername !endswith \"$\"\n    | extend ActingBin = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n    | where ActingBin !in (BrowserOrSyncClients)\n    | summarize ArchiveCount = count(),\n                ArchiveSamples = make_set(TargetFileName, 5),\n                LastStaged = max(TimeGenerated)\n                by DvcHostname, ActorUsername, ActingBin;\nlet CloudUpload = ImNetworkSession\n    | where TimeGenerated > ago(LookbackHours)\n    | where isnotempty(Url)\n    | where Url matches regex CloudExfilHostRegex\n    | extend ActingBin = tolower(tostring(split(coalesce(SrcUsername, \"\"), \"\\\\\")[-1]))   // best-effort if process name unavailable\n    | summarize ConnCount = count(),\n                ExfilHost = make_set(extract(CloudExfilHostRegex, 1, Url), 5),\n                LastUpload = max(TimeGenerated),\n                BytesOut = sum(NetworkBytes)\n                by DvcHostname, SrcUsername;\nArchiveStaging\n| join kind=inner CloudUpload on DvcHostname\n| where LastStaged < LastUpload\n| project DvcHostname, ActorUsername, ActingBin,\n          ArchiveCount, ArchiveSamples, LastStaged,\n          ConnCount, ExfilHost, BytesOut, LastUpload,\n          DwellSeconds = datetime_diff('second', LastUpload, LastStaged)\n| order by LastUpload desc",
+      "sigma_yaml": "",
+      "rationale": "Confucius's exfiltration TTP is documented across Uptycs and TrendMicro reports as preferring legitimate cloud storage (T1567.002) \u2014 Mega, anonfiles, Dropbox \u2014 because South Asian government targets often allow these as productivity domains while blocking exotic C2. The detection's high-fidelity hinge is requiring the SAME non-browser process to (a) write an archive locally and (b) push it to one "
+    }
+  ]
+}

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 

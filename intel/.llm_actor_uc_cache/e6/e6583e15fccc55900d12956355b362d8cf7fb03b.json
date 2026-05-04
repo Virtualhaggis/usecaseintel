@@ -1,0 +1,65 @@
+{
+  "name": "Wizard Spider",
+  "ucs": [
+    {
+      "title": "[LLM] Wizard Spider / Conti AdFind reconnaissance \u2014 leaked-playbook filter strings",
+      "description": "Wizard Spider (FIN12 / Periwinkle Tempest) operators run AdFind with a near-verbatim, copy-pasted set of LDAP filter strings drawn from the August-2021 Conti playbook leak (objectcategory=person/computer, trustdmp, subnets, name dnshostname operatingsystem, etc.) typically 1-3 days post-BazarLoader/IcedID landing and immediately before lateral movement and Conti/Ryuk deployment. Catching the exact filter combination is far more specific than 'adfind.exe ran'.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1087.002",
+        "T1018",
+        "T1482",
+        "T1016"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as commandLines values(Processes.process_path) as imagePaths values(Processes.parent_process_name) as parents values(Processes.parent_process) as parentCmd from datamodel=Endpoint.Processes where (Processes.process_name=\"adfind.exe\" OR Processes.process=\"*adfind*\" OR Processes.original_file_name=\"AdFind.exe\") (Processes.process=\"*objectcategory=person*\" OR Processes.process=\"*objectcategory=computer*\" OR Processes.process=\"*objectcategory=organizationalUnit*\" OR Processes.process=\"*objectcategory=group*\" OR Processes.process=\"*trustdmp*\" OR Processes.process=\"*-subnets*\" OR Processes.process=\"*name dnshostname operatingsystem*\" OR Processes.process=\"*(objectClass=trustedDomain)*\" OR Processes.process=\"*-tdcs*\" OR Processes.process=\"*-tdca*\") Processes.user!=\"*$\" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval filterCount=mvcount(split(commandLines,\" \")) | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let _adfind_filters = dynamic([\n    \"objectcategory=person\",\n    \"objectcategory=computer\",\n    \"objectcategory=organizationalUnit\",\n    \"objectcategory=group\",\n    \"trustdmp\",\n    \"-subnets\",\n    \"name dnshostname operatingsystem\",\n    \"objectClass=trustedDomain\",\n    \"-tdcs\",\n    \"-tdca\",\n    \"(objectcategory=organizationalunit)\"\n]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where FileName =~ \"adfind.exe\"\n   or ProcessVersionInfoOriginalFileName =~ \"AdFind.exe\"\n   or (ProcessCommandLine has \"adfind\" and ProcessCommandLine has_any (\"-f \", \"-csv \", \"-bit\", \"-tdcs\"))\n| where ProcessCommandLine has_any (_adfind_filters)\n| extend MatchedFilters = set_difference(\n    set_intersect(_adfind_filters, split(tolower(ProcessCommandLine), \" \")),\n    dynamic([]))\n| project Timestamp, DeviceName, AccountName,\n          FileName, FolderPath, SHA256,\n          ProcessCommandLine,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          IsRemoteSession = InitiatingProcessAccountName\n| order by Timestamp desc",
+      "sentinel_kql": "let _adfind_filters = dynamic([\n    \"objectcategory=person\",\n    \"objectcategory=computer\",\n    \"objectcategory=organizationalUnit\",\n    \"objectcategory=group\",\n    \"trustdmp\",\n    \"-subnets\",\n    \"name dnshostname operatingsystem\",\n    \"objectClass=trustedDomain\",\n    \"-tdcs\",\n    \"-tdca\"\n]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith @\"\\adfind.exe\"\n   or (CommandLine has \"adfind\" and CommandLine has_any (\"-f \", \"-csv \", \"-tdcs\"))\n| where CommandLine has_any (_adfind_filters)\n| project TimeGenerated, Computer, Account,\n          NewProcessName, CommandLine,\n          ParentProcessName, TokenElevationType, LogonId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Wizard Spider / Conti AdFind Reconnaissance Filter Strings\nid: 7c1f6a90-7d7e-4f4e-9c4a-c0f1e4a0c2d4\nstatus: experimental\ndescription: Detects AdFind LDAP recon executed with filter strings drawn verbatim from the leaked Conti playbook used by Wizard Spider (FIN12 / Periwinkle Tempest) prior to Conti/Ryuk deployment.\nreferences:\n  - https://www.thedfirreport.com/2021/05/12/conti-ransomware/\n  - https://attack.mitre.org/groups/G0102/\nauthor: SOC Detection Engineering\ndate: 2024/01/01\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    - Image|endswith: '\\adfind.exe'\n    - OriginalFileName: 'AdFind.exe'\n  selection_cmd:\n    CommandLine|contains: 'adfind'\n  selection_filters:\n    CommandLine|contains:\n      - 'objectcategory=person'\n      - 'objectcategory=computer'\n      - 'objectcategory=organizationalUnit'\n      - 'objectcategory=group'\n      - 'trustdmp'\n      - 'name dnshostname operatingsystem'\n      - '(objectClass=trustedDomain)'\n      - '-tdcs'\n      - '-tdca'\n      - '-subnets -f (objectCategory=subnet)'\n  condition: (selection_image or selection_cmd) and selection_filters\nfalsepositives:\n  - Sysadmins running AdFind for legitimate domain enumeration (rare; correlate with user role and ticket).\nlevel: high\ntags:\n  - attack.discovery\n  - attack.t1087.002\n  - attack.t1018\n  - attack.t1482\n  - attack.g0102\n",
+      "rationale": "AdFind is dual-use, but Wizard Spider operators copy specific filter strings from the leaked Conti TTP guide. Plain 'adfind.exe ran' is a noisy hunting signal; this rule keys on the *filter argument fingerprint* (trustdmp, -subnets, 'name dnshostname operatingsystem', objectclass=trustedDomain) which is essentially diagnostic for the Conti/Ryuk recon stage and rarely matches benign admin usage."
+    },
+    {
+      "title": "[LLM] Wizard Spider BazarLoader/TrickBot rundll32 \u2014 AppData DLL with public-IP egress",
+      "description": "Wizard Spider's loaders (BazarLoader, TrickBot, IcedID partner-relay) almost always pivot through rundll32.exe loading a DLL written to %AppData%, %ProgramData%, or %Temp%, often with a numeric ordinal (#1) or short export name, then beacon out to a Cobalt Strike team server within seconds. This UC chains the rundll32 anomaly with the immediate egress to remove false positives from benign Microsoft-signed DLL invocations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.011",
+        "T1059.001",
+        "T1071.001",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as procTime values(Processes.process) as cmd values(Processes.process_path) as image values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name=\"rundll32.exe\" Processes.user!=\"*$\" (Processes.process=\"*\\\\AppData\\\\Local\\\\Temp\\\\*\" OR Processes.process=\"*\\\\AppData\\\\Roaming\\\\*\" OR Processes.process=\"*\\\\ProgramData\\\\*\" OR Processes.process=\"*\\\\Users\\\\Public\\\\*\") (Processes.process=\"*.dll*\" OR Processes.process=\"*.tmp*\" OR Processes.process=\"*.dat*\" OR Processes.process=\"*.bin*\" OR Processes.process=\"*.png*\") by Processes.dest Processes.user Processes.process_id Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | rename process_id as proc_pid\n| join type=inner dest proc_pid [\n    | tstats summariesonly=true count values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.dest) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=\"rundll32.exe\" (All_Traffic.dest_category!=\"internal\" OR NOT All_Traffic.dest_ip IN (\"10.0.0.0/8\",\"172.16.0.0/12\",\"192.168.0.0/16\")) by All_Traffic.src All_Traffic.app All_Traffic.process_id\n    | rename All_Traffic.src as dest All_Traffic.process_id as proc_pid ]\n| convert ctime(procTime)\n| table procTime dest user parent cmd image proc_pid remote_ip remote_port remote_host count",
+      "kql": "let _suspect_paths = dynamic([@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\"]);\nlet _suspect_ext = dynamic([\".dll\", \".tmp\", \".dat\", \".bin\", \".png\", \".log\"]);\nlet _proc = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"rundll32.exe\"\n    | where AccountName !endswith \"$\"\n    | where ProcessCommandLine has_any (_suspect_paths)\n    | where ProcessCommandLine has_any (_suspect_ext)\n    // BazarLoader/TrickBot frequently uses numeric ordinal exports (#1) or short export names\n    | extend OrdinalCall = extract(@\"(?i),\\s*(#?\\w{1,12})\\s*$\", 1, ProcessCommandLine)\n    | project ProcTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ProcessId, ProcessCommandLine, FolderPath,\n              InitiatingProcessFileName, InitiatingProcessFolderPath,\n              SHA256, OrdinalCall;\nlet _net = DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName =~ \"rundll32.exe\"\n    | where RemoteIPType == \"Public\"\n    | where not(ipv4_is_in_any_range(RemoteIP, dynamic([\"13.107.0.0/16\",\"40.76.0.0/14\",\"52.96.0.0/12\",\"104.146.0.0/15\"]))) // strip MS edge ranges\n    | project NetTime = Timestamp, DeviceId, NetProcessId = InitiatingProcessId,\n              RemoteIP, RemotePort, RemoteUrl;\n_proc\n| join kind=inner _net on DeviceId, $left.ProcessId == $right.NetProcessId\n| where NetTime between (ProcTime .. ProcTime + 5m)\n| project ProcTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, ProcTime),\n          DeviceName, AccountName,\n          ProcessCommandLine, OrdinalCall, FolderPath, SHA256,\n          ParentProcess = InitiatingProcessFileName,\n          RemoteIP, RemotePort, RemoteUrl\n| order by ProcTime desc",
+      "sentinel_kql": "let _suspect_paths = dynamic([@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\"]);\nlet _suspect_ext = dynamic([\".dll\", \".tmp\", \".dat\", \".bin\", \".png\", \".log\"]);\nlet _proc = SecurityEvent\n    | where TimeGenerated > ago(7d)\n    | where EventID == 4688\n    | where NewProcessName endswith @\"\\rundll32.exe\"\n    | where Account !endswith \"$\"\n    | where CommandLine has_any (_suspect_paths)\n    | where CommandLine has_any (_suspect_ext)\n    | extend OrdinalCall = extract(@\"(?i),\\s*(#?\\w{1,12})\\s*$\", 1, CommandLine)\n    | project ProcTime = TimeGenerated, Computer, Account, NewProcessId, CommandLine, ParentProcessName, OrdinalCall;\nlet _net = ImNetworkSession\n    | where TimeGenerated > ago(7d)\n    | where ActingProcessName has \"rundll32.exe\"\n    | where not(ipv4_is_private(DstIpAddr))\n    | project NetTime = TimeGenerated, Computer = DvcHostname, DstIpAddr, DstPortNumber, Url;\n_proc\n| join kind=inner _net on Computer\n| where NetTime between (ProcTime .. ProcTime + 5m)\n| project ProcTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, ProcTime),\n          Computer, Account, CommandLine, OrdinalCall,\n          ParentProcessName, DstIpAddr, DstPortNumber, Url\n| order by ProcTime desc",
+      "sigma_yaml": "",
+      "rationale": "Rundll32 from %AppData% on its own is noisy (browser updaters, ClickOnce). Rundll32 from %AppData% paired with same-PID public-IP egress within five minutes is essentially diagnostic for Wizard Spider's BazarLoader/TrickBot stagers (and the Cobalt Strike beacons their playbook spawns next). The ordinal-call extraction (#1, single-letter exports) is a known WS/Conti loader artefact documented by Th",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession, SecurityEvent; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

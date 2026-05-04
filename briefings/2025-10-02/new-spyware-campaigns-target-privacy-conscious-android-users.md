@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ProSpy/ToSpy Android spyware C2 callback to ESET-named UAE infrastructure
 
-`UC_335_7` · phase: **c2** · confidence: **High**
+`UC_336_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### [LLM] ToSpy in-app update path: HTTP request to spiralkey.co /totok_update/ APK or version check
 
-`UC_335_8` · phase: **install** · confidence: **High**
+`UC_336_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceNetworkEvents
 
 ### [LLM] DNS resolution for ProSpy/ToSpy lure & C2 domains from internal resolvers
 
-`UC_335_9` · phase: **delivery** · confidence: **Medium**
+`UC_336_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceEvents
 | order by FirstSeen desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 

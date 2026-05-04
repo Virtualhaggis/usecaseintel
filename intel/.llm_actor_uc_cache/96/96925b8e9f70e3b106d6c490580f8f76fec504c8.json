@@ -1,0 +1,84 @@
+{
+  "name": "APT-C-36",
+  "ucs": [
+    {
+      "title": "[LLM] APT-C-36 (Blind Eagle) staged loader: LOLBin fetch from public hosting \u2192 .NET utility process hollowing",
+      "description": "Hunts the canonical Blind Eagle / TAG-144 infection chain \u2014 a Spanish-language phishing payload uses mshta/PowerShell/WScript to pull a second stage from a public file-hosting / paste service (Bitbucket, Discord CDN, archive.org, paste.ee, GitHub raw, IPFS, trycloudflare tunnels) followed within seconds-to-minutes by execution of a .NET Framework LOLBin (RegAsm/RegSvcs/InstallUtil/aspnet_compiler/MSBuild) that AsyncRAT, Remcos and BitRAT loaders consistently hollow into. This combination is the actor's signature; the public-host plus .NET LOLBin chain has been documented across QiAnXin (2019),",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1059.005",
+        "T1218.005",
+        "T1218.009",
+        "T1127.001",
+        "T1055.012"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as fetch_time values(Web.url) as fetch_url values(Web.user) as user from datamodel=Web.Web where Web.app IN (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"curl.exe\",\"bitsadmin.exe\",\"certutil.exe\") AND (Web.url=\"*bitbucket.org*\" OR Web.url=\"*discordapp.com*\" OR Web.url=\"*discord.com*\" OR Web.url=\"*cdn.discordapp.com*\" OR Web.url=\"*archive.org*\" OR Web.url=\"*paste.ee*\" OR Web.url=\"*pastebin.com*\" OR Web.url=\"*controlc.com*\" OR Web.url=\"*textbin*\" OR Web.url=\"*ipfs.io*\" OR Web.url=\"*raw.githubusercontent.com*\" OR Web.url=\"*trycloudflare.com*\" OR Web.url=\"*workers.dev*\" OR Web.url=\"*1024tera*\" OR Web.url=\"*mediafire*\" OR Web.url=\"*anonfiles*\") by host Web.app | rename host as dest Web.app as fetcher_process | join type=inner dest [ | tstats summariesonly=t count max(_time) as hollow_time values(Processes.process) as hollow_cmd values(Processes.parent_process_name) as hollow_parent values(Processes.process_name) as hollow_proc from datamodel=Endpoint.Processes where Processes.process_name IN (\"RegAsm.exe\",\"RegSvcs.exe\",\"InstallUtil.exe\",\"aspnet_compiler.exe\",\"MSBuild.exe\",\"jsc.exe\",\"csc.exe\") AND Processes.process_path=\"*Microsoft.NET\\\\Framework*\" by host | rename host as dest ] | eval delta=hollow_time-fetch_time | where delta>=0 AND delta<=900 | table fetch_time hollow_time delta dest user fetcher_process fetch_url hollow_proc hollow_parent hollow_cmd | sort - fetch_time",
+      "kql": "let LookbackDays = 7d;\nlet WindowSec = 900;\nlet PublicHosters = dynamic([\"bitbucket.org\",\"discordapp.com\",\"discord.com\",\"cdn.discordapp.com\",\"archive.org\",\"paste.ee\",\"pastebin.com\",\"controlc.com\",\"textbin.net\",\"ipfs.io\",\"raw.githubusercontent.com\",\"githubusercontent.com\",\"trycloudflare.com\",\"workers.dev\",\"mediafire.com\",\"anonfiles.com\",\"1024tera.com\",\"mega.nz\",\"bashupload.com\"]);\nlet Fetchers = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"curl.exe\",\"bitsadmin.exe\",\"certutil.exe\"]);\nlet StageFetch = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (Fetchers)\n    | where isnotempty(RemoteUrl)\n    | where RemoteUrl has_any (PublicHosters)\n    | project FetchTime = Timestamp, DeviceId, DeviceName,\n              FetcherUser = InitiatingProcessAccountName,\n              FetcherProc = InitiatingProcessFileName,\n              FetcherCmd = InitiatingProcessCommandLine,\n              StageUrl = RemoteUrl, StageIP = RemoteIP;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName in~ (\"RegAsm.exe\",\"RegSvcs.exe\",\"InstallUtil.exe\",\"aspnet_compiler.exe\",\"MSBuild.exe\",\"jsc.exe\",\"csc.exe\")\n| where FolderPath has @\"\\Microsoft.NET\\Framework\"\n| where AccountName !endswith \"$\"\n| join kind=inner StageFetch on DeviceId\n| where Timestamp between (FetchTime .. FetchTime + WindowSec * 1s)\n| project FetchTime, HollowTime = Timestamp,\n          DelaySec = datetime_diff('second', Timestamp, FetchTime),\n          DeviceName, AccountName,\n          FetcherProc, FetcherCmd, StageUrl, StageIP,\n          HollowTarget = FileName, HollowCmd = ProcessCommandLine,\n          HollowParent = InitiatingProcessFileName, HollowParentCmd = InitiatingProcessCommandLine\n| order by FetchTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WindowSec = 900;\nlet PublicHosters = dynamic([\"bitbucket.org\",\"discordapp.com\",\"discord.com\",\"cdn.discordapp.com\",\"archive.org\",\"paste.ee\",\"pastebin.com\",\"controlc.com\",\"textbin.net\",\"ipfs.io\",\"raw.githubusercontent.com\",\"githubusercontent.com\",\"trycloudflare.com\",\"workers.dev\",\"mediafire.com\",\"anonfiles.com\",\"1024tera.com\",\"mega.nz\",\"bashupload.com\"]);\nlet Fetchers = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"curl.exe\",\"bitsadmin.exe\",\"certutil.exe\"]);\nlet StageFetch = ImWebSession\n    | where TimeGenerated > ago(LookbackDays)\n    | extend FetcherProc = tolower(tostring(split(coalesce(SrcUsername,\"\"), \"\\\\\")[-1]))\n    | where Url has_any (PublicHosters) or HttpHostName has_any (PublicHosters)\n    | project FetchTime = TimeGenerated, DvcHostname, SrcUsername, StageUrl = Url, StageHost = HttpHostName;\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| where TargetProcessName has_any (\"RegAsm.exe\",\"RegSvcs.exe\",\"InstallUtil.exe\",\"aspnet_compiler.exe\",\"MSBuild.exe\",\"jsc.exe\",\"csc.exe\")\n| where TargetProcessName has @\"\\Microsoft.NET\\Framework\"\n| where ActorUsername !endswith \"$\"\n| where ParentProcessName has_any (Fetchers)\n| join kind=inner StageFetch on DvcHostname\n| where TimeGenerated between (FetchTime .. FetchTime + WindowSec * 1s)\n| project FetchTime, HollowTime = TimeGenerated,\n          DelaySec = datetime_diff('second', TimeGenerated, FetchTime),\n          DvcHostname, ActorUsername,\n          ParentProcessName, ParentProcessCommandLine,\n          StageUrl, StageHost,\n          HollowTarget = TargetProcessName, HollowCmd = TargetProcessCommandLine\n| order by FetchTime desc",
+      "sigma_yaml": "",
+      "rationale": "Blind Eagle / APT-C-36 / TAG-144 has been documented since 2019 (QiAnXin) through 2025 (Check Point, Recorded Future) using a remarkably consistent loader chain: spearphish (often Colombian DIAN tax / judicial-summons lures) drops a script that fetches an obfuscated AsyncRAT, Remcos or BitRAT stage from a public service, then process-hollows into a .NET Framework LOLBin (RegAsm.exe is the dominant"
+    },
+    {
+      "title": "[LLM] APT-C-36 (Blind Eagle) AsyncRAT/Remcos beacon to dynamic-DNS C2 from non-browser process",
+      "description": "Surfaces non-browser processes egressing to dynamic-DNS providers (DuckDNS, No-IP, DDNS, Hopto, Sytes, Zapto, Dynu) \u2014 Blind Eagle's near-exclusive C2 infrastructure choice for their cracked AsyncRAT, Remcos and njRAT builds, repeatedly observed by Kaspersky (2024) and Check Point (2025) as `*.duckdns.org` and `*.ddns.net` callbacks.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1568.002",
+        "T1571",
+        "T1583.001",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as first_seen max(_time) as last_seen dc(All_Traffic.dest_ip) as unique_dest_ips dc(All_Traffic.dest_port) as unique_ports values(All_Traffic.dest_port) as ports values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host=\"*.duckdns.org\" OR All_Traffic.dest_host=\"*.ddns.net\" OR All_Traffic.dest_host=\"*.hopto.org\" OR All_Traffic.dest_host=\"*.sytes.net\" OR All_Traffic.dest_host=\"*.zapto.org\" OR All_Traffic.dest_host=\"*.no-ip.biz\" OR All_Traffic.dest_host=\"*.no-ip.org\" OR All_Traffic.dest_host=\"*.myftp.biz\" OR All_Traffic.dest_host=\"*.myftp.org\" OR All_Traffic.dest_host=\"*.dynu.net\" OR All_Traffic.dest_host=\"*.servehttp.com\" OR All_Traffic.dest_host=\"*.serveftp.com\") AND All_Traffic.app!=\"chrome.exe\" AND All_Traffic.app!=\"msedge.exe\" AND All_Traffic.app!=\"firefox.exe\" AND All_Traffic.app!=\"brave.exe\" AND All_Traffic.app!=\"iexplore.exe\" AND All_Traffic.app!=\"opera.exe\" AND All_Traffic.app!=\"outlook.exe\" by All_Traffic.src All_Traffic.dest_host All_Traffic.app | rename All_Traffic.* as * | where count>=5 | sort - count",
+      "kql": "let DynDnsTlds = dynamic([\".duckdns.org\",\".ddns.net\",\".hopto.org\",\".sytes.net\",\".zapto.org\",\".no-ip.biz\",\".no-ip.org\",\".myftp.biz\",\".myftp.org\",\".dynu.net\",\".servehttp.com\",\".serveftp.com\"]);\nlet Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"teams.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIPType == \"Public\"\n| where isnotempty(RemoteUrl)\n| where RemoteUrl has_any (DynDnsTlds)\n| where InitiatingProcessFileName !in~ (Browsers)\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize Connections = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            DistinctRemoteIPs = dcount(RemoteIP),\n            DistinctPorts = dcount(RemotePort),\n            SamplePort = any(RemotePort),\n            SampleCmd = any(InitiatingProcessCommandLine),\n            ParentProc = any(InitiatingProcessParentFileName)\n            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl\n| where Connections >= 5\n| order by FirstSeen desc",
+      "sentinel_kql": "let DynDnsTlds = dynamic([\".duckdns.org\",\".ddns.net\",\".hopto.org\",\".sytes.net\",\".zapto.org\",\".no-ip.biz\",\".no-ip.org\",\".myftp.biz\",\".myftp.org\",\".dynu.net\",\".servehttp.com\",\".serveftp.com\"]);\nlet Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"teams.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where isnotempty(DstHostname)\n| where DstHostname has_any (DynDnsTlds)\n| extend ProcLeaf = tolower(tostring(split(coalesce(ActingProcessName,\"\"),\"\\\\\")[-1]))\n| where ProcLeaf !in~ (Browsers)\n| where SrcUsername !endswith \"$\"\n| summarize Connections = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            DistinctRemoteIPs = dcount(DstIpAddr),\n            DistinctPorts = dcount(DstPortNumber),\n            SamplePort = any(DstPortNumber),\n            SampleCmd = any(ActingProcessCommandLine)\n            by DvcHostname, SrcUsername, ProcLeaf, DstHostname\n| where Connections >= 5\n| order by FirstSeen desc",
+      "sigma_yaml": "title: APT-C-36 (Blind Eagle) RAT Beacon to Dynamic DNS Provider\nid: 1f9c2e7a-3b4d-4e2a-9c8f-blindeagle0099\nstatus: experimental\ndescription: Detects non-browser Windows processes initiating outbound network connections to dynamic-DNS providers (DuckDNS, No-IP, DDNS, Hopto, Sytes, Zapto, Dynu) \u2014 the canonical C2 infrastructure for APT-C-36 / Blind Eagle / TAG-144 AsyncRAT, Remcos and njRAT campaigns targeting Latin America.\nreferences:\n    - https://attack.mitre.org/groups/G0099/\n    - https://securelist.com/blindeagle-flying-high-with-latin-america/113830/\n    - https://research.checkpoint.com/2025/blind-eagle-and-justice-for-all/\nauthor: Detection Engineering\ndate: 2026/05/03\ntags:\n    - attack.command_and_control\n    - attack.t1568.002\n    - attack.t1571\n    - attack.t1071.001\n    - attack.g0099\nlogsource:\n    category: network_connection\n    product: windows\ndetection:\n    selection_dyndns:\n        DestinationHostname|endswith:\n            - '.duckdns.org'\n            - '.ddns.net'\n            - '.hopto.org'\n            - '.sytes.net'\n            - '.zapto.org'\n            - '.no-ip.biz'\n            - '.no-ip.org'\n            - '.myftp.biz'\n            - '.myftp.org'\n            - '.dynu.net'\n            - '.servehttp.com'\n            - '.serveftp.com'\n    filter_browsers:\n        Image|endswith:\n            - '\\chrome.exe'\n            - '\\msedge.exe'\n            - '\\firefox.exe'\n            - '\\brave.exe'\n            - '\\opera.exe'\n            - '\\iexplore.exe'\n            - '\\outlook.exe'\n            - '\\teams.exe'\n    condition: selection_dyndns and not filter_browsers\nfalsepositives:\n    - Sysadmin remote-access tools using DuckDNS/No-IP for home labs (allowlist by host/process)\n    - Legitimate IoT or remote-monitoring agents\nlevel: high",
+      "rationale": "Across every public Blind Eagle report (QiAnXin 2019, Trend 2021, BlackBerry 2023, Kaspersky 2024, Check Point 2025, Recorded Future TAG-144 2025) the C2 destination is a dynamic-DNS subdomain \u2014 overwhelmingly `*.duckdns.org`, with `*.ddns.net` and `*.hopto.org` as supporting choices \u2014 because the actor relies on free, low-cost infrastructure they can rotate quickly. Pinning to dynamic-DNS TLDs al",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

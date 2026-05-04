@@ -1,0 +1,88 @@
+{
+  "name": "Moonstone Sleet",
+  "ucs": [
+    {
+      "title": "[LLM] Moonstone Sleet trojanized npm package \u2014 node/npm postinstall hook spawning network downloader",
+      "description": "Hunts Moonstone Sleet's (Storm-1789) signature supply-chain TTP: malicious npm packages (e.g. 'execution-time-async', 'data-time-utils', 'logging-system-utils') published from fake-developer accounts whose preinstall/postinstall lifecycle scripts shell out to download a second-stage payload. Detects node.exe / npm.cmd / yarn / pnpm parenting a LOLBin downloader (powershell/curl/wget/certutil/bitsadmin/mshta) with HTTP-fetch arguments to non-registry destinations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1195.002",
+        "T1059.001",
+        "T1105",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"node.exe\",\"npm.cmd\",\"npm.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl.exe\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process Processes.process_id Processes.parent_process_id\n| `drop_dm_object_name(Processes)`\n| where match(process,\"(?i)(https?://|Invoke-WebRequest|DownloadString|DownloadFile|-OutFile|IEX|FromBase64String|-decode|--remote-name)\")\n| where NOT match(process,\"(?i)(registry\\.npmjs\\.org|registry\\.yarnpkg\\.com|registry\\.npmmirror\\.com|github\\.com|nodejs\\.org|raw\\.githubusercontent\\.com)\")\n| where NOT match(parent_process,\"(?i)(electron|webpack|vite|esbuild|jest|mocha|cypress)\")\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// Moonstone Sleet \u2014 trojanized npm package install chain\n// Storm-1789 publishes npm packages with malicious pre/postinstall scripts\n// that fetch a second-stage from actor infra during `npm install`.\nlet _downloaders = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl.exe\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet _registry_hosts = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"registry.npmmirror.com\",\"nodejs.org\",\"raw.githubusercontent.com\",\"github.com\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"node.exe\",\"npm.cmd\",\"npm.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\")\n   or InitiatingProcessParentFileName in~ (\"node.exe\",\"npm.cmd\",\"npm.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\")\n| where FileName in~ (_downloaders)\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\"Invoke-WebRequest\",\"DownloadString\",\"DownloadFile\",\"-OutFile\",\"IEX\",\"Invoke-Expression\",\"FromBase64String\",\"--decode\",\"--remote-name\")\n| where not(ProcessCommandLine has_any (_registry_hosts))\n| where AccountName !endswith \"$\"\n| extend SuspectUrl = extract(@\"(?i)(https?://[^\\s\\\"']+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName,\n          NpmParent = InitiatingProcessFileName,\n          NpmCmd    = InitiatingProcessCommandLine,\n          Grandparent = InitiatingProcessParentFileName,\n          Child     = FileName,\n          ChildCmd  = ProcessCommandLine,\n          SuspectUrl, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Moonstone Sleet \u2014 trojanized npm package install chain (Sentinel/4688)\nlet _downloaders = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl.exe\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\"]);\nlet _registry_hosts = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"registry.npmmirror.com\",\"nodejs.org\",\"raw.githubusercontent.com\",\"github.com\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where ParentProcessName has_any (\"\\\\node.exe\",\"\\\\npm.cmd\",\"\\\\npm.exe\",\"\\\\npx.exe\",\"\\\\yarn.exe\",\"\\\\pnpm.exe\")\n| extend ChildBin = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ChildBin in (_downloaders)\n| where CommandLine has_any (\"http://\",\"https://\",\"Invoke-WebRequest\",\"DownloadString\",\"DownloadFile\",\"-OutFile\",\"IEX\",\"Invoke-Expression\",\"FromBase64String\",\"--decode\",\"--remote-name\")\n| where not(CommandLine has_any (_registry_hosts))\n| where Account !endswith \"$\"\n| extend SuspectUrl = extract(@\"(?i)(https?://[^\\s\\\"']+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, SuspectUrl",
+      "sigma_yaml": "title: Moonstone Sleet npm Package Install Chain to Network Downloader\nid: 7c3b6f1a-9a52-4b6a-b1d9-7f5e3a1cf001\nstatus: experimental\ndescription: Detects Moonstone Sleet (Storm-1789) trojanized npm package execution where node/npm/yarn/pnpm parents a LOLBin downloader fetching a non-registry URL during package install lifecycle hooks.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2024/05/28/moonstone-sleet-emerges-as-new-north-korean-threat-actor-with-new-bag-of-tricks/\n  - https://attack.mitre.org/groups/G1036/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.initial_access\n  - attack.t1195.002\n  - attack.t1105\n  - attack.t1059.001\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent:\n    ParentImage|endswith:\n      - '\\node.exe'\n      - '\\npm.cmd'\n      - '\\npm.exe'\n      - '\\npx.exe'\n      - '\\yarn.exe'\n      - '\\pnpm.exe'\n  child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\curl.exe'\n      - '\\wget.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\mshta.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n  fetch:\n    CommandLine|contains:\n      - 'http://'\n      - 'https://'\n      - 'Invoke-WebRequest'\n      - 'DownloadString'\n      - 'DownloadFile'\n      - '-OutFile'\n      - 'IEX'\n      - 'Invoke-Expression'\n      - 'FromBase64String'\n  filter_registry:\n    CommandLine|contains:\n      - 'registry.npmjs.org'\n      - 'registry.yarnpkg.com'\n      - 'registry.npmmirror.com'\n      - 'github.com'\n      - 'nodejs.org'\n  condition: parent and child and fetch and not filter_registry\nfalsepositives:\n  - Internal package mirrors served from non-public hosts (allowlist domain)\n  - Postinstall hooks that legitimately download Electron/binary deps (allowlist publisher)\nlevel: high",
+      "rationale": "Moonstone Sleet's distinguishing tradecraft (per Microsoft May 2024 advisory) is publishing trojanized npm packages from fake-developer personas. The chain \u2014 npm/node parent \u2192 LOLBin child \u2192 outbound HTTP to non-registry host during install \u2014 is unique to npm-borne supply-chain implants and isn't characteristic of more conventional KP actors like Lazarus/Diamond Sleet. Filtering against legitimate",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "SuspectUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`SuspectUrl` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "SuspectUrl",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`SuspectUrl` is not a canonical column of SecurityEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Moonstone Sleet fake-recruiter trojanized utility \u2014 signed binary from user-writable path with sideloaded DLL and immediate C2",
+      "description": "Hunts Moonstone Sleet's social-engineering chain: fake recruiter / fake-company persona on LinkedIn (e.g. StarGlow Ventures, C.C. Waterfall, Detankzone) delivers a trojanized utility (PuTTY-variant, AnyDesk fork, or the DeTankWar/DeTankZone game executable) to the victim. The malicious binary, run from Downloads/AppData/Public, sideloads an attacker DLL from its own folder and beacons to public infrastructure within ~60s of launch.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1566.003",
+        "T1204.002",
+        "T1574.002",
+        "T1071.001",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_path IN (\"*\\\\Users\\\\*\\\\Downloads\\\\*\",\"*\\\\Users\\\\*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\") AND Processes.process_name IN (\"putty.exe\",\"anydesk.exe\",\"sumatrapdf.exe\",\"detankwar.exe\",\"detankzone.exe\",\"tankzone.exe\",\"chrome_proxy.exe\",\"node-webkit.exe\") by _time Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_id\n| `drop_dm_object_name(Processes)`\n| rename process_id as procId, dest as host\n| join type=inner host procId [\n    | tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!=\"internal\" AND All_Traffic.dest_port IN (80,443,8080,8443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_id _time\n    | `drop_dm_object_name(All_Traffic)`\n    | rename process_id as procId, src as host\n  ]\n| where _time<=_time+60\n| stats values(process) as cmd values(dest) as remote_ip values(dest_port) as remote_port by host user process_name process_path",
+      "kql": "// Moonstone Sleet \u2014 fake-recruiter trojanized utility: user-writable path binary +\n// adjacent DLL sideload + outbound public C2 within 60s of launch.\nlet LookbackDays = 14d;\nlet WindowSec = 60;\nlet _suspect_bins = dynamic([\"putty.exe\",\"anydesk.exe\",\"sumatrapdf.exe\",\"detankwar.exe\",\"detankzone.exe\",\"tankzone.exe\",\"chrome_proxy.exe\",\"node-webkit.exe\",\"nw.exe\"]);\nlet _user_paths = dynamic([@\"\\Users\\\",@\"\\AppData\\Local\\Temp\\\",@\"\\AppData\\Roaming\\\",@\"\\Public\\\",@\"\\ProgramData\\\",@\"\\Downloads\\\"]);\nlet Launches = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | where FileName in~ (_suspect_bins)\n    | where FolderPath has_any (_user_paths)\n    | where InitiatingProcessFileName in~ (\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"outlook.exe\",\"teams.exe\",\"7zg.exe\",\"winrar.exe\",\"explorer.exe\")\n    | project LaunchTime = Timestamp, DeviceId, DeviceName, AccountName,\n              SuspectBin = FileName, SuspectFolder = FolderPath,\n              SuspectPid = ProcessId, SuspectSha = SHA256, SuspectCmd = ProcessCommandLine;\nlet Sideloads = DeviceImageLoadEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (_suspect_bins)\n    | where FolderPath =~ InitiatingProcessFolderPath          // DLL next to the EXE\n    | where SHA256 != InitiatingProcessSHA256                  // not the EXE itself\n    | where not(FolderPath startswith @\"C:\\Windows\\\")\n    | project SideloadTime = Timestamp, DeviceId,\n              LoadedDll = FileName, LoadedDllSha = SHA256,\n              LoaderPid = InitiatingProcessId;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (_suspect_bins)\n    | project NetTime = Timestamp, DeviceId,\n              NetPid = InitiatingProcessId,\n              RemoteIP, RemotePort, RemoteUrl;\nLaunches\n| join kind=inner Sideloads on DeviceId, $left.SuspectPid == $right.LoaderPid\n| where SideloadTime between (LaunchTime .. LaunchTime + WindowSec * 1s)\n| join kind=inner Egress on DeviceId, $left.SuspectPid == $right.NetPid\n| where NetTime between (LaunchTime .. LaunchTime + WindowSec * 1s)\n| project LaunchTime, DeviceName, AccountName,\n          SuspectBin, SuspectFolder, SuspectSha, SuspectCmd,\n          LoadedDll, LoadedDllSha,\n          RemoteIP, RemotePort, RemoteUrl,\n          DelayLoadSec = datetime_diff('second', SideloadTime, LaunchTime),\n          DelayNetSec  = datetime_diff('second', NetTime, LaunchTime)\n| order by LaunchTime desc",
+      "sentinel_kql": "// Moonstone Sleet \u2014 fake-recruiter trojanized utility (Sentinel via SecurityEvent 4688 +\n// CommonSecurityLog egress). Note: DLL-sideload telemetry requires Sysmon EID 7.\nlet LookbackDays = 14d;\nlet WindowSec = 60;\nlet _suspect_bins = dynamic([\"putty.exe\",\"anydesk.exe\",\"sumatrapdf.exe\",\"detankwar.exe\",\"detankzone.exe\",\"tankzone.exe\",\"chrome_proxy.exe\",\"node-webkit.exe\",\"nw.exe\"]);\nlet _user_paths = dynamic([@\"\\Users\\\",@\"\\AppData\\Local\\Temp\\\",@\"\\AppData\\Roaming\\\",@\"\\Public\\\",@\"\\ProgramData\\\",@\"\\Downloads\\\"]);\nlet Launches = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | extend BinName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n    | where BinName in (_suspect_bins)\n    | where NewProcessName has_any (_user_paths)\n    | where ParentProcessName has_any (\"\\\\explorer.exe\",\"\\\\chrome.exe\",\"\\\\msedge.exe\",\"\\\\firefox.exe\",\"\\\\outlook.exe\",\"\\\\teams.exe\",\"\\\\7zg.exe\",\"\\\\winrar.exe\")\n    | project LaunchTime = TimeGenerated, Computer, Account,\n              SuspectBin = BinName, SuspectPath = NewProcessName,\n              SuspectPid = NewProcessId, SuspectCmd = CommandLine;\nlet Egress = ImNetworkSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where DvcAction !in (\"Drop\",\"Reject\",\"Deny\")\n    | where not(ipv4_is_private(DstIpAddr))\n    | where ActingProcessName has_any (\"putty.exe\",\"anydesk.exe\",\"sumatrapdf.exe\",\"detankwar.exe\",\"detankzone.exe\",\"tankzone.exe\",\"chrome_proxy.exe\",\"nw.exe\")\n    | project NetTime = TimeGenerated, Computer = DvcHostname,\n              DstIpAddr, DstPortNumber, Url, ActingProcessName;\nLaunches\n| join kind=inner Egress on Computer\n| where NetTime between (LaunchTime .. LaunchTime + WindowSec * 1s)\n| project LaunchTime, Computer, Account, SuspectBin, SuspectPath, SuspectCmd,\n          DstIpAddr, DstPortNumber, Url,\n          DelaySec = datetime_diff('second', NetTime, LaunchTime)\n| order by LaunchTime desc",
+      "sigma_yaml": "",
+      "rationale": "Microsoft attributes Moonstone Sleet specifically to a LinkedIn fake-recruiter / fake-company chain delivering trojanized utilities (PuTTY variant inherited from Lazarus, plus the actor-unique DeTankWar/DeTankZone game and AnyDesk forks). The triad \u2014 utility-named binary in a user-writable path + DLL sideload from the EXE's own folder + immediate public C2 within 60s \u2014 is the deliverable shape of ",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession, SecurityEvent; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

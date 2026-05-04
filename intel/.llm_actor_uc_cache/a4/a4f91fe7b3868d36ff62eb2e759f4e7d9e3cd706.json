@@ -1,0 +1,67 @@
+{
+  "name": "Windigo",
+  "ucs": [
+    {
+      "title": "[LLM] Windigo / Ebury \u2014 trojanized libkeyutils.so or OpenSSH binary tampering on Linux servers",
+      "description": "Hunts for the canonical Ebury (Windigo G0124) persistence primitive: replacement of the libkeyutils.so shared library, which OpenSSH transitively links to via DT_NEEDED, or in-place modification of /usr/sbin/sshd / ssh / ssh-add / scp. ESET's Operation Windigo and CERN's 2019 Ebury reports both fingerprint these specific files as the trojan landing site, with libkeyutils.so growing from ~10\u201312 KB legit to 50\u2013150 KB when carrying the Ebury implant.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574",
+        "T1554",
+        "T1014",
+        "T1543"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_size) as file_size values(Filesystem.file_hash) as file_hash values(Filesystem.process_name) as initiating_proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN (\"created\",\"modified\",\"renamed\") AND ( (Filesystem.file_name=\"libkeyutils.so*\" AND Filesystem.file_size>20000) OR Filesystem.file_path IN (\"/usr/sbin/sshd\",\"/usr/bin/ssh\",\"/usr/bin/ssh-add\",\"/usr/bin/scp\",\"/usr/libexec/openssh/sftp-server\",\"/usr/lib/openssh/sftp-server\") OR Filesystem.file_name IN (\"libns2.so\",\"libns5.so\",\"libsbr.so\") ) AND NOT Filesystem.process_name IN (\"dpkg\",\"apt\",\"apt-get\",\"yum\",\"dnf\",\"rpm\",\"zypper\",\"pacman\",\"unattended-upgrade\",\"update-alternatives\",\"snapd\") by host Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(\"Filesystem\")` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Windigo / Ebury \u2014 trojan libkeyutils.so or OpenSSH-suite tampering\n// Defender for Endpoint Linux telemetry. Legit libkeyutils is ~10-12KB;\n// Ebury samples are 50-150KB and dropped outside package-manager context.\nlet _pkg_managers = dynamic([\"dpkg\",\"apt\",\"apt-get\",\"yum\",\"dnf\",\"rpm\",\"zypper\",\"pacman\",\"unattended-upgrade\",\"update-alternatives\",\"snapd\",\"installer\"]);\nlet _ebury_alt_libs  = dynamic([\"libns2.so\",\"libns5.so\",\"libsbr.so\",\"libpamc.so.0\"]);\nlet _openssh_targets = dynamic([\"/usr/sbin/sshd\",\"/usr/bin/ssh\",\"/usr/bin/ssh-add\",\"/usr/bin/scp\",\"/usr/libexec/openssh/sftp-server\",\"/usr/lib/openssh/sftp-server\"]);\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where InitiatingProcessFileName !in~ (_pkg_managers)\n| where ( FileName startswith \"libkeyutils.so\" and FileSize > 20000 )    // legit ~10-12KB\n     or ( FolderPath in~ (_openssh_targets) )                              // direct OpenSSH binary touch\n     or ( FileName in~ (_ebury_alt_libs) and FolderPath matches regex @\"(?i)^/(usr/)?lib(64|x32)?(/|$)\" )\n| join kind=leftouter (\n    DeviceInfo\n    | where Timestamp > ago(1d)\n    | summarize arg_max(Timestamp, OSPlatform, OSDistribution) by DeviceId\n  ) on DeviceId\n| project Timestamp, DeviceName, OSPlatform, OSDistribution,\n          ActionType, FolderPath, FileName, FileSize, SHA256,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessAccountName, InitiatingProcessParentFileName\n| order by Timestamp desc",
+      "sentinel_kql": "// Sentinel \u2014 same detection via ASIM ImFileEvent (cross-vendor: MDE, AuditD, Sysmon-for-Linux)\nlet _pkg_managers = dynamic([\"dpkg\",\"apt\",\"apt-get\",\"yum\",\"dnf\",\"rpm\",\"zypper\",\"pacman\",\"unattended-upgrade\",\"update-alternatives\",\"snapd\"]);\nlet _ebury_alt_libs  = dynamic([\"libns2.so\",\"libns5.so\",\"libsbr.so\",\"libpamc.so.0\"]);\nlet _openssh_targets = dynamic([\"/usr/sbin/sshd\",\"/usr/bin/ssh\",\"/usr/bin/ssh-add\",\"/usr/bin/scp\",\"/usr/libexec/openssh/sftp-server\",\"/usr/lib/openssh/sftp-server\"]);\nImFileEvent\n| where TimeGenerated > ago(7d)\n| where EventType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where ActingProcessName !in~ (_pkg_managers)\n| where ( TargetFileName startswith \"libkeyutils.so\" and TargetFileSize > 20000 )\n     or ( TargetFilePath in~ (_openssh_targets) )\n     or ( TargetFileName in~ (_ebury_alt_libs) and TargetFilePath matches regex @\"(?i)^/(usr/)?lib(64|x32)?(/|$)\" )\n| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName,\n          TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine,\n          ActorUsername\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Windigo Ebury Trojanized libkeyutils or OpenSSH Binary Modification\nid: 7c2b8d8e-5a8c-4a2f-9e0b-6d3a1c4b9a01\nstatus: experimental\ndescription: Detects creation or modification of /lib*/libkeyutils.so* with abnormal size (>20KB), or in-place modification of OpenSSH binaries (sshd, ssh, ssh-add, scp, sftp-server) outside of package-manager context \u2014 the canonical Ebury / Windigo (G0124) install footprint.\nreferences:\n  - https://www.welivesecurity.com/2014/03/18/operation-windigo-the-vivisection-of-a-large-linux-server-side-credential-stealing-malware-campaign/\n  - https://attack.mitre.org/groups/G0124/\n  - https://attack.mitre.org/software/S0377/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.persistence\n  - attack.t1554\n  - attack.t1574\n  - attack.t1014\n  - g0124\nlogsource:\n  product: linux\n  category: file_event\ndetection:\n  selection_libkeyutils:\n    TargetFilename|startswith:\n      - '/lib/libkeyutils.so'\n      - '/lib64/libkeyutils.so'\n      - '/usr/lib/libkeyutils.so'\n      - '/usr/lib64/libkeyutils.so'\n  selection_openssh_targets:\n    TargetFilename:\n      - '/usr/sbin/sshd'\n      - '/usr/bin/ssh'\n      - '/usr/bin/ssh-add'\n      - '/usr/bin/scp'\n      - '/usr/libexec/openssh/sftp-server'\n      - '/usr/lib/openssh/sftp-server'\n  filter_pkg_mgr:\n    Image|endswith:\n      - '/dpkg'\n      - '/apt'\n      - '/apt-get'\n      - '/yum'\n      - '/dnf'\n      - '/rpm'\n      - '/zypper'\n      - '/pacman'\n      - '/unattended-upgrade'\n      - '/update-alternatives'\n      - '/snapd'\n  condition: (selection_libkeyutils or selection_openssh_targets) and not filter_pkg_mgr\nfalsepositives:\n  - Manual administrator rebuild of OpenSSH from source (rare in production)\n  - Out-of-band patch deployment via Ansible/Salt running as root without invoking the package manager\nlevel: high",
+      "rationale": "This isn't a generic 'unsigned binary modification' rule \u2014 it pins on the EXACT three artefacts ESET and CERN documented as the Ebury install signature: (1) oversized libkeyutils.so used as a DT_NEEDED hijack against sshd, (2) in-place patching of the OpenSSH binaries themselves, and (3) Ebury's known alternate drop names (libns2/libns5/libsbr/libpamc). The 20KB lower bound on libkeyutils is the t",
+      "_sigma_issues": [
+        "sigma parse error: Sigma tag must start with namespace separated with dot from remaining tag."
+      ]
+    },
+    {
+      "title": "[LLM] Windigo / Ebury \u2014 sshd-initiated DNS exfiltration of stolen SSH credentials (long-label TXT/A queries)",
+      "description": "Hunts the Ebury credential-exfil channel: the in-memory implant inside the trojanized sshd hooks PAM/keyboard-interactive auth, captures plaintext SSH credentials and private keys, then exfiltrates them via DNS queries (A/TXT) with base64-encoded payloads in the leftmost labels to attacker-controlled nameservers. CERN's 2019 Ebury post-mortem documents this as the persistent C2 method even after the 2014 ESET disclosure.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1048.003",
+        "T1556.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(DNS.query) as queries dc(DNS.query) as unique_queries values(DNS.record_type) as record_types min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.src_category!=\"workstation\" AND DNS.process_name=\"sshd\" by host DNS.dest DNS.query_type | `drop_dm_object_name(\"DNS\")` | eval long_label_count=mvcount(mvfilter(match(queries,\"^[A-Za-z0-9+/=_-]{30,}\\.\"))) | where long_label_count>3 OR unique_queries>20 | append [ | tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=\"sshd\" All_Traffic.dest_port=53 NOT All_Traffic.dest_category=\"internal_dns\" by host All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(\"All_Traffic\")` ] | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Windigo / Ebury \u2014 sshd talking DNS to the public internet, OR sshd issuing\n// long-label DNS queries (the Ebury credential-exfil channel).\nlet _lookback = 7d;\n// Path A: sshd opens UDP/53 directly to a public resolver \u2014 sshd should never\n// do this; it always goes through libc/getaddrinfo \u2192 systemd-resolved/nscd.\nlet PathA = DeviceNetworkEvents\n  | where Timestamp > ago(_lookback)\n  | where InitiatingProcessFileName =~ \"sshd\"\n  | where RemotePort == 53\n  | where RemoteIPType == \"Public\"\n  | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,\n            InitiatingProcessCommandLine, Channel = \"sshd_direct_dns_egress\";\n// Path B: long-label DNS queries by sshd \u2014 Ebury's base64 payload tell.\nlet PathB = DeviceEvents\n  | where Timestamp > ago(_lookback)\n  | where ActionType == \"DnsQueryResponse\"\n  | where InitiatingProcessFileName =~ \"sshd\"\n  | extend Q = tostring(parse_json(AdditionalFields).QueryName)\n  | extend FirstLabel = tostring(split(Q, \".\")[0])\n  | extend LabelLen = strlen(FirstLabel),\n           TotalLen = strlen(Q),\n           B64ish   = iff(FirstLabel matches regex @\"^[A-Za-z0-9+/=_-]+$\", true, false)\n  | where (LabelLen >= 30 and B64ish) or TotalLen >= 100\n  | project Timestamp, DeviceName, Q, FirstLabel, LabelLen, TotalLen,\n            InitiatingProcessCommandLine, RemoteIP = \"\", RemotePort = 53,\n            RemoteUrl = Q, Channel = \"sshd_long_label_dns\";\nunion isfuzzy=true PathA, PathB\n| summarize Hits = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            SampleQuery = any(RemoteUrl),\n            Destinations = make_set(RemoteIP, 25)\n            by DeviceName, Channel\n| where Hits > 0\n| order by FirstSeen desc",
+      "sentinel_kql": "// Sentinel \u2014 Path A via ImNetworkSession (sshd-on-public-DNS) and Path B via\n// ImDnsActivity (long-label payloads). Either alone is suspicious; both is Ebury.\nlet _lookback = 7d;\nlet PathA = ImNetworkSession\n  | where TimeGenerated > ago(_lookback)\n  | where ActingProcessName =~ \"sshd\"\n  | where DstPortNumber == 53\n  | where not(ipv4_is_private(DstIpAddr))\n  | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url,\n            ActingProcessCommandLine, Channel = \"sshd_direct_dns_egress\";\nlet PathB = ImDnsActivity\n  | where TimeGenerated > ago(_lookback)\n  | where SrcUsername has \"sshd\" or DvcHostname != \"\"   // Im* doesn't always carry process; rely on Syslog enrichment\n  | extend FirstLabel = tostring(split(DnsQuery, \".\")[0])\n  | extend LabelLen = strlen(FirstLabel),\n           TotalLen = strlen(DnsQuery),\n           B64ish   = iff(FirstLabel matches regex @\"^[A-Za-z0-9+/=_-]+$\", true, false)\n  | where (LabelLen >= 30 and B64ish) or TotalLen >= 100\n  | project TimeGenerated, DvcHostname, DnsQuery, FirstLabel, LabelLen, TotalLen,\n            DstIpAddr, DstPortNumber = 53, Url = DnsQuery,\n            ActingProcessCommandLine = \"\", Channel = \"sshd_long_label_dns\";\nunion isfuzzy=true PathA, PathB\n| summarize Hits = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            SampleQuery = any(Url),\n            Destinations = make_set(DstIpAddr, 25)\n            by DvcHostname, Channel\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Generic 'DNS-tunnel' rules misfire on McAfee/Symantec query strings, AV cloud lookups, and CDN tokens. This rule is Windigo-specific because it anchors on the PROCESS \u2014 sshd \u2014 which on a clean Linux host should never make DNS queries directly (it relies on libc \u2192 systemd-resolved/nscd). Any sshd\u2192public-UDP/53 traffic is by itself anomalous, and ESET's Operation Windigo writeup plus CERN's 2019 fol",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImDnsActivity",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImDnsActivity, ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

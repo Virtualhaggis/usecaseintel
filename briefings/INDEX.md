@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_429 per-article briefings — auto-generated from articles in the rolling 365-day window._
+_430 per-article briefings — auto-generated from articles in the rolling 365-day window._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,14 +8,24 @@ _429 per-article briefings — auto-generated from articles in the rolling 365-d
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-04
+- [cisa warns of cpanel whm vulnerability exploited in attacks](./2026-05-04/cisa-warns-of-cpanel-whm-vulnerability-exploited-in-attacks.md)
+- [critical moveit vulnerabilities enables authentication bypas](./2026-05-04/critical-moveit-vulnerabilities-enables-authentication-bypas.md)
+- [email bombing and fake it support calls fuel new microsoft t](./2026-05-04/email-bombing-and-fake-it-support-calls-fuel-new-microsoft-t.md)
+- [freebsd dhcp client vulnerability enables remote code execut](./2026-05-04/freebsd-dhcp-client-vulnerability-enables-remote-code-execut.md)
+- [global crackdown arrests 276 shuts 9 crypto scam centers sei](./2026-05-04/global-crackdown-arrests-276-shuts-9-crypto-scam-centers-sei.md)
+- [threat actors use ai to automate 0 day discovery and exploit](./2026-05-04/threat-actors-use-ai-to-automate-0-day-discovery-and-exploit.md)
+
 ## 2026-05-03
 - [cisa adds actively exploited linux root access bug cve 2026 ](./2026-05-03/cisa-adds-actively-exploited-linux-root-access-bug-cve-2026-.md)
+- [instructure confirms data breach shinyhunters claims attack](./2026-05-03/instructure-confirms-data-breach-shinyhunters-claims-attack.md)
+- [microsoft defender mistakenly flags digicert root certificat](./2026-05-03/microsoft-defender-mistakenly-flags-digicert-root-certificat.md)
+- [microsoft defender wrongly flags digicert certs as trojan wi](./2026-05-03/microsoft-defender-wrongly-flags-digicert-certs-as-trojan-wi.md)
+- [telegram mini apps abused for crypto scams android malware d](./2026-05-03/telegram-mini-apps-abused-for-crypto-scams-android-malware-d.md)
 
 ## 2026-05-02
-- [attackers abuse google appsheet netlify and telegram in face](./2026-05-02/attackers-abuse-google-appsheet-netlify-and-telegram-in-face.md)
 - [attackers deploy aitm phishing pages to access sharepoint hu](./2026-05-02/attackers-deploy-aitm-phishing-pages-to-access-sharepoint-hu.md)
 - [consentfix v3 attacks target azure with automated oauth abus](./2026-05-02/consentfix-v3-attacks-target-azure-with-automated-oauth-abus.md)
-- [cpanelsniper poc exploit disclosed for cpanel vulnerability ](./2026-05-02/cpanelsniper-poc-exploit-disclosed-for-cpanel-vulnerability-.md)
 - [critrical cpanel flaw mass exploited in sorry ransomware att](./2026-05-02/critrical-cpanel-flaw-mass-exploited-in-sorry-ransomware-att.md)
 - [cve 2026 31431 copy fail vulnerability enables linux root pr](./2026-05-02/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-pr.md)
 - [hackers breach government and military servers by exploiting](./2026-05-02/hackers-breach-government-and-military-servers-by-exploiting.md)
@@ -33,32 +43,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
 - [edu tech firm instructure discloses cyber incident probes im](./2026-05-01/edu-tech-firm-instructure-discloses-cyber-incident-probes-im.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
-- [etherrat campaign uses seo poisoning and github facades to t](./2026-05-01/etherrat-campaign-uses-seo-poisoning-and-github-facades-to-t.md)
 - [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
 - [microsoft fixes remote desktop warnings displaying incorrect](./2026-05-01/microsoft-fixes-remote-desktop-warnings-displaying-incorrect.md)
 - [microsoft now lets admins choose pre installed store apps to](./2026-05-01/microsoft-now-lets-admins-choose-pre-installed-store-apps-to.md)
-- [new spyware platform lets buyers rebrand and resell android ](./2026-05-01/new-spyware-platform-lets-buyers-rebrand-and-resell-android-.md)
 - [poisoned ruby gems and go modules exploit ci pipelines for c](./2026-05-01/poisoned-ruby-gems-and-go-modules-exploit-ci-pipelines-for-c.md)
 - [story retracted](./2026-05-01/story-retracted.md)
-- [the agency mirage why ai needs real engineering not just hyp](./2026-05-01/the-agency-mirage-why-ai-needs-real-engineering-not-just-hyp.md)
 - [top five sales challenges costing msps cybersecurity revenue](./2026-05-01/top-five-sales-challenges-costing-msps-cybersecurity-revenue.md)
 - [two cybersecurity professionals get 4 year sentences in blac](./2026-05-01/two-cybersecurity-professionals-get-4-year-sentences-in-blac.md)
 - [us ransomware negotiators get 4 years in prison over blackca](./2026-05-01/us-ransomware-negotiators-get-4-years-in-prison-over-blackca.md)
 - [windows 11 kb5083631 update released with 34 changes and fix](./2026-05-01/windows-11-kb5083631-update-released-with-34-changes-and-fix.md)
 
 ## 2026-04-30
-- [april kb5083769 windows 11 update causes backup software fai](./2026-04-30/april-kb5083769-windows-11-update-causes-backup-software-fai.md)
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [etherrat distribution spoofing administrative tools via gith](./2026-04-30/etherrat-distribution-spoofing-administrative-tools-via-gith.md)
-- [fbi links cybercriminals to sharp surge in cargo theft attac](./2026-04-30/fbi-links-cybercriminals-to-sharp-surge-in-cargo-theft-attac.md)
 - [google fixes cvss 10 gemini cli ci rce and cursor flaws enab](./2026-04-30/google-fixes-cvss-10-gemini-cli-ci-rce-and-cursor-flaws-enab.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
 - [new bluekit phishing service includes an ai assistant 40 tem](./2026-04-30/new-bluekit-phishing-service-includes-an-ai-assistant-40-tem.md)
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
-- [romanian leader of online swatting ring gets 4 years in pris](./2026-04-30/romanian-leader-of-online-swatting-ring-gets-4-years-in-pris.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 - [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
@@ -117,7 +121,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-23
 - [bitwarden cli compromised in ongoing checkmarx supply chain ](./2026-04-23/bitwarden-cli-compromised-in-ongoing-checkmarx-supply-chain-.md)
 - [can ai attack the cloud lessons from building an autonomous ](./2026-04-23/can-ai-attack-the-cloud-lessons-from-building-an-autonomous-.md)
-- [china linked gopherwhisper infects 12 mongolian government s](./2026-04-23/china-linked-gopherwhisper-infects-12-mongolian-government-s.md)
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)
 - [fast16 mystery shadowbrokers reference reveals high precisio](./2026-04-23/fast16-mystery-shadowbrokers-reference-reveals-high-precisio.md)
 - [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)

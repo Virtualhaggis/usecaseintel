@@ -39,6 +39,14 @@ Multiple documents associated…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
+- **T1564.003** — Hide Artifacts: Hidden Window
+- **T1102** — Web Service
+- **T1567** — Exfiltration Over Web Service
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1567.002** — Exfiltration to Cloud Storage / Web Service
+- **T1221** — Template Injection
 
 ## Kill chain phases observed
 
@@ -46,7 +54,94 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing â€” periodic outbound to small set of destinations
+### [LLM] APT28 MacroMaze: Edge launched off-screen or headless to webhook.site by non-browser parent
+
+`UC_200_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="msedge.exe" Processes.parent_process_name IN ("cmd.exe","wscript.exe","cscript.exe") (Processes.process="*--window-position=10000,10000*" OR Processes.process="*--window-size=1,1*" OR Processes.process="*--headless=new*" OR (Processes.process="*--ignore-certificate-errors*" AND Processes.process="*webhook*")) by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_id | `drop_dm_object_name(Processes)` | where match(process,"(?i)webhook\.site|--window-position=10000,10000|--headless=new")
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "msedge.exe"
+| where InitiatingProcessFileName in~ ("cmd.exe","wscript.exe","cscript.exe")
+| where AccountName !endswith "$"
+| where ProcessCommandLine has_any ("--window-position=10000,10000","--window-size=1,1","--headless=new","--ignore-certificate-errors")
+   or ProcessCommandLine has "webhook.site"
+| where ProcessCommandLine has "webhook.site"
+   or InitiatingProcessFolderPath has_any (@"\Users\", @"\AppData\", @"\Downloads\")
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] APT28 MacroMaze: schtasks creating wscript-launched persistence with 20/30/61-minute repeat
+
+`UC_200_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" (Processes.process="*/create*" OR Processes.process="*/xml*") Processes.process="*wscript*" by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process,"(?i)\\\\Users\\\\[^\\\\]+\\\\.*\\.vbs") OR match(process,"(?i)\\.bat") | rename process as command | table firstTime lastTime dest user parent command
+```
+
+**Defender KQL:**
+```kql
+// Direct schtasks creation observed by MacroMaze CMD
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has_any ("/create","/xml")
+| where ProcessCommandLine has "wscript"
+| where ProcessCommandLine has_any (@"\Users\", "%USERPROFILE%", @"\AppData\")
+| where ProcessCommandLine matches regex @"(?i)\.(bat|cmd)\b"
+| extend SuspiciousInterval = iff(ProcessCommandLine has_any ("PT20M","PT30M","PT61M","/RI 20","/RI 30","/RI 61"), true, false)
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildCmd = ProcessCommandLine,
+          SuspiciousInterval
+| order by Timestamp desc
+```
+
+### [LLM] APT28 MacroMaze: Office or Edge HTTP traffic to webhook.site (INCLUDEPICTURE tracker + exfil)
+
+`UC_200_12` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user) as user values(Web.dest) as dest from datamodel=Web where Web.url="*webhook.site*" Web.process_name IN ("winword.exe","excel.exe","powerpnt.exe","msedge.exe","wscript.exe","cscript.exe","cmd.exe") by Web.src Web.process_name Web.http_method Web.url | `drop_dm_object_name(Web)` | eval indicator=case(match(urls,"(?i)docopened\.jpg"),"INCLUDEPICTURE_tracker", http_method="POST","Possible_exfil_POST", true(),"Other_webhook_traffic") | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has "webhook.site" or RemoteUrl endswith ".webhook.site"
+| where InitiatingProcessFileName in~ (
+    "winword.exe","excel.exe","powerpnt.exe",
+    "msedge.exe","wscript.exe","cscript.exe","cmd.exe")
+| extend Indicator = case(
+    RemoteUrl has "docopened.jpg", "INCLUDEPICTURE_tracker",
+    InitiatingProcessFileName =~ "winword.exe", "Office_to_webhook.site",
+    InitiatingProcessFileName =~ "msedge.exe", "Edge_exfil_or_payload",
+    "Script_host_to_webhook.site")
+| project Timestamp, DeviceName,
+          Account = InitiatingProcessAccountName,
+          Process = InitiatingProcessFileName,
+          ProcessCmd = InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl, Indicator
+| order by Timestamp desc
+```
+
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -316,7 +411,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation MacroMaze: new APT28  campaign using basic tooling and legit infrastru
 
-`UC_199_9` · phase: **exploit** · confidence: **High**
+`UC_200_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -376,4 +471,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

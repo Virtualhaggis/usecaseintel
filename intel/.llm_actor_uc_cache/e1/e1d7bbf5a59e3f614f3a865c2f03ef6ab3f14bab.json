@@ -1,0 +1,258 @@
+{
+  "name": "CopyKittens",
+  "ucs": [
+    {
+      "title": "[LLM] CopyKittens (G0052) Matryoshka-style rundll32 DLL load from user-writable path chained to hidden PowerShell",
+      "description": "Hunts CopyKittens' canonical Operation Wilted Tulip execution chain \u2014 Matryoshka/TDTESS DLL payloads launched via rundll32.exe from %AppData%, %ProgramData%, \\Users\\Public, or %Temp%, followed within 5 minutes by powershell.exe with -WindowStyle Hidden / -EncodedCommand on the same host & user. The combination (T1218.011 + T1059.001 + T1564.003) is documented for this Iranian cluster by ClearSky and Trend Micro.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.011",
+        "T1059.001",
+        "T1564.003",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as RundllTime values(Processes.process) as RundllCmd values(Processes.parent_process_name) as RundllParent from datamodel=Endpoint.Processes where Processes.process_name=\"rundll32.exe\" (Processes.process=\"*\\\\appdata\\\\*\" OR Processes.process=\"*\\\\programdata\\\\*\" OR Processes.process=\"*\\\\users\\\\public\\\\*\" OR Processes.process=\"*\\\\windows\\\\temp\\\\*\" OR Processes.process=\"*\\\\local\\\\temp\\\\*\") NOT Processes.user=\"*$\" by Processes.dest Processes.user | rename Processes.* as * | join type=inner dest user [ | tstats summariesonly=true min(_time) as PsTime values(Processes.process) as PsCmd values(Processes.parent_process_name) as PsParent from datamodel=Endpoint.Processes where (Processes.process_name=\"powershell.exe\" OR Processes.process_name=\"pwsh.exe\") (Processes.process=\"*-WindowStyle Hidden*\" OR Processes.process=\"*-w hidden*\" OR Processes.process=\"*-WindowStyl*\" OR Processes.process=\"*-EncodedCommand*\" OR Processes.process=\"*-enc *\" OR Processes.process=\"*DownloadString*\" OR Processes.process=\"*IEX*\" OR Processes.process=\"*Invoke-Expression*\") by Processes.dest Processes.user | rename Processes.* as * ] | where PsTime>=RundllTime AND PsTime<=(RundllTime+300) | table RundllTime PsTime dest user RundllParent RundllCmd PsParent PsCmd | sort - RundllTime",
+      "kql": "let lookback = 7d;\nlet UserWritable = dynamic([@\"\\appdata\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\", @\"\\local\\temp\\\"]);\nlet RundllStaged = DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where FileName =~ \"rundll32.exe\"\n    | where AccountName !endswith \"$\"\n    | where tolower(ProcessCommandLine) has_any (UserWritable)\n       or ProcessCommandLine matches regex @\"(?i)rundll32(\\.exe)?\\s+[^,\\s\\\"]+\\.dll[, ]+(#?\\d+|[A-Z][A-Za-z0-9_]{0,15})\\b\"\n    | project RundllTime = Timestamp, DeviceId, DeviceName, AccountName,\n              RundllParent = InitiatingProcessFileName,\n              RundllCmd    = ProcessCommandLine,\n              RundllPid    = ProcessId;\nlet HiddenPS = DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where FileName in~ (\"powershell.exe\", \"pwsh.exe\")\n    | where ProcessCommandLine matches regex @\"(?i)-w(in)?(dow)?style?\\s+h(idden)?\"\n       or ProcessCommandLine has_any (\"-EncodedCommand\", \"-enc \", \"-ec \", \"DownloadString\", \"IEX\", \"Invoke-Expression\")\n    | project PsTime = Timestamp, DeviceId, AccountName,\n              PsParent = InitiatingProcessFileName,\n              PsCmd    = ProcessCommandLine;\nRundllStaged\n| join kind=inner HiddenPS on DeviceId, AccountName\n| where PsTime between (RundllTime .. RundllTime + 5m)\n| project RundllTime, PsTime,\n          DelaySec = datetime_diff('second', PsTime, RundllTime),\n          DeviceName, AccountName,\n          RundllParent, RundllCmd, PsParent, PsCmd\n| order by RundllTime desc",
+      "sentinel_kql": "let lookback = 7d;\nlet UserWritable = dynamic([@\"\\appdata\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\", @\"\\local\\temp\\\"]);\nlet RundllStaged = SecurityEvent\n    | where TimeGenerated > ago(lookback)\n    | where EventID == 4688\n    | where NewProcessName endswith @\"\\rundll32.exe\"\n    | where Account !endswith \"$\"\n    | where tolower(CommandLine) has_any (UserWritable)\n       or CommandLine matches regex @\"(?i)rundll32(\\.exe)?\\s+[^,\\s\\\"]+\\.dll[, ]+(#?\\d+|[A-Z][A-Za-z0-9_]{0,15})\\b\"\n    | project RundllTime = TimeGenerated, Computer, Account,\n              RundllParent = ParentProcessName,\n              RundllCmd    = CommandLine;\nlet HiddenPS = SecurityEvent\n    | where TimeGenerated > ago(lookback)\n    | where EventID == 4688\n    | where NewProcessName has_any (@\"\\powershell.exe\", @\"\\pwsh.exe\")\n    | where CommandLine matches regex @\"(?i)-w(in)?(dow)?style?\\s+h(idden)?\"\n       or CommandLine has_any (\"-EncodedCommand\", \"-enc \", \"-ec \", \"DownloadString\", \"IEX\", \"Invoke-Expression\")\n    | project PsTime = TimeGenerated, Computer, Account,\n              PsParent = ParentProcessName,\n              PsCmd    = CommandLine;\nRundllStaged\n| join kind=inner HiddenPS on Computer, Account\n| where PsTime between (RundllTime .. RundllTime + 5m)\n| project RundllTime, PsTime,\n          DelaySec = datetime_diff('second', PsTime, RundllTime),\n          Computer, Account,\n          RundllParent, RundllCmd, PsParent, PsCmd\n| order by RundllTime desc",
+      "sigma_yaml": "",
+      "rationale": "ClearSky's CopyKittens reports document Matryoshka and TDTESS dropping a DLL into %AppData% / %ProgramData% and re-launching it via rundll32 with an export ordinal, then handing off to PowerShell with -WindowStyle Hidden for the second-stage download. Generic 'PowerShell hidden' or 'rundll32 from temp' fire on commodity malware too \u2014 joining the two within a 5-minute same-user window is the signat",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Za",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Za` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EncodedCommand",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`EncodedCommand` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DownloadString",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DownloadString` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IEX",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IEX` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Expression",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Expression` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "HiddenPS",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`HiddenPS` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RundllTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllParent",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RundllParent` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RundllCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Za",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Za` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EncodedCommand",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`EncodedCommand` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DownloadString",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`DownloadString` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IEX",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IEX` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Expression",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Expression` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "HiddenPS",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`HiddenPS` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`RundllTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllParent",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`RundllParent` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RundllCmd",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`RundllCmd` is not a canonical column of SecurityEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] CopyKittens pre-exfil staging: scripted RAR/7-Zip multi-volume password-protected archive of collected data",
+      "description": "Hunts the CopyKittens collection\u2192exfil pivot from Operation Wilted Tulip \u2014 rar.exe / WinRAR / 7z spawned non-interactively by powershell, cmd, wscript, cscript, mshta, or rundll32 (i.e. driven by the implant, not a user clicking RAR), with the password (-hp/-p) and split-volume (-v) flags the group uses to chunk staged data before egress. Tied directly to T1560.001 / T1560.003 in CopyKittens' MITRE technique list.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1560.001",
+        "T1560.003",
+        "T1059.001",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.process_name=\"rar.exe\" OR Processes.process_name=\"winrar.exe\" OR Processes.process_name=\"7z.exe\" OR Processes.process_name=\"7za.exe\" OR Processes.process_name=\"7zg.exe\") (Processes.parent_process_name=\"powershell.exe\" OR Processes.parent_process_name=\"pwsh.exe\" OR Processes.parent_process_name=\"cmd.exe\" OR Processes.parent_process_name=\"wscript.exe\" OR Processes.parent_process_name=\"cscript.exe\" OR Processes.parent_process_name=\"mshta.exe\" OR Processes.parent_process_name=\"rundll32.exe\" OR Processes.parent_process_name=\"wmiprvse.exe\") (Processes.process=\"* a *\" OR Processes.process=\"*-hp*\" OR Processes.process=\"*-p*\" OR Processes.process=\"*-v*\" OR Processes.process=\"*-m5*\" OR Processes.process=\"*-ssw*\" OR Processes.process=\"*-r *\") NOT Processes.user=\"*$\" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | rename Processes.* as * | sort - lastTime",
+      "kql": "let lookback = 7d;\nlet Archivers = dynamic([\"rar.exe\", \"winrar.exe\", \"7z.exe\", \"7za.exe\", \"7zg.exe\"]);\nlet ScriptedParents = dynamic([\"powershell.exe\", \"pwsh.exe\", \"cmd.exe\", \"wscript.exe\", \"cscript.exe\", \"mshta.exe\", \"rundll32.exe\", \"regsvr32.exe\", \"wmiprvse.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where FileName in~ (Archivers)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (ScriptedParents)\n| where ProcessCommandLine has_any (\" a \", \"-hp\", \"-p\", \"-v\", \"-m5\", \"-ssw\", \"-r \")\n| extend HasPasswordFlag = ProcessCommandLine matches regex @\"(?i)\\s-(hp|p)[\\\"\\S]\"\n| extend HasSplitFlag    = ProcessCommandLine matches regex @\"(?i)\\s-v\\d+[kmg]?\\b\"\n| project Timestamp, DeviceName, AccountName,\n          Archiver = FileName,\n          ArchiverCmd = ProcessCommandLine,\n          ParentName  = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          HasPasswordFlag, HasSplitFlag\n| order by Timestamp desc",
+      "sentinel_kql": "let lookback = 7d;\nlet Archivers = dynamic([\"rar.exe\", \"winrar.exe\", \"7z.exe\", \"7za.exe\", \"7zg.exe\"]);\nlet ScriptedParents = dynamic([\"powershell.exe\", \"pwsh.exe\", \"cmd.exe\", \"wscript.exe\", \"cscript.exe\", \"mshta.exe\", \"rundll32.exe\", \"regsvr32.exe\", \"wmiprvse.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ImageLeaf  = tolower(tostring(split(NewProcessName,    @\"\\\")[-1]))\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, @\"\\\")[-1]))\n| where ImageLeaf  in (Archivers)\n| where ParentLeaf in (ScriptedParents)\n| where CommandLine has_any (\" a \", \"-hp\", \"-p\", \"-v\", \"-m5\", \"-ssw\", \"-r \")\n| extend HasPasswordFlag = CommandLine matches regex @\"(?i)\\s-(hp|p)[\\\"\\S]\"\n| extend HasSplitFlag    = CommandLine matches regex @\"(?i)\\s-v\\d+[kmg]?\\b\"\n| project TimeGenerated, Computer, Account,\n          Archiver = ImageLeaf,\n          ArchiverCmd = CommandLine,\n          ParentName  = ParentLeaf,\n          ParentImage = ParentProcessName,\n          HasPasswordFlag, HasSplitFlag\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: CopyKittens-style scripted RAR/7z password-protected archive staging\nid: 9b4e7f4a-4cb1-4a0c-9c0d-c0py1k1ttens02\nstatus: experimental\ndescription: Detects archive utilities (rar/winrar/7z) spawned non-interactively by script-host or LOLBin parents with password and/or split-volume flags, matching CopyKittens (G0052) pre-exfil staging tradecraft from Operation Wilted Tulip.\nreferences:\n  - https://attack.mitre.org/groups/G0052/\n  - https://www.clearskysec.com/wp-content/uploads/2017/07/Operation_Wilted_Tulip.pdf\nauthor: Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.collection\n  - attack.exfiltration\n  - attack.t1560.001\n  - attack.t1560.003\n  - attack.g0052\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith:\n      - '\\rar.exe'\n      - '\\WinRAR.exe'\n      - '\\7z.exe'\n      - '\\7za.exe'\n      - '\\7zg.exe'\n  selection_parent:\n    ParentImage|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\wmiprvse.exe'\n  selection_flags:\n    CommandLine|contains:\n      - ' -hp'\n      - ' -p'\n      - ' -v'\n      - ' -m5'\n      - ' -ssw'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection_image and selection_parent and selection_flags and not filter_machine\nfalsepositives:\n  - Backup or DLP agents that legitimately call rar/7z from a service wrapper (whitelist by parent path / signing cert)\n  - IT-driven scripted archive jobs (whitelist scheduled-task service accounts)\nlevel: high",
+      "rationale": "ClearSky's Wilted Tulip report explicitly calls out CopyKittens using RAR with password and split-volume flags, driven by their PowerShell/cmd-based implants (Matryoshka, Vminst), to chunk and password-protect staged data before exfiltration to CDN-fronted infrastructure (T1090). Hunting RAR/7z alone is too noisy; constraining the parent to script-hosts / LOLBins eliminates the IT-admin and user-d",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HasSplitFlag",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`HasSplitFlag` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HasSplitFlag",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`HasSplitFlag` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

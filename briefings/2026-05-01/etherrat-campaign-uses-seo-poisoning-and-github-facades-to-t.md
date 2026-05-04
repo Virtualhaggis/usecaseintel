@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EtherRAT Stage 3: conhost.exe --headless launching node.exe payload
 
-`UC_17_10` · phase: **install** · confidence: **High**
+`UC_21_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ _conhost_headless
 
 ### [LLM] EtherRAT Stage 1: msiexec SYSTEM-spawned cmd.exe with SET-concatenation obfuscation of curl/tar/cmd
 
-`UC_17_11` · phase: **install** · confidence: **High**
+`UC_21_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### [LLM] EtherRAT C2 lookup: node.exe / conhost.exe contacting public Ethereum JSON-RPC endpoints
 
-`UC_17_12` · phase: **c2** · confidence: **High**
+`UC_21_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ _eth_callers
 | order by LastSeen desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -503,7 +503,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — EtherRAT Campaign Uses SEO Poisoning and GitHub Facades to Target Enterprise Adm
 
-`UC_17_9` · phase: **exploit** · confidence: **High**
+`UC_21_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

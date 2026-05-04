@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EtherRAT MSI dropper: msiexec-spawned cmd downloads Node.js runtime via curl to %LOCALAPPDATA%
 
-`UC_43_10` · phase: **install** · confidence: **High**
+`UC_45_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ _suspicious_curl
 
 ### [LLM] EtherRAT Node.js loader executing AES-encrypted payload with non-script extension from %LOCALAPPDATA%
 
-`UC_43_11` · phase: **install** · confidence: **High**
+`UC_45_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] EtherRAT EtherHiding C2 — node.exe contacting public Ethereum JSON-RPC endpoints (eth_call DDR)
 
-`UC_43_12` · phase: **c2** · confidence: **High**
+`UC_45_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ union isfuzzy=true _net, _dns
 | order by Timestamp desc
 ```
 
-### Beaconing â€” periodic outbound to small set of destinations
+### Beaconing — periodic outbound to small set of destinations
 
 `UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
@@ -347,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EtherRAT Distribution Spoofing Administrative Tools via GitHub Facades
 
-`UC_43_9` · phase: **exploit** · confidence: **High**
+`UC_45_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

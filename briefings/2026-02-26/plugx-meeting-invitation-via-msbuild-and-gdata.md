@@ -38,12 +38,150 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1127.001** — Trusted Developer Utilities Proxy Execution: MSBuild
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Renamed MSBuild auto-loading sibling .csproj from user-writable path
+
+`UC_189_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.original_file_name="MSBuild.exe" AND Processes.process_name!="MSBuild.exe" AND Processes.process_name!="msbuild.exe") OR (Processes.process_name="MSBuild.exe" AND (Processes.process_path="*\\Users\\*\\Downloads\\*" OR Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\Desktop\\*") AND Processes.process="*.csproj*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// PlugX/STATICPLUGIN — renamed MSBuild or MSBuild auto-loading a sibling .csproj from a user-writable path
+let _user_writable = dynamic([@"\Users\Public\", @"\AppData\Local\Temp\", @"\Downloads\", @"\Desktop\", @"\AppData\Roaming\"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+// (a) MSBuild renamed to anything else (the Invitation_Letter_*.exe trick)
+| where (ProcessVersionInfoOriginalFileName =~ "MSBuild.exe" and FileName !~ "MSBuild.exe")
+     // (b) Real MSBuild but launched from a user-writable path with a .csproj sibling on the cmdline / cwd
+     or (FileName =~ "MSBuild.exe"
+         and (FolderPath has_any (_user_writable)
+              or InitiatingProcessFolderPath has_any (_user_writable)
+              or ProcessCommandLine matches regex @"(?i)[a-z]:\\.*\\(downloads|temp|public|desktop|appdata)\\.*\.csproj"))
+| project Timestamp, DeviceName, AccountName,
+          FileName, OriginalName = ProcessVersionInfoOriginalFileName,
+          FolderPath, ProcessCommandLine, SHA256,
+          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] G DATA Avk.exe sideload from C:\Users\Public\GDatas with numeric-arg persistence
+
+`UC_189_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where Processes.process_name="Avk.exe" AND Processes.process_path!="*\\Program Files*\\G Data*" AND (Processes.process_path="*\\Users\\Public\\GDatas\\*" OR Processes.process_path="*\\Users\\Public\\*" OR match(Processes.process,"(?i)Avk\.exe\"?\s+\d{2,4}\s+\d{2,4}")) by Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | join type=outer dest [| tstats `summariesonly` count values(Registry.registry_value_name) as registry_value_name values(Registry.registry_value_data) as registry_value_data from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name="G DATA" OR Registry.registry_value_data="*\\Users\\Public\\GDatas\\Avk.exe*") by Registry.dest | `drop_dm_object_name(Registry)` | rename count as registry_count] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// PlugX — G DATA Avk.exe side-load from C:\Users\Public\GDatas with numeric-arg persistence
+let _bad_hashes = dynamic([
+    "8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99", // legitimate AVK.exe used by attacker
+    "46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc", // Avk.dll Korplug
+    "e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17"  // AVKTray.dat
+]);
+let _proc =
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "avk.exe"
+    | where FolderPath !startswith @"C:\Program Files"
+    | where FolderPath has @"\Users\Public\"
+          or ProcessCommandLine matches regex @"(?i)avk\.exe\"?\s+\d{2,4}\s+\d{2,4}"
+          or SHA256 in (_bad_hashes)
+    | project Timestamp, DeviceId, DeviceName, AccountName,
+              FolderPath, ProcessCommandLine, SHA256,
+              Parent = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath;
+let _reg =
+    DeviceRegistryEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has @"\CurrentVersion\Run"
+    | where RegistryValueName =~ "G DATA"
+         or RegistryValueData has @"\Users\Public\GDatas"
+    | project RegTime = Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData,
+              RegInitiatingProc = InitiatingProcessFileName;
+let _imgload =
+    DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName =~ "avk.exe"
+    | where FileName =~ "avk.dll"
+    | where FolderPath !startswith @"C:\Program Files"
+    | project LoadTime = Timestamp, DeviceId, LoadedDll = FolderPath, DllSHA256 = SHA256;
+_proc
+| join kind=leftouter _reg on DeviceId
+| join kind=leftouter _imgload on DeviceId
+| order by Timestamp desc
+```
+
+### [LLM] PlugX STATICPLUGIN C2 / staging-domain contact (decoraat[.]net, gesecole[.]net)
+
+`UC_189_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host IN ("decoraat.net","decoorat.net","onedown.gesecole.net","onedow.gesecole.net","gesecole.net") OR All_Traffic.url IN ("*decoraat.net*","*decoorat.net*","*gesecole.net*") by All_Traffic.dest_host All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17","46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc","8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99","5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc","de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1","29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad","d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e","6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// PlugX STATICPLUGIN — C2 / staging domain contact + on-disk hash sweep
+let _domains = dynamic(["decoraat.net","decoorat.net","onedown.gesecole.net","onedow.gesecole.net","gesecole.net"]);
+let _hashes = dynamic([
+    "e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17",  // AVKTray.dat
+    "46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc",  // Avk.dll (Korplug)
+    "8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99",  // AVK.exe
+    "5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc",  // Invitation_Letter_No.02_2026.exe (renamed MSBuild)
+    "de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1",  // .csproj
+    "29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad",  // .zip
+    "d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e",  // AVKTray.dat decrypted
+    "6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7"   // PDF decoy
+]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (_domains)
+         or tostring(parse_url(RemoteUrl)["Host"]) in~ (_domains)
+    | project Timestamp, Source = "NetworkEvents", DeviceName, AccountName = InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RemoteIP, RemotePort, RemoteUrl, ProtocolField = Protocol ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q in~ (_domains) or Q endswith ".gesecole.net"
+    | project Timestamp, Source = "DnsQuery", DeviceName, AccountName = InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RemoteIP = "", RemotePort = int(null), RemoteUrl = Q, ProtocolField = "DNS" ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (_hashes)
+    | project Timestamp, Source = "FileEvents", DeviceName, AccountName = InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RemoteIP = "", RemotePort = int(null), RemoteUrl = strcat(FolderPath, FileName),
+              ProtocolField = SHA256 )
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -247,7 +385,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_188_7` · phase: **exploit** · confidence: **High**
+`UC_189_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -307,4 +445,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,0 +1,65 @@
+{
+  "name": "WIRTE",
+  "ucs": [
+    {
+      "title": "[LLM] WIRTE (Gaza Cybergang) Office\u2192VBS\u2192regsvr32 Squiblydoo chain (G0090)",
+      "description": "Hunts WIRTE's signature initial-access chain: a maldoc lure (Israel/Hamas/diplomatic themed) spawns wscript/cscript which calls regsvr32.exe with /i:http(s) to fetch a remote .sct/scriptlet (Squiblydoo). Kaspersky and Check Point have repeatedly attributed this exact tradecraft to WIRTE/Ashen Lepus since 2018, and it remains in use through their 2024 IronWind/SameCoin operations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1218.010",
+        "T1059.005",
+        "T1566.001",
+        "T1204.002",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.process_name=regsvr32.exe AND (Processes.process=\"*/i:http*\" OR Processes.process=\"*/i:https*\" OR Processes.process=\"*scrobj.dll*\" OR Processes.process=\"*scrobj*\") AND (Processes.parent_process_name=wscript.exe OR Processes.parent_process_name=cscript.exe OR Processes.parent_process_name=winword.exe OR Processes.parent_process_name=excel.exe OR Processes.parent_process_name=outlook.exe OR Processes.parent_process_name=powerpnt.exe OR Processes.parent_process_name=mshta.exe) AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | rename dest as host",
+      "kql": "// WIRTE / Ashen Lepus (G0090) \u2014 Squiblydoo Office\u2192script\u2192regsvr32 chain\nlet _office_or_script_parents = dynamic([\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"powerpnt.exe\",\"mshta.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName =~ \"regsvr32.exe\"\n| where AccountName !endswith \"$\"\n// WIRTE pattern: regsvr32 fetching a remote scriptlet (the /i:http payload + scrobj COM object)\n| where ProcessCommandLine has_any (\"/i:http\", \"/i:https\", \"scrobj.dll\", \"scrobj\")\n| where InitiatingProcessFileName in~ (_office_or_script_parents)\n| extend RemoteSct = extract(@\"(?i)/i:(https?://[^\\s\\\"]+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ParentFolder = InitiatingProcessFolderPath,\n          Child = FileName,\n          ChildCmd = ProcessCommandLine,\n          RemoteSct,\n          SHA256, InitiatingProcessSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// WIRTE / Ashen Lepus (G0090) \u2014 Squiblydoo Office\u2192script\u2192regsvr32 chain\nlet _office_or_script_parents = dynamic([\"\\\\wscript.exe\",\"\\\\cscript.exe\",\"\\\\winword.exe\",\"\\\\excel.exe\",\"\\\\outlook.exe\",\"\\\\powerpnt.exe\",\"\\\\mshta.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\regsvr32.exe\"\n| where Account !endswith \"$\"\n| where CommandLine has_any (\"/i:http\", \"/i:https\", \"scrobj.dll\", \"scrobj\")\n| where ParentProcessName endswith_any (_office_or_script_parents)\n| extend RemoteSct = extract(@\"(?i)/i:(https?://[^\\s\\\"]+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, RemoteSct, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: WIRTE Squiblydoo via Office or Script Host (G0090)\nid: 7c2a4d0b-3e51-4b1a-9b5c-9f2c1a4e0a01\nstatus: experimental\ndescription: Detects WIRTE / Ashen Lepus (Gaza Cybergang subgroup) Office-macro\u2192VBS\u2192regsvr32 Squiblydoo chain delivering remote scriptlets.\nreferences:\n  - https://attack.mitre.org/groups/G0090/\n  - https://securelist.com/wirte-attack-the-middle-east/100231/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.execution\n  - attack.t1218.010\n  - attack.t1059.005\n  - attack.t1566.001\n  - attack.g0090\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  selection_image:\n    Image|endswith: '\\regsvr32.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - '/i:http'\n      - '/i:https'\n      - 'scrobj'\n  selection_parent:\n    ParentImage|endswith:\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\outlook.exe'\n      - '\\powerpnt.exe'\n      - '\\mshta.exe'\n  condition: selection_image and selection_cmd and selection_parent\nfields:\n  - Image\n  - CommandLine\n  - ParentImage\n  - ParentCommandLine\n  - User\nfalsepositives:\n  - Legacy enterprise software using COM scriptlet registration over HTTP (rare; whitelist by URL/host)\nlevel: high",
+      "rationale": "Squiblydoo (regsvr32 /i:http \u2026 scrobj) parented by Office or wscript/cscript is documented as WIRTE\u2019s primary delivery technique by Kaspersky (2019), S2 Grupo, and Check Point. Generic regsvr32 telemetry has FPs; scoping to remote scriptlet URLs AND Office/script-host parents AND non-machine accounts removes legitimate installer noise and isolates the WIRTE/Gaza Cybergang chain that survives acros"
+    },
+    {
+      "title": "[LLM] WIRTE VBS/JS C2 beacon over non-standard ports to public IPs (G0090)",
+      "description": "Hunts WIRTE's distinctive post-exploitation pattern: wscript.exe/cscript.exe launched from %AppData%/%Temp% communicating outbound to public IPs over non-standard HTTP/S ports (T1571), the documented C2 transport for their Havoc/IronWind/LitePower stagers tracked under G0090.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1571",
+        "T1071.001",
+        "T1059.005",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=wscript.exe OR All_Traffic.app=cscript.exe OR All_Traffic.process_name=wscript.exe OR All_Traffic.process_name=cscript.exe) AND All_Traffic.dest_category!=internal AND All_Traffic.dest_port!=80 AND All_Traffic.dest_port!=443 AND All_Traffic.dest_port!=53 AND All_Traffic.transport=tcp by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where NOT cidrmatch(\"10.0.0.0/8\",dest_ip) AND NOT cidrmatch(\"172.16.0.0/12\",dest_ip) AND NOT cidrmatch(\"192.168.0.0/16\",dest_ip) | stats count dc(dest_port) as port_count values(dest_port) as ports values(dest_ip) as remote_ips by src user app | where count > 5",
+      "kql": "// WIRTE / Ashen Lepus (G0090) \u2014 wscript/cscript egressing on non-standard ports\nlet _well_known = dynamic([53, 80, 443, 8080, 8443, 587, 465, 993, 995]);\nDeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"wscript.exe\",\"cscript.exe\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| where RemoteIPType == \"Public\"\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n// WIRTE LitePower / IronWind beacons documented on ports like 2096, 8443->but also 2052, 2087, 8880\n| where RemotePort !in (_well_known)\n// AppData / Temp / Public is where WIRTE\u2019s VBS droppers land\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\ProgramData\\\")\n   or InitiatingProcessFolderPath !startswith @\"C:\\Windows\\\"\n| summarize Connections = count(),\n            DistinctPorts = dcount(RemotePort),\n            DistinctIPs = dcount(RemoteIP),\n            Ports = make_set(RemotePort, 25),\n            Hosts = make_set(RemoteIP, 25),\n            URLs = make_set(RemoteUrl, 25),\n            FirstSeen = min(Timestamp),\n            LastSeen = max(Timestamp),\n            SampleCmd = any(InitiatingProcessCommandLine),\n            SampleFolder = any(InitiatingProcessFolderPath)\n            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName\n| where Connections >= 5 or DistinctPorts >= 2\n| order by FirstSeen desc",
+      "sentinel_kql": "// WIRTE / Ashen Lepus (G0090) \u2014 wscript/cscript egressing on non-standard ports (ASIM)\nlet _well_known = dynamic([53, 80, 443, 8080, 8443, 587, 465, 993, 995]);\nImNetworkSession\n| where TimeGenerated > ago(14d)\n| where ActingProcessName has_any (\"wscript.exe\",\"cscript.exe\")\n| where SrcUsername !endswith \"$\"\n| where isnotempty(DstIpAddr)\n| where not(ipv4_is_private(DstIpAddr))\n| where DstPortNumber !in (_well_known)\n| summarize Connections = count(),\n            DistinctPorts = dcount(DstPortNumber),\n            DistinctIPs = dcount(DstIpAddr),\n            Ports = make_set(DstPortNumber, 25),\n            Hosts = make_set(DstIpAddr, 25),\n            URLs = make_set(Url, 25),\n            FirstSeen = min(TimeGenerated),\n            LastSeen = max(TimeGenerated)\n            by DvcHostname, SrcUsername, ActingProcessName\n| where Connections >= 5 or DistinctPorts >= 2\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "rationale": "WIRTE's reporting (Kaspersky 2021 LitePower, Check Point 2024 IronWind/SameCoin) consistently shows VBS/JS scripts dropped to AppData beaconing over non-443 HTTPS ports \u2014 a deliberate evasion that simultaneously fingerprints the actor. Pairing the script interpreter (their characteristic T1059.005 stager) with non-standard-port public egress (T1571) and AppData/Temp execution path filters out the ",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "PLATINUM",
+  "ucs": [
+    {
+      "title": "[LLM] PLATINUM Dipsind/JPIN ICMP C2 \u2014 non-LOLBIN process generating sustained ICMP egress",
+      "description": "Hunts for PLATINUM's hallmark covert C2 channel \u2014 the Dipsind/JPIN backdoor families documented by Microsoft (April 2016) used raw ICMP (T1095 Non-Application Layer Protocol) instead of HTTP/S to blend with network noise on South/Southeast Asian government networks. Legitimate ICMP almost exclusively comes from ping.exe/tracert.exe/kernel; sustained ICMP from any other process to a public IP is characteristic of this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1095",
+        "T1071",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen dc(All_Traffic.dest) as dest_count values(All_Traffic.dest) as dest_ip values(All_Traffic.src) as src_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=icmp All_Traffic.dest_category!=internal NOT All_Traffic.app IN (\"ping\",\"tracert\",\"pathping\",\"system\") by All_Traffic.src All_Traffic.app All_Traffic.process_name span=1m | `drop_dm_object_name(\"All_Traffic\")` | stats count as buckets sum(count) as packet_count values(dest_ip) as dest_ip values(src) as src by app process_name | where buckets>=5 AND packet_count>=20 | sort - packet_count",
+      "kql": "// PLATINUM (G0068) \u2014 Dipsind/JPIN-style ICMP C2 channel\nlet KnownIcmpBins = dynamic([\"ping.exe\",\"tracert.exe\",\"pathping.exe\",\"system\",\"ntoskrnl.exe\"]);\nlet WindowsSysPaths = dynamic([@\"c:\\windows\\system32\\\", @\"c:\\windows\\syswow64\\\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where Protocol == \"Icmp\"                                    // raw ICMP only\n| where RemoteIPType == \"Public\"                              // skip LAN ping sweeps\n| where InitiatingProcessFileName !in~ (KnownIcmpBins)\n| where not(tolower(InitiatingProcessFolderPath) has_any (WindowsSysPaths))\n| where isnotempty(InitiatingProcessFileName)\n| summarize PacketCount      = count(),\n            DistinctMinutes  = dcount(bin(Timestamp, 1m)),\n            DistinctHours    = dcount(bin(Timestamp, 1h)),\n            FirstSeen        = min(Timestamp),\n            LastSeen         = max(Timestamp),\n            Hosts            = make_set(DeviceName, 50),\n            DestIPs          = make_set(RemoteIP, 50),\n            SampleCmd        = any(InitiatingProcessCommandLine),\n            SampleSHA256     = any(InitiatingProcessSHA256)\n            by InitiatingProcessFileName, InitiatingProcessFolderPath\n| where DistinctMinutes >= 5      // sustained beacon cadence \u2014 Dipsind keepalive\n   and PacketCount > 20           // strip one-off ICMP probes\n| order by DistinctHours desc, PacketCount desc",
+      "sentinel_kql": "// PLATINUM (G0068) \u2014 ICMP C2 \u2014 ASIM port; covers MDE + Sysmon + Linux audit\nlet KnownIcmpBins = dynamic([\"ping.exe\",\"tracert.exe\",\"pathping.exe\",\"ping\",\"system\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where NetworkProtocol =~ \"ICMP\"\n| where isnotempty(DstIpAddr)\n| where not(ipv4_is_private(DstIpAddr))\n| where not(DstIpAddr startswith \"127.\") and not(DstIpAddr startswith \"169.254.\")\n| extend ProcLeaf = tostring(split(ActingProcessName, \"\\\\\")[-1])\n| where isnotempty(ActingProcessName)\n| where ProcLeaf !in~ (KnownIcmpBins)\n| where not(tolower(ActingProcessName) startswith @\"c:\\windows\\system32\\\")\n   and not(tolower(ActingProcessName) startswith @\"c:\\windows\\syswow64\\\")\n| summarize PacketCount     = count(),\n            DistinctMinutes = dcount(bin(TimeGenerated, 1m)),\n            FirstSeen       = min(TimeGenerated),\n            LastSeen        = max(TimeGenerated),\n            Hosts           = make_set(DvcHostname, 50),\n            DestIPs         = make_set(DstIpAddr, 50),\n            SampleCmd       = any(ActingProcessCommandLine)\n            by ProcLeaf, ActingProcessName\n| where DistinctMinutes >= 5 and PacketCount > 20\n| order by PacketCount desc",
+      "sigma_yaml": "title: Suspicious ICMP Egress From Non-Standard Process (PLATINUM Dipsind)\nid: 7d3b4f1a-9b8a-4e2c-9a4f-platinumicmpc2\nstatus: experimental\ndescription: |\n  Detects raw ICMP traffic to public IPs from a process that is not a known\n  ping/trace utility \u2014 characteristic of the PLATINUM (G0068) Dipsind/JPIN\n  backdoor families which use ICMP for C2 to evade web-proxy inspection.\nreferences:\n  - https://attack.mitre.org/groups/G0068/\n  - https://www.microsoft.com/security/blog/2016/04/26/digging-deep-for-platinum/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\ntags:\n  - attack.command_and_control\n  - attack.t1095\n  - attack.g0068\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Protocol: 'icmp'\n    DestinationIsIpv4: true\n  filter_known_bins:\n    Image|endswith:\n      - '\\ping.exe'\n      - '\\tracert.exe'\n      - '\\pathping.exe'\n  filter_system_paths:\n    Image|startswith:\n      - 'C:\\Windows\\System32\\'\n      - 'C:\\Windows\\SysWOW64\\'\n  filter_private_dest:\n    DestinationIp|startswith:\n      - '10.'\n      - '192.168.'\n      - '172.16.'\n      - '127.'\n      - '169.254.'\n  condition: selection and not (filter_known_bins or filter_system_paths or filter_private_dest)\nfalsepositives:\n  - Custom monitoring agents that perform ICMP probes\n  - Network management software running outside System32\nlevel: high",
+      "rationale": "ICMP-based C2 is rare across all APTs but is a documented signature behaviour of PLATINUM's bespoke Dipsind backdoor (Microsoft DCU/MMPC report April 2016). Almost no legitimate Windows process besides ping/tracert and the kernel emits raw ICMP \u2014 the combination of (a) public-IP destination, (b) non-LOLBIN initiator, and (c) sustained cadence (\u22655 distinct minutes) excludes troubleshooting use. Gen",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] PLATINUM spearphish-to-LSASS chain \u2014 Office attachment \u2192 masqueraded payload \u2192 LSASS credential access",
+      "description": "Hunts the full PLATINUM kill chain documented by Microsoft: T1566.001 spearphish-attachment \u2192 T1204.002 user opens lure document targeting Indian/Malaysian/Indonesian government victims \u2192 T1036 masqueraded helper binary (often dropped to %TEMP% or %APPDATA% under a benign-sounding name) \u2192 T1003.001 LSASS memory access. Correlates Office parent + non-system child + LSASS read in a 30-minute window.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1036",
+        "T1055",
+        "T1003.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as office_time values(Processes.process) as office_cmd values(Processes.process_hash) as parent_hash from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") Processes.process_path IN (\"*\\\\Temp\\\\*\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\Public\\\\*\") NOT Processes.process_name IN (\"splwow64.exe\",\"WINWORD.EXE\",\"EXCEL.EXE\") by host Processes.user Processes.process_name Processes.process_hash _time span=1s | rename Processes.* as * | join type=inner host user [| tstats summariesonly=true min(_time) as lsass_time values(Processes.parent_process_name) as lsass_parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"rundll32.exe\",\"comsvcs.dll\",\"procdump.exe\") OR (Processes.process=\"*lsass*\" AND Processes.process=\"*MiniDump*\") by host Processes.user _time span=1s | rename Processes.* as * | eval lsass_time=lsass_time] | where lsass_time>=office_time AND lsass_time<=office_time+1800 | table host user process_name process_hash office_cmd lsass_parent office_time lsass_time | sort - office_time",
+      "kql": "// PLATINUM (G0068) \u2014 Office spearphish \u2192 masqueraded helper \u2192 LSASS access chain\nlet LookbackDays = 14d;\nlet ChainWindow  = 30m;\nlet OfficeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wordpad.exe\"]);\nlet UserDropPaths = dynamic([@\"\\appdata\\local\\temp\\\", @\"\\appdata\\roaming\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\"]);\n// Stage 1 \u2014 Office spawns a non-Office binary from a user-writable dir (T1204.002 + T1036)\nlet Stage1 =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (OfficeParents)\n    | where AccountName !endswith \"$\"\n    | where tolower(FolderPath) has_any (UserDropPaths)\n    | where FileName !in~ (\"splwow64.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")\n    | where not(tolower(FolderPath) startswith @\"c:\\program files\")\n    | project StageOneTime = Timestamp, DeviceId, DeviceName, AccountName,\n              LureParent = InitiatingProcessFileName,\n              LureParentCmd = InitiatingProcessCommandLine,\n              DropName = FileName, DropPath = FolderPath,\n              DropSHA256 = SHA256, DropCmd = ProcessCommandLine,\n              DropProcessId = ProcessId;\n// Stage 2 \u2014 credential access against LSASS within 30m on the same device (T1003.001)\nlet Stage2 =\n    union\n    ( DeviceProcessEvents\n        | where Timestamp > ago(LookbackDays)\n        | where (FileName =~ \"rundll32.exe\" and ProcessCommandLine has \"comsvcs.dll\" and ProcessCommandLine has \"MiniDump\")\n            or (ProcessCommandLine has \"lsass\" and ProcessCommandLine has_any (\"MiniDump\",\"procdump\",\"-ma \"))\n            or FileName in~ (\"procdump.exe\",\"procdump64.exe\")\n        | project Stage2Time = Timestamp, DeviceId, Stage2Cmd = ProcessCommandLine, Stage2File = FileName ),\n    ( DeviceEvents\n        | where Timestamp > ago(LookbackDays)\n        | where ActionType in (\"OpenProcessApiCall\",\"ReadProcessMemoryApiCall\")\n        | where FileName =~ \"lsass.exe\" or AdditionalFields has \"lsass.exe\"\n        | project Stage2Time = Timestamp, DeviceId,\n                  Stage2Cmd = InitiatingProcessCommandLine,\n                  Stage2File = InitiatingProcessFileName );\nStage1\n| join kind=inner Stage2 on DeviceId\n| where Stage2Time between (StageOneTime .. StageOneTime + ChainWindow)\n| project StageOneTime, Stage2Time,\n          DelaySec = datetime_diff('second', Stage2Time, StageOneTime),\n          DeviceName, AccountName,\n          LureParent, LureParentCmd,\n          DropName, DropPath, DropSHA256, DropCmd,\n          Stage2File, Stage2Cmd\n| order by StageOneTime desc",
+      "sentinel_kql": "// PLATINUM (G0068) \u2014 Office \u2192 masqueraded drop \u2192 LSASS \u2014 Sentinel SecurityEvent port\nlet LookbackDays = 14d;\nlet ChainWindow  = 30m;\nlet OfficeParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wordpad.exe\"]);\nlet UserDropPaths = dynamic([@\"\\appdata\\local\\temp\\\", @\"\\appdata\\roaming\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\"]);\nlet Stage1 =\n    SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n             ChildLeaf  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1])),\n             ChildPath  = tolower(NewProcessName)\n    | where ParentLeaf in (OfficeParents)\n    | where ChildPath has_any (UserDropPaths)\n    | where ChildLeaf !in~ (\"splwow64.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")\n    | project StageOneTime = TimeGenerated, Computer, Account,\n              LureParent = ParentLeaf, DropName = ChildLeaf,\n              DropPath = NewProcessName, DropCmd = CommandLine;\nlet Stage2 =\n    SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where (NewProcessName endswith \"rundll32.exe\" and CommandLine has \"comsvcs.dll\" and CommandLine has \"MiniDump\")\n        or (CommandLine has \"lsass\" and CommandLine has_any (\"MiniDump\",\"procdump\",\"-ma \"))\n        or NewProcessName endswith \"procdump.exe\"\n        or NewProcessName endswith \"procdump64.exe\"\n    | project Stage2Time = TimeGenerated, Computer, Stage2Cmd = CommandLine, Stage2Bin = NewProcessName;\nStage1\n| join kind=inner Stage2 on Computer\n| where Stage2Time between (StageOneTime .. StageOneTime + ChainWindow)\n| project StageOneTime, Stage2Time,\n          DelaySec = datetime_diff('second', Stage2Time, StageOneTime),\n          Computer, Account, LureParent, DropName, DropPath, DropCmd,\n          Stage2Bin, Stage2Cmd\n| order by StageOneTime desc",
+      "sigma_yaml": "",
+      "rationale": "The Microsoft DCU PLATINUM whitepaper documents this exact sequence as their primary intrusion pattern against Indian/Malaysian/Indonesian government targets \u2014 weaponised Office attachments dropping helpers to user-writable directories that subsequently scrape LSASS for credential reuse. Detecting either stage in isolation produces noise (red-teamers also drop Office macros, IT support uses procdu"
+    }
+  ]
+}

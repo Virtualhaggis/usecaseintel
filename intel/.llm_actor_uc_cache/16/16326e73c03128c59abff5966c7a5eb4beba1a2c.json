@@ -1,0 +1,89 @@
+{
+  "name": "SilverTerrier",
+  "ucs": [
+    {
+      "title": "[LLM] SilverTerrier infostealer SMTP/FTP exfil from non-mail process (Agent Tesla / LokiBot / HawkEye / AzoRult)",
+      "description": "Hunts SilverTerrier's signature commodity-stealer exfiltration: an unsigned binary executing from %AppData%/%Temp%/%ProgramData% opens an outbound SMTP (25/465/587), IMAP (143/993) or FTP (21/990) session to a non-corporate mail/file server. Unit 42's SilverTerrier reporting consistently flags Agent Tesla, LokiBot, HawkEye, AzoRult, Pony, KeyBase, ISpy, NanoCore, NetWire, FormBook and Predator Pain \u2014 nearly all of which use SMTP/FTP rather than HTTP for credential exfil, which is unusual outside of legitimate mail clients.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1071.002",
+        "T1071.003",
+        "T1048.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest) as dest dc(All_Traffic.dest) as dest_count sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (25,465,587,143,993,21,990) NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16) by host All_Traffic.user All_Traffic.app All_Traffic.process All_Traffic.dest_port _time span=1h\n| `drop_dm_object_name(All_Traffic)`\n| rex field=process \"(?<proc_name>[^\\\\\\\\]+)$\"\n| eval lc_proc=lower(proc_name)\n| where NOT match(lc_proc,\"^(outlook\\.exe|msedge\\.exe|chrome\\.exe|firefox\\.exe|thunderbird\\.exe|emclient\\.exe|mailbird\\.exe|filezilla\\.exe|winscp\\.exe|ftp\\.exe|msexchangetransport\\.exe|msexchangefrontendtransport\\.exe|edgetransport\\.exe)$\")\n| where match(process,\"(?i)\\\\\\\\AppData\\\\\\\\(Roaming|Local\\\\\\\\Temp)\\\\\\\\\") OR match(process,\"(?i)\\\\\\\\ProgramData\\\\\\\\\") OR match(process,\"(?i)\\\\\\\\Users\\\\\\\\Public\\\\\\\\\") OR match(process,\"(?i)\\\\\\\\Windows\\\\\\\\Temp\\\\\\\\\")\n| eval firstTime=strftime(firstTime,\"%F %T\"), lastTime=strftime(lastTime,\"%F %T\")\n| table firstTime lastTime host user proc_name process dest dest_port count bytes_out\n| sort - bytes_out",
+      "kql": "// SilverTerrier \u2014 commodity-stealer SMTP/FTP exfil from suspicious binary path\nlet _mail_clients = dynamic([\"outlook.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"thunderbird.exe\",\"emclient.exe\",\"mailbird.exe\",\"filezilla.exe\",\"winscp.exe\",\"ftp.exe\",\"tftp.exe\",\"msexchangetransport.exe\",\"msexchangefrontendtransport.exe\",\"edgetransport.exe\"]);\nlet _suspect_paths = dynamic([@\"\\appdata\\roaming\\\", @\"\\appdata\\local\\temp\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n| where RemotePort in (25, 465, 587, 143, 993, 21, 990)\n| where RemoteIPType == \"Public\"           // ignore intra-org mail relays\n| where InitiatingProcessFileName !in~ (_mail_clients)\n| extend _path = tolower(InitiatingProcessFolderPath)\n| where _path has_any (_suspect_paths)\n   or isempty(InitiatingProcessVersionInfoCompanyName)\n   or InitiatingProcessVersionInfoCompanyName in~ (\"unknown\",\"n/a\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize ConnCount = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            Destinations = make_set(strcat(tostring(RemoteIP), \":\", tostring(RemotePort)), 25),\n            SampleCmd = any(InitiatingProcessCommandLine)\n            by DeviceName, InitiatingProcessAccountName,\n               InitiatingProcessFileName, InitiatingProcessFolderPath,\n               InitiatingProcessSHA256\n| order by FirstSeen desc",
+      "sentinel_kql": "// SilverTerrier \u2014 commodity-stealer SMTP/FTP exfil (ASIM)\nlet _mail_clients = dynamic([\"outlook.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"thunderbird.exe\",\"emclient.exe\",\"mailbird.exe\",\"filezilla.exe\",\"winscp.exe\",\"ftp.exe\",\"tftp.exe\",\"msexchangetransport.exe\",\"edgetransport.exe\"]);\nlet _suspect_paths = dynamic([@\"\\appdata\\roaming\\\", @\"\\appdata\\local\\temp\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\windows\\temp\\\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstPortNumber in (25, 465, 587, 143, 993, 21, 990)\n| where not(ipv4_is_private(DstIpAddr))\n| extend _proc = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| where _proc !in~ (_mail_clients)\n| extend _path = tolower(ActingProcessName)\n| where _path has_any (_suspect_paths)\n| where ActorUsername !endswith \"$\"\n| summarize ConnCount = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            Destinations = make_set(strcat(DstIpAddr, \":\", tostring(DstPortNumber)), 25),\n            SampleCmd = any(ActingProcessCommandLine)\n            by DvcHostname, ActorUsername, _proc, ActingProcessName\n| order by FirstSeen desc",
+      "sigma_yaml": "title: SilverTerrier Infostealer SMTP/FTP Exfil from Non-Mail Process\nid: 7c2a4e5d-9b1f-4a73-9c6d-3f2b1e0a8d11\nstatus: experimental\ndescription: >\n  Detects outbound SMTP/IMAP/FTP from a binary located in user-writable\n  staging paths (AppData, ProgramData, Public, Windows\\Temp) that is not a\n  recognised mail/FTP client. Designed to catch SilverTerrier (G0083)\n  commodity stealers (Agent Tesla, LokiBot, HawkEye, AzoRult, NanoCore,\n  NetWire, Remcos, FormBook).\nreferences:\n  - https://attack.mitre.org/groups/G0083/\n  - https://unit42.paloaltonetworks.com/silverterrier-2018-update/\nauthor: SOC Detection Engineering\ndate: 2026/05/03\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_ports:\n    DestinationPort:\n      - 25\n      - 465\n      - 587\n      - 143\n      - 993\n      - 21\n      - 990\n  selection_path:\n    Image|contains:\n      - '\\AppData\\Roaming\\'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\Windows\\Temp\\'\n  filter_mail_clients:\n    Image|endswith:\n      - '\\outlook.exe'\n      - '\\thunderbird.exe'\n      - '\\emclient.exe'\n      - '\\mailbird.exe'\n      - '\\filezilla.exe'\n      - '\\winscp.exe'\n      - '\\ftp.exe'\n  filter_internal:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n  condition: selection_ports and selection_path and not (filter_mail_clients or filter_internal)\nfields:\n  - Image\n  - User\n  - DestinationIp\n  - DestinationPort\n  - CommandLine\nfalsepositives:\n  - Niche scripted SMTP relays packaged into AppData by legitimate apps\n  - Marketing/CRM tools that spawn SMTP from user profile installs\nlevel: high\ntags:\n  - attack.exfiltration\n  - attack.t1048.003\n  - attack.command_and_control\n  - attack.t1071.002\n  - attack.t1071.003\n  - attack.g0083\n",
+      "rationale": "Unit 42's SilverTerrier corpus is dominated by SMTP/FTP-exfil stealers \u2014 Agent Tesla, LokiBot, HawkEye, AzoRult, KeyBase, ISpy, Pony \u2014 that authenticate to attacker-controlled mailboxes (often free webmail) on 587/465 or upload via FTP. The combination 'unsigned binary in user-writable temp/roaming path AND outbound mail/FTP port AND not a known client' is essentially a SilverTerrier-shaped signat",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActorUsername",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImAuthentication",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActorUsername` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImAuthentication, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] SilverTerrier BEC mailbox-rule manipulation hiding finance reply threads (T1657 financial-theft preparation)",
+      "description": "Catches the SilverTerrier post-credential-theft pivot: after harvesting O365 credentials with Agent Tesla/LokiBot, the operator logs in and creates an Exchange inbox rule that auto-moves or deletes any reply containing finance keywords (invoice, wire, swift, ACH, beneficiary) into RSS Feeds / Conversation History / Deleted Items so the legitimate user never sees the hijacked thread. This is the canonical Nigerian-BEC indicator and maps directly to MITRE T1657.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1657",
+        "T1564.008",
+        "T1114.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "`o365_management_activity` Workload=Exchange Operation IN (\"New-InboxRule\",\"Set-InboxRule\",\"UpdateInboxRules\",\"Enable-InboxRule\")\n| spath input=Parameters output=param_str\n| eval params_lc=lower(param_str)\n| where match(params_lc,\"(invoice|payment|wire|ach|swift|beneficiary|remit|bank|account|deposit|transfer|vendor|supplier)\")\n   OR match(params_lc,\"(deletemessage|movetofolder.*(rss|conversation history|archive|junk|deleted))\")\n   OR match(params_lc,\"forwardto|redirectto|forwardasattachmentto\")\n| iplocation ClientIP\n| stats min(_time) as firstTime max(_time) as lastTime values(Operation) as Operation values(ClientIP) as src_ip values(Country) as country values(UserAgent) as ua values(param_str) as rule_params by UserId\n| eval firstTime=strftime(firstTime,\"%F %T\"), lastTime=strftime(lastTime,\"%F %T\")\n| join type=left UserId [ search `o365_management_activity` Operation=\"UserLoggedIn\" earliest=-1d | stats values(ClientIP) as login_ips values(Country) as login_countries by UserId ]\n| where mvcount(login_countries)>1 OR match(rule_params,\"(?i)(invoice|wire|swift|ach|beneficiary)\")\n| sort - lastTime",
+      "kql": "// SilverTerrier \u2014 BEC inbox-rule that hides finance reply threads\nlet _hide_targets = dynamic([\"deleted items\",\"rss feeds\",\"rss subscriptions\",\"conversation history\",\"archive\",\"junk\",\"junk email\",\"notes\"]);\nlet _finance_kw = dynamic([\"invoice\",\"payment\",\"wire\",\"ach\",\"swift\",\"beneficiary\",\"remit\",\"remittance\",\"bank\",\"account number\",\"deposit\",\"transfer\",\"vendor\",\"supplier\",\"iban\"]);\nlet _rule_creates = CloudAppEvents\n    | where Timestamp > ago(30d)\n    | where Application in (\"Microsoft Exchange Online\",\"Office 365\")\n    | where ActionType in~ (\"New-InboxRule\",\"Set-InboxRule\",\"UpdateInboxRules\",\"Enable-InboxRule\")\n    | extend Raw = tolower(tostring(RawEventData))\n    | where Raw has_any (_hide_targets)\n         or Raw has_any (_finance_kw)\n         or Raw has_any (\"forwardto\",\"redirectto\",\"forwardasattachmentto\")\n    | project RuleTime = Timestamp, AccountObjectId, AccountDisplayName,\n              IPAddress, CountryCode, City, ISP, UserAgent, ActionType, Raw;\n// Pivot \u2014 same account, recent sign-in from a different country\nlet _signins = AADSignInEventsBeta\n    | where Timestamp > ago(7d)\n    | where ErrorCode == 0\n    | summarize Countries = make_set(Country, 10),\n                IPs = make_set(IPAddress, 25)\n                by AccountObjectId;\n_rule_creates\n| join kind=leftouter _signins on AccountObjectId\n| extend ForeignSignin = iff(array_length(Countries) > 1, true, false)\n| project RuleTime, AccountDisplayName, IPAddress, CountryCode, City, ISP,\n          UserAgent, ActionType, ForeignSignin, SigninCountries = Countries, RuleSnippet = substring(Raw, 0, 600)\n| order by RuleTime desc",
+      "sentinel_kql": "// SilverTerrier \u2014 BEC inbox-rule hiding financial reply threads\nlet _hide_targets = dynamic([\"deleted items\",\"rss feeds\",\"rss subscriptions\",\"conversation history\",\"archive\",\"junk\",\"junk email\",\"notes\"]);\nlet _finance_kw = dynamic([\"invoice\",\"payment\",\"wire\",\"ach\",\"swift\",\"beneficiary\",\"remit\",\"remittance\",\"bank\",\"account number\",\"deposit\",\"transfer\",\"vendor\",\"supplier\",\"iban\"]);\nlet _rules = OfficeActivity\n    | where TimeGenerated > ago(30d)\n    | where OfficeWorkload =~ \"Exchange\"\n    | where Operation in~ (\"New-InboxRule\",\"Set-InboxRule\",\"UpdateInboxRules\",\"Enable-InboxRule\")\n    | where ResultStatus =~ \"Succeeded\"\n    | extend ParamStr = tolower(tostring(Parameters))\n    | where ParamStr has_any (_hide_targets)\n         or ParamStr has_any (_finance_kw)\n         or ParamStr has_any (\"forwardto\",\"redirectto\",\"forwardasattachmentto\")\n    | project RuleTime = TimeGenerated, UserId, ClientIP, Operation, ParamStr, UserAgent;\nlet _signins = SigninLogs\n    | where TimeGenerated > ago(7d)\n    | where ResultType == 0\n    | extend Country = tostring(parse_json(LocationDetails).countryOrRegion)\n    | summarize Countries = make_set(Country, 10), IPs = make_set(IPAddress, 25) by UserPrincipalName;\n_rules\n| join kind=leftouter _signins on $left.UserId == $right.UserPrincipalName\n| extend ForeignSignin = iff(array_length(Countries) > 1, true, false)\n| project RuleTime, UserId, ClientIP, UserAgent, Operation, ForeignSignin,\n          SigninCountries = Countries, RuleSnippet = substring(ParamStr, 0, 600)\n| order by RuleTime desc",
+      "sigma_yaml": "",
+      "rationale": "SilverTerrier is the archetypal Nigerian BEC crew tracked by Unit 42 since 2014 \u2014 their entire monetisation chain depends on credential theft \u2192 mailbox hijack \u2192 silently redirecting wire-payment reply threads. Generic 'new inbox rule' rules are noisy; tying the rule body to (a) a finance keyword OR (b) a hide-folder destination AND showing the user has a recent sign-in from an unusual country prod"
+    }
+  ]
+}
