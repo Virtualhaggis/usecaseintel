@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ShaiWorm: Bun runtime spawned by Python interpreter executing router_runtime.js
 
-`UC_34_3` · phase: **install** · confidence: **High**
+`UC_35_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### [LLM] Install / import of quarantined PyTorch Lightning 2.6.2 or 2.6.3 wheel
 
-`UC_34_4` · phase: **delivery** · confidence: **High**
+`UC_35_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ union
 
 ### [LLM] Python interpreter pulling Bun runtime from GitHub releases (oven-sh/bun)
 
-`UC_34_5` · phase: **delivery** · confidence: **Medium**
+`UC_35_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Backdoored PyTorch Lightning package drops credential stealer
 
-`UC_34_2` · phase: **exploit** · confidence: **High**
+`UC_35_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

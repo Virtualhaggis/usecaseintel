@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ScarCruft trojanized sqgame Windows payload (mono.dll / RokRAT downloader / BirdCall) by SHA1
 
-`UC_10_9` · phase: **install** · confidence: **High**
+`UC_11_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ union isfuzzy=true
 
 ### [LLM] ScarCruft RokRAT shellcode fetch from compromised Korean staging sites
 
-`UC_10_10` · phase: **c2** · confidence: **High**
+`UC_11_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceNetworkEvents
 
 ### [LLM] BirdCall Zoho WorkDrive C2 from non-browser Windows process
 
-`UC_10_11` · phase: **c2** · confidence: **Medium**
+`UC_11_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -440,7 +440,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ScarCruft Supply Chain Attack Hits Gaming Platform With Windows and Android
 
-`UC_10_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

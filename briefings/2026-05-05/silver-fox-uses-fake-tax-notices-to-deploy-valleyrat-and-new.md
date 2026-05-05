@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silver Fox ABCDoor persistence — schtasks creating 'AppClient' task pointing to C:\ProgramData\Tailscale
 
-`UC_12_10` · phase: **install** · confidence: **High**
+`UC_13_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ union isfuzzy=true SchtasksAppClient, TailscalePathDrops
 
 ### [LLM] ABCDoor C2 — pythonw.exe egress to 'abc' third-level subdomain
 
-`UC_12_11` · phase: **c2** · confidence: **High**
+`UC_13_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ union isfuzzy=true NetHits, DnsHits
 
 ### [LLM] ABCDoor screen-capture collection — pythonw.exe spawns ffmpeg.exe
 
-`UC_12_12` · phase: **actions** · confidence: **High**
+`UC_13_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -478,7 +478,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Silver Fox Uses Fake Tax Notices to Deploy ValleyRAT and New ABCDoor Backdoor
 
-`UC_12_9` · phase: **exploit** · confidence: **High**
+`UC_13_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

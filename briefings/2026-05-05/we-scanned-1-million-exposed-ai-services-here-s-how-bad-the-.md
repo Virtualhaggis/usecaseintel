@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Internet-exposed self-hosted Ollama API (port 11434) reachable from public IPs
 
-`UC_22_2` · phase: **recon** · confidence: **Medium**
+`UC_23_2` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### [LLM] Endpoint making outbound requests to Ollama /api/generate or /api/tags on non-corporate hosts
 
-`UC_22_3` · phase: **recon** · confidence: **Medium**
+`UC_23_3` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
