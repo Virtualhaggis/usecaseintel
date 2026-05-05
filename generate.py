@@ -2798,16 +2798,85 @@ HTML_HEAD = r"""<!doctype html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Clankerusecase — Splunk &amp; Defender Use Cases from threat-intel articles</title>
-<link rel="icon" type="image/png" href="logo.png">
-<link rel="apple-touch-icon" href="logo.png">
-<meta name="description" content="Threat-intel-driven Splunk and Defender use cases, mapped to MITRE ATT&amp;CK with tier-tagged alerting and hunting detections.">
-<meta property="og:title" content="Clankerusecase — Threat-Intel-Driven Detection Catalogue">
-<meta property="og:description" content="2,175 use cases · 596 IOCs · 392/691 ATT&CK techniques covered. Splunk SPL + Defender KQL, tier-tagged.">
-<meta property="og:image" content="logo.png">
+<title>Clankerusecase — Threat-led detection library: Defender KQL, Sentinel KQL, Sigma, Splunk SPL</title>
+<link rel="icon" type="image/png" href="https://clankerusecase.com/logo.png">
+<link rel="apple-touch-icon" href="https://clankerusecase.com/logo.png">
+<link rel="canonical" href="https://clankerusecase.com/">
+<meta name="description" content="Open-source threat-led detection library: 2,000+ use cases mapped to MITRE ATT&amp;CK, with Defender KQL, Sentinel KQL, Sigma, and Splunk SPL queries. Auto-pulled from 11+ threat-intel feeds (BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV) every 2 hours.">
+<meta name="keywords" content="MITRE ATT&amp;CK, Defender KQL, Sentinel KQL, Sigma rules, Splunk SPL, threat hunting, SOC, threat intelligence, detection engineering, CTI, Microsoft Defender Advanced Hunting, Microsoft Sentinel, IOC, indicators of compromise, KQL queries, SPL queries, threat actors, APT, ransomware, phishing, BleepingComputer, Hacker News">
+<meta name="author" content="Virtualhaggis">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#08090a">
+
+<!-- Open Graph / Facebook / LinkedIn -->
 <meta property="og:type" content="website">
+<meta property="og:site_name" content="Clankerusecase">
+<meta property="og:url" content="https://clankerusecase.com/">
+<meta property="og:title" content="Clankerusecase — Threat-led detection library for SOC teams">
+<meta property="og:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — auto-generated from daily threat-intel feeds. Free, open source, ready to deploy.">
+<meta property="og:image" content="https://clankerusecase.com/logo.png">
+<meta property="og:image:alt" content="Clankerusecase — production-ready SOC detections from daily threat-intel">
+<meta property="og:locale" content="en_GB">
+
+<!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="logo.png">
+<meta name="twitter:title" content="Clankerusecase — Threat-led detection library">
+<meta name="twitter:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL. Auto-generated from daily threat-intel.">
+<meta name="twitter:image" content="https://clankerusecase.com/logo.png">
+<meta name="twitter:image:alt" content="Clankerusecase — production-ready SOC detections">
+
+<!-- Structured data — tells Google this is a SoftwareApplication / Dataset
+     so search results can surface descriptive snippets and rich cards
+     instead of just the raw HTML title. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://clankerusecase.com/#website",
+      "url": "https://clankerusecase.com/",
+      "name": "Clankerusecase",
+      "description": "Open-source threat-led detection library: 2,000+ MITRE-mapped use cases in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL.",
+      "publisher": {"@id": "https://clankerusecase.com/#org"},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://clankerusecase.com/?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://clankerusecase.com/#org",
+      "name": "Clankerusecase",
+      "url": "https://clankerusecase.com/",
+      "logo": "https://clankerusecase.com/logo.png",
+      "sameAs": ["https://github.com/Virtualhaggis/usecaseintel"]
+    },
+    {
+      "@type": "Dataset",
+      "@id": "https://clankerusecase.com/#dataset",
+      "name": "Clankerusecase Detection Library",
+      "description": "Daily-refreshed corpus of SOC detection use cases mapped to MITRE ATT&CK, expressed in Defender KQL, Microsoft Sentinel KQL, Sigma, and Splunk SPL. Each detection is tied to a public threat-intel article from BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV, or similar source.",
+      "creator": {"@id": "https://clankerusecase.com/#org"},
+      "license": "https://opensource.org/licenses/MIT",
+      "url": "https://clankerusecase.com/",
+      "keywords": "MITRE ATT&CK, threat detection, Defender KQL, Sentinel KQL, Sigma, Splunk SPL, threat intelligence, SOC, threat hunting, IOC",
+      "isAccessibleForFree": true
+    },
+    {
+      "@type": "SoftwareApplication",
+      "name": "Clankerusecase",
+      "applicationCategory": "SecurityApplication",
+      "operatingSystem": "Web",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "description": "Threat-led detection library for SOC teams, threat hunters, and CTI analysts. Free and open source.",
+      "url": "https://clankerusecase.com/"
+    }
+  ]
+}
+</script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11404,6 +11473,49 @@ def main():
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")
     print(f"    Severity: crit={sev_counts['crit']} high={sev_counts['high']} med={sev_counts['med']} low={sev_counts['low']}")
     print(f"    Bespoke article-specific UCs built: {bespoke_built}")
+
+    # SEO sitemap.xml — refresh every pipeline run so Google's crawler
+    # knows about freshly-published per-article briefings. Includes the
+    # main site, the cheatsheet, and every briefings/<date>/<slug>.md
+    # file rendered through GitHub raw URLs (those pages are search-
+    # engine-friendly per-article content; the SPA itself is one giant
+    # blob that Google struggles to index).
+    try:
+        import datetime as _dt
+        from pathlib import Path as _Path
+        today_iso = _dt.date.today().isoformat()
+        sitemap_urls = [
+            ("https://clankerusecase.com/", "1.0", "hourly"),
+            ("https://clankerusecase.com/index.html", "1.0", "hourly"),
+            ("https://clankerusecase.com/cheatsheet.html", "0.9", "daily"),
+        ]
+        briefings_root = _Path(__file__).with_name("briefings")
+        if briefings_root.exists():
+            for date_dir in sorted(briefings_root.iterdir()):
+                if not date_dir.is_dir():
+                    continue
+                for md in sorted(date_dir.glob("*.md")):
+                    rel = md.relative_to(_Path(__file__).parent).as_posix()
+                    sitemap_urls.append(
+                        (f"https://github.com/Virtualhaggis/usecaseintel/blob/main/{rel}",
+                         "0.6", "monthly")
+                    )
+        sitemap_urls = sitemap_urls[:50000]  # protocol cap
+        xml_lines = ['<?xml version="1.0" encoding="UTF-8"?>',
+                     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+        for loc, prio, freq in sitemap_urls:
+            xml_lines.append("  <url>")
+            xml_lines.append(f"    <loc>{html.escape(loc)}</loc>")
+            xml_lines.append(f"    <lastmod>{today_iso}</lastmod>")
+            xml_lines.append(f"    <changefreq>{freq}</changefreq>")
+            xml_lines.append(f"    <priority>{prio}</priority>")
+            xml_lines.append("  </url>")
+        xml_lines.append("</urlset>")
+        _Path(__file__).with_name("sitemap.xml").write_text(
+            "\n".join(xml_lines) + "\n", encoding="utf-8")
+        print(f"[*] Wrote sitemap.xml ({len(sitemap_urls)} URLs)")
+    except Exception as _e:
+        print(f"[!] sitemap.xml write failed: {_e}")
 
 
 if __name__ == "__main__":
