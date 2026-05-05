@@ -649,13 +649,17 @@ def extract_mechanics(title: str, body: str) -> dict:
 # alongside _make_bespoke_uc() (regex). Both run; the LLM output is treated
 # as a higher-confidence bespoke UC tier.
 #
-# Cost note: ~3-6K input tokens + ~1.5K output tokens per article. With
-# claude-haiku-4-5 (cheapest current Claude) that's ~$0.005-0.01 per article,
-# so ~$2-3 for a 300-article 180-day pipeline run. Cached per article URL
-# so re-runs of the same articles are free.
+# Cost note: ~3-6K input tokens + ~1.5K output tokens per article. We
+# use Opus 4.7 by default — the article analysis is the place where
+# detection quality matters most, so we pay the Opus premium for it
+# rather than pinch pennies on Haiku. The cache means an article only
+# costs once; re-runs are free until the 24-h re-review pre-pass
+# decides the body or peer set has changed.
+# Override via USECASEINTEL_LLM_MODEL=<id> if you need to dial down
+# (e.g. for a one-off comprehensive corpus run on Haiku).
 LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
 LLM_ACTOR_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_actor_uc_cache"
-LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-haiku-4-5-20251001")
+LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
@@ -916,12 +920,16 @@ def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
             # WebSearch lets Claude cross-check the article against vendor
             # advisories, MITRE attributions, public IOC dumps. max_turns=4
             # gives it room to do 1-2 search rounds + the final answer.
+            # `model=LLM_UC_MODEL` so the OAuth path honours the same env-
+            # var override as the API-key path; otherwise it'd silently
+            # fall back to the agent SDK's default.
             options = ClaudeAgentOptions(
+                model=LLM_UC_MODEL,
                 max_turns=4,
                 allowed_tools=["WebSearch", "WebFetch"],
             )
         else:
-            options = ClaudeAgentOptions(max_turns=1, allowed_tools=[])
+            options = ClaudeAgentOptions(model=LLM_UC_MODEL, max_turns=1, allowed_tools=[])
         async for msg in query(prompt=prompt, options=options):
             if isinstance(msg, AssistantMessage):
                 for block in msg.content:
@@ -6289,7 +6297,7 @@ ul.intel-types-doc code{
     <div class="wf-step">
       <p>When <code>ANTHROPIC_API_KEY</code> is set in the environment, the pipeline sends each article body to an LLM with a structured detection-engineer prompt, parses the response as JSON, validates the techniques (<code>T####.###</code> format) + tier (alerting/hunting) + KQL/SPL fields, and emits the resulting UseCase objects alongside the regex bespoke UCs.</p>
       <p>The LLM is told: use the actual binaries/paths/cmdlines named in the article, not invented ones; if the article describes the attack only narratively, return no UCs. Output is cached per article URL hash so repeat runs cost nothing.</p>
-      <p>Cost: ~$0.005-0.01 per article on <code>claude-haiku-4-5</code> (configurable via <code>USECASEINTEL_LLM_MODEL</code>). The first 365-day run hits the LLM for every article that passes the attack-content filter (typically a few thousand cents); subsequent runs are essentially free thanks to the per-URL cache.</p>
+      <p>Model: <code>claude-opus-4-7</code> by default for top-shelf detection quality (configurable via <code>USECASEINTEL_LLM_MODEL</code> — set to <code>claude-haiku-4-5-20251001</code> for a budget run). The first comprehensive run hits the LLM for every article that passes the attack-content filter; subsequent runs only re-analyse articles whose body has changed in the last 24 hours or that have new similar peers, so steady-state cost is small.</p>
       <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
     </div>
 
