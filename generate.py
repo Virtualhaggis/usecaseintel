@@ -28,11 +28,17 @@ from pathlib import Path
 import feedparser
 
 # Sources & lookback configuration -------------------------------------------
-LOOKBACK_DAYS = 365       # 1-year window — pulls every article each
-                          # configured feed has indexed in the last
-                          # 365 days. Subsequent runs use the per-URL
-                          # caches so re-runs are cheap; LLM bespoke
-                          # UCs cost only on first encounter.
+LOOKBACK_DAYS = 36500     # ~100 years — effectively no rolling window.
+                          # The user wants every article we've ever pulled to
+                          # stay on the live site, never age off. Subsequent
+                          # runs use the per-URL caches so re-runs are cheap;
+                          # LLM bespoke UCs cost only on first encounter.
+                          # NB: site page weight grows over time — at ~430
+                          # articles we're already at 17 MB (Google's hard
+                          # indexing cap is ~15 MB). When this becomes a
+                          # ranking issue, switch to lazy-loading older
+                          # articles into a separate "Archive" view rather
+                          # than dropping them.
 MAX_PER_SOURCE = 500      # safety cap per source per run
 
 SOURCES = [
@@ -10587,7 +10593,7 @@ def write_briefings(articles_meta, articles_raw_index):
 
     idx_lines = [
         "# Briefings — full archive\n",
-        f"_{len(written)} per-article briefings — auto-generated from articles in the rolling {LOOKBACK_DAYS}-day window._\n",
+        f"_{len(written)} per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._\n",
         "",
         "**Shared detection templates:** generic IOC-substitution hunts ",
         "(asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) ",
