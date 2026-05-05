@@ -796,6 +796,17 @@ Use what you find to:
 
 Don't search for more than 2-3 things — keep it focused.
 
+IMAGES IN THE ARTICLE — these CAN contain detection-grade content the
+text strip misses (command-line screenshots literally showing the
+payload string, process-tree diagrams showing the parent→child chain,
+phishing-page decoys with the lure URL on screen, C2 panel screenshots,
+flowcharts of multi-stage chains). A list of in-article image URLs is
+provided below. **WebFetch any image whose filename / position
+suggests it's a screenshot or diagram** (don't fetch banner/hero
+images, ads, or author headshots). When you do fetch one, extract any
+strings/IOCs/parent-child relationships it shows and feed them into
+your queries. Cite the image URL in `rationale` if it contributed.
+
 
 Output STRICT JSON matching this schema (no markdown fences, no prose, just one JSON object):
 
@@ -838,6 +849,9 @@ Article body:
 
 Pre-extracted IOCs from the article (use these in your queries where appropriate):
 <<IOC_SUMMARY>>
+
+In-article image URLs (WebFetch the screenshots/diagrams; skip banner/hero/ads):
+<<IMAGE_URLS>>
 
 ================================================================
 CANONICAL DEFENDER ADVANCED HUNTING SCHEMA
@@ -1057,6 +1071,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
                      ("sha256","SHA256"),("sha1","SHA1"),("md5","MD5")]:
         if ind.get(k):
             ioc_summary.append(f"  {label}: {', '.join(ind[k][:8])}")
+    # In-article images — the LLM can WebFetch any that look like screenshots
+    # or diagrams. Capped at 5 by the extractor; we list them numbered so
+    # the model can reference them in `rationale`.
+    image_urls = article.get("image_urls") or []
+    if image_urls:
+        image_block = "\n".join(f"  [{i+1}] {u}" for i, u in enumerate(image_urls))
+    else:
+        image_block = "  (none extracted)"
     # Manual placeholder substitution — the prompt body contains literal
     # JSON `{...}` braces which would confuse str.format(), causing every
     # call to fail with a KeyError before ever reaching the LLM.
@@ -1065,6 +1087,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<URL>>",         url[:200])
               .replace("<<BODY>>",        body)
               .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
+              .replace("<<IMAGE_URLS>>",  image_block)
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
@@ -1111,10 +1134,12 @@ def _llm_generate_ucs(article: dict, ind: dict):
     if total_sigma_issues:
         print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(data.get('ucs') or [])} UC(s)")
     # Stamp the cache with the inputs we used so the 24h re-review pass
-    # can detect when an article's body has been edited or when a similar
-    # article has appeared elsewhere since this analysis ran.
-    data["_body_hash"]     = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()
+    # can detect when an article's body has been edited, a new image has
+    # been added, or when a similar article has appeared elsewhere.
+    body_for_hash = body + "\n#IMAGES:" + "\n".join(image_urls)
+    data["_body_hash"]     = hashlib.sha256(body_for_hash.encode("utf-8", "replace")).hexdigest()
     data["_similar_count"] = int(article.get("_similar_count", 0))
+    data["_image_count"]   = len(image_urls)
     data["_analyzed_at"]   = dt.datetime.now(dt.timezone.utc).isoformat()
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
@@ -1192,13 +1217,18 @@ def _recent_window_revisit(articles, hours: int = 24) -> int:
             continue
 
         body = (a.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
-        cur_hash = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()
+        image_urls = a.get("image_urls") or []
+        body_for_hash = body + "\n#IMAGES:" + "\n".join(image_urls)
+        cur_hash = hashlib.sha256(body_for_hash.encode("utf-8", "replace")).hexdigest()
         body_changed = bool(data.get("_body_hash")) and data["_body_hash"] != cur_hash
         cached_similar = int(data.get("_similar_count", 0))
         cur_similar = int(a.get("_similar_count", 0))
         similar_grew = cur_similar > cached_similar
+        cached_imgs = int(data.get("_image_count", 0))
+        cur_imgs = len(image_urls)
+        images_grew = cur_imgs > cached_imgs
 
-        if not (body_changed or similar_grew):
+        if not (body_changed or similar_grew or images_grew):
             continue
         ts = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
         target = cache_path.with_suffix(cache_path.suffix + f".invalidated-{ts}-revisit")
@@ -1207,6 +1237,7 @@ def _recent_window_revisit(articles, hours: int = 24) -> int:
             invalidated += 1
             reasons = []
             if body_changed: reasons.append("body changed")
+            if images_grew:  reasons.append(f"images {cached_imgs}->{cur_imgs}")
             if similar_grew: reasons.append(f"similar {cached_similar}->{cur_similar}")
             title = (a.get("title") or "")[:60]
             print(f"    [revisit] {title} ({', '.join(reasons)})")
@@ -10845,10 +10876,68 @@ def _html_to_text_for_iocs(html_doc: str) -> str:
     return body.strip()
 
 
-def _fetch_full_body(url: str, fallback: str = "") -> str:
-    """Fetch and clean an article body. Cached to disk; falls back on error."""
+def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 5) -> list:
+    """Pull the <img src> URLs out of the article body, filter junk
+    (logos, avatars, tracking pixels, sprites, share-button icons), and
+    return up to `max_images` absolute URLs in document order.
+
+    Threat-intel articles routinely embed:
+      - command-line / payload screenshots (literal IOC strings),
+      - process-tree diagrams,
+      - phishing-page decoys,
+      - C2 panel screenshots,
+      - flowcharts of multi-stage chains.
+
+    Pure HTML→text strip drops all of these, which is why the LLM
+    needs a list of URLs it can fetch through WebFetch when it
+    suspects an image carries detection-grade content."""
+    from urllib.parse import urljoin
+    if not html_doc:
+        return []
+    main = _extract_main_html(html_doc)
+    raw = re.findall(r'<img\b[^>]+?src=["\']([^"\']+)["\']', main, re.IGNORECASE)
+    # Reject patterns common for chrome / social / tracking / ads.
+    REJECT = (
+        "/avatar", "gravatar.com", "/logo", "/icon", "/sprite", "/ads/",
+        "/advert", "doubleclick.net", "googlesyndication", "google-analytics",
+        "facebook.com/tr", "linkedin.com/li", "twitter.com/i/", "x.com/i/",
+        "/share-button", "/social/", "/badge", "/emoji",
+        "1x1.gif", "pixel.gif", "spacer.gif", "blank.gif",
+    )
+    out = []
+    seen = set()
+    for src in raw:
+        src = src.strip()
+        if not src:
+            continue
+        if src.startswith("data:"):
+            continue
+        # Resolve relative paths against the article URL.
+        absolute = urljoin(base_url, src)
+        if not absolute.lower().startswith(("http://", "https://")):
+            continue
+        low = absolute.lower()
+        if any(p in low for p in REJECT):
+            continue
+        if absolute in seen:
+            continue
+        seen.add(absolute)
+        out.append(absolute)
+        if len(out) >= max_images:
+            break
+    return out
+
+
+def _fetch_full_body(url: str, fallback: str = "") -> tuple:
+    """Fetch and clean an article body. Cached to disk; falls back on error.
+
+    Returns a (text, image_urls) tuple. `image_urls` is a list of up to
+    five content-image URLs harvested from the article HTML — they're
+    forwarded to the LLM so it can WebFetch and analyse screenshots /
+    flow diagrams / IOC-tables-as-images that pure text strip misses.
+    """
     if not FETCH_FULL_BODY or not url or not url.lower().startswith(("http://", "https://")):
-        return fallback
+        return (fallback, [])
     cache = _cache_path_for(url)
     html_doc = ""
     if cache.exists():
@@ -10874,16 +10963,17 @@ def _fetch_full_body(url: str, fallback: str = "") -> str:
                 except Exception:
                     pass
             else:
-                return fallback
+                return (fallback, [])
         except Exception as e:
             safe_err = str(e).encode("ascii", "replace").decode("ascii")
             print(f"    [!] body fetch failed for {url[:80]}: {safe_err}")
-            return fallback
+            return (fallback, [])
     text = _html_to_text_for_iocs(html_doc)
     if len(text) < 200:
         # extraction looks broken — better to keep the RSS summary than ship rubbish
-        return fallback
-    return text
+        return (fallback, [])
+    images = _extract_article_image_urls(html_doc, url)
+    return (text, images)
 
 
 def _fetch_rss(source, since):
@@ -10899,8 +10989,10 @@ def _fetch_rss(source, since):
         link = e.get("link", "")
 
         # Pull the full article body so IOC extraction sees hashes / defanged
-        # IPs / domains that live below the RSS preview.
-        full_body = _fetch_full_body(link, fallback=rss_summary)
+        # IPs / domains that live below the RSS preview. Also harvest the
+        # in-article image URLs — they get forwarded to the LLM so it can
+        # WebFetch screenshots / flow diagrams that pure text strip misses.
+        full_body, image_urls = _fetch_full_body(link, fallback=rss_summary)
         if full_body and full_body != rss_summary:
             fetched += 1
 
@@ -10913,6 +11005,7 @@ def _fetch_rss(source, since):
             # Display preview stays short; raw_body holds full text for IOC extraction.
             "summary": (rss_summary[:600] + "…") if len(rss_summary) > 600 else rss_summary,
             "raw_body": full_body or rss_summary,
+            "image_urls": image_urls,
         })
     if fetched:
         print(f"    -> fetched {fetched} full article bodies")
@@ -10963,6 +11056,7 @@ def _fetch_kev(source, since):
             "published_dt": pub,
             "summary": body,
             "raw_body": body + " " + cve,
+            "image_urls": [],
         })
     return out
 
