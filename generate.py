@@ -693,6 +693,23 @@ def _load_kql_knowledge() -> str:
 _KQL_KNOWLEDGE_BLOCK = _load_kql_knowledge()
 
 
+def _load_datadog_knowledge() -> str:
+    """Load knowledge/datadog_fundamentals.md if present — Datadog
+    Cloud SIEM log-source / @field.path / query-syntax reference. Same
+    pattern as the KQL knowledge loader; degrades gracefully when the
+    file is missing."""
+    p = KNOWLEDGE_DIR / "datadog_fundamentals.md"
+    if p.exists():
+        try:
+            return p.read_text(encoding="utf-8")
+        except Exception:
+            return ""
+    return ""
+
+
+_DATADOG_KNOWLEDGE_BLOCK = _load_datadog_knowledge()
+
+
 def _load_schema_block(filename: str) -> str:
     """Render a data_sources/*.json schema into a compact text block —
     one line per table, columns comma-separated. Injected into the LLM
@@ -826,6 +843,7 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "defender_kql": "<full Microsoft Defender Advanced Hunting KQL. Use DeviceProcessEvents / DeviceFileEvents / DeviceNetworkEvents / DeviceRegistryEvents / EmailEvents / AADSignInEventsBeta etc. Reference the article's specific strings. Use `Timestamp` (NOT TimeGenerated) — Defender column is Timestamp.>",
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the SAME detection but on Sentinel's schema. Use SecurityEvent / SigninLogs / AuditLogs / AzureActivity / OfficeActivity / CommonSecurityLog / Syslog / ASIM Im* tables. Use `TimeGenerated` (NOT Timestamp) — Sentinel column is TimeGenerated. If the detection genuinely cannot be expressed on Sentinel telemetry available in this tenant, leave as empty string and explain in `rationale`.>",
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule (https://sigmahq.io). Emit ONLY when the detection is single-event-shape (one selection block + condition). Skip Sigma — leave empty string — for: counts/thresholds, time-window correlation, cross-table joins, statistical anomaly, multi-stage chains. Required fields: title, id (UUID), description, references, author, date (YYYY/MM/DD), tags (`attack.t####`), logsource (category + product), detection (selection blocks + condition), level. Use logsource categories: process_creation, file_event, file_access, network_connection, registry_event, dns, image_load, process_access; or product+service for cloud (azure auditlogs / signinlogs / etc.).>",
+      "datadog_query": "<Datadog Cloud SIEM logs query string (the bare query, not the full rule wrapper — we wrap it at export time). Use Datadog syntax: `source:<source>` to scope (cloudtrail, windows.security, windows.sysmon, windows.defender, azure.activity_logs, azure.activeDirectory, gcp.audit, kubernetes.audit, okta, linux.auditd, linux.syslog), `@field.path:value` for structured-log attributes, AND/OR/NOT and parentheses, wildcards `*`, CIDR for IPs (`@network.client.ip:81.171.16.0/24`), numeric ranges (`@status:>=400`). Reference the Datadog schema below — only use field paths that actually exist on Datadog's standard log format for the source you're querying. Leave empty string if the detection cannot be expressed on Datadog telemetry (e.g. detection that depends on Defender XDR signals not shipped to Datadog).>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
       "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"]
     }
@@ -910,6 +928,15 @@ machine-account exclusion. The translation reference shows how to
 port a Defender query to Sentinel and vice versa.
 
 <<KQL_KNOWLEDGE>>
+================================================================
+DATADOG CLOUD SIEM SCHEMA + QUERY SYNTAX
+================================================================
+Reference for the `datadog_query` field. Use only the field paths
+listed below for the source you're scoping with `source:` — Datadog
+enforces tag conventions per source and unknown paths return zero
+results.
+
+<<DATADOG_SCHEMA>>
 ================================================================
 """
 
@@ -1090,7 +1117,8 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<IMAGE_URLS>>",  image_block)
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
-              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
+              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
+              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK))
     raw = None
     if use_oauth:
         raw = _llm_call_via_oauth(prompt)
@@ -1277,6 +1305,7 @@ Reply with JSON only, no commentary, this exact shape:
       "defender_kql": "<full Microsoft Defender Advanced Hunting KQL — uses `Timestamp`>",
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the same detection — uses `TimeGenerated`. Empty string if not expressible on Sentinel telemetry.>",
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule. Emit only for single-event-shape detections; empty string otherwise. See article-prompt guidance for the field schema.>",
+      "datadog_query": "<Datadog Cloud SIEM logs query string targeting the same detection. Use `source:<source>` + `@field.path:value` syntax — see Datadog schema reference at the end of this prompt. Empty string if not expressible on Datadog telemetry.>",
       "confidence": "high | medium | low",
       "tier": "alerting | hunting",
       "fp_rate_estimate": "low | medium | high",
@@ -1359,6 +1388,15 @@ port a Defender query to Sentinel and vice versa.
 
 <<KQL_KNOWLEDGE>>
 ================================================================
+DATADOG CLOUD SIEM SCHEMA + QUERY SYNTAX
+================================================================
+Reference for the `datadog_query` field. Use only the field paths
+listed below for the source you're scoping with `source:` — Datadog
+enforces tag conventions per source and unknown paths return zero
+results.
+
+<<DATADOG_SCHEMA>>
+================================================================
 """
 
 
@@ -1403,7 +1441,8 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<TECHNIQUES>>", ", ".join(techs[:60]))
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
-              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK))
+              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
+              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK))
     raw = None
     try:
         if use_oauth:
@@ -1521,6 +1560,7 @@ def _uc_from_llm_dict(d: dict):
         defender_kql=kql,
         sentinel_kql=(d.get("sentinel_kql") or ""),
         sigma_yaml=(d.get("sigma_yaml") or ""),
+        datadog_query=(d.get("datadog_query") or ""),
         confidence=(d.get("confidence") or "Medium"),
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -1761,6 +1801,12 @@ class UseCase:
     defender_kql: str
     sentinel_kql: str = ""           # Microsoft Sentinel KQL — uses TimeGenerated
     sigma_yaml: str = ""              # Optional platform-neutral Sigma rule
+    datadog_query: str = ""           # Datadog Cloud SIEM logs query — wrapped
+                                      # in Cloud SIEM rule boilerplate at
+                                      # rule-pack export time. Empty when the
+                                      # detection isn't expressible on Datadog
+                                      # telemetry (e.g. only Microsoft-Defender-
+                                      # specific tables are available).
     confidence: str = "Medium"
     # Tier classification:
     #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
@@ -1865,6 +1911,12 @@ def _load_uc_from_yaml(path):
             sigma_yaml = sigma_path.read_text(encoding="utf-8")
     if sigma_yaml and "sigma" not in impls:
         impls.add("sigma")
+    # Datadog Cloud SIEM is a separate platform; accepted either via the
+    # `implementations` list or directly as a `datadog_query` field. Same
+    # back-compat shape as Sentinel.
+    datadog_query = (doc.get("datadog_query") or "")
+    if datadog_query and "datadog" not in impls:
+        impls.add("datadog")
     confidence = doc.get("confidence", "Medium")
     # Tier: explicit field wins; otherwise infer from query shape.
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
@@ -1886,6 +1938,7 @@ def _load_uc_from_yaml(path):
         defender_kql=kql,
         sentinel_kql=sentinel_kql,
         sigma_yaml=sigma_yaml,
+        datadog_query=datadog_query,
         confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -3717,6 +3770,7 @@ body:not(.view-actors-active)   .stats-actors{
 .lib-pill.platform-s.on{ background:linear-gradient(180deg, rgba(110,160,255,0.30), rgba(110,160,255,0.18)); box-shadow:0 0 0 1px rgba(110,160,255,0.55) inset; }
 .lib-pill.platform-z.on{ background:linear-gradient(180deg, rgba(255,170,90,0.30), rgba(255,170,90,0.18)); box-shadow:0 0 0 1px rgba(255,170,90,0.55) inset; }
 .lib-pill.platform-p.on{ background:linear-gradient(180deg, rgba(220,120,200,0.30), rgba(220,120,200,0.18)); box-shadow:0 0 0 1px rgba(220,120,200,0.55) inset; }
+.lib-pill.platform-dd.on{ background:linear-gradient(180deg, rgba(120,90,200,0.32), rgba(120,90,200,0.18)); box-shadow:0 0 0 1px rgba(120,90,200,0.60) inset; }
 .lib-clear-btn{
   background:transparent; border:1px solid var(--border-2); color:var(--muted);
   padding:5px 12px; border-radius:99px;
@@ -3778,6 +3832,7 @@ body:not(.view-actors-active)   .stats-actors{
 .lib-tag.platform-s{background:rgba(110,160,255,0.12); border-color:rgba(110,160,255,0.32); color:#a8c5ff;}
 .lib-tag.platform-z{background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a;}
 .lib-tag.platform-p{background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8;}
+.lib-tag.platform-dd{background:rgba(120,90,200,0.14); border-color:rgba(120,90,200,0.36); color:#c5b0ff;}
 .lib-card-footer{
   display:flex; align-items:center; gap:10px; justify-content:space-between;
   padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);
@@ -4090,6 +4145,7 @@ body.tour-on .tour-card.tour-card-top{
 .tour-preview-pill.platform-s{ background:rgba(110,160,255,0.12); border-color:rgba(110,160,255,0.32); color:#a8c5ff; }
 .tour-preview-pill.platform-z{ background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a; }
 .tour-preview-pill.platform-p{ background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8; }
+.tour-preview-pill.platform-dd{ background:rgba(120,90,200,0.14); border-color:rgba(120,90,200,0.36); color:#c5b0ff; }
 .tour-preview-key{
   font-family:var(--mono); font-size:11px; font-weight:600;
   padding:3px 7px; border-radius:4px;
@@ -5401,6 +5457,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-sent { background:rgba(64,160,255,0.18);  color:#7fb6ff; border-color:rgba(64,160,255,0.40); }
 .pl-badge.pl-sigma{ background:rgba(155,138,251,0.18); color:#cbb6ff; border-color:rgba(155,138,251,0.40); font-size:9.5px; }
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
+.pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -5906,6 +5963,7 @@ ul.intel-types-doc code{
         <span class="lg-chip"><span class="pl-badge pl-sent">S</span> Sentinel KQL</span>
         <span class="lg-chip"><span class="pl-badge pl-sigma">Σ</span> Sigma rule</span>
         <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
+        <span class="lg-chip"><span class="pl-badge pl-ddog">DD</span> Datadog Cloud SIEM</span>
         <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
@@ -6996,6 +7054,7 @@ function _libPrepare() {
       if (/defender/.test(k)) tabs.def = true;
       else if (/sentinel/.test(k)) tabs.sent = true;
       else if (/sigma/.test(k)) tabs.sigma = true;
+      else if (/datadog/.test(k)) tabs.datadog = true;
       else if (/splunk|spl/.test(k)) tabs.spl = true;
     });
     d.querySelectorAll('pre, code').forEach(p => {
@@ -7004,6 +7063,8 @@ function _libPrepare() {
       if (!tabs.spl && /^\\s*(?:index=|search\\b)/m.test(t)) tabs.spl = true;
       if (!tabs.def && /DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(t)) tabs.def = true;
       if (!tabs.sent && /\\bSecurityEvent\\b|\\bSigninLogs\\b|\\bAuditLogs\\b/.test(t)) tabs.sent = true;
+      // Datadog: source: + @field.path syntax, not Splunk's index= and not KQL pipe.
+      if (!tabs.datadog && /(^|\\s)source:[a-z][a-z0-9._-]+\\s/i.test(t) && /@[a-z][a-z0-9._-]+:/i.test(t)) tabs.datadog = true;
     });
     const queries = {};
     d.querySelectorAll('pre').forEach(pre => {
@@ -7011,6 +7072,7 @@ function _libPrepare() {
       if (!txt.trim()) return;
       let kind = 'other';
       if (/^\\s*title:/m.test(txt) && /\\bdetection:/.test(txt)) kind = 'sigma';
+      else if ((/(^|\\s)source:[a-z][a-z0-9._-]+\\s/i.test(txt)) && /@[a-z][a-z0-9._-]+:/i.test(txt) && !/\\|/.test(txt.split('\\n')[0])) kind = 'datadog';
       else if (/^\\s*(?:index=|search\\b|\\|)/m.test(txt)) kind = 'spl';
       else if (/DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(txt)) kind = 'def';
       else if (/SecurityEvent|SigninLogs|AuditLogs/.test(txt)) kind = 'sent';
@@ -7027,7 +7089,7 @@ function _libPrepare() {
       if (r > maxSev) { maxSev = r; sevTag = SEV_NORM[(a.sev || '').toLowerCase()] || 'low'; }
     }
     let plats = ucDom.get(uc.t)?.tabs || {};
-    if (!plats.def && !plats.sent && !plats.sigma && !plats.spl) {
+    if (!plats.def && !plats.sent && !plats.sigma && !plats.spl && !plats.datadog) {
       if (uc.src === 'internal') plats = {def:true, sent:true, sigma:true, spl:true};
       else plats = {def:true, sigma:true};
     }
@@ -7046,8 +7108,8 @@ function _libPrepare() {
 
     const probability   = Math.min(100, Math.round(Math.log2(1 + ucArts.length) * 22));
     const impact        = ({0:20, 1:35, 2:55, 3:80, 4:100})[maxSev] ?? 30;
-    const platformCount = ['def','sent','sigma','spl'].filter(k => plats[k]).length;
-    const detectability = Math.round((platformCount / 4) * 100);
+    const platformCount = ['def','sent','sigma','spl','datadog'].filter(k => plats[k]).length;
+    const detectability = Math.round((platformCount / 5) * 100);
     const queryLines = Object.values(queries).reduce((s, q) => s + q.split('\\n').length, 0) || 18;
     const effort = Math.max(20, Math.min(100, 110 - Math.round(queryLines * 1.6)));
     const score  = Math.round(0.30 * probability + 0.30 * impact + 0.25 * detectability + 0.15 * effort);
@@ -7105,6 +7167,7 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-s" data-pl="sent">S · Sentinel</button>
     <button class="lib-pill platform-z" data-pl="sigma">Σ · Sigma</button>
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
+    <button class="lib-pill platform-dd" data-pl="datadog">DD · Datadog</button>
   </div>`;
   const clear = `<button type="button" class="lib-clear-btn" id="libClearFilters">Clear all</button>`;
   return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, clear].join(' ');
@@ -7115,9 +7178,9 @@ function _libCardHtml(p) {
   const tacticTag = tacticLabel ? `<span class="lib-tag tactic">${escapeHtml(tacticLabel)}</span>` : '';
   const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
   const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
-  const platTags = ['def','sent','sigma','spl'].filter(k => p.plats[k]).map(k => {
-    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p'}[k];
-    const label = {def:'D', sent:'S', sigma:'Σ', spl:'P'}[k];
+  const platTags = ['def','sent','sigma','spl','datadog'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd'}[k];
+    const label = {def:'D', sent:'S', sigma:'Σ', spl:'P', datadog:'DD'}[k];
     return `<span class="lib-tag ${cls}" title="${k}">${label}</span>`;
   }).join('');
   const techPills = (p.uc.techs || []).slice(0, 4).map(t => `<span class="lib-tag">${escapeHtml(t)}</span>`).join('');
@@ -7332,9 +7395,9 @@ function _libDetailHtml(p) {
   const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
   const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
   const phaseTag = p.uc.ph ? `<span class="lib-tag">${escapeHtml(p.uc.ph)}</span>` : '';
-  const platTags = ['def','sent','sigma','spl'].filter(k => p.plats[k]).map(k => {
-    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p'}[k];
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL'}[k];
+  const platTags = ['def','sent','sigma','spl','datadog'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog'}[k];
     return `<span class="lib-tag ${cls}">${escapeHtml(lbl)}</span>`;
   }).join('');
 
@@ -7366,16 +7429,16 @@ function _libDetailHtml(p) {
     return `Detects activity matching ${escapeHtml(descLine)}. Maps to ${tCount} MITRE technique${tCount === 1 ? '' : 's'} across ${phaseLabel}; tuned for ${p.uc.tier === 'alerting' ? 'alert-grade fidelity' : 'analyst hunting'}.`;
   })();
 
-  const platOrder = ['def','sent','sigma','spl'];
+  const platOrder = ['def','sent','sigma','spl','datadog'];
   const havePlats = platOrder.filter(k => p.queries[k]);
   const queryTabs = havePlats.length ? havePlats.map((k, i) => {
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog'}[k];
     return `<button class="lib-query-tab ${i === 0 ? 'on' : ''}" data-platform="${k}">${lbl}</button>`;
   }).join('') : '';
   const queryPanes = havePlats.length ? havePlats.map((k, i) => {
     return `<div data-query-pane="${k}" style="${i === 0 ? '' : 'display:none;'}">
       <div class="lib-query-toolbar">
-        <span class="lib-query-meta">${({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL'}[k])}</span>
+        <span class="lib-query-meta">${({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query'}[k])}</span>
         <button type="button" class="lib-copy-btn">Copy</button>
       </div>
       <pre class="lib-query-pre">${escapeHtml(p.queries[k] || '')}</pre>
@@ -7855,11 +7918,12 @@ function tidCellHtml(tid, isSub) {
   if (matrixMode === 'coverage') cls += ' ' + covClassFor(ucs.length);
   else if (matrixMode === 'heat') cls += ' ' + heatClassFor(arts.length);
   // Platform-coverage flags — aggregate the `pl` field across every UC
-  // attached to this technique. `pl` is a 4-char string "dsgp": d=Defender,
-  // s=Sentinel, g=Sigma, p=SPL. A position is `-` if that UC lacks that
-  // platform body. The matrix shows a small badge for each platform that
-  // at least one UC on this technique covers.
-  let plDef=false, plSent=false, plSigma=false, plSpl=false;
+  // attached to this technique. `pl` is now a 5-char string "dsgpD"
+  // where each position is the platform letter or '-': d=Defender,
+  // s=Sentinel, g=Sigma, p=SPL, D=Datadog. A position is `-` if that
+  // UC lacks that platform body. The matrix shows a small badge for
+  // each platform that at least one UC on this technique covers.
+  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false;
   for (let u of ucs) {
     const rec = MATRIX.ucs[u];
     if (!rec || !rec.pl) continue;
@@ -7867,13 +7931,15 @@ function tidCellHtml(tid, isSub) {
     if (rec.pl[1] === 's') plSent = true;
     if (rec.pl[2] === 'g') plSigma = true;
     if (rec.pl[3] === 'p') plSpl = true;
+    if (rec.pl[4] === 'D') plDdog = true;
   }
   const platforms = [];
   if (plDef)   platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
   if (plSent)  platforms.push('<span class="pl-badge pl-sent" title="Sentinel KQL">S</span>');
   if (plSigma) platforms.push('<span class="pl-badge pl-sigma" title="Sigma rule">Σ</span>');
   if (plSpl)   platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
-  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" tabindex="0">
+  if (plDdog)  platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-ddog="${plDdog?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
@@ -9212,6 +9278,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     kql = parameterize(uc.defender_kql, ind)
     skql = parameterize(uc.sentinel_kql, ind) if uc.sentinel_kql else ""
     sigma = uc.sigma_yaml or ""        # Sigma rules don't take parameter substitution
+    ddog = parameterize(uc.datadog_query, ind) if uc.datadog_query else ""
     techs = " ".join(
         f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
         for tid, name in uc.techniques
@@ -9222,9 +9289,9 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     uid = f"{art_id}-uc{idx}"
     phase_name = next((n for p, n, _ in KILL_CHAIN_PHASES if p == uc.kill_chain), uc.kill_chain)
     conf_cls = uc.confidence.lower()
-    # Build the tabs dynamically — Sentinel/Sigma only appear when the UC
-    # carries a body for them. SPL stays last for backward compat with
-    # existing querystring deep-links.
+    # Build the tabs dynamically — Sentinel/Sigma/Datadog only appear when
+    # the UC carries a body for them. SPL stays last for backward compat
+    # with existing querystring deep-links.
     sentinel_tab_btn = (
         f'<button class="tab-btn" data-target="{uid}-sentinel">Sentinel KQL</button>'
         if skql else ""
@@ -9245,6 +9312,16 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         f'</div>'
         if sigma else ""
     )
+    datadog_tab_btn = (
+        f'<button class="tab-btn" data-target="{uid}-datadog">Datadog</button>'
+        if ddog else ""
+    )
+    datadog_tab_pane = (
+        f'<div class="tab-content" id="{uid}-datadog">'
+        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(ddog)}</code></pre>'
+        f'</div>'
+        if ddog else ""
+    )
     return f"""
 <details class="uc"{ ' open' if idx == 0 else '' }>
   <summary>
@@ -9260,6 +9337,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
       <button class="tab-btn active" data-target="{uid}-kql">Defender KQL</button>
       {sentinel_tab_btn}
       {sigma_tab_btn}
+      {datadog_tab_btn}
       <button class="tab-btn" data-target="{uid}-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="{uid}-kql">
@@ -9267,6 +9345,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     </div>
     {sentinel_tab_pane}
     {sigma_tab_pane}
+    {datadog_tab_pane}
     <div class="tab-content" id="{uid}-spl">
       <pre><button class="copy-btn">COPY</button><code>{html.escape(spl)}</code></pre>
     </div>
@@ -9525,14 +9604,17 @@ def build_matrix_data(articles_meta):
         idx = len(uc_records)
         seen_uc_ids[name] = idx
         uc_techs = [t for t, _ in uc.techniques]
-        # Platform coverage — `pl` is a 4-bit string flagging which
-        # platform queries this UC ships. Front-end uses it for badges
-        # on the matrix and for the "Sigma-only" / "Sentinel-only" filters.
+        # Platform coverage — `pl` is a 5-char string flagging which
+        # platform queries this UC ships. Position 0=Defender (d/-),
+        # 1=Sentinel (s/-), 2=Sigma (g/-), 3=Splunk (p/-),
+        # 4=Datadog (D/-). Front-end uses it for badges on the matrix
+        # and for the platform-only filters in the Detection Library.
         pl = "".join([
             "d" if uc.defender_kql else "-",
             "s" if uc.sentinel_kql else "-",
             "g" if getattr(uc, "sigma_yaml", "") else "-",
             "p" if uc.splunk_spl else "-",
+            "D" if getattr(uc, "datadog_query", "") else "-",
         ])
         uc_records.append({
             "i": idx,
@@ -9542,7 +9624,7 @@ def build_matrix_data(articles_meta):
             "ph": uc.kill_chain,
             "src": "internal",
             "tier": getattr(uc, "tier", "hunting"),
-            "pl": pl,                    # platform coverage flags d/s/g/p
+            "pl": pl,                    # platform coverage d/s/g/p/D
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
         })
@@ -9595,7 +9677,7 @@ def build_matrix_data(articles_meta):
             "ph": ph_short,
             "src": "escu",
             "tier": tier,
-            "pl": "---p",                # ESCU = Splunk SPL-only
+            "pl": "---p-",               # ESCU = Splunk SPL-only (5 positions)
             "techs": tech_ids,
             "arts": [],
         })

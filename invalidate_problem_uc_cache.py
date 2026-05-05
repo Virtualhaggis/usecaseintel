@@ -44,7 +44,8 @@ CACHE_DIRS = [
 
 def file_has_problems(path: Path, style_cutoff: float,
                        require_sentinel: bool = False,
-                       require_sigma: bool = False) -> tuple[bool, list[str]]:
+                       require_sigma: bool = False,
+                       require_datadog: bool = False) -> tuple[bool, list[str]]:
     """Return (problematic, reasons) for a cache file."""
     try:
         data = json.loads(path.read_text(encoding="utf-8"))
@@ -80,6 +81,8 @@ def file_has_problems(path: Path, style_cutoff: float,
             reasons.append(f"UC#{i+1} missing sentinel_kql")
         if require_sigma and not uc.get("sigma_yaml"):
             reasons.append(f"UC#{i+1} missing sigma_yaml")
+        if require_datadog and not uc.get("datadog_query"):
+            reasons.append(f"UC#{i+1} missing datadog_query")
     return bool(reasons), reasons
 
 
@@ -93,6 +96,8 @@ def main() -> int:
                     help="Also flag any UC missing sentinel_kql (forces regen with new prompt).")
     ap.add_argument("--require-sigma", action="store_true",
                     help="Also flag any UC missing sigma_yaml (forces regen with new prompt).")
+    ap.add_argument("--require-datadog", action="store_true",
+                    help="Also flag any UC missing datadog_query (forces regen with new prompt).")
     args = ap.parse_args()
 
     suffix = ".invalidated-" + time.strftime("%Y%m%d-%H%M%S")
@@ -114,6 +119,7 @@ def main() -> int:
                 path, args.style_cutoff,
                 require_sentinel=args.require_sentinel,
                 require_sigma=args.require_sigma,
+                require_datadog=args.require_datadog,
             )
             if not problematic:
                 continue
