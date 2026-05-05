@@ -30,12 +30,110 @@ The attack usual…
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
+- **T1567** — Exfiltration Over Web Service
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1566.003** — Phishing: Spearphishing via Service
+- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Quick Assist drops UNC6692 'Email-Deployment-Process-System.zip' lure
+
+`UC_15_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="Email-Deployment-Process-System.zip" OR (Filesystem.file_name="*.zip" AND Filesystem.file_name="*Email-Deployment-Process-System*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// UNC6692 — Email-Deployment-Process-System.zip dropped on disk
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName =~ "Email-Deployment-Process-System.zip"
+    or (FileName endswith ".zip" and FileName has "Email-Deployment-Process-System")
+| project Timestamp, DeviceName, FileName, FolderPath, FileSize, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessParentFileName,
+          InitiatingProcessAccountName, FileOriginUrl, FileOriginIP
+| order by Timestamp desc
+```
+
+### [LLM] WinSCP / RClone / FileZilla / MegaSync executed within a Quick Assist or AnyDesk session
+
+`UC_15_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as qa_start max(_time) as qa_end from datamodel=Endpoint.Processes where (Processes.process_name="quickassist.exe" OR Processes.process_name="msra.exe" OR Processes.process_name="QuickAssistApp.exe" OR Processes.process_name="AnyDesk.exe") by Processes.dest | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` count min(_time) as exfil_first values(Processes.process) as exfil_cmdline values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="WinSCP.exe" OR Processes.process_name="WinSCP.com" OR Processes.process_name="rclone.exe" OR Processes.process_name="filezilla.exe" OR Processes.process_name="MEGAsync.exe" OR Processes.process_name="MEGAsyncservice.exe") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)`] | where exfil_first >= qa_start AND exfil_first <= (qa_end + 3600) | convert ctime(qa_start) ctime(qa_end) ctime(exfil_first)
+```
+
+**Defender KQL:**
+```kql
+// Quick Assist / AnyDesk session followed by exfil tooling on the same host
+let LookbackHours = 24h;
+let WindowSec = 3600;            // 1 hour after the QA/AnyDesk session ends
+let RemoteAccessBins = dynamic(["quickassist.exe","msra.exe","quickassistapp.exe","anydesk.exe"]);
+let ExfilBins = dynamic(["winscp.exe","winscp.com","rclone.exe","filezilla.exe","megasync.exe","megasyncservice.exe"]);
+let RASessions = DeviceProcessEvents
+    | where Timestamp > ago(LookbackHours)
+    | where FileName in~ (RemoteAccessBins)
+         or InitiatingProcessFileName in~ (RemoteAccessBins)
+    | summarize RAStart = min(Timestamp), RAEnd = max(Timestamp),
+                RABins = make_set(FileName)
+                by DeviceId, DeviceName;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackHours)
+| where AccountName !endswith "$"
+| where FileName in~ (ExfilBins)
+     or InitiatingProcessFileName in~ (ExfilBins)
+     or ProcessCommandLine has_any ("WinSCP","rclone ","MEGAsync")
+| join kind=inner RASessions on DeviceId
+| where Timestamp between (RAStart .. RAEnd + WindowSec * 1s)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RAStart, RAEnd, RABins
+| order by Timestamp desc
+```
+
+### [LLM] External Microsoft Teams contact from helpdesk-themed display name (UNC6692 / Scattered Spider lure)
+
+`UC_15_7` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity` Workload=MicrosoftTeams Operation IN ("MemberAdded","MessageSent","ChatCreated","MessageCreatedHasLink") (ExternalAccess=true OR UserId="*#EXT#*" OR UserType="Guest") | rex field=_raw "(?i)(?<impersonation>IT[\s\-]?(Protection|Support|Department|Help|Desk)|Help[\s\-]?Desk|Windows[\s\-]?Security|Security[\s\-]?Help[\s\-]?Desk)" | where isnotnull(impersonation) | stats min(_time) as firstSeen max(_time) as lastSeen values(UserId) as senders values(ClientIP) as src_ip values(Operation) as ops by impersonation
+```
+
+**Defender KQL:**
+```kql
+// External Teams contact from a helpdesk-themed display name (UNC6692 lure)
+let _internal_domain = "yourdomain.com";   // <-- replace with your verified domain
+let _impersonation = @"(?i)(IT[\s\-]?(Protection|Support|Department|Help|Desk)|Help[\s\-]?Desk|Windows[\s\-]?Security|Security[\s\-]?Help[\s\-]?Desk)";
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application =~ "Microsoft Teams"
+| where ActionType has_any ("MessageSent","ChatCreated","MemberAdded",
+                            "ChatMessageReceived","MessageCreatedHasLink",
+                            "MessageReceived")
+| extend Raw = parse_json(RawEventData)
+| extend SenderUpn = tostring(coalesce(Raw.UserId, Raw.SenderId))
+| extend ExternalSender = (AccountType =~ "Guest")
+                       or (isnotempty(SenderUpn) and SenderUpn !endswith _internal_domain)
+                       or (AccountDisplayName has "#EXT#")
+| where ExternalSender
+| where AccountDisplayName matches regex _impersonation
+     or tostring(ObjectName)   matches regex _impersonation
+| project Timestamp, AccountDisplayName, SenderUpn, AccountType, IPAddress,
+          CountryCode, ISP, ActionType, ObjectName, ApplicationId, RawEventData
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -241,4 +339,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

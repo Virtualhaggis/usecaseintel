@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Identify endpoints affected by Defender FP signature 'Trojan:Win32/Cerdigent.A!dha' (DigiCert root cert quarantine)
 
-`UC_8_5` · phase: **actions** · confidence: **High**
+`UC_19_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ AlertInfo
 
 ### [LLM] DigiCert root certificate registry key deletion under HKLM\SOFTWARE\Microsoft\SystemCertificates\AuthRoot\Certificates
 
-`UC_8_6` · phase: **actions** · confidence: **High**
+`UC_19_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -278,7 +278,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Defender Mistakenly Flags DigiCert Root Certificates as Malware
 
-`UC_8_4` · phase: **install** · confidence: **High**
+`UC_19_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

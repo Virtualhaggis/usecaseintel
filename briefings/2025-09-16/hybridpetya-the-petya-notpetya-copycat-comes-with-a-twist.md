@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HybridPetya bootkit artefacts written to EFI System Partition (\EFI\Microsoft\Boot\)
 
-`UC_355_4` · phase: **install** · confidence: **High**
+`UC_341_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### [LLM] HybridPetya installer / bootkit / cloak.dat SHA-1 hash match
 
-`UC_355_5` · phase: **install** · confidence: **High**
+`UC_341_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union isfuzzy=true
 
 ### [LLM] NotPetya-style forced reboot via NtRaiseHardError 0xC0000350 from non-system process
 
-`UC_355_6` · phase: **actions** · confidence: **Medium**
+`UC_341_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Defender removes legitimate DigiCert root cert (Cerdigent.A!dha FP cleanup hunt)
 
-`UC_7_7` · phase: **actions** · confidence: **High**
+`UC_38_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceRegistryEvents
 
 ### [LLM] Zhong Stealer / GoldenEyeDog: signed-by-abused-vendor binary executing from non-vendor path
 
-`UC_7_8` · phase: **install** · confidence: **Medium**
+`UC_38_8` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -313,7 +313,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Defender wrongly flags DigiCert certs as Trojan:Win32/Cerdigent.A!dha
 
-`UC_7_6` · phase: **install** · confidence: **High**
+`UC_38_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

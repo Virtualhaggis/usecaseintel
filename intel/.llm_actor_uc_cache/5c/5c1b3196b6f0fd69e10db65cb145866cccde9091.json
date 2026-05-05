@@ -1,0 +1,89 @@
+{
+  "name": "APT32",
+  "ucs": [
+    {
+      "title": "[LLM] APT32 (OceanLotus / SeaLotus / Canvas Cyclone) Outlook persistence chaining to Squiblydoo / mshta script-proxy execution",
+      "description": "Hunts the APT32-characteristic chain where Office Application Startup persistence (malicious Outlook form / VbaProject.OTM) causes outlook.exe to spawn a signed-binary script proxy (regsvr32 /i: scrobj.dll, mshta http(s)://, or encoded PowerShell). FireEye and ESET have repeatedly tied this exact parent->child handoff to OceanLotus's KerrDown / Cobalt Kitty loader chains.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1137",
+        "T1218.010",
+        "T1218.005",
+        "T1059.001",
+        "T1216.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.parent_process_name=\"outlook.exe\" AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\") AND NOT match(Processes.user,\"(?i)(\\$$|^SYSTEM$|^LOCAL SERVICE$|^NETWORK SERVICE$)\") BY Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | eval squiblydoo=if(match(process,\"(?i)regsvr32.*/[ius]:.*(scrobj|https?://)\"),1,0) | eval mshta_remote=if(match(process,\"(?i)mshta.*https?://\"),1,0) | eval encoded_ps=if(match(process,\"(?i)(-enc(odedcommand)?\\s|-ec\\s|frombase64string|downloadstring|invoke-expression|\\biex\\b)\"),1,0) | eval rundll32_remote=if(match(process,\"(?i)rundll32.*(https?://|\\\\\\\\)\"),1,0) | where squiblydoo=1 OR mshta_remote=1 OR encoded_ps=1 OR rundll32_remote=1 OR process_name IN (\"regsvr32.exe\",\"mshta.exe\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"outlook.exe\"\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\")\n| extend SquiblyDoo  = ProcessCommandLine matches regex @\"(?i)regsvr32.*/[ius]:.*(scrobj|https?://)\"\n| extend MshtaRemote = ProcessCommandLine matches regex @\"(?i)mshta.*https?://\"\n| extend EncodedPS   = ProcessCommandLine has_any (\"-EncodedCommand\",\"-enc \",\"-ec \",\"FromBase64String\",\"DownloadString\",\"Invoke-Expression\",\"IEX\")\n| extend Rundll32Remote = ProcessCommandLine matches regex @\"(?i)rundll32.*(https?://|\\\\\\\\)\"\n| where SquiblyDoo or MshtaRemote or EncodedPS or Rundll32Remote\n     or FileName in~ (\"regsvr32.exe\",\"mshta.exe\")   // bare LOLBin spawn from outlook.exe is itself anomalous\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          Child = FileName, ChildCmd = ProcessCommandLine,\n          SquiblyDoo, MshtaRemote, EncodedPS, Rundll32Remote, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688                                  // requires command-line auditing GPO\n| where tolower(ParentProcessName) endswith @\"\\outlook.exe\"\n| where Account !endswith \"$\"\n| where tolower(NewProcessName) endswith @\"\\powershell.exe\"\n    or tolower(NewProcessName) endswith @\"\\pwsh.exe\"\n    or tolower(NewProcessName) endswith @\"\\cmd.exe\"\n    or tolower(NewProcessName) endswith @\"\\mshta.exe\"\n    or tolower(NewProcessName) endswith @\"\\regsvr32.exe\"\n    or tolower(NewProcessName) endswith @\"\\rundll32.exe\"\n    or tolower(NewProcessName) endswith @\"\\wscript.exe\"\n    or tolower(NewProcessName) endswith @\"\\cscript.exe\"\n| extend SquiblyDoo  = CommandLine matches regex @\"(?i)regsvr32.*/[ius]:.*(scrobj|https?://)\"\n| extend MshtaRemote = CommandLine matches regex @\"(?i)mshta.*https?://\"\n| extend EncodedPS   = CommandLine has_any (\"-EncodedCommand\",\"-enc \",\"-ec \",\"FromBase64String\",\"DownloadString\",\"Invoke-Expression\",\"IEX\")\n| extend Rundll32Remote = CommandLine matches regex @\"(?i)rundll32.*(https?://|\\\\\\\\)\"\n| where SquiblyDoo or MshtaRemote or EncodedPS or Rundll32Remote\n     or tolower(NewProcessName) endswith @\"\\regsvr32.exe\"\n     or tolower(NewProcessName) endswith @\"\\mshta.exe\"\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName,\n          CommandLine, SquiblyDoo, MshtaRemote, EncodedPS, Rundll32Remote\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 Outlook Persistence Spawning Script Proxy / LOLBin\nid: 9f6b2a40-0de8-4f9c-a3e2-12c8f6ff77ab\nstatus: experimental\ndescription: Detects outlook.exe spawning a script interpreter or LOLBin (regsvr32 /i: scrobj.dll, mshta http(s)://, encoded powershell), the canonical APT32 (OceanLotus / SeaLotus / Canvas Cyclone) Office Application Startup persistence chain leading into KerrDown / Cobalt Kitty loaders.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://www.fireeye.com/blog/threat-research/2017/05/cyber-espionage-apt32.html\n  - https://www.welivesecurity.com/2018/03/13/oceanlotus-ships-new-backdoor/\nauthor: detection-engineering\ndate: 2026/05/04\ntags:\n  - attack.persistence\n  - attack.t1137\n  - attack.defense_evasion\n  - attack.t1218.005\n  - attack.t1218.010\n  - attack.execution\n  - attack.t1059.001\n  - attack.g0050\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\outlook.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\mshta.exe'\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n  selection_intent_squibly:\n    CommandLine|re: '(?i)regsvr32.*/[ius]:.*(scrobj|https?://)'\n  selection_intent_mshta:\n    CommandLine|re: '(?i)mshta.*https?://'\n  selection_intent_ps:\n    CommandLine|contains:\n      - '-EncodedCommand'\n      - '-enc '\n      - '-ec '\n      - 'FromBase64String'\n      - 'DownloadString'\n      - 'Invoke-Expression'\n      - 'IEX'\n  selection_intent_lolbin:\n    Image|endswith:\n      - '\\regsvr32.exe'\n      - '\\mshta.exe'\n  filter_machine_account:\n    User|endswith: '$'\n  condition: selection_parent and selection_child and (1 of selection_intent_*) and not filter_machine_account\nfalsepositives:\n  - Legitimate Outlook add-ins or VBA macros invoking PowerShell / scripts\n  - Custom mail-rule automation tooling\nlevel: high",
+      "rationale": "APT32 is one of the few state-sponsored groups that has consistently used Office Application Startup (Outlook.OTM / Outlook custom forms) for persistence (FireEye 2017, ESET 2018, Volexity 2017), and they pair it with regsvr32 /i: scrobj.dll Squiblydoo and mshta-driven loaders for KerrDown / Cobalt Kitty. The narrow parent=outlook.exe + child=script-proxy + APT32-style intent regex eliminates the ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "MshtaRemote",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MshtaRemote` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "MshtaRemote",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MshtaRemote` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "yaml/sigma error: mapping values are not allowed in this context\n  in \"<unicode string>\", line 4, column 86"
+      ]
+    },
+    {
+      "title": "[LLM] APT32 DLL search-order hijack: signed third-party utility side-loading from user-writable path",
+      "description": "Hunts the OceanLotus / SeaLotus signature side-loading pattern: a legitimately-signed Symantec / McAfee / Avast / Kaspersky / Adobe / Microsoft binary copied into %APPDATA% / %PROGRAMDATA% / %TEMP% loads an attacker-supplied DLL from the same folder. APT32 has reused this primitive for years (RasTls.exe + rastlsc.dll, wsc_proxy.exe + wsc.dll, McUtil.dll, AcroBroker abuse).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE (Processes.process_path IN (\"*\\\\AppData\\\\Local\\\\*\",\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\",\"*\\\\Temp\\\\*\")) AND (Processes.process_name IN (\"rastls.exe\",\"rastlsc.exe\",\"wsc_proxy.exe\",\"wsc_proxy_x86.exe\",\"goopdate.exe\",\"AcroBroker.exe\",\"RtkAudUService64.exe\",\"TrendUploader.exe\",\"Qcheck.exe\",\"oleview.exe\") OR (Processes.process_company IN (\"Symantec Corporation\",\"McAfee, Inc.\",\"AVAST Software\",\"Kaspersky Lab\",\"Microsoft Corporation\",\"Adobe Inc.\",\"Sophos Limited\",\"Trend Micro Inc.\") AND Processes.process_signature_verified=\"true\")) BY Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_hash Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=false count FROM datamodel=Endpoint.Filesystem WHERE Filesystem.file_name=\"*.dll\" AND (Filesystem.file_path IN (\"*\\\\AppData\\\\Local\\\\*\",\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\Temp\\\\*\")) BY Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_id | `drop_dm_object_name(Filesystem)` | rename file_path as dll_path file_name as dll_name file_hash as dll_hash] | eval exe_dir=replace(process_path,\"\\\\[^\\\\]+$\",\"\") | eval dll_dir=replace(dll_path,\"\\\\[^\\\\]+$\",\"\") | where lower(exe_dir)==lower(dll_dir) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// APT32 (OceanLotus) DLL side-loading: signed-vendor EXE in user-writable path loads sibling DLL\nlet _user_writable = dynamic([@\"\\AppData\\Local\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\"]);\nlet _abused_signers = dynamic([\"Symantec\",\"McAfee\",\"AVAST\",\"Avast\",\"Kaspersky\",\"Microsoft Corporation\",\"Adobe\",\"Sophos\",\"Trend Micro\"]);\nlet _ocean_lotus_loaders = dynamic([\"rastls.exe\",\"rastlsc.exe\",\"wsc_proxy.exe\",\"wsc_proxy_x86.exe\",\"goopdate.exe\",\"acrobroker.exe\",\"rtkaudUservice64.exe\",\"trenduploader.exe\",\"qcheck.exe\",\"oleview.exe\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFolderPath has_any (_user_writable)\n| where not(InitiatingProcessFolderPath startswith @\"C:\\Program Files\")\n| where InitiatingProcessVersionInfoCompanyName has_any (_abused_signers)\n     or InitiatingProcessFileName in~ (_ocean_lotus_loaders)\n| where FileName endswith \".dll\"\n| where SHA256 != InitiatingProcessSHA256                       // not the EXE re-mapping itself\n| where not(FolderPath startswith @\"C:\\Windows\\\")\n     and not(FolderPath startswith @\"C:\\Program Files\")\n// Co-located DLL = classic search-order hijack\n| where tolower(FolderPath) =~ tolower(InitiatingProcessFolderPath)\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          SignedExe = InitiatingProcessFileName,\n          SignedExePath = InitiatingProcessFolderPath,\n          SignedExeCompany = InitiatingProcessVersionInfoCompanyName,\n          SignedExeSHA256 = InitiatingProcessSHA256,\n          LoadedDll = FileName, LoadedDllPath = FolderPath,\n          LoadedDllSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Sysmon EID 7 image-load via AMA / Windows Event collector\nlet _user_writable = dynamic([@\"\\AppData\\Local\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\"]);\nlet _abused_signers = dynamic([\"Symantec\",\"McAfee\",\"AVAST\",\"Avast\",\"Kaspersky\",\"Microsoft Corporation\",\"Adobe\",\"Sophos\",\"Trend Micro\"]);\nWindowsEvent\n| where TimeGenerated > ago(7d)\n| where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 7\n| extend Image       = tostring(EventData.Image),\n         ImageLoaded = tostring(EventData.ImageLoaded),\n         CompanyName = tostring(EventData.Company),\n         Signed      = tostring(EventData.Signed),\n         User        = tostring(EventData.User),\n         ImageSha256 = tostring(EventData.Hashes)\n| where Image has_any (_user_writable)\n| where not(Image startswith @\"C:\\Program Files\")\n| where CompanyName has_any (_abused_signers)\n| where ImageLoaded endswith \".dll\"\n| where not(ImageLoaded startswith @\"C:\\Windows\\\")\n     and not(ImageLoaded startswith @\"C:\\Program Files\")\n| extend ImageDir       = extract(@\"^(.*\\\\)[^\\\\]+$\", 1, Image),\n         ImageLoadedDir = extract(@\"^(.*\\\\)[^\\\\]+$\", 1, ImageLoaded)\n| where tolower(ImageDir) == tolower(ImageLoadedDir)\n| project TimeGenerated, Computer, User, Image, CompanyName, Signed,\n          ImageLoaded, ImageSha256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 (OceanLotus) DLL Side-Loading via Signed Utility in User-Writable Path\nid: c1d2e8b3-3acb-4f19-9b8b-66a09d57e3cf\nstatus: experimental\ndescription: Detects DLL side-loading where a signed Symantec / McAfee / Avast / Kaspersky / Adobe / Microsoft / Sophos / Trend Micro utility runs from a user-writable directory (AppData / ProgramData / Public / Temp) and loads a co-located DLL. This is APT32's (OceanLotus / SeaLotus / Canvas Cyclone) signature execution primitive across RasTls.exe, wsc_proxy.exe, McUtil.dll, AcroBroker, and goopdate.exe campaigns.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://www.fireeye.com/blog/threat-research/2017/05/cyber-espionage-apt32.html\n  - https://www.welivesecurity.com/2018/03/13/oceanlotus-ships-new-backdoor/\n  - https://www.cybereason.com/blog/operation-cobalt-kitty-apt\nauthor: detection-engineering\ndate: 2026/05/04\ntags:\n  - attack.defense_evasion\n  - attack.t1574.002\n  - attack.t1036.005\n  - attack.g0050\nlogsource:\n  category: image_load\n  product: windows\ndetection:\n  selection_image_path:\n    Image|contains:\n      - '\\AppData\\Local\\'\n      - '\\AppData\\Roaming\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\Temp\\'\n  selection_signed_company:\n    Company|contains:\n      - 'Symantec'\n      - 'McAfee'\n      - 'AVAST'\n      - 'Avast'\n      - 'Kaspersky'\n      - 'Microsoft Corporation'\n      - 'Adobe'\n      - 'Sophos'\n      - 'Trend Micro'\n  selection_dll:\n    ImageLoaded|endswith: '.dll'\n  filter_system_dll:\n    ImageLoaded|startswith:\n      - 'C:\\Windows\\'\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n  filter_legit_install:\n    Image|startswith:\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n  condition: selection_image_path and selection_signed_company and selection_dll and not filter_system_dll and not filter_legit_install\nfalsepositives:\n  - Portable / extracted vendor utilities run from user profile (uncommon in managed estates)\n  - Vendor uninstaller staged to %TEMP% during patching\nlevel: high",
+      "rationale": "DLL side-loading from a signed-vendor binary running outside Program Files is the single most consistent APT32 / OceanLotus tradecraft fingerprint across a decade of public reporting (FireEye, ESET, Cybereason 'Operation Cobalt Kitty', Volexity). The combination of (1) abused vendor (Symantec/McAfee/etc.), (2) execution from user-writable path, and (3) co-located unsigned DLL load is rare for legi",
+      "_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "InitiatingProcessVersionInfoCompanyName",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents"
+          ],
+          "message": "`InitiatingProcessVersionInfoCompanyName` is not a column of DeviceImageLoadEvents; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "name": "Volt Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Volt Typhoon NTDS.dit extraction via 'ntdsutil ac i ntds ifm create' (CISA AA24-038A signature)",
+      "description": "Hunts the exact LOTL credential-dump pattern fingerprinted in CISA AA24-038A and Microsoft's Volt Typhoon write-up: ntdsutil's Install-From-Media feature staging a full NTDS.dit copy to a temp folder. Volt Typhoon (Vanguard Panda / BRONZE SILHOUETTE) prefers ntdsutil over Mimikatz/secretsdump because it is signed, built-in, and avoids dropping non-Microsoft binaries on critical-infrastructure DCs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.003",
+        "T1059.003",
+        "T1218",
+        "T1074.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=\"ntdsutil.exe\" OR Processes.process=\"*ntdsutil*\") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | rex field=process \"(?i)(?<ifm_target>create\\s+full\\s+\\\"?[a-z]:\\\\\\\\[^\\\"]+)\" | where match(process, \"(?i)ac\\s+i\\s+ntds\") OR match(process, \"(?i)ifm\\s*\\\"?\\s*create\\s+full\") | where NOT match(user, \"(?i)\\$$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime host user parent_process_name process ifm_target",
+      "kql": "// Volt Typhoon \u2014 ntdsutil IFM dump of NTDS.dit (CISA AA24-038A)\n// Adversary command from advisory:\n//   cmd.exe /C \"ntdsutil \\\"ac i ntds\\\" \\\"ifm\\\" \\\"create full c:\\\\windows\\\\temp\\\\Pro\\\" q q\"\nlet _legit_dc_admin_hosts = dynamic([]); // populate with sanctioned DC-promo / restore jumpboxes\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"                              // exclude machine accounts\n| where DeviceName !in~ (_legit_dc_admin_hosts)\n| where (FileName =~ \"ntdsutil.exe\" or ProcessCommandLine has \"ntdsutil\")\n     or (InitiatingProcessFileName =~ \"ntdsutil.exe\")\n| where ProcessCommandLine has_all (\"ifm\", \"create\")          // IFM staging branch\n     or ProcessCommandLine matches regex @\"(?i)ac\\s+i(nstance)?\\s+ntds\"\n     or InitiatingProcessCommandLine has_all (\"ifm\", \"create\")\n| extend StagingPath = extract(@\"(?i)create\\s+full\\s+\\\"?([a-zA-Z]:\\\\[^\\\"\\s]+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          FileName, ProcessCommandLine,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          IsInitiatingProcessRemoteSession,\n          StagingPath, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Volt Typhoon \u2014 ntdsutil IFM dump of NTDS.dit (CISA AA24-038A)\n// Requires GPO 'Include command line in process creation events' for 4688\nlet _legit_dc_admin_hosts = dynamic([]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where Computer !in~ (_legit_dc_admin_hosts)\n| where NewProcessName endswith \"\\\\ntdsutil.exe\"\n     or CommandLine has \"ntdsutil\"\n     or ParentProcessName endswith \"\\\\ntdsutil.exe\"\n| where CommandLine has_all (\"ifm\", \"create\")\n     or CommandLine matches regex @\"(?i)ac\\s+i(nstance)?\\s+ntds\"\n| extend StagingPath = extract(@\"(?i)create\\s+full\\s+\\\"?([a-zA-Z]:\\\\[^\\\"\\s]+)\", 1, CommandLine)\n| project TimeGenerated, Computer, Account, NewProcessName,\n          CommandLine, ParentProcessName, TokenElevationType, StagingPath\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Volt Typhoon NTDS.dit Extraction via ntdsutil IFM\nid: 5b9c6f32-7d3c-4d51-9f44-vt0001ntdsutil\nstatus: stable\ndescription: Detects Volt Typhoon's signature credential dump using ntdsutil 'ac i ntds' 'ifm' 'create full' to stage NTDS.dit on disk, per CISA AA24-038A and Microsoft Threat Intelligence reporting.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a\n  - https://www.microsoft.com/en-us/security/blog/2023/05/24/volt-typhoon-targets-us-critical-infrastructure-with-living-off-the-land-techniques/\nauthor: SOC Detection Engineering\ndate: 2026/05/05\ntags:\n  - attack.credential_access\n  - attack.t1003.003\n  - attack.g1017\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    - Image|endswith: '\\ntdsutil.exe'\n    - ParentImage|endswith: '\\ntdsutil.exe'\n    - CommandLine|contains: 'ntdsutil'\n  selection_ifm:\n    CommandLine|contains|all:\n      - 'ifm'\n      - 'create'\n  selection_acntds:\n    CommandLine|re|i: 'ac\\s+i(nstance)?\\s+ntds'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection_image and (selection_ifm or selection_acntds) and not filter_machine_acct\nfields:\n  - Image\n  - CommandLine\n  - ParentImage\n  - ParentCommandLine\n  - User\n  - Computer\nfalsepositives:\n  - Sanctioned DC promotion / forest recovery / IFM media generation by domain administrators\nlevel: high",
+      "rationale": "Generic 'ntdsutil ran' fires on every legitimate DC-promo. Volt Typhoon's tradecraft is the IFM sub-command \u2014 they use it instead of vssadmin/secretsdump because it's signed, native, and produces no PE drop. The exact strings 'ac i ntds' and 'ifm create full <path>' are documented in CISA AA24-038A as the actor's verbatim invocation. Excluding machine accounts and a small allowlist of sanctioned D",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Volt Typhoon netsh portproxy v4tov4 redirector to KV-botnet SOHO infrastructure",
+      "description": "Hunts Volt Typhoon (Voltzite / Vanguard Panda) establishing 'netsh interface portproxy add v4tov4' rules \u2014 their characteristic technique for turning compromised internal hosts into proxy hops that egress to KV-botnet-controlled SOHO routers (Cisco RV320/325, NETGEAR ProSAFE, ASUS), masking C2 traffic as benign LAN traffic. Documented across CISA AA24-038A, Lumen Black Lotus Labs, and Microsoft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1090.001",
+        "T1090",
+        "T1059.003",
+        "T1572"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=\"netsh.exe\" Processes.process=\"*portproxy*\" by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process, \"(?i)interface\\s+portproxy\\s+(add|set)\\s+v4tov4\") | rex field=process \"(?i)listenport=(?<listenport>\\d+).*?connectport=(?<connectport>\\d+)\" | rex field=process \"(?i)connectaddress=(?<connectaddress>[0-9a-fA-F\\.\\:]+)\" | where NOT match(user, \"(?i)\\$$\") | where NOT cidrmatch(\"10.0.0.0/8\", connectaddress) AND NOT cidrmatch(\"172.16.0.0/12\", connectaddress) AND NOT cidrmatch(\"192.168.0.0/16\", connectaddress) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime host user parent_process_name process listenport connectport connectaddress",
+      "kql": "// Volt Typhoon \u2014 netsh portproxy v4tov4 to public IP (KV-botnet pivot)\n// Adversary command per CISA AA24-038A:\n//   netsh interface portproxy add v4tov4 listenport=8443 listenaddress=0.0.0.0 connectport=8443 connectaddress=<edge-router-ip>\nlet _it_admin_hosts = dynamic([]);  // populate with sanctioned admin jumpboxes\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where DeviceName !in~ (_it_admin_hosts)\n| where FileName =~ \"netsh.exe\"\n| where ProcessCommandLine has_all (\"interface\", \"portproxy\")\n| where ProcessCommandLine has_any (\"add\", \"set\")\n| where ProcessCommandLine has \"v4tov4\"\n| extend ConnectAddress = extract(@\"(?i)connectaddress\\s*=\\s*([0-9a-fA-F\\.\\:]+)\", 1, ProcessCommandLine)\n| extend ListenPort   = extract(@\"(?i)listenport\\s*=\\s*(\\d+)\", 1, ProcessCommandLine)\n| extend ConnectPort  = extract(@\"(?i)connectport\\s*=\\s*(\\d+)\", 1, ProcessCommandLine)\n| extend EgressesPublic = isnotempty(ConnectAddress)\n     and not(ipv4_is_private(ConnectAddress))\n     and not(ConnectAddress startswith \"127.\")\n     and not(ConnectAddress startswith \"169.254.\")\n| project Timestamp, DeviceName, AccountName,\n          ProcessCommandLine,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          IsInitiatingProcessRemoteSession,\n          ListenPort, ConnectPort, ConnectAddress, EgressesPublic\n// Public-IP pivot is the high-fidelity Volt Typhoon signal;\n// internal-only portproxy is left in for hunting tier triage.\n| order by EgressesPublic desc, Timestamp desc",
+      "sentinel_kql": "// Volt Typhoon \u2014 netsh portproxy v4tov4 to public IP (KV-botnet pivot)\nlet _it_admin_hosts = dynamic([]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where Computer !in~ (_it_admin_hosts)\n| where NewProcessName endswith \"\\\\netsh.exe\"\n| where CommandLine has_all (\"interface\", \"portproxy\")\n| where CommandLine has_any (\"add\", \"set\")\n| where CommandLine has \"v4tov4\"\n| extend ConnectAddress = extract(@\"(?i)connectaddress\\s*=\\s*([0-9a-fA-F\\.\\:]+)\", 1, CommandLine)\n| extend ListenPort   = extract(@\"(?i)listenport\\s*=\\s*(\\d+)\", 1, CommandLine)\n| extend ConnectPort  = extract(@\"(?i)connectport\\s*=\\s*(\\d+)\", 1, CommandLine)\n| extend EgressesPublic = isnotempty(ConnectAddress)\n     and not(ipv4_is_private(ConnectAddress))\n     and not(ConnectAddress startswith \"127.\")\n     and not(ConnectAddress startswith \"169.254.\")\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,\n          ParentProcessName, ListenPort, ConnectPort, ConnectAddress, EgressesPublic\n| order by EgressesPublic desc, TimeGenerated desc",
+      "sigma_yaml": "title: Volt Typhoon netsh portproxy v4tov4 Redirector\nid: 7e2d9a1b-4f88-49bc-9c12-vt0002portproxy\nstatus: stable\ndescription: Detects creation of an IPv4-to-IPv4 portproxy via netsh \u2014 Volt Typhoon's signature method for chaining compromised hosts to KV-botnet SOHO router infrastructure for C2 obfuscation. Documented in CISA AA24-038A and Lumen Black Lotus Labs reporting.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a\n  - https://blog.lumen.com/the-kv-botnet-from-the-prc-cyber-attack-perspective/\nauthor: SOC Detection Engineering\ndate: 2026/05/05\ntags:\n  - attack.command_and_control\n  - attack.t1090.001\n  - attack.t1572\n  - attack.g1017\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection:\n    Image|endswith: '\\netsh.exe'\n    CommandLine|contains|all:\n      - 'interface'\n      - 'portproxy'\n      - 'v4tov4'\n  selection_action:\n    CommandLine|contains:\n      - 'add'\n      - 'set'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection and selection_action and not filter_machine_acct\nfields:\n  - Image\n  - CommandLine\n  - ParentImage\n  - User\n  - Computer\nfalsepositives:\n  - Network-administration tooling on documented jumpboxes\n  - Hyper-V / WSL2 host-NAT helper scripts (allowlist by host)\nlevel: high",
+      "rationale": "netsh portproxy is rare in modern enterprises (port forwarders are normally a router function). Volt Typhoon's MO is to land on an internet-facing edge appliance, then plant a portproxy on internal pivot hosts that forwards lateral SMB/HTTP traffic out to a KV-botnet-controlled Cisco/NETGEAR SOHO router \u2014 making C2 look like routine egress from a corporate gateway. The combination of 'netsh interf",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

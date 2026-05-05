@@ -1,6 +1,6 @@
 # [HIGH] Trellix Confirms Source Code Breach With Unauthorized Repository Access
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-05-02
 **Article:** https://thehackernews.com/2026/05/trellix-confirms-source-code-breach.html
 

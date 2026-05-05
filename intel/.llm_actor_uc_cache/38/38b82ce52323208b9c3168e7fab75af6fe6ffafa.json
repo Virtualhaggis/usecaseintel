@@ -1,0 +1,52 @@
+{
+  "name": "Ke3chang",
+  "ucs": [
+    {
+      "title": "[LLM] Ke3chang / NICKEL RoyalDNS implant \u2014 periodic DNS TXT-record C2 beaconing",
+      "description": "Hunts for the RoyalDNS backdoor's signature C2 channel: a single endpoint repeatedly resolving TXT records on the same non-corporate FQDN, where the TXT body carries operator commands. NCC Group and Microsoft both attributed RoyalDNS exclusively to Ke3chang/APT15/NICKEL/Vixen Panda \u2014 TXT-only beaconing from an endpoint binary is essentially an APT15 fingerprint.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "medium",
+      "techs": [
+        "T1071.004",
+        "T1041",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count dc(_time) as unique_seconds values(DNS.src) as src_hosts values(DNS.src_category) as src_cats min(_time) as first_seen max(_time) as last_seen from datamodel=Network_Resolution where DNS.record_type=\"TXT\" AND DNS.query!=\"\" AND NOT (DNS.query IN (\"*._dmarc.*\",\"*._domainkey.*\",\"*_mta-sts*\",\"*_acme-challenge*\",\"*_spf.*\")) AND NOT DNS.query=\"*.local\" by DNS.query DNS.src span=1m | stats sum(count) as total_q dc(_time) as active_minutes values(src_hosts) as src values(first_seen) as first values(last_seen) as last by DNS.query DNS.src | where total_q>=20 AND active_minutes>=10 | eval beacon_window_min=round((last-first)/60,1) | sort - total_q",
+      "kql": "let _legit_txt = dynamic([\"_dmarc\",\"_domainkey\",\"_mta-sts\",\"_acme-challenge\",\"_spf\",\"_amazonses\",\"_atproto\",\"_psl\"]);\nlet _benign_resolvers = dynamic([\"svchost.exe\",\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"outlook.exe\",\"teams.exe\",\"OneDrive.exe\",\"backgroundtaskhost.exe\"]);\nDeviceEvents\n| where Timestamp > ago(24h)\n| where ActionType == \"DnsQueryResponse\"\n| extend Parsed = parse_json(AdditionalFields)\n| extend QueryName = tostring(Parsed.QueryName), QueryType = tostring(Parsed.QueryType)\n| where QueryType =~ \"TXT\"\n| where isnotempty(QueryName)\n| where not(QueryName has_any (_legit_txt))\n| where not(QueryName endswith \".local\" or QueryName endswith \".arpa\")\n| where InitiatingProcessFileName !in~ (_benign_resolvers)\n| summarize Count = count(),\n            ActiveMinutes = dcount(bin(Timestamp, 1m)),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            Procs     = make_set(InitiatingProcessFileName, 5),\n            Cmds      = make_set(InitiatingProcessCommandLine, 5)\n            by DeviceName, DeviceId, QueryName\n| where Count >= 20 and ActiveMinutes >= 10\n| extend BeaconWindowMin = datetime_diff('minute', LastSeen, FirstSeen)\n| where BeaconWindowMin >= 10\n| order by Count desc",
+      "sentinel_kql": "let _legit_txt = dynamic([\"_dmarc\",\"_domainkey\",\"_mta-sts\",\"_acme-challenge\",\"_spf\",\"_amazonses\",\"_atproto\"]);\nDnsEvents\n| where TimeGenerated > ago(24h)\n| where QueryTypeName =~ \"TXT\"\n| where isnotempty(Name)\n| where not(Name has_any (_legit_txt))\n| where not(Name endswith \".local\" or Name endswith \".arpa\")\n| summarize Count = count(),\n            ActiveMinutes = dcount(bin(TimeGenerated, 1m)),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            Resolvers = make_set(Computer, 10)\n            by ClientIP, Name\n| where Count >= 20 and ActiveMinutes >= 10\n| extend BeaconWindowMin = datetime_diff('minute', LastSeen, FirstSeen)\n| where BeaconWindowMin >= 10\n| order by Count desc",
+      "sigma_yaml": "",
+      "rationale": "Ke3chang/NICKEL is one of the very few state actors that ships a DNS-TXT-only backdoor (RoyalDNS, observed in the UK government incident NCC documented). Generic egress-beacon detections won't catch it because the implant never opens a TCP socket \u2014 all C2 rides on TXT lookups your recursive resolver issues outward. Filtering out legitimate `_dmarc/_domainkey/_acme-challenge/_mta-sts` records and w"
+    },
+    {
+      "title": "[LLM] Ke3chang / NICKEL diplomatic-target post-exploit recon command burst",
+      "description": "Hunts for the tightly-clustered native Windows recon command set Ke3chang operators run by hand on diplomatic and MFA hosts: net group/view/user, ipconfig, systeminfo, netstat, tasklist, nltest, whoami, query \u2014 Mandiant's Operation Ke3chang report and Microsoft's NICKEL writeup both document this exact LotL fingerprint within minutes of initial access. The detection looks for \u22655 distinct recon binaries from one user-account on one host inside a 10-minute window.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1016",
+        "T1033",
+        "T1049",
+        "T1057",
+        "T1069.002",
+        "T1082",
+        "T1087.002",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(Processes.process_name) as recon_run values(Processes.process) as cmdlines dc(Processes.process_name) as distinct_recon_bins values(Processes.parent_process_name) as parents min(_time) as first_seen max(_time) as last_seen from datamodel=Endpoint.Processes where Processes.process_name IN (\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"netstat.exe\",\"whoami.exe\",\"nltest.exe\",\"quser.exe\",\"query.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by Processes.dest Processes.user _time span=10m | where distinct_recon_bins>=5 | eval window_sec=last_seen-first_seen | sort - last_seen",
+      "kql": "let _recon = dynamic([\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"netstat.exe\",\"whoami.exe\",\"nltest.exe\",\"quser.exe\",\"query.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where FileName in~ (_recon)\n| summarize DistinctReconBins = dcount(FileName),\n            ReconRun = make_set(FileName),\n            Cmds = make_set(ProcessCommandLine, 25),\n            Parents = make_set(InitiatingProcessFileName, 10),\n            ParentCmds = make_set(InitiatingProcessCommandLine, 10),\n            FirstSeen = min(Timestamp),\n            LastSeen = max(Timestamp)\n            by DeviceName, AccountName, bin(Timestamp, 10m)\n| where DistinctReconBins >= 5\n| extend WindowSec = datetime_diff('second', LastSeen, FirstSeen)\n| order by LastSeen desc",
+      "sentinel_kql": "let _recon = dynamic([\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"netstat.exe\",\"whoami.exe\",\"nltest.exe\",\"quser.exe\",\"query.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where AccountType == \"User\"\n| where Account !endswith \"$\"\n| extend BaseName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where BaseName in (_recon)\n| summarize DistinctReconBins = dcount(BaseName),\n            ReconRun = make_set(BaseName),\n            Cmds = make_set(CommandLine, 25),\n            Parents = make_set(ParentProcessName, 10),\n            FirstSeen = min(TimeGenerated),\n            LastSeen = max(TimeGenerated)\n            by Computer, Account, bin(TimeGenerated, 10m)\n| where DistinctReconBins >= 5\n| extend WindowSec = datetime_diff('second', LastSeen, FirstSeen)\n| order by LastSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Ke3chang/APT15 is one of the most heavily LotL-leaning Chinese clusters \u2014 Mandiant's Operation Ke3chang report literally lists `ipconfig /all`, `net group \"Domain Admins\" /domain`, `tasklist /v`, `netstat -ano`, `systeminfo` as the operator's first-touch recon batch on diplomatic / MFA hosts, and Microsoft's 2021 NICKEL writeup confirmed the same pattern persisted across BS2005, RoyalCli and Mirag"
+    }
+  ]
+}

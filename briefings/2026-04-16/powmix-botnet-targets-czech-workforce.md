@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PowMix persistence-firing chain: scheduled-task explorer.exe spawning PowerShell via ProgramData LNK
 
-`UC_129_8` · phase: **install** · confidence: **High**
+`UC_132_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### [LLM] PowMix C2 beacon: PowerShell egress to *.herokuapp.com
 
-`UC_129_9` · phase: **c2** · confidence: **High**
+`UC_132_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### [LLM] PowMix scheduled-task creation - explorer.exe + ProgramData LNK action via PowerShell or schtasks
 
-`UC_129_10` · phase: **install** · confidence: **Medium**
+`UC_132_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PowMix botnet targets Czech workforce
 
-`UC_129_7` · phase: **exploit** · confidence: **High**
+`UC_132_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

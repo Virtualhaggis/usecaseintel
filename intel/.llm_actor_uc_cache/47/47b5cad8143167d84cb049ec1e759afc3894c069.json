@@ -1,0 +1,76 @@
+{
+  "name": "BlackTech",
+  "ucs": [
+    {
+      "title": "[LLM] BlackTech (Palmerworm) DLL search-order hijack \u2014 signed third-party binary side-loading unsigned DLL from user-writable path",
+      "description": "Hunts the signature loader pattern shared by BlackTech's TSCookie, Flagpro, BendyBear, PLEAD and Waterbear families: a legitimate signed third-party binary (Adobe, iTunes, Trend Micro, Kaspersky, Notepad++, etc.) is dropped into a user-writable directory and side-loads a co-located DLL that hijacks an exported function. This catches their characteristic T1574.001 \u2192 T1106 chain regardless of which custom backdoor is delivered.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.001",
+        "T1036.002",
+        "T1106",
+        "T1588.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_hash) as process_hash values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"AcroRd32.exe\",\"AcroBroker.exe\",\"iTunesHelper.exe\",\"iTunes.exe\",\"javaw.exe\",\"jusched.exe\",\"PresentationHost.exe\",\"plugin_host.exe\",\"OneDrive.exe\",\"GoogleUpdate.exe\",\"notepad++.exe\",\"vmtoolsd.exe\",\"TmDbg.exe\",\"coreServiceShell.exe\",\"avp.exe\",\"egui.exe\") (Processes.process_path=\"*\\\\AppData\\\\*\" OR Processes.process_path=\"*\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\Users\\\\Public\\\\*\" OR Processes.process_path=\"*\\\\PerfLogs\\\\*\") NOT (Processes.process_path=\"*\\\\Program Files*\" OR Processes.process_path=\"C:\\\\Windows\\\\*\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | join type=outer dest process_name [ | tstats summariesonly=t values(Filesystem.file_name) as sibling_dlls values(Filesystem.file_path) as sibling_paths from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" (Filesystem.file_path=\"*\\\\AppData\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\Users\\\\Public\\\\*\") by Filesystem.dest Filesystem.process_name | rename Filesystem.dest as dest Filesystem.process_name as process_name ] | where isnotnull(sibling_dlls) | convert ctime(firstTime) ctime(lastTime) | table firstTime lastTime dest user process_name process_path parent sibling_dlls sibling_paths",
+      "kql": "// BlackTech / Palmerworm DLL side-load \u2014 signed third-party loader running from user-writable path AND loading a DLL co-located in that path.\nlet lookback = 7d;\nlet _user_writable = dynamic([@\"\\appdata\\\", @\"\\temp\\\", @\"\\programdata\\\", @\"\\users\\public\\\", @\"\\perflogs\\\"]);\nlet _abused_loaders = dynamic([\n    \"acrord32.exe\",\"acrobroker.exe\",\"itunes.exe\",\"ituneshelper.exe\",\n    \"javaw.exe\",\"jusched.exe\",\"plugin_host.exe\",\"presentationhost.exe\",\n    \"onedrive.exe\",\"googleupdate.exe\",\"notepad++.exe\",\"vmtoolsd.exe\",\n    \"tmdbg.exe\",\"coreserviceshell.exe\",\"avp.exe\",\"egui.exe\",\n    \"hkcmd.exe\",\"igfxtray.exe\",\"setup.exe\",\"sandboxie.exe\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(lookback)\n| where tolower(InitiatingProcessFileName) in (_abused_loaders)\n| where InitiatingProcessFolderPath has_any (_user_writable)\n| where FolderPath has_any (_user_writable)\n// DLL is dropped next to (or one level under) the abused signed binary \u2014 classic search-order hijack\n| extend _loaderDir = tolower(InitiatingProcessFolderPath), _dllDir = tolower(FolderPath)\n| where _dllDir == _loaderDir or _dllDir startswith _loaderDir\n| where FileName endswith \".dll\"\n| where not(FolderPath startswith @\"C:\\Program Files\") and not(FolderPath startswith @\"C:\\Windows\\\")\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where tolower(FileName) in (_abused_loaders)\n    | project DeviceId, InitiatingProcessId = ProcessId, ProcessCreationTime, ProcessCommandLine, AccountName, IsInitiatingProcessRemoteSession\n  ) on DeviceId, InitiatingProcessId\n| project Timestamp, DeviceName, AccountName,\n          LegitBinary = InitiatingProcessFileName,\n          LegitPath   = InitiatingProcessFolderPath,\n          LegitSHA256 = InitiatingProcessSHA256,\n          SideLoadDLL = FileName,\n          DllPath     = FolderPath,\n          DllSHA256   = SHA256,\n          ProcessCmd  = ProcessCommandLine,\n          IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "// BlackTech / Palmerworm DLL side-load \u2014 Sentinel via SecurityEvent 4688 (proxy: signed third-party loader executing from a user-writable path is the high-signal artefact when ImageLoad telemetry isn't available).\nlet lookback = 7d;\nlet _abused_loaders = dynamic([\n    \"acrord32.exe\",\"acrobroker.exe\",\"itunes.exe\",\"ituneshelper.exe\",\n    \"javaw.exe\",\"jusched.exe\",\"plugin_host.exe\",\"presentationhost.exe\",\n    \"onedrive.exe\",\"googleupdate.exe\",\"notepad++.exe\",\"vmtoolsd.exe\",\n    \"tmdbg.exe\",\"coreserviceshell.exe\",\"avp.exe\",\"egui.exe\",\n    \"hkcmd.exe\",\"igfxtray.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend _img = tolower(NewProcessName)\n| extend _file = tostring(split(_img, \"\\\\\")[-1])\n| where _file in (_abused_loaders)\n| where _img has_any (\"\\\\appdata\\\\\", \"\\\\temp\\\\\", \"\\\\programdata\\\\\", \"\\\\users\\\\public\\\\\", \"\\\\perflogs\\\\\")\n| where not(_img startswith \"c:\\\\program files\") and not(_img startswith \"c:\\\\windows\\\\\")\n| project TimeGenerated, Computer, Account, LegitBinary = _file,\n          LegitPath = NewProcessName, ParentProcessName, CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: BlackTech / Palmerworm Signed-Binary DLL Side-Load From User-Writable Path\nid: 8c7c2a4e-5b6f-4f0e-9e9b-7b1c0a3d2b1a\nstatus: experimental\ndescription: Detects BlackTech's hallmark DLL search-order hijack pattern where a legitimately signed third-party binary (Adobe, iTunes, Trend Micro, Kaspersky, Notepad++, etc.) is dropped into a user-writable directory and side-loads a co-located malicious DLL.\nreferences:\n  - https://attack.mitre.org/groups/G0098/\n  - https://www.trendmicro.com/en_us/research/17/f/following-trail-blacktech-cyber-espionage-campaigns.html\n  - https://symantec-enterprise-blogs.security.com/threat-intelligence/palmerworm-blacktech-espionage-attacks\nauthor: SOC Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.defense_evasion\n  - attack.t1574.001\n  - attack.t1036.002\n  - detection.threat_hunting\n  - g0098\nlogsource:\n  category: image_load\n  product: windows\ndetection:\n  selection_loader:\n    Image|endswith:\n      - '\\AcroRd32.exe'\n      - '\\AcroBroker.exe'\n      - '\\iTunes.exe'\n      - '\\iTunesHelper.exe'\n      - '\\javaw.exe'\n      - '\\jusched.exe'\n      - '\\plugin_host.exe'\n      - '\\PresentationHost.exe'\n      - '\\OneDrive.exe'\n      - '\\GoogleUpdate.exe'\n      - '\\notepad++.exe'\n      - '\\vmtoolsd.exe'\n      - '\\TmDbg.exe'\n      - '\\coreServiceShell.exe'\n      - '\\avp.exe'\n      - '\\egui.exe'\n  selection_loader_path:\n    Image|contains:\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\PerfLogs\\'\n  selection_dll:\n    ImageLoaded|endswith: '.dll'\n    ImageLoaded|contains:\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\PerfLogs\\'\n  filter_signed_paths:\n    ImageLoaded|startswith:\n      - 'C:\\Program Files'\n      - 'C:\\Windows\\'\n  condition: selection_loader and selection_loader_path and selection_dll and not filter_signed_paths\nfalsepositives:\n  - Portable apps run from user profiles by power users\n  - Software updaters that stage signed binaries in %ProgramData% prior to install\nlevel: high",
+      "rationale": "BlackTech (CrowdStrike: PALMERWORM; Microsoft tracks overlap with CIRCUIT PANDA) has used DLL search-order hijacking as the loader for nearly every documented family \u2014 TSCookie, Flagpro, BendyBear, PLEAD, Waterbear, IconDown, Kivars. Trend Micro (2017), Symantec (2020) and JPCERT all describe the same pattern: a stolen-cert-signed third-party binary is staged in a user-writable directory together ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceImageLoadEvents, DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma tag must start with namespace separated with dot from remaining tag."
+      ]
+    },
+    {
+      "title": "[LLM] BlackTech SoftEther VPN tunnel staging on internal hosts",
+      "description": "Hunts BlackTech's distinctive lateral-movement and persistence pattern flagged by CISA/NSA/JPCERT: deployment of SoftEther VPN client/server binaries (vpncmd.exe, vpnclient.exe, vpnserver.exe, vpnbridge.exe) on compromised endpoints to build covert tunnels \u2014 frequently followed by internal port-scanning (T1046) using the same bridge.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1572",
+        "T1046",
+        "T1588.002",
+        "T1021.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_hash) as hash values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"vpncmd.exe\",\"vpnclient.exe\",\"vpnserver.exe\",\"vpnbridge.exe\",\"vpnsmgr.exe\") OR (Processes.process_name=\"cmd.exe\" AND Processes.process IN (\"*vpncmd*\",\"*AccountCreate*\",\"*NicCreate*\",\"*BridgeCreate*\")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// BlackTech SoftEther VPN tunnel staging \u2014 CISA/JPCERT-documented tradecraft.\nlet lookback = 14d;\nlet _softether_bins = dynamic([\"vpncmd.exe\",\"vpnclient.exe\",\"vpnserver.exe\",\"vpnbridge.exe\",\"vpnsmgr.exe\",\"vpninstall.exe\"]);\nlet _softether_files = DeviceFileEvents\n    | where Timestamp > ago(lookback)\n    | where ActionType in (\"FileCreated\", \"FileRenamed\")\n    | where tolower(FileName) in (_softether_bins)\n        or (FileName endswith \".exe\" and InitiatingProcessVersionInfoCompanyName has \"SoftEther\")\n    | project FileTime = Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA256,\n              InitiatingProcessFileName, InitiatingProcessAccountName;\nlet _softether_procs = DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where AccountName !endswith \"$\"\n    | where tolower(FileName) in (_softether_bins)\n        or ProcessVersionInfoCompanyName has \"SoftEther\"\n        or ProcessVersionInfoProductName has \"SoftEther VPN\"\n        or ProcessCommandLine has_any (\"AccountCreate\", \"NicCreate\", \"BridgeCreate\", \"HubCreate\", \"vpn_client.config\", \"vpn_server.config\")\n    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath,\n              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,\n              IsInitiatingProcessRemoteSession, SHA256;\nunion isfuzzy=true\n    (_softether_files | project Timestamp = FileTime, DeviceName, Source = \"FileDrop\",\n        Detail = strcat(FolderPath, \"\\\\\", FileName), SHA256,\n        Actor = InitiatingProcessAccountName, By = InitiatingProcessFileName),\n    (_softether_procs | project Timestamp, DeviceName, Source = \"Execution\",\n        Detail = ProcessCommandLine, SHA256,\n        Actor = AccountName, By = InitiatingProcessFileName)\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),\n            Sources = make_set(Source), Details = make_set(Detail, 32),\n            Hashes = make_set(SHA256, 16), Actors = make_set(Actor, 16),\n            ParentProcs = make_set(By, 16)\n            by DeviceName\n| order by FirstSeen desc",
+      "sentinel_kql": "// BlackTech SoftEther VPN tunnel staging \u2014 Sentinel SecurityEvent 4688.\nlet lookback = 14d;\nlet _softether_bins = dynamic([\"vpncmd.exe\",\"vpnclient.exe\",\"vpnserver.exe\",\"vpnbridge.exe\",\"vpnsmgr.exe\",\"vpninstall.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend _proc = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where _proc in (_softether_bins)\n    or CommandLine has_any (\"AccountCreate\", \"NicCreate\", \"BridgeCreate\", \"HubCreate\", \"vpn_client.config\", \"vpn_server.config\", \"SoftEther\")\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,\n          ParentProcessName, TokenElevationType, SubjectUserName\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "CISA/NSA/FBI/JPCERT joint advisory AA23-270A explicitly named SoftEther VPN abuse as a BlackTech signature for building covert internal tunnels and pivoting between subsidiary and parent networks (their preferred Taiwan\u2192Japan\u2192US route). SoftEther is rare in enterprise estates outside the legitimate vendor \u2014 any standalone vpncmd.exe execution by a user-context process is high-fidelity. The conditi",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceFileEvents, DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    }
+  ]
+}

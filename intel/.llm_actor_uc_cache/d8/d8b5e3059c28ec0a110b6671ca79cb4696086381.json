@@ -1,0 +1,81 @@
+{
+  "name": "FIN6",
+  "ucs": [
+    {
+      "title": "[LLM] FIN6 'more_eggs' loader: squiblytwo (wmic XSL) and squiblydoo (regsvr32 scrobj) execution from fake-resume lures",
+      "description": "Catches FIN6 / Skeleton Spider's signature initial-execution chain where a LinkedIn/recruitment-themed ZIP+LNK lure invokes wmic.exe with a remote .xsl payload (T1220) or regsvr32 /i: scrobj.dll (T1218.010) to stage the more_eggs/TerraLoader JScript backdoor. Mandiant and Gigamon attribute this exact LOLBin chain to FIN6 (ITG08, Camouflage Tempest) across the 2019-2024 campaigns that pivoted from FrameworkPOS skimming to Ryuk/LockerGoga/Trinity ransomware staging.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1220",
+        "T1218.010",
+        "T1059.007",
+        "T1566.003",
+        "T1204.002",
+        "T1027.010"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=wmic.exe AND Processes.process=\"*format:*\" AND (Processes.process=\"*http*\" OR Processes.process=\"*.xsl*\")) OR (Processes.process_name=regsvr32.exe AND Processes.process=\"*scrobj.dll*\" AND Processes.process=\"*/i:*http*\") OR (Processes.process_name IN (cscript.exe,wscript.exe) AND (Processes.process=\"*.js *\" OR Processes.process=\"*.jse *\") AND Processes.parent_process_name IN (explorer.exe,outlook.exe,winrar.exe,7zfm.exe,chrome.exe,msedge.exe,firefox.exe)) by host Processes.process_name Processes.parent_process_name Processes.user Processes.process | `drop_dm_object_name(Processes)` | where NOT match(user, \"\\$$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let _lookback = 30d;\nlet _browsers_archivers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"explorer.exe\",\"outlook.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(_lookback)\n| where AccountName !endswith \"$\"\n| where\n    // squiblytwo - FIN6 signature for more_eggs / TerraLoader\n    (FileName =~ \"wmic.exe\"\n        and ProcessCommandLine has \"format:\"\n        and ProcessCommandLine matches regex @\"(?i)format:[\"\"' ]?https?://|\\.xsl\")\n    or\n    // squiblydoo - regsvr32 staging the JScript backdoor\n    (FileName =~ \"regsvr32.exe\"\n        and ProcessCommandLine has \"scrobj.dll\"\n        and ProcessCommandLine matches regex @\"(?i)/i:[\"\"' ]?https?://\")\n    or\n    // direct JScript execution from the resume.zip lure\n    (FileName in~ (\"cscript.exe\",\"wscript.exe\")\n        and ProcessCommandLine matches regex @\"(?i)\\.(js|jse|wsf)\\b\"\n        and InitiatingProcessFileName in~ (_browsers_archivers))\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          Child = FileName,\n          ChildCmd = ProcessCommandLine,\n          SHA256, IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "let _lookback = 30d;\nlet _browsers_archivers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"explorer.exe\",\"outlook.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(_lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ChildBin = tolower(tostring(split(NewProcessName, '\\\\')[-1])),\n         ParentBin = tolower(tostring(split(ParentProcessName, '\\\\')[-1]))\n| where\n    (ChildBin == \"wmic.exe\"\n        and CommandLine has \"format:\"\n        and CommandLine matches regex @\"(?i)format:[\"\"' ]?https?://|\\.xsl\")\n    or\n    (ChildBin == \"regsvr32.exe\"\n        and CommandLine has \"scrobj.dll\"\n        and CommandLine matches regex @\"(?i)/i:[\"\"' ]?https?://\")\n    or\n    (ChildBin in (\"cscript.exe\",\"wscript.exe\")\n        and CommandLine matches regex @\"(?i)\\.(js|jse|wsf)\\b\"\n        and ParentBin in (_browsers_archivers))\n| project TimeGenerated, Computer, Account,\n          Parent = ParentProcessName,\n          Child  = NewProcessName,\n          CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: FIN6 more_eggs Loader via squiblytwo / squiblydoo LOLBin Chain\nid: 7b2c0a44-fin6-moreeggs-squibly\nstatus: experimental\ndescription: Detects FIN6 / Skeleton Spider initial-execution tradecraft using wmic.exe XSL Script Processing or regsvr32 /i: scrobj.dll to stage the more_eggs (TerraLoader) JScript backdoor delivered via fake-resume LinkedIn lures.\nreferences:\n  - https://attack.mitre.org/groups/G0037/\n  - https://www.gigamon.com/resources/blog/fin6-skeleton-spider/\n  - https://www.mandiant.com/resources/blog/fin6-cybercrime-now-deploys-ransomware\nauthor: Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.execution\n  - attack.t1220\n  - attack.t1218.010\n  - attack.t1059.007\n  - attack.g0037\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  squiblytwo:\n    Image|endswith: '\\wmic.exe'\n    CommandLine|contains: 'format:'\n    CommandLine|re: '(?i)format:[\\\"'' ]?https?://|\\.xsl'\n  squiblydoo:\n    Image|endswith: '\\regsvr32.exe'\n    CommandLine|contains|all:\n      - 'scrobj.dll'\n    CommandLine|re: '(?i)/i:[\\\"'' ]?https?://'\n  jscript_from_lure:\n    Image|endswith:\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n    CommandLine|re: '(?i)\\.(js|jse|wsf)\\b'\n    ParentImage|endswith:\n      - '\\explorer.exe'\n      - '\\outlook.exe'\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\winrar.exe'\n      - '\\7zfm.exe'\n  filter_machine:\n    User|endswith: '$'\n  condition: (squiblytwo or squiblydoo or jscript_from_lure) and not filter_machine\nfields:\n  - Image\n  - ParentImage\n  - CommandLine\n  - User\n  - ComputerName\nfalsepositives:\n  - Legacy management scripts that legitimately consume remote XSL stylesheets (rare; should be allowlisted by signed publisher / known URL).\nlevel: high",
+      "rationale": "wmic.exe /format: with a remote URL (squiblytwo) and regsvr32 /i:http*scrobj.dll (squiblydoo) are the documented FIN6 indicators for staging more_eggs / TerraLoader from fake-resume lures - this exact LOLBin pair is called out in Mandiant, Gigamon and Trend Micro reporting on ITG08 / Skeleton Spider and is rarely produced by legitimate enterprise software, giving very high signal-to-noise. Pairing",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "yaml/sigma error: mapping values are not allowed in this context\n  in \"<unicode string>\", line 4, column 125"
+      ]
+    },
+    {
+      "title": "[LLM] FIN6 NTDS.dit theft via ntdsutil IFM and follow-on credential exfil prep on domain controllers",
+      "description": "Hunts FIN6's post-compromise domain dominance step where Cobalt Strike operators run ntdsutil.exe with 'IFM / create full' on a DC to dump NTDS.dit + SYSTEM hive into a staging directory (T1003.003), often immediately followed by 7z/rar archive creation and SMB pull-back to a jump host. Mandiant FIN6 reporting, CrowdStrike (Skeleton Spider) and the FireEye 2019 'pivot to ransomware' write-ups all cite ntdsutil IFM as the FIN6 NTDS-dump method of choice (vs. shadow-copy or DCSync) because it bypasses VSS-deletion detections.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.003",
+        "T1074.002",
+        "T1560.003",
+        "T1021.001",
+        "T1078"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=ntdsutil.exe AND (Processes.process=\"*ifm*\" OR Processes.process=\"*create full*\" OR Processes.process=\"*ac i ntds*\" OR Processes.process=\"*activate instance ntds*\") by host Processes.process_name Processes.user Processes.parent_process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | join type=outer host [| tstats summariesonly=true values(Filesystem.file_name) as files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name=ntds.dit OR Filesystem.file_name=SYSTEM OR Filesystem.file_name=SECURITY OR Filesystem.file_path=\"*\\\\Active Directory\\\\ntds.dit\" OR Filesystem.file_name IN (\"*.7z\",\"*.rar\",\"*.zip\")) by host _time | rename _time as fs_time] | where NOT match(user, \"\\$$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let _lookback = 14d;\nlet _ntds_proc = DeviceProcessEvents\n    | where Timestamp > ago(_lookback)\n    | where FileName =~ \"ntdsutil.exe\"\n    | where ProcessCommandLine has_any (\"ifm\",\"create full\",\"ac i ntds\",\"activate instance ntds\")\n    | where AccountName !endswith \"$\"\n    | project NtdsTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ProcessCommandLine, InitiatingProcessFileName,\n              InitiatingProcessCommandLine, IsInitiatingProcessRemoteSession;\n_ntds_proc\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(_lookback)\n    | where ActionType == \"FileCreated\"\n    | where FileName in~ (\"ntds.dit\",\"SYSTEM\",\"SECURITY\")\n         or FileName endswith \".7z\"\n         or FileName endswith \".rar\"\n         or FileName endswith \".zip\"\n    | project FileTime = Timestamp, DeviceId,\n              DroppedFile = FileName, DroppedPath = FolderPath,\n              FileWriter = InitiatingProcessFileName\n  ) on DeviceId\n| where isnull(FileTime) or FileTime between (NtdsTime .. NtdsTime + 30m)\n| project NtdsTime, DeviceName, AccountName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          IsInitiatingProcessRemoteSession,\n          FileTime, DroppedFile, DroppedPath, FileWriter\n| order by NtdsTime desc",
+      "sentinel_kql": "let _lookback = 14d;\nlet _ntds_proc = SecurityEvent\n    | where TimeGenerated > ago(_lookback)\n    | where EventID == 4688\n    | extend ChildBin = tolower(tostring(split(NewProcessName, '\\\\')[-1]))\n    | where ChildBin == \"ntdsutil.exe\"\n    | where CommandLine has_any (\"ifm\",\"create full\",\"ac i ntds\",\"activate instance ntds\")\n    | where Account !endswith \"$\"\n    | project NtdsTime = TimeGenerated, Computer, Account,\n              CommandLine, ParentProcessName, NewProcessId, SubjectLogonId;\n_ntds_proc\n| join kind=leftouter (\n    SecurityEvent\n    | where TimeGenerated > ago(_lookback)\n    | where EventID == 4663   // object access - file write\n    | extend ObjLower = tolower(ObjectName)\n    | where ObjLower has \"ntds.dit\"\n         or ObjLower has \"\\\\system\"\n         or ObjLower has \"\\\\security\"\n         or ObjLower endswith \".7z\"\n         or ObjLower endswith \".rar\"\n         or ObjLower endswith \".zip\"\n    | project FileTime = TimeGenerated, Computer,\n              DroppedPath = ObjectName, AccessingProc = ProcessName\n  ) on Computer\n| where isnull(FileTime) or FileTime between (NtdsTime .. NtdsTime + 30m)\n| project NtdsTime, Computer, Account, CommandLine, ParentProcessName,\n          FileTime, DroppedPath, AccessingProc\n| order by NtdsTime desc",
+      "sigma_yaml": "title: FIN6 NTDS.dit Theft via ntdsutil IFM\nid: 1d8a4f12-fin6-ntdsutil-ifm\nstatus: experimental\ndescription: Detects FIN6 / Skeleton Spider use of ntdsutil.exe with the IFM (Install From Media) command set to dump NTDS.dit and registry hives from a domain controller for offline credential extraction.\nreferences:\n  - https://attack.mitre.org/techniques/T1003/003/\n  - https://attack.mitre.org/groups/G0037/\n  - https://www.mandiant.com/resources/blog/fin6-cybercrime-now-deploys-ransomware\nauthor: Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.credential_access\n  - attack.t1003.003\n  - attack.g0037\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection:\n    Image|endswith: '\\ntdsutil.exe'\n    CommandLine|contains:\n      - 'ifm'\n      - 'create full'\n      - 'ac i ntds'\n      - 'activate instance ntds'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection and not filter_machine\nfields:\n  - Image\n  - ParentImage\n  - CommandLine\n  - User\n  - ComputerName\nfalsepositives:\n  - Sanctioned AD backup / DR rehearsal performed by a named change-controlled service account from an admin jump host (allowlist by user + source).\nlevel: critical",
+      "rationale": "ntdsutil 'IFM / create full' is a Tier-0 administrative action that legitimately runs only during sanctioned AD backups - any unscheduled execution under an interactive user, especially correlated within 30 minutes with archive/.dit file creation on the same DC, mirrors FIN6's documented domain-dominance playbook (the same group also pivots to Ryuk/LockerGoga/Trinity ransomware after this step). F",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceFileEvents, DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "name": "Cobalt Group",
+  "ucs": [
+    {
+      "title": "[LLM] Cobalt Group EQNEDT32.EXE child-process spawn (CVE-2017-11882 / 0802 Equation Editor exploit chain)",
+      "description": "Hunts Cobalt Group's hallmark initial-access technique: weaponized RTF/DOC spearphishes that exploit Microsoft Equation Editor (CVE-2017-11882, CVE-2017-8570, CVE-2018-0802) and cause EQNEDT32.EXE to spawn a script/LOLBin child. EQNEDT32 is an out-of-process OLE host that has no legitimate reason to spawn a shell \u2014 any child is a near-certain exploit signal and matches the bank-targeting tradecraft of GOLD KINGSWOOD / Cobalt Spider documented by Talos, FireEye and Group-IB.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1203",
+        "T1204.002",
+        "T1566.001",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as child_hash values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"EQNEDT32.EXE\" OR Processes.parent_process_name=\"eqnedt32.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"hh.exe\",\"msiexec.exe\",\"schtasks.exe\",\"forfiles.exe\") by host Processes.parent_process_name Processes.process_name Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Cobalt Group / GOLD KINGSWOOD \u2014 EQNEDT32 exploit chain (CVE-2017-11882, CVE-2018-0802)\nlet _suspect_children = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"hh.exe\",\"msiexec.exe\",\"schtasks.exe\",\"forfiles.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName =~ \"EQNEDT32.EXE\"          // Equation Editor \u2014 out-of-process OLE host\n| where FileName in~ (_suspect_children)                       // any of these = exploit shellcode payload\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          ChildSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Cobalt Group / GOLD KINGSWOOD \u2014 EQNEDT32 exploit chain (CVE-2017-11882, CVE-2018-0802)\nlet _suspect_children = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"hh.exe\",\"msiexec.exe\",\"schtasks.exe\",\"forfiles.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| where ParentProcessName endswith \"EQNEDT32.EXE\"             // Equation Editor parent\n| extend ChildBin = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ChildBin in (_suspect_children)\n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Cobalt Group EQNEDT32 Child Process (CVE-2017-11882 Exploit)\nid: 9b6f4a2c-cobalt-eqnedt32-child\nstatus: stable\ndescription: Detects Microsoft Equation Editor (EQNEDT32.EXE) spawning a script/LOLBin child \u2014 Cobalt Group / GOLD KINGSWOOD signature initial-access technique against banks since 2017.\nreferences:\n  - https://attack.mitre.org/groups/G0080/\n  - https://blog.talosintelligence.com/rokrat-reloaded/\n  - https://www.group-ib.com/resources/research-hub/cobalt/\nauthor: SOC Detection Eng\ndate: 2026/05/04\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection:\n    ParentImage|endswith: '\\EQNEDT32.EXE'\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n      - '\\bitsadmin.exe'\n      - '\\certutil.exe'\n      - '\\hh.exe'\n      - '\\msiexec.exe'\n      - '\\schtasks.exe'\n      - '\\forfiles.exe'\n  condition: selection\nfalsepositives:\n  - Legacy patched-but-still-deployed Office installs running internal equation macros (extremely rare)\nlevel: high\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1203\n  - attack.t1566.001\n  - attack.g0080\n",
+      "rationale": "Cobalt Group / Cobalt Spider has used Equation Editor exploits as their primary initial-access vector against banks for years (Talos, Group-IB, Trend Micro, ESET reports all converge on this). EQNEDT32.EXE is a niche OOP OLE component that, by design, never legitimately spawns a shell or scripting host \u2014 so any child here is functionally equivalent to 'exploit succeeded'. This catches their RTF sp",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Cobalt Group Squiblydoo: regsvr32 /i: remote scrobj.dll COM scriptlet load",
+      "description": "Hunts Cobalt Group's signature defense-evasion + execution combo: regsvr32.exe invoking the Squiblydoo bypass (`/s /n /u /i:<http(s)://...> scrobj.dll`) to fetch and execute a remote SCT/COM scriptlet, often delivered after the Equation Editor exploit lands. This LOLBin chain (T1218.010 + T1105) was pervasive in Cobalt Gang banking campaigns (Group-IB, Positive Technologies). Pairs the command-line shape with an outbound public connection from regsvr32 to lock fidelity high.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1218.010",
+        "T1105",
+        "T1071.001",
+        "T1027.010"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=\"regsvr32.exe\" AND (Processes.process=\"*scrobj.dll*\" OR Processes.process=\"*/i:http*\" OR Processes.process=\"*/i:\\\\\\\\*\") AND (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\") by host Processes.process_name Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | join type=inner host [| tstats summariesonly=t count from datamodel=Network_Traffic where All_Traffic.app=\"regsvr32.exe\" AND All_Traffic.dest_category!=\"internal\" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | rename All_Traffic.src as host All_Traffic.dest as remote_ip All_Traffic.dest_port as remote_port] | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Cobalt Group \u2014 Squiblydoo (regsvr32 + remote scrobj.dll)\nlet _window = 5m;\nlet _squiblydoo = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"regsvr32.exe\"\n    | where AccountName !endswith \"$\"\n    | where ProcessCommandLine has \"scrobj.dll\"\n        and ProcessCommandLine matches regex @\"(?i)/i:\\s*(https?://|\\\\\\\\)\"\n    | where ProcessCommandLine has_any (\"/s\",\"/n\",\"/u\")     // canonical Squiblydoo flag combo\n    | project SqTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ProcessId, ProcessCommandLine,\n              ParentImage = InitiatingProcessFileName,\n              ParentCmd   = InitiatingProcessCommandLine;\n_squiblydoo\n| join kind=inner (\n    DeviceNetworkEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName =~ \"regsvr32.exe\"\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl,\n              NetProcId = InitiatingProcessId\n  ) on DeviceId\n| where NetTime between (SqTime - _window .. SqTime + _window)\n  and ProcessId == NetProcId\n| project SqTime, NetTime, DeviceName, AccountName,\n          ProcessCommandLine, ParentImage, ParentCmd,\n          RemoteIP, RemotePort, RemoteUrl\n| order by SqTime desc",
+      "sentinel_kql": "// Cobalt Group \u2014 Squiblydoo (regsvr32 + remote scrobj.dll)\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend Bin = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where Bin == \"regsvr32.exe\"\n| where Account !endswith \"$\"\n| where CommandLine has \"scrobj.dll\"\n    and CommandLine matches regex @\"(?i)/i:\\s*(https?://|\\\\\\\\)\"\n| where CommandLine has_any (\"/s\",\"/n\",\"/u\")\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName,\n          CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Cobalt Group Squiblydoo Regsvr32 Remote Scriptlet\nid: 7e2db1a8-cobalt-squiblydoo\nstatus: stable\ndescription: Detects Cobalt Group / GOLD KINGSWOOD use of regsvr32.exe with Squiblydoo flags loading a remote scrobj.dll COM scriptlet (T1218.010 + T1105).\nreferences:\n  - https://attack.mitre.org/groups/G0080/\n  - https://attack.mitre.org/techniques/T1218/010/\n  - https://www.group-ib.com/resources/research-hub/cobalt/\nauthor: SOC Detection Eng\ndate: 2026/05/04\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith: '\\regsvr32.exe'\n  selection_scrobj:\n    CommandLine|contains: 'scrobj.dll'\n  selection_remote:\n    CommandLine|re: '(?i)/i:\\s*(https?://|\\\\\\\\)'\n  selection_flags:\n    CommandLine|contains:\n      - '/s'\n      - '/n'\n      - '/u'\n  condition: selection_image and selection_scrobj and selection_remote and selection_flags\nfalsepositives:\n  - Bespoke admin tooling that fetches remote .sct files (very rare, allowlist by source host)\nlevel: high\ntags:\n  - attack.defense_evasion\n  - attack.execution\n  - attack.t1218.010\n  - attack.t1105\n  - attack.g0080\n",
+      "rationale": "Squiblydoo (regsvr32 + remote scrobj.dll) is a defining Cobalt Group LOLBin abuse \u2014 referenced in nearly every public Cobalt Gang report from Group-IB, Positive Technologies, and Trend Micro between 2017-2020 and revived in post-arrest activity. Combining the cmdline signature with a same-PID outbound public connection from regsvr32.exe within minutes eliminates the residual FP (legit COM unregist",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "SqTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`SqTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentImage",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentImage` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

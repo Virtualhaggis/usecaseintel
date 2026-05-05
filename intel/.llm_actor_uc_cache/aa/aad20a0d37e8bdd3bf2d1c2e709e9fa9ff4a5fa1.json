@@ -1,0 +1,172 @@
+{
+  "name": "TA577",
+  "ucs": [
+    {
+      "title": "[LLM] TA577 NTLM hash theft via zipped .url + outbound SMB to attacker server (Feb-Mar 2024 campaign)",
+      "description": "Hunts TA577's distinctive thread-hijacked phishing wave that delivered ZIP attachments containing Windows .url shortcuts with a file:// SMB referrer, coercing the host to NTLM-authenticate to an attacker-controlled server. Catches the chain: archive extraction drops a .url file, then the user's host opens an outbound SMB (TCP/445) session to a public IP within seconds.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1204.001",
+        "T1187",
+        "T1586.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name=\"*.url\" Filesystem.process_name IN (\"explorer.exe\",\"7zg.exe\",\"7zfm.exe\",\"winrar.exe\",\"Rar.exe\",\"outlook.exe\") by _time, Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | rename Filesystem.* AS * | eval drop_time=_time, dropper=process_name | join type=inner dest [ | tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=445 All_Traffic.dest_category!=\"internal\" by _time, All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.process_name | rename All_Traffic.src AS dest, All_Traffic.dest_ip AS smb_dest_ip, All_Traffic.dest_port AS smb_dest_port, All_Traffic.process_name AS smb_process | eval conn_time=_time ] | where conn_time>=drop_time AND conn_time<=drop_time+180 | table drop_time, conn_time, dest, user, file_path, file_name, dropper, smb_dest_ip, smb_dest_port, smb_process",
+      "kql": "let LookbackDays = 7d;\nlet WindowSec = 180;\nlet UrlDrops = DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType == \"FileCreated\"\n    | where FileName endswith \".url\"\n    | where InitiatingProcessFileName in~ (\"explorer.exe\",\"7zg.exe\",\"7zfm.exe\",\"winrar.exe\",\"rar.exe\",\"outlook.exe\")\n    | project DropTime = Timestamp, DeviceId, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              UrlFilePath = FolderPath, UrlFileName = FileName,\n              Dropper = InitiatingProcessFileName;\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where RemotePort == 445\n| where RemoteIPType == \"Public\"                       // outbound SMB to internet = anomalous\n| where InitiatingProcessFileName !in~ (\"svchost.exe\") // domain-trust noise\n| join kind=inner UrlDrops on DeviceId\n| where Timestamp between (DropTime .. DropTime + WindowSec * 1s)\n| project DropTime, ConnTime = Timestamp, DeviceName, AccountName,\n          UrlFilePath, UrlFileName, Dropper,\n          RemoteIP, RemotePort,\n          SmbInitiator = InitiatingProcessFileName,\n          SmbInitiatorCmd = InitiatingProcessCommandLine\n| order by ConnTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WindowSec = 180;\nlet UrlDrops = ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType == \"FileCreated\"\n    | where TargetFileName endswith \".url\"\n    | where ActingProcessName has_any (\"explorer.exe\",\"7zg.exe\",\"7zfm.exe\",\"winrar.exe\",\"rar.exe\",\"outlook.exe\")\n    | project DropTime = TimeGenerated, DvcHostname,\n              ActorUsername, TargetFilePath, TargetFileName,\n              Dropper = ActingProcessName;\nImNetworkSession\n| where TimeGenerated > ago(LookbackDays)\n| where DstPortNumber == 445\n| where not(ipv4_is_private(DstIpAddr))\n| where not(DstIpAddr startswith \"127.\") and not(DstIpAddr startswith \"169.254.\")\n| join kind=inner UrlDrops on DvcHostname\n| where TimeGenerated between (DropTime .. DropTime + WindowSec * 1s)\n| project DropTime, ConnTime = TimeGenerated, DvcHostname, ActorUsername,\n          TargetFilePath, TargetFileName, Dropper,\n          DstIpAddr, DstPortNumber,\n          SmbInitiator = ActingProcessName\n| order by ConnTime desc",
+      "sigma_yaml": "",
+      "rationale": "This is a TA577 fingerprint, not a generic technique. Proofpoint observed TA577 (the same IAB CrowdStrike clusters with QakBot/Pikabot/Latrodectus distribution) running this exact campaign on 26-27 Feb 2024 and 4 Mar 2024 \u2014 thread-hijacked replies carrying ZIPs of .url files whose URL= line pointed at SMB shares on attacker servers. The combination of (a) .url file written by an archive utility or"
+    },
+    {
+      "title": "[LLM] TA577 Pikabot/Latrodectus delivery chain: JS host -> curl.exe -> msiexec/rundll32 with remote URL",
+      "description": "Hunts the script-engine-driven loader chain TA577 has used since mid-2023 to push Pikabot and (from late-2023) Latrodectus: a .js dropper extracted from a ZIP/IMG is launched by wscript/cscript, which spawns curl.exe (or PowerShell) to fetch a remote MSI/DLL, then hands off to msiexec.exe or rundll32.exe to detonate.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1059.007",
+        "T1059.003",
+        "T1218.007",
+        "T1218.011",
+        "T1027.009",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\") Processes.process_name=\"curl.exe\" (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\") by _time, Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process, Processes.process_id | rename Processes.* AS * | eval curl_time=_time, curl_cmd=process | join type=inner dest user [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN (\"msiexec.exe\",\"rundll32.exe\",\"regsvr32.exe\") (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\" OR Processes.process=\"*.msi*\" OR Processes.process=\"*.dll,*\") by _time, Processes.dest, Processes.user, Processes.process, Processes.process_name, Processes.parent_process_name | rename Processes.process AS child_cmd, Processes.process_name AS child_proc, Processes.parent_process_name AS child_parent | eval child_time=_time ] | where child_time>=curl_time AND child_time<=curl_time+120 | table curl_time, child_time, dest, user, parent_process_name, curl_cmd, child_proc, child_parent, child_cmd",
+      "kql": "let LookbackDays = 7d;\nlet WindowSec = 120;\n// 1. Script host (wscript/cscript/mshta) spawning curl.exe to a URL\nlet CurlFromScript = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\")\n    | where FileName =~ \"curl.exe\"\n    | where ProcessCommandLine has_any (\"http://\",\"https://\")\n    | where InitiatingProcessCommandLine has_any (\".js\",\".jse\",\".wsf\",\".vbs\",\".hta\")\n       or InitiatingProcessFolderPath has_any (@\"\\AppData\\Local\\Temp\\\",@\"\\Users\\Public\\\",@\"\\AppData\\Roaming\\\")\n    | project CurlTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ScriptHost = InitiatingProcessFileName,\n              ScriptCmd  = InitiatingProcessCommandLine,\n              CurlCmd    = ProcessCommandLine,\n              CurlPid    = ProcessId;\n// 2. msiexec/rundll32/regsvr32 child on same host within 2 minutes carrying a URL or remote DLL/MSI\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName in~ (\"msiexec.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| where ProcessCommandLine has_any (\"http://\",\"https://\",\".msi\",\".dll\")\n| join kind=inner CurlFromScript on DeviceId\n| where Timestamp between (CurlTime .. CurlTime + WindowSec * 1s)\n| project CurlTime, ChildTime = Timestamp, DeviceName, AccountName,\n          ScriptHost, ScriptCmd, CurlCmd,\n          ChildProcess = FileName, ChildCmd = ProcessCommandLine\n| order by ChildTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WindowSec = 120;\nlet CurlFromScript = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where ParentProcessName has_any (\"\\\\wscript.exe\",\"\\\\cscript.exe\",\"\\\\mshta.exe\")\n    | where NewProcessName endswith \"\\\\curl.exe\"\n    | where CommandLine has_any (\"http://\",\"https://\")\n    | project CurlTime = TimeGenerated, Computer, Account,\n              ScriptHost = ParentProcessName,\n              CurlCmd    = CommandLine;\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where NewProcessName has_any (\"\\\\msiexec.exe\",\"\\\\rundll32.exe\",\"\\\\regsvr32.exe\")\n| where CommandLine has_any (\"http://\",\"https://\",\".msi\",\".dll\")\n| join kind=inner CurlFromScript on Computer, Account\n| where TimeGenerated between (CurlTime .. CurlTime + WindowSec * 1s)\n| project CurlTime, ChildTime = TimeGenerated, Computer, Account,\n          ScriptHost, CurlCmd,\n          ChildProcess = NewProcessName, ChildCmd = CommandLine\n| order by ChildTime desc",
+      "sigma_yaml": "",
+      "rationale": "Script-engine -> curl.exe -> msiexec/rundll32 from a remote URL is the canonical TA577 loader flow documented by Proofpoint, Microsoft (Storm-0464), and Palo Alto Unit42 across QakBot (pre-takedown), Pikabot (Mar 2023+), and Latrodectus (Oct 2023+). Each link of the chain is suspicious in isolation but firmly characteristic of TA577 in combination: (a) wscript/cscript launching a child at all is r",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "AppData",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`AppData` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Local",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Local` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Temp",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "Timestamp",
+          "message": "`Temp` is not a canonical column of DeviceProcessEvents. Did you mean `Timestamp`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Users",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Users` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Roaming",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Roaming` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "CurlTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`CurlTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ScriptHost",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ScriptHost` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ScriptCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ScriptCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "CurlCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`CurlCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "CurlTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`CurlTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ScriptHost",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`ScriptHost` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "CurlCmd",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`CurlCmd` is not a canonical column of SecurityEvent."
+        }
+      ]
+    }
+  ]
+}

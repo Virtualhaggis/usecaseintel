@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DPRK 'WageMole/Jasper Sleet' RMM stack on recently-enrolled corporate device
 
-`UC_300_0` · phase: **c2** · confidence: **High**
+`UC_290_0` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### [LLM] Astrill VPN client or relay traffic from a corporate endpoint (DPRK IT-worker location obfuscation)
 
-`UC_300_1` · phase: **c2** · confidence: **High**
+`UC_290_1` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

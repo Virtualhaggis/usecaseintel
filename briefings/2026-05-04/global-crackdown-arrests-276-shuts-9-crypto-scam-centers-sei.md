@@ -28,12 +28,118 @@ The crackdown was led by the Dubai Police, under the United Arab Emirates (UAE) 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1437.001** — Application Layer Protocol: Web Protocols (Mobile)
+- **T1566.001** — Phishing: Spearphishing Attachment
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vault Viper / Vigorish Viper Android lure-domain access from corporate endpoint
+
+`UC_44_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest from datamodel=Web.Web where Web.url IN ("*orgo.cc*","*dkhth.com*","*ngovbr.cc*","*sxjgo.cc*","*rycnair.com*","*vsgo.cc*","*nmxgo.cc*","*idphil.net*","*immigration-kr.net*","*openbank-es.com*","*cedula-registraduria-gov.org*","*nbsvgo.cc*","*lx-yindu.top*","*orbiixtrade.com*") by Web.src Web.user Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let VaultViperLureDomains = dynamic(["orgo.cc","dkhth.com","ngovbr.cc","sxjgo.cc","rycnair.com","vsgo.cc","nmxgo.cc","idphil.net","immigration-kr.net","openbank-es.com","cedula-registraduria-gov.org","nbsvgo.cc","lx-yindu.top","orbiixtrade.com"]);
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where isnotempty(RemoteUrl)
+    | extend MatchedDomain = tostring(VaultViperLureDomains[toint(0)])
+    | mv-apply Lure = VaultViperLureDomains to typeof(string) on (
+        where RemoteUrl has tostring(Lure)
+        | project MatchedDomain = tostring(Lure)
+      )
+    | project Timestamp, DeviceName, RemoteIP, RemoteUrl, MatchedDomain,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName;
+let ClickHits = UrlClickEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | mv-apply Lure = VaultViperLureDomains to typeof(string) on (
+        where Url has tostring(Lure)
+        | project MatchedDomain = tostring(Lure)
+      )
+    | project Timestamp, AccountUpn, Url, MatchedDomain, IPAddress, Workload, IsClickedThrough;
+union isfuzzy=true NetHits, ClickHits
+| order by Timestamp desc
+```
+
+### [LLM] Vault Viper Android banking trojan C2 beacon (IP / domain IOC sweep)
+
+`UC_44_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("103.214.169.197","18.167.169.60","38.47.52.4") OR All_Traffic.dest IN ("vnwd.top","alafrica.xyz","alperu.top","safeapk.xyz","*.vnwd.top","*.alafrica.xyz","*.alperu.top","*.safeapk.xyz") by All_Traffic.src All_Traffic.src_ip All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let VaultViperC2Ips = dynamic(["103.214.169.197","18.167.169.60","38.47.52.4"]);
+let VaultViperC2Domains = dynamic(["vnwd.top","alafrica.xyz","alperu.top","safeapk.xyz"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where RemoteIP in (VaultViperC2Ips)
+   or RemoteUrl has_any (VaultViperC2Domains)
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+          Protocol, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] Inbound email carrying APK or Vault Viper lure URL impersonating bank/government
+
+`UC_44_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.url) as url values(All_Email.file_name) as file_name values(All_Email.recipient) as recipient from datamodel=Email.All_Email where (All_Email.file_name="*.apk" OR All_Email.url IN ("*orgo.cc*","*dkhth.com*","*ngovbr.cc*","*sxjgo.cc*","*rycnair.com*","*vsgo.cc*","*nmxgo.cc*","*idphil.net*","*immigration-kr.net*","*openbank-es.com*","*cedula-registraduria-gov.org*","*nbsvgo.cc*","*lx-yindu.top*","*orbiixtrade.com*","*vnwd.top*","*alafrica.xyz*","*alperu.top*","*safeapk.xyz*")) by All_Email.src_user All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let VaultViperDomains = dynamic(["orgo.cc","dkhth.com","ngovbr.cc","sxjgo.cc","rycnair.com","vsgo.cc","nmxgo.cc","idphil.net","immigration-kr.net","openbank-es.com","cedula-registraduria-gov.org","nbsvgo.cc","lx-yindu.top","orbiixtrade.com","vnwd.top","alafrica.xyz","alperu.top","safeapk.xyz"]);
+let ApkKnownHashes = dynamic([
+    "4fff28eecc0ab6303e4948df77671009dda5b93ed3d1cead527b02d1317426bc",
+    "39ea88f852b25d3c55d605464a3440bd250a577e3e21f52d1eaf94d15aad5b82",
+    "4338ab77d05aeacd7eac5acbe9eed5568778c8e3e9499562816805b54b4d1a6a"]);
+let ApkAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where FileName endswith ".apk" or SHA256 in (ApkKnownHashes)
+    | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress,
+              FileName, FileType, SHA256, MalwareFilterVerdict;
+let LureUrls = EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | where UrlDomain has_any (VaultViperDomains) or Url has_any (VaultViperDomains)
+    | project Timestamp, NetworkMessageId, Url, UrlDomain, UrlLocation;
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+| join kind=inner (
+    union isfuzzy=true
+        (ApkAttachments | extend MatchKind = "APK", Indicator = strcat(FileName, " / ", SHA256)),
+        (LureUrls       | extend MatchKind = "LureURL", Indicator = Url)
+    | project NetworkMessageId, MatchKind, Indicator
+  ) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress,
+          RecipientEmailAddress, Subject, MatchKind, Indicator,
+          DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -217,4 +323,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

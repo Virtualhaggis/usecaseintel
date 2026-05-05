@@ -1,0 +1,64 @@
+{
+  "name": "Andariel",
+  "ucs": [
+    {
+      "title": "[LLM] Andariel (Onyx Sleet) abuse of Innorix Agent / Korean security plug-ins for lateral tool transfer",
+      "description": "Hunts the actor-specific TTP that Microsoft attributed to Onyx Sleet/Andariel: abusing the Innorix Agent file-transfer client (and adjacent Korean PKI/security plug-ins like INISAFE, TouchEn, MagicLine \u2014 pre-installed on most South Korean enterprise endpoints) as a delivery vector for TigerRAT, DTrack, NukeSped and Volgmer. Detects when these Korean-locale agents spawn LOLBins or scripting hosts, which is the documented post-exploitation chain unique to this DPRK cluster targeting ROK government/finance/defense.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1105",
+        "T1570",
+        "T1204.002",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count, values(Processes.process) as ChildCmd, values(Processes.parent_process) as ParentCmd, values(Processes.process_path) as ChildPath, min(_time) as FirstSeen, max(_time) as LastSeen from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"INNORIXAgent.exe\",\"INISAFEWebEX.exe\",\"INNORIX_Agent.exe\",\"inisafecrosswebexsvc.exe\",\"TouchEnNxKey.exe\",\"MagicLine4NX.exe\",\"VeraportGAgent.exe\") OR Processes.parent_process_path=\"*\\\\INNORIX\\\\*\" OR Processes.parent_process_path=\"*\\\\INISAFE\\\\*\" OR Processes.parent_process_path=\"*\\\\TouchEn*\\\\*\" OR Processes.parent_process_path=\"*\\\\MagicLine*\\\\*\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\") AND NOT Processes.user=\"*$\" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - LastSeen",
+      "kql": "// Andariel / Onyx Sleet \u2014 Innorix & Korean PKI plug-in abuse\nlet KoreanAgentParents = dynamic([\"innorixagent.exe\",\"innorix_agent.exe\",\"inisafewebex.exe\",\"inisafecrosswebexsvc.exe\",\"touchennxkey.exe\",\"magicline4nx.exe\",\"veraportgagent.exe\"]);\nlet KoreanAgentPaths   = dynamic([@\"\\INNORIX\\\", @\"\\INISAFE\\\", @\"\\TouchEn\", @\"\\MagicLine\", @\"\\Veraport\"]);\nlet SuspiciousChildren = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where tolower(InitiatingProcessFileName) in (KoreanAgentParents)\n     or InitiatingProcessFolderPath has_any (KoreanAgentPaths)\n| where tolower(FileName) in (SuspiciousChildren)\n     or FolderPath has_any (@\"\\Users\\Public\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\ProgramData\\\")\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildFile   = FileName,\n          ChildCmd    = ProcessCommandLine,\n          SHA256, IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "// Andariel / Onyx Sleet \u2014 Innorix & Korean PKI plug-in abuse (Sentinel via 4688)\nlet KoreanAgents = dynamic([\"innorixagent.exe\",\"innorix_agent.exe\",\"inisafewebex.exe\",\"inisafecrosswebexsvc.exe\",\"touchennxkey.exe\",\"magicline4nx.exe\",\"veraportgagent.exe\"]);\nlet SuspiciousChildren = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, @\"\\\")[-1])),\n         ChildLeaf  = tolower(tostring(split(NewProcessName, @\"\\\")[-1]))\n| where ParentLeaf in (KoreanAgents)\n     or ParentProcessName has_any (@\"\\INNORIX\\\", @\"\\INISAFE\\\", @\"\\TouchEn\", @\"\\MagicLine\", @\"\\Veraport\")\n| where ChildLeaf in (SuspiciousChildren)\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName,\n          CommandLine, TokenElevationType, IpAddress\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Andariel Onyx Sleet - Korean Security Plug-in Abuse for Tool Transfer\nid: 7d6b8c1e-1f1a-4f7e-9c1f-andariel-innorix\nstatus: experimental\ndescription: Detects Andariel/Onyx Sleet abusing Korean-locale endpoint agents (Innorix Agent, INISAFE, TouchEn, MagicLine, Veraport) as launching parents for LOLBins / scripting hosts - documented post-exploit chain for TigerRAT, DTrack, NukeSped delivery against ROK targets.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2024/07/25/onyx-sleet-uses-array-of-malware-to-gather-intelligence-for-north-korea/\n  - https://attack.mitre.org/groups/G0138/\nauthor: SOC Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.lateral_movement\n  - attack.command_and_control\n  - attack.t1105\n  - attack.t1570\n  - attack.t1204.002\n  - attack.g0138\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent_korean_agent:\n    ParentImage|endswith:\n      - '\\INNORIXAgent.exe'\n      - '\\INNORIX_Agent.exe'\n      - '\\INISAFEWebEX.exe'\n      - '\\inisafecrosswebexsvc.exe'\n      - '\\TouchEnNxKey.exe'\n      - '\\MagicLine4NX.exe'\n      - '\\VeraportGAgent.exe'\n  parent_korean_path:\n    ParentImage|contains:\n      - '\\INNORIX\\'\n      - '\\INISAFE\\'\n      - '\\TouchEn'\n      - '\\MagicLine'\n      - '\\Veraport'\n  child_lolbin:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\mshta.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\curl.exe'\n      - '\\wget.exe'\n  condition: (parent_korean_agent or parent_korean_path) and child_lolbin\nfalsepositives:\n  - Legitimate software updates pushed by IT via Innorix/INISAFE management consoles (baseline 30d before alerting)\nlevel: high",
+      "rationale": "Innorix Agent, INISAFE, TouchEn, MagicLine and Veraport are Korean-only PKI/file-transfer plug-ins effectively absent from non-ROK estates. Andariel/Onyx Sleet are the primary publicly-attributed actor that weaponises these agents (Microsoft Threat Intelligence, July 2024; AhnLab ASEC reporting). A western APT or e-crime crew triggering this rule is so unlikely that the parent-process predicate is",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Andariel DTrack/TigerRAT host-recon command burst (T1049 + T1057 fan-out)",
+      "description": "Catches Andariel's signature post-implant reconnaissance: DTrack and TigerRAT shell out a tight burst of native Windows discovery binaries (ipconfig /all, systeminfo, tasklist /v, whoami /all, net view, netstat -ano, route print, arp -a, query user, nltest /dclist) within minutes from a single parent PID. The actor's two top-listed MITRE techniques are T1049 + T1057 \u2014 this UC operationalises that pairing as a single-event-cluster detection.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1049",
+        "T1057",
+        "T1082",
+        "T1016",
+        "T1033"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count, dc(Processes.process_name) as DistinctTools, values(Processes.process_name) as Tools, values(Processes.process) as Cmds, min(_time) as FirstSeen, max(_time) as LastSeen from datamodel=Endpoint.Processes where Processes.process_name IN (\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"query.exe\",\"nltest.exe\",\"reg.exe\",\"hostname.exe\") AND NOT Processes.user=\"*$\" AND NOT Processes.parent_process_name IN (\"ccmexec.exe\",\"sccm.exe\",\"mmc.exe\",\"sense.exe\",\"MsSense.exe\") by Processes.dest Processes.user Processes.parent_process_id Processes.parent_process_name _time span=5m | `drop_dm_object_name(Processes)` | where DistinctTools >= 4 | sort - LastSeen",
+      "kql": "// Andariel / DTrack-TigerRAT recon burst\nlet WindowMin = 5m;\nlet DiscoveryBins = dynamic([\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"query.exe\",\"nltest.exe\",\"reg.exe\",\"hostname.exe\"]);\nlet BenignParents = dynamic([\"ccmexec.exe\",\"sccm.exe\",\"mmc.exe\",\"sense.exe\",\"mssense.exe\",\"intunemanagementextension.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where tolower(FileName) in (DiscoveryBins)\n| where tolower(InitiatingProcessFileName) !in (BenignParents)\n| summarize\n      DistinctTools = dcount(FileName),\n      Tools         = make_set(FileName, 20),\n      SampleCmds    = make_set(ProcessCommandLine, 20),\n      ParentImage   = any(InitiatingProcessFolderPath),\n      ParentCmd     = any(InitiatingProcessCommandLine),\n      ParentSHA     = any(InitiatingProcessSHA256),\n      FirstSeen     = min(Timestamp),\n      LastSeen      = max(Timestamp),\n      Hits          = count()\n      by DeviceName, AccountName, InitiatingProcessId,\n         InitiatingProcessFileName, bin(Timestamp, WindowMin)\n| where DistinctTools >= 4   // 4+ distinct discovery LOLBins inside one 5-min window from same parent PID = DTrack/TigerRAT signature\n| order by LastSeen desc",
+      "sentinel_kql": "// Andariel / DTrack-TigerRAT recon burst (Sentinel via 4688)\nlet WindowMin = 5m;\nlet DiscoveryBins = dynamic([\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"query.exe\",\"nltest.exe\",\"reg.exe\",\"hostname.exe\"]);\nlet BenignParents  = dynamic([\"ccmexec.exe\",\"sccm.exe\",\"mmc.exe\",\"sense.exe\",\"mssense.exe\",\"intunemanagementextension.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ChildLeaf  = tolower(tostring(split(NewProcessName, @\"\\\")[-1])),\n         ParentLeaf = tolower(tostring(split(ParentProcessName, @\"\\\")[-1]))\n| where ChildLeaf in (DiscoveryBins)\n| where ParentLeaf !in (BenignParents)\n| summarize\n      DistinctTools = dcount(ChildLeaf),\n      Tools         = make_set(ChildLeaf, 20),\n      SampleCmds    = make_set(CommandLine, 20),\n      ParentName    = any(ParentProcessName),\n      FirstSeen     = min(TimeGenerated),\n      LastSeen      = max(TimeGenerated),\n      Hits          = count()\n      by Computer, Account, ProcessId, bin(TimeGenerated, WindowMin)\n| where DistinctTools >= 4\n| order by LastSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Andariel's MITRE profile foregrounds T1049 + T1057 \u2014 and reverse-engineering of DTrack (Kaspersky, 2019; ESET, 2022), TigerRAT (KrCERT, 2022) and the more recent Dora RAT samples shows a hard-coded chain of 5\u20138 of these exact discovery binaries fired within a single child shell context immediately after implant ping-back. Most administrative tooling (SCCM, Intune, MMC) and human admins do not run "
+    }
+  ]
+}

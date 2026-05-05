@@ -10,13 +10,9 @@ Home Cyber Security News
 Critical MOVEit Vulnerabilities Enables Authentication Bypass 
 By Abinaya 
 May 4, 2026 
-
-
-
-
 Progress Software has issued a critical security bulletin for its MOVEit Automation platform .
 This April 2026 alert warns of two highly severe vulnerabilities that could allow attackers to bypass security checkpoints and gain full system control.
-MOVEit Automation is widely used by enterprises to manage and automate secure file transfers, making it a high-value target for cy…
+MOVEit Automation is widely used by enterprises to manage and automate secure file transfers, making it a high-value target for cybercrimi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,12 +34,82 @@ MOVEit Automation is widely used by enterprises to manage and automate secure fi
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vulnerable MOVEit Automation install (CVE-2026-4670 / CVE-2026-5174) inventory hunt
+
+`UC_23_7` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve="CVE-2026-4670" OR Vulnerabilities.cve="CVE-2026-5174") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product
+| `drop_dm_object_name(Vulnerabilities)`
+| where (like(signature,"%MOVEit%Automation%") OR like(vendor_product,"%MOVEit%") OR like(vendor_product,"%Progress%"))
+| eval patched_target=case(cve="CVE-2026-4670","2024.1.8 / 2025.0.9 / 2025.1.5", cve="CVE-2026-5174","2024.1.8 / 2025.0.9 / 2025.1.5", true(),"see Progress KB")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort 0 - severity dest
+```
+
+**Defender KQL:**
+```kql
+// MOVEit Automation hosts that Defender TVM still flags for the April 2026 advisory
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-4670","CVE-2026-5174")
+| where SoftwareVendor has "progress" or SoftwareName has "moveit"
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing, MachineGroup, PublicIP) by DeviceId, DeviceName
+  ) on DeviceId
+| project DeviceName, MachineGroup, IsInternetFacing, PublicIP,
+          SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, DeviceName asc
+```
+
+### [LLM] MOVEit Automation service process spawning shell/LOLBin child (post-exploit of CVE-2026-4670)
+
+`UC_23_8` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="*MOVEit*" OR Processes.parent_process_path="*MOVEit*" OR Processes.parent_process_path="*Progress*MOVEit*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","whoami.exe","net.exe","net1.exe","ipconfig.exe","tasklist.exe","quser.exe","systeminfo.exe","nltest.exe","reg.exe") by host Processes.dest Processes.parent_process_name Processes.parent_process_path Processes.process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Post-exploitation behaviour: MOVEit Automation service binary spawning a shell or recon LOLBin
+let recon_or_shell = dynamic([
+    "cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe",
+    "regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe",
+    "certutil.exe","curl.exe","whoami.exe","net.exe","net1.exe",
+    "ipconfig.exe","tasklist.exe","quser.exe","systeminfo.exe",
+    "nltest.exe","reg.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFolderPath has "MOVEit"
+   or InitiatingProcessFileName has "MOVEit"
+   or InitiatingProcessVersionInfoCompanyName has "Progress" and InitiatingProcessVersionInfoProductName has "MOVEit"
+| where FileName in~ (recon_or_shell)
+| project Timestamp, DeviceName, AccountName, AccountDomain,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentBinary = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildBinary = FileName,
+          ChildCmd = ProcessCommandLine,
+          SHA256, IsInitiatingProcessRemoteSession = InitiatingProcessTokenElevation
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -291,4 +357,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

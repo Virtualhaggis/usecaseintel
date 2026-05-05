@@ -1,0 +1,77 @@
+{
+  "name": "Molerats",
+  "ucs": [
+    {
+      "title": "[LLM] Molerats (Gaza Cybergang) DropBook/SharpStage cloud-storage C2 \u2014 non-browser process talking to Dropbox/Google Drive/Facebook Graph APIs",
+      "description": "Hunts the signature C2 channel of Molerats' Spark/SharpStage/DropBook/MoleNet families (Cybereason, Dec 2020) where dropper-installed implants beacon to api.dropbox.com, content.dropboxapi.com, drive.google.com or graph.facebook.com using stolen OAuth tokens hard-coded in the binary. We surface any process touching these APIs that is NOT a known browser/Office/sync client \u2014 Molerats' implants are written in .NET/C++ and call the REST endpoints directly with WinINet/WinHTTP, so the initiating process will be a renamed binary in %APPDATA% or %PUBLIC%, not chrome.exe.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (\"api.dropbox.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"*.dropboxusercontent.com\",\"www.googleapis.com\",\"oauth2.googleapis.com\",\"graph.facebook.com\",\"www.facebook.com\")) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.process_path host\n| `drop_dm_object_name(All_Traffic)`\n| search NOT process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"teams.exe\",\"onedrive.exe\",\"dropbox.exe\",\"googledrivesync.exe\",\"backupandsync.exe\",\"msedgewebview2.exe\",\"slack.exe\",\"code.exe\",\"explorer.exe\",\"safari.exe\")\n| where match(process_path,\"(?i)\\\\\\\\(AppData|ProgramData|Public|Users\\\\\\\\Public|Temp|Downloads)\\\\\\\\\")\n| convert ctime(firstTime) ctime(lastTime)\n| sort - count",
+      "kql": "// Molerats DropBook / SharpStage / MoleNet \u2014 implant talks to cloud-storage REST APIs as C2\nlet _legit_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"teams.exe\",\"onedrive.exe\",\"dropbox.exe\",\"googledrivesync.exe\",\"backupandsync.exe\",\"msedgewebview2.exe\",\"slack.exe\",\"code.exe\",\"explorer.exe\",\"powerpnt.exe\",\"winword.exe\",\"excel.exe\"]);\nlet _c2_hosts = dynamic([\"api.dropbox.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\",\"oauth2.googleapis.com\",\"graph.facebook.com\",\"www.facebook.com\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl in~ (_c2_hosts) or RemoteUrl endswith \".dropboxusercontent.com\"\n| where InitiatingProcessFileName !in~ (_legit_clients)\n| where InitiatingProcessAccountName !endswith \"$\"\n// Molerats drops payloads to user-writable paths\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\", @\"\\Downloads\\\")\n| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,\n          Process = InitiatingProcessFileName, ProcessPath = InitiatingProcessFolderPath,\n          ProcessCmd = InitiatingProcessCommandLine, ProcessSHA256 = InitiatingProcessSHA256,\n          RemoteUrl, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "// Molerats DropBook / SharpStage cloud-API C2 \u2014 Sentinel via ASIM web-session telemetry (proxy / EDR connector)\nlet _legit_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"teams.exe\",\"onedrive.exe\",\"dropbox.exe\",\"googledrivesync.exe\",\"msedgewebview2.exe\",\"slack.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\"]);\nlet _c2_hosts = dynamic([\"api.dropbox.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\",\"oauth2.googleapis.com\",\"graph.facebook.com\",\"www.facebook.com\"]);\nImWebSession\n| where TimeGenerated > ago(7d)\n| where HttpHostName in~ (_c2_hosts) or HttpHostName endswith \".dropboxusercontent.com\"\n| extend ProcessName = tolower(tostring(parse_json(tostring(AdditionalFields)).ActingProcessName))\n| where isempty(ProcessName) or ProcessName !in~ (_legit_clients)\n| project TimeGenerated, DvcHostname, SrcUsername, ProcessName, Url, HttpHostName, HttpMethod, DstIpAddr, HttpRequestHeaderUserAgent\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Molerats Cloud-Storage API C2 (Dropbox / Google Drive / Facebook Graph)\nid: a4d2f7e0-1b3a-4e2d-9d65-mole-ratsc2v1\nstatus: experimental\ndescription: Detects Molerats / Gaza Cybergang implants (Spark, SharpStage, DropBook, MoleNet) beaconing to cloud-storage REST APIs from a non-browser process running out of a user-writable directory.\nreferences:\n  - https://www.cybereason.com/blog/new-malware-arsenal-abusing-cloud-platforms-in-middle-east-espionage-campaign\n  - https://attack.mitre.org/groups/G0021/\nauthor: SOC Detection Engineering\ndate: 2026/05/05\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.g0021\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dest:\n    DestinationHostname:\n      - 'api.dropbox.com'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'www.googleapis.com'\n      - 'oauth2.googleapis.com'\n      - 'graph.facebook.com'\n  selection_dest_suffix:\n    DestinationHostname|endswith: '.dropboxusercontent.com'\n  filter_legit_clients:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\outlook.exe'\n      - '\\teams.exe'\n      - '\\dropbox.exe'\n      - '\\onedrive.exe'\n      - '\\msedgewebview2.exe'\n      - '\\explorer.exe'\n  selection_path:\n    Image|contains:\n      - '\\AppData\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\Temp\\'\n      - '\\Downloads\\'\n  condition: (selection_dest or selection_dest_suffix) and selection_path and not filter_legit_clients\nfalsepositives:\n  - Custom in-house tools that legitimately hit Dropbox/Google APIs from %ProgramData% \u2014 allowlist by SHA256.\nlevel: high",
+      "rationale": "Cybereason's 'Molerats in the Cloud' (Dec 2020) and Kaspersky's MoleRATs reporting (Apr 2019) explicitly document this group's reliance on Dropbox, Google Drive and Facebook as bidirectional C2 \u2014 embedded OAuth tokens fetch jobs and exfiltrate data via the public REST APIs. No other major APT cluster combines all three providers in a single toolset. Pinning the destination list to those exact host",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "AdditionalFields",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents",
+            "DeviceEvents",
+            "DeviceInfo",
+            "EmailEvents",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "CloudAppEvents",
+            "AlertEvidence",
+            "AADSignInEventsBeta",
+            "ASCDeviceEvents"
+          ],
+          "message": "`AdditionalFields` is not a column of ImWebSession; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents, DeviceEvents, DeviceInfo, EmailEvents, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, CloudAppEvents, AlertEvidence, AADSignInEventsBeta, ASCDeviceEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Molerats spearphishing chain \u2014 RAR/SFX decoy spawning scheduled-task persistence with politically-themed payload name",
+      "description": "Hunts the canonical Molerats initial-access chain (DustySky / Operation Molerats): Arabic-language spearphish (T1566.001) delivers a self-extracting WinRAR or .NET dropper that drops a PDF/DOCX decoy plus a payload (Pierogi, Spark, JhoneRAT, MoleNet) into %APPDATA% or %PUBLIC%, then registers a scheduled task or HKCU\\Run key for persistence within seconds. We chain WinRAR.exe / 7zG.exe / Outlook-spawned executable \u2192 schtasks.exe /create OR registry Run-key write, on the same host within a 5-minute window.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1053.005",
+        "T1547.001",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as paths from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"winrar.exe\",\"7zg.exe\",\"7zfm.exe\",\"outlook.exe\") OR Processes.parent_process_path=\"*\\\\AppData\\\\Local\\\\Temp\\\\Rar*\") (Processes.process_name=\"schtasks.exe\" Processes.process=\"*/create*\") OR (Processes.process_name=\"reg.exe\" Processes.process=\"*\\\\CurrentVersion\\\\Run*\") OR (Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") Processes.process=\"*Registry::HKCU*Run*\") by host Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process\n| `drop_dm_object_name(Processes)`\n| where NOT match(user,\"(?i)\\\\$$\")\n| convert ctime(firstTime) ctime(lastTime)\n| sort - count",
+      "kql": "// Molerats spearphish-to-persistence chain: SFX/RAR or Outlook-spawned dropper -> schtasks.exe or HKCU Run key within 5 min\nlet _persist_window = 5m;\nlet _droppers = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName in~ (\"winrar.exe\",\"7zg.exe\",\"7zfm.exe\",\"outlook.exe\")\n         or InitiatingProcessFolderPath has_any (@\"\\AppData\\Local\\Temp\\Rar\", @\"\\AppData\\Local\\Temp\\7z\", @\"\\AppData\\Local\\Microsoft\\Olk\\Attachments\")\n    | where AccountName !endswith \"$\"\n    | where FolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\")\n    | project DropTime = Timestamp, DeviceId, DeviceName, AccountName,\n              DropperFile = FileName, DropperPath = FolderPath, DropperSHA256 = SHA256,\n              DropperCmd = ProcessCommandLine, DropperParent = InitiatingProcessFileName;\n// Branch A \u2014 scheduled task persistence\nlet _sched = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"schtasks.exe\"\n    | where ProcessCommandLine has \"/create\"\n    | project SchedTime = Timestamp, DeviceId, AccountName, SchedCmd = ProcessCommandLine;\n// Branch B \u2014 HKCU Run key persistence\nlet _runkey = DeviceRegistryEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where RegistryKey has_any (@\"\\Microsoft\\Windows\\CurrentVersion\\Run\", @\"\\Microsoft\\Windows\\CurrentVersion\\RunOnce\")\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | project RegTime = Timestamp, DeviceId, RegInitiator = InitiatingProcessFileName,\n              RegInitiatorPath = InitiatingProcessFolderPath, RegKey = RegistryKey,\n              RegValueName = RegistryValueName, RegValueData = RegistryValueData;\n_droppers\n| join kind=inner _sched on DeviceId\n| where SchedTime between (DropTime .. DropTime + _persist_window)\n| project Timestamp = SchedTime, DeviceName, AccountName, DropperParent, DropperFile, DropperPath, DropperSHA256, SchedCmd, PersistType = \"ScheduledTask\"\n| union (\n    _droppers\n    | join kind=inner _runkey on DeviceId\n    | where RegTime between (DropTime .. DropTime + _persist_window)\n    | where RegInitiatorPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\")\n    | project Timestamp = RegTime, DeviceName, AccountName, DropperParent, DropperFile = RegInitiator, DropperPath = RegInitiatorPath, DropperSHA256 = \"\", SchedCmd = strcat(RegKey, \"\\\\\", RegValueName, \" = \", RegValueData), PersistType = \"RunKey\"\n  )\n| order by Timestamp desc",
+      "sentinel_kql": "// Molerats spearphish-to-persistence: dropper out of WinRAR / Outlook-temp -> schtasks.exe within 5 min (SecurityEvent 4688)\nlet _persist_window = 5m;\nlet _droppers = SecurityEvent\n    | where TimeGenerated > ago(7d)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where (ParentProcessName endswith \"\\\\winrar.exe\" or ParentProcessName endswith \"\\\\7zG.exe\" or ParentProcessName endswith \"\\\\outlook.exe\")\n         or ParentProcessName has_any (\"\\\\AppData\\\\Local\\\\Temp\\\\Rar\", \"\\\\AppData\\\\Local\\\\Temp\\\\7z\", \"\\\\AppData\\\\Local\\\\Microsoft\\\\Olk\\\\Attachments\")\n    | where NewProcessName has_any (\"\\\\AppData\\\\\", \"\\\\ProgramData\\\\\", \"\\\\Users\\\\Public\\\\\", \"\\\\Temp\\\\\")\n    | project DropTime = TimeGenerated, Computer, Account,\n              DropperImage = NewProcessName, DropperCmd = CommandLine,\n              DropperParent = ParentProcessName;\nlet _sched = SecurityEvent\n    | where TimeGenerated > ago(7d)\n    | where EventID == 4688\n    | where NewProcessName endswith \"\\\\schtasks.exe\"\n    | where CommandLine has \"/create\"\n    | project SchedTime = TimeGenerated, Computer, Account, SchedCmd = CommandLine;\n_droppers\n| join kind=inner _sched on Computer, Account\n| where SchedTime between (DropTime .. DropTime + _persist_window)\n| project TimeGenerated = SchedTime, Computer, Account, DropperParent, DropperImage, DropperCmd, SchedCmd,\n          DelaySec = datetime_diff('second', SchedTime, DropTime)\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "ClearSky's DustySky reports and Kaspersky's 2019 MoleRATs writeup both anchor Molerats' kill chain on the WinRAR-SFX-with-decoy pattern (Operation Molerats) followed by very fast persistence registration \u2014 DustySky and the later Spark/Pierogi droppers either write a Run key or a Schtasks 'wininit'/'WindowsUpdate'-themed task within seconds of execution. Generic 'process from %APPDATA%' or 'schtask"
+    }
+  ]
+}

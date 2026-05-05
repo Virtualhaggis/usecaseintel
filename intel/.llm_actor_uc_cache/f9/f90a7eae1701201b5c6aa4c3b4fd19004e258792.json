@@ -1,0 +1,143 @@
+{
+  "name": "APT39",
+  "ucs": [
+    {
+      "title": "[LLM] APT39 (Chafer) Plink reverse SSH tunnel for RDP pivot via SOCKS / port-forward",
+      "description": "Hunts APT39's signature use of PuTTY's `plink.exe` to establish reverse SSH tunnels (-R), local port forwards (-L) and dynamic SOCKS proxies (-D) into compromised telco/travel networks, which they then use to relay RDP (T1021.001) through the tunnel. FireEye and the FBI specifically called out Chafer/Rana Intelligence Computing using plink + custom SOCKS to bridge their MOIS infrastructure into victim estates.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1572",
+        "T1090.001",
+        "T1090.002",
+        "T1021.001",
+        "T1588.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user values(Processes.dest) as host from datamodel=Endpoint.Processes where (Processes.process_name=\"plink.exe\" OR Processes.original_file_name=\"Plink\" OR Processes.process=\"*plink*\") AND (Processes.process=\"* -R *\" OR Processes.process=\"* -L *\" OR Processes.process=\"* -D *\" OR Processes.process=\"* -pw *\" OR Processes.process=\"* -N *\" OR Processes.process=\"*:22 *\" OR Processes.process=\"*:3389*\" OR Processes.process=\"* -ssh *\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename firstTime as firstTime lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// APT39 (Chafer) \u2014 Plink reverse SSH tunnel / SOCKS proxy / port-forward\n// FireEye APT39 Jan 2019; FBI 2020 Rana Intelligence Computing flash\nlet _lookback = 30d;\nlet _tunnel_flags = dynamic([\" -R \", \" -L \", \" -D \", \" -pw \", \" -N \", \" -ssh \", \":3389\", \":22 \", \":445\"]);\nlet _plink_aliases = dynamic([\"plink.exe\",\"plink_x86.exe\",\"plink64.exe\",\"pl.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(_lookback)\n| where AccountName !endswith \"$\"                                  // skip machine accounts\n| where FileName in~ (_plink_aliases)\n   or ProcessVersionInfoOriginalFileName =~ \"Plink\"               // detect renamed plink\n   or (InitiatingProcessFileName in~ (_plink_aliases))\n| where ProcessCommandLine has_any (_tunnel_flags)\n   or ProcessCommandLine matches regex @\"(?i)\\s-(R|L|D)\\s+\\d{2,5}\"\n| extend TunnelMode = case(\n    ProcessCommandLine has \" -R \", \"reverse-port-forward\",\n    ProcessCommandLine has \" -L \", \"local-port-forward\",\n    ProcessCommandLine has \" -D \", \"dynamic-SOCKS\",\n    \"ssh-cleartext\")\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          TunnelMode,\n          FileName, FolderPath, SHA256,\n          ProcessCommandLine,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "// APT39 (Chafer) \u2014 Plink tunnel detection on Sentinel via 4688 / Sysmon-1\nlet _lookback = 30d;\nlet _tunnel_flags = dynamic([\" -R \", \" -L \", \" -D \", \" -pw \", \" -N \", \" -ssh \", \":3389\", \":22 \", \":445\"]);\nSecurityEvent\n| where TimeGenerated > ago(_lookback)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\\\plink.exe\"\n   or NewProcessName endswith \"\\\\plink64.exe\"\n   or NewProcessName endswith \"\\\\plink_x86.exe\"\n   or ParentProcessName endswith \"\\\\plink.exe\"\n| where CommandLine has_any (_tunnel_flags)\n   or CommandLine matches regex @\"(?i)\\s-(R|L|D)\\s+\\d{2,5}\"\n| extend TunnelMode = case(\n    CommandLine has \" -R \", \"reverse-port-forward\",\n    CommandLine has \" -L \", \"local-port-forward\",\n    CommandLine has \" -D \", \"dynamic-SOCKS\",\n    \"ssh-cleartext\")\n| project TimeGenerated, Computer, Account, TunnelMode,\n          NewProcessName, CommandLine, ParentProcessName, TokenElevationType",
+      "sigma_yaml": "title: APT39 Chafer Plink Reverse SSH Tunnel / SOCKS Proxy\nid: 7d3a9c20-3f4e-4f1b-9a82-apt39-plink-001\nstatus: experimental\ndescription: Detects plink.exe (PuTTY link) being launched with reverse port-forward, local port-forward, dynamic SOCKS, or cleartext password flags as used by APT39/Chafer/Remix Kitten (Iranian MOIS / Rana Intelligence Computing) for RDP-over-SSH pivoting in telco and travel intrusions.\nreferences:\n  - https://attack.mitre.org/groups/G0087/\n  - https://www.mandiant.com/resources/blog/apt39-iranian-cyber-espionage-group-focused-on-personal-information\n  - https://www.fbi.gov/news/press-releases/treasury-sanctions-iranian-cyber-actors-for-attempting-to-influence-the-2020-us-presidential-election\nauthor: SOC Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.command_and_control\n  - attack.t1572\n  - attack.t1090.001\n  - attack.t1090.002\n  - attack.lateral_movement\n  - attack.t1021.001\n  - attack.g0087\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    - Image|endswith:\n        - '\\plink.exe'\n        - '\\plink64.exe'\n        - '\\plink_x86.exe'\n    - OriginalFileName: 'Plink'\n  selection_flags:\n    CommandLine|contains:\n      - ' -R '\n      - ' -L '\n      - ' -D '\n      - ' -pw '\n      - ' -N '\n      - ':3389'\n      - ':22 '\n      - ':445'\n  filter_machine_account:\n    User|endswith: '$'\n  condition: selection_image and selection_flags and not filter_machine_account\nfalsepositives:\n  - Authorised network engineers tunnelling through jump hosts (whitelist by user/host)\nlevel: high",
+      "rationale": "APT39 is one of the few state-sponsored crews documented (Mandiant 2019, FBI 2020 Rana Intelligence Computing flash) running plink.exe inside victim networks specifically to bridge MOIS C2 to RDP-accessible internal targets in telco/travel/hospitality. Detecting plink+tunnel-flags catches the very stage of their kill chain that turns a single shelled host into estate-wide pivot capability \u2014 generi",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT39 ASPXSpy / China Chopper web shell on Exchange OWA spawning recon LOLBins",
+      "description": "Hunts APT39's recurring foothold pattern: drop an ASPXSpy / ASPX web shell into an Outlook Web Access / OWA virtual directory after a public-facing-app exploit (T1190), then drive recon via the IIS worker (`w3wp.exe` under MSExchangeOWAAppPool) spawning cmd/PowerShell/whoami/net/quser. Mandiant and Symantec (Chafer Dec 2015) tied this exact chain to APT39 telco intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.001",
+        "T1059.003",
+        "T1033",
+        "T1018"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as child values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=\"w3wp.exe\" AND (Processes.parent_process=\"*MSExchangeOWAAppPool*\" OR Processes.parent_process=\"*MSExchangeServicesAppPool*\" OR Processes.parent_process=\"*MSExchangeECPAppPool*\" OR Processes.parent_process=\"*DefaultAppPool*\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\"tasklist.exe\",\"quser.exe\",\"query.exe\",\"hostname.exe\",\"nltest.exe\",\"arp.exe\",\"netstat.exe\",\"reg.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// APT39 (Chafer / Remix Kitten) \u2014 OWA / Exchange w3wp.exe spawning recon LOLBins\n// Symantec Chafer Dec 2015; FireEye APT39 Jan 2019; FBI Rana Intelligence Computing 2020\nlet _lookback = 14d;\nlet _recon_lolbins = dynamic([\n    \"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\n    \"whoami.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\n    \"tasklist.exe\",\"quser.exe\",\"query.exe\",\"hostname.exe\",\"nltest.exe\",\n    \"arp.exe\",\"netstat.exe\",\"reg.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\"]);\nlet _exchange_app_pools = dynamic([\n    \"MSExchangeOWAAppPool\",\"MSExchangeServicesAppPool\",\n    \"MSExchangeECPAppPool\",\"MSExchangeAutodiscoverAppPool\",\n    \"MSExchangeMapiFrontEndAppPool\",\"MSExchangeRpcProxyAppPool\"]);\nDeviceProcessEvents\n| where Timestamp > ago(_lookback)\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where InitiatingProcessCommandLine has_any (_exchange_app_pools)\n| where FileName in~ (_recon_lolbins)\n| where AccountName !endswith \"$\"\n   or AccountName in~ (\"system\",\"network service\",\"iusr\")            // OWA pool runs as NT AUTHORITY\\NETWORK SERVICE \u2014 keep these in scope\n| project Timestamp, DeviceName,\n          AppPool = extract(@\"-ap\\s+\\\"?([^\\\"\\s]+)\\\"?\", 1, InitiatingProcessCommandLine),\n          AccountName, AccountDomain,\n          ChildImage = FolderPath,\n          ChildCmd   = ProcessCommandLine,\n          ChildHash  = SHA256\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(_lookback)\n    | where ActionType in (\"FileCreated\",\"FileModified\")\n    | where FolderPath has_any (@\"\\inetpub\\wwwroot\\\", @\"\\Exchange Server\\\", @\"\\ClientAccess\\Owa\\\", @\"\\FrontEnd\\HttpProxy\\\")\n    | where FileName endswith \".aspx\" or FileName endswith \".ashx\"\n    | summarize WebShellCandidates = make_set(strcat(FolderPath, FileName), 25) by DeviceName\n  ) on DeviceName\n| order by Timestamp desc",
+      "sentinel_kql": "// APT39 \u2014 Exchange OWA web-shell command exec via w3wp child process\nlet _lookback = 14d;\nlet _recon_lolbins = dynamic([\n    \"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\n    \"whoami.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"ipconfig.exe\",\n    \"tasklist.exe\",\"quser.exe\",\"query.exe\",\"hostname.exe\",\"nltest.exe\",\n    \"arp.exe\",\"netstat.exe\",\"reg.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\"]);\nlet _exchange_app_pools = dynamic([\n    \"MSExchangeOWAAppPool\",\"MSExchangeServicesAppPool\",\n    \"MSExchangeECPAppPool\",\"MSExchangeAutodiscoverAppPool\",\n    \"MSExchangeMapiFrontEndAppPool\",\"MSExchangeRpcProxyAppPool\"]);\nSecurityEvent\n| where TimeGenerated > ago(_lookback)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\w3wp.exe\"\n| where ProcessName has_any (_exchange_app_pools) or ParentProcessName has \"w3wp\"\n// 4688 carries parent CommandLine only on newer Windows builds; fall back to NewProcessName check\n| extend ChildLeaf = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ChildLeaf in~ (_recon_lolbins)\n| project TimeGenerated, Computer, Account, AccountDomain,\n          ParentProcessName, NewProcessName, CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT39 Chafer OWA / Exchange w3wp Spawning Recon LOLBins\nid: 4f1c8b62-9a14-4c3a-bd2b-apt39-owashell-001\nstatus: experimental\ndescription: Detects child processes spawned by the IIS worker process w3wp.exe under an Exchange / OWA application pool, where the child is a recon-stage LOLBin (whoami, net, systeminfo, quser, nltest, etc.) \u2014 characteristic of APT39 / Chafer ASPXSpy web-shell post-exploitation against Outlook Web Access in telco and travel-sector intrusions.\nreferences:\n  - https://attack.mitre.org/groups/G0087/\n  - https://www.mandiant.com/resources/blog/apt39-iranian-cyber-espionage-group-focused-on-personal-information\n  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/iran-based-attackers-use-back-door-threats-spy-middle-eastern-targets\nauthor: SOC Detection Engineering\ndate: 2026/05/04\ntags:\n  - attack.initial_access\n  - attack.t1190\n  - attack.persistence\n  - attack.t1505.003\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.discovery\n  - attack.t1033\n  - attack.t1018\n  - attack.g0087\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\w3wp.exe'\n  selection_apppool:\n    ParentCommandLine|contains:\n      - 'MSExchangeOWAAppPool'\n      - 'MSExchangeServicesAppPool'\n      - 'MSExchangeECPAppPool'\n      - 'MSExchangeAutodiscoverAppPool'\n      - 'MSExchangeMapiFrontEndAppPool'\n      - 'MSExchangeRpcProxyAppPool'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\whoami.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\systeminfo.exe'\n      - '\\ipconfig.exe'\n      - '\\tasklist.exe'\n      - '\\quser.exe'\n      - '\\query.exe'\n      - '\\hostname.exe'\n      - '\\nltest.exe'\n      - '\\arp.exe'\n      - '\\netstat.exe'\n      - '\\reg.exe'\n      - '\\wmic.exe'\n      - '\\bitsadmin.exe'\n      - '\\certutil.exe'\n  condition: selection_parent and selection_apppool and selection_child\nfalsepositives:\n  - Exchange health-monitoring scripts run under MSExchange app pools (allowlist by hash / specific cmdlines)\n  - Legitimate admin troubleshooting via OWA management shell (rare, should still be reviewed)\nlevel: high",
+      "rationale": "APT39's Symantec/FireEye/FBI-documented intrusion lifecycle starts with an internet-facing OWA exploit, then an ASPX web shell (ASPXSpy variant or China Chopper-style) dropped under the OWA virtual directory, then immediate recon via w3wp-spawned LOLBins to enumerate the domain before pivoting to Mimikatz/ProcDump LSASS dumps and RDP. Pinning the parent to `w3wp.exe` *and* an Exchange app pool (ra",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "FileCreated",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "FileName",
+          "message": "`FileCreated` is not a canonical column of DeviceProcessEvents. Did you mean `FileName`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "FileModified",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "FileSize",
+          "message": "`FileModified` is not a canonical column of DeviceProcessEvents. Did you mean `FileSize`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Exchange",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Exchange` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Server",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Server` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ClientAccess",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ClientAccess` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Owa",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Owa` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "FrontEnd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`FrontEnd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "HttpProxy",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`HttpProxy` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

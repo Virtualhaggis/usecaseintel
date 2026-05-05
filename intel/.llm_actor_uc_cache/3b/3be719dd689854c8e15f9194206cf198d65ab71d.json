@@ -1,0 +1,177 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37/ScarCruft ROKRAT cloud-API C2 from non-browser process (pCloud, Dropbox, Yandex)",
+      "description": "Detects ROKRAT and successor implants used by APT37 (ScarCruft / Reaper / Ricochet Chollima / InkySquid) that beacon to legitimate cloud-storage REST endpoints \u2014 specifically pCloud, Dropbox content API, Yandex Disk, and Box \u2014 for bidirectional C2 and exfil. The signal is a non-browser, non-sync-client process making TLS calls to those FQDNs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1041",
+        "T1132.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest=\"api.pcloud.com\" OR All_Traffic.dest=\"eapi.pcloud.com\" OR All_Traffic.dest=\"content.dropboxapi.com\" OR All_Traffic.dest=\"api.dropboxapi.com\" OR All_Traffic.dest=\"cloud-api.yandex.net\" OR All_Traffic.dest=\"webdav.yandex.com\" OR All_Traffic.dest=\"upload.box.com\" OR All_Traffic.dest=\"api.box.com\") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.process_name host All_Traffic.dest | rename All_Traffic.* as * | search NOT (process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"safari.exe\",\"Dropbox.exe\",\"DropboxUpdate.exe\",\"pCloud.exe\",\"Yandex.Disk.exe\",\"Yandex.Disk.2.exe\",\"Box.exe\",\"BoxSync.exe\",\"BoxDrive.exe\",\"BoxEdit.exe\")) | join type=left host process_name [| tstats summariesonly=true values(Processes.process) as process_cmd values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes by Processes.dest Processes.process_name | rename Processes.dest as host Processes.process_name as process_name] | eval suspicious_parent=if(match(parent_process_name,\"(?i)(mshta|powershell|cmd|wscript|cscript|rundll32|regsvr32|hh|certutil|explorer|hwp|winword|excel|outlook|gswin)\\.exe\"),1,0) | where suspicious_parent=1 OR match(process_name,\"(?i)\\.tmp$|^[a-f0-9]{6,}\\.exe$\") | table firstTime lastTime host src user process_name parent_process_name process_cmd dest dest_ip dest_port bytes_out | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// APT37/ScarCruft \u2014 ROKRAT family beaconing to cloud storage REST APIs from non-browser/non-sync processes\nlet LookbackDays = 7d;\nlet _ScarCruftCloudEndpoints = dynamic([\n    \"api.pcloud.com\",\"eapi.pcloud.com\",\n    \"content.dropboxapi.com\",\"api.dropboxapi.com\",\n    \"cloud-api.yandex.net\",\"webdav.yandex.com\",\n    \"api.box.com\",\"upload.box.com\"\n]);\nlet _LegitClients = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\n    \"dropbox.exe\",\"dropboxupdate.exe\",\"pcloud.exe\",\"yandex.disk.exe\",\"yandex.disk.2.exe\",\n    \"box.exe\",\"boxsync.exe\",\"boxdrive.exe\",\"boxedit.exe\",\"onedrive.exe\"\n]);\nlet CloudHits =\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ConnectionSuccess\",\"HttpConnectionInspected\")\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where RemoteUrl has_any (_ScarCruftCloudEndpoints)\n    | where InitiatingProcessFileName !in~ (_LegitClients)\n    | where InitiatingProcessAccountName !endswith \"$\";\n// Pivot to the spawning process tree \u2014 ROKRAT loaders are typically launched by\n// mshta/powershell/rundll32/hh.exe (CHM) / gswin (Ghostscript) / Office apps\nCloudHits\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | project ProcStart = Timestamp, DeviceId, ProcessId, FileName,\n              FolderPath, ProcessCommandLine,\n              ParentName = InitiatingProcessFileName,\n              ParentCmd  = InitiatingProcessCommandLine\n  ) on $left.DeviceId == $right.DeviceId,\n     $left.InitiatingProcessId == $right.ProcessId\n| where ProcStart between (Timestamp - 30m .. Timestamp)\n| extend SuspiciousAncestry = ParentName in~ (\n    \"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\n    \"rundll32.exe\",\"regsvr32.exe\",\"hh.exe\",\"certutil.exe\",\"explorer.exe\",\n    \"winword.exe\",\"excel.exe\",\"outlook.exe\",\"hwp.exe\",\"hword.exe\",\"gswin64c.exe\",\"gswin32c.exe\")\n| extend AnomalousImagePath = FolderPath has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Public\\\", @\"\\ProgramData\\\")\n| where SuspiciousAncestry or AnomalousImagePath or InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort,\n          ParentName, ParentCmd, ChildImagePath = FolderPath, ChildCmd = ProcessCommandLine\n| order by Timestamp desc",
+      "sentinel_kql": "// APT37/ScarCruft \u2014 ROKRAT cloud-storage API C2 (Sentinel via ASIM)\nlet LookbackDays = 7d;\nlet _ScarCruftCloudEndpoints = dynamic([\n    \"api.pcloud.com\",\"eapi.pcloud.com\",\n    \"content.dropboxapi.com\",\"api.dropboxapi.com\",\n    \"cloud-api.yandex.net\",\"webdav.yandex.com\",\n    \"api.box.com\",\"upload.box.com\"\n]);\nlet _LegitClients = dynamic([\n    \"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\n    \"dropbox.exe\",\"dropboxupdate.exe\",\"pcloud.exe\",\"yandex.disk.exe\",\"yandex.disk.2.exe\",\n    \"box.exe\",\"boxsync.exe\",\"boxdrive.exe\",\"boxedit.exe\",\"onedrive.exe\"\n]);\nlet CloudHits =\n    ImWebSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventResult == \"Success\"\n    | where isnotempty(Url)\n    | where Url has_any (_ScarCruftCloudEndpoints) or HttpHostName has_any (_ScarCruftCloudEndpoints)\n    | extend ProcLeaf = tolower(tostring(split(coalesce(column_ifexists(\"ActingProcessName\", \"\"), \"\"), \"\\\\\")[-1]))\n    | where ProcLeaf !in~ (_LegitClients)\n    | project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, Url, HttpHostName, ProcLeaf,\n              ActingProcessName = column_ifexists(\"ActingProcessName\", \"\");\nCloudHits\n| join kind=leftouter (\n    ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | project ProcStart = TimeGenerated, DvcHostname, ActingProcessName,\n              ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine\n  ) on DvcHostname, ActingProcessName\n| where ProcStart between (TimeGenerated - 30m .. TimeGenerated)\n| extend SuspiciousAncestry = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])) in~ (\n    \"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\n    \"rundll32.exe\",\"regsvr32.exe\",\"hh.exe\",\"certutil.exe\",\"explorer.exe\",\n    \"winword.exe\",\"excel.exe\",\"outlook.exe\",\"hwp.exe\",\"hword.exe\",\"gswin64c.exe\",\"gswin32c.exe\")\n| where SuspiciousAncestry or ActingProcessCommandLine has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\ProgramData\\\")\n| project TimeGenerated, DvcHostname, SrcUsername, SrcIpAddr,\n          Url, HttpHostName, ActingProcessName, ActingProcessCommandLine,\n          ParentProcessName, ParentProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ScarCruft ROKRAT Cloud Storage API C2\nid: 6f1f3a82-7a73-4d31-9c07-3c1d3a2e0f01\nstatus: experimental\ndescription: Detects ROKRAT/Dolphin/Goldbackdoor-style C2 used by APT37 (ScarCruft) where a non-browser, non-sync-client process talks to pCloud/Dropbox/Yandex/Box REST APIs.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://blog.talosintelligence.com/rokrat-analysis/\nauthor: SOC Detection Engineering\ndate: 2026/05/05\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - apt37\n  - scarcruft\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dest:\n    DestinationHostname|contains:\n      - 'api.pcloud.com'\n      - 'eapi.pcloud.com'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'cloud-api.yandex.net'\n      - 'webdav.yandex.com'\n      - 'api.box.com'\n      - 'upload.box.com'\n  filter_legit_clients:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\iexplore.exe'\n      - '\\Dropbox.exe'\n      - '\\DropboxUpdate.exe'\n      - '\\pCloud.exe'\n      - '\\Yandex.Disk.exe'\n      - '\\Yandex.Disk.2.exe'\n      - '\\Box.exe'\n      - '\\BoxSync.exe'\n      - '\\BoxDrive.exe'\n      - '\\OneDrive.exe'\n  condition: selection_dest and not filter_legit_clients\nfalsepositives:\n  - Custom internal tooling that legitimately uses these cloud APIs (rare; allowlist by SHA256)\nlevel: high",
+      "rationale": "ROKRAT and the wider ScarCruft toolset (Dolphin, Goldbackdoor, M2RAT, Chinotto) is publicly documented (Talos, ESET, Kaspersky, AhnLab) as APT37's signature pattern of using legitimate cloud-storage REST endpoints \u2014 pCloud is the longest-running and near-pathognomonic \u2014 so they can blend with normal HTTPS to api.pcloud.com / content.dropboxapi.com / cloud-api.yandex.net. Generic C2 rules miss this",
+      "_sigma_issues": [
+        "sigma parse error: Sigma tag must start with namespace separated with dot from remaining tag."
+      ]
+    },
+    {
+      "title": "[LLM] APT37/ScarCruft weaponized document chain: HWP/CHM/LNK \u2192 mshta/powershell with cloud-fetch",
+      "description": "Hunts APT37's characteristic delivery \u2192 execution chain: a Hangul Word Processor (hwp.exe / hword.exe), Microsoft Help Compiled (hh.exe handling .chm), or explorer.exe-launched .lnk that immediately spawns mshta.exe, powershell.exe, or rundll32.exe pulling a remote payload. This combo is the public signature of campaigns like 'Operation Daybreak', 'GoldDragon', RoKRAT/CHM, and the 2022-2024 LNK\u2192PowerShell waves attributed to ScarCruft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1218",
+        "T1059.001",
+        "T1059.005",
+        "T1027",
+        "T1140",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"hh.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")) AND (Processes.process_name IN (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\")) AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.process_name Processes.parent_process_name | rename Processes.* as * | eval is_remote_fetch=if(match(cmdline,\"(?i)(http[s]?://|FromBase64String|DownloadString|DownloadFile|Invoke-WebRequest|IEX|Invoke-Expression|certutil.*-urlcache|bitsadmin.*transfer|curl|wget|mshta\\s+http|javascript:)\"),1,0) | eval is_chm=if(parent_process_name=\"hh.exe\",1,0) | eval is_hwp=if(match(parent_process_name,\"(?i)^h(wp|word|cell|show)\\.exe$\"),1,0) | eval is_lnk_via_explorer=if(parent_process_name=\"explorer.exe\" AND match(cmdline,\"(?i)(-w\\s+(hidden|1)|-windowstyle\\s+hidden|-nop|-noprofile|FromBase64String|http)\"),1,0) | eval is_office_macro=if(match(parent_process_name,\"(?i)^(winword|excel|powerpnt|outlook)\\.exe$\") AND is_remote_fetch=1,1,0) | eval scarcruft_score=is_chm+is_hwp+is_lnk_via_explorer+is_office_macro+is_remote_fetch | where scarcruft_score>=2 | table firstTime lastTime host user parent_process_name process_name cmdline parent_cmd image is_chm is_hwp is_lnk_via_explorer is_office_macro is_remote_fetch | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "kql": "// APT37/ScarCruft weaponized-document chain: HWP/CHM/LNK/Office -> mshta|powershell|rundll32 with remote fetch\nlet LookbackDays = 14d;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (\n    \"hh.exe\",                                  // CHM \u2014 APT37 RoKRAT/CHM campaigns\n    \"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\", // Hangul Office \u2014 KR-targeted lures\n    \"explorer.exe\",                            // .lnk double-click\n    \"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\n    \"gswin64c.exe\",\"gswin32c.exe\"              // Ghostscript \u2014 APT37 PDF lure chain\n  )\n| where FileName in~ (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\")\n| extend Cmd = tolower(ProcessCommandLine)\n| extend IsRemoteFetch = Cmd has_any (\"http://\",\"https://\",\"frombase64string\",\"downloadstring\",\"downloadfile\",\"invoke-webrequest\",\"iex\",\"invoke-expression\",\"certutil\",\"bitsadmin\",\"curl \",\"wget \",\"javascript:\")\n| extend IsHidden = Cmd matches regex @\"-w(in)?(dow)?style?\\s+(h(idden)?|1)\" or Cmd has_any (\"-nop \",\"-noprofile\",\"-enc \",\"-encodedcommand\",\"-ec \",\" -e \")\n| extend IsCHM = InitiatingProcessFileName =~ \"hh.exe\"\n| extend IsHWP = InitiatingProcessFileName in~ (\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\")\n| extend IsLnkChain = InitiatingProcessFileName =~ \"explorer.exe\" and (IsRemoteFetch or IsHidden)\n| extend IsOfficeChild = InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") and IsRemoteFetch\n| extend ScarCruftScore = toint(IsCHM) + toint(IsHWP) + toint(IsLnkChain) + toint(IsOfficeChild) + toint(IsRemoteFetch) + toint(IsHidden)\n| where ScarCruftScore >= 2\n// Suppress benign Office Click-to-Run repair (signed MS paths) \u2014 keep user-temp / appdata launches in scope\n| where not(FolderPath startswith @\"C:\\Program Files\\\" and IsOfficeChild and not(IsRemoteFetch))\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentName  = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildName   = FileName,\n          ChildCmd    = ProcessCommandLine,\n          IsCHM, IsHWP, IsLnkChain, IsOfficeChild, IsRemoteFetch, IsHidden, ScarCruftScore,\n          SHA256\n| order by ScarCruftScore desc, Timestamp desc",
+      "sentinel_kql": "// APT37/ScarCruft weaponized-document chain (Sentinel \u2014 SecurityEvent 4688 / ImProcessCreate)\nlet LookbackDays = 14d;\nlet _APT37Parents = dynamic([\n    \"hh.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\",\n    \"explorer.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\n    \"gswin64c.exe\",\"gswin32c.exe\"]);\nlet _LolBins = dynamic([\n    \"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\n    \"wscript.exe\",\"cscript.exe\",\"cmd.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where AccountType == \"User\" and not(Account endswith \"$\")\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n         ChildLeaf  = tolower(tostring(split(NewProcessName, \"\\\\\")[-1])),\n         Cmd        = tolower(CommandLine)\n| where ParentLeaf in (_APT37Parents) and ChildLeaf in (_LolBins)\n| extend IsRemoteFetch = Cmd has_any (\"http://\",\"https://\",\"frombase64string\",\"downloadstring\",\"downloadfile\",\"invoke-webrequest\",\"iex\",\"invoke-expression\",\"certutil\",\"bitsadmin\",\"curl \",\"wget \",\"javascript:\")\n| extend IsHidden = Cmd matches regex @\"-w(in)?(dow)?style?\\s+(h(idden)?|1)\" or Cmd has_any (\"-nop \",\"-noprofile\",\"-enc \",\"-encodedcommand\",\"-ec \")\n| extend IsCHM         = ParentLeaf == \"hh.exe\",\n         IsHWP         = ParentLeaf in (\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\"),\n         IsLnkChain    = ParentLeaf == \"explorer.exe\" and (IsRemoteFetch or IsHidden),\n         IsOfficeChild = ParentLeaf in (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") and IsRemoteFetch\n| extend ScarCruftScore = toint(IsCHM) + toint(IsHWP) + toint(IsLnkChain) + toint(IsOfficeChild) + toint(IsRemoteFetch) + toint(IsHidden)\n| where ScarCruftScore >= 2\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine,\n          IsCHM, IsHWP, IsLnkChain, IsOfficeChild, IsRemoteFetch, IsHidden, ScarCruftScore,\n          TokenElevationType\n| order by ScarCruftScore desc, TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "APT37 (CrowdStrike: Ricochet Chollima; Microsoft: not yet a Blizzard cluster, tracked under historic G0067; FireEye/Mandiant: TEMP.Reaper) uniquely targets South Korean and adjacent victims with Hangul HWP documents (hwp.exe), CHM lures executed by hh.exe, and Ghostscript-based PDF exploit chains \u2014 none of which are common in Western threat groups. The combination of an *hh.exe / hwp.exe / gswin*.",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Program",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Program` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Files",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "FileSize",
+          "message": "`Files` is not a canonical column of DeviceProcessEvents. Did you mean `FileSize`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsOfficeChild",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IsOfficeChild` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsCHM",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IsCHM` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsHWP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IsHWP` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsLnkChain",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IsLnkChain` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsHidden",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IsHidden` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ScarCruftScore",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ScarCruftScore` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsCHM",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IsCHM` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsHWP",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IsHWP` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsLnkChain",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IsLnkChain` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsOfficeChild",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IsOfficeChild` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IsHidden",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`IsHidden` is not a canonical column of SecurityEvent."
+        }
+      ]
+    }
+  ]
+}

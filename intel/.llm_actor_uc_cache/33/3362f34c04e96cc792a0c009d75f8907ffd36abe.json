@@ -1,0 +1,100 @@
+{
+  "name": "TA2541",
+  "ucs": [
+    {
+      "title": "[LLM] TA2541 commodity RAT injection chain \u2014 wscript/mshta spawning .NET LOLBins (RegSvcs/MSBuild/AddInProcess) used for process hollowing",
+      "description": "Hunts TA2541's signature execution chain: an aviation/transport-themed VBS or HTA dropper (delivered via T1566) launches PowerShell or mshta which then spawns one of the unusual .NET utility binaries the actor characteristically hollows out (RegSvcs.exe, MSBuild.exe, AddInProcess.exe, InstallUtil.exe, jsc.exe, vbc.exe) to host AsyncRAT/NetWire/Parallax/RevengeRAT/WSHRAT payloads. This parent\u2192child pair is rare in benign telemetry and is documented by Proofpoint and Cisco Talos (Operation Layover) as TA2541-distinctive.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.005",
+        "T1218.005",
+        "T1055.012",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmd values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") Processes.process_name IN (\"RegSvcs.exe\",\"RegAsm.exe\",\"MSBuild.exe\",\"AddInProcess.exe\",\"AddInProcess32.exe\",\"InstallUtil.exe\",\"jsc.exe\",\"vbc.exe\",\"csc.exe\",\"aspnet_compiler.exe\") Processes.user!=\"*$\" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(parent_process,\"(?i)visualstudio|devenv|MSBuild.+\\.csproj|MSBuild.+\\.vbproj\") | sort - lastSeen",
+      "kql": "let LookbackDays = 14d;\nlet Droppers = dynamic([\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\"]);\nlet HollowTargets = dynamic([\"regsvcs.exe\",\"regasm.exe\",\"msbuild.exe\",\"addinprocess.exe\",\"addinprocess32.exe\",\"installutil.exe\",\"jsc.exe\",\"vbc.exe\",\"csc.exe\",\"aspnet_compiler.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (Droppers)\n| where FileName in~ (HollowTargets)\n// strip legit dev workflow \u2014 devenv/MSBuild building a real .csproj/.vbproj\n| where not(ProcessCommandLine matches regex @\"(?i)\\.(cs|vb|sln)proj\\b\")\n| where InitiatingProcessParentFileName !in~ (\"devenv.exe\",\"vshost.exe\")\n// TA2541 droppers tend to live in user-writable paths, not Program Files\n| where InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Downloads\\\")\n   or InitiatingProcessCommandLine has_any (\".vbs\", \".vbe\", \".js\", \".hta\", \".lnk\")\n| project Timestamp, DeviceName, AccountName,\n          DropperImage = InitiatingProcessFolderPath,\n          DropperCmd   = InitiatingProcessCommandLine,\n          HollowChild  = FileName,\n          ChildCmd     = ProcessCommandLine,\n          ChildIntegrity = ProcessIntegrityLevel,\n          GrandparentImage = InitiatingProcessParentFileName,\n          SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet Droppers = dynamic([\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\"]);\nlet HollowTargets = dynamic([\"regsvcs.exe\",\"regasm.exe\",\"msbuild.exe\",\"addinprocess.exe\",\"addinprocess32.exe\",\"installutil.exe\",\"jsc.exe\",\"vbc.exe\",\"csc.exe\",\"aspnet_compiler.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n         ChildLeaf  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1]))\n| where ParentLeaf in (Droppers)\n| where ChildLeaf  in (HollowTargets)\n| where not(CommandLine matches regex @\"(?i)\\.(cs|vb|sln)proj\\b\")\n| where ParentProcessName has_any (@\"\\AppData\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Downloads\\\")\n   or CommandLine has_any (\".vbs\", \".vbe\", \".js\", \".hta\")\n| project TimeGenerated, Computer, Account,\n          DropperImage = ParentProcessName,\n          HollowChild  = NewProcessName,\n          ChildCmd     = CommandLine,\n          TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: TA2541 .NET LOLBin Hollow Target Spawned by Script Dropper\nid: 9d6c1b1e-ta2541-hollow-chain\nstatus: experimental\ndescription: Detects TA2541's commodity-RAT execution chain where a script-host dropper (VBS/HTA/PowerShell) spawns a .NET utility binary used as a process-hollowing target (RegSvcs, MSBuild, AddInProcess, InstallUtil, jsc, vbc).\nreferences:\n  - https://www.proofpoint.com/us/blog/threat-insight/charting-ta2541s-flight\n  - https://blog.talosintelligence.com/operation-layover-how-we-tracked-attack/\nauthor: SOC Detection Engineering\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent:\n    ParentImage|endswith:\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n  child:\n    Image|endswith:\n      - '\\RegSvcs.exe'\n      - '\\RegAsm.exe'\n      - '\\MSBuild.exe'\n      - '\\AddInProcess.exe'\n      - '\\AddInProcess32.exe'\n      - '\\InstallUtil.exe'\n      - '\\jsc.exe'\n      - '\\vbc.exe'\n      - '\\aspnet_compiler.exe'\n  filter_devbuild:\n    CommandLine|re|i: '\\.(cs|vb|sln)proj\\b'\n  condition: parent and child and not filter_devbuild\nfalsepositives:\n  - Visual Studio MSBuild invocations against a real project file\n  - Legacy in-house installers using InstallUtil\nlevel: high\ntags:\n  - attack.execution\n  - attack.t1059.005\n  - attack.t1218.005\n  - attack.t1055.012\n  - attack.g1018",
+      "rationale": "Proofpoint (Feb 2022 'Charting TA2541's flight') and Cisco Talos (Operation Layover, Sep 2021) both call out that TA2541 uses VBS/HTA droppers themed around aviation/charter/fuel/manifest topics, and that the resulting RAT (AsyncRAT, NetWire, RevengeRAT, Parallax, WSHRAT) is consistently injected into a small set of .NET utility binaries \u2014 RegSvcs/RegAsm/MSBuild/AddInProcess/InstallUtil. The scrip",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] TA2541 dynamic-DNS C2 beacon from injected .NET LOLBin (DuckDNS / no-ip / DDNS.net egress)",
+      "description": "Hunts post-hollow C2: an outbound connection to known dynamic-DNS providers (duckdns.org, ddns.net, no-ip.com/biz/info, hopto.org, sytes.net, myftp.org, myq-see.com, redirectme.net, zapto.org, serveftp.com, dynu.net) sourced from MSBuild.exe / RegSvcs.exe / RegAsm.exe / AddInProcess.exe / InstallUtil.exe / vbc.exe \u2014 the exact LOLBins TA2541 hollows. Per Proofpoint, TA2541 has registered hundreds of DDNS subdomains since 2017 for AsyncRAT/NetWire/RevengeRAT/Parallax C2 (T1568, T1583.001).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1568",
+        "T1583.001",
+        "T1573.002",
+        "T1055.012",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as ports dc(All_Traffic.dest) as unique_dest_fqdns from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"MSBuild.exe\",\"RegSvcs.exe\",\"RegAsm.exe\",\"AddInProcess.exe\",\"AddInProcess32.exe\",\"InstallUtil.exe\",\"vbc.exe\",\"jsc.exe\",\"aspnet_compiler.exe\") (All_Traffic.dest=\"*.duckdns.org\" OR All_Traffic.dest=\"*.ddns.net\" OR All_Traffic.dest=\"*.no-ip.com\" OR All_Traffic.dest=\"*.no-ip.biz\" OR All_Traffic.dest=\"*.no-ip.info\" OR All_Traffic.dest=\"*.hopto.org\" OR All_Traffic.dest=\"*.sytes.net\" OR All_Traffic.dest=\"*.myftp.org\" OR All_Traffic.dest=\"*.myq-see.com\" OR All_Traffic.dest=\"*.redirectme.net\" OR All_Traffic.dest=\"*.zapto.org\" OR All_Traffic.dest=\"*.serveftp.com\" OR All_Traffic.dest=\"*.dynu.net\" OR All_Traffic.dest=\"*.hopto.me\" OR All_Traffic.dest=\"*.linkpc.net\") by All_Traffic.src All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where count >= 5 | sort - lastSeen",
+      "kql": "let LookbackDays = 14d;\nlet HollowTargets = dynamic([\"msbuild.exe\",\"regsvcs.exe\",\"regasm.exe\",\"addinprocess.exe\",\"addinprocess32.exe\",\"installutil.exe\",\"vbc.exe\",\"jsc.exe\",\"aspnet_compiler.exe\",\"csc.exe\"]);\nlet DDNSSuffixes = dynamic([\n    \".duckdns.org\", \".ddns.net\", \".no-ip.com\", \".no-ip.biz\", \".no-ip.info\",\n    \".hopto.org\", \".sytes.net\", \".myftp.org\", \".myq-see.com\",\n    \".redirectme.net\", \".zapto.org\", \".serveftp.com\", \".dynu.net\",\n    \".hopto.me\", \".linkpc.net\", \".publicvm.com\", \".myvnc.com\"\n]);\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n| where RemoteIPType == \"Public\"\n| where InitiatingProcessFileName in~ (HollowTargets)\n| where InitiatingProcessAccountName !endswith \"$\"\n| extend RemoteHost = tolower(coalesce(RemoteUrl, \"\"))\n| where RemoteHost has_any (DDNSSuffixes)\n   or RemoteUrl matches regex @\"(?i)\\.(duckdns\\.org|ddns\\.net|no-ip\\.(com|biz|info)|hopto\\.org|sytes\\.net|myftp\\.org|zapto\\.org|serveftp\\.com|dynu\\.net|linkpc\\.net|publicvm\\.com)$\"\n| summarize ConnCount = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            Ports     = make_set(RemotePort, 10),\n            DistinctIPs = dcount(RemoteIP),\n            SampleCmd = any(InitiatingProcessCommandLine)\n            by DeviceName, InitiatingProcessAccountName,\n               InitiatingProcessFileName, RemoteHost\n| where ConnCount >= 3   // single resolution + retry, suppress one-shots\n| order by LastSeen desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet HollowTargets = dynamic([\"msbuild.exe\",\"regsvcs.exe\",\"regasm.exe\",\"addinprocess.exe\",\"addinprocess32.exe\",\"installutil.exe\",\"vbc.exe\",\"jsc.exe\",\"aspnet_compiler.exe\"]);\nlet DDNSSuffixes = dynamic([\n    \".duckdns.org\", \".ddns.net\", \".no-ip.com\", \".no-ip.biz\", \".no-ip.info\",\n    \".hopto.org\", \".sytes.net\", \".myftp.org\", \".myq-see.com\",\n    \".redirectme.net\", \".zapto.org\", \".serveftp.com\", \".dynu.net\",\n    \".hopto.me\", \".linkpc.net\", \".publicvm.com\"\n]);\nlet ProcEgress = ImNetworkSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where DvcAction !in~ (\"deny\",\"drop\",\"reject\")\n    | extend ActProc = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n    | where ActProc in (HollowTargets)\n    | extend Host = tolower(coalesce(DstHostname, Url, \"\"))\n    | where Host has_any (DDNSSuffixes)\n    | summarize ConnCount = count(),\n                FirstSeen = min(TimeGenerated),\n                LastSeen  = max(TimeGenerated),\n                Ports     = make_set(DstPortNumber, 10),\n                Cmd       = any(ActingProcessCommandLine)\n              by DvcHostname, ActorUsername, ActProc, Host;\nlet DnsEgress = DnsEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where Name has_any (DDNSSuffixes)\n    | summarize DnsCount = count(), DnsFirst = min(TimeGenerated)\n              by Computer, Name;\nProcEgress\n| join kind=leftouter DnsEgress on $left.DvcHostname == $right.Computer, $left.Host == $right.Name\n| where ConnCount >= 3\n| project FirstSeen, LastSeen, DvcHostname, ActorUsername,\n          InjectedProc = ActProc, DDNSHost = Host,\n          ConnCount, Ports, DnsCount, Cmd\n| order by LastSeen desc",
+      "sigma_yaml": "",
+      "rationale": "TA2541's infrastructure pattern is exceptionally consistent: Proofpoint's 2022 report shows hundreds of registered DuckDNS / no-ip / sytes.net / hopto.org subdomains hosting AsyncRAT, NetWire, Parallax, RevengeRAT and WSHRAT C2 since 2017. Independently, Cisco Talos's Operation Layover write-up confirms the same DDNS reuse against aviation/aerospace targets. Crucially, MSBuild.exe/RegSvcs.exe/AddI",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "DnsEvents",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of DnsEvents, ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "DnsEvents",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of DnsEvents, ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActorUsername",
+          "tables_in_scope": [
+            "DnsEvents",
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImAuthentication",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActorUsername` is not a column of DnsEvents, ImNetworkSession; it does exist on ImProcessCreate, ImAuthentication, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

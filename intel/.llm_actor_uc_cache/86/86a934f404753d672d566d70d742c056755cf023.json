@@ -1,0 +1,184 @@
+{
+  "name": "Storm-1811",
+  "ucs": [
+    {
+      "title": "[LLM] Storm-1811 / Black Basta \u2014 Quick Assist (quickassist.exe) spawning LOLBins or scripting hosts",
+      "description": "Hunts the signature Storm-1811 hand-on-keyboard step where an attacker, after social-engineering a victim into starting a Microsoft Quick Assist remote-help session, types living-off-the-land commands that spawn cmd / PowerShell / curl / certutil / OpenSSH from quickassist.exe. Microsoft, Rapid7 and Red Canary all observed this exact parent\u2192child shape preceding Black Basta deployment.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1219.002",
+        "T1566.004",
+        "T1059.001",
+        "T1059.003",
+        "T1105",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmd values(Processes.process_path) as child_path values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name=\"quickassist.exe\" AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"certutil.exe\",\"mshta.exe\",\"rundll32.exe\",\"bitsadmin.exe\",\"wscript.exe\",\"cscript.exe\",\"msiexec.exe\",\"ssh.exe\",\"scp.exe\",\"schtasks.exe\",\"reg.exe\",\"net.exe\",\"net1.exe\",\"netsh.exe\") by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | search NOT user=\"*$\" AND NOT user IN (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") | convert ctime(firstTime) ctime(lastTime) | sort 0 - lastTime",
+      "kql": "let LookbackDays = 7d;\nlet StormChildren = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"certutil.exe\",\"mshta.exe\",\"rundll32.exe\",\"bitsadmin.exe\",\"wscript.exe\",\"cscript.exe\",\"msiexec.exe\",\"ssh.exe\",\"scp.exe\",\"schtasks.exe\",\"reg.exe\",\"net.exe\",\"net1.exe\",\"netsh.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName =~ \"quickassist.exe\"\n| where FileName in~ (StormChildren)\n| where AccountName !endswith \"$\"\n| extend SuspiciousIntent = case(\n    ProcessCommandLine has_any (\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"-EncodedCommand\",\"-enc \"), \"PS-download/exec\",\n    ProcessCommandLine has_any (\"http://\",\"https://\",\"-urlcache\",\"--insecure\",\" -k \"), \"Remote payload fetch\",\n    FileName =~ \"ssh.exe\" or FileName =~ \"scp.exe\", \"OpenSSH tunneling (Storm-1811 staple)\",\n    ProcessCommandLine has_any (\"AntiSpam.bat\",\"updater.bat\",\"clean.bat\"), \"Storm-1811 batch artefact\",\n    \"Generic LOLBin under Quick Assist\"\n)\n| project Timestamp, DeviceName, AccountName, AccountUpn,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          Child = FileName,\n          ChildCmd = ProcessCommandLine,\n          ChildSHA256 = SHA256,\n          SuspiciousIntent,\n          IsRemoteSession = tostring(parse_json(AdditionalFields).IsInitiatingProcessRemoteSession)\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet StormChildren = dynamic([\"\\\\cmd.exe\",\"\\\\powershell.exe\",\"\\\\pwsh.exe\",\"\\\\curl.exe\",\"\\\\certutil.exe\",\"\\\\mshta.exe\",\"\\\\rundll32.exe\",\"\\\\bitsadmin.exe\",\"\\\\wscript.exe\",\"\\\\cscript.exe\",\"\\\\msiexec.exe\",\"\\\\ssh.exe\",\"\\\\scp.exe\",\"\\\\schtasks.exe\",\"\\\\reg.exe\",\"\\\\net.exe\",\"\\\\net1.exe\",\"\\\\netsh.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\quickassist.exe\"\n| where NewProcessName has_any (StormChildren)\n| where Account !endswith \"$\"\n| where AccountType == \"User\"\n| extend SuspiciousIntent = case(\n    CommandLine has_any (\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"-EncodedCommand\",\"-enc \"), \"PS-download/exec\",\n    CommandLine has_any (\"http://\",\"https://\",\"-urlcache\",\"--insecure\",\" -k \"), \"Remote payload fetch\",\n    NewProcessName endswith \"\\\\ssh.exe\" or NewProcessName endswith \"\\\\scp.exe\", \"OpenSSH tunneling (Storm-1811 staple)\",\n    CommandLine has_any (\"AntiSpam.bat\",\"updater.bat\",\"clean.bat\"), \"Storm-1811 batch artefact\",\n    \"Generic LOLBin under Quick Assist\"\n)\n| project TimeGenerated, Computer, Account, AccountDomain,\n          ParentProcessName, NewProcessName, CommandLine,\n          TokenElevationType, SuspiciousIntent\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Quick Assist Spawning LOLBin or Scripting Host (Storm-1811 / Black Basta)\nid: 8e2b3a55-1b4c-4d77-9f5e-storm1811quickassist\nstatus: experimental\ndescription: Detects Microsoft Quick Assist (quickassist.exe) spawning command shells, scripting hosts, download utilities or OpenSSH binaries \u2014 the hand-on-keyboard pattern Microsoft attributed to Storm-1811 prior to Black Basta deployment, following email-bomb + fake-helpdesk social engineering.\nreferences:\n    - https://www.microsoft.com/en-us/security/blog/2024/05/15/threat-actors-misusing-quick-assist-in-social-engineering-attacks-leading-to-ransomware/\n    - https://redcanary.com/blog/threat-intelligence/black-basta-quick-assist/\n    - https://www.rapid7.com/blog/post/2024/05/10/ongoing-social-engineering-campaign-refreshes-payloads/\nauthor: SOC Detection Engineering\ndate: 2026/05/05\ntags:\n    - attack.initial_access\n    - attack.execution\n    - attack.command_and_control\n    - attack.t1219.002\n    - attack.t1566.004\n    - attack.t1059.001\n    - attack.t1059.003\n    - attack.t1105\nlogsource:\n    category: process_creation\n    product: windows\ndetection:\n    selection_parent:\n        ParentImage|endswith: '\\quickassist.exe'\n    selection_child:\n        Image|endswith:\n            - '\\cmd.exe'\n            - '\\powershell.exe'\n            - '\\pwsh.exe'\n            - '\\curl.exe'\n            - '\\certutil.exe'\n            - '\\mshta.exe'\n            - '\\rundll32.exe'\n            - '\\bitsadmin.exe'\n            - '\\wscript.exe'\n            - '\\cscript.exe'\n            - '\\msiexec.exe'\n            - '\\ssh.exe'\n            - '\\scp.exe'\n            - '\\schtasks.exe'\n            - '\\net.exe'\n            - '\\net1.exe'\n            - '\\netsh.exe'\n            - '\\reg.exe'\n    condition: selection_parent and selection_child\nfalsepositives:\n    - Genuine Microsoft helpdesk staff using command-line tools during a remote session (rare, should be allowlisted by approved support account)\nlevel: high",
+      "rationale": "Quick Assist parent \u2192 shell/LOLBin child is essentially never produced by legitimate Microsoft helpdesk usage \u2014 Quick Assist normally only spawns its own UI helpers. Microsoft's May 2024 Storm-1811 advisory and Red Canary's reporting both call out this exact tree as the kinetic step in the Black Basta kill chain (email bomb \u2192 vishing as Helpdesk via Teams/phone \u2192 user runs Quick Assist \u2192 attacker ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "OpenSSH",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`OpenSSH` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Storm",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Storm` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "AntiSpam",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`AntiSpam` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Generic",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Generic` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "LOLBin",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`LOLBin` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Quick",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Quick` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Assist",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Assist` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "OpenSSH",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`OpenSSH` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Storm",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Storm` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "AntiSpam",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`AntiSpam` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Generic",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Generic` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "LOLBin",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`LOLBin` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Quick",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Quick` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Assist",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Assist` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Storm-1811 email-bomb followed by remote-support tool launch on the bombed user's device",
+      "description": "Correlates a high-volume inbound spam burst against a single mailbox (Storm-1811's 'email bombing' lure) with the subsequent execution of a remote-support / RMM binary (Quick Assist, MSRA, AnyDesk, ScreenConnect, TeamViewer) on a device owned by that same user within 4 hours \u2014 the full Storm-1811 \u2192 Black Basta initial-access chain.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.003",
+        "T1566.004",
+        "T1219.002",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count as InboundCount dc(All_Email.src_user) as UniqueSenders min(_time) as BombStart max(_time) as BombEnd from datamodel=Email.All_Email where All_Email.direction=\"inbound\" by All_Email.recipient _time span=15m | `drop_dm_object_name(All_Email)` | where InboundCount>=30 AND UniqueSenders>=20 | eval window_end=BombEnd+14400 | rename recipient as user | join type=inner user [ | tstats summariesonly=true count as ToolEvents values(Processes.process) as ToolCmd values(Processes.process_name) as ToolName min(_time) as ToolTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"quickassist.exe\",\"msra.exe\",\"AnyDesk.exe\",\"ScreenConnect.ClientService.exe\",\"TeamViewer.exe\",\"TeamViewer_Service.exe\",\"Supremo.exe\",\"NetSupportClient32.exe\",\"client32.exe\") by host Processes.user | `drop_dm_object_name(Processes)` | rename user as user_short ] | where ToolTime>=BombStart AND ToolTime<=window_end | table BombStart BombEnd ToolTime user host InboundCount UniqueSenders ToolName ToolCmd | sort 0 - ToolTime",
+      "kql": "let WindowMinutes = 15m;\nlet BombThreshold = 30;\nlet UniqueSenderThreshold = 20;\nlet PostBombSeconds = 4h;\nlet RmmTools = dynamic([\"quickassist.exe\",\"msra.exe\",\"anydesk.exe\",\"screenconnect.clientservice.exe\",\"teamviewer.exe\",\"teamviewer_service.exe\",\"supremo.exe\",\"netsupportclient32.exe\",\"client32.exe\"]);\nlet EmailBomb = EmailEvents\n    | where Timestamp > ago(7d)\n    | where EmailDirection == \"Inbound\"\n    | summarize InboundCount = count(),\n                UniqueSenders = dcount(SenderFromAddress),\n                UniqueSenderDomains = dcount(SenderFromDomain),\n                BombStart = min(Timestamp),\n                BombEnd = max(Timestamp)\n                by RecipientEmailAddress, bin(Timestamp, WindowMinutes)\n    | where InboundCount >= BombThreshold and UniqueSenders >= UniqueSenderThreshold;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (RmmTools)\n   or ProcessCommandLine has_any (\"aka.ms/quickassist\",\"quick assist\",\"join.me\",\"anydesk\",\"screenconnect\")\n| where AccountName !endswith \"$\"\n| join kind=inner EmailBomb on $left.AccountUpn == $right.RecipientEmailAddress\n| where Timestamp between (BombStart .. BombEnd + PostBombSeconds)\n| extend MinutesAfterBomb = datetime_diff('minute', Timestamp, BombEnd)\n| project BombStart, BombEnd, ToolLaunchTime = Timestamp,\n          MinutesAfterBomb, DeviceName, AccountUpn,\n          BombMessageCount = InboundCount,\n          UniqueSenders, UniqueSenderDomains,\n          ToolName = FileName, ToolCmd = ProcessCommandLine,\n          ToolParent = InitiatingProcessFileName\n| order by ToolLaunchTime desc",
+      "sentinel_kql": "let WindowMinutes = 15m;\nlet BombThreshold = 30;\nlet UniqueSenderThreshold = 20;\nlet PostBombSeconds = 4h;\nlet RmmPaths = dynamic([\"\\\\quickassist.exe\",\"\\\\msra.exe\",\"\\\\anydesk.exe\",\"\\\\screenconnect.clientservice.exe\",\"\\\\teamviewer.exe\",\"\\\\teamviewer_service.exe\",\"\\\\supremo.exe\",\"\\\\netsupportclient32.exe\",\"\\\\client32.exe\"]);\nlet EmailBomb = OfficeActivity\n    | where TimeGenerated > ago(7d)\n    | where OfficeWorkload == \"Exchange\"\n    | where Operation in~ (\"Receive\",\"MailItemsAccessed\",\"MessageReceived\")\n    | where isnotempty(MailboxOwnerUPN)\n    | summarize InboundCount = count(),\n                UniqueSenders = dcount(Sender),\n                BombStart = min(TimeGenerated),\n                BombEnd = max(TimeGenerated)\n                by MailboxOwnerUPN, bin(TimeGenerated, WindowMinutes)\n    | where InboundCount >= BombThreshold and UniqueSenders >= UniqueSenderThreshold;\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where NewProcessName has_any (RmmPaths)\n| where Account !endswith \"$\"\n| where AccountType == \"User\"\n| extend UPN = strcat(AccountName, \"@\", split(AccountDomain, \".\")[0])\n| join kind=inner (\n    EmailBomb\n    | extend UserPrefix = tostring(split(MailboxOwnerUPN, \"@\")[0])\n  ) on $left.AccountName == $right.UserPrefix\n| where TimeGenerated between (BombStart .. BombEnd + PostBombSeconds)\n| extend MinutesAfterBomb = datetime_diff('minute', TimeGenerated, BombEnd)\n| project BombStart, BombEnd, ToolLaunchTime = TimeGenerated,\n          MinutesAfterBomb, Computer, MailboxOwnerUPN,\n          BombMessageCount = InboundCount, UniqueSenders,\n          ToolPath = NewProcessName, ToolCmd = CommandLine,\n          ParentProcessName\n| order by ToolLaunchTime desc",
+      "sigma_yaml": "",
+      "rationale": "The 'email bomb to overwhelm the inbox, then call the user as Helpdesk to run Quick Assist' chain is the singular Storm-1811 fingerprint per the Microsoft (May 2024), Red Canary, and Rapid7 reports \u2014 no other tracked actor uses this combo as their primary initial-access pattern. Each leg alone (a noisy mailbox, an RMM launch) is benign; the 4-hour temporal join between the bombed mailbox owner and"
+    }
+  ]
+}
