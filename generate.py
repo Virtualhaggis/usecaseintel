@@ -1102,8 +1102,113 @@ def _llm_generate_ucs(article: dict, ind: dict):
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(data.get('ucs') or [])} UC(s)")
     if total_sigma_issues:
         print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(data.get('ucs') or [])} UC(s)")
+    # Stamp the cache with the inputs we used so the 24h re-review pass
+    # can detect when an article's body has been edited or when a similar
+    # article has appeared elsewhere since this analysis ran.
+    data["_body_hash"]     = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()
+    data["_similar_count"] = int(article.get("_similar_count", 0))
+    data["_analyzed_at"]   = dt.datetime.now(dt.timezone.utc).isoformat()
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+
+
+def _recent_window_revisit(articles, hours: int = 24) -> int:
+    """Pre-pass: for every article published within the last `hours`
+    hours, check whether its cached LLM analysis has gone stale and
+    invalidate it if so. Two staleness triggers:
+
+      1. **Body changed.** The article was edited after we last analysed
+         it (publishers routinely add IOCs / vendor links / corrections).
+         We compare SHA256 of the body we'd send the LLM today against
+         the `_body_hash` recorded when the cache was written.
+
+      2. **A similar article appeared elsewhere.** Cross-source dedupe
+         keeps only one card, but if a SECOND vendor publishes a
+         write-up of the same campaign after our first analysis, the
+         second write-up frequently brings new mechanics. We compare
+         current similar-title count (Jaccard ≥ 0.55) against the
+         `_similar_count` recorded at analysis time.
+
+    Each invalidated cache file is renamed `*.invalidated-<ts>` rather
+    than deleted, so we can roll back if a regression sneaks in. Returns
+    the number of cache files invalidated."""
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(hours=hours)
+    # Pre-tokenize titles once for the similarity walk.
+    def _tok(t):
+        return {w.lower() for w in re.findall(r"[A-Za-z0-9]+", t or "") if len(w) > 2}
+    title_tokens_by_url = {}
+    for a in articles:
+        url = a.get("link") or ""
+        if url:
+            title_tokens_by_url[url] = _tok(a.get("title", ""))
+
+    # Annotate each article with its current similar-article count, so
+    # _llm_generate_ucs can persist that value when it caches.
+    for a in articles:
+        my = title_tokens_by_url.get(a.get("link") or "")
+        if not my:
+            a["_similar_count"] = 0
+            continue
+        count = 0
+        for other_url, other_tok in title_tokens_by_url.items():
+            if other_url == a.get("link"):
+                continue
+            if not other_tok:
+                continue
+            inter = len(my & other_tok)
+            union = len(my | other_tok)
+            if union and (inter / union) >= 0.55:
+                count += 1
+        a["_similar_count"] = count
+
+    invalidated = 0
+    for a in articles:
+        pub = a.get("published_dt")
+        if not isinstance(pub, dt.datetime):
+            continue
+        # Some feeds emit naive datetimes; coerce to UTC for the compare.
+        if pub.tzinfo is None:
+            pub = pub.replace(tzinfo=dt.timezone.utc)
+        if pub < cutoff:
+            continue
+        url = a.get("link") or ""
+        if not url:
+            continue
+        cache_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
+        cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+        if not cache_path.exists():
+            continue
+        try:
+            data = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+
+        body = (a.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
+        cur_hash = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()
+        body_changed = bool(data.get("_body_hash")) and data["_body_hash"] != cur_hash
+        cached_similar = int(data.get("_similar_count", 0))
+        cur_similar = int(a.get("_similar_count", 0))
+        similar_grew = cur_similar > cached_similar
+
+        if not (body_changed or similar_grew):
+            continue
+        ts = dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        target = cache_path.with_suffix(cache_path.suffix + f".invalidated-{ts}-revisit")
+        try:
+            cache_path.rename(target)
+            invalidated += 1
+            reasons = []
+            if body_changed: reasons.append("body changed")
+            if similar_grew: reasons.append(f"similar {cached_similar}->{cur_similar}")
+            title = (a.get("title") or "")[:60]
+            print(f"    [revisit] {title} ({', '.join(reasons)})")
+        except Exception as _e:
+            # Disk weirdness shouldn't block the pipeline.
+            print(f"    [!] revisit rename failed for {url[:60]}: {_e}")
+
+    if invalidated:
+        print(f"[*] 24h re-review: invalidated {invalidated} cache file(s) for re-analysis")
+    return invalidated
 
 
 # Prompt for the per-actor LLM bespoke detections. Different shape from
@@ -10957,6 +11062,15 @@ def main():
     if not articles:
         sys.exit("[!] No articles returned from any source.")
     print(f"[*] {len(articles)} articles total. Building deep analysis…")
+
+    # 24-hour re-review window: for any article published in the last day,
+    # invalidate its cached LLM analysis if either (a) the body has been
+    # edited since we cached, or (b) a similar article has appeared
+    # elsewhere since. Forces a fresh LLM pass with the up-to-date inputs.
+    try:
+        _recent_window_revisit(articles, hours=24)
+    except Exception as _e:
+        print(f"[!] 24h re-review pre-pass failed: {_e}")
 
     cards = []
     nav_meta = []
