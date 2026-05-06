@@ -934,7 +934,11 @@ DATADOG CLOUD SIEM SCHEMA + QUERY SYNTAX
 Reference for the `datadog_query` field. Use only the field paths
 listed below for the source you're scoping with `source:` — Datadog
 enforces tag conventions per source and unknown paths return zero
-results.
+results. CRITICAL: Datadog values are CASE-SENSITIVE (no `=~`
+equivalent). When matching binary paths, registry keys, hostnames or
+anything that real-world events emit in mixed case, emit BOTH
+casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
+*\\dthelper.exe)`. A single-case match WILL miss legitimate hits.
 
 <<DATADOG_SCHEMA>>
 ================================================================
@@ -1393,7 +1397,11 @@ DATADOG CLOUD SIEM SCHEMA + QUERY SYNTAX
 Reference for the `datadog_query` field. Use only the field paths
 listed below for the source you're scoping with `source:` — Datadog
 enforces tag conventions per source and unknown paths return zero
-results.
+results. CRITICAL: Datadog values are CASE-SENSITIVE (no `=~`
+equivalent). When matching binary paths, registry keys, hostnames or
+anything that real-world events emit in mixed case, emit BOTH
+casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
+*\\dthelper.exe)`. A single-case match WILL miss legitimate hits.
 
 <<DATADOG_SCHEMA>>
 ================================================================

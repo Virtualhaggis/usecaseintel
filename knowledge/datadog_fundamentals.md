@@ -9,12 +9,15 @@ source:<log-source> @<tag.path>:<value> [AND|OR|NOT] @<other.path>:<value>
 ```
 
 - `source:cloudtrail` — restricts to one log shipper.
-- `@user.name:alice` — matches a structured-attribute path. `@` denotes a tagged attribute (case-sensitive path); plain `name:alice` searches free-text.
-- Boolean operators: `AND`, `OR`, `NOT` (uppercase). Group with parentheses.
-- Wildcards: `@process.name:power*`, `@host:web-*`. Leading wildcards work but are slow.
-- Numeric ranges: `@http.status_code:>=400`, `@duration:[100 TO 500]`.
-- IP CIDR: `@network.client.ip:81.171.16.0/24`.
+- `@user.name:alice` — matches a structured-attribute path. `@` denotes a tagged attribute; plain `name:alice` is reserved-attribute / free-text.
+- **Boolean operators MUST be uppercase**: `AND`, `OR`, `NOT` / `-`. Lowercase `and`/`or` are treated as search terms.
+- **All `@attribute` searches are CASE-SENSITIVE**. Direct quote from Datadog docs: *"Attributes searches are case sensitive. Use full-text search to get case insensitive results."* There is no `=~` equivalent. `@Image:*\\dthelper.exe` will NOT match `DTHelper.exe`. See the case-sensitivity guidance in the house-style section below.
+- Wildcards: `*` = multi-char, `?` = single-char (incl. space). Both work in tagged attributes (`@process.name:power*`, `@host:web-?`); leading wildcards work but are slow.
+- **Wildcards inside quotes are LITERAL** — `"*test*"` searches for asterisks. Always use unquoted values when you need wildcard expansion.
+- Numeric ranges: `@http.status_code:>=400`, `@duration:[100 TO 500]`. The bracketed-range form requires the attribute to have a numeric facet.
+- **IP CIDR uses the `CIDR()` function, NOT colon syntax**: `CIDR(@network.client.ip, 10.0.0.0/8)` — works for IPv4 and IPv6, accepts multiple ranges `CIDR(@network.client.ip, 10.0.0.0/8, 192.168.0.0/16)`. Do NOT write `@network.client.ip:10.0.0.0/8` — that's a literal-string match and will silently miss everything.
 - Negation: `-@user.name:svc-*` or `NOT @user.name:svc-*`.
+- Escape these special chars with `\` when matching them literally inside a value: `= - ! && || > >= < <= ( ) { } [ ] " * ? : \ #` and spaces. Forward slash `/` does NOT need escaping. Alternative to escaping: wrap the value in double quotes (which also disables wildcards — pick one approach).
 - `@evt.outcome:failure` is a near-universal Datadog convention for failed-action signals.
 
 ## Standard log sources we target
@@ -106,10 +109,16 @@ silently returns zero hits for unknown paths.
 - **Prefer `@field.path:exact-value` over free-text search** — Datadog tagged attributes are indexed for fast lookup; free-text matches grep through every log line.
 - **Use `evt.outcome` where it exists** — terser than chasing source-specific status codes.
 - **Time windows are set at rule level**, not in the query — don't try to encode time in the query.
-- **Wildcards are case-insensitive when written lowercase**; use lowercase except where the protocol specifies otherwise (CloudTrail event names are PascalCase).
+- **Datadog values are CASE-SENSITIVE** (unlike KQL `=~` / `has`). `@Image:*\\dthelper.exe` will NOT match `DTHelper.exe` and vice versa. There is no case-insensitive operator. To handle vendor-style PascalCase paths plus likely-lowercase variants, emit BOTH casings inside an OR group whenever you reference a binary name, registry key, or other string that could appear in either form:
+  - GOOD: `@Image:(*\\DTHelper.exe OR *\\dthelper.exe)`
+  - GOOD: `@TargetObject:(*\\Run\\* OR *\\run\\*)`
+  - BAD: `@Image:*\\dthelper.exe` (misses real-world `DTHelper.exe` events)
+  CloudTrail/AWS event names (`ConsoleLogin`, `AssumeRole`) and Okta event types (`user.session.start`) have a single canonical casing and don't need duplication. Anything that came out of a Windows / Sysmon / file-system path almost certainly does.
 - **Group multi-condition queries with parentheses** — `(@a:1 OR @a:2) AND @b:3`.
 - **Negation**: `-@user.name:svc-*` or `NOT (@user.name:svc-*)`.
-- **CIDR for IPs**: `@network.client.ip:10.0.0.0/8` not regex.
+- **CIDR for IPs**: `CIDR(@network.client.ip, 10.0.0.0/8)` — function syntax, NOT `@network.client.ip:10.0.0.0/8` (that's a literal-string match and matches nothing).
+- **Reference Tables (lookup lists)** capped at 1,000,000 rows for filtering — fine for our IOC scale, but don't lean on giant allow-lists.
+- **Detection-rule queries use the exact same syntax** as the Logs Explorer search bar; time windows, evaluation cadence, groupBy, and aggregation thresholds are configured at rule-level, not in the query string.
 
 ## Examples
 
@@ -118,7 +127,7 @@ source:cloudtrail @evt.name:ConsoleLogin @userIdentity.type:Root @evt.outcome:su
 ```
 
 ```
-source:windows.sysmon @EventID:1 @ParentImage:*\\winword.exe @Image:(*\\powershell.exe OR *\\mshta.exe OR *\\regsvr32.exe)
+source:windows.sysmon @EventID:1 @ParentImage:(*\\winword.exe OR *\\WINWORD.EXE) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\regsvr32.exe OR *\\RegSvr32.exe)
 ```
 
 ```
@@ -126,7 +135,7 @@ source:azure.activeDirectory @evt.name:"Sign-in activity" @properties.status.err
 ```
 
 ```
-source:okta @evt.name:user.account.lock @client.ipAddress:81.171.16.0/24
+source:okta @evt.name:user.account.lock CIDR(@client.ipAddress, 81.171.16.0/24)
 ```
 
 ```

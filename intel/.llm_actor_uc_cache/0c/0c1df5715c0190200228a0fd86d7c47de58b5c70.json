@@ -1,0 +1,113 @@
+{
+  "name": "APT32",
+  "ucs": [
+    {
+      "title": "[LLM] APT32 (OceanLotus) Cobalt Kitty chain \u2014 Office macro spawning regsvr32/mshta with remote scriptlet (squiblydoo)",
+      "description": "Hunts APT32's signature post-delivery execution chain documented in the Cobra Carbon System / Cobalt Kitty campaigns: a maldoc opened in Word/Excel/Outlook spawns regsvr32.exe with /i:http (Squiblydoo), mshta.exe with an http URL, or an empty-cmdline rundll32 to stage a Cobalt Strike / Denis backdoor. This combination of office-parent + LOLBin-child + remote scriptlet retrieval is one of OceanLotus's most repeated TTPs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.005",
+        "T1218.010",
+        "T1218.005",
+        "T1218.011",
+        "T1137"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\") (Processes.process_name=\"regsvr32.exe\" Processes.process IN (\"*scrobj*\",\"*/i:http*\",\"*/i:\\\\\\\\*\",\"*/u*/s*/i*\")) OR (Processes.process_name=\"mshta.exe\" Processes.process IN (\"*http*\",\"*javascript:*\",\"*vbscript:*\")) OR (Processes.process_name=\"rundll32.exe\" (Processes.process=\"*rundll32.exe\" OR Processes.process IN (\"*javascript:*\",\"*\\\\AppData\\\\*\",\"*\\\\Temp\\\\*\"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | rename dest as host | where user!=\"SYSTEM\" AND NOT match(user,\"\\\\$$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// APT32 / OceanLotus \u2014 Cobalt Kitty execution chain: maldoc \u2192 LOLBin scriptlet exec\nlet lookback = 14d;\nlet office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\",\"wordview.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(lookback)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (office_parents)\n| where (FileName =~ \"regsvr32.exe\"\n         and (ProcessCommandLine has_any (\"/i:http\",\"/i:\\\\\\\\\",\"scrobj.dll\")\n              or ProcessCommandLine matches regex @\"(?i)/u\\s+/s\\s+/i:\"))\n     or (FileName =~ \"mshta.exe\"\n         and ProcessCommandLine has_any (\"http://\",\"https://\",\"javascript:\",\"vbscript:\"))\n     or (FileName =~ \"rundll32.exe\"\n         and (isempty(ProcessCommandLine)\n              or ProcessCommandLine matches regex @\"(?i)rundll32(\\.exe)?\\s*$\"\n              or ProcessCommandLine has \"javascript:\"\n              or ProcessCommandLine matches regex @\"(?i)\\\\AppData\\\\(Local|Roaming)\\\\\"\n              or ProcessCommandLine has @\"\\Temp\\\"))\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          ChildSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// APT32 / OceanLotus \u2014 Cobalt Kitty execution chain (Sentinel ASIM port)\nlet lookback = 14d;\nlet office_parents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\",\"wordview.exe\"]);\nImProcessCreate\n| where TimeGenerated > ago(lookback)\n| where ActorUsername !endswith \"$\"\n| extend parent = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n         child  = tolower(tostring(split(TargetProcessName, \"\\\\\")[-1]))\n| where parent in (office_parents)\n| where (child == \"regsvr32.exe\"\n         and (TargetProcessCommandLine has_any (\"/i:http\",\"/i:\\\\\\\\\",\"scrobj.dll\")\n              or TargetProcessCommandLine matches regex @\"(?i)/u\\s+/s\\s+/i:\"))\n     or (child == \"mshta.exe\"\n         and TargetProcessCommandLine has_any (\"http://\",\"https://\",\"javascript:\",\"vbscript:\"))\n     or (child == \"rundll32.exe\"\n         and (isempty(TargetProcessCommandLine)\n              or TargetProcessCommandLine has \"javascript:\"\n              or TargetProcessCommandLine has @\"\\AppData\\\"\n              or TargetProcessCommandLine has @\"\\Temp\\\"))\n| project TimeGenerated, DvcHostname, ActorUsername,\n          ParentProcessName, ParentProcessCommandLine,\n          TargetProcessName, TargetProcessCommandLine, SHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 OceanLotus Office-Parent LOLBin Scriptlet Execution\nid: 7c4e2b22-3ac1-4d0a-8a3a-ap32cobaltkitty01\nstatus: experimental\ndescription: Detects APT32 / OceanLotus / Cobalt Kitty execution chain where Office spawns regsvr32 (Squiblydoo), mshta with HTTP, or empty-cmdline rundll32.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://www.cybereason.com/blog/operation-cobalt-kitty-apt\nauthor: detection-engineering\ndate: 2026/05/06\ntags:\n  - attack.g0050\n  - attack.t1218.010\n  - attack.t1218.005\n  - attack.t1218.011\n  - attack.t1204.002\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent_office:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\eqnedt32.exe'\n  squiblydoo:\n    Image|endswith: '\\regsvr32.exe'\n    CommandLine|contains:\n      - '/i:http'\n      - 'scrobj.dll'\n      - '/i:\\\\\\\\'\n  mshta_http:\n    Image|endswith: '\\mshta.exe'\n    CommandLine|contains:\n      - 'http://'\n      - 'https://'\n      - 'javascript:'\n      - 'vbscript:'\n  rundll_susp:\n    Image|endswith: '\\rundll32.exe'\n    CommandLine|contains:\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - 'javascript:'\n  condition: parent_office and (squiblydoo or mshta_http or rundll_susp)\nfalsepositives:\n  - Legitimate add-in installers initiated from Office (rare)\nlevel: high",
+      "rationale": "OceanLotus / Cobalt Kitty operational reporting (Cybereason, ESET, FireEye) repeatedly documents exactly this chain: spear-phish maldoc \u2192 VBA \u2192 regsvr32 with remote .sct (Squiblydoo) OR mshta over HTTP OR rundll32 launching from %AppData%/%Temp% to stage Denis/Cobalt Strike. The combination of Office parentage with LOLBin children fetching remote scriptlets is far more APT32-specific than any sing",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "AppData",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`AppData` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Local",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Local` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Roaming",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Roaming` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Temp",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "Timestamp",
+          "message": "`Temp` is not a canonical column of DeviceProcessEvents. Did you mean `Timestamp`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "AppData",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`AppData` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Temp",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Temp` is not a canonical column of ImProcessCreate."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT32 (OceanLotus) DLL side-loading via legitimate signed binary in user-writable directory",
+      "description": "Hunts APT32's hallmark side-loading tradecraft (RasTls.exe / Symantec, mcoemcpy.exe / McAfee, wsc_proxy.exe / AVG, GoogleUpdate.exe, Word's wwlib.dll variants) where a properly signed third-party binary is dropped into AppData/ProgramData/Temp and immediately loads an unsigned DLL from the same folder \u2014 the loader pattern used to deploy KerrDown, Salgorea and OceanLotus's PhantomDLL.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1218",
+        "T1027",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\AppData\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\Public\\\\*\") (Filesystem.file_name IN (\"RasTls.exe\",\"mcoemcpy.exe\",\"wsc_proxy.exe\",\"GoogleUpdate.exe\",\"goopdate.dll\",\"wwlib.dll\",\"SymNeti.dll\",\"vsodscpl.dll\",\"AcroRd32.exe\",\"AdobeUpdate.exe\")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename dest as host | join type=inner host file_path [ | tstats summariesonly=t values(Processes.process) as cmdline values(Processes.process_hash) as procHash from datamodel=Endpoint.Processes where Processes.parent_process_path=\"*\\\\AppData\\\\*\" OR Processes.parent_process_path=\"*\\\\ProgramData\\\\*\" OR Processes.parent_process_path=\"*\\\\Temp\\\\*\" by Processes.dest Processes.parent_process_path Processes.parent_process_name | rename Processes.dest as host Processes.parent_process_path as file_path Processes.parent_process_name as exec_name ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// APT32 / OceanLotus \u2014 signed third-party binary loading sibling unsigned DLL from user-writable path\nlet lookback = 14d;\nlet user_writable = dynamic([@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Users\\Public\\\"]);\nlet apt32_loaders = dynamic([\n    \"rastls.exe\",\"mcoemcpy.exe\",\"wsc_proxy.exe\",\"googleupdate.exe\",\n    \"acrord32.exe\",\"adobeupdate.exe\",\"symneti.dll\",\"goopdate.dll\",\n    \"wwlib.dll\",\"vsodscpl.dll\",\"avgrsstx.dll\"]);\nlet sus_loads =\n    DeviceImageLoadEvents\n    | where Timestamp > ago(lookback)\n    | where InitiatingProcessFolderPath has_any (user_writable)\n    | where FolderPath has_any (user_writable)\n    | where InitiatingProcessFolderPath =~ FolderPath          // DLL alongside the EXE\n    | where SHA256 != InitiatingProcessSHA256\n    | where tolower(InitiatingProcessFileName) in (apt32_loaders)\n         or tolower(FileName) in (apt32_loaders)\n         or InitiatingProcessVersionInfoCompanyName has_any (\"Symantec\",\"McAfee\",\"AVG\",\"Google\",\"Adobe\",\"Microsoft\")\n    | project Timestamp, DeviceId, DeviceName,\n              LoaderImage = InitiatingProcessFolderPath,\n              LoaderSigner = InitiatingProcessVersionInfoCompanyName,\n              LoaderSHA = InitiatingProcessSHA256,\n              SideloadedDLL = FolderPath,\n              DllSHA = SHA256;\nsus_loads\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(lookback)\n    | where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n    | project Timestamp, DeviceId, FolderPath, FileName,\n              DropperParent = InitiatingProcessFileName,\n              DropperCmd    = InitiatingProcessCommandLine\n  ) on DeviceId\n| where SideloadedDLL has FolderPath\n| project Timestamp, DeviceName, LoaderImage, LoaderSigner, LoaderSHA,\n          SideloadedDLL, DllSHA, DropperParent, DropperCmd\n| order by Timestamp desc",
+      "sentinel_kql": "// APT32 / OceanLotus \u2014 signed-binary side-loading in user-writable path (Sentinel)\n// Falls back to SecurityEvent 4688 + EventID 7 (Sysmon ImageLoad) where available.\nlet lookback = 14d;\nlet apt32_loaders = dynamic([\n    \"rastls.exe\",\"mcoemcpy.exe\",\"wsc_proxy.exe\",\"googleupdate.exe\",\n    \"acrord32.exe\",\"adobeupdate.exe\",\"symneti.dll\",\"goopdate.dll\",\n    \"wwlib.dll\",\"vsodscpl.dll\",\"avgrsstx.dll\"]);\nlet user_writable = dynamic([@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Users\\Public\\\"]);\nWindowsEvent\n| where TimeGenerated > ago(lookback)\n| where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 7   // ImageLoad\n| extend Image = tostring(EventData.Image),\n         ImageLoaded = tostring(EventData.ImageLoaded),\n         Signed = tostring(EventData.Signed),\n         Signature = tostring(EventData.Signature),\n         ImageHash = tostring(EventData.Hashes),\n         LoadedHash = tostring(EventData.HashesLoaded)\n| where Image has_any (user_writable) and ImageLoaded has_any (user_writable)\n| extend ImageDir = strcat_array(array_slice(split(Image, \"\\\\\"), 0, -2), \"\\\\\"),\n         LoadedDir = strcat_array(array_slice(split(ImageLoaded, \"\\\\\"), 0, -2), \"\\\\\")\n| where ImageDir =~ LoadedDir                                     // sibling on disk\n| where tolower(tostring(split(Image,\"\\\\\")[-1])) in (apt32_loaders)\n     or tolower(tostring(split(ImageLoaded,\"\\\\\")[-1])) in (apt32_loaders)\n     or Signature has_any (\"Symantec\",\"McAfee\",\"AVG\",\"Google\",\"Adobe\",\"Microsoft Corporation\")\n| project TimeGenerated, Computer, Image, Signature, Signed, ImageLoaded, ImageHash, LoadedHash\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "DLL side-loading is THE OceanLotus signature \u2014 researchers (ESET, Volexity, Mandiant, BlackBerry/Cylance) attribute APT32 partly by this very loader pattern. The actor consistently abuses signed Symantec (RasTls), McAfee (mcoemcpy), AVG (wsc_proxy), Google Updater and Microsoft Word components, dropped to AppData/ProgramData/Temp alongside a malicious twin DLL \u2014 used to load KerrDown, Salgorea, De"
+    }
+  ]
+}
