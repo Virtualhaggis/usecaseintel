@@ -5720,6 +5720,54 @@ ul.intel-types-doc code{
 .drawer-list .pill.confmedium{color:var(--warn);}
 .drawer-empty{color:var(--muted-2); font-size:12px; font-style:italic; padding:8px 0;}
 
+/* ----- Share buttons + deeplink highlight ---------------------------- */
+.share-btn{
+  background:transparent; border:1px solid transparent;
+  color:var(--muted); cursor:pointer;
+  padding:3px 5px; border-radius:5px;
+  display:inline-flex; align-items:center; justify-content:center;
+  line-height:1;
+  transition:color 0.12s, border-color 0.12s, background 0.12s, transform 0.12s;
+}
+.share-btn:hover{
+  color:var(--text); border-color:var(--border); background:rgba(255,255,255,0.04);
+}
+.share-btn:active{transform:scale(0.92);}
+.share-btn.copied{
+  color:#10b981; border-color:rgba(16,185,129,0.4); background:rgba(16,185,129,0.08);
+}
+.share-btn.copied svg{display:none;}
+.share-btn.copied::after{content:"✓ Link copied"; font-size:11px; font-weight:600;}
+/* UC inline share button: sit at end of summary row, low-emphasis. */
+.uc summary .share-btn{
+  margin-left:auto; opacity:0.55;
+}
+.uc summary:hover .share-btn{opacity:1;}
+/* Article-card share button: floats top-right corner of the card. */
+.card-share{
+  position:absolute; top:12px; right:42px;
+  width:28px; height:28px;
+  opacity:0.55;
+}
+.card:hover .card-share{opacity:1;}
+.card{position:relative;}
+
+/* Brief halo + outline when a deeplink lands on a target. */
+@keyframes deeplinkHi{
+  0%   {box-shadow:0 0 0 0 rgba(113,112,255,0.55);}
+  60%  {box-shadow:0 0 0 8px rgba(113,112,255,0);}
+  100% {box-shadow:0 0 0 0 rgba(113,112,255,0);}
+}
+.deeplink-target{
+  animation:deeplinkHi 1.6s ease-out 1;
+  outline:1px solid var(--accent);
+  outline-offset:2px;
+  border-radius:6px;
+}
+@media (prefers-reduced-motion: reduce){
+  .deeplink-target{animation:none;}
+}
+
 /* ----- Reduced motion ------------------------------------------------ */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important;}
@@ -9187,6 +9235,99 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
      independent). -->
 <script defer src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
 <script defer src="https://unpkg.com/globe.gl@2.27.0/dist/globe.gl.min.js"></script>
+<!-- Share & deeplink routing.
+     Hash format:
+       #uc-<10hex>           open + scroll to a use case
+       #article-<date>-<slug> scroll to an article card
+     The Copy-link buttons hand out share-stub URLs (share/uc/<slug>.html
+     or share/article/<slug>.html) so chat-app unfurls (Discord/Slack/X)
+     get proper og:* previews; the stub redirects humans to the in-app
+     hash URL in <50 ms. -->
+<script>
+(function(){
+  function shareStubUrl(kind, slug){
+    var base = location.origin + location.pathname.replace(/\/index\.html$/, '/');
+    if (!base.endsWith('/')) base += '/';
+    return base + 'share/' + kind + '/' + encodeURIComponent(slug) + '.html';
+  }
+  function highlight(el){
+    if (!el) return;
+    el.classList.add('deeplink-target');
+    setTimeout(function(){ el.classList.remove('deeplink-target'); }, 1700);
+  }
+  function openUc(slug){
+    var el = document.querySelector('[data-uc-slug="' + slug.replace(/"/g, '\\"') + '"]');
+    if (!el) return false;
+    var p = el;
+    while (p) {
+      if (p.tagName === 'DETAILS' && !p.open) p.open = true;
+      p = p.parentElement;
+    }
+    el.scrollIntoView({behavior:'smooth', block:'center'});
+    highlight(el);
+    var t = el.querySelector('.uc-title');
+    if (t) document.title = t.textContent.trim() + ' · Clankerusecase';
+    return true;
+  }
+  function openArticle(slug){
+    var el = document.querySelector('[data-art-slug="' + slug.replace(/"/g, '\\"') + '"]');
+    if (!el) return false;
+    el.scrollIntoView({behavior:'smooth', block:'start'});
+    highlight(el);
+    var t = el.querySelector('h2 a, h2');
+    if (t) document.title = t.textContent.trim() + ' · Clankerusecase';
+    return true;
+  }
+  function route(hash){
+    if (!hash) return false;
+    hash = hash.replace(/^#/, '');
+    var m;
+    if ((m = hash.match(/^uc-([0-9a-f]+)$/i))) return openUc(m[1]);
+    if ((m = hash.match(/^article-(.+)$/))) return openArticle(decodeURIComponent(m[1]));
+    return false;
+  }
+  function initialRoute(){
+    if (!location.hash) return;
+    var tries = 0;
+    var iv = setInterval(function(){
+      if (route(location.hash) || ++tries > 25) clearInterval(iv);
+    }, 150);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialRoute);
+  } else {
+    initialRoute();
+  }
+  window.addEventListener('hashchange', function(){ route(location.hash); });
+
+  // Copy-link click handler. Uses the share-stub URL by default so
+  // chat-app unfurls work; falls back to the hash URL if Shift is held.
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('[data-share-uc], [data-share-art]');
+    if (!btn) return;
+    e.preventDefault(); e.stopPropagation();
+    var slug = btn.getAttribute('data-share-uc') || btn.getAttribute('data-share-art');
+    var kind = btn.hasAttribute('data-share-uc') ? 'uc' : 'article';
+    var url;
+    if (e.shiftKey) {
+      var base = location.origin + location.pathname.replace(/\/index\.html$/, '/');
+      url = base + '#' + kind + '-' + slug;
+    } else {
+      url = shareStubUrl(kind, slug);
+    }
+    var ta = document.createElement('textarea');
+    ta.value = url; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch(_){}
+    document.body.removeChild(ta);
+    if (!ok && navigator.clipboard) navigator.clipboard.writeText(url).catch(function(){});
+    btn.classList.add('copied');
+    setTimeout(function(){ btn.classList.remove('copied'); }, 1200);
+  });
+})();
+</script>
+
 <!-- Cloudflare Web Analytics — privacy-friendly, no cookies, no GDPR
      banner needed. Beacon script is loaded with `defer` so it never
      blocks the 8 MB index.html parse, and it's injected at the very
@@ -9330,12 +9471,16 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         f'</div>'
         if ddog else ""
     )
+    uslug = _uc_slug(uc)
     return f"""
-<details class="uc"{ ' open' if idx == 0 else '' }>
+<details class="uc" data-uc-slug="{uslug}"{ ' open' if idx == 0 else '' }>
   <summary>
     <span class="uc-title">{html.escape(uc.title)}</span>
     <span class="uc-phase">{html.escape(phase_name)}</span>
     <span class="uc-conf {conf_cls}">{html.escape(uc.confidence)}</span>
+    <button class="share-btn" data-share-uc="{uslug}" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
   </summary>
   <div class="uc-body">
     <div class="uc-desc">{html.escape(uc.description)}</div>
@@ -9418,14 +9563,18 @@ def render_card(idx: int, article: dict, ind: dict,
     # ones the LLM tailored to the specific TTP).
     uc_total = len(use_cases)
     uc_llm = sum(1 for u in use_cases if (u.title or "").startswith("[LLM]"))
+    art_slug = _art_slug(article, article.get("published", ""))
     return f"""
-<article class="card" id="{aid}"
+<article class="card" id="{aid}" data-art-slug="{html.escape(art_slug)}"
   data-phases="{phases_attr}" data-sev="{severity}"
   data-techs="{html.escape(techs_attr)}"
   data-sources="{html.escape(sources_attr)}"
   data-uc-count="{uc_total}" data-llm-uc-count="{uc_llm}"
   data-search="{html.escape(search_blob)}">
   <div class="sev-ribbon {severity}">{SEV_LABEL[severity]}</div>
+  <button class="share-btn card-share" data-share-art="{html.escape(art_slug)}" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
   <h2><a href="{html.escape(article['link'])}" target="_blank" rel="noopener">{html.escape(article['title'])}</a></h2>
   <div class="source-badges">{source_html}</div>
   <div class="pubmeta">
@@ -10452,6 +10601,25 @@ def _slug(s: str) -> str:
     return s[:60] or "untitled"
 
 
+def _art_slug(article: dict, published: str | None = None) -> str:
+    """Stable share-link slug for an article: '<YYYY-MM-DD>-<title-slug>'.
+    Survives future regens because it's content-derived, not position-
+    derived. Empty / undated articles fall through to 'undated-<slug>'."""
+    pub = published or article.get("published") or "undated"
+    if not re.match(r"^\d{4}-\d{2}-\d{2}$", pub):
+        pub = "undated"
+    return f"{pub}-{_slug(article.get('title', ''))}"
+
+
+def _uc_slug(uc) -> str:
+    """Stable share-link slug for a use case: 10 hex chars from SHA1 of
+    title + Defender KQL. Stable across regens unless the UC content
+    actually changes; ~10⁻¹² collision probability across our catalog."""
+    import hashlib
+    blob = (getattr(uc, "title", "") or "") + "|" + (getattr(uc, "defender_kql", "") or "")
+    return hashlib.sha1(blob.encode("utf-8")).hexdigest()[:10]
+
+
 def _kev_briefing(article, ind, ucs):
     cves = ind.get("cves", []) or []
     cve = cves[0] if cves else "CVE-UNKNOWN"
@@ -10782,6 +10950,95 @@ For machine consumption, the same IOC list is also exported to:
 - `intel/iocs.rss.xml` (RSS feed)
 """
     (BRIEFINGS_DIR / "_TEMPLATES.md").write_text(md, encoding="utf-8")
+
+
+def _emit_share_stub(path, title: str, description: str, target: str):
+    """Write a tiny HTML redirect stub at `path` whose <head> carries
+    rich og:*/twitter:* meta tags. Bots scrape these for the unfurl
+    preview; humans get redirected to `target` (the in-app hash URL)
+    via meta-refresh + JS in <50 ms. Idempotent — overwrites cleanly."""
+    desc_short = (description or "").strip()
+    if len(desc_short) > 280:
+        desc_short = desc_short[:277].rstrip() + "..."
+    body = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(title)}</title>
+<meta name="description" content="{html.escape(desc_short)}">
+<link rel="canonical" href="{html.escape(target)}">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(desc_short)}">
+<meta property="og:url" content="{html.escape(target)}">
+<meta property="og:site_name" content="Clankerusecase">
+<meta property="og:image" content="https://clankerusecase.com/logo.png">
+<meta property="og:image:alt" content="Clankerusecase mascot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{html.escape(title)}">
+<meta name="twitter:description" content="{html.escape(desc_short)}">
+<meta name="twitter:image" content="https://clankerusecase.com/logo.png">
+<meta http-equiv="refresh" content="0; url={html.escape(target)}">
+<style>body{{font-family:system-ui,sans-serif;background:#08090a;color:#e7e7eb;display:flex;align-items:center;justify-content:center;height:100vh;margin:0;}} a{{color:#7170ff;}}</style>
+</head>
+<body>
+<p>Loading <a href="{html.escape(target)}">{html.escape(title)}</a> on Clankerusecase...</p>
+<script>location.replace("{target.replace(chr(92), chr(92)*2).replace('"', chr(92)+chr(34))}");</script>
+</body>
+</html>
+"""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(body, encoding="utf-8")
+
+
+def write_share_stubs(articles_meta, articles_raw_index, base_url: str = "https://clankerusecase.com"):
+    """Emit per-article and per-UC redirect stubs at:
+        share/article/<art-slug>.html
+        share/uc/<uc-slug>.html
+    so chat apps that paste these URLs render specific previews instead
+    of the generic site OG card. Wipes share/ first so deletes propagate
+    when articles rotate out of the window."""
+    share_dir = Path(__file__).parent / "share"
+    if share_dir.exists():
+        import shutil
+        shutil.rmtree(share_dir)
+    art_dir = share_dir / "article"
+    uc_dir = share_dir / "uc"
+    art_dir.mkdir(parents=True, exist_ok=True)
+    uc_dir.mkdir(parents=True, exist_ok=True)
+
+    art_n = uc_n = 0
+    seen_uc_slugs: set[str] = set()
+    for am in articles_meta:
+        a = articles_raw_index.get(am["id"])
+        if not a:
+            continue
+        title = a.get("title") or "Article"
+        summary = a.get("summary") or ""
+        pub = am.get("published") or ""
+        aslug = _art_slug(a, pub)
+        target = f"{base_url}/#article-{aslug}"
+        try:
+            _emit_share_stub(art_dir / f"{aslug}.html", title + " — Clankerusecase",
+                             summary, target)
+            art_n += 1
+        except OSError:
+            # Slug too long for filesystem? Fall back gracefully.
+            pass
+
+        for _uc_var, uc in am.get("ucs", []) or []:
+            usl = _uc_slug(uc)
+            if usl in seen_uc_slugs:
+                # Same UC reused across articles — first emit wins.
+                continue
+            seen_uc_slugs.add(usl)
+            uctitle = (uc.title or "Use case").lstrip("[LLM] ").strip() or "Use case"
+            ucdesc = (uc.description or "")
+            _emit_share_stub(uc_dir / f"{usl}.html", uctitle + " — Clankerusecase UC",
+                             ucdesc, f"{base_url}/#uc-{usl}")
+            uc_n += 1
+    print(f"[*] Share stubs written: {art_n} articles + {uc_n} UCs  ->  share/")
 
 
 def write_briefings(articles_meta, articles_raw_index):
@@ -11437,6 +11694,10 @@ def main():
     raw_index = {f"art-{i:02d}": a for i, a in enumerate(articles)}
     briefing_paths = write_briefings(articles_meta, raw_index)
     print(f"[*] Briefings written: {len(briefing_paths)}  ->  briefings/")
+    # Per-target redirect stubs at share/{article,uc}/<slug>.html so chat
+    # apps unfurl shared deeplinks with proper og:* previews. Bots scrape
+    # the stub; humans get redirected to the in-app hash URL in <50 ms.
+    write_share_stubs(articles_meta, raw_index)
 
     intel_json = __import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str)
 
