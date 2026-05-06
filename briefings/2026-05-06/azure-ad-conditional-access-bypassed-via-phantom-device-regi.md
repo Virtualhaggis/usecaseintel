@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Device code flow auth to Device Registration Service after AADSTS53003 CA block (Storm-2372 / Howler Cell pattern)
 
-`UC_7_3` · phase: **exploit** · confidence: **High**
+`UC_20_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ AADSignInEventsBeta
 
 ### [LLM] Phantom Entra ID device registration: non-Windows OS claiming hybrid Azure AD join
 
-`UC_7_4` · phase: **install** · confidence: **High**
+`UC_20_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ CloudAppEvents
 
 ### [LLM] Newly registered Entra ID device performs bulk Microsoft Graph directory enumeration within 1 hour
 
-`UC_7_5` · phase: **actions** · confidence: **Medium**
+`UC_20_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

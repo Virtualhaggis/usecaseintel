@@ -20,79 +20,12 @@ While the software industry has made genuine strides over the past few decades t
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
-- **T1133** — External Remote Services
-- **T1046** — Network Service Discovery
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Internet-exposed self-hosted Ollama API (port 11434) reachable from public IPs
-
-`UC_31_2` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.action) as action values(All_Traffic.transport) as transport values(All_Traffic.bytes_in) as bytes_in from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=11434 All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| where NOT cidrmatch("10.0.0.0/8", src) AND NOT cidrmatch("172.16.0.0/12", src) AND NOT cidrmatch("192.168.0.0/16", src) AND NOT cidrmatch("127.0.0.0/8", src) AND NOT cidrmatch("169.254.0.0/16", src)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// Inbound public-internet access to internal Ollama default port 11434
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where LocalPort == 11434
-| where ActionType in ("InboundConnectionAccepted", "ConnectionSuccess")
-| where RemoteIPType == "Public"
-| where not(ipv4_is_private(RemoteIP))
-| where not(RemoteIP startswith "127.") and not(RemoteIP startswith "169.254.")
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count(), DistinctSources = dcount(RemoteIP), SampleSources = make_set(RemoteIP, 25) by DeviceName, LocalIP, LocalPort, InitiatingProcessFileName
-| order by ConnCount desc
-```
-
-### [LLM] Endpoint making outbound requests to Ollama /api/generate or /api/tags on non-corporate hosts
-
-`UC_31_3` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.user) as user values(Web.dest) as dest from datamodel=Web.Web where (Web.url="*/api/generate*" OR Web.url="*/api/tags*" OR Web.url="*/api/chat*" OR Web.url="*/api/embeddings*" OR Web.dest_port=11434) by Web.src Web.dest Web.dest_port
-| `drop_dm_object_name(Web)`
-| where NOT cidrmatch("10.0.0.0/8", dest) AND NOT cidrmatch("172.16.0.0/12", dest) AND NOT cidrmatch("192.168.0.0/16", dest)
-| stats sum(count) as RequestCount, dcount(url) as UniqueUrls, values(url) as Urls, values(method) as Methods, min(firstTime) as firstTime, max(lastTime) as lastTime by src, dest, dest_port, user
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// Endpoint contacts to public Ollama API endpoints — enumeration (/api/tags) or prompt submission (/api/generate, /api/chat)
-let ollama_paths = dynamic(["/api/generate", "/api/tags", "/api/chat", "/api/embeddings", "/api/show", "/api/pull"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIPType == "Public"
-| where (RemotePort == 11434) or (RemoteUrl has_any (ollama_paths))
-| where InitiatingProcessFileName !in~ ("ollama.exe", "ollama-app.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-          RemoteIP, RemotePort, RemoteUrl,
-          ProcessName = InitiatingProcessFileName,
-          ProcessCmd = InitiatingProcessCommandLine
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            Hits = count(), DistinctRemotes = dcount(RemoteIP),
-            SampleUrls = make_set(RemoteUrl, 25), SampleRemotes = make_set(RemoteIP, 25),
-            SampleCmds = make_set(ProcessCmd, 5)
-            by DeviceName, AccountName, ProcessName
-| order by Hits desc
-```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -128,4 +61,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

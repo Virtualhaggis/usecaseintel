@@ -1,0 +1,264 @@
+{
+  "name": "Akira",
+  "ucs": [
+    {
+      "title": "[LLM] Akira (Howling Scorpius) RClone-to-MEGA exfil staging followed by VSS shadow-copy wipe",
+      "description": "Catches Akira's signature pre-encryption chain: bulk file staging via rclone.exe (frequently renamed) syncing to mega.io / mega.nz / mega.co.nz, paired within hours with deletion of Volume Shadow Copies via vssadmin/wmic/PowerShell on the same host - the documented Akira playbook before the megazord encryptor runs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1567.002",
+        "T1490",
+        "T1486",
+        "T1059.001",
+        "T1047"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as exfil_cmd from datamodel=Endpoint.Processes where (Processes.process_name=rclone.exe OR Processes.process=*\"rclone\"* OR Processes.original_file_name=rclone.exe) (Processes.process=*mega* OR Processes.process=*\"copy\"* OR Processes.process=*\"sync\"*) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | rename dest as exfil_host | join type=inner exfil_host [| tstats summariesonly=true count as vss_count values(Processes.process) as vss_cmd values(Processes.process_name) as vss_proc from datamodel=Endpoint.Processes where ((Processes.process_name=vssadmin.exe Processes.process=*\"delete shadows\"*) OR (Processes.process_name=wmic.exe Processes.process=*shadowcopy* Processes.process=*delete*) OR ((Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) (Processes.process=*\"Win32_Shadowcopy\"* OR Processes.process=*\"vssadmin*delete*\"*))) by Processes.dest | `drop_dm_object_name(Processes)` | rename dest as exfil_host | fields exfil_host vss_count vss_cmd vss_proc] | where lastTime - firstTime < 86400 | table firstTime exfil_host user process_name exfil_cmd vss_cmd vss_proc",
+      "kql": "let Lookback = 7d;\nlet Window = 24h;\nlet ExfilNames = dynamic([\"rclone.exe\",\"winscp.exe\",\"winscp.com\",\"filezilla.exe\"]);\nlet RcloneStaging =\n    DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where AccountName !endswith \"$\"\n    | where FileName in~ (ExfilNames)\n         or ProcessVersionInfoOriginalFileName in~ (\"rclone.exe\",\"WinSCP.exe\")\n         or ProcessCommandLine has_any (\"mega.io\",\"mega.nz\",\"mega.co.nz\",\":mega:\",\"--config\",\"copy \",\" sync \",\"--transfers\")\n    | where ProcessCommandLine has_any (\"mega\",\"transfer.sh\",\"anonfiles\",\"gofile\",\"sftp://\",\"ftp://\",\"copy \",\" sync \")\n    | project ExfilTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ExfilProc = FileName, ExfilCmd = ProcessCommandLine, ExfilSHA256 = SHA256;\nlet ShadowWipe =\n    DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where (FileName =~ \"vssadmin.exe\" and ProcessCommandLine has \"delete shadows\")\n         or (FileName =~ \"wmic.exe\" and ProcessCommandLine has_all (\"shadowcopy\",\"delete\"))\n         or (FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n             and ProcessCommandLine has_any (\"Win32_Shadowcopy\",\"Get-WmiObject Win32_Shadow\",\"Remove-WmiObject Win32_Shadow\",\"Get-CimInstance Win32_Shadow\"))\n         or (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has_any (\"recoveryenabled No\",\"bootstatuspolicy ignoreallfailures\"))\n         or (FileName =~ \"wbadmin.exe\" and ProcessCommandLine has_all (\"delete\",\"catalog\"))\n    | project WipeTime = Timestamp, DeviceId, WipeProc = FileName, WipeCmd = ProcessCommandLine;\nRcloneStaging\n| join kind=inner ShadowWipe on DeviceId\n| where WipeTime between (ExfilTime - Window .. ExfilTime + Window)\n| project ExfilTime, WipeTime,\n          DeltaMinutes = datetime_diff('minute', WipeTime, ExfilTime),\n          DeviceName, AccountName,\n          ExfilProc, ExfilCmd, ExfilSHA256,\n          WipeProc, WipeCmd\n| order by ExfilTime desc",
+      "sentinel_kql": "let Lookback = 7d;\nlet Window = 24h;\nlet ExfilNames = dynamic([\"rclone.exe\",\"winscp.exe\",\"winscp.com\",\"filezilla.exe\"]);\nlet RcloneStaging =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | extend ChildName = tolower(tostring(split(NewProcessName, @\"\\\")[-1]))\n    | where ChildName in (ExfilNames)\n         or CommandLine has_any (\"mega.io\",\"mega.nz\",\"mega.co.nz\",\":mega:\",\" sync \",\" copy \",\"--transfers\",\"--config\")\n    | where CommandLine has_any (\"mega\",\"transfer.sh\",\"anonfiles\",\"gofile\",\"sftp://\",\"ftp://\",\" sync \",\" copy \")\n    | project ExfilTime = TimeGenerated, Computer, Account, ExfilProc = ChildName, ExfilCmd = CommandLine;\nlet ShadowWipe =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 4688\n    | extend ChildName = tolower(tostring(split(NewProcessName, @\"\\\")[-1]))\n    | where (ChildName == \"vssadmin.exe\" and CommandLine has \"delete shadows\")\n         or (ChildName == \"wmic.exe\" and CommandLine has_all (\"shadowcopy\",\"delete\"))\n         or (ChildName in (\"powershell.exe\",\"pwsh.exe\")\n             and CommandLine has_any (\"Win32_Shadowcopy\",\"Get-WmiObject Win32_Shadow\",\"Remove-WmiObject Win32_Shadow\",\"Get-CimInstance Win32_Shadow\"))\n         or (ChildName == \"bcdedit.exe\" and CommandLine has_any (\"recoveryenabled No\",\"bootstatuspolicy ignoreallfailures\"))\n         or (ChildName == \"wbadmin.exe\" and CommandLine has_all (\"delete\",\"catalog\"))\n    | project WipeTime = TimeGenerated, Computer, WipeProc = ChildName, WipeCmd = CommandLine;\nRcloneStaging\n| join kind=inner ShadowWipe on Computer\n| where WipeTime between (ExfilTime - Window .. ExfilTime + Window)\n| project ExfilTime, WipeTime,\n          DeltaMinutes = datetime_diff('minute', WipeTime, ExfilTime),\n          Computer, Account,\n          ExfilProc, ExfilCmd, WipeProc, WipeCmd\n| order by ExfilTime desc",
+      "sigma_yaml": "",
+      "rationale": "Akira's post-intrusion playbook (CISA AA24-109A, Sophos X-Ops, Arctic Wolf, Unit 42) is consistent: stage data with rclone or WinSCP to MEGA, then immediately wipe VSS via vssadmin/wmic/PowerShell Win32_Shadowcopy and disable recovery with bcdedit before launching the megazord/Akira encryptor. Either half of this chain alone is noisy; the same-host correlation in a <24h window is an Akira fingerpr",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Win32_Shadowcopy",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Win32_Shadowcopy` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Get",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Get` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WmiObject",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WmiObject` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Win32_Shadow",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Win32_Shadow` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Remove",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Remove` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "CimInstance",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`CimInstance` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "No",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`No` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ShadowWipe",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ShadowWipe` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ExfilTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilProc",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ExfilProc` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ExfilCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilSHA256",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "SHA256",
+          "message": "`ExfilSHA256` is not a canonical column of DeviceProcessEvents. Did you mean `SHA256`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Win32_Shadowcopy",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Win32_Shadowcopy` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Get",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Get` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WmiObject",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "ObjectType",
+          "message": "`WmiObject` is not a canonical column of SecurityEvent. Did you mean `ObjectType`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Win32_Shadow",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Win32_Shadow` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Remove",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Remove` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "CimInstance",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`CimInstance` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "No",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`No` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ShadowWipe",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`ShadowWipe` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`ExfilTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilProc",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`ExfilProc` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExfilCmd",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`ExfilCmd` is not a canonical column of SecurityEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Akira (PUNK SPIDER) AnyDesk / RustDesk silent persistence install paired with internal RDP hop",
+      "description": "Detects Akira's documented persistence pattern: dropping AnyDesk.exe or RustDesk.exe into Public/ProgramData with an unattended-install command line and an Akira-style password file (e.g. p.txt / pass.txt), followed by an outbound AnyDesk relay or an inbound RDP from the same host - the bridge between Cisco VPN initial access and lateral movement seen in CISA AA24-109A.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1133",
+        "T1021.001",
+        "T1078"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime values(Processes.process) as install_cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=AnyDesk.exe OR Processes.process_name=anydesk.exe OR Processes.process_name=RustDesk.exe OR Processes.process_name=rustdesk.exe) (Processes.process=*\"--install\"* OR Processes.process=*\"--silent\"* OR Processes.process=*\"--start-with-win\"* OR Processes.process=*\"--set-password\"* OR Processes.process=*\"--password\"*) by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | where match(process_path,\"(?i)\\\\\\\\(Public|ProgramData|Users\\\\\\\\Public|Temp)\\\\\\\\\") | rename dest as install_host | join type=inner install_host [| tstats summariesonly=true count as rdp_count values(All_Traffic.dest_ip) as rdp_targets from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=3389 All_Traffic.action=allowed by All_Traffic.src | `drop_dm_object_name(All_Traffic)` | rename src as install_host | where rdp_count >= 1] | table firstTime install_host user process_name parent install_cmd rdp_targets",
+      "kql": "let Lookback = 7d;\nlet Window = 4h;\nlet RemoteToolBins = dynamic([\"anydesk.exe\",\"rustdesk.exe\",\"screenconnect.exe\",\"connectwisecontrol.exe\"]);\nlet SilentInstall =\n    DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where AccountName !endswith \"$\"\n    | where FileName in~ (RemoteToolBins)\n         or ProcessVersionInfoOriginalFileName in~ (\"AnyDesk.exe\",\"RustDesk.exe\")\n    | where ProcessCommandLine has_any (\"--install\",\"--silent\",\"--start-with-win\",\"--set-password\",\"--password\",\"/silent\",\"/S \",\" -s \")\n         or InitiatingProcessFolderPath has_any (@\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\Windows\\Temp\\\", @\"\\AppData\\Local\\Temp\\\")\n    | where FolderPath !startswith @\"C:\\Program Files\"\n         and FolderPath !startswith @\"C:\\Program Files (x86)\"\n    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,\n              InstallProc = FileName, InstallPath = FolderPath,\n              InstallCmd = ProcessCommandLine, ParentProc = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine;\nlet RdpEgress =\n    DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n    | where RemotePort == 3389 or RemotePort in (5938, 7070, 6568, 21115, 21116, 21117, 21118, 21119)\n    | project HopTime = Timestamp, DeviceId, RemoteIP, RemotePort,\n              HopProc = InitiatingProcessFileName, HopCmd = InitiatingProcessCommandLine;\nSilentInstall\n| join kind=inner RdpEgress on DeviceId\n| where HopTime between (InstallTime .. InstallTime + Window)\n| summarize HopCount = count(),\n            RemoteTargets = make_set(strcat(tostring(RemoteIP),\":\",tostring(RemotePort)), 25),\n            HopProcs = make_set(HopProc, 10),\n            arg_min(HopTime, *)\n            by InstallTime, DeviceName, AccountName, InstallProc, InstallPath, InstallCmd, ParentProc\n| order by InstallTime desc",
+      "sentinel_kql": "let Lookback = 7d;\nlet Window = 4h;\nlet RemoteToolBins = dynamic([\"anydesk.exe\",\"rustdesk.exe\",\"screenconnect.exe\",\"connectwisecontrol.exe\"]);\nlet SilentInstall =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | extend ChildName = tolower(tostring(split(NewProcessName, @\"\\\")[-1])),\n             ChildPath = tolower(NewProcessName)\n    | where ChildName in (RemoteToolBins)\n    | where CommandLine has_any (\"--install\",\"--silent\",\"--start-with-win\",\"--set-password\",\"--password\",\"/silent\",\"/S \",\" -s \")\n         or ChildPath has_any (@\"\\users\\public\\\", @\"\\programdata\\\", @\"\\windows\\temp\\\", @\"\\appdata\\local\\temp\\\")\n    | where ChildPath !startswith @\"c:\\program files\"\n    | project InstallTime = TimeGenerated, Computer, Account,\n              InstallProc = ChildName, InstallPath = NewProcessName,\n              InstallCmd = CommandLine, ParentProc = ParentProcessName;\nlet RdpEgress =\n    SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 5156\n    | extend dport = toint(extract(@\"Destination Port:\\s+(\\d+)\", 1, EventData))\n    | where dport in (3389, 5938, 7070, 6568, 21115, 21116, 21117, 21118, 21119)\n    | project HopTime = TimeGenerated, Computer, RemotePort = dport;\nSilentInstall\n| join kind=inner RdpEgress on Computer\n| where HopTime between (InstallTime .. InstallTime + Window)\n| summarize HopCount = count(), RemotePorts = make_set(RemotePort, 10), arg_min(HopTime, *)\n            by InstallTime, Computer, Account, InstallProc, InstallPath, InstallCmd, ParentProc\n| order by InstallTime desc",
+      "sigma_yaml": "title: Akira AnyDesk/RustDesk Silent Install From Non-Standard Path\nid: a4c1ef07-0b8e-4f6e-9a13-akira-anydesk-rustdesk\nstatus: experimental\ndescription: Detects unattended install of AnyDesk or RustDesk dropped to Public/ProgramData/Temp - persistence pattern documented for Akira / Howling Scorpius (CISA AA24-109A).\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-109a\nauthor: SOC Detection Engineering\ndate: 2026/05/06\ntags:\n  - attack.persistence\n  - attack.command_and_control\n  - attack.t1219\n  - attack.t1133\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith:\n      - '\\AnyDesk.exe'\n      - '\\anydesk.exe'\n      - '\\RustDesk.exe'\n      - '\\rustdesk.exe'\n  selection_args:\n    CommandLine|contains:\n      - '--install'\n      - '--silent'\n      - '--start-with-win'\n      - '--set-password'\n      - '--password'\n  filter_legit_path:\n    Image|startswith:\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n  condition: selection_img and selection_args and not filter_legit_path\nfalsepositives:\n  - Sanctioned IT remote-support deployment from imaging tooling\nlevel: high",
+      "rationale": "Multiple IR reports (CISA AA24-109A, S-RM, Sophos X-Ops) document Akira/Howling Scorpius/PUNK SPIDER specifically dropping AnyDesk (and increasingly RustDesk in 2024-25 intrusions) into C:\\ProgramData or C:\\Users\\Public with --install --silent --set-password to create unattended remote access after initial Cisco ASA/AnyConnect VPN access without MFA. Pairing the silent-install + non-standard path ",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

@@ -9,41 +9,51 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-06
-- [azure ad conditional access bypassed via phantom device regi](./2026-05-06/azure-ad-conditional-access-bypassed-via-phantom-device-regi.md)
-- [critical palo alto firewalls vulnerability exploited in the ](./2026-05-06/critical-palo-alto-firewalls-vulnerability-exploited-in-the-.md)
+- [argo cd s serversidediff vulnerability enables kubernetes se](./2026-05-06/argo-cd-s-serversidediff-vulnerability-enables-kubernetes-se.md)
+- [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
+- [daemon tools devs confirm breach release malware free versio](./2026-05-06/daemon-tools-devs-confirm-breach-release-malware-free-versio.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
+- [hackers use microsoft teams to steal credentials and manipul](./2026-05-06/hackers-use-microsoft-teams-to-steal-credentials-and-manipul.md)
 - [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
+- [iranian nexus operation targets oman ministries with webshel](./2026-05-06/iranian-nexus-operation-targets-oman-ministries-with-webshel.md)
+- [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
+- [malicious openclaw deepseek skill exploits agentic ai workfl](./2026-05-06/malicious-openclaw-deepseek-skill-exploits-agentic-ai-workfl.md)
+- [member of prolific russian ransomware group sentenced to 102](./2026-05-06/member-of-prolific-russian-ransomware-group-sentenced-to-102.md)
+- [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
+- [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)
+- [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
+- [new fanwei e cology10 server vulnerability could let attacke](./2026-05-06/new-fanwei-e-cology10-server-vulnerability-could-let-attacke.md)
+- [new majordomo rce vulnerability exposes servers to code exec](./2026-05-06/new-majordomo-rce-vulnerability-exposes-servers-to-code-exec.md)
+- [new phishing to rmm attacks how analysts can detect trusted ](./2026-05-06/new-phishing-to-rmm-attacks-how-analysts-can-detect-trusted-.md)
+- [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
-- [ransomware and data extortion groups intensify targeting of ](./2026-05-06/ransomware-and-data-extortion-groups-intensify-targeting-of-.md)
-- [vimeo data breach exposes 119 000 users unique email address](./2026-05-06/vimeo-data-breach-exposes-119-000-users-unique-email-address.md)
+- [salesforce marketing cloud vulnerability opened door to emai](./2026-05-06/salesforce-marketing-cloud-vulnerability-opened-door-to-emai.md)
+- [taiwan high speed rail hacked using radio signal spoofing at](./2026-05-06/taiwan-high-speed-rail-hacked-using-radio-signal-spoofing-at.md)
+- [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
+- [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
 - [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
+- [why ransomware attacks succeed even when backups exist](./2026-05-06/why-ransomware-attacks-succeed-even-when-backups-exist.md)
 - [windows phone link exploited by cloudz rat to steal credenti](./2026-05-06/windows-phone-link-exploited-by-cloudz-rat-to-steal-credenti.md)
+- [your ai agents are already inside the perimeter do you know ](./2026-05-06/your-ai-agents-are-already-inside-the-perimeter-do-you-know-.md)
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [china linked uat 8302 targets governments using shared apt m](./2026-05-05/china-linked-uat-8302-targets-governments-using-shared-apt-m.md)
-- [cisco to acquire astrix security to strengthen ai agent and ](./2026-05-05/cisco-to-acquire-astrix-security-to-strengthen-ai-agent-and-.md)
 - [cloudz malware abuses microsoft phone link to steal sms and ](./2026-05-05/cloudz-malware-abuses-microsoft-phone-link-to-steal-sms-and-.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [critical apache http 2 flaw cve 2026 23918 enables dos and p](./2026-05-05/critical-apache-http-2-flaw-cve-2026-23918-enables-dos-and-p.md)
-- [critical qualcomm chipset vulnerabilities enables remote cod](./2026-05-05/critical-qualcomm-chipset-vulnerabilities-enables-remote-cod.md)
-- [critical weaver e cology rce vulnerability actively exploite](./2026-05-05/critical-weaver-e-cology-rce-vulnerability-actively-exploite.md)
 - [daemon tools supply chain attack compromises official instal](./2026-05-05/daemon-tools-supply-chain-attack-compromises-official-instal.md)
 - [daemon tools trojanized in supply chain attack to deploy bac](./2026-05-05/daemon-tools-trojanized-in-supply-chain-attack-to-deploy-bac.md)
 - [ftc to ban data broker kochava from selling americans locati](./2026-05-05/ftc-to-ban-data-broker-kochava-from-selling-americans-locati.md)
-- [gnutls 3 8 13 released with fix for 12 vulnerabilities affec](./2026-05-05/gnutls-3-8-13-released-with-fix-for-12-vulnerabilities-affec.md)
 - [google now offers up to 1 5 million for some android exploit](./2026-05-05/google-now-offers-up-to-1-5-million-for-some-android-exploit.md)
 - [instructure hacker claims data theft from 8 800 schools univ](./2026-05-05/instructure-hacker-claims-data-theft-from-8-800-schools-univ.md)
 - [karakurt extortion gang cold case negotiator gets 8 5 years ](./2026-05-05/karakurt-extortion-gang-cold-case-negotiator-gets-8-5-years-.md)
-- [low noise high confidence optimizing soc costs with better t](./2026-05-05/low-noise-high-confidence-optimizing-soc-costs-with-better-t.md)
 - [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [microsoft details phishing campaign targeting 35 000 users a](./2026-05-05/microsoft-details-phishing-campaign-targeting-35-000-users-a.md)
-- [new scarcruft supply chain attack hits gaming platform with ](./2026-05-05/new-scarcruft-supply-chain-attack-hits-gaming-platform-with-.md)
 - [new stealthy quasar linux malware targets software developer](./2026-05-05/new-stealthy-quasar-linux-malware-targets-software-developer.md)
-- [scarcruft hackers push birdcall android malware via game pla](./2026-05-05/scarcruft-hackers-push-birdcall-android-malware-via-game-pla.md)
 - [scarcruft hacks gaming platform to deploy birdcall malware o](./2026-05-05/scarcruft-hacks-gaming-platform-to-deploy-birdcall-malware-o.md)
 - [student hacked taiwan high speed rail to trigger emergency b](./2026-05-05/student-hacked-taiwan-high-speed-rail-to-trigger-emergency-b.md)
 - [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
@@ -55,16 +65,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-04
 - [2026 the year of ai assisted attacks](./2026-05-04/2026-the-year-of-ai-assisted-attacks.md)
-- [backdoored pytorch lightning package drops credential steale](./2026-05-04/backdoored-pytorch-lightning-package-drops-credential-steale.md)
 - [breaking the code multi stage code of conduct phishing campa](./2026-05-04/breaking-the-code-multi-stage-code-of-conduct-phishing-campa.md)
 - [critical cpanel vulnerability weaponized to target governmen](./2026-05-04/critical-cpanel-vulnerability-weaponized-to-target-governmen.md)
 - [global crackdown arrests 276 shuts 9 crypto scam centers sei](./2026-05-04/global-crackdown-arrests-276-shuts-9-crypto-scam-centers-sei.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
 - [phishing campaign hits 80 orgs using simplehelp and screenco](./2026-05-04/phishing-campaign-hits-80-orgs-using-simplehelp-and-screenco.md)
 - [progress patches critical moveit automation bug enabling aut](./2026-05-04/progress-patches-critical-moveit-automation-bug-enabling-aut.md)
-- [researchers report amazon ses abused in phishing to evade de](./2026-05-04/researchers-report-amazon-ses-abused-in-phishing-to-evade-de.md)
 - [silver fox deploys abcdoor malware via tax themed phishing i](./2026-05-04/silver-fox-deploys-abcdoor-malware-via-tax-themed-phishing-i.md)
-- [weaver e cology critical bug exploited in attacks since marc](./2026-05-04/weaver-e-cology-critical-bug-exploited-in-attacks-since-marc.md)
 - [weekly recap ai powered phishing android spying tool linux e](./2026-05-04/weekly-recap-ai-powered-phishing-android-spying-tool-linux-e.md)
 
 ## 2026-05-03
@@ -117,15 +124,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chinese silk typhoon hacker extradited to u s over covid res](./2026-04-28/chinese-silk-typhoon-hacker-extradited-to-u-s-over-covid-res.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
-- [microsoft confirms active exploitation of windows shell cve ](./2026-04-28/microsoft-confirms-active-exploitation-of-windows-shell-cve-.md)
-- [microsoft patches entra id role flaw that enabled service pr](./2026-04-28/microsoft-patches-entra-id-role-flaw-that-enabled-service-pr.md)
 - [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
 - [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)
 - [vect 2 0 ransomware irreversibly destroys files over 131kb o](./2026-04-28/vect-2-0-ransomware-irreversibly-destroys-files-over-131kb-o.md)
 - [why secure data movement is the zero trust bottleneck nobody](./2026-04-28/why-secure-data-movement-is-the-zero-trust-bottleneck-nobody.md)
-
-## 2026-04-27
-- [checkmarx confirms github repository data posted on dark web](./2026-04-27/checkmarx-confirms-github-repository-data-posted-on-dark-web.md)
 
 ## 2026-04-24
 - [cisa kev cve 2024 57726 simplehelp missing authorization vul](./2026-04-24/cisa-kev-cve-2024-57726-simplehelp-missing-authorization-vul.md)
@@ -152,7 +154,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-21
 - [bad apples weaponizing native macos primitives for movement ](./2026-04-21/bad-apples-weaponizing-native-macos-primitives-for-movement-.md)
-- [detection strategies across cloud and identities against inf](./2026-04-21/detection-strategies-across-cloud-and-identities-against-inf.md)
 - [new ngate variant hides in a trojanized nfc payment app](./2026-04-21/new-ngate-variant-hides-in-a-trojanized-nfc-payment-app.md)
 - [phishing and mfa exploitation targeting the keys to the king](./2026-04-21/phishing-and-mfa-exploitation-targeting-the-keys-to-the-king.md)
 - [podcast it s not you it s your printer state sponsored and p](./2026-04-21/podcast-it-s-not-you-it-s-your-printer-state-sponsored-and-p.md)
@@ -166,7 +167,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20133 cisco catalyst sd wan manager exposu](./2026-04-20/cisa-kev-cve-2026-20133-cisco-catalyst-sd-wan-manager-exposu.md)
 - [fakewallet crypto stealer spreading through ios apps in the ](./2026-04-20/fakewallet-crypto-stealer-spreading-through-ios-apps-in-the-.md)
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
-- [making opportunistic cyberattacks harder by design](./2026-04-20/making-opportunistic-cyberattacks-harder-by-design.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
 
 ## 2026-04-17
@@ -216,7 +216,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when an attacker meets a group of agents navigating amazon b](./2026-04-03/when-an-attacker-meets-a-group-of-agents-navigating-amazon-b.md)
 
 ## 2026-04-01
-- [a laughing rat crystalx combines spyware stealer and prankwa](./2026-04-01/a-laughing-rat-crystalx-combines-spyware-stealer-and-prankwa.md)
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)
 
 ## 2026-03-27
@@ -387,7 +386,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [labscon25 replay hacktivism and war a clarifying discussion](./2026-01-14/labscon25-replay-hacktivism-and-war-a-clarifying-discussion.md)
 
 ## 2026-01-13
-- [inside the llm understanding ai the mechanics of modern atta](./2026-01-13/inside-the-llm-understanding-ai-the-mechanics-of-modern-atta.md)
 - [your personal information is on the dark web what happens ne](./2026-01-13/your-personal-information-is-on-the-dark-web-what-happens-ne.md)
 
 ## 2026-01-12

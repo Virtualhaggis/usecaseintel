@@ -10,13 +10,9 @@ Home Cyber Security News
 Vimeo Data Breach Exposes 119,000 Users Unique Email Addresses 
 By Abinaya 
 May 6, 2026 
-
-
-
-
 In a significant supply chain security incident, the popular video hosting platform Vimeo has confirmed a data breach that exposed user information.
 Discovered in April 2026, the breach exposed 119,000 unique email addresses and other metadata.
-The incident highlights the growing risks associated with third-party service providers, as the compromise did not occur directly on…
+The incident highlights the growing risks associated with third-party service providers, as the compromise did not occur directly on Vimeo’s…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,82 +36,12 @@ The incident highlights the growing risks associated with third-party service pr
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1199** — Trusted Relationship
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1530** — Data from Cloud Storage
-- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Anodot OAuth app / service-principal authentication post-vendor-compromise (ShinyHunters supply chain)
-
-`UC_0_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest values(Authentication.signature) as signature from datamodel=Authentication where Authentication.app="AzureActiveDirectory" (Authentication.user="*anodot*" OR Authentication.user_agent="*anodot*" OR Authentication.signature="*Anodot*") Authentication.action="success" _time>="04/27/2026:00:00:00" by Authentication.user Authentication.app Authentication.action | `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-// Anodot service-principal / OAuth app sign-ins observed after Vimeo's April-2026 revocation
-// Article: https://cybersecuritynews.com/vimeo-data-breach-exposed/
-let RevocationDate = datetime(2026-04-27);
-AADSignInEventsBeta
-| where Timestamp > RevocationDate
-| where ErrorCode == 0
-| where Application has "Anodot"
-   or AppDisplayName has "Anodot"
-   or ResourceDisplayName has "Anodot"
-| project Timestamp, AccountUpn, AccountObjectId, Application, AppDisplayName,
-          ApplicationId, ResourceDisplayName, ResourceId, IPAddress, Country,
-          UserAgent, ClientAppUsed, ConditionalAccessStatus,
-          RiskLevelDuringSignIn, RiskState
-| order by Timestamp asc
-```
-
-### [LLM] Anodot service-account bulk data egress from Snowflake / BigQuery via stolen OAuth tokens
-
-`UC_0_10` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-`summariesonly` | tstats count sum(Web.bytes_out) as bytes_out values(Web.url) as url values(Web.user) as user values(Web.src) as src from datamodel=Web where (Web.url="*snowflakecomputing.com*" OR Web.url="*bigquery.googleapis.com*" OR Web.url="*googleapis.com/bigquery*") (Web.user="*anodot*" OR Web.http_user_agent="*anodot*") _time>="04/01/2026:00:00:00" by Web.user Web.src Web.url _time span=1h | `drop_dm_object_name(Web)` | where bytes_out > 50000000
-```
-
-**Defender KQL:**
-```kql
-// Anodot OAuth app pulling bulk data from Snowflake / BigQuery via MCAS (CloudAppEvents)
-// Looks for Anodot account/app activity in cloud DWH connectors after the April-2026 disclosure
-let StartWindow = datetime(2026-04-01);
-CloudAppEvents
-| where Timestamp > StartWindow
-| where Application in~ ("Snowflake","Google BigQuery","BigQuery","Microsoft Azure Synapse Analytics")
-   or ApplicationId has "snowflake"
-   or ApplicationId has "bigquery"
-| where AccountDisplayName has "anodot"
-   or AccountId has "anodot"
-   or UserAgent has "anodot"
-   or tostring(RawEventData) has "anodot"
-| where ActionType has_any ("DataExport","Download","Query","BulkRead","Export","jobs.query","jobs.getQueryResults","COPY INTO")
-   or ActivityType has_any ("Export","Query","Download")
-| summarize EventCount = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            DistinctIPs = dcount(IPAddress),
-            SampleIPs = make_set(IPAddress, 10),
-            SampleObjects = make_set(ObjectName, 25),
-            Countries = make_set(CountryCode, 10),
-            ActionTypes = make_set(ActionType, 10)
-            by Application, AccountDisplayName, AccountId
-| where EventCount > 25 or DistinctIPs > 1
-| order by LastSeen desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -429,4 +355,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

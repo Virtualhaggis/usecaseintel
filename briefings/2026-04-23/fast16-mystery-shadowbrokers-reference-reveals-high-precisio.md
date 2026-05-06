@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] fast16 Sabotage Framework Hash IOC Sweep (svcmgmt.exe / fast16.sys / svcmgmt.dll)
 
-`UC_104_5` · phase: **install** · confidence: **High**
+`UC_108_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ union isfuzzy=true
 
 ### [LLM] fast16 Carrier Runtime Artefacts (SvcMgmt service / pipe p577 / \Device\fast16)
 
-`UC_104_6` · phase: **install** · confidence: **Medium**
+`UC_108_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -295,7 +295,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast16 | Mystery ShadowBrokers Reference Reveals High-Precision Software Sabotag
 
-`UC_104_4` · phase: **exploit** · confidence: **High**
+`UC_108_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

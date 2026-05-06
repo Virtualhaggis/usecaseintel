@@ -1,0 +1,166 @@
+{
+  "name": "MuddyWater",
+  "ucs": [
+    {
+      "title": "[LLM] MuddyWater PowGoop loader: goopdate.dll DLL side-load via GoogleUpdate.exe outside Program Files",
+      "description": "Hunts MuddyWater's signature PowGoop first-stage loader, which renames a legitimate Google Update binary and side-loads a malicious goopdate.dll from a non-Google directory (typically %APPDATA%, %TEMP%, %ProgramData% or C:\\Users\\Public). PowGoop has been the trademark MuddyWater (MERCURY / Mango Sandstorm / Static Kitten / Seedworm) loader since 2021 and has been documented by Mandiant, Cisco Talos and Deep Instinct as a near-exclusive MuddyWater artefact.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1027.013",
+        "T1059.001",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"goopdate.dll\" AND NOT (Filesystem.file_path=\"*\\\\Program Files\\\\Google\\\\*\" OR Filesystem.file_path=\"*\\\\Program Files (x86)\\\\Google\\\\*\") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name=\"GoogleUpdate.exe\" AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\",\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\") AND Processes.parent_process_path!=\"*\\\\Program Files\\\\Google\\\\*\" AND Processes.parent_process_path!=\"*\\\\Program Files (x86)\\\\Google\\\\*\" by host Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// MuddyWater PowGoop: goopdate.dll loaded by GoogleUpdate.exe from a non-Google folder\nlet GoogleLegitPaths = dynamic([@\"c:\\program files\\google\\\", @\"c:\\program files (x86)\\google\\\"]);\nlet SideLoad = DeviceImageLoadEvents\n    | where Timestamp > ago(14d)\n    | where FileName =~ \"goopdate.dll\"\n    | where InitiatingProcessFileName =~ \"GoogleUpdate.exe\"\n    | extend lcPath = tolower(FolderPath)\n    | where not(lcPath startswith @\"c:\\program files\\google\\\")\n        and not(lcPath startswith @\"c:\\program files (x86)\\google\\\")\n    | project Timestamp, DeviceName, DeviceId,\n              LoadedDll = strcat(FolderPath, FileName), DllSHA256 = SHA256,\n              LoaderPath = InitiatingProcessFolderPath,\n              LoaderCmd  = InitiatingProcessCommandLine,\n              AccountName = InitiatingProcessAccountName;\n// Tie the side-load to a follow-on PowerShell/LOLBin spawn (PowGoop -> POWERSTAR/POWERSTATS)\nlet ChildSpawn = DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where InitiatingProcessFileName =~ \"GoogleUpdate.exe\"\n    | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\",\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\")\n    | project ChildTime = Timestamp, DeviceId, ChildFile = FileName,\n              ChildCmd = ProcessCommandLine,\n              LoaderFolder = InitiatingProcessFolderPath;\nSideLoad\n| join kind=leftouter ChildSpawn on DeviceId\n| where isnull(ChildTime) or ChildTime between (Timestamp - 5m .. Timestamp + 30m)\n| project Timestamp, DeviceName, AccountName, LoaderPath, LoaderCmd,\n          LoadedDll, DllSHA256, ChildFile, ChildCmd\n| order by Timestamp desc",
+      "sentinel_kql": "// MuddyWater PowGoop side-load via Sysmon EID 7 (image load) in Sentinel\nWindowsEvent\n| where TimeGenerated > ago(14d)\n| where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 7\n| extend Image       = tolower(tostring(EventData.Image)),\n         ImageLoaded = tolower(tostring(EventData.ImageLoaded)),\n         Signed      = tostring(EventData.Signed),\n         User        = tostring(EventData.User)\n| where Image endswith @\"\\googleupdate.exe\"\n| where ImageLoaded endswith @\"\\goopdate.dll\"\n| where not(ImageLoaded startswith @\"c:\\program files\\google\\\")\n    and not(ImageLoaded startswith @\"c:\\program files (x86)\\google\\\")\n| project TimeGenerated, Computer, User, Image, ImageLoaded, Signed\n| join kind=leftouter (\n    WindowsEvent\n    | where TimeGenerated > ago(14d)\n    | where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 1\n    | extend ParentImage = tolower(tostring(EventData.ParentImage)),\n             ChildImage  = tolower(tostring(EventData.Image)),\n             ChildCmd    = tostring(EventData.CommandLine)\n    | where ParentImage endswith @\"\\googleupdate.exe\"\n    | where ChildImage has_any (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\",\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\")\n    | project ChildTime = TimeGenerated, Computer, ChildImage, ChildCmd\n  ) on Computer\n| where isnull(ChildTime) or ChildTime between (TimeGenerated - 5m .. TimeGenerated + 30m)\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: MuddyWater PowGoop goopdate.dll Side-Load via GoogleUpdate.exe\nid: 4f7d5f1e-7c2a-4f0e-9c2c-muddywater-powgoop\nstatus: experimental\ndescription: Detects PowGoop loader behaviour where GoogleUpdate.exe loads goopdate.dll from a non-Google directory. Strongly attributed to MuddyWater / MERCURY / Mango Sandstorm.\nreferences:\n  - https://www.mandiant.com/resources/blog/mercury-mandiant-iran-iranian-actor\n  - https://blog.talosintelligence.com/muddywater-powgoop/\nauthor: SOC Detection Eng\ndate: 2026/05/06\nlogsource:\n  product: windows\n  category: image_load\ndetection:\n  selection_loader:\n    Image|endswith: '\\GoogleUpdate.exe'\n    ImageLoaded|endswith: '\\goopdate.dll'\n  filter_legit_path:\n    ImageLoaded|contains:\n      - ':\\Program Files\\Google\\'\n      - ':\\Program Files (x86)\\Google\\'\n  condition: selection_loader and not filter_legit_path\nfields:\n  - Image\n  - ImageLoaded\n  - User\n  - Hashes\nfalsepositives:\n  - Repackaged Google Update installers staged outside the Program Files tree (rare in enterprise estates)\nlevel: high\ntags:\n  - attack.defense_evasion\n  - attack.t1574.002\n  - attack.g0069",
+      "rationale": "PowGoop / goopdate.dll DLL side-loading via a renamed GoogleUpdate.exe is a near-unique MuddyWater fingerprint - documented in Mandiant, Cisco Talos, Deep Instinct and ClearSky reports across 2021-2024 campaigns against Israeli, Saudi, Jordanian and Turkish targets. Genuine Google Update binaries always live under \\Program Files\\Google\\, so a goopdate.dll loaded from %TEMP%, %APPDATA%, %ProgramDat",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] MuddyWater (TA450) spear-phishing chain: inbound link to legitimate RMM vendor followed by RMM agent execution",
+      "description": "Hunts MuddyWater's TA450 RMM-abuse playbook: inbound spear-phish containing a direct link to a legitimate Remote Monitoring & Management installer (Atera, ScreenConnect/ConnectWise Control, Syncro, SimpleHelp, Remote Utilities, RPort, Splashtop) followed by execution of that RMM agent on the recipient's host within the next 7 days. Proofpoint, Microsoft (Mango Sandstorm) and Group-IB attribute this exact pattern to MuddyWater / TA450 across the 2022-2024 Israeli and US campaigns.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1219",
+        "T1204.001",
+        "T1078"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstExec max(_time) as lastExec from datamodel=Endpoint.Processes where Processes.process_name IN (\"AteraAgent.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"ScreenConnect.ClientSetup.exe\",\"rutserv.exe\",\"rfusclient.exe\",\"SimpleHelpCustomer.exe\",\"Remote Access.exe\",\"SyncroLive.Agent.Service.exe\",\"Syncro.exe\",\"rport.exe\",\"SRClient.exe\",\"SRService.exe\",\"AnyDesk.exe\",\"TeamViewer.exe\") AND Processes.user!=\"*$\" by host Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename user as recipient | join type=inner recipient [ | tstats summariesonly=true count from datamodel=Email where (All_Email.url IN (\"*atera.com*\",\"*ateraagent.com*\",\"*screenconnect.com*\",\"*control.connectwise.com*\",\"*simple-help.com*\",\"*syncromsp.com*\",\"*remoteutilities.com*\",\"*rport.io*\",\"*splashtop.com*\",\"*anydesk.com*\",\"*teamviewer.com*\") OR All_Email.subject IN (\"*remote support*\",\"*invoice*\",\"*review document*\",\"*PDF Reader*\")) AND All_Email.action=\"delivered\" by All_Email.recipient All_Email.src_user All_Email.subject All_Email.url All_Email.message_id | `drop_dm_object_name(All_Email)` | rename recipient as recipient ] | where firstExec > strptime(\"1970-01-01\",\"%Y-%m-%d\") | eval delivery_to_exec_days = round((firstExec - _time)/86400,2) | where delivery_to_exec_days >= 0 AND delivery_to_exec_days <= 7 | table _time host recipient src_user subject url process_name parent_process process delivery_to_exec_days | sort - _time",
+      "kql": "// MuddyWater (TA450) RMM-abuse spear-phish chain\nlet RmmDomains = dynamic([\"atera.com\",\"ateraagent.com\",\"screenconnect.com\",\"control.connectwise.com\",\"simple-help.com\",\"simplehelp.com\",\"syncromsp.com\",\"remoteutilities.com\",\"rport.io\",\"splashtop.com\",\"anydesk.com\",\"teamviewer.com\"]);\nlet RmmBinaries = dynamic([\"AteraAgent.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"ScreenConnect.ClientSetup.exe\",\"rutserv.exe\",\"rfusclient.exe\",\"SimpleHelpCustomer.exe\",\"Remote Access.exe\",\"SyncroLive.Agent.Service.exe\",\"Syncro.exe\",\"rport.exe\",\"SRClient.exe\",\"SRService.exe\",\"AnyDesk.exe\",\"TeamViewer.exe\"]);\nlet PhishWithRmmLink = EmailEvents\n    | where Timestamp > ago(14d)\n    | where EmailDirection == \"Inbound\" and DeliveryAction == \"Delivered\"\n    | join kind=inner (\n        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain\n      ) on NetworkMessageId\n    | where UrlDomain has_any (RmmDomains)\n    | project EmailTime = Timestamp, RecipientEmailAddress, SenderFromAddress,\n              Subject, Url, UrlDomain, NetworkMessageId;\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (RmmBinaries)\n| where AccountName !endswith \"$\"\n| join kind=inner PhishWithRmmLink\n    on $left.AccountUpn == $right.RecipientEmailAddress\n| where Timestamp between (EmailTime .. EmailTime + 7d)\n| project EmailTime, ExecTime = Timestamp,\n          DelayHours = datetime_diff('hour', Timestamp, EmailTime),\n          DeviceName, AccountUpn, SenderFromAddress, Subject, Url, UrlDomain,\n          RmmBinary = FileName,\n          RmmCmd    = ProcessCommandLine,\n          ParentImg = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine\n| order by ExecTime desc",
+      "sentinel_kql": "// Sentinel port: OfficeActivity (Exchange) URL hits + SecurityEvent 4688 RMM exec\nlet RmmDomains = dynamic([\"atera.com\",\"ateraagent.com\",\"screenconnect.com\",\"control.connectwise.com\",\"simple-help.com\",\"simplehelp.com\",\"syncromsp.com\",\"remoteutilities.com\",\"rport.io\",\"splashtop.com\",\"anydesk.com\",\"teamviewer.com\"]);\nlet RmmBinariesPath = dynamic([\"\\\\AteraAgent.exe\",\"\\\\ScreenConnect.ClientService.exe\",\"\\\\ScreenConnect.WindowsClient.exe\",\"\\\\ScreenConnect.ClientSetup.exe\",\"\\\\rutserv.exe\",\"\\\\rfusclient.exe\",\"\\\\SimpleHelpCustomer.exe\",\"\\\\Remote Access.exe\",\"\\\\SyncroLive.Agent.Service.exe\",\"\\\\Syncro.exe\",\"\\\\rport.exe\",\"\\\\SRClient.exe\",\"\\\\SRService.exe\",\"\\\\AnyDesk.exe\",\"\\\\TeamViewer.exe\"]);\nlet PhishLinks = OfficeActivity\n    | where TimeGenerated > ago(14d)\n    | where OfficeWorkload == \"Exchange\"\n    | where Operation in~ (\"Send\",\"Receive\",\"MailItemsAccessed\")\n    | extend Subj = tostring(Subject), MsgId = tostring(InternetMessageId)\n    | extend BodyUrls = extract_all(@\"https?://[^\\s\\\"'<>]+\", tostring(EventData))\n    | mv-expand BodyUrls\n    | extend U = tolower(tostring(BodyUrls))\n    | where U has_any (RmmDomains)\n    | project EmailTime = TimeGenerated, RecipientUpn = MailboxOwnerUPN,\n              Sender = tostring(Sender), Subject = Subj, Url = U;\nSecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| where AccountType == \"User\" and Account !endswith \"$\"\n| where NewProcessName has_any (RmmBinariesPath)\n| extend RecipientUpn = strcat(tolower(TargetUserName), \"@\", tolower(TargetDomainName))\n| join kind=inner PhishLinks on $left.TargetUserName == $right.RecipientUpn\n    or $left.RecipientUpn == $right.RecipientUpn\n| where TimeGenerated between (EmailTime .. EmailTime + 7d)\n| project EmailTime, ExecTime = TimeGenerated,\n          DelayHours = datetime_diff('hour', TimeGenerated, EmailTime),\n          Computer, Account, Sender, Subject, Url,\n          RmmBinary = NewProcessName, RmmCmd = CommandLine,\n          ParentProcessName\n| order by ExecTime desc",
+      "sigma_yaml": "",
+      "rationale": "MuddyWater / TA450 is the only Iranian state actor that has industrialised inbound spear-phishing with direct download links to legitimate RMM-vendor portals (Atera/ScreenConnect/Syncro/SimpleHelp/RPort) as the *primary* initial-access vector since 2021, documented by Proofpoint (TA450 cluster), Microsoft Threat Intelligence (Mango Sandstorm), Cisco Talos and Group-IB. Joining inbound delivered em",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "User",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "Event",
+            "AKSAudit"
+          ],
+          "message": "`User` is not a column of OfficeActivity; it does exist on Event, AKSAudit."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "TargetDomainName",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`TargetDomainName` is not a column of OfficeActivity; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EmailTime",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "suggestion": null,
+          "message": "`EmailTime` is not a canonical column of OfficeActivity."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "Computer",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "AKSAudit",
+            "DnsEvents",
+            "W3CIISLog",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate"
+          ],
+          "message": "`Computer` is not a column of OfficeActivity; it does exist on SecurityEvent, WindowsEvent, Event, Syslog, AKSAudit, DnsEvents, W3CIISLog, Heartbeat, Update, ImProcessCreate."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "Account",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`Account` is not a column of OfficeActivity; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "Url",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "EmailUrlInfo",
+            "UrlClickEvents",
+            "ThreatIntelligenceIndicator",
+            "ImNetworkSession",
+            "ImWebSession"
+          ],
+          "message": "`Url` is not a column of OfficeActivity; it does exist on EmailUrlInfo, UrlClickEvents, ThreatIntelligenceIndicator, ImNetworkSession, ImWebSession."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "NewProcessName",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`NewProcessName` is not a column of OfficeActivity; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "CommandLine",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`CommandLine` is not a column of OfficeActivity; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ParentProcessName",
+          "tables_in_scope": [
+            "OfficeActivity"
+          ],
+          "exists_on": [
+            "SecurityEvent",
+            "ImProcessCreate"
+          ],
+          "message": "`ParentProcessName` is not a column of OfficeActivity; it does exist on SecurityEvent, ImProcessCreate."
+        }
+      ]
+    }
+  ]
+}
