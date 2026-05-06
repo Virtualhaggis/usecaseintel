@@ -3126,14 +3126,18 @@ HTML_HEAD = r"""<!doctype html>
 }
 *{box-sizing:border-box;}
 html,body{margin:0;}
-body{
-  /* Flat near-black with a single subtle indigo wash from the top — the
-     restrained Linear backdrop. No competing gradients from multiple
-     directions; the eye should land on content, not chrome. */
+html{
+  /* Background lives on <html> so the <body> can be transparent and the
+     Vanta NET canvas + cursor-glow (both z-index:-1) show through behind
+     content. */
   background:
     radial-gradient(1200px 500px at 50% -10%, rgba(113,112,255,0.06), transparent 60%),
     var(--bg);
   background-attachment:fixed;
+  min-height:100vh;
+}
+body{
+  background:transparent;
   color:var(--text);
   font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
   font-size:14px; line-height:1.55;
@@ -5720,6 +5724,33 @@ ul.intel-types-doc code{
 .drawer-list .pill.confmedium{color:var(--warn);}
 .drawer-empty{color:var(--muted-2); font-size:12px; font-style:italic; padding:8px 0;}
 
+/* ----- Background fx: Vanta NET + cursor radial glow ----------------- */
+/* Vanta NET renders a slow, low-poly mesh of red connected nodes
+   that gently respond to cursor position — a "threat-graph" backdrop.
+   The cursor glow is a soft red radial gradient that lerps after the
+   pointer. Both are pointer-events:none and z-index:-1 so they never
+   interfere with reading or interaction. They auto-disable for users
+   who prefer reduced motion. */
+#vanta-bg{
+  position:fixed; inset:0; z-index:-1;
+  opacity:0.16; pointer-events:none;
+}
+#cursor-glow{
+  position:fixed; left:0; top:0; width:560px; height:560px;
+  pointer-events:none; z-index:-1;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(220,38,38,0.22) 0%, rgba(220,38,38,0.08) 40%, transparent 70%);
+  transform:translate3d(-50%,-50%,0);
+  filter:blur(40px);
+  mix-blend-mode:screen;
+  will-change:transform;
+  opacity:0; transition:opacity 0.35s;
+}
+#cursor-glow.active{opacity:1;}
+@media (prefers-reduced-motion: reduce){
+  #vanta-bg, #cursor-glow{display:none !important;}
+}
+
 /* ----- Reduced motion ------------------------------------------------ */
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important;}
@@ -5727,6 +5758,11 @@ ul.intel-types-doc code{
 </style>
 </head>
 <body>
+<!-- Background FX: low-poly red mesh (Vanta NET) + cursor radial glow.
+     z-index:-1, pointer-events:none — never blocks content. -->
+<div id="vanta-bg" aria-hidden="true"></div>
+<div id="cursor-glow" aria-hidden="true"></div>
+
 <!-- Logo lightbox — click logoButton to open, click backdrop or ESC to close. -->
 <div class="logo-lightbox" id="logoLightbox" role="dialog" aria-modal="true" aria-labelledby="lbCaption" hidden>
   <button class="logo-lightbox-close" id="logoLightboxClose" aria-label="Close">×</button>
@@ -9187,6 +9223,68 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
      independent). -->
 <script defer src="https://unpkg.com/three@0.150.1/build/three.min.js"></script>
 <script defer src="https://unpkg.com/globe.gl@2.27.0/dist/globe.gl.min.js"></script>
+<!-- Background FX boot: Vanta NET (low-poly red mesh) + cursor radial
+     glow. Both gated on prefers-reduced-motion. Vanta reuses the three.js
+     loaded above for globe.gl, so we only add vanta.net.min.js (~25 KB).
+     If the CDN is blocked / offline, the page still renders normally. -->
+<script defer src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+<script>
+(function(){
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  // Cursor radial glow — soft red disc that lerps after the pointer.
+  document.addEventListener('DOMContentLoaded', function(){
+    var glow = document.getElementById('cursor-glow');
+    if (!glow) return;
+    var tx = -1000, ty = -1000, cx = -1000, cy = -1000, raf = 0;
+    document.addEventListener('mousemove', function(e){
+      tx = e.clientX; ty = e.clientY;
+      glow.classList.add('active');
+      if (!raf) raf = requestAnimationFrame(tick);
+    });
+    document.addEventListener('mouseleave', function(){ glow.classList.remove('active'); });
+    function tick(){
+      cx += (tx - cx) * 0.14;
+      cy += (ty - cy) * 0.14;
+      glow.style.transform = 'translate3d(' + (cx - 280) + 'px,' + (cy - 280) + 'px,0)';
+      if (Math.abs(tx - cx) > 0.3 || Math.abs(ty - cy) > 0.3) {
+        raf = requestAnimationFrame(tick);
+      } else { raf = 0; }
+    }
+  });
+
+  // Vanta NET — low-poly red mesh, slow drift, subtle cursor influence.
+  // Defer-loaded via CDN; init once both scripts are present.
+  function startVanta(){
+    if (!window.VANTA || !window.VANTA.NET || !window.THREE) return false;
+    try {
+      window.VANTA.NET({
+        el: '#vanta-bg',
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200, minWidth: 200,
+        scale: 1, scaleMobile: 1,
+        color: 0xff3b3b,
+        backgroundColor: 0x000000,
+        backgroundAlpha: 0.0,
+        points: 11,
+        maxDistance: 22,
+        spacing: 18,
+        showDots: true
+      });
+      return true;
+    } catch (e) { return false; }
+  }
+  if (!startVanta()) {
+    // Poll briefly while CDN scripts load, then give up gracefully.
+    var tries = 0, iv = setInterval(function(){
+      if (startVanta() || ++tries > 40) clearInterval(iv);
+    }, 150);
+  }
+})();
+</script>
+
 <!-- Cloudflare Web Analytics — privacy-friendly, no cookies, no GDPR
      banner needed. Beacon script is loaded with `defer` so it never
      blocks the 8 MB index.html parse, and it's injected at the very
