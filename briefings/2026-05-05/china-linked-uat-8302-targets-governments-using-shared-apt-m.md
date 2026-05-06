@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NetDraft/FINALDRAFT covert C2 — non-mail process beaconing to Microsoft Graph (Outlook drafts channel)
 
-`UC_40_4` · phase: **c2** · confidence: **Medium**
+`UC_41_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### [LLM] UAT-8302 internal recon — chainreactors `gogo` scanner cmdline tokens
 
-`UC_40_5` · phase: **recon** · confidence: **High**
+`UC_41_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] UAT-8302 alternate access — Stowaway pivot agent or SoftEther VPN client install
 
-`UC_40_6` · phase: **c2** · confidence: **High**
+`UC_41_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

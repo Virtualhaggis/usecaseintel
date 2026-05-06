@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RMM installer downloaded from n8n.cloud webhook lure (vmail.app.n8n.cloud)
 
-`UC_9_7` · phase: **delivery** · confidence: **High**
+`UC_10_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### [LLM] Renamed ScreenConnect installer — VersionInfo says ConnectWise but filename is Adobesetup.exe / non-vendor
 
-`UC_9_8` · phase: **install** · confidence: **High**
+`UC_10_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### [LLM] VBS lure → SmartScreen disable + Defender weaken + msiexec /qn LogMeIn install chain
 
-`UC_9_9` · phase: **install** · confidence: **High**
+`UC_10_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -370,7 +370,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Phishing-to-RMM Attacks: How Analysts Can Detect Trusted-Tool Abuse Early
 
-`UC_9_6` · phase: **exploit** · confidence: **High**
+`UC_10_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

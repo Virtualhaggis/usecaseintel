@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater Olalampo C2 / ms_upd.exe / Game.exe RAT indicators
 
-`UC_12_15` · phase: **c2** · confidence: **High**
+`UC_13_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ union ProcHits, NetHits
 
 ### [LLM] MuddyWater Teams social-engineering — credentials.txt / cred.txt creation
 
-`UC_12_16` · phase: **actions** · confidence: **High**
+`UC_13_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceFileEvents
 
 ### [LLM] MuddyWater dual-RMM persistence — DWAgent + AnyDesk co-deployment
 
-`UC_12_17` · phase: **install** · confidence: **Medium**
+`UC_13_17` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -586,7 +586,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — Hackers Use Microsoft Teams to Steal Credentials and Manipulate MFA
 
-`UC_12_14` · phase: **exploit** · confidence: **High**
+`UC_13_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
