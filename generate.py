@@ -3756,6 +3756,15 @@ body:not(.view-actors-active)   .stats-actors{
   cursor:pointer; min-width:90px;
 }
 .lib-filter-group select:focus{outline:0;}
+/* The OS-rendered popup that opens when you click a <select> doesn't inherit
+   transparent backgrounds — Chrome/Edge on Windows show solid white by
+   default, which renders the dark site text invisible. Force the option list
+   to match the dark panel. */
+.lib-filter-group select option,
+#actorsSort option{
+  background:#0d0e10;
+  color:#e7e7eb;
+}
 .lib-pill-group{
   display:inline-flex; gap:2px;
   background:var(--panel); border:1px solid var(--border);
@@ -5931,6 +5940,31 @@ ul.intel-types-doc code{
           </button>
         </div>
       </div>
+      <div class="ft-group ft-platform">
+        <span class="ft-label">Platform</span>
+        <div class="ft-chips">
+          <button class="src-chip plat-chip" data-platform="def"
+                  title="Show only articles whose UCs have a Defender KQL query">
+            Defender <span class="cnt" id="platCntDef"></span>
+          </button>
+          <button class="src-chip plat-chip" data-platform="sent"
+                  title="Show only articles whose UCs have a Sentinel KQL query">
+            Sentinel <span class="cnt" id="platCntSent"></span>
+          </button>
+          <button class="src-chip plat-chip" data-platform="sigma"
+                  title="Show only articles whose UCs have a Sigma rule">
+            Sigma <span class="cnt" id="platCntSigma"></span>
+          </button>
+          <button class="src-chip plat-chip" data-platform="spl"
+                  title="Show only articles whose UCs have a Splunk SPL query">
+            Splunk <span class="cnt" id="platCntSpl"></span>
+          </button>
+          <button class="src-chip plat-chip" data-platform="datadog"
+                  title="Show only articles whose UCs have a Datadog Cloud SIEM query">
+            Datadog <span class="cnt" id="platCntDatadog"></span>
+          </button>
+        </div>
+      </div>
       <div class="ft-group ft-view">
         <span class="ft-label">Layout</span>
         <div class="width-toggle" id="widthToggle" title="Article column width">
@@ -6897,12 +6931,14 @@ input.addEventListener('input', () => renderResults(input.value));
 // every active feature filter ("Has UCs" / "LLM UCs only").
 // "All" deselects every other source chip; feature chips are independent.
 function applySourceFilter() {
-  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip)');
+  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip)');
   const activeSources = Array.from(activeSourceChips).map(c => c.dataset.source).filter(Boolean);
   const activeFeats = Array.from(document.querySelectorAll('#srcFilter .feat-chip.active')).map(c => c.dataset.feat);
+  const activePlats = Array.from(document.querySelectorAll('#srcFilter .plat-chip.active')).map(c => c.dataset.platform);
   const cards = document.querySelectorAll('#view-articles article.card');
   cards.forEach(card => {
     const sources = (card.dataset.sources || '').split('|');
+    const platforms = (card.dataset.platforms || '').split(',').filter(Boolean);
     const matchSource = activeSources.length === 0
                         || activeSources.some(s => sources.includes(s));
     const ucCount = parseInt(card.dataset.ucCount || '0', 10);
@@ -6912,17 +6948,23 @@ function applySourceFilter() {
       if (f === 'has-llm') return llmCount > 0;
       return true;
     });
-    card.classList.toggle('src-hidden', !(matchSource && matchFeat));
+    // Platform filter is OR within the group (any selected platform matches)
+    // and AND with the rest of the filters, mirroring the source-chip pattern.
+    const matchPlat = activePlats.length === 0
+                      || activePlats.some(p => platforms.includes(p));
+    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat));
   });
   document.querySelectorAll('#navlist .nav-item').forEach(n => {
     const card = document.getElementById(n.dataset.jump);
     n.style.display = card && card.classList.contains('src-hidden') ? 'none' : '';
   });
-  // Keep "All" chip in sync — active iff no source AND no feature filter chosen
+  // Keep "All" chip in sync — active iff no source AND no feature filter
+  // AND no platform filter chosen.
   const allChip = document.querySelector('#srcFilter .src-chip.all');
-  if (allChip) allChip.classList.toggle('active', activeSources.length === 0 && activeFeats.length === 0);
+  if (allChip) allChip.classList.toggle('active',
+    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0);
 }
-// Pre-populate the count badges on the feature chips on load.
+// Pre-populate the count badges on the feature + platform chips on load.
 (function() {
   const cards = Array.from(document.querySelectorAll('#view-articles article.card'));
   const hasUc = cards.filter(c => parseInt(c.dataset.ucCount||'0',10) > 0).length;
@@ -6931,6 +6973,18 @@ function applySourceFilter() {
   const b = document.getElementById('featCntHasLlm');
   if (a) a.textContent = hasUc;
   if (b) b.textContent = hasLlm;
+  // Platform counts — how many articles have at least one UC for each platform
+  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0};
+  for (const c of cards) {
+    const p = (c.dataset.platforms || '').split(',').filter(Boolean);
+    for (const k of p) if (k in platCounts) platCounts[k]++;
+  }
+  const idMap = {def:'platCntDef', sent:'platCntSent', sigma:'platCntSigma',
+                 spl:'platCntSpl', datadog:'platCntDatadog'};
+  for (const k of Object.keys(idMap)) {
+    const el = document.getElementById(idMap[k]);
+    if (el) el.textContent = platCounts[k];
+  }
 })();
 document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
   chip.addEventListener('click', () => {
@@ -9564,11 +9618,23 @@ def render_card(idx: int, article: dict, ind: dict,
     uc_total = len(use_cases)
     uc_llm = sum(1 for u in use_cases if (u.title or "").startswith("[LLM]"))
     art_slug = _art_slug(article, article.get("published", ""))
+    # Platforms covered by ANY UC on this card — drives the Platform filter
+    # chip group on the toolbar so analysts can find e.g. "every article that
+    # has a Datadog query".
+    plats = set()
+    for uc in use_cases:
+        if uc.defender_kql: plats.add("def")
+        if uc.sentinel_kql: plats.add("sent")
+        if getattr(uc, "sigma_yaml", ""): plats.add("sigma")
+        if uc.splunk_spl: plats.add("spl")
+        if getattr(uc, "datadog_query", ""): plats.add("datadog")
+    plats_attr = ",".join(sorted(plats))
     return f"""
 <article class="card" id="{aid}" data-art-slug="{html.escape(art_slug)}"
   data-phases="{phases_attr}" data-sev="{severity}"
   data-techs="{html.escape(techs_attr)}"
   data-sources="{html.escape(sources_attr)}"
+  data-platforms="{plats_attr}"
   data-uc-count="{uc_total}" data-llm-uc-count="{uc_llm}"
   data-search="{html.escape(search_blob)}">
   <div class="sev-ribbon {severity}">{SEV_LABEL[severity]}</div>
@@ -9844,7 +9910,12 @@ def build_matrix_data(articles_meta):
     if escu_added:
         print(f"[*] Matrix: added {escu_added} ESCU detections from registry")
 
-    # Walk current articles, register article->technique and article->UC links
+    # Walk current articles, register article->technique and article->UC links.
+    # If a UC is bespoke (LLM-generated from this article — not a module-level
+    # internal UC and not an ESCU detection), register it as a new matrix entry
+    # so it shows up in the Detection Library + matrix views with its proper
+    # per-platform coverage flags. Without this, the Library only lists the 25
+    # hand-built internal UCs and ignores the hundreds of article-bespoke ones.
     for a in articles_meta:
         a_idx = len(art_records)
         art_techs = sorted({t for t, _ in a["techs"]})
@@ -9858,9 +9929,36 @@ def build_matrix_data(articles_meta):
         for tid in art_techs:
             if tid in technique_view:
                 tech_arts.setdefault(tid, []).append(a_idx)
-        for uc_var, _uc in a["ucs"]:
+        for uc_var, uc in a["ucs"]:
             if uc_var in seen_uc_ids:
                 uc_records[seen_uc_ids[uc_var]]["arts"].append(a_idx)
+                continue
+            # Bespoke UC — fresh entry with the same shape as internal UCs.
+            idx = len(uc_records)
+            seen_uc_ids[uc_var] = idx
+            uc_techs = [t for t, _ in uc.techniques]
+            pl = "".join([
+                "d" if uc.defender_kql else "-",
+                "s" if uc.sentinel_kql else "-",
+                "g" if getattr(uc, "sigma_yaml", "") else "-",
+                "p" if uc.splunk_spl else "-",
+                "D" if getattr(uc, "datadog_query", "") else "-",
+            ])
+            uc_records.append({
+                "i": idx,
+                "n": uc_var,
+                "t": uc.title,
+                "conf": uc.confidence,
+                "ph": uc.kill_chain,
+                "src": "bespoke",
+                "tier": getattr(uc, "tier", "hunting"),
+                "pl": pl,
+                "techs": uc_techs,
+                "arts": [a_idx],
+            })
+            for tid in uc_techs:
+                if tid in technique_view:
+                    tech_ucs.setdefault(tid, []).append(idx)
 
     # 3. Compose tactics array in canonical order
     tactics_out = []
