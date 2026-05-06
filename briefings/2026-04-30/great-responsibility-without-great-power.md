@@ -319,7 +319,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Great responsibility, without great power
 
-`UC_59_9` · phase: **exploit** · confidence: **High**
+`UC_67_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EtherRAT MSI dropper: msiexec-spawned cmd downloads Node.js runtime via curl to %LOCALAPPDATA%
 
-`UC_65_10` · phase: **install** · confidence: **High**
+`UC_73_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ _suspicious_curl
 
 ### [LLM] EtherRAT Node.js loader executing AES-encrypted payload with non-script extension from %LOCALAPPDATA%
 
-`UC_65_11` · phase: **install** · confidence: **High**
+`UC_73_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] EtherRAT EtherHiding C2 — node.exe contacting public Ethereum JSON-RPC endpoints (eth_call DDR)
 
-`UC_65_12` · phase: **c2** · confidence: **High**
+`UC_73_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -347,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EtherRAT Distribution Spoofing Administrative Tools via GitHub Facades
 
-`UC_65_9` · phase: **exploit** · confidence: **High**
+`UC_73_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,62 @@
+{
+  "name": "Cl0p",
+  "ucs": [
+    {
+      "title": "[LLM] Cl0p / FIN11 LEMURLOOT-DEWMODE webshell drop on MFT appliances (MOVEit / GoAnywhere / Cleo / Accellion)",
+      "description": "Hunts the file-write footprint Cl0p (TA505 / FIN11 / GRACEFUL SPIDER) leaves after SQL-injecting an internet-facing managed file transfer appliance: the IIS worker (w3wp.exe) writes .aspx/.ashx webshells (human2.aspx / health.aspx \u2014 LEMURLOOT on MOVEit, DEWMODE on Accellion) into the appliance's wwwroot. This is THE 2021\u20132024 Cl0p signature behind the Accellion FTA, GoAnywhere MFT (CVE-2023-0669), MOVEit Transfer (CVE-2023-34362) and Cleo Harmony / VLTrader / LexiCom (CVE-2024-50623, CVE-2024-55956) mass-extortion campaigns.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=\"w3wp.exe\" AND ((Filesystem.file_path IN (\"*\\\\MOVEitTransfer\\\\wwwroot\\\\*\",\"*\\\\GoAnywhere\\\\*\",\"*\\\\Cleo\\\\Harmony\\\\*\",\"*\\\\Cleo\\\\VLTrader\\\\*\",\"*\\\\Cleo\\\\LexiCom\\\\*\",\"*\\\\Accellion\\\\*\",\"*\\\\PaperCut*\") AND Filesystem.file_name IN (\"*.aspx\",\"*.ashx\",\"*.asp\",\"*.jsp\")) OR Filesystem.file_name IN (\"human2.aspx\",\"human.aspx\",\"health.aspx\",\"DEWMODE.html\",\"_human2.aspx\")) by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Cl0p / FIN11 webshell drop on MFT appliances \u2014 LEMURLOOT (human2.aspx) / DEWMODE\nlet _mft_paths = dynamic([@\"\\MOVEitTransfer\\wwwroot\\\", @\"\\GoAnywhere\\\", @\"\\Cleo\\Harmony\\\", @\"\\Cleo\\VLTrader\\\", @\"\\Cleo\\LexiCom\\\", @\"\\Accellion\\\", @\"\\PaperCut MF\\server\\\"]);\nlet _known_shells = dynamic([\"human2.aspx\",\"_human2.aspx\",\"human.aspx\",\"health.aspx\",\"DEWMODE.html\"]);\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where (FolderPath has_any (_mft_paths) and (FileName endswith \".aspx\" or FileName endswith \".ashx\" or FileName endswith \".asp\" or FileName endswith \".jsp\"))\n     or FileName in~ (_known_shells)\n| project Timestamp, DeviceName, FolderPath, FileName, SHA256,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessAccountName, InitiatingProcessIntegrityLevel\n| order by Timestamp desc",
+      "sentinel_kql": "// Cl0p / FIN11 webshell drop on MFT appliances \u2014 ASIM file-event view\nlet _mft_paths = dynamic([@\"\\MOVEitTransfer\\wwwroot\\\", @\"\\GoAnywhere\\\", @\"\\Cleo\\Harmony\\\", @\"\\Cleo\\VLTrader\\\", @\"\\Cleo\\LexiCom\\\", @\"\\Accellion\\\", @\"\\PaperCut MF\\server\\\"]);\nlet _known_shells = dynamic([\"human2.aspx\",\"_human2.aspx\",\"human.aspx\",\"health.aspx\",\"DEWMODE.html\"]);\nImFileEvent\n| where TimeGenerated > ago(7d)\n| where EventType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| where ActingProcessName endswith \"w3wp.exe\"\n| where (TargetFilePath has_any (_mft_paths) and (TargetFileName endswith \".aspx\" or TargetFileName endswith \".ashx\" or TargetFileName endswith \".asp\" or TargetFileName endswith \".jsp\"))\n     or TargetFileName in~ (_known_shells)\n| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName, TargetFileSHA256,\n          ActingProcessName, ActingProcessCommandLine, ActorUsername\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Cl0p / FIN11 LEMURLOOT-DEWMODE Webshell Drop on MFT Appliance\nid: 7c1f9d4e-3a8b-4d12-9b5d-cl0plemurloot01\nstatus: experimental\ndescription: Detects the IIS worker process (w3wp.exe) writing .aspx/.ashx webshells into managed-file-transfer appliance webroots \u2014 the LEMURLOOT (human2.aspx) and DEWMODE artefacts dropped by Cl0p / TA505 / FIN11 after exploiting MOVEit (CVE-2023-34362), GoAnywhere (CVE-2023-0669), Cleo (CVE-2024-50623/55956), Accellion FTA and PaperCut zero-days.\nreferences:\n  - https://www.mandiant.com/resources/blog/zero-day-moveit-data-theft\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a\n  - https://www.fortra.com/security/advisory/fi-2023-01\nauthor: SOC Detection Engineering\ndate: 2026/05/06\ntags:\n  - attack.initial_access\n  - attack.persistence\n  - attack.t1190\n  - attack.t1505.003\n  - detection.cl0p\n  - detection.fin11\nlogsource:\n  product: windows\n  category: file_event\ndetection:\n  iis_writer:\n    Image|endswith: '\\w3wp.exe'\n  mft_path:\n    TargetFilename|contains:\n      - '\\MOVEitTransfer\\wwwroot\\'\n      - '\\GoAnywhere\\'\n      - '\\Cleo\\Harmony\\'\n      - '\\Cleo\\VLTrader\\'\n      - '\\Cleo\\LexiCom\\'\n      - '\\Accellion\\'\n      - '\\PaperCut MF\\server\\'\n  shell_ext:\n    TargetFilename|endswith:\n      - '.aspx'\n      - '.ashx'\n      - '.asp'\n      - '.jsp'\n  known_shell:\n    TargetFilename|endswith:\n      - '\\human2.aspx'\n      - '\\_human2.aspx'\n      - '\\human.aspx'\n      - '\\health.aspx'\n      - '\\DEWMODE.html'\n  condition: (iis_writer and mft_path and shell_ext) or known_shell\nfalsepositives:\n  - Vendor-issued patches or supported plug-ins for the MFT product (validate with change-management tickets)\nlevel: critical",
+      "rationale": "MFT appliances are vendor-managed black boxes \u2014 w3wp.exe writing freshly-named .aspx into their wwwroot is essentially never legitimate, and the literal filenames human2.aspx / DEWMODE.html are Cl0p tooling artefacts named in CISA AA23-158A and Mandiant's LEMURLOOT advisory. Random APTs aren't burning MFT 0-days at scale; Cl0p is the operator that built its 2021\u20132024 extortion business on this exa",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Cl0p / TA505 bulk data exfiltration via Rclone / MEGAcmd to MEGA, S3 or WebDAV pre-encryption",
+      "description": "Hunts Cl0p's pre-ransomware data-theft stage: a hands-on-keyboard operator drops rclone.exe (often renamed) or MEGAcmd onto a file or DB server and runs `copy / sync / moveto` against a `mega:` / `:s3` / `:webdav` remote. This is the staging step Cl0p has used in every MOVEit, GoAnywhere and Cleo extortion event to upload terabytes to MEGA / cloud buckets BEFORE detonating the Cl0p locker \u2014 the data-theft itself is the leverage, not the encryption.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1567.002",
+        "T1071.001",
+        "T1041",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN (\"*rclone*\",\"*MEGAcmd*\",\"*megatools*\",\"*megaclient*\") OR (Processes.process=\"*--config*\" AND Processes.process=\"*remote:*\" AND Processes.process IN (\"*copy*\",\"*sync*\",\"*move*\",\"*moveto*\",\"*--transfers*\",\"*--multi-thread-streams*\"))) AND Processes.process IN (\"*mega:*\",\"*mega.nz*\",\"*mega.co.nz*\",\"*:webdav*\",\"*:s3*\",\"*:dropbox*\",\"*:gdrive*\",\"*:pcloud*\",\"*ftp:*\",\"*sftp:*\",\"*ftps:*\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Cl0p / TA505 bulk data exfil \u2014 rclone / MEGAcmd to cloud remotes\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where ProcessCommandLine has_any (\"rclone\",\"MEGAcmd\",\"megatools\",\"megaclient.exe\")\n     or (ProcessCommandLine has_all (\"--config\",\"remote:\")\n         and ProcessCommandLine has_any (\"copy\",\"sync\",\"move \",\"moveto\",\"--transfers\",\"--multi-thread-streams\"))\n| where ProcessCommandLine has_any (\"mega:\",\"mega.nz\",\"mega.co.nz\",\":webdav\",\":s3\",\":dropbox\",\":gdrive\",\":pcloud\",\":ftp\",\":sftp\",\":ftps\",\"backblaze\",\"wasabi\")\n| extend RenamedRclone = iff(FileName !in~ (\"rclone.exe\",\"rclone\",\"MEGAcmdShell.exe\",\"MEGAclient.exe\") and ProcessCommandLine has \"--config\", true, false)\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,\n          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,\n          IsInitiatingProcessRemoteSession, RenamedRclone\n| order by Timestamp desc",
+      "sentinel_kql": "// Cl0p / TA505 bulk data exfil \u2014 rclone / MEGAcmd to cloud remotes (ASIM)\nImProcessCreate\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith \"$\"\n| where ActorUsername !in~ (\"system\",\"local service\",\"network service\")\n| where TargetProcessCommandLine has_any (\"rclone\",\"MEGAcmd\",\"megatools\",\"megaclient.exe\")\n     or (TargetProcessCommandLine has_all (\"--config\",\"remote:\")\n         and TargetProcessCommandLine has_any (\"copy\",\"sync\",\"move \",\"moveto\",\"--transfers\",\"--multi-thread-streams\"))\n| where TargetProcessCommandLine has_any (\"mega:\",\"mega.nz\",\"mega.co.nz\",\":webdav\",\":s3\",\":dropbox\",\":gdrive\",\":pcloud\",\":ftp\",\":sftp\",\":ftps\",\"backblaze\",\"wasabi\")\n| extend RenamedRclone = iff(TargetProcessName !endswith \"rclone.exe\" and TargetProcessName !endswith \"MEGAcmdShell.exe\" and TargetProcessCommandLine has \"--config\", true, false)\n| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName,\n          TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine, RenamedRclone\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "Cl0p / TA505 / FIN11 has a documented preference for staging stolen MFT and file-server data to MEGA and other public cloud remotes via rclone (frequently renamed to evade naive name-based detections) before dropping the Cl0p locker \u2014 Mandiant, CrowdStrike (GRACEFUL SPIDER) and DFIR Report all flag this as a Cl0p signature distinct from REvil / LockBit / BlackCat (which more typically use Mega.nz ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    }
+  ]
+}

@@ -8,13 +8,26 @@ _588 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-06
+- [azure ad conditional access bypassed via phantom device regi](./2026-05-06/azure-ad-conditional-access-bypassed-via-phantom-device-regi.md)
+- [critical palo alto firewalls vulnerability exploited in the ](./2026-05-06/critical-palo-alto-firewalls-vulnerability-exploited-in-the-.md)
+- [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
+- [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
+- [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
+- [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
+- [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
+- [ransomware and data extortion groups intensify targeting of ](./2026-05-06/ransomware-and-data-extortion-groups-intensify-targeting-of-.md)
+- [vimeo data breach exposes 119 000 users unique email address](./2026-05-06/vimeo-data-breach-exposes-119-000-users-unique-email-address.md)
+- [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
+- [windows phone link exploited by cloudz rat to steal credenti](./2026-05-06/windows-phone-link-exploited-by-cloudz-rat-to-steal-credenti.md)
+
 ## 2026-05-05
-- [cerberus stalkerware on google play leverages accessibility ](./2026-05-05/cerberus-stalkerware-on-google-play-leverages-accessibility-.md)
-- [china aligned shadow earth 053 exploits exchange servers to ](./2026-05-05/china-aligned-shadow-earth-053-exploits-exchange-servers-to-.md)
+- [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [china linked uat 8302 targets governments using shared apt m](./2026-05-05/china-linked-uat-8302-targets-governments-using-shared-apt-m.md)
 - [cisco to acquire astrix security to strengthen ai agent and ](./2026-05-05/cisco-to-acquire-astrix-security-to-strengthen-ai-agent-and-.md)
 - [cloudz malware abuses microsoft phone link to steal sms and ](./2026-05-05/cloudz-malware-abuses-microsoft-phone-link-to-steal-sms-and-.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
+- [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [critical apache http 2 flaw cve 2026 23918 enables dos and p](./2026-05-05/critical-apache-http-2-flaw-cve-2026-23918-enables-dos-and-p.md)
 - [critical qualcomm chipset vulnerabilities enables remote cod](./2026-05-05/critical-qualcomm-chipset-vulnerabilities-enables-remote-cod.md)
 - [critical weaver e cology rce vulnerability actively exploite](./2026-05-05/critical-weaver-e-cology-rce-vulnerability-actively-exploite.md)
@@ -26,14 +39,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [instructure hacker claims data theft from 8 800 schools univ](./2026-05-05/instructure-hacker-claims-data-theft-from-8-800-schools-univ.md)
 - [karakurt extortion gang cold case negotiator gets 8 5 years ](./2026-05-05/karakurt-extortion-gang-cold-case-negotiator-gets-8-5-years-.md)
 - [low noise high confidence optimizing soc costs with better t](./2026-05-05/low-noise-high-confidence-optimizing-soc-costs-with-better-t.md)
-- [luxsci launches enterprise grade hipaa compliant email secur](./2026-05-05/luxsci-launches-enterprise-grade-hipaa-compliant-email-secur.md)
 - [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [microsoft details phishing campaign targeting 35 000 users a](./2026-05-05/microsoft-details-phishing-campaign-targeting-35-000-users-a.md)
 - [new scarcruft supply chain attack hits gaming platform with ](./2026-05-05/new-scarcruft-supply-chain-attack-hits-gaming-platform-with-.md)
 - [new stealthy quasar linux malware targets software developer](./2026-05-05/new-stealthy-quasar-linux-malware-targets-software-developer.md)
 - [scarcruft hackers push birdcall android malware via game pla](./2026-05-05/scarcruft-hackers-push-birdcall-android-malware-via-game-pla.md)
 - [scarcruft hacks gaming platform to deploy birdcall malware o](./2026-05-05/scarcruft-hacks-gaming-platform-to-deploy-birdcall-malware-o.md)
-- [silver fox uses fake tax notices to deploy valleyrat and new](./2026-05-05/silver-fox-uses-fake-tax-notices-to-deploy-valleyrat-and-new.md)
 - [student hacked taiwan high speed rail to trigger emergency b](./2026-05-05/student-hacked-taiwan-high-speed-rail-to-trigger-emergency-b.md)
 - [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
 - [the eol blind spot in your cve feed what sca tools miss](./2026-05-05/the-eol-blind-spot-in-your-cve-feed-what-sca-tools-miss.md)
@@ -53,7 +64,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [progress patches critical moveit automation bug enabling aut](./2026-05-04/progress-patches-critical-moveit-automation-bug-enabling-aut.md)
 - [researchers report amazon ses abused in phishing to evade de](./2026-05-04/researchers-report-amazon-ses-abused-in-phishing-to-evade-de.md)
 - [silver fox deploys abcdoor malware via tax themed phishing i](./2026-05-04/silver-fox-deploys-abcdoor-malware-via-tax-themed-phishing-i.md)
-- [trellix discloses data breach after source code repository h](./2026-05-04/trellix-discloses-data-breach-after-source-code-repository-h.md)
 - [weaver e cology critical bug exploited in attacks since marc](./2026-05-04/weaver-e-cology-critical-bug-exploited-in-attacks-since-marc.md)
 - [weekly recap ai powered phishing android spying tool linux e](./2026-05-04/weekly-recap-ai-powered-phishing-android-spying-tool-linux-e.md)
 
@@ -116,9 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-27
 - [checkmarx confirms github repository data posted on dark web](./2026-04-27/checkmarx-confirms-github-repository-data-posted-on-dark-web.md)
-- [mythos changed the math on vulnerability discovery most team](./2026-04-27/mythos-changed-the-math-on-vulnerability-discovery-most-team.md)
-- [phantomcore exploits trueconf vulnerabilities to breach russ](./2026-04-27/phantomcore-exploits-trueconf-vulnerabilities-to-breach-russ.md)
-- [weekly recap fast16 malware xchat launch federal backdoor ai](./2026-04-27/weekly-recap-fast16-malware-xchat-launch-federal-backdoor-ai.md)
 
 ## 2026-04-24
 - [cisa kev cve 2024 57726 simplehelp missing authorization vul](./2026-04-24/cisa-kev-cve-2024-57726-simplehelp-missing-authorization-vul.md)
@@ -170,7 +177,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
 - [foxit libraw vulnerabilities](./2026-04-16/foxit-libraw-vulnerabilities.md)
-- [more than pretty pictures wendy bishop on visual storytellin](./2026-04-16/more-than-pretty-pictures-wendy-bishop-on-visual-storytellin.md)
 - [powmix botnet targets czech workforce](./2026-04-16/powmix-botnet-targets-czech-workforce.md)
 - [supply chain dependencies have you checked your blind spot](./2026-04-16/supply-chain-dependencies-have-you-checked-your-blind-spot.md)
 - [the q1 vulnerability pulse](./2026-04-16/the-q1-vulnerability-pulse.md)
@@ -212,7 +218,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-01
 - [a laughing rat crystalx combines spyware stealer and prankwa](./2026-04-01/a-laughing-rat-crystalx-combines-spyware-stealer-and-prankwa.md)
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)
-- [threat brief widespread impact of the axios supply chain att](./2026-04-01/threat-brief-widespread-impact-of-the-axios-supply-chain-att.md)
 
 ## 2026-03-27
 - [a cunning predator how silver fox preys on japanese firms th](./2026-03-27/a-cunning-predator-how-silver-fox-preys-on-japanese-firms-th.md)
@@ -220,7 +225,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [rsac 2026 wrap up week in security with tony anscombe](./2026-03-27/rsac-2026-wrap-up-week-in-security-with-tony-anscombe.md)
 
 ## 2026-03-26
-- [an ai gateway designed to steal your data](./2026-03-26/an-ai-gateway-designed-to-steal-your-data.md)
 - [cisa kev cve 2026 33634 aquasecurity trivy embedded maliciou](./2026-03-26/cisa-kev-cve-2026-33634-aquasecurity-trivy-embedded-maliciou.md)
 
 ## 2026-03-25
@@ -528,7 +532,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 54236 adobe commerce and magento improper ](./2025-10-24/cisa-kev-cve-2025-54236-adobe-commerce-and-magento-improper-.md)
 - [cisa kev cve 2025 59287 microsoft windows server update serv](./2025-10-24/cisa-kev-cve-2025-59287-microsoft-windows-server-update-serv.md)
 - [cybersecurity awareness month 2025 cyber risk thrives in the](./2025-10-24/cybersecurity-awareness-month-2025-cyber-risk-thrives-in-the.md)
-- [from dream job to malware dreamloaders in lazarus recent cam](./2025-10-24/from-dream-job-to-malware-dreamloaders-in-lazarus-recent-cam.md)
 
 ## 2025-10-23
 - [gotta fly lazarus targets the uav sector](./2025-10-23/gotta-fly-lazarus-targets-the-uav-sector.md)
@@ -614,9 +617,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-09-18
 - [small businesses big targets protecting your business agains](./2025-09-18/small-businesses-big-targets-protecting-your-business-agains.md)
-
-## 2025-09-16
-- [hybridpetya the petya notpetya copycat comes with a twist](./2025-09-16/hybridpetya-the-petya-notpetya-copycat-comes-with-a-twist.md)
 
 ## 2025-09-11
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-09-11/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)

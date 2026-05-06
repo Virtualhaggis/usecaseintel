@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CrystalX RAT — ChromeElevator stealer drop in %TEMP% (svc[digits].exe + co[digits])
 
-`UC_153_7` · phase: **actions** · confidence: **High**
+`UC_156_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ union _crystalx_drops, _crystalx_execs
 
 ### [LLM] CrystalX RAT — clipper extension drop to Microsoft\Edge\ExtSvc and CDP injection
 
-`UC_153_8` · phase: **install** · confidence: **High**
+`UC_156_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ union _ext_drop, _cdp_inject
 
 ### [LLM] CrystalX / Webcrystal RAT C2 + implant hash IOC sweep
 
-`UC_153_9` · phase: **c2** · confidence: **High**
+`UC_156_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -278,7 +278,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — A laughing RAT: CrystalX combines spyware, stealer, and prankware features
 
-`UC_153_6` · phase: **exploit** · confidence: **High**
+`UC_156_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

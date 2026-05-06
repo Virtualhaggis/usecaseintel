@@ -29,12 +29,164 @@ The multi-stage campaign, observed between April 14 and 16, 2026, targeted more 
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1557** — Adversary-in-the-Middle
+- **T1539** — Steal Web Session Cookie
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1556.007** — Modify Authentication Process: Hybrid Identity
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Code of Conduct AiTM phish lure — inbound email by sender, subject, and PDF filename
+
+`UC_40_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, values(Email.subject) as subjects, values(Email.file_name) as attachments, values(Email.recipient) as recipients, values(Email.message_id) as message_ids from datamodel=Email where (Email.src_user IN ("cocpostmaster@cocinternal.com","nationaladmin@gadellinet.com","nationalintegrity@harteprn.com","m365premiumcommunications@cocinternal.com","documentviewer@na.businesshellosign.de") OR Email.src_user IN ("*@cocinternal.com","*@gadellinet.com","*@harteprn.com","*@na.businesshellosign.de") OR Email.subject IN ("*Internal case log issued under conduct policy*","*Reminder: employer opened a non-compliance case log*","*non-compliance case log*") OR Email.file_name IN ("Awareness Case Log File*April 2026.pdf","Awareness Case Log File*pdf")) by Email.src_user, Email.recipient, host
+| `drop_dm_object_name(Email)`
+| where count > 0
+```
+
+**Defender KQL:**
+```kql
+// Code of Conduct AiTM lure — inbound email match (Microsoft 'Breaking the code', May 2026)
+let CocSenders = dynamic(["cocpostmaster@cocinternal.com","nationaladmin@gadellinet.com","nationalintegrity@harteprn.com","m365premiumcommunications@cocinternal.com","documentviewer@na.businesshellosign.de"]);
+let CocSenderDomains = dynamic(["cocinternal.com","gadellinet.com","harteprn.com","na.businesshellosign.de"]);
+let CocDisplayNames = dynamic(["Internal Regulatory COC","Workforce Communications","Team Conduct Report"]);
+let CocSubjectFragments = dynamic(["Internal case log issued under conduct policy","Reminder: employer opened a non-compliance case log","non-compliance case log","issued under conduct policy"]);
+let CocAttachmentSHA256 = dynamic(["5DB1ECBBB2C90C51D81BDA138D4300B90EA5EB2885CCE1BD921D692214AECBC6","B5A3346082AC566B4494E6175F1CD9873B64ABE6C902DB49BD4E8088876C9EAD","11420D6D693BF8B19195E6B98FEDD03B9BCBC770B6988BC64CB788BFABE1A49D"]);
+let HitMail = EmailEvents
+    | where Timestamp > ago(30d)
+    | where EmailDirection == "Inbound"
+    | where SenderFromAddress in~ (CocSenders)
+        or SenderMailFromAddress in~ (CocSenders)
+        or SenderFromDomain in~ (CocSenderDomains)
+        or SenderMailFromDomain in~ (CocSenderDomains)
+        or SenderDisplayName in~ (CocDisplayNames)
+        or Subject has_any (CocSubjectFragments)
+    | project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName,
+              SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction,
+              DeliveryLocation, ThreatTypes;
+HitMail
+| join kind=leftouter (
+    EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where FileName has "Awareness Case Log File" and FileName endswith ".pdf"
+        or SHA256 in (CocAttachmentSHA256)
+    | project NetworkMessageId, AttachmentName = FileName, AttachmentSHA256 = SHA256, FileSize
+  ) on NetworkMessageId
+| project Timestamp, SenderFromAddress, SenderDisplayName, SenderFromDomain,
+          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation,
+          AttachmentName, AttachmentSHA256, NetworkMessageId
+| order by Timestamp desc
+```
+
+### [LLM] Workstation egress to Code of Conduct AiTM landing-page domains (compliance-protectionoutlook[.]de et al.)
+
+`UC_40_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, values(Web.url) as urls, values(Web.user) as users, values(Web.dest) as dest, min(_time) as first_seen, max(_time) as last_seen from datamodel=Web where Web.url IN ("*compliance-protectionoutlook.de*","*acceptable-use-policy-calendly.de*","*cocinternal.com*","*gadellinet.com*","*harteprn.com*","*na.businesshellosign.de*") by Web.src, Web.user, host
+| `drop_dm_object_name(Web)`
+| append [
+    | tstats summariesonly=true count, values(DNS.query) as queries, min(_time) as first_seen, max(_time) as last_seen from datamodel=Network_Resolution where DNS.query IN ("*compliance-protectionoutlook.de","*acceptable-use-policy-calendly.de","*cocinternal.com","*gadellinet.com","*harteprn.com","*na.businesshellosign.de") by DNS.src, host
+    | `drop_dm_object_name(DNS)`
+  ]
+| stats sum(count) as hits, values(urls) as urls, values(queries) as queries, min(first_seen) as first_seen, max(last_seen) as last_seen by src, user, host
+```
+
+**Defender KQL:**
+```kql
+// Code of Conduct AiTM campaign — egress to Microsoft-published phishing/sender domains
+let CocDomains = dynamic(["compliance-protectionoutlook.de","acceptable-use-policy-calendly.de","cocinternal.com","gadellinet.com","harteprn.com","na.businesshellosign.de"]);
+let Clicks = UrlClickEvents
+    | where Timestamp > ago(30d)
+    | where Url has_any (CocDomains)
+    | project Timestamp, AccountUpn, Url, IPAddress, ActionType, NetworkMessageId,
+              IsClickedThrough, Source = "UrlClickEvents";
+let NetConn = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (CocDomains)
+        or tostring(parse_url(RemoteUrl).Host) has_any (CocDomains)
+    | project Timestamp, DeviceName, AccountUpn = InitiatingProcessAccountUpn,
+              Url = RemoteUrl, RemoteIP, RemotePort, ActionType,
+              InitiatingProcessFileName, Source = "DeviceNetworkEvents";
+let DnsQueries = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has_any (CocDomains)
+    | project Timestamp, DeviceName, AccountUpn = InitiatingProcessAccountUpn,
+              Url = Q, InitiatingProcessFileName, Source = "DeviceEvents-DNS";
+union Clicks, NetConn, DnsQueries
+| order by Timestamp desc
+```
+
+### [LLM] AiTM token theft — successful Entra ID sign-in from new IP within 30 min of clicking COC phishing URL
+
+`UC_40_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true min(_time) as click_time, values(Web.url) as click_url from datamodel=Web where Web.url IN ("*compliance-protectionoutlook.de*","*acceptable-use-policy-calendly.de*","*cocinternal.com*","*gadellinet.com*","*harteprn.com*") by Web.user
+| `drop_dm_object_name(Web)`
+| rename user as Authentication.user
+| join type=inner Authentication.user [
+    | tstats summariesonly=true count, values(Authentication.src) as new_src, values(Authentication.user_agent) as new_ua, min(_time) as signin_time from datamodel=Authentication where Authentication.action="success" Authentication.app="azure_active_directory" earliest=-30d by Authentication.user, Authentication.src
+    | `drop_dm_object_name(Authentication)`
+  ]
+| where signin_time >= click_time AND signin_time <= click_time + 1800
+| join type=left user [
+    | tstats summariesonly=true count from datamodel=Authentication where Authentication.action="success" Authentication.app="azure_active_directory" earliest=-60d latest=-1d by Authentication.user, Authentication.src
+    | `drop_dm_object_name(Authentication)`
+    | stats values(src) as historical_src by user
+  ]
+| eval is_new_ip = if(isnull(historical_src) OR NOT match(mvjoin(historical_src,","),src), 1, 0)
+| where is_new_ip=1
+| table click_time, signin_time, user, click_url, src, new_ua, historical_src
+```
+
+**Defender KQL:**
+```kql
+// AiTM token theft — successful AAD sign-in from new IP within 30m of clicking the COC phishing URL
+let LookbackDays = 14d;
+let BaselineDays = 60d;
+let WindowAfterClick = 30m;
+let CocDomains = dynamic(["compliance-protectionoutlook.de","acceptable-use-policy-calendly.de","cocinternal.com","gadellinet.com","harteprn.com","na.businesshellosign.de"]);
+let CocClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where Url has_any (CocDomains)
+    | project ClickTime = Timestamp, AccountUpn, ClickIP = IPAddress, ClickUrl = Url;
+let UserBaseline = AADSignInEventsBeta
+    | where Timestamp between (ago(BaselineDays) .. ago(LookbackDays))
+    | where ErrorCode == 0
+    | summarize KnownIPs = make_set(IPAddress, 5000), KnownCountries = make_set(Country) by AccountUpn;
+AADSignInEventsBeta
+| where Timestamp > ago(LookbackDays)
+| where ErrorCode == 0
+| project SignInTime = Timestamp, AccountUpn, SignInIP = IPAddress, Country, City,
+          Application, ApplicationId, UserAgent, ClientAppUsed, RiskLevelDuringSignIn,
+          ConditionalAccessStatus, IsAnonymousProxy
+| join kind=inner CocClicks on AccountUpn
+| where SignInTime between (ClickTime .. ClickTime + WindowAfterClick)
+| join kind=leftouter UserBaseline on AccountUpn
+| extend NewIP = iif(isempty(KnownIPs) or not(set_has_element(KnownIPs, SignInIP)), true, false)
+| extend NewCountry = iif(isempty(KnownCountries) or not(set_has_element(KnownCountries, Country)), true, false)
+| where NewIP == true or NewCountry == true or IsAnonymousProxy == true
+| project ClickTime, SignInTime,
+          DelayMin = datetime_diff('minute', SignInTime, ClickTime),
+          AccountUpn, ClickUrl, ClickIP, SignInIP, Country, City,
+          Application, UserAgent, ClientAppUsed, ConditionalAccessStatus,
+          NewIP, NewCountry, IsAnonymousProxy
+| order by SignInTime desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -246,4 +398,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -24,12 +24,95 @@ The activity is being tracked by Cisco Talos under the moniker UAT-8302 , with p
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.003** — Application Layer Protocol: Mail Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567** — Exfiltration Over Web Service
+- **T1046** — Network Service Discovery
+- **T1018** — Remote System Discovery
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1572** — Protocol Tunneling
+- **T1090.001** — Proxy: Internal Proxy
+- **T1090.002** — Proxy: External Proxy
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] NetDraft/FINALDRAFT covert C2 — non-mail process beaconing to Microsoft Graph (Outlook drafts channel)
+
+`UC_25_4` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as destinations values(All_Traffic.process_name) as process_name values(All_Traffic.process) as process from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("graph.microsoft.com","login.microsoftonline.com") AND NOT All_Traffic.process_name IN ("outlook.exe","OUTLOOK.EXE","teams.exe","ms-teams.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe","onedrive.exe","winword.exe","excel.exe","powerpnt.exe","onenote.exe","officeclicktorun.exe","olk.exe","explorer.exe","sharepoint.exe","msaccess.exe","powerautomatedesktop.exe","code.exe","pwsh.exe") by All_Traffic.src, All_Traffic.user, All_Traffic.process_name, All_Traffic.process_hash, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort 0 - count
+```
+
+**Defender KQL:**
+```kql
+let _mail_browser_allow = dynamic(["outlook.exe","olk.exe","teams.exe","msteams.exe","ms-teams.exe","msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","onedrive.exe","winword.exe","excel.exe","powerpnt.exe","onenote.exe","officeclicktorun.exe","sharepoint.exe","explorer.exe","msaccess.exe","code.exe","powerautomatedesktop.exe","searchapp.exe","searchhost.exe","settingshost.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any ("graph.microsoft.com","login.microsoftonline.com") or RemoteUrl endswith ".graph.microsoft.com"
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName !in~ (_mail_browser_allow)
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), DistinctMinutes=dcount(bin(Timestamp,1m)), DestUrls=make_set(RemoteUrl,8)
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where ConnCount >= 3                  // suppress one-shot legit OAuth probes
+| order by ConnCount desc
+```
+
+### [LLM] UAT-8302 internal recon — chainreactors `gogo` scanner cmdline tokens
+
+`UC_25_5` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.user!="*$" AND ( Processes.process_name IN ("gogo.exe","gogo_windows_amd64.exe","gogo_windows_386.exe") OR Processes.process="*gogo.exe *" OR Processes.process="*gogo_windows_amd64.exe*" OR Processes.process="* --mod s *" OR Processes.process="* --mod ss *" OR Processes.process="* -p top1*" OR Processes.process="* -p top2*" OR Processes.process="* -p top3*" OR Processes.process="* -p win *" OR Processes.process="* -p db *" OR Processes.process="* -p all*" OR Processes.process="* --af *") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName matches regex @"(?i)^gogo(_windows_(amd64|386))?\.exe$")
+     or (ProcessCommandLine matches regex @"(?i)\\gogo(_windows_(amd64|386))?\.exe\b")
+     or (ProcessCommandLine has_any ("--mod s ","--mod ss "))
+     or (ProcessCommandLine matches regex @"(?i)\s-p\s+(top1|top2|top3|win|db|all|rce|ws)\b")
+     or (ProcessCommandLine has " --af " and ProcessCommandLine has " -i ")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          IsInitiatingProcessRemoteSession
+| order by Timestamp desc
+```
+
+### [LLM] UAT-8302 alternate access — Stowaway pivot agent or SoftEther VPN client install
+
+`UC_25_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.user!="*$" AND ( Processes.process_name IN ("stowaway_agent.exe","stowaway_admin.exe","vpncmd.exe","vpncmd_x64.exe","vpnclient.exe","vpnclient_x64.exe","vpnserver.exe","vpnserver_x64.exe","vpnbridge.exe","vpnbridge_x64.exe","vpninstall.exe") OR Processes.process="*--cs gbk*" OR Processes.process="*vpncmd*AccountConnect*" OR Processes.process="*vpncmd*NicCreate*" OR Processes.process="*vpncmd*HubCreate*" OR Processes.process="*vpncmd*/server*:443*/client*" OR Processes.process="*stowaway_agent*-l 0.0.0.0:*" OR Processes.process="*stowaway_agent*-c *:*-s *") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName matches regex @"(?i)^(stowaway_(agent|admin)|vpncmd(_x64)?|vpnclient(_x64)?|vpnserver(_x64)?|vpnbridge(_x64)?|vpninstall)\.exe$")
+     or (ProcessCommandLine has "--cs gbk")
+     or (ProcessCommandLine matches regex @"(?i)\bvpncmd(_x64)?(\.exe)?\b.*\b(AccountConnect|NicCreate|HubCreate|AccountCreate|NicEnable)\b")
+     or (ProcessCommandLine matches regex @"(?i)\bstowaway_(agent|admin)(\.exe)?\b.*\s-(l|c)\s+\S+.*\s-s\s+\S+")
+     or (ProcessCommandLine matches regex @"(?i)\bvpncmd(_x64)?\.exe\b.*\/server\s+\S+:(443|992|5555|1194)")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          IsInitiatingProcessRemoteSession
+| order by Timestamp desc
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -117,4 +200,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

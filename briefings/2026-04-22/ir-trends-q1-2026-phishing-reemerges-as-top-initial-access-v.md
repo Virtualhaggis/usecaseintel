@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Softr-hosted phishing page impersonating OWA/Exchange (Crimson Collective TTP)
 
-`UC_108_14` · phase: **delivery** · confidence: **High**
+`UC_113_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ SoftrEmails
 
 ### [LLM] MeowBackConn proxy DLL drop / load (Gootloader -> Rhysida)
 
-`UC_108_15` · phase: **install** · confidence: **High**
+`UC_113_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ union ImageLoads, FileWrites
 
 ### [LLM] First-seen service-principal Graph API sign-in after TruffleHog secret-scan exposure (Crimson Collective)
 
-`UC_108_16` · phase: **actions** · confidence: **Medium**
+`UC_113_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -583,7 +583,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IR Trends Q1 2026: Phishing reemerges as top initial access vector, as attacks t
 
-`UC_108_13` · phase: **exploit** · confidence: **High**
+`UC_113_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

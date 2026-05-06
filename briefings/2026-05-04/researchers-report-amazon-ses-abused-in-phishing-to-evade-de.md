@@ -28,12 +28,88 @@ Although the resource has been leveraged for malicious activity in the past, Kas
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1586.002** — Compromise Accounts: Email Accounts
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1656** — Impersonation
+- **T1583.006** — Acquire Infrastructure: Web Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Amazon SES IAM key abuse: quota/identity recon followed by bulk SendEmail from same principal
+
+`UC_42_4` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count(eval(match('All_Changes.command', "^(GetSendQuota|GetSendStatistics|VerifyEmailIdentity|ListIdentities|GetAccountSendingEnabled|GetIdentityVerificationAttributes)$"))) AS ReconCalls count(eval(match('All_Changes.command', "^(SendEmail|SendRawEmail|SendBulkTemplatedEmail|SendTemplatedEmail)$"))) AS SendCalls values(All_Changes.command) AS ApiCalls min(_time) AS FirstSeen max(_time) AS LastSeen FROM datamodel=Change WHERE All_Changes.vendor_product="Amazon Web Services" All_Changes.object_category="cloud" All_Changes.command IN ("GetSendQuota","GetSendStatistics","VerifyEmailIdentity","ListIdentities","GetAccountSendingEnabled","GetIdentityVerificationAttributes","SendEmail","SendRawEmail","SendBulkTemplatedEmail","SendTemplatedEmail") BY All_Changes.user All_Changes.src All_Changes.user_type | `drop_dm_object_name("All_Changes")` | where ReconCalls>=1 AND SendCalls>=50 AND user_type IN ("IAMUser","AssumedRole") | eval WindowMinutes=round((LastSeen-FirstSeen)/60,1) | where WindowMinutes<=60
+```
+
+**Defender KQL:**
+```kql
+// Defender for Cloud Apps AWS connector — CloudAppEvents carries CloudTrail records under Application 'Amazon Web Services'
+let ReconApis = dynamic(["GetSendQuota","GetSendStatistics","VerifyEmailIdentity","ListIdentities","GetAccountSendingEnabled","GetIdentityVerificationAttributes"]);
+let SendApis  = dynamic(["SendEmail","SendRawEmail","SendBulkTemplatedEmail","SendTemplatedEmail"]);
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application has "Amazon Web Services"
+| where ActionType in (ReconApis) or ActionType in (SendApis)
+| extend Raw = parse_json(RawEventData)
+| extend EventSource = tostring(Raw.eventSource), UserType = tostring(Raw.userIdentity.type), UserName = tostring(Raw.userIdentity.userName), AccessKeyId = tostring(Raw.userIdentity.accessKeyId)
+| where EventSource =~ "ses.amazonaws.com"
+| where UserType in ("IAMUser","AssumedRole")
+| summarize ReconCalls = countif(ActionType in (ReconApis)),
+            SendCalls  = countif(ActionType in (SendApis)),
+            ApiCalls   = make_set(ActionType),
+            FirstSeen  = min(Timestamp),
+            LastSeen   = max(Timestamp)
+            by UserName, AccessKeyId, IPAddress, CountryCode
+| where ReconCalls >= 1 and SendCalls >= 50
+| extend WindowMinutes = datetime_diff('minute', LastSeen, FirstSeen)
+| where WindowMinutes <= 60
+| order by SendCalls desc
+```
+
+### [LLM] Inbound Amazon-SES-authenticated phishing: DocuSign lure with AWS-hosted destination URL
+
+`UC_42_5` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) AS FirstSeen max(_time) AS LastSeen values(All_Email.subject) AS Subjects values(All_Email.url) AS Urls values(All_Email.recipient) AS Recipients FROM datamodel=Email WHERE All_Email.direction="inbound" All_Email.delivery_action IN ("Delivered","DeliveredAsSpam") (All_Email.src_user_domain="*.amazonses.com" OR All_Email.message_id="*amazonses.com*" OR All_Email.return_path="*amazonses.com*") (All_Email.subject="*DocuSign*" OR All_Email.subject="*please review*" OR All_Email.subject="*signature requested*" OR All_Email.subject="*document is ready*" OR All_Email.subject="*sign and return*" OR All_Email.subject="*invoice*" OR All_Email.subject="*payment approval*") (All_Email.url="*.amazonaws.com*" OR All_Email.url="*.cloudfront.net*" OR All_Email.url="*.awsapps.com*") BY All_Email.src_user All_Email.recipient All_Email.message_id | `drop_dm_object_name("All_Email")` | sort -count
+```
+
+**Defender KQL:**
+```kql
+let DocuSignLures = dynamic(["DocuSign","docusign","please review","signature requested","document is ready","sign and return","completed document","invoice attached","payment approval","wire instructions","e-sign"]);
+let AwsHostedDomains = dynamic(["amazonaws.com",".cloudfront.net",".awsapps.com",".s3.amazonaws.com",".execute-api.amazonaws.com"]);
+let SesMail = EmailEvents
+    | where Timestamp > ago(7d)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | where SenderMailFromDomain endswith ".amazonses.com"
+         or SenderFromDomain endswith ".amazonses.com"
+         or InternetMessageId has "amazonses.com"
+         or AuthenticationDetails has "amazonses.com"
+    | where Subject has_any (DocuSignLures);
+SesMail
+| join kind=inner (
+    EmailUrlInfo
+    | where Timestamp > ago(7d)
+    | project NetworkMessageId, Url, UrlDomain, UrlLocation
+  ) on NetworkMessageId
+| where UrlDomain has_any (AwsHostedDomains)
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress,
+          SenderMailFromDomain, RecipientEmailAddress, Subject,
+          Url, UrlDomain, UrlLocation, DeliveryAction, DeliveryLocation,
+          AuthenticationDetails
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -214,4 +290,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

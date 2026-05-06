@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DeceptiveDevelopment ClickFix lure: nvidiaRelease.zip + run.vbs/shell.bat Node.js BeaverTail loader and AkdoorTea drvUpdate.exe
 
-`UC_336_12` · phase: **install** · confidence: **High**
+`UC_337_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union isfuzzy=true _writes, _execs
 
 ### [LLM] WeaselStore / GolangGhost / PylangGhost: Go toolchain shipped to victim and used to compile-and-run RAT from user-writable path
 
-`UC_336_13` · phase: **install** · confidence: **Medium**
+`UC_337_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ _go_compile
 
 ### [LLM] TsunamiKit TsunamiHardener: Defender exclusions added for TsunamiClient + XMRig/NBMiner cryptominer components
 
-`UC_336_14` · phase: **install** · confidence: **High**
+`UC_337_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -519,7 +519,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based dece
 
-`UC_336_11` · phase: **exploit** · confidence: **High**
+`UC_337_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
