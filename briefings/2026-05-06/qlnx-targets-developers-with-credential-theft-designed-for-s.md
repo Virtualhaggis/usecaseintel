@@ -10,12 +10,8 @@ Home Cyber Security News
 QLNX Targets Developers With Credential Theft Designed for Supply Chain Compromise 
 By Tushar Subhra Dutta 
 May 6, 2026 
-
-
-
-
 A new and previously undocumented Linux threat has emerged, targeting software developers in a way that could put entire supply chains at risk. 
-Named Quasar Linux, or QLNX, this malware operates as a full-featured remote access trojan built specifically for Linux systems. It combines stealth techniques with targeted credential theft, making i…
+Named Quasar Linux, or QLNX, this malware operates as a full-featured remote access trojan built specifically for Linux systems. It combines stealth techniques with targeted credential theft, making it one of…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,11 +44,12 @@ Named Quasar Linux, or QLNX, this malware operates as a full-featured remote acc
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1574.006** — Hijack Execution Flow: Dynamic Linker Hijacking
+- **T1014** — Rootkit
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
-- **T1547** — Boot or Logon Autostart Execution
-- **T1547.013** — Boot or Logon Autostart Execution: XDG Autostart Entries
-- **T1543.002** — Create or Modify System Process: Systemd Service
 - **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1547.013** — Boot or Logon Autostart Execution: XDG Autostart Entries
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 - **T1027.004** — Obfuscated Files or Information: Compile After Delivery
 
 ## Kill chain phases observed
@@ -61,112 +58,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] QLNX library hijack: write or modify /etc/ld.so.preload by non-package-manager process
+### [LLM] QLNX rootkit / PAM hook libraries written or ld.so.preload tampered
 
-`UC_3_13` · phase: **install** · confidence: **High**
+`UC_4_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where Filesystem.file_path="/etc/ld.so.preload" AND Filesystem.action IN ("created","modified","written","write") AND NOT Filesystem.process_name IN ("apt","apt-get","dpkg","yum","dnf","rpm","zypper","pacman","unattended-upgr") by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/ld.so.preload" OR Filesystem.file_path="/usr/lib/libsecurity_utils.so.1" OR Filesystem.file_path="/usr/lib/.libpam_cache.so" OR Filesystem.file_path="/usr/lib/libpam_cache.so" OR Filesystem.file_name IN ("libsecurity_utils.so.1",".libpam_cache.so","libpam_cache.so") OR Filesystem.file_hash IN ("82DAA93219BA40A6E41CDF3174BA57EB5D3383D1CD805584E9954EB0200182A1","42D0C420EB5FE181388F2E4F0B7D7C0D302971E7A06FDC1BEC481B68C8CCAE1F","F417430B2D4AE8D005224A9FF5DCB4007D452338ACBCBCBB62C4E8ED1A70552DD")) Filesystem.action IN ("created","modified","renamed","written") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has "/etc/ld.so.preload" or (FolderPath =~ "/etc" and FileName =~ "ld.so.preload")
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("apt","apt-get","dpkg","yum","dnf","rpm","zypper","pacman","unattended-upgr","packagekitd")
+| where (FolderPath =~ "/etc/ld.so.preload")
+    or (FolderPath =~ "/etc" and FileName =~ "ld.so.preload")
+    or (FolderPath startswith "/usr/lib" and FileName in~ ("libsecurity_utils.so.1",".libpam_cache.so","libpam_cache.so"))
+    or FolderPath in~ ("/usr/lib/libsecurity_utils.so.1","/usr/lib/.libpam_cache.so","/usr/lib/libpam_cache.so")
+    or SHA256 in~ ("82DAA93219BA40A6E41CDF3174BA57EB5D3383D1CD805584E9954EB0200182A1","42D0C420EB5FE181388F2E4F0B7D7C0D302971E7A06FDC1BEC481B68C8CCAE1F","F417430B2D4AE8D005224A9FF5DCB4007D452338ACBCBCBB62C4E8ED1A70552DD")
 | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### [LLM] QLNX known artifact filesystem footprint and implant hashes
+### [LLM] QLNX hidden credential-log + persistence-file artefacts
 
-`UC_3_14` · phase: **install** · confidence: **High**
+`UC_4_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/usr/lib/libsecurity_utils.so.1","/usr/lib/.libpam_cache.so","/tmp/.pam_cache","/var/log/.ICE-unix","/var/log/.Test-unix","/tmp/.X752e2ca1-lock","/etc/systemd/system/quasar_linux.service","/etc/init.d/quasar_linux") OR Filesystem.file_path="*/.config/systemd/user/quasar_linux.service" OR Filesystem.file_path="*/.config/autostart/quasar_linux.desktop" OR Filesystem.file_hash IN ("ea1d34b21b739a6bbf89b3f7e67978005cf7f3eda612cefc7eac1c8ead7c5545","82daa93219ba40a6e41cdf3174ba57eb5d3383d1cd805584e9954eb0200182a1","42d0c420eb5fe181388f2e4f0b7d7c0d302971e7a06fdc1bec481b68c8ccae1f","f417430b2d4ae8d005224a9ff5dcb4007d452338acbcbcbb62c4e8ed1a70552dd")) by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","written") AND (Filesystem.file_path IN ("/tmp/.pam_cache","/var/log/.Test-unix","/var/log/.ICE-unix","/tmp/.X752e2ca1-lock","/etc/init.d/quasar_linux","/etc/systemd/system/quasar_linux.service") OR Filesystem.file_name IN ("quasar_linux.service","quasar_linux.desktop",".X752e2ca1-lock") OR (Filesystem.file_path="*/.config/systemd/user/quasar_linux.service") OR (Filesystem.file_path="*/.config/autostart/quasar_linux.desktop")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let qlnx_paths = dynamic([
-    "/usr/lib/libsecurity_utils.so.1",
-    "/usr/lib/.libpam_cache.so",
-    "/tmp/.pam_cache",
-    "/var/log/.ICE-unix",
-    "/var/log/.Test-unix",
-    "/tmp/.X752e2ca1-lock",
-    "/etc/systemd/system/quasar_linux.service",
-    "/etc/init.d/quasar_linux"
-]);
-let qlnx_hashes = dynamic([
-    "ea1d34b21b739a6bbf89b3f7e67978005cf7f3eda612cefc7eac1c8ead7c5545",
-    "82daa93219ba40a6e41cdf3174ba57eb5d3383d1cd805584e9954eb0200182a1",
-    "42d0c420eb5fe181388f2e4f0b7d7c0d302971e7a06fdc1bec481b68c8ccae1f",
-    "f417430b2d4ae8d005224a9ff5dcb4007d452338acbcbcbb62c4e8ed1a70552dd"
-]);
-union isfuzzy=true
-( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath in~ (qlnx_paths)
-         or (FolderPath endswith "/.config/systemd/user" and FileName =~ "quasar_linux.service")
-         or (FolderPath endswith "/.config/autostart"     and FileName =~ "quasar_linux.desktop")
-         or tolower(SHA256) in (qlnx_hashes)
-    | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where tolower(SHA256) in (qlnx_hashes) or tolower(InitiatingProcessSHA256) in (qlnx_hashes)
-    | project Timestamp, DeviceName, ActionType="ProcessExec", FolderPath, FileName, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName )
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath in~ ("/tmp/.pam_cache","/var/log/.Test-unix","/var/log/.ICE-unix","/tmp/.X752e2ca1-lock","/etc/init.d/quasar_linux","/etc/systemd/system/quasar_linux.service")
+    or FileName in~ ("quasar_linux.service","quasar_linux.desktop",".X752e2ca1-lock")
+    or (FolderPath has "/.config/systemd/user" and FileName =~ "quasar_linux.service")
+    or (FolderPath has "/.config/autostart" and FileName =~ "quasar_linux.desktop")
+    or (FolderPath =~ "/var/log" and FileName in~ (".Test-unix",".ICE-unix"))
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### [LLM] QLNX runtime compile chain: GCC writing .so to /usr/lib followed by ld.so.preload modification
+### [LLM] QLNX runtime GCC compilation of embedded rootkit/PAM source
 
-`UC_3_15` · phase: **install** · confidence: **High**
+`UC_4_15` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as compile_time values(Filesystem.file_path) as compiled_so values(Filesystem.process_name) as compiler from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("gcc","cc","cc1","ld","x86_64-linux-gnu-gcc","clang") AND (Filesystem.file_path="/usr/lib/*.so*" OR Filesystem.file_path="/tmp/*.so" OR Filesystem.file_path="/dev/shm/*.so") AND Filesystem.action IN ("created","modified","written") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest [ | tstats `summariesonly` min(_time) as preload_time from datamodel=Endpoint.Filesystem where Filesystem.file_path="/etc/ld.so.preload" AND Filesystem.action IN ("created","modified","written") AND NOT Filesystem.process_name IN ("apt","apt-get","dpkg","yum","dnf","rpm") by Filesystem.dest | `drop_dm_object_name(Filesystem)` ] | eval delta_seconds=preload_time-compile_time | where delta_seconds>=0 AND delta_seconds<=600 | convert ctime(compile_time) ctime(preload_time) | table dest user compiler compiled_so compile_time preload_time delta_seconds
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("gcc","cc","cc1","ld","gcc-9","gcc-10","gcc-11","gcc-12") AND (Processes.process="*hide_src_*" OR Processes.process="*pam_src_*" OR Processes.process="*pcs_*" OR Processes.process="*libsecurity_utils*" OR Processes.process="*libpam_cache*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let WindowSec = 600;
-let Compiles = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("FileCreated","FileModified")
-    | where InitiatingProcessFileName in~ ("gcc","cc","cc1","ld","clang","x86_64-linux-gnu-gcc")
-         or InitiatingProcessCommandLine has_any ("gcc ","cc -shared","-fPIC","-shared")
-    | where (FolderPath startswith "/usr/lib" or FolderPath startswith "/tmp" or FolderPath startswith "/dev/shm")
-    | where FileName endswith ".so" or FileName matches regex @"\.so\.[0-9]+$"
-    | project CompileTime = Timestamp, DeviceName, DeviceId,
-              SoPath = strcat(FolderPath, "/", FileName),
-              Compiler = InitiatingProcessFileName,
-              CompileCmd = InitiatingProcessCommandLine,
-              CompileUser = InitiatingProcessAccountName;
-let Preloads = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("FileCreated","FileModified","FileRenamed")
-    | where FolderPath has "/etc/ld.so.preload" or (FolderPath =~ "/etc" and FileName =~ "ld.so.preload")
-    | where InitiatingProcessFileName !in~ ("apt","apt-get","dpkg","yum","dnf","rpm","zypper","pacman","unattended-upgr","packagekitd")
-    | project PreloadTime = Timestamp, DeviceId,
-              PreloadProcess = InitiatingProcessFileName,
-              PreloadCmd = InitiatingProcessCommandLine;
-Compiles
-| join kind=inner Preloads on DeviceId
-| where PreloadTime between (CompileTime .. CompileTime + WindowSec * 1s)
-| project CompileTime, PreloadTime,
-          DelaySec = datetime_diff('second', PreloadTime, CompileTime),
-          DeviceName, CompileUser, Compiler, CompileCmd, SoPath,
-          PreloadProcess, PreloadCmd
-| order by CompileTime desc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName in~ ("gcc","cc","cc1","ld","gcc-9","gcc-10","gcc-11","gcc-12")
+     or InitiatingProcessFileName in~ ("gcc","cc","cc1","gcc-9","gcc-10","gcc-11","gcc-12"))
+| where ProcessCommandLine has_any ("hide_src_","pam_src_","pcs_","libsecurity_utils","libpam_cache")
+     or ProcessCommandLine matches regex @"(?i)/tmp/[a-z0-9_]+_[a-z0-9]{3,8}\.(c|cb|f)\b"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -543,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — QLNX Targets Developers With Credential Theft Designed for Supply Chain Compromi
 
-`UC_3_12` · phase: **install** · confidence: **High**
+`UC_4_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -584,4 +543,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

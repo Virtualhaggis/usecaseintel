@@ -11,15 +11,9 @@ By Bill Toulas
 May 6, 2026
 02:38 PM
 0 
-
-
 A critical vulnerability in the popular Node.js sandboxing library vm2 allows escaping the sandbox and executing arbitrary code on the host system.
-
-
 The security issue is tracked as CVE-2026-26956 and has been confirmed to impact vm2 version 3.10.4, although earlier releases may also be vulnerable. Proof-of-concept (PoC) exploit code has been published.
-
-
-In the security advisory, the …
+In the security advisory, the maintainer s…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -33,8 +27,8 @@ In the security advisory, the …
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1059** — Command and Scripting Interpreter
 - **T1611** — Escape to Host
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
@@ -42,79 +36,66 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Vulnerable vm2 sandbox library installed (CVE-2026-26956)
+### [LLM] Node.js process spawning shell or LOLBin children (vm2 CVE-2026-26956 sandbox escape post-exploit)
 
-`UC_0_2` · phase: **weapon** · confidence: **High**
+`UC_1_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.file_name="package.json" Filesystem.file_path="*\\node_modules\\vm2\\package.json" OR Filesystem.file_path="*/node_modules/vm2/package.json" by host Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | rex field=file_path "vm2[\\\\/](?<vm2_dir>[^\\\\/]+)[\\\\/]package\\.json" | eval cve="CVE-2026-26956", vulnerable_lt="3.10.5", patched="3.11.2" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","mshta.exe","regsvr32.exe","rundll32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","curl","wget","python.exe","python","python3","perl","ruby","whoami.exe","whoami","net.exe","hostname.exe","id","uname") by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Approach 1: TVM-driven (preferred, uses Defender's vulnerability KB)
-let VulnByCve = DeviceTvmSoftwareVulnerabilities
-    | where CveId == "CVE-2026-26956"
-    | project DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate;
-// Approach 2: filesystem-driven fallback — TVM may not yet index npm-package CVEs
-let Vm2OnDisk = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "package.json"
-    | where FolderPath has @"\node_modules\vm2\" or FolderPath has "/node_modules/vm2/"
-    | summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-                SamplePath = any(FolderPath),
-                SampleSHA256 = any(SHA256)
-                by DeviceId, DeviceName;
-Vm2OnDisk
-| join kind=leftouter VulnByCve on DeviceId
-| extend cve = "CVE-2026-26956", VulnerableIfBelow = "3.10.5", LatestPatched = "3.11.2"
-| project Cve = cve, DeviceId, DeviceName, FirstSeen, LastSeen, SamplePath, SampleSHA256,
-          SoftwareVersion, RecommendedSecurityUpdate, VulnerableIfBelow, LatestPatched
-| order by LastSeen desc
-```
-
-### [LLM] node.exe spawning OS shell — possible vm2 sandbox escape post-exploitation
-
-`UC_0_3` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as child_proc from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","/bin/sh","/bin/bash","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe") by host user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let _known_node_runners = dynamic([]); // populate with hostnames of legit node-shell tooling (CI runners, build agents) to suppress
+// vm2 CVE-2026-26956 — Node.js spawning shells or LOLBins indicates sandbox escape
+let _node_parents = dynamic(["node.exe","node"]);
+let _suspicious_children = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","mshta.exe","regsvr32.exe","rundll32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","curl","wget","python.exe","python","python3","perl","ruby","whoami.exe","whoami","net.exe","hostname.exe","id","uname"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where FileName in~ (
-    "cmd.exe","powershell.exe","pwsh.exe",
-    "wscript.exe","cscript.exe","mshta.exe",
-    "rundll32.exe","regsvr32.exe",
-    "certutil.exe","bitsadmin.exe",
-    "curl.exe","wget.exe",
-    "sh","bash","dash","zsh")
-| where DeviceName !in~ (_known_node_runners)
-| where InitiatingProcessAccountName !endswith "$"
-| extend SuspectVm2Escape = iif(
-    InitiatingProcessCommandLine has_any ("vm2","isolated-vm") or
-    InitiatingProcessFolderPath has @"\node_modules\",
-    "likely", "possible")
-| project Timestamp, DeviceName,
-          AccountName, AccountDomain,
+| where InitiatingProcessFileName in~ (_node_parents)
+| where FileName in~ (_suspicious_children)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
           ParentCmd   = InitiatingProcessCommandLine,
           ChildImage  = FolderPath,
           ChildCmd    = ProcessCommandLine,
-          SHA256, SuspectVm2Escape
+          SHA256, IsRemote = IsInitiatingProcessRemoteSession
 | order by Timestamp desc
+```
+
+### [LLM] Inventory hunt: vulnerable vm2 (<3.10.5) installations on Node.js 25 hosts
+
+`UC_1_3` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\vm2\\package.json" OR Filesystem.file_path="*/node_modules/vm2/package.json") by host | `drop_dm_object_name(Filesystem)` | join type=left host [ | tstats summariesonly=true values(Processes.process_version) as node_versions from datamodel=Endpoint.Processes where Processes.process_name IN ("node.exe","node") by host | `drop_dm_object_name(Processes)` ] | search node_versions="25.*" OR node_versions="v25.*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// vm2 CVE-2026-26956 — surface hosts with vm2 in node_modules + Node 25
+let _vm2_hosts = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where (FolderPath has @"\node_modules\vm2\" or FolderPath has "/node_modules/vm2/")
+    | where FileName =~ "package.json"
+    | summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Paths = make_set(FolderPath, 10) by DeviceId, DeviceName;
+let _node25_hosts = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ ("node.exe","node")
+    | where ProcessVersionInfoProductVersion startswith "25." or ProcessVersionInfoProductVersion startswith "v25."
+        or ProcessCommandLine matches regex @"(?i)node[/\\\.exe]*\s+--version.*25\."
+    | summarize NodeVersions = make_set(ProcessVersionInfoProductVersion, 10), NodeCmdSamples = make_set(ProcessCommandLine, 5) by DeviceId, DeviceName;
+_vm2_hosts
+| join kind=inner _node25_hosts on DeviceId
+| project DeviceName, FirstSeen, LastSeen, Paths, NodeVersions, NodeCmdSamples
+| order by LastSeen desc
 ```
 
 ### Article-specific behavioural hunt — Critical vm2 sandbox bug lets attackers execute code on hosts
 
-`UC_0_1` · phase: **exploit** · confidence: **High**
+`UC_1_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

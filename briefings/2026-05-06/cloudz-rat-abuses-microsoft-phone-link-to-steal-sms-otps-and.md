@@ -10,11 +10,7 @@ Home Cyber Security News
 CloudZ RAT Abuses Microsoft Phone Link to Steal SMS OTPs and Mobile Notifications 
 By Tushar Subhra Dutta 
 May 6, 2026 
-
-
-
-
-A newly discovered threat is turning a built-in Microsoft feature into a powerful spying tool. Security researchers have found a remote access tool called CloudZ that works alongside a custom plugin named Pheno to silently intercept SMS messages and one-time passwords (OTPs) from mobile phones, all without ever touching the phone itself. The at…
+A newly discovered threat is turning a built-in Microsoft feature into a powerful spying tool. Security researchers have found a remote access tool called CloudZ that works alongside a custom plugin named Pheno to silently intercept SMS messages and one-time passwords (OTPs) from mobile phones, all without ever touching the phone itself. The attack exp…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,12 +40,145 @@ A newly discovered threat is turning a built-in Microsoft feature into a powerfu
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1111** — Multi-Factor Authentication Interception
+- **T1005** — Data from Local System
+- **T1119** — Automated Collection
+- **T1057** — Process Discovery
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1218.009** — System Binary Proxy Execution: Regsvcs/Regasm
+- **T1574.001** — Hijack Execution Flow: DLL
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] CloudZ Pheno plugin staging — pheno.exe in Windows\TEMP and PhoneExperiences SQLite targeting
+
+`UC_2_12` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="pheno.exe" OR Processes.process_path="*\\Windows\\TEMP\\pheno.exe*" OR Processes.process_path="*\\Windows\\Temp\\pheno.exe*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\Microsoft\\feedback\\cm*" OR Filesystem.file_path="*\\ProgramData\\Microsoft\\whealth\\*" OR Filesystem.file_path="*\\ProgramData\\Microsoft\\windosDoc\\*" OR Filesystem.file_name="pheno.exe" OR Filesystem.file_name="PhoneExperiences-*.db") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _phonelink_legit = dynamic(["PhoneExperienceHost.exe","YourPhone.exe","YourPhoneServer.exe","YourPhoneAppProxy.exe"]);
+let _staging_paths = dynamic([@"\ProgramData\Microsoft\feedback\cm", @"\ProgramData\Microsoft\whealth\", @"\ProgramData\Microsoft\windosDoc\"]);
+union isfuzzy=true
+( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "pheno.exe"
+        or FolderPath has @"\Windows\TEMP\pheno.exe"
+        or InitiatingProcessFolderPath has @"\Windows\TEMP\pheno.exe"
+    | project Timestamp, DeviceName, AccountName, Source = "PhenoExec",
+              FileName, FolderPath, ProcessCommandLine, SHA256,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine ),
+( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where FolderPath has_any (_staging_paths)
+         or FileName =~ "pheno.exe"
+         or FileName matches regex @"(?i)PhoneExperiences-.*\.db"
+    | where InitiatingProcessFileName !in~ (_phonelink_legit)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              Source = "PhenoFileDrop",
+              FileName, FolderPath, SHA256,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine )
+| order by Timestamp desc
+```
+
+### [LLM] CloudZ persistence — SystemWindowsApis scheduled task spawning regasm.exe as SYSTEM
+
+`UC_2_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="schtasks.exe" AND Processes.process="*SystemWindowsApis*") OR (Processes.process_name="regasm.exe" AND (Processes.user="*SYSTEM*" OR Processes.user="*system*") AND (Processes.process="*\\ProgramData\\Microsoft\\windosDoc*" OR Processes.process="*update.txt*" OR Processes.process="*msupdate.txt*")) OR (Processes.parent_process="*SystemWindowsApis*")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _windosDoc = dynamic([@"\ProgramData\Microsoft\windosDoc\", @"\ProgramData\Microsoft\whealth\"]);
+union isfuzzy=true
+( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "schtasks.exe"
+         or InitiatingProcessFileName =~ "schtasks.exe"
+    | where ProcessCommandLine has "SystemWindowsApis"
+         or InitiatingProcessCommandLine has "SystemWindowsApis"
+    | project Timestamp, DeviceName, AccountName,
+              Source = "TaskCreated",
+              FileName, ProcessCommandLine,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine ),
+( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "regasm.exe"
+    | where AccountName =~ "system"
+         or InitiatingProcessAccountName =~ "system"
+         or InitiatingProcessIntegrityLevel =~ "System"
+    | where ProcessCommandLine has_any (_windosDoc)
+         or ProcessCommandLine has_any ("update.txt","msupdate.txt","systemupdates.exe","Windows-interactive-update.exe")
+         or InitiatingProcessCommandLine has "SystemWindowsApis"
+         or InitiatingProcessParentFileName =~ "svchost.exe" and InitiatingProcessFileName =~ "taskhostw.exe"
+            and ProcessCommandLine has_any (_windosDoc)
+    | project Timestamp, DeviceName, AccountName,
+              Source = "RegasmExec",
+              FileName, ProcessCommandLine,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine,
+              GrandParent = InitiatingProcessParentFileName )
+| order by Timestamp desc
+```
+
+### [LLM] CloudZ C2 staging — HELLOHIALL Pastebin dead-drop and *.hellohiall.workers.dev egress
+
+`UC_2_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="185.196.10.136" OR All_Traffic.dest_ip="185.196.10.136") by All_Traffic.dest All_Traffic.src_ip All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*pastebin.com/raw/8pYAgF0Z*" OR Web.url="*hellohiall.workers.dev*" OR Web.url="*round-cherry-4418*" OR Web.url="*orange-cell-1353*") by Web.dest Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)`] | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*hellohiall.workers.dev" OR DNS.query="*hellohiall*") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _c2_ip = dynamic(["185.196.10.136"]);
+let _c2_url_substrings = dynamic(["pastebin.com/raw/8pYAgF0Z","hellohiall.workers.dev","round-cherry-4418.hellohiall","orange-cell-1353.hellohiall"]);
+let _ua_rotation = dynamic(["Firefox","Safari","Chrome"]);
+union isfuzzy=true
+( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIPType == "Public"
+    | where RemoteIP in (_c2_ip)
+         or (RemoteIP in (_c2_ip) and RemotePort == 8089)
+         or (isnotempty(RemoteUrl) and RemoteUrl has_any (_c2_url_substrings))
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              Source = "NetworkConnect",
+              RemoteIP, RemotePort, RemoteUrl, Protocol,
+              ProcessName = InitiatingProcessFileName,
+              ProcessCmd = InitiatingProcessCommandLine,
+              ProcessPath = InitiatingProcessFolderPath ),
+( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has "hellohiall" or Q endswith "hellohiall.workers.dev"
+    | project Timestamp, DeviceName, Source = "DnsQuery",
+              RemoteUrl = Q,
+              ProcessName = InitiatingProcessFileName,
+              ProcessCmd = InitiatingProcessCommandLine )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -404,7 +533,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CloudZ RAT Abuses Microsoft Phone Link to Steal SMS OTPs and Mobile Notification
 
-`UC_1_11` · phase: **exploit** · confidence: **High**
+`UC_2_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -461,4 +590,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

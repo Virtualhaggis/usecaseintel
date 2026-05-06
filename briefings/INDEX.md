@@ -22,6 +22,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
 - [member of prolific russian ransomware group sentenced to 102](./2026-05-06/member-of-prolific-russian-ransomware-group-sentenced-to-102.md)
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
+- [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
@@ -122,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-28
 - [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
-- [chinese silk typhoon hacker extradited to u s over covid res](./2026-04-28/chinese-silk-typhoon-hacker-extradited-to-u-s-over-covid-res.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
 - [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
