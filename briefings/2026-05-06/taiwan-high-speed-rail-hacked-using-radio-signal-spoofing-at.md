@@ -10,13 +10,9 @@ Home Cyber Security News
 Taiwan High Speed Rail Hacked Using Radio Signal Spoofing Attack That Halted Three Trains 
 By Abinaya 
 May 6, 2026 
-
-
-
-
 On the final night of the Qingming Festival holiday, three Taiwan High Speed Rail trains were forced into emergency stops due to a sophisticated radio signal spoofing attack .
 The malicious transmission triggered false alarms across the network, causing a nearly hour-long delay for passengers.
-Authorities have since apprehended a 23-year-old colleg…
+Authorities have since apprehended a 23-year-old college studen…
 
 ## Indicators of Compromise (high-fidelity only)
 

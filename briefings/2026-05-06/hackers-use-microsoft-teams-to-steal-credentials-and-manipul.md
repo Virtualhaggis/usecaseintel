@@ -10,12 +10,8 @@ Home Cyber Attack News
 Hackers Use Microsoft Teams to Steal Credentials and Manipulate MFA 
 By Guru Baran 
 May 6, 2026 
-
-
-
-
 Iranian APT group MuddyWater deployed Chaos ransomware as a “false flag” in a sophisticated hybrid espionage campaign targeting Western organizations, bypassing encryption in favor of data theft and long-term persistence.
-In early 2026, Rapid7 incident responders were called into what initially appeared to be a routine Chaos ransomware intrusion, but forensic analysis …
+In early 2026, Rapid7 incident responders were called into what initially appeared to be a routine Chaos ransomware intrusion, but forensic analysis quickly …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -49,14 +45,13 @@ In early 2026, Rapid7 incident responders were called into what initially appear
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1056.002** — Input Capture: GUI Input Capture
-- **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1553.002** — Subvert Trust Controls: Code Signing
+- **T1056.002** — Input Capture: GUI Input Capture
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1566.003** — Phishing: Spearphishing via Service
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -64,110 +59,123 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] MuddyWater Teams social-engineering: credentials.txt / cred.txt written to user folder
+### [LLM] MuddyWater Olalampo C2 / ms_upd.exe / Game.exe RAT indicators
 
-`UC_7_15` · phase: **actions** · confidence: **High**
+`UC_11_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as parent_process values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="credentials.txt" OR Filesystem.file_name="cred.txt" OR Filesystem.file_name="Credentials.txt" OR Filesystem.file_name="Cred.txt") (Filesystem.file_path="*\\Users\\*\\Desktop\\*" OR Filesystem.file_path="*\\Users\\*\\Documents\\*" OR Filesystem.file_path="*\\Users\\*\\Downloads\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Users\\*\\Desktop OR *\\AppData\\Local\\Temp\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name IN ("ms_upd.exe","Game.exe") OR Processes.process IN ("*ms_upd.exe*","*172.86.126.208*","*moonzonet.com*","*uploadfiler.com*","*adm-pulse.com*","*visualwincomp.txt*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="172.86.126.208" OR All_Traffic.dest_host IN ("moonzonet.com","uploadfiler.com","adm-pulse.com","*.moonzonet.com","*.uploadfiler.com","*.adm-pulse.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// MuddyWater Teams social-engineering — credentials.txt / cred.txt drop
-let TeamsBins = dynamic(["teams.exe","ms-teams.exe","msteams.exe"]);
-let CredFiles = dynamic(["credentials.txt","cred.txt"]);
-let CredFileWrites = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "FileCreated"
-    | where FileName in~ (CredFiles)
-    | where FolderPath has_any (@"\Users\", @"\Desktop\", @"\Documents\", @"\Downloads\", @"\Public\", @"\AppData\Local\Temp\")
-    | where InitiatingProcessAccountName !endswith "$";
-// Pivot: was a Microsoft Teams process recently active for the same user/device?
-let TeamsActivity = DeviceProcessEvents
-    | where Timestamp > ago(1d)
-    | where InitiatingProcessFileName in~ (TeamsBins) or FileName in~ (TeamsBins)
-    | summarize TeamsLastSeen = max(Timestamp) by DeviceId, AcctOnDevice = tolower(InitiatingProcessAccountName);
-CredFileWrites
-| extend AcctOnDevice = tolower(InitiatingProcessAccountName)
-| join kind=leftouter TeamsActivity on DeviceId, AcctOnDevice
-| project Timestamp, DeviceName, User=InitiatingProcessAccountName, FileName, FolderPath,
-          WriterProcess=InitiatingProcessFileName, WriterCmd=InitiatingProcessCommandLine,
-          TeamsLastSeen, MinutesSinceTeams = iff(isnotempty(TeamsLastSeen), datetime_diff('minute', Timestamp, TeamsLastSeen), int(null))
-| order by Timestamp desc
-```
-
-### [LLM] MuddyWater Stagecomp/Darkcomp C2 contact (172.86.126.208 / moonzonet / uploadfiler / adm-pulse) or ms_upd.exe execution
-
-`UC_7_16` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="172.86.126.208" OR All_Traffic.dest_host IN ("moonzonet.com","uploadfiler.com","adm-pulse.com") OR All_Traffic.url IN ("*moonzonet.com*","*uploadfiler.com*","*adm-pulse.com*")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="ms_upd.exe" OR (Processes.process_name="curl.exe" AND (Processes.process="*172.86.126.208*" OR Processes.process="*moonzonet.com*" OR Processes.process="*uploadfiler.com*" OR Processes.process="*adm-pulse.com*"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` ]
-```
-
-**Defender KQL:**
-```kql
-// MuddyWater Operation Olalampo / Stagecomp+Darkcomp infrastructure sweep
-let MuddyDomains = dynamic(["moonzonet.com","uploadfiler.com","adm-pulse.com"]);
-let MuddyIP = "172.86.126.208";
-let NetHits = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP == MuddyIP
-         or RemoteUrl has_any (MuddyDomains)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-              Process=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
-              RemoteIP, RemoteUrl, RemotePort, EvidenceType="NetworkConnection";
+let MuddyWater_C2_IPs = dynamic(["172.86.126.208"]);
+let MuddyWater_C2_Domains = dynamic(["moonzonet.com","uploadfiler.com","adm-pulse.com"]);
+let MuddyWater_Strings = dynamic(["ms_upd.exe","visualwincomp.txt","172.86.126.208","moonzonet.com","uploadfiler.com","adm-pulse.com"]);
+// Process side — custom downloader / RAT binary or any IOC string in cmdline
 let ProcHits = DeviceProcessEvents
     | where Timestamp > ago(30d)
-    | where FileName =~ "ms_upd.exe"
-         or InitiatingProcessFileName =~ "ms_upd.exe"
-         or (FileName =~ "curl.exe" and ProcessCommandLine has_any (MuddyIP, "moonzonet.com", "uploadfiler.com", "adm-pulse.com"))
-    | extend RemoteIP = "", RemoteUrl = "", RemotePort = int(null)
-    | project Timestamp, DeviceName, AccountName,
-              Process=FileName, ProcessCmd=ProcessCommandLine,
-              RemoteIP, RemoteUrl, RemotePort, EvidenceType="ProcessExecution";
-union NetHits, ProcHits
-| where AccountName !endswith "$"
+    | where FileName in~ ("ms_upd.exe","Game.exe")
+         or ProcessCommandLine has_any (MuddyWater_Strings)
+         or InitiatingProcessCommandLine has_any (MuddyWater_Strings)
+    | project Timestamp, DeviceName, AccountName, Source="Process",
+              FileName, FolderPath, SHA256, ProcessCommandLine,
+              ParentImage = InitiatingProcessFileName,
+              ParentCmd   = InitiatingProcessCommandLine,
+              RemoteIP=tostring(""), RemoteUrl=tostring("");
+// Network side — direct hits on the campaign's C2 IP / domains
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (MuddyWater_C2_IPs)
+         or RemoteUrl has_any (MuddyWater_C2_Domains)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              Source="Network",
+              FileName    = InitiatingProcessFileName,
+              FolderPath  = InitiatingProcessFolderPath,
+              SHA256      = InitiatingProcessSHA256,
+              ProcessCommandLine = InitiatingProcessCommandLine,
+              ParentImage = InitiatingProcessParentFileName,
+              ParentCmd   = tostring(""),
+              RemoteIP, RemoteUrl;
+union ProcHits, NetHits
 | order by Timestamp desc
 ```
 
-### [LLM] MuddyWater Game.exe (Darkcomp) RAT staging - WebView2APISample trojanization
+### [LLM] MuddyWater Teams social-engineering — credentials.txt / cred.txt creation
 
-`UC_7_17` · phase: **install** · confidence: **High**
+`UC_11_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as writer_processes from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="visualwincomp.txt" OR Filesystem.file_name="Game.exe" OR Filesystem.file_name="WebView2Loader.dll") by Filesystem.dest Filesystem.user Filesystem.file_name _time span=1h | `drop_dm_object_name(Filesystem)` | stats min(firstTime) as firstTime max(lastTime) as lastTime sum(count) as count values(file_name) as files_created values(paths) as paths values(writer_processes) as writer_processes by dest user | where mvcount(files_created)>=2 OR mvfind(files_created,"visualwincomp.txt")>=0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as creating_process from datamodel=Endpoint.Filesystem where Filesystem.action="created" Filesystem.file_name IN ("credentials.txt","cred.txt","Credentials.txt","Cred.txt","CREDENTIALS.txt","CRED.txt") (Filesystem.file_path="*\\Desktop\\*" OR Filesystem.file_path="*\\Documents\\*" OR Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\Users\\*" OR Filesystem.file_path="*\\Public\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// MuddyWater Darkcomp staging - WebView2APISample trojanization (Game.exe + WebView2Loader.dll + visualwincomp.txt)
-let StagedNames = dynamic(["Game.exe","WebView2Loader.dll","visualwincomp.txt"]);
-let Staged = DeviceFileEvents
+// MuddyWater operators instruct Teams victims to type their passwords
+// into credentials.txt / cred.txt during a screen-share. The literal
+// filename is the high-fidelity hook.
+let TeamsActiveDevices = DeviceProcessEvents
     | where Timestamp > ago(30d)
-    | where ActionType == "FileCreated"
-    | where FileName in~ (StagedNames)
-    | where InitiatingProcessAccountName !endswith "$";
-// Branch 1: any creation of the unique config file is enough on its own
-let UniqueConfig = Staged
-    | where FileName =~ "visualwincomp.txt"
-    | extend Reason = "unique_config_file_dropped"
-    | project Timestamp, DeviceName, User=InitiatingProcessAccountName, FileName, FolderPath,
-              Writer=InitiatingProcessFileName, WriterCmd=InitiatingProcessCommandLine, Reason;
-// Branch 2: 2+ of the 3 staged components written into the same folder within 1h
-let Triplet = Staged
-    | summarize FileSet = make_set(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-                Writers = make_set(InitiatingProcessFileName), WriterCmds = make_set(InitiatingProcessCommandLine)
-            by DeviceId, DeviceName, User=InitiatingProcessAccountName, FolderPath, bin(Timestamp, 1h)
-    | where array_length(FileSet) >= 2
-    | extend Reason = "webview2_trojanized_triplet"
-    | project Timestamp=FirstSeen, DeviceName, User, FileName=tostring(FileSet), FolderPath,
-              Writer=tostring(Writers), WriterCmd=tostring(WriterCmds), Reason;
-union UniqueConfig, Triplet
+    | where InitiatingProcessFileName has_any ("ms-teams.exe","Teams.exe","msteams.exe")
+         or FileName has_any ("ms-teams.exe","Teams.exe","msteams.exe")
+    | summarize TeamsLastSeen = max(Timestamp) by DeviceId;
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FileName in~ ("credentials.txt","cred.txt")
+| where FolderPath has_any (@"\Desktop\", @"\Documents\", @"\Downloads\",
+                            @"\Public\", @"\Users\", @"\AppData\")
+| where InitiatingProcessFileName !in~ ("git.exe","code.exe","devenv.exe",
+                                          "msbuild.exe","7zg.exe","setup.exe")
+| join kind=leftouter TeamsActiveDevices on DeviceId
+| extend TeamsRecent = iff(isnotempty(TeamsLastSeen)
+                            and datetime_diff('hour', Timestamp, TeamsLastSeen) <= 4,
+                            "Teams seen \u2264 4h before drop", "")
+| project Timestamp, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessAccountName,
+          InitiatingProcessCommandLine, TeamsRecent, TeamsLastSeen
 | order by Timestamp desc
+```
+
+### [LLM] MuddyWater dual-RMM persistence — DWAgent + AnyDesk co-deployment
+
+`UC_11_17` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as firstTime max(_time) as lastTime count from datamodel=Endpoint.Processes where (Processes.process_name IN ("dwagent.exe","DWAgent.exe","dwagsvc.exe") OR Processes.process IN ("*dwagent*","*DWAgent*")) by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | rename firstTime as DWAgentFirst, lastTime as DWAgentLast, count as DWAgentCount | join type=inner dest [| tstats `summariesonly` min(_time) as AnyDeskFirst max(_time) as AnyDeskLast count as AnyDeskCount from datamodel=Endpoint.Processes where (Processes.process_name IN ("AnyDesk.exe","anydesk.exe") OR Processes.process IN ("*AnyDesk*","*anydesk*")) by Processes.dest | `drop_dm_object_name(Processes)`] | eval DeltaHours = abs(DWAgentFirst - AnyDeskFirst) / 3600 | where DeltaHours <= 24 | convert ctime(DWAgentFirst) ctime(AnyDeskFirst)
+```
+
+**Defender KQL:**
+```kql
+// MuddyWater pairs DWAgent + AnyDesk for redundant persistent access
+// after Teams credential theft. Co-deployment on same host \u2264 24h apart
+// is the alerting signal — single-tool installs are common IT activity.
+let Lookback = 30d;
+let DWAgent = DeviceProcessEvents
+    | where Timestamp > ago(Lookback)
+    | where FileName in~ ("dwagent.exe","dwagsvc.exe")
+         or ProcessCommandLine has "dwagent"
+         or InitiatingProcessFileName in~ ("dwagent.exe","dwagsvc.exe")
+    | summarize DWAgentFirst = min(Timestamp),
+                DWAgentCmd   = any(ProcessCommandLine)
+                by DeviceId, DeviceName;
+let AnyDesk = DeviceProcessEvents
+    | where Timestamp > ago(Lookback)
+    | where FileName =~ "AnyDesk.exe"
+         or InitiatingProcessFileName =~ "AnyDesk.exe"
+    | summarize AnyDeskFirst = min(Timestamp),
+                AnyDeskCmd   = any(ProcessCommandLine)
+                by DeviceId, DeviceName;
+DWAgent
+| join kind=inner AnyDesk on DeviceId
+| extend DeltaHours = abs(datetime_diff('hour', DWAgentFirst, AnyDeskFirst))
+| where DeltaHours <= 24
+| project DeviceName, DWAgentFirst, DWAgentCmd, AnyDeskFirst, AnyDeskCmd, DeltaHours
+| order by DWAgentFirst desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -578,7 +586,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — Hackers Use Microsoft Teams to Steal Credentials and Manipulate MFA
 
-`UC_7_14` · phase: **exploit** · confidence: **High**
+`UC_11_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -638,4 +646,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

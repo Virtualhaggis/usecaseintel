@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Anodot service principal / OAuth app sign-in from non-Anodot infrastructure
 
-`UC_38_0` · phase: **c2** · confidence: **High**
+`UC_41_0` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ CloudAppEvents
 
 ### [LLM] ShinyHunters vishing — new MFA method registered then immediate SSO access to data-rich SaaS apps
 
-`UC_38_1` · phase: **c2** · confidence: **High**
+`UC_41_1` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,25 +10,28 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-06
 - [argo cd s serversidediff vulnerability enables kubernetes se](./2026-05-06/argo-cd-s-serversidediff-vulnerability-enables-kubernetes-se.md)
+- [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
+- [cloudz rat abuses microsoft phone link to steal sms otps and](./2026-05-06/cloudz-rat-abuses-microsoft-phone-link-to-steal-sms-otps-and.md)
+- [critical vm2 sandbox bug lets attackers execute code on host](./2026-05-06/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-host.md)
 - [daemon tools devs confirm breach release malware free versio](./2026-05-06/daemon-tools-devs-confirm-breach-release-malware-free-versio.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [hackers use microsoft teams to steal credentials and manipul](./2026-05-06/hackers-use-microsoft-teams-to-steal-credentials-and-manipul.md)
 - [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
-- [iranian nexus operation targets oman ministries with webshel](./2026-05-06/iranian-nexus-operation-targets-oman-ministries-with-webshel.md)
 - [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
-- [malicious openclaw deepseek skill exploits agentic ai workfl](./2026-05-06/malicious-openclaw-deepseek-skill-exploits-agentic-ai-workfl.md)
 - [member of prolific russian ransomware group sentenced to 102](./2026-05-06/member-of-prolific-russian-ransomware-group-sentenced-to-102.md)
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
 - [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
+- [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
 - [new fanwei e cology10 server vulnerability could let attacke](./2026-05-06/new-fanwei-e-cology10-server-vulnerability-could-let-attacke.md)
 - [new majordomo rce vulnerability exposes servers to code exec](./2026-05-06/new-majordomo-rce-vulnerability-exposes-servers-to-code-exec.md)
 - [new phishing to rmm attacks how analysts can detect trusted ](./2026-05-06/new-phishing-to-rmm-attacks-how-analysts-can-detect-trusted-.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
+- [qlnx targets developers with credential theft designed for s](./2026-05-06/qlnx-targets-developers-with-credential-theft-designed-for-s.md)
 - [salesforce marketing cloud vulnerability opened door to emai](./2026-05-06/salesforce-marketing-cloud-vulnerability-opened-door-to-emai.md)
 - [taiwan high speed rail hacked using radio signal spoofing at](./2026-05-06/taiwan-high-speed-rail-hacked-using-radio-signal-spoofing-at.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
@@ -41,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [china linked uat 8302 targets governments using shared apt m](./2026-05-05/china-linked-uat-8302-targets-governments-using-shared-apt-m.md)
-- [cloudz malware abuses microsoft phone link to steal sms and ](./2026-05-05/cloudz-malware-abuses-microsoft-phone-link-to-steal-sms-and-.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [critical apache http 2 flaw cve 2026 23918 enables dos and p](./2026-05-05/critical-apache-http-2-flaw-cve-2026-23918-enables-dos-and-p.md)
@@ -50,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ftc to ban data broker kochava from selling americans locati](./2026-05-05/ftc-to-ban-data-broker-kochava-from-selling-americans-locati.md)
 - [google now offers up to 1 5 million for some android exploit](./2026-05-05/google-now-offers-up-to-1-5-million-for-some-android-exploit.md)
 - [instructure hacker claims data theft from 8 800 schools univ](./2026-05-05/instructure-hacker-claims-data-theft-from-8-800-schools-univ.md)
-- [karakurt extortion gang cold case negotiator gets 8 5 years ](./2026-05-05/karakurt-extortion-gang-cold-case-negotiator-gets-8-5-years-.md)
 - [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [microsoft details phishing campaign targeting 35 000 users a](./2026-05-05/microsoft-details-phishing-campaign-targeting-35-000-users-a.md)
 - [new stealthy quasar linux malware targets software developer](./2026-05-05/new-stealthy-quasar-linux-malware-targets-software-developer.md)
@@ -917,6 +918,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-11-21
 - [cisa kev cve 2024 20953 oracle agile product lifecycle manag](./2024-11-21/cisa-kev-cve-2024-20953-oracle-agile-product-lifecycle-manag.md)
+- [cisa kev cve 2024 44308 apple multiple products code executi](./2024-11-21/cisa-kev-cve-2024-44308-apple-multiple-products-code-executi.md)
 - [cisa kev cve 2024 44309 apple multiple products cross site s](./2024-11-21/cisa-kev-cve-2024-44309-apple-multiple-products-cross-site-s.md)
 
 ## 2024-11-20
@@ -1142,6 +1144,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-03-07
 - [cisa kev cve 2024 27198 jetbrains teamcity authentication by](./2024-03-07/cisa-kev-cve-2024-27198-jetbrains-teamcity-authentication-by.md)
-
-## 2024-03-06
-- [cisa kev cve 2024 44308 apple multiple products code executi](./2024-03-06/cisa-kev-cve-2024-44308-apple-multiple-products-code-executi.md)

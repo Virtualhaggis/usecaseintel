@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Trojanized DAEMON Tools binary creates autorun persistence
 
-`UC_31_2` · phase: **install** · confidence: **High**
+`UC_34_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceRegistryEvents
 
 ### [LLM] DAEMON Tools binary makes outbound public network connection (info-stealer beacon)
 
-`UC_31_3` · phase: **c2** · confidence: **High**
+`UC_34_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] DAEMON Tools binary spawns interpreter or LOLBin (second-stage / QUIC RAT execution)
 
-`UC_31_4` · phase: **actions** · confidence: **High**
+`UC_34_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DAEMON Tools trojanized in supply-chain attack to deploy backdoor
 
-`UC_31_1` · phase: **exploit** · confidence: **High**
+`UC_34_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

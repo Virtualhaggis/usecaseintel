@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gamaredon PteroGraphin/PteroOdd C2 — PowerShell GET to api.telegra.ph/getPage
 
-`UC_340_8` · phase: **c2** · confidence: **High**
+`UC_341_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ union TelegraphPS, TelegraphNet
 
 ### [LLM] Turla Kazuar v3 launch — vncutil64.exe / LaunchGFExperience.exe side-load from user-writable path
 
-`UC_340_9` · phase: **install** · confidence: **High**
+`UC_341_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ union ProcHits, DllSideLoad, DllDrop
 
 ### [LLM] Turla Kazuar exfil — POST to ESET-impersonating ydns.eu lookalikes / mopig92456 Cloudflare worker
 
-`UC_340_10` · phase: **c2** · confidence: **High**
+`UC_341_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gamaredon X Turla collab
 
-`UC_340_7` · phase: **exploit** · confidence: **High**
+`UC_341_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

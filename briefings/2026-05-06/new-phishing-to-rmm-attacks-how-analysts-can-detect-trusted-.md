@@ -10,13 +10,9 @@ Home ANY.RUN
 New Phishing-to-RMM Attacks: How Analysts Can Detect Trusted-Tool Abuse Early  
 By Balaji N 
 May 6, 2026 
-
-
-
-
 Detect Phishing-to-RMM Trusted Tool Abuse 
 ANY.RUN researchers uncovered a phishing-to-RMM campaign in which attackers use fake Microsoft, Adobe, and OneDrive pages to deliver legitimate remote management tools such as ScreenConnect  and LogMeIn Rescue. 
-Detection is difficult because the payload and infrastructure can look legitimate in isolation. Analysts need to conn…
+Detection is difficult because the payload and infrastructure can look legitimate in isolation. Analysts need to connect the …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,13 +31,15 @@ Detection is difficult because the payload and infrastructure can look legitimat
 - **T1218** — System Binary Proxy Execution
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1218.007** — System Binary Proxy Execution: Msiexec
+- **T1102** — Web Service
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1036.001** — Masquerading: Invalid Code Signature
 - **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1218.007** — System Binary Proxy Execution: Msiexec
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1553.005** — Subvert Trust Controls: Mark-of-the-Web Bypass
-- **T1102** — Web Service
+- **T1548.002** — Abuse Elevation Control Mechanism: Bypass UAC
 
 ## Kill chain phases observed
 
@@ -49,102 +47,92 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Renamed RMM installer (ScreenConnect/LogMeIn) downloaded via browser as Adobe/Microsoft setup
+### [LLM] RMM installer downloaded from n8n.cloud webhook lure (vmail.app.n8n.cloud)
 
-`UC_4_7` · phase: **delivery** · confidence: **High**
+`UC_8_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","outlook.exe","explorer.exe") AND (Processes.original_file_name IN ("ScreenConnect.ClientSetup.exe","ScreenConnect.WindowsClient.exe","LMI_Rescue.exe","Lmi_Rescue.exe","LogMeIn.exe","MeshAgent.exe","Action1_agent.exe","Syncro.Installer.exe","client32.exe","NetSupportManager.exe","SimpleHelpCustomer.exe","rustdesk.exe","SRServer.exe","AeroAdmin.exe","DattoRMMAgent.exe") OR Processes.process_company IN ("ConnectWise, LLC","ScreenConnect Software","LogMeIn, Inc.","GoTo Technologies USA, Inc.","Datto, Inc.","Action1 Corporation","Syncro","NetSupport Ltd","SimpleHelp","Splashtop Inc.","Open Source Developer, Sergiy Kovalenko")) AND (Processes.process_name IN ("Adobesetup.exe","AdobeSetup.exe","AdobeAcrobatSetup.exe","AcrobatReaderSetup.exe","AcroRdrDC.exe","OneDriveSetup.exe","MicrosoftStore.exe","MSStoreSetup.exe","PDFViewer.exe","PDF_Reader.exe","Document.exe","Invoice.exe") OR match(Processes.process_name,"(?i)^(adobe|acrobat|onedrive|microsoft|office|pdf|document|invoice|reader).*\.exe$")) by Processes.dest Processes.user Processes.process_name Processes.original_file_name Processes.process_company Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where original_file_name!=process_name | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*n8n.cloud/webhook/*" OR Web.url="*vmail.app.n8n.cloud*") by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)` | rename src as host | join type=inner host [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND (Filesystem.file_name="ScreenConnect.ClientSetup.exe" OR Filesystem.file_name="ConnectWiseControl.ClientSetup.exe" OR Filesystem.file_name="Adobesetup.exe" OR Filesystem.file_name="LMIRescue*.exe" OR Filesystem.file_name="LMI_Rescue*.exe" OR Filesystem.file_name="Rescue*.exe" OR Filesystem.file_name="SimpleHelp*.exe" OR Filesystem.file_name="Remote*.msi") AND Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") by host Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let RmmOriginalNames = dynamic(["ScreenConnect.ClientSetup.exe","ScreenConnect.WindowsClient.exe","LMI_Rescue.exe","Lmi_Rescue.exe","LogMeIn.exe","MeshAgent.exe","Action1_agent.exe","Syncro.Installer.exe","client32.exe","NetSupportManager.exe","SimpleHelpCustomer.exe","rustdesk.exe","SRServer.exe","DattoRMMAgent.exe","AteraAgent.exe"]);
-let RmmCompanies = dynamic(["ConnectWise, LLC","ScreenConnect Software","LogMeIn, Inc.","GoTo Technologies USA, Inc.","Datto, Inc.","Action1 Corporation","Syncro","NetSupport Ltd","SimpleHelp","Splashtop Inc.","TrustConnect Software PTY LTD"]);
-let LureFileNames = dynamic(["Adobesetup.exe","AdobeSetup.exe","AdobeAcrobatSetup.exe","AcrobatReaderSetup.exe","AcroRdrDC.exe","OneDriveSetup.exe","MicrosoftStore.exe","MSStoreSetup.exe","PDFViewer.exe","PDF_Reader.exe","Document.exe","Invoice.exe","Statement.exe"]);
-let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","outlook.exe","explorer.exe"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ (Browsers)
-| where (ProcessVersionInfoOriginalFileName in~ (RmmOriginalNames) or ProcessVersionInfoCompanyName in~ (RmmCompanies))
-| where FileName in~ (LureFileNames) or FileName matches regex @"(?i)^(adobe|acrobat|onedrive|microsoft|ms[-_]?store|office|pdf|document|invoice|reader|statement).{0,30}\.exe$"
-| where ProcessVersionInfoOriginalFileName !~ FileName
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          OriginalFileName = ProcessVersionInfoOriginalFileName,
-          CompanyName = ProcessVersionInfoCompanyName,
-          ProductName = ProcessVersionInfoProductName,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildCmd = ProcessCommandLine
-| order by Timestamp desc
-```
-
-### [LLM] VBS-spawned msiexec quiet install of LogMeIn Rescue / RMM with SmartScreen or MOTW tampering
-
-`UC_4_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("wscript.exe","cscript.exe") AND Processes.process_name="msiexec.exe" AND (Processes.process IN ("*\/quiet*","*\/qn*","*\/qb*","*-quiet*","*-qn*")) AND (Processes.process IN ("*LogMeIn*","*Rescue*","*LMI_*","*Lmi_Rescue*","*ScreenConnect*","*ConnectWise*","*MeshAgent*","*Action1*","*Syncro*","*NetSupport*","*SimpleHelp*","*RustDesk*","*Splashtop*","*Datto*","*ITarian*") OR Processes.process LIKE "%http%.msi%") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_id Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | rename _time AS msi_time | join type=left dest [ | tstats `summariesonly` min(_time) as smartscreen_time from datamodel=Endpoint.Registry where (Registry.registry_path IN ("*\\System\\SmartScreenEnabled*","*\\Microsoft\\Windows\\System\\EnableSmartScreen*","*\\Edge\\SmartScreenEnabled*","*\\Attachments\\SaveZoneInformation*")) AND Registry.registry_value_data IN ("Off","0","1") by Registry.dest | `drop_dm_object_name(Registry)`] | where isnull(smartscreen_time) OR abs(msi_time - smartscreen_time) <= 600 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let RmmHints = dynamic(["LogMeIn","Rescue","LMI_","Lmi_Rescue","ScreenConnect","ConnectWise","MeshAgent","Action1","Syncro","NetSupport","SimpleHelp","RustDesk","Splashtop","Datto","ITarian"]);
-let VbsToMsiQuiet = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-    | where FileName =~ "msiexec.exe"
-    | where ProcessCommandLine has_any ("/quiet","/qn","/qb","-quiet")
-    | where ProcessCommandLine has_any (RmmHints)
-        or ProcessCommandLine matches regex @"(?i)https?://[^\s\"]+\.msi\b"
-    | project MsiTime = Timestamp, DeviceId, DeviceName, AccountName,
-              VbsCmd = InitiatingProcessCommandLine,
-              VbsParent = InitiatingProcessParentFileName,
-              MsiCmd = ProcessCommandLine,
-              ProcessIntegrityLevel;
-let DefenderTamper = DeviceRegistryEvents
-    | where Timestamp > ago(7d)
-    | where (RegistryKey has_any (@"\SmartScreenEnabled", @"\Microsoft\Windows\System\EnableSmartScreen", @"\Edge\SmartScreenEnabled", @"\Attachments\SaveZoneInformation", @"\Windows Defender\Real-Time Protection")
-              and RegistryValueData in~ ("Off","0","1"))
-    | project RegTime = Timestamp, DeviceId, RegistryKey, RegistryValueName, RegistryValueData,
-              RegInitiator = InitiatingProcessFileName;
-VbsToMsiQuiet
-| join kind=leftouter DefenderTamper on DeviceId
-| where isnull(RegTime) or abs(datetime_diff('minute', MsiTime, RegTime)) <= 5
-| project MsiTime, DeviceName, AccountName, VbsCmd, MsiCmd, ProcessIntegrityLevel,
-          RegistryKey, RegistryValueName, RegistryValueData, RegInitiator
-| order by MsiTime desc
-```
-
-### [LLM] RMM client installer / VBS dropper downloaded from n8n.cloud workflow domain
-
-`UC_4_9` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*n8n.cloud*" OR Web.url="*vmail.app.n8n.cloud*") by Web.src Web.user Web.url Web.http_user_agent Web.dest | `drop_dm_object_name(Web)` | rename src AS dest | join type=inner dest [ | tstats `summariesonly` min(_time) as file_time values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("ScreenConnect.ClientSetup.exe","ScreenConnect.WindowsClient.exe","LMI_Rescue.exe","Lmi_Rescue.exe","LogMeIn.exe","MeshAgent.exe","Action1_agent.exe","client32.exe","rustdesk.exe","DattoRMMAgent.exe","Adobesetup.exe","AdobeSetup.exe","AcrobatReaderSetup.exe","OneDriveSetup.exe") OR Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.msi") AND Filesystem.action="created" by Filesystem.dest] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let LureFileNames = dynamic(["ScreenConnect.ClientSetup.exe","ScreenConnect.WindowsClient.exe","LMI_Rescue.exe","Lmi_Rescue.exe","LogMeIn.exe","MeshAgent.exe","Action1_agent.exe","client32.exe","rustdesk.exe","DattoRMMAgent.exe","Adobesetup.exe","AdobeSetup.exe","AcrobatReaderSetup.exe","OneDriveSetup.exe","AdobeAcrobatSetup.exe"]);
+// Phishing-to-RMM (ANY.RUN, May 2026): RMM installer dropped from an n8n.cloud webhook lure
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where (FileOriginUrl has "n8n.cloud" or FileOriginReferrerUrl has "n8n.cloud")
-| where FileName in~ (LureFileNames)
-   or FileName endswith ".vbs"
-   or FileName endswith ".msi"
-   or FileName endswith ".exe"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","outlook.exe","explorer.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          FileName, FolderPath, SHA256, FileSize,
-          FileOriginUrl, FileOriginReferrerUrl, FileOriginIP,
-          DownloadedBy = InitiatingProcessFileName
+| where Timestamp > ago(14d)
+| where ActionType == "FileCreated"
+| where FileOriginUrl has "n8n.cloud"                  // legitimate no-code platform abused as lure host
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
+| where FileName endswith ".exe" or FileName endswith ".msi"
+| where FileName has_any ("ScreenConnect","ConnectWiseControl","ClientSetup","Adobesetup","LMIRescue","LMI_Rescue","Rescue","SimpleHelp","MeshAgent","AnyDesk","NetSupport","Action1","Syncro","Splashtop","RustDesk","Datto","ITarian")
+   or FileOriginUrl has "/webhook/"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          FileName, FolderPath, FileOriginUrl, FileOriginIP, SHA256, RequestSourceIP
+```
+
+### [LLM] Renamed ScreenConnect installer — VersionInfo says ConnectWise but filename is Adobesetup.exe / non-vendor
+
+`UC_8_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_version_info_company_name="ConnectWise*" OR Processes.process_version_info_product_name="ConnectWise Control*" OR Processes.process_version_info_product_name="ScreenConnect*" OR Processes.process_version_info_company_name="LogMeIn*" OR Processes.process_version_info_company_name="GoTo*" OR Processes.process_signer="TrustConnect Software PTY LTD*") AND NOT (Processes.process_name="ScreenConnect*.exe" OR Processes.process_name="ConnectWiseControl*.exe" OR Processes.process_name="LMI*.exe" OR Processes.process_name="LogMeIn*.exe" OR Processes.process_name="Rescue*.exe" OR Processes.process_name="GoToAssist*.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_version_info_company_name Processes.process_version_info_product_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Phishing-to-RMM (ANY.RUN Case 1): ScreenConnect/LogMeIn binary disguised under non-vendor filename
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessAccountName !endswith "$"
+| where (ProcessVersionInfoCompanyName has_any ("ConnectWise","ScreenConnect","LogMeIn","GoTo Technologies","TrustConnect")
+      or ProcessVersionInfoProductName has_any ("ConnectWise Control","ScreenConnect","LogMeIn Rescue","GoToAssist"))
+| where not(FileName has_any ("ScreenConnect","ConnectWiseControl","ClientSetup","LogMeIn","LMIRescue","LMI_Rescue","Rescue","GoToAssist"))
+// Bias toward user-writable launch paths used by the campaign
+| where FolderPath has_any (@"\Users\",@"\AppData\Local\Temp\",@"\AppData\Local\Microsoft\Windows\INetCache\",@"\Downloads\",@"\Public\")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, ProcessVersionInfoOriginalFileName,
+          InitiatingProcessFileName, SHA256
 | order by Timestamp desc
+```
+
+### [LLM] VBS lure → SmartScreen disable + Defender weaken + msiexec /qn LogMeIn install chain
+
+`UC_8_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("wscript.exe","cscript.exe") AND Processes.process_name="msiexec.exe" AND (Processes.process="*/qn*" OR Processes.process="*/quiet*" OR Processes.process="*-qn*") AND (Processes.process="*LMI*" OR Processes.process="*LogMeIn*" OR Processes.process="*Rescue*" OR Processes.process="*ScreenConnect*" OR Processes.process="*ConnectWise*" OR Processes.process="*SimpleHelp*" OR Processes.process="*MeshAgent*" OR Processes.process="*Splashtop*" OR Processes.process="*RustDesk*" OR Processes.process="*Action1*" OR Processes.process="*Syncro*" OR Processes.process="*NetSupport*") by host Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner host [ | tstats summariesonly=true count from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Windows\\System\\EnableSmartScreen" OR Registry.registry_path="*\\SmartScreenEnabled" OR Registry.registry_path="*\\Windows Defender\\DisableAntiSpyware" OR Registry.registry_path="*\\Windows Defender\\Real-Time Protection\\DisableRealtimeMonitoring" OR Registry.registry_path="*\\Windows Defender\\Real-Time Protection\\DisableBehaviorMonitoring" OR Registry.registry_path="*\\Windows Defender\\Exclusions\\*") AND Registry.registry_value_data IN ("0","0x0","Off") by host | `drop_dm_object_name(Registry)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Phishing-to-RMM (ANY.RUN Case 3): VBS lure -> Defender/SmartScreen tamper -> msiexec /qn LogMeIn install
+let WindowMin = 10m;
+let TamperEvents = DeviceRegistryEvents
+    | where Timestamp > ago(14d)
+    | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","powershell.exe","pwsh.exe","cmd.exe","reg.exe","msiexec.exe")
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where (RegistryKey has_any (@"\Windows\System\EnableSmartScreen",
+                                  @"Microsoft\Windows\CurrentVersion\Explorer\SmartScreenEnabled",
+                                  @"\Policies\Microsoft\Windows Defender",
+                                  @"\Microsoft\Windows Defender\Real-Time Protection",
+                                  @"\Microsoft\Windows Defender\Exclusions")
+           and (RegistryValueData in ("0","Off","00000000") or RegistryValueName has_any ("DisableAntiSpyware","DisableRealtimeMonitoring","DisableBehaviorMonitoring","DisableScanOnRealtimeEnable","EnableSmartScreen")))
+    | project TamperTime = Timestamp, DeviceId, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+              TamperParent = InitiatingProcessFileName;
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where FileName =~ "msiexec.exe"
+| where ProcessCommandLine has_any ("/qn","/quiet","-qn","/passive")
+| where ProcessCommandLine has_any ("LMI","LogMeIn","Rescue","ScreenConnect","ConnectWise","SimpleHelp","MeshAgent","Splashtop","RustDesk","Action1","Syncro","NetSupport","Datto","ITarian")
+| join kind=inner TamperEvents on DeviceId
+| where TamperTime between (Timestamp - WindowMin .. Timestamp + WindowMin)
+| project Timestamp, TamperTime, DeviceName, AccountName,
+          VbsParent = InitiatingProcessCommandLine, MsiCmd = ProcessCommandLine,
+          RegistryKey, RegistryValueName, RegistryValueData, SHA256
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -382,7 +370,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Phishing-to-RMM Attacks: How Analysts Can Detect Trusted-Tool Abuse Early
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_8_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,4 +420,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,5 +1,5 @@
 @echo off
-REM Single pipeline iteration — invoked by Windows Task Scheduler.
+REM Single pipeline iteration â€” invoked by Windows Task Scheduler.
 REM Runs generate.py with OAuth so LLM bespoke UCs come through, then
 REM commits + pushes any refreshed intel/ catalog/ briefings/ index.html
 REM back to GitHub Pages so the site stays live and current.
@@ -23,7 +23,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-REM Stage just the regenerated outputs — never sweep up unrelated edits.
+REM Stage just the regenerated outputs â€” never sweep up unrelated edits.
 REM daily_digest.md is gitignored; sitemap.xml is regenerated each run.
 >>"%LOG%" echo [git] cwd=%CD%
 >>"%LOG%" echo [git] pre-add status:
@@ -37,11 +37,11 @@ git diff --cached --quiet
 set DIFF_RC=%ERRORLEVEL%
 >>"%LOG%" echo [git] diff --cached --quiet exit=%DIFF_RC%
 if %DIFF_RC% neq 0 (
-  >>"%LOG%" echo [git] changes detected — committing
+  >>"%LOG%" echo [git] changes detected â€” committing
   git commit -m "auto: scheduled pipeline run %TS%" 1>>"%LOG%" 2>>&1
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
-    >>"%LOG%" echo [!] push FAILED — resolve manually
+    >>"%LOG%" echo [!] push FAILED â€” resolve manually
     exit /b 2
   )
   >>"%LOG%" echo [git] pushed

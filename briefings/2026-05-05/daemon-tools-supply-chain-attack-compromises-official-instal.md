@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DAEMON Tools trojanized binary beacons to env-check.daemontools.cc / 38.180.107.76
 
-`UC_34_5` · phase: **c2** · confidence: **High**
+`UC_37_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union isfuzzy=true
 
 ### [LLM] DAEMON Tools binary spawns cmd.exe / PowerShell (implant shell-command stage)
 
-`UC_34_6` · phase: **install** · confidence: **High**
+`UC_37_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] DAEMON Tools second-stage payload drop: envchk.exe / cdg.exe / cdg.tmp by name or SHA1
 
-`UC_34_7` · phase: **install** · confidence: **High**
+`UC_37_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DAEMON Tools Supply Chain Attack Compromises Official Installers with Malware
 
-`UC_34_4` · phase: **exploit** · confidence: **High**
+`UC_37_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

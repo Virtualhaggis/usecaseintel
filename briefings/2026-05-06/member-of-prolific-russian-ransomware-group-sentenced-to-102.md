@@ -10,13 +10,9 @@ Home Cyber Security News
 Member of Prolific Russian Ransomware Group Sentenced to 102 Months in Prison 
 By Abinaya 
 May 6, 2026 
-
-
-
-
 A Latvian national operating out of Moscow was sentenced to 102 months in federal prison for his central role in a sprawling Russian ransomware syndicate.
 Deniss Zolotarjovs, 35, served as a primary extortionist and negotiator for a highly organized cybercriminal network that attacked over 54 companies worldwide.
-The United States Justice Department announced …
+The United States Justice Department announced the sent…
 
 ## Indicators of Compromise (high-fidelity only)
 
