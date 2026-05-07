@@ -4795,19 +4795,20 @@ pre:hover .copy-btn{opacity:1;}
 .copy-btn:hover{background:var(--accent);color:#04111d;border-color:transparent;}
 .copy-btn.copied{background:var(--good);color:#04130a;border-color:transparent;}
 
-/* ----- Search overlay (Cmd/Ctrl+K) ----------------------------------- */
+/* ----- Search overlay (Cmd/Ctrl+K command palette) ------------------- */
 .search-overlay{
   display:none; position:fixed; inset:0; z-index:200;
   background:rgba(4,7,12,0.78); backdrop-filter:blur(8px);
-  align-items:flex-start; justify-content:center; padding-top:14vh;
+  align-items:flex-start; justify-content:center; padding-top:10vh;
   animation:fadeIn 0.15s ease;
 }
 .search-overlay.open{display:flex;}
 .search-modal{
-  width:min(620px, 90%);
+  width:min(720px, 92%);
   background:var(--panel-elev); border:1px solid var(--border-2);
   border-radius:var(--r-lg); box-shadow:var(--shadow-lg);
-  overflow:hidden;
+  overflow:hidden; display:flex; flex-direction:column;
+  max-height:80vh;
 }
 .search-modal input{
   width:100%; padding:18px 22px; background:transparent; border:none;
@@ -4815,19 +4816,69 @@ pre:hover .copy-btn{opacity:1;}
   font-size:16px; font-family:inherit; outline:none;
 }
 .search-modal input::placeholder{color:var(--muted-2);}
-.search-results{max-height:50vh;overflow:auto;padding:8px;}
+.search-results{flex:1; overflow:auto; padding:6px 0;}
 .search-results::-webkit-scrollbar{width:6px;}
 .search-results::-webkit-scrollbar-thumb{background:var(--border-2);border-radius:3px;}
-.search-result{
-  padding:10px 14px; border-radius:var(--r-md); cursor:pointer;
-  display:flex; gap:10px; align-items:flex-start; transition:background 0.1s;
+.sr-group-head{
+  display:flex; align-items:center; gap:8px;
+  padding:10px 18px 6px 18px;
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em;
+  text-transform:uppercase; color:var(--muted-2);
 }
-.search-result:hover, .search-result.sel{background:var(--panel2);}
-.search-result .sr-num{color:var(--muted);font-variant-numeric:tabular-nums;
-  font-size:11px;font-weight:700;flex:0 0 24px;margin-top:2px;}
-.search-result .sr-title{font-weight:600;font-size:13.5px;margin-bottom:2px;}
-.search-result .sr-meta{color:var(--muted);font-size:11.5px;}
-.search-empty{padding:20px;text-align:center;color:var(--muted);font-size:13px;}
+.sr-group-head .sr-group-count{
+  background:rgba(113,112,255,0.10); color:var(--accent-2);
+  padding:1px 7px; border-radius:99px; font-size:10px;
+  border:1px solid rgba(113,112,255,0.24);
+}
+.search-result{
+  padding:9px 18px; cursor:pointer;
+  display:flex; gap:12px; align-items:flex-start;
+  transition:background 0.1s; border-left:2px solid transparent;
+}
+.search-result:hover, .search-result.sel{
+  background:rgba(113,112,255,0.10);
+  border-left-color:var(--accent);
+}
+.search-result .sr-icon{
+  flex:0 0 22px; height:22px; border-radius:5px;
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:700; font-family:var(--mono);
+  color:var(--accent-2); background:rgba(113,112,255,0.10);
+  border:1px solid rgba(113,112,255,0.24);
+}
+.search-result.kind-art .sr-icon{color:#ff8888;background:rgba(235,87,87,0.10);border-color:rgba(235,87,87,0.32);}
+.search-result.kind-uc .sr-icon{color:#9bdfc1;background:rgba(76,183,130,0.10);border-color:rgba(76,183,130,0.32);}
+.search-result.kind-tech .sr-icon{color:var(--warn);background:rgba(226,169,63,0.10);border-color:rgba(226,169,63,0.32);}
+.search-result.kind-actor .sr-icon{color:var(--accent-2);}
+.search-result .sr-body{flex:1; min-width:0;}
+.search-result .sr-title{
+  font-weight:500; font-size:13.5px; margin-bottom:3px;
+  color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.search-result .sr-meta{
+  color:var(--muted); font-size:11px;
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+  font-family:var(--mono); letter-spacing:0.02em;
+}
+.search-result .sr-meta .sr-badge{
+  padding:1px 6px; border-radius:4px;
+  background:var(--panel); border:1px solid var(--border);
+  font-size:10px;
+}
+.search-result mark{
+  background:rgba(113,112,255,0.28); color:var(--text);
+  padding:0 2px; border-radius:2px;
+}
+.search-empty{padding:32px 20px;text-align:center;color:var(--muted);font-size:13px;}
+.search-foot{
+  display:flex; gap:14px; justify-content:flex-end;
+  padding:8px 18px; border-top:1px solid var(--hairline);
+  font-family:var(--mono); font-size:10.5px; color:var(--muted-2);
+}
+.search-foot .sf-key{
+  background:var(--panel); border:1px solid var(--border);
+  padding:1px 6px; border-radius:4px; margin-right:4px;
+}
 
 /* ----- Footer -------------------------------------------------------- */
 footer{
@@ -6249,8 +6300,13 @@ details.uc.uc-platform-hidden{display:none !important;}
 
 <div class="search-overlay" id="searchOverlay">
   <div class="search-modal">
-    <input type="text" id="searchInput" placeholder="Search by title, technique (T1566), CVE, malware name…" autocomplete="off">
+    <input type="text" id="searchInput" placeholder="Search use cases, articles, techniques (T1566), actors, CVEs…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div class="search-results" id="searchResults"></div>
+    <div class="search-foot">
+      <span><span class="sf-key">↑↓</span>navigate</span>
+      <span><span class="sf-key">⏎</span>open</span>
+      <span><span class="sf-key">esc</span>close</span>
+    </div>
   </div>
 </div>
 
@@ -6945,18 +7001,163 @@ document.addEventListener('click', e => {
   });
 });
 
-// ----- Search overlay -------------------------------------------------
+// ----- Smart Ctrl/Cmd+K search palette -------------------------------
+// Grouped fuzzy search across Use Cases, Articles, Techniques, Actors.
+// Builds the index lazily on first open from MATRIX + DOM + window globals.
+// Recent searches persisted in localStorage. Keyboard nav: ↑↓ Enter Esc.
 const overlay = document.getElementById('searchOverlay');
 const input = document.getElementById('searchInput');
 const results = document.getElementById('searchResults');
 const trigger = document.getElementById('searchTrigger');
+
+const RECENT_KEY = 'usecaseintel:recent-searches';
+const MAX_RECENT = 6;
+const PER_GROUP_LIMIT = 8;
+
+// --- Index build ---
+let SEARCH_INDEX = null;
+
+function _buildIndex() {
+  const idx = { ucs: [], arts: [], techs: [], actors: [] };
+
+  // Use cases (from MATRIX) — primary searchable surface
+  if (window.MATRIX && Array.isArray(MATRIX.ucs)) {
+    MATRIX.ucs.forEach(uc => {
+      const techs = (uc.techs || []).join(' ');
+      idx.ucs.push({
+        kind: 'uc',
+        title: uc.t || uc.n || '',
+        meta: [uc.src || '', uc.ph || '', uc.tier || '', techs].filter(Boolean).join(' · '),
+        techs: techs,
+        blob: ((uc.t || '') + ' ' + (uc.n || '') + ' ' + techs + ' ' +
+                (uc.ph || '') + ' ' + (uc.src || '') + ' ' + (uc.tier || '')).toLowerCase(),
+        ref: uc,
+      });
+    });
+  }
+
+  // Articles — read from DOM data-attributes
+  document.querySelectorAll('#view-articles article.card').forEach(c => {
+    const title = c.querySelector('h2 a, h2')?.textContent?.trim() || c.id;
+    const sources = c.dataset.sources || '';
+    const techs = c.dataset.techs || '';
+    const sev = c.dataset.sev || '';
+    const search = c.dataset.search || '';
+    idx.arts.push({
+      kind: 'art',
+      id: c.id,
+      slug: c.dataset.artSlug || '',
+      title: title,
+      meta: [sev.toUpperCase(), sources.split('|')[0] || '', techs.split(',').slice(0, 3).join(', ')].filter(Boolean).join(' · '),
+      blob: (title + ' ' + search + ' ' + sources + ' ' + techs).toLowerCase(),
+      sev: sev,
+    });
+  });
+
+  // Techniques (from MATRIX.techniques)
+  if (window.MATRIX && MATRIX.techniques) {
+    Object.entries(MATRIX.techniques).forEach(([tid, info]) => {
+      const tactics = (info.tactics || []).join(', ');
+      const ucCount = (MATRIX.tech_ucs && MATRIX.tech_ucs[tid] || []).length;
+      const artCount = (MATRIX.tech_arts && MATRIX.tech_arts[tid] || []).length;
+      idx.techs.push({
+        kind: 'tech',
+        tid: tid,
+        title: tid + ' · ' + (info.name || ''),
+        meta: [tactics, ucCount + ' UCs', artCount + ' arts'].filter(Boolean).join(' · '),
+        blob: (tid + ' ' + (info.name || '') + ' ' + tactics).toLowerCase(),
+      });
+    });
+  }
+
+  // Actors — preferred source: window.__ACTORS__ (loaded by the actors tab),
+  // fallback to scraping data-actor-name from the DOM if present.
+  const actorList = (window.__ACTORS__ && Array.isArray(window.__ACTORS__)) ? window.__ACTORS__ : [];
+  actorList.forEach(a => {
+    const name = a.name || a.canonical || '';
+    if (!name) return;
+    const aliases = (a.aliases || []).join(', ');
+    const country = a.country || '';
+    idx.actors.push({
+      kind: 'actor',
+      title: name,
+      slug: (a.slug || name).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+      meta: [country, aliases ? 'aka ' + aliases : '', (a.articles?.length || 0) + ' articles'].filter(Boolean).join(' · '),
+      blob: (name + ' ' + aliases + ' ' + country).toLowerCase(),
+    });
+  });
+
+  return idx;
+}
+
+// --- Scoring ---
+// Substring + token-aligned match with a score boost for prefix hits and
+// exact T-IDs / CVE matches.
+function _score(blob, q) {
+  if (!q) return 0;
+  const i = blob.indexOf(q);
+  if (i < 0) {
+    // fall back to AND-on-tokens
+    const toks = q.split(/\s+/).filter(Boolean);
+    if (!toks.every(t => blob.includes(t))) return 0;
+    return 50;  // weak match
+  }
+  // i === 0 is a prefix match — strongest
+  if (i === 0) return 1000;
+  // word-boundary prefix is next-best
+  if (blob[i - 1] === ' ' || blob[i - 1] === '/' || blob[i - 1] === '.') return 800;
+  return 500 - Math.min(i, 400);  // earlier-in-string is better
+}
+
+function _doSearch(q) {
+  q = q.toLowerCase().trim();
+  if (!SEARCH_INDEX) SEARCH_INDEX = _buildIndex();
+  if (!q) return null;
+  const out = { ucs: [], arts: [], techs: [], actors: [] };
+  ['ucs', 'arts', 'techs', 'actors'].forEach(k => {
+    SEARCH_INDEX[k].forEach(item => {
+      const s = _score(item.blob, q);
+      if (s > 0) out[k].push({ item, score: s });
+    });
+    out[k].sort((a, b) => b.score - a.score);
+    out[k] = out[k].slice(0, PER_GROUP_LIMIT);
+  });
+  return out;
+}
+
+// --- Highlight matched substring ---
+function _hl(text, q) {
+  if (!q) return _escapeHtml(text);
+  const lc = text.toLowerCase();
+  const i = lc.indexOf(q.toLowerCase());
+  if (i < 0) return _escapeHtml(text);
+  return _escapeHtml(text.slice(0, i)) + '<mark>' + _escapeHtml(text.slice(i, i + q.length)) + '</mark>' + _escapeHtml(text.slice(i + q.length));
+}
+function _escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+}
+
+// --- Recent searches ---
+function _getRecent() {
+  try { return JSON.parse(localStorage.getItem(RECENT_KEY) || '[]'); }
+  catch { return []; }
+}
+function _addRecent(q) {
+  q = q.trim(); if (!q) return;
+  let r = _getRecent().filter(x => x !== q);
+  r.unshift(q);
+  r = r.slice(0, MAX_RECENT);
+  try { localStorage.setItem(RECENT_KEY, JSON.stringify(r)); } catch {}
+}
+
+// --- DOM render ---
 let resultEls = [];
 let selIndex = 0;
 
 function openSearch() {
   overlay.classList.add('open');
   input.value = '';
-  renderResults('');
+  _renderEmpty();
   setTimeout(() => input.focus(), 30);
 }
 function closeSearch() { overlay.classList.remove('open'); }
@@ -6967,51 +7168,159 @@ document.addEventListener('keydown', e => {
   } else if (e.key === 'Escape' && overlay.classList.contains('open')) {
     closeSearch();
   } else if (overlay.classList.contains('open')) {
-    if (e.key === 'ArrowDown') { e.preventDefault(); selIndex = Math.min(selIndex+1, resultEls.length-1); renderSel(); }
-    if (e.key === 'ArrowUp')   { e.preventDefault(); selIndex = Math.max(selIndex-1, 0); renderSel(); }
-    if (e.key === 'Enter' && resultEls[selIndex]) { resultEls[selIndex].click(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); selIndex = Math.min(selIndex + 1, resultEls.length - 1); _refreshSel(); }
+    else if (e.key === 'ArrowUp')   { e.preventDefault(); selIndex = Math.max(selIndex - 1, 0); _refreshSel(); }
+    else if (e.key === 'Enter' && resultEls[selIndex]) {
+      _addRecent(input.value);
+      resultEls[selIndex].click();
+    }
   }
 });
 overlay.addEventListener('click', e => { if (e.target === overlay) closeSearch(); });
 
-function renderResults(q) {
-  q = q.toLowerCase().trim();
+function _refreshSel() {
+  resultEls.forEach((el, i) => el.classList.toggle('sel', i === selIndex));
+  resultEls[selIndex]?.scrollIntoView({ block: 'nearest' });
+}
+
+function _renderEmpty() {
   results.innerHTML = '';
   resultEls = [];
   selIndex = 0;
-  let count = 0;
-  cards.forEach(c => {
-    const blob = (c.dataset.search || '').toLowerCase();
-    if (q && !blob.includes(q)) return;
-    const id = c.id;
-    const title = c.querySelector('h2 a')?.innerText || id;
-    const num = parseInt(id.replace('art-','')) + 1;
-    const techs = c.dataset.techs || '';
-    const sev = c.dataset.sev || '';
-    const div = document.createElement('div');
-    div.className = 'search-result' + (count === 0 ? ' sel' : '');
-    div.innerHTML = `<div class="sr-num">${String(num).padStart(2,'0')}</div>
-      <div><div class="sr-title">${title}</div><div class="sr-meta">${sev.toUpperCase()} · ${techs.split(',').slice(0,3).join(', ')}</div></div>`;
-    div.addEventListener('click', () => {
-      closeSearch();
-      document.getElementById(id).scrollIntoView({behavior:'smooth', block:'start'});
+  const recent = _getRecent();
+  if (recent.length) {
+    const head = document.createElement('div');
+    head.className = 'sr-group-head';
+    head.innerHTML = 'Recent searches <span class="sr-group-count">' + recent.length + '</span>';
+    results.appendChild(head);
+    recent.forEach(q => {
+      const div = document.createElement('div');
+      div.className = 'search-result';
+      div.innerHTML = '<div class="sr-icon">↻</div><div class="sr-body"><div class="sr-title">' + _escapeHtml(q) + '</div><div class="sr-meta">click to repeat</div></div>';
+      div.addEventListener('click', () => { input.value = q; _renderResults(q); });
+      results.appendChild(div);
+      resultEls.push(div);
     });
-    results.appendChild(div);
-    resultEls.push(div);
-    count++;
-  });
-  if (count === 0) {
+  } else {
     const e = document.createElement('div');
     e.className = 'search-empty';
-    e.textContent = q ? `No matches for "${q}"` : 'Type to search…';
+    e.textContent = 'Type to search use cases, articles, techniques (T1566), actors, CVEs…';
     results.appendChild(e);
   }
 }
-function renderSel() {
-  resultEls.forEach((el,i) => el.classList.toggle('sel', i === selIndex));
-  resultEls[selIndex]?.scrollIntoView({block:'nearest'});
+
+function _renderResults(q) {
+  q = q.trim();
+  if (!q) { _renderEmpty(); return; }
+
+  const grouped = _doSearch(q);
+  results.innerHTML = '';
+  resultEls = [];
+  selIndex = 0;
+  if (!grouped) { _renderEmpty(); return; }
+
+  const groups = [
+    ['ucs',    'Use Cases',     'UC'],
+    ['techs',  'Techniques',    'T'],
+    ['arts',   'Articles',      'A'],
+    ['actors', 'Threat Actors', '◈'],
+  ];
+
+  let total = 0;
+  groups.forEach(([k, label, icon]) => {
+    const items = grouped[k];
+    if (!items.length) return;
+    total += items.length;
+    const head = document.createElement('div');
+    head.className = 'sr-group-head';
+    head.innerHTML = _escapeHtml(label) + ' <span class="sr-group-count">' + items.length + '</span>';
+    results.appendChild(head);
+    items.forEach(({ item }) => {
+      const row = document.createElement('div');
+      row.className = 'search-result kind-' + item.kind;
+      row.innerHTML =
+        '<div class="sr-icon">' + _escapeHtml(icon) + '</div>' +
+        '<div class="sr-body">' +
+          '<div class="sr-title">' + _hl(item.title, q) + '</div>' +
+          '<div class="sr-meta">' + _hl(item.meta || '', q) + '</div>' +
+        '</div>';
+      row.addEventListener('click', () => {
+        _addRecent(q);
+        closeSearch();
+        _navigate(item);
+      });
+      results.appendChild(row);
+      resultEls.push(row);
+    });
+  });
+
+  if (total === 0) {
+    const e = document.createElement('div');
+    e.className = 'search-empty';
+    e.textContent = 'No matches for "' + q + '"';
+    results.appendChild(e);
+  } else if (resultEls[0]) {
+    resultEls[0].classList.add('sel');
+  }
 }
-input.addEventListener('input', () => renderResults(input.value));
+
+// Navigate to the right surface for each kind.
+function _navigate(item) {
+  if (item.kind === 'art') {
+    const el = document.getElementById(item.id);
+    if (el) {
+      _switchToTab('articles');
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.classList.add('deeplink-target');
+      setTimeout(() => el.classList.remove('deeplink-target'), 1700);
+    }
+  } else if (item.kind === 'uc') {
+    // Use case — try the article-card surface first (fastest), else point
+    // the deeplink at the technique landing if we know one.
+    const title = item.title || '';
+    const allUcs = document.querySelectorAll('#view-articles article.card details.uc');
+    let found = null;
+    allUcs.forEach(d => {
+      if (found) return;
+      const t = d.querySelector('summary .uc-title')?.textContent?.trim() || '';
+      if (t === title) found = d;
+    });
+    if (found) {
+      _switchToTab('articles');
+      found.open = true;
+      found.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      found.classList.add('deeplink-target');
+      setTimeout(() => found.classList.remove('deeplink-target'), 1700);
+    } else {
+      // Fall back: open the Library tab and seed the search box with the title
+      _switchToTab('detection-library');
+      const libSearch = document.querySelector('#view-detection-library input[type="search"], #view-detection-library .lib-search input, #libSearch');
+      if (libSearch) { libSearch.value = title; libSearch.dispatchEvent(new Event('input', { bubbles: true })); }
+    }
+  } else if (item.kind === 'tech') {
+    // Send to the per-technique landing page (static, indexable)
+    location.href = 'techniques/' + item.tid + '.html';
+  } else if (item.kind === 'actor') {
+    _switchToTab('actors');
+    setTimeout(() => {
+      const target = document.querySelector('[data-actor-name="' + item.title + '"]') ||
+                     document.querySelector('[data-actor-slug="' + item.slug + '"]');
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.classList.add('deeplink-target');
+        setTimeout(() => target.classList.remove('deeplink-target'), 1700);
+      }
+    }, 250);
+  }
+}
+
+function _switchToTab(name) {
+  // Click the matching nav-tab so existing tab-switch logic runs
+  const tabBtn = document.querySelector('[data-tab="' + name + '"], button[data-target="view-' + name + '"]');
+  if (tabBtn && !tabBtn.classList.contains('active')) tabBtn.click();
+}
+
+input.addEventListener('input', () => _renderResults(input.value));
 
 // =================================================================
 // Source filter (Articles tab) — multi-select
