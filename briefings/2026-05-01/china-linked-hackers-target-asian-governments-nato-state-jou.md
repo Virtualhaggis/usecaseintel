@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Godzilla web shell on IIS/Exchange — w3wp.exe spawning recon/cmd children (SHADOW-EARTH-053)
 
-`UC_72_12` · phase: **install** · confidence: **High**
+`UC_74_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] AnyDesk.exe staged from writable path — SHADOW-EARTH-053 ShadowPad DLL side-load
 
-`UC_72_13` · phase: **install** · confidence: **High**
+`UC_74_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] SHADOW-EARTH-053 tunneling & lateral-movement toolkit (GOST / IOX / Wstunnel / Sharp-SMBExec / RingQ)
 
-`UC_72_14` · phase: **c2** · confidence: **Medium**
+`UC_74_14` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

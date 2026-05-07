@@ -10,11 +10,7 @@ Home Cyber Security News
 28 Fake Call History Apps on Google Play with 7.3M+ Downloads Trick Users to Steal Payments 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
-A new wave of fraudulent Android apps quietly racked up millions of downloads on Google Play before being taken down. These apps, now tracked under the name CallPhantom, promised users something irresistible: the ability to look up the call history of any phone number . What they actually delivered was nothing more than fake data and …
+A new wave of fraudulent Android apps quietly racked up millions of downloads on Google Play before being taken down. These apps, now tracked under the name CallPhantom, promised users something irresistible: the ability to look up the call history of any phone number . What they actually delivered was nothing more than fake data and a very r…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -73,9 +69,9 @@ A new wave of fraudulent Android apps quietly racked up millions of downloads on
 - **T1027** — Obfuscated Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102** — Web Service
-- **T1568** — Dynamic Resolution
+- **T1437.001** — Application Layer Protocol: Web Protocols (Mobile)
 - **T1660** — Phishing (Mobile)
-- **T1456** — Drive-By Compromise (Mobile)
+- **T1655.001** — Masquerading: Match Legitimate Name or Location (Mobile)
 
 ## Kill chain phases observed
 
@@ -83,86 +79,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] CallPhantom Firebase RTDB C2 / payment-channel callback
+### [LLM] CallPhantom Android scam — Firebase RTDB C2 / payment-URL beacon
 
-`UC_0_11` · phase: **c2** · confidence: **High**
+`UC_10_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("call-history-7cda4-default-rtdb.firebaseio.com","call-history-ecc1e-default-rtdb.firebaseio.com","ch-ap-4-default-rtdb.firebaseio.com","chh1-ac0a3-default-rtdb.firebaseio.com") by All_Traffic.src All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | appendpipe [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query IN ("call-history-7cda4-default-rtdb.firebaseio.com","call-history-ecc1e-default-rtdb.firebaseio.com","ch-ap-4-default-rtdb.firebaseio.com","chh1-ac0a3-default-rtdb.firebaseio.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("call-history-7cda4-default-rtdb.firebaseio.com","call-history-ecc1e-default-rtdb.firebaseio.com","ch-ap-4-default-rtdb.firebaseio.com","chh1-ac0a3-default-rtdb.firebaseio.com") OR All_Traffic.url IN ("*call-history-7cda4-default-rtdb.firebaseio.com*","*call-history-ecc1e-default-rtdb.firebaseio.com*","*ch-ap-4-default-rtdb.firebaseio.com*","*chh1-ac0a3-default-rtdb.firebaseio.com*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Web.Web where Web.url IN ("*call-history-7cda4-default-rtdb.firebaseio.com*","*call-history-ecc1e-default-rtdb.firebaseio.com*","*ch-ap-4-default-rtdb.firebaseio.com*","*chh1-ac0a3-default-rtdb.firebaseio.com*") by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)`]
 ```
 
 **Defender KQL:**
 ```kql
-let _callphantom_rtdb = dynamic(["call-history-7cda4-default-rtdb.firebaseio.com","call-history-ecc1e-default-rtdb.firebaseio.com","ch-ap-4-default-rtdb.firebaseio.com","chh1-ac0a3-default-rtdb.firebaseio.com"]);
-let _net = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl in~ (_callphantom_rtdb)
-        or (RemoteUrl has "firebaseio.com" and RemoteUrl has_any ("call-history-7cda4","call-history-ecc1e","ch-ap-4","chh1-ac0a3"))
-    | project Timestamp, DeviceName, DeviceId, ActionType, RemoteIP, RemoteUrl,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
-let _dns = DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q in~ (_callphantom_rtdb)
-    | project Timestamp, DeviceName, DeviceId, ActionType, RemoteUrl=Q,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
-union isfuzzy=true _net, _dns
+// CallPhantom Firebase RTDB beacons — DNS + Network egress
+let CallPhantomDomains = dynamic([
+    "call-history-7cda4-default-rtdb.firebaseio.com",
+    "call-history-ecc1e-default-rtdb.firebaseio.com",
+    "ch-ap-4-default-rtdb.firebaseio.com",
+    "chh1-ac0a3-default-rtdb.firebaseio.com"
+]);
+union isfuzzy=true
+    ( DeviceNetworkEvents
+        | where Timestamp > ago(30d)
+        | where RemoteUrl in~ (CallPhantomDomains)
+            or RemoteUrl has_any (CallPhantomDomains)
+        | project Timestamp, DeviceName, DeviceId, ActionType,
+                  RemoteUrl, RemoteIP, RemotePort, Protocol,
+                  InitiatingProcessFileName, InitiatingProcessCommandLine,
+                  Source = "DeviceNetworkEvents" ),
+    ( DeviceEvents
+        | where Timestamp > ago(30d)
+        | where ActionType == "DnsQueryResponse"
+        | extend QName = tostring(parse_json(AdditionalFields).QueryName)
+        | where QName in~ (CallPhantomDomains)
+        | project Timestamp, DeviceName, DeviceId, ActionType,
+                  QName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+                  Source = "DeviceEvents:DnsQueryResponse" )
 | order by Timestamp desc
 ```
 
-### [LLM] CallPhantom Android APK SHA-1 hash sighting in file telemetry
+### [LLM] CallPhantom APK SHA1 sweep across endpoint and proxy file telemetry
 
-`UC_0_12` · phase: **delivery** · confidence: **Medium**
+`UC_10_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("799AA5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB","EC5E470753E76614CD28ECF6A3591F08770B7215","77C8B7BEC79E7D9AE0D0C02DEC4E9AC510429AD8","9484EFD4C19969F57AFB0C21E6E1A4249C209305","CE97CA7FEECDCAFC6B8E9BD83A370DFA5C336C0A","FC3BA2EDAC0BB9801F8535E36F0BCC49ADA5FA5A","B7B80FA34A41E3259E377C0D843643FF736803B8","F0A8EBD7C4179636BE752ECCFC6BD9E4CD5C7F2C","D021E7A0CF45EECC7EE8F57149138725DC77DC9A","04D2221967FFC4312AFDC9B06A0B923BF3579E93","CB31ED027FADBFA3BFFDBC8A84EE1A48A0B7C11D","C840A85B5FBAF1ED3E0F18A10A6520B337A94D4C","BB6260CA856C37885BF9E952CA3D7E95398DDABF","55D46813047E98879901FD2416A23ACF8D8828F5","E23D3905443CDBF4F1B9CA84A6FF250B6D89E093","89ECEC01CCB15FCDD2F64E07D0E876A9E79DD3CE","8EC557302145B40FE0898105752FFF5E357D7AC9","6F72FF58A67EF7AAA79CE2342012326C7B46429D","28D3F36BD43D48F02C5058EDD1509E4488112154","47CEE9DED41B953A84FC9F6ED556EC3AF5BD9345","9199A376B433F888AFE962C9BBD991622E8D39F9","053A6A723FA2BFDA8A1B113E8A98DD04C6EEF72A","4B537A7152179BBA19D63C9EF287F1AC366AB5CB","87F6B2DB155192692BAD1F26F6AEBB04DBF23AAD","583D0E7113795C7D68686D37CE7A41535CF56960","45D04E06D8B329A01E680539D798DD3AE68904DA","34393950A950F5651F3F7811B815B5A21F84A84B") OR (Filesystem.file_name="*.apk" OR Filesystem.file_name="*.xapk") AND Filesystem.file_name IN ("all.callhistory.detail.apk","calldetaila.ndcallhisto.rytogetan.ynumber.apk","callhistoryeditor.callhistory.numberdetails.calleridlocator.apk","com.all_historydownload.anynumber.callhistorybackup.apk","com.any.numbers.calls.history.apk","com.app.call.detail.history.apk","com.call.detail.caller.history.xapk","com.callapp.historyero.apk","com.callhistory.callhistoryyourgf.apk") by Filesystem.dest Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.dest) as dest from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("799AA5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB","EC5E470753E76614CD28ECF6A3591F08770B7215","77C8B7BEC79E7D9AE0D0C02DEC4E9AC510429AD8","9484EFD4C19969F57AFB0C21E6E1A4249C209305","CE97CA7FEECDCAFC6B8E9BD83A370DFA5C336C0A","FC3BA2EDAC0BB9801F8535E36F0BCC49ADA5FA5A","B7B80FA34A41E3259E377C0D843643FF736803B8","F0A8EBD7C4179636BE752ECCFC6BD9E4CD5C7F2C","D021E7A0CF45EECC7EE8F57149138725DC77DC9A","04D2221967FFC4312AFDC9B06A0B923BF3579E93","CB31ED027FADBFA3BFFDBC8A84EE1A48A0B7C11D","C840A85B5FBAF1ED3E0F18A10A6520B337A94D4C","BB6260CA856C37885BF9E952CA3D7E95398DDABF","55D46813047E98879901FD2416A23ACF8D8828F5","E23D3905443CDBF4F1B9CA84A6FF250B6D89E093","89ECEC01CCB15FCDD2F64E07D0E876A9E79DD3CE","8EC557302145B40FE0898105752FFF5E357D7AC9","6F72FF58A67EF7AAA79CE2342012326C7B46429D","28D3F36BD43D48F02C5058EDD1509E4488112154","47CEE9DED41B953A84FC9F6ED556EC3AF5BD9345","9199A376B433F888AFE962C9BBD991622E8D39F9","053A6A723FA2BFDA8A1B113E8A98DD04C6EEF72A","4B537A7152179BBA19D63C9EF287F1AC366AB5CB","87F6B2DB155192692BAD1F26F6AEBB04DBF23AAD","583D0E7113795C7D68686D37CE7A41535CF56960","45D04E06D8B329A01E680539D798DD3AE68904DA","34393950A950F5651F3F7811B815B5A21F84A84B") by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let _callphantom_sha1 = dynamic([
-    "799AA5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB",
-    "EC5E470753E76614CD28ECF6A3591F08770B7215","77C8B7BEC79E7D9AE0D0C02DEC4E9AC510429AD8",
-    "9484EFD4C19969F57AFB0C21E6E1A4249C209305","CE97CA7FEECDCAFC6B8E9BD83A370DFA5C336C0A",
-    "FC3BA2EDAC0BB9801F8535E36F0BCC49ADA5FA5A","B7B80FA34A41E3259E377C0D843643FF736803B8",
-    "F0A8EBD7C4179636BE752ECCFC6BD9E4CD5C7F2C","D021E7A0CF45EECC7EE8F57149138725DC77DC9A",
-    "04D2221967FFC4312AFDC9B06A0B923BF3579E93","CB31ED027FADBFA3BFFDBC8A84EE1A48A0B7C11D",
-    "C840A85B5FBAF1ED3E0F18A10A6520B337A94D4C","BB6260CA856C37885BF9E952CA3D7E95398DDABF",
-    "55D46813047E98879901FD2416A23ACF8D8828F5","E23D3905443CDBF4F1B9CA84A6FF250B6D89E093",
-    "89ECEC01CCB15FCDD2F64E07D0E876A9E79DD3CE","8EC557302145B40FE0898105752FFF5E357D7AC9",
-    "6F72FF58A67EF7AAA79CE2342012326C7B46429D","28D3F36BD43D48F02C5058EDD1509E4488112154",
-    "47CEE9DED41B953A84FC9F6ED556EC3AF5BD9345","9199A376B433F888AFE962C9BBD991622E8D39F9",
-    "053A6A723FA2BFDA8A1B113E8A98DD04C6EEF72A","4B537A7152179BBA19D63C9EF287F1AC366AB5CB",
-    "87F6B2DB155192692BAD1F26F6AEBB04DBF23AAD","583D0E7113795C7D68686D37CE7A41535CF56960",
-    "45D04E06D8B329A01E680539D798DD3AE68904DA","34393950A950F5651F3F7811B815B5A21F84A84B"
+// CallPhantom APK SHA1 IOC sweep
+let CallPhantomSHA1 = dynamic([
+    "799AA5127CA54239D3D4A14367DB3B712012CF14",
+    "56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB",
+    "EC5E470753E76614CD28ECF6A3591F08770B7215",
+    "77C8B7BEC79E7D9AE0D0C02DEC4E9AC510429AD8",
+    "9484EFD4C19969F57AFB0C21E6E1A4249C209305",
+    "CE97CA7FEECDCAFC6B8E9BD83A370DFA5C336C0A",
+    "FC3BA2EDAC0BB9801F8535E36F0BCC49ADA5FA5A",
+    "B7B80FA34A41E3259E377C0D843643FF736803B8",
+    "F0A8EBD7C4179636BE752ECCFC6BD9E4CD5C7F2C",
+    "D021E7A0CF45EECC7EE8F57149138725DC77DC9A",
+    "04D2221967FFC4312AFDC9B06A0B923BF3579E93",
+    "CB31ED027FADBFA3BFFDBC8A84EE1A48A0B7C11D",
+    "C840A85B5FBAF1ED3E0F18A10A6520B337A94D4C",
+    "BB6260CA856C37885BF9E952CA3D7E95398DDABF",
+    "55D46813047E98879901FD2416A23ACF8D8828F5",
+    "E23D3905443CDBF4F1B9CA84A6FF250B6D89E093",
+    "89ECEC01CCB15FCDD2F64E07D0E876A9E79DD3CE",
+    "8EC557302145B40FE0898105752FFF5E357D7AC9",
+    "6F72FF58A67EF7AAA79CE2342012326C7B46429D",
+    "28D3F36BD43D48F02C5058EDD1509E4488112154",
+    "47CEE9DED41B953A84FC9F6ED556EC3AF5BD9345",
+    "9199A376B433F888AFE962C9BBD991622E8D39F9",
+    "053A6A723FA2BFDA8A1B113E8A98DD04C6EEF72A",
+    "4B537A7152179BBA19D63C9EF287F1AC366AB5CB",
+    "87F6B2DB155192692BAD1F26F6AEBB04DBF23AAD",
+    "583D0E7113795C7D68686D37CE7A41535CF56960",
+    "45D04E06D8B329A01E680539D798DD3AE68904DA",
+    "34393950A950F5651F3F7811B815B5A21F84A84B"
 ]);
-let _callphantom_files = dynamic([
-    "all.callhistory.detail.apk","calldetaila.ndcallhisto.rytogetan.ynumber.apk",
-    "callhistoryeditor.callhistory.numberdetails.calleridlocator.apk",
-    "com.all_historydownload.anynumber.callhistorybackup.apk",
-    "com.any.numbers.calls.history.apk","com.anycallinformation.datadetailswho.callinfo.numberfinder.xapk",
-    "com.app.call.detail.history.apk","com.basehistory.historydownloading.xapk",
-    "com.call.detail.caller.history.xapk","com.call.of.any.number.apk",
-    "com.callapp.historyero.apk","com.calldetails.smshistory.callhistoryofanynumber.apk",
-    "com.callhistory.anynumber.chapfvor.history.xapk","com.callhistory.callhistoryany.call.apk",
-    "com.callhistory.callhistoryyourgf.apk","com.cddhaduk.callerid.block.contact.xapk",
-    "com.easyranktools.callhistoryforanynumber.apk","com.chdev.callhistory.xapk",
-    "com.name.factor.apk","com.pdf.maker.pdfreader.pdfscanner.apk",
-    "com.phone.call.history.tracker.apk","com.pixelxinnovation.manager.apk",
-    "com.rajni.callhistory.apk","com.sbpinfotech.findlocationofanynumber.xapk",
-    "sc.call.ofany.mobiledetail.apk"
-]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA1 in (_callphantom_sha1)
-    or (FileName has_any (_callphantom_files))
-    or (FileName endswith ".apk" and FileName has_any ("callhistory","call.history","callhisto"))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, SHA256,
-          FileOriginUrl, FileOriginReferrerUrl,
-          InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine
+union isfuzzy=true
+    ( DeviceFileEvents
+        | where Timestamp > ago(30d)
+        | where SHA1 in~ (CallPhantomSHA1)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+                  SHA1, FileOriginUrl, FileOriginReferrerUrl,
+                  InitiatingProcessFileName, InitiatingProcessAccountName,
+                  Source = "DeviceFileEvents" ),
+    ( DeviceProcessEvents
+        | where Timestamp > ago(30d)
+        | where SHA1 in~ (CallPhantomSHA1)
+        | project Timestamp, DeviceName, FileName, FolderPath, SHA1,
+                  ProcessCommandLine, AccountName,
+                  Source = "DeviceProcessEvents" )
 | order by Timestamp desc
 ```
 
@@ -456,7 +466,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 28 Fake Call History Apps on Google Play with 7.3M+ Downloads Trick Users to Ste
 
-`UC_0_10` · phase: **exploit** · confidence: **High**
+`UC_10_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

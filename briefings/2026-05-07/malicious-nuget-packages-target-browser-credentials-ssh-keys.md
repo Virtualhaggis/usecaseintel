@@ -10,12 +10,8 @@ Home Cyber Security News
 Malicious NuGet Packages Target Browser Credentials, SSH Keys, and Crypto Wallets 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 A fresh wave of malicious packages has been quietly spreading through the NuGet ecosystem, one of the most widely used registries in the .NET developer world. Five rogue packages have been discovered posing as legitimate Chinese software libraries, secretly stealing browser credentials, SSH private keys, and cryptocurrency wallet data.
-The atta…
+The attack takes…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -57,17 +53,12 @@ The atta…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1074.001** — Local Data Staging
+- **T1036.005** — Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
 - **T1568** — Dynamic Resolution
-- **T1074.001** — Local Data Staging
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1555** — Credentials from Password Stores
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1059** — Command and Scripting Interpreter
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
 
 ## Kill chain phases observed
 
@@ -75,60 +66,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NuGet supply-chain stealer C2 callback to dns-providersa2[.]com / 62.84.102.85
+### [LLM] Socket NuGet supply-chain stealer staging file at C:\ProgramData\Microsoft OneDrive\keys.dat
 
-`UC_4_14` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="62.84.102.85" OR All_Traffic.dest="dns-providersa2.com" OR All_Traffic.dest_host="dns-providersa2.com") by All_Traffic.src host
-| `drop_dm_object_name(All_Traffic)`
-| append [
-    | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.user) as user from datamodel=Web.Web where (Web.url="*dns-providersa2.com/check*" OR Web.url="*dns-providersa2.com/upload*" OR Web.dest="dns-providersa2.com" OR Web.dest="62.84.102.85") by Web.src host
-    | `drop_dm_object_name(Web)`
-  ]
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let _c2_ips = dynamic(["62.84.102.85"]);
-let _c2_domain = "dns-providersa2.com";
-union isfuzzy=true
-(
-    DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP in (_c2_ips)
-        or RemoteUrl has _c2_domain
-    | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-              InitiatingProcessFileName, InitiatingProcessFolderPath,
-              InitiatingProcessCommandLine, InitiatingProcessSHA256,
-              InitiatingProcessAccountName
-),
-(
-    DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-    | where QueryName has _c2_domain
-    | project Timestamp, DeviceName, ActionType, QueryName,
-              InitiatingProcessFileName, InitiatingProcessFolderPath,
-              InitiatingProcessCommandLine, InitiatingProcessAccountName
-)
-| order by Timestamp desc
-```
-
-### [LLM] Stealer staging at spoofed OneDrive path C:\ProgramData\Microsoft OneDrive\keys.dat
-
-`UC_4_15` · phase: **actions** · confidence: **High**
+`UC_14_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\Microsoft OneDrive\\keys.dat" OR Filesystem.file_path="*\\programdata\\microsoft onedrive\\keys.dat") by Filesystem.dest Filesystem.file_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\ProgramData\\Microsoft OneDrive\\keys.dat" OR (Filesystem.file_path="*\\ProgramData\\Microsoft OneDrive\\*" AND Filesystem.file_name="keys.dat")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -136,59 +80,71 @@ union isfuzzy=true
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath has @"\ProgramData\Microsoft OneDrive"
-   and FileName =~ "keys.dat"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, FileSize,
+| where FolderPath has @"\ProgramData\Microsoft OneDrive" and FileName =~ "keys.dat"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
           InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### [LLM] Second-stage NuGet stealer execution: we4ftg.exe / s4.exe by name or SHA-256
+### [LLM] NuGet bmrxntfj C2 beacon to dns-providersa2[.]com or VDSINA Amsterdam VPS
 
-`UC_4_16` · phase: **install** · confidence: **High**
+`UC_14_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as process_path values(Processes.user) as user values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_cmdline values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_name IN ("we4ftg.exe","s4.exe") OR Processes.process_hash IN ("e1869d6571894f058dd4ab2b66f060628dc364ee8e29afbd2323c95e5002fb8e","8f7aa15c77bde94087bb74dfc072e25212797b313731b4cad0ded3e152268dcf","34e2d63b5db7e24c808711c2ca0c0a42afde97a0086d7d81609110c002d18d7c","b8543b2a1ad8862ebfef18924cf5444d2adfee996939963f4fc2748c582cf9a9","b8fa1b2fade45304c003909e375d2519ea447b498b7d93fe7c50db014d30f4fa","019e6c2cf58386039133981f3377b085fbd70c98ae8613c7c6a4f10a9f2d9824","596c453c9dbb7240f1ce05cc025496524ce7c538c23a9b2171174bf32b5691a1")) by Processes.dest Processes.process_name Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="62.84.102.85" OR All_Traffic.dest="dns-providersa2.com" OR All_Traffic.dest="*.dns-providersa2.com") by All_Traffic.src All_Traffic.dest_ip All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let _stealer_names = dynamic(["we4ftg.exe","s4.exe"]);
-let _stealer_hashes = dynamic([
-    "e1869d6571894f058dd4ab2b66f060628dc364ee8e29afbd2323c95e5002fb8e",
-    "8f7aa15c77bde94087bb74dfc072e25212797b313731b4cad0ded3e152268dcf",
-    "34e2d63b5db7e24c808711c2ca0c0a42afde97a0086d7d81609110c002d18d7c",
-    "b8543b2a1ad8862ebfef18924cf5444d2adfee996939963f4fc2748c582cf9a9",
-    "b8fa1b2fade45304c003909e375d2519ea447b498b7d93fe7c50db014d30f4fa",
-    "019e6c2cf58386039133981f3377b085fbd70c98ae8613c7c6a4f10a9f2d9824",
-    "596c453c9dbb7240f1ce05cc025496524ce7c538c23a9b2171174bf32b5691a1"]);
-union isfuzzy=true
-(
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ (_stealer_names)
-        or SHA256 in (_stealer_hashes)
-        or InitiatingProcessFileName in~ (_stealer_names)
-        or InitiatingProcessSHA256 in (_stealer_hashes)
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-              ProcessCommandLine, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-              InitiatingProcessSHA256
-),
-(
-    DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_stealer_hashes)
-    | project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-              InitiatingProcessFileName, InitiatingProcessFolderPath,
-              InitiatingProcessCommandLine
-)
+let c2_domains = dynamic(["dns-providersa2.com"]);
+let c2_ips = dynamic(["62.84.102.85"]);
+let c2_paths = dynamic(["/check","/upload"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (c2_ips)
+   or RemoteUrl has_any (c2_domains)
+   or (isnotempty(RemoteUrl) and RemoteUrl has "dns-providersa2")
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Execution of we4ftg.exe / s4.exe stealer dropped by IR.* NuGet packages
+
+`UC_14_16` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="we4ftg.exe" OR Processes.process_name="s4.exe" OR Processes.process_hash="8f7aa15c77bde94087bb74dfc072e25212797b313731b4cad0ded3e152268dcf" OR Processes.process_hash="e1869d6571894f058dd4ab2b66f060628dc364ee8e29afbd2323c95e5002fb8e" OR Processes.process_hash IN ("34e2d63b5db7e24c808711c2ca0c0a42afde97a0086d7d81609110c002d18d7c","b8543b2a1ad8862ebfef18924cf5444d2adfee996939963f4fc2748c582cf9a9","b8fa1b2fade45304c003909e375d2519ea447b498b7d93fe7c50db014d30f4fa","019e6c2cf58386039133981f3377b085fbd70c98ae8613c7c6a4f10a9f2d9824","596c453c9dbb7240f1ce05cc025496524ce7c538c23a9b2171174bf32b5691a1")) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let bad_hashes = dynamic([
+  "8f7aa15c77bde94087bb74dfc072e25212797b313731b4cad0ded3e152268dcf",
+  "e1869d6571894f058dd4ab2b66f060628dc364ee8e29afbd2323c95e5002fb8e",
+  "34e2d63b5db7e24c808711c2ca0c0a42afde97a0086d7d81609110c002d18d7c",
+  "b8543b2a1ad8862ebfef18924cf5444d2adfee996939963f4fc2748c582cf9a9",
+  "b8fa1b2fade45304c003909e375d2519ea447b498b7d93fe7c50db014d30f4fa",
+  "019e6c2cf58386039133981f3377b085fbd70c98ae8613c7c6a4f10a9f2d9824",
+  "596c453c9dbb7240f1ce05cc025496524ce7c538c23a9b2171174bf32b5691a1"
+]);
+let bad_names = dynamic(["we4ftg.exe","s4.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (bad_names)
+   or SHA256 in (bad_hashes)
+   or InitiatingProcessSHA256 in (bad_hashes)
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -566,7 +522,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious NuGet Packages Target Browser Credentials, SSH Keys, and Crypto Wallet
 
-`UC_4_13` · phase: **exploit** · confidence: **High**
+`UC_14_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -626,4 +582,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

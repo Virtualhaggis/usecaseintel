@@ -10,11 +10,7 @@ Home Cyber Security News
 Hackers Abuse Google Ads to Steal Users GoDaddy ManageWP login Credentials 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
-Hackers are using fake Google ads to steal login credentials from ManageWP users, GoDaddy’s popular platform for managing WordPress websites from a single dashboard. The campaign, which researchers have dubbed “WrongPress,” plants a fraudulent sponsored search result directly above the real ManageWP listing, trapping users before they even realize som…
+Hackers are using fake Google ads to steal login credentials from ManageWP users, GoDaddy’s popular platform for managing WordPress websites from a single dashboard. The campaign, which researchers have dubbed “WrongPress,” plants a fraudulent sponsored search result directly above the real ManageWP listing, trapping users before they even realize something i…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,6 +37,8 @@ Hackers are using fake Google ads to steal login credentials from ManageWP users
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1583.008** — Acquire Infrastructure: Malvertising
 - **T1557** — Adversary-in-the-Middle
+- **T1111** — Multi-Factor Authentication Interception
+- **T1583.001** — Acquire Infrastructure: Domains
 
 ## Kill chain phases observed
 
@@ -48,31 +46,76 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] WrongPress: browser visit to non-ManageWP domain containing 'managewp' (AiTM phishing lookalike)
+### [LLM] WrongPress: browser navigation to ManageWP phishing lookalike (manageewpbest.it.com)
 
-`UC_14_10` · phase: **delivery** · confidence: **Medium**
+`UC_18_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.http_referrer) as referrers values(Web.dest) as dest from datamodel=Web where Web.url="*managewp*" AND NOT (Web.url="*://managewp.com/*" OR Web.url="*://*.managewp.com/*" OR Web.url="*://godaddy.com/*" OR Web.url="*://*.godaddy.com/*") by Web.src Web.user Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_referrer) as referrer values(Web.dest) as dest from datamodel=Web where (Web.url="*manageewpbest.it.com*" OR Web.dest="manageewpbest.it.com" OR (Web.url="*managewp*" AND Web.url!="*managewp.com*" AND Web.url!="*godaddy.com*" AND Web.url!="*wp.com*" AND Web.url!="*google.com*")) by Web.src Web.user Web.http_user_agent index sourcetype | `drop_dm_object_name(Web)` | eval campaign="WrongPress AiTM ManageWP phishing" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// WrongPress lookalike-domain hunt — browser navigation to a URL
-// containing 'managewp' that is NOT on legitimate ManageWP / GoDaddy infra.
-let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","arc.exe","opera.exe","iexplore.exe"]);
+let SuspectHosts = dynamic(["manageewpbest.it.com"]);
+let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe"]);
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
 | where InitiatingProcessFileName in~ (Browsers)
 | where isnotempty(RemoteUrl)
-| where RemoteUrl matches regex @"(?i)://[^/]*managewp"   // 'managewp' in HOST portion
-| where not(RemoteUrl matches regex @"(?i)://(?:[a-z0-9-]+\.)*managewp\.com(?:[/:?#]|$)")
-| where not(RemoteUrl matches regex @"(?i)://(?:[a-z0-9-]+\.)*godaddy\.com(?:[/:?#]|$)")
-| extend Host = extract(@"(?i)://([^/:]+)", 1, RemoteUrl)
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), HitCount = count(),
-            SampleUrls = make_set(RemoteUrl, 5)
-            by DeviceName, AccountName, Host, InitiatingProcessFileName
+| where RemoteUrl has_any (SuspectHosts)
+   or (RemoteUrl has "managewp"
+       and not(RemoteUrl has "managewp.com")
+       and not(RemoteUrl has "godaddy.com")
+       and not(RemoteUrl has "wp.com")
+       and not(RemoteUrl has "google.com"))
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          AccountUpn  = InitiatingProcessAccountUpn,
+          Browser     = InitiatingProcessFileName,
+          RemoteUrl, RemoteIP, RemotePort,
+          BrowserCmd  = InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] Hunt: first-time-seen ManageWP lookalike host across the org (WrongPress rotation)
+
+`UC_18_11` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count from datamodel=Web where Web.url="*managewp*" AND Web.url!="*managewp.com*" AND Web.url!="*godaddy.com*" AND Web.url!="*wp.com*" AND Web.url!="*google.com*" earliest=-30d@d latest=-1h@h by Web.dest | `drop_dm_object_name(Web)` | rename dest as baseline_dest | append [| tstats summariesonly=t count min(_time) as firstSeen values(Web.src) as src values(Web.user) as user values(Web.url) as url from datamodel=Web where Web.url="*managewp*" AND Web.url!="*managewp.com*" AND Web.url!="*godaddy.com*" AND Web.url!="*wp.com*" AND Web.url!="*google.com*" earliest=-1h@h by Web.dest | `drop_dm_object_name(Web)` | rename dest as recent_dest] | stats values(baseline_dest) as baseline values(recent_dest) as recent values(src) as src values(user) as user values(url) as url min(firstSeen) as firstSeen by recent_dest | where isnotnull(recent_dest) AND isnull(baseline) | convert ctime(firstSeen)
+```
+
+**Defender KQL:**
+```kql
+let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1h))
+    | where isnotempty(RemoteUrl)
+    | where RemoteUrl has "managewp"
+    | where not(RemoteUrl has "managewp.com")
+    | where not(RemoteUrl has "godaddy.com")
+    | where not(RemoteUrl has "wp.com")
+    | where not(RemoteUrl has "google.com")
+    | extend Host = tostring(parse_url(RemoteUrl)["Host"])
+    | summarize by Host;
+DeviceNetworkEvents
+| where Timestamp > ago(1h)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has "managewp"
+| where not(RemoteUrl has "managewp.com")
+| where not(RemoteUrl has "godaddy.com")
+| where not(RemoteUrl has "wp.com")
+| where not(RemoteUrl has "google.com")
+| extend Host = tostring(parse_url(RemoteUrl)["Host"])
+| join kind=leftanti Baseline on Host
+| summarize FirstSeen = min(Timestamp),
+            DeviceCount = dcount(DeviceId),
+            Devices = make_set(DeviceName, 25),
+            Users = make_set(InitiatingProcessAccountUpn, 25),
+            SampleUrls = make_set(RemoteUrl, 10)
+            by Host
 | order by FirstSeen desc
 ```
 
@@ -401,7 +444,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers abuse Google ads for GoDaddy ManageWP login phishing
 
-`UC_14_9` · phase: **exploit** · confidence: **High**
+`UC_18_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -451,4 +494,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

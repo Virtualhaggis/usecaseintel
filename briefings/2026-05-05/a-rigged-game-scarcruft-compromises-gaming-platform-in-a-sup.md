@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ScarCruft sqgame supply-chain — download from xiazai.sqgame.com.cn / sqgame.com.cn
 
-`UC_52_7` · phase: **delivery** · confidence: **High**
+`UC_54_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ union
 
 ### [LLM] Trojanized sqgame mono.dll / BirdCall APK hash hit on Windows endpoint
 
-`UC_52_8` · phase: **install** · confidence: **High**
+`UC_54_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ union
 
 ### [LLM] ScarCruft second-stage staging — connection to compromised KR sites or BirdCall C2 IPs
 
-`UC_52_9` · phase: **c2** · confidence: **High**
+`UC_54_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -272,7 +272,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A rigged game: ScarCruft compromises gaming platform in a supply-chain attack
 
-`UC_52_6` · phase: **exploit** · confidence: **High**
+`UC_54_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

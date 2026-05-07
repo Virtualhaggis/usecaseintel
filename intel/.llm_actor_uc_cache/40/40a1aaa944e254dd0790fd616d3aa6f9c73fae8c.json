@@ -1,0 +1,68 @@
+{
+  "name": "APT41",
+  "ucs": [
+    {
+      "title": "[LLM] APT41 web-facing app exploitation chain \u2014 IIS/Tomcat/Java spawning LOLBin recon (China Chopper / Log4Shell / ADSelfService Plus)",
+      "description": "Hunts the post-exploitation behaviour APT41 (Wicked Panda / Brass Typhoon / BARIUM) consistently exhibits after exploiting public-facing web apps \u2014 Citrix NetScaler, Confluence (CVE-2022-26134), ManageEngine ADSelfService Plus (CVE-2021-40539), and Log4Shell \u2014 where a web-server worker process (w3wp/Tomcat/Java/nginx) spawns LOLBin reconnaissance utilities, the unmistakable footprint of China Chopper/Behinder webshell command execution. Mandiant's APT41 reporting and CISA AA22-238A attribute this exact chain to the group.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1059.001",
+        "T1059.003",
+        "T1505.003",
+        "T1087.002",
+        "T1057",
+        "T1082"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as command values(Processes.user) as user values(Processes.process_path) as child_path from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"tomcat10.exe\",\"java.exe\",\"javaw.exe\",\"nginx.exe\",\"node.exe\")) (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"quser.exe\",\"tasklist.exe\",\"wmic.exe\",\"netstat.exe\",\"reg.exe\",\"schtasks.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"cscript.exe\",\"wscript.exe\",\"ping.exe\",\"arp.exe\",\"nltest.exe\")) by host Processes.parent_process_name Processes.process_name Processes.user Processes.process\n| `drop_dm_object_name(Processes)`\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"tomcat10.exe\",\"java.exe\",\"javaw.exe\",\"nginx.exe\",\"node.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"quser.exe\",\"tasklist.exe\",\"wmic.exe\",\"netstat.exe\",\"reg.exe\",\"schtasks.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"cscript.exe\",\"wscript.exe\",\"ping.exe\",\"arp.exe\",\"nltest.exe\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          ParentProcess = InitiatingProcessFileName,\n          ParentCmd    = InitiatingProcessCommandLine,\n          ChildProcess = FileName,\n          ChildCmd     = ProcessCommandLine,\n          ChildPath    = FolderPath,\n          SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend ParentImageName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| extend ChildImageName  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1]))\n| where ParentImageName in (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"tomcat10.exe\",\"java.exe\",\"javaw.exe\",\"nginx.exe\",\"node.exe\")\n| where ChildImageName  in (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"quser.exe\",\"tasklist.exe\",\"wmic.exe\",\"netstat.exe\",\"reg.exe\",\"schtasks.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"cscript.exe\",\"wscript.exe\",\"ping.exe\",\"arp.exe\",\"nltest.exe\")\n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT41 Web-Server Process Spawning LOLBin Reconnaissance (China Chopper / Log4Shell post-exploitation)\nid: 9b3a7c2e-4f15-4d4f-8a5d-c01a6f9b9e21\nstatus: experimental\ndescription: |\n  Detects APT41 / Wicked Panda / Brass Typhoon post-exploitation tradecraft where\n  IIS, Tomcat, Java or nginx worker processes spawn Windows LOLBins for host /\n  domain reconnaissance \u2014 the canonical fingerprint of China Chopper or\n  Behinder webshell command execution after exploiting Confluence (CVE-2022-26134),\n  ManageEngine ADSelfService Plus (CVE-2021-40539), Log4Shell, or Citrix NetScaler.\nreferences:\n  - https://attack.mitre.org/groups/G0096/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-238a\n  - https://www.mandiant.com/resources/blog/apt41-us-state-governments\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.initial-access\n  - attack.t1190\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.t1505.003\n  - attack.g0096\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent_webserver:\n    ParentImage|endswith:\n      - '\\w3wp.exe'\n      - '\\httpd.exe'\n      - '\\tomcat.exe'\n      - '\\tomcat9.exe'\n      - '\\tomcat10.exe'\n      - '\\java.exe'\n      - '\\javaw.exe'\n      - '\\nginx.exe'\n      - '\\node.exe'\n  child_lolbin:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\whoami.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\ipconfig.exe'\n      - '\\systeminfo.exe'\n      - '\\quser.exe'\n      - '\\tasklist.exe'\n      - '\\wmic.exe'\n      - '\\netstat.exe'\n      - '\\reg.exe'\n      - '\\schtasks.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\curl.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\nltest.exe'\n  condition: parent_webserver and child_lolbin\nfalsepositives:\n  - Legitimate web app maintenance / health-check scripts (rare on production)\n  - Application installers running under the IIS app-pool identity\nlevel: high\n",
+      "rationale": "Pinned tightly to APT41's documented operational pattern: every public Mandiant and CISA report on the group describes web-app exploitation followed by webshell-driven recon. The parent\u21e2child predicate eliminates the bulk of normal IIS/Java traffic \u2014 production web tiers should virtually never spawn whoami/net/nltest. Differentiates from generic T1059 process detection by requiring a *web-server p"
+    },
+    {
+      "title": "[LLM] APT41 / Winnti DLL side-loading \u2014 signed legitimate binary executing from user-writable directory",
+      "description": "Hunts the Winnti / APT41 / Blackfly hallmark of dropping a renamed, validly-signed third-party binary (commonly from VLC, Kaspersky, McAfee, VMware, Cisco, Adobe, NVIDIA installers) into a user-writable folder so it side-loads a malicious DLL from the same directory \u2014 the loader chain behind ShadowPad, PlugX, Crosswalk, KEYPLUG and Winnti backdoor variants documented by Symantec, Mandiant and ESET.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1027",
+        "T1027.002",
+        "T1036.005",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as command values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_path IN (\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\PerfLogs\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\",\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\Users\\\\Default\\\\*\",\"*\\\\$Recycle.Bin\\\\*\")) (Processes.process_name IN (\"DTHelper.exe\",\"vlc.exe\",\"goopdate.exe\",\"GoogleUpdate.exe\",\"cookie_exporter.exe\",\"RasTls.exe\",\"wsc_proxy.exe\",\"TmDbgLog.exe\",\"corecmd.exe\",\"mscorsvw.exe\",\"vmnat.exe\",\"vmware.exe\",\"vmtoolsd.exe\",\"mcods.exe\",\"javaws.exe\",\"NisSrv.exe\",\"MsMpEng.exe\",\"AcroRd32.exe\",\"nvSmartMaxApp.exe\",\"chrome.exe\",\"OneDrive.exe\")) by host Processes.process_name Processes.process_path Processes.parent_process_name Processes.user\n| `drop_dm_object_name(Processes)`\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "// APT41 / Winnti side-load: signed third-party loader executing from a user-writable\n// directory AND loading a DLL from the same directory whose hash differs from the loader.\nlet _suspect_dirs = dynamic([@\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\PerfLogs\\\",\n                             @\"\\Windows\\Temp\\\", @\"\\AppData\\Roaming\\\",\n                             @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Default\\\",\n                             @\"\\$Recycle.Bin\\\"]);\nlet _legit_vendors = dynamic([\"Microsoft\",\"Google\",\"VMware\",\"Kaspersky\",\"Avast\",\n                              \"McAfee\",\"Symantec\",\"Bitdefender\",\"Adobe\",\"NVIDIA\",\n                              \"Oracle\",\"Realtek\",\"Cisco\",\"Citrix\",\"Avira\",\"BugSplat\",\n                              \"Trend Micro\",\"Sophos\",\"VideoLAN\",\"Notepad++\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFolderPath has_any (_suspect_dirs)\n| where InitiatingProcessVersionInfoCompanyName has_any (_legit_vendors)\n| where FileName endswith \".dll\"\n| extend LoaderDir = tostring(parse_path(InitiatingProcessFolderPath).DirectoryPath)\n| extend DllDir    = tostring(parse_path(FolderPath).DirectoryPath)\n| where DllDir =~ LoaderDir                                  // sibling DLL \u2014 the side-load signal\n| where SHA256 != InitiatingProcessSHA256                   // not the loader itself\n| where FolderPath !startswith @\"C:\\Windows\\System32\\\"\n   and FolderPath !startswith @\"C:\\Windows\\SysWOW64\\\"\n| project Timestamp, DeviceName,\n          Loader        = InitiatingProcessFileName,\n          LoaderPath    = InitiatingProcessFolderPath,\n          LoaderVendor  = InitiatingProcessVersionInfoCompanyName,\n          LoaderSHA256  = InitiatingProcessSHA256,\n          DllLoaded     = FileName,\n          DllPath       = FolderPath,\n          DllSHA256     = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Requires Sysmon EID 7 (ImageLoad) ingestion via WindowsEvent / AMA.\nlet _suspect_dirs = dynamic([@\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\PerfLogs\\\",\n                             @\"\\Windows\\Temp\\\", @\"\\AppData\\Roaming\\\",\n                             @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Default\\\"]);\nlet _legit_vendors = dynamic([\"Microsoft\",\"Google\",\"VMware\",\"Kaspersky\",\"Avast\",\n                              \"McAfee\",\"Symantec\",\"Bitdefender\",\"Adobe\",\"NVIDIA\",\n                              \"Oracle\",\"Realtek\",\"Cisco\",\"Citrix\",\"Trend Micro\",\n                              \"Sophos\",\"VideoLAN\",\"Notepad++\"]);\nWindowsEvent\n| where TimeGenerated > ago(7d)\n| where Provider == \"Microsoft-Windows-Sysmon\"\n| where EventID == 7                                          // ImageLoad\n| extend Image       = tostring(EventData.Image),\n         ImageLoaded = tostring(EventData.ImageLoaded),\n         Company     = tostring(EventData.Company),\n         Signed      = tostring(EventData.Signed),\n         Hashes      = tostring(EventData.Hashes)\n| where Signed =~ \"true\"\n| where Company has_any (_legit_vendors)\n| where Image has_any (_suspect_dirs)\n| where ImageLoaded endswith \".dll\"\n| extend LoaderDir = strcat_array(array_slice(split(Image,       \"\\\\\"), 0, -2), \"\\\\\"),\n         LoadedDir = strcat_array(array_slice(split(ImageLoaded, \"\\\\\"), 0, -2), \"\\\\\")\n| where tolower(LoaderDir) == tolower(LoadedDir)\n| where ImageLoaded !startswith @\"C:\\Windows\\System32\\\"\n   and  ImageLoaded !startswith @\"C:\\Windows\\SysWOW64\\\"\n| project TimeGenerated, Computer, Image, Company, ImageLoaded, Hashes\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "DLL side-loading is the single most-cited APT41/Winnti/Blackfly TTP across vendor reporting (Mandiant M-Trends, Symantec Threat Hunter Team, ESET Winnti reports, Microsoft Brass Typhoon writeups). Generic side-loading detections fire on legitimate installers; this rule narrows the field by requiring (a) a signed third-party vendor binary (b) running from a user-writable path that vendors NEVER shi",
+      "_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "InitiatingProcessVersionInfoCompanyName",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents"
+          ],
+          "message": "`InitiatingProcessVersionInfoCompanyName` is not a column of DeviceImageLoadEvents; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents."
+        }
+      ]
+    }
+  ]
+}
