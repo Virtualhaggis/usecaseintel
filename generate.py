@@ -7154,41 +7154,30 @@ function _libPrepare() {
   if (!M || !Array.isArray(M.ucs)) return [];
   const arts = M.arts || [];
 
+  // Pull just the raw query bodies from the rendered DOM so the drawer can
+  // display them on click. Platform flags are NOT derived from DOM any more
+  // — they come from each MATRIX record's authoritative `pl` field below.
+  // The old selector (#articles .article) silently matched nothing because
+  // the cards are <article class="card"> inside #view-articles, so every
+  // UC fell through to a fallback that wrongly tagged bespoke UCs as
+  // def+sigma only. That hid every Datadog UC from the Library.
   const ucDom = new Map();
-  document.querySelectorAll('#articles .article details.uc').forEach(d => {
-    const title = (d.querySelector('summary')?.textContent || '').trim();
+  document.querySelectorAll('#view-articles article.card details.uc').forEach(d => {
+    const title = (d.querySelector('summary .uc-title')?.textContent || d.querySelector('summary')?.textContent || '').trim();
     if (!title) return;
-    const tabs = {};
-    d.querySelectorAll('.uc-tabs .uc-tab, [data-platform], .platform-tab').forEach(b => {
-      const k = (b.dataset.platform || b.textContent || '').trim().toLowerCase();
-      if (/defender/.test(k)) tabs.def = true;
-      else if (/sentinel/.test(k)) tabs.sent = true;
-      else if (/sigma/.test(k)) tabs.sigma = true;
-      else if (/datadog/.test(k)) tabs.datadog = true;
-      else if (/splunk|spl/.test(k)) tabs.spl = true;
-    });
-    d.querySelectorAll('pre, code').forEach(p => {
-      const t = (p.textContent || '');
-      if (!tabs.sigma && /^\\s*title:\\s/m.test(t) && /detection:/m.test(t)) tabs.sigma = true;
-      if (!tabs.spl && /^\\s*(?:index=|search\\b)/m.test(t)) tabs.spl = true;
-      if (!tabs.def && /DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(t)) tabs.def = true;
-      if (!tabs.sent && /\\bSecurityEvent\\b|\\bSigninLogs\\b|\\bAuditLogs\\b/.test(t)) tabs.sent = true;
-      // Datadog: source: + @field.path syntax, not Splunk's index= and not KQL pipe.
-      if (!tabs.datadog && /(^|\\s)source:[a-z][a-z0-9._-]+\\s/i.test(t) && /@[a-z][a-z0-9._-]+:/i.test(t)) tabs.datadog = true;
-    });
     const queries = {};
     d.querySelectorAll('pre').forEach(pre => {
       const txt = pre.textContent || '';
       if (!txt.trim()) return;
       let kind = 'other';
-      if (/^\\s*title:/m.test(txt) && /\\bdetection:/.test(txt)) kind = 'sigma';
-      else if ((/(^|\\s)source:[a-z][a-z0-9._-]+\\s/i.test(txt)) && /@[a-z][a-z0-9._-]+:/i.test(txt) && !/\\|/.test(txt.split('\\n')[0])) kind = 'datadog';
-      else if (/^\\s*(?:index=|search\\b|\\|)/m.test(txt)) kind = 'spl';
+      if (/^\s*title:/m.test(txt) && /\bdetection:/.test(txt)) kind = 'sigma';
+      else if ((/(^|\s)source:[a-z][a-z0-9._-]+\s/i.test(txt)) && /@[a-z][a-z0-9._-]+:/i.test(txt) && !/\|/.test(txt.split('\n')[0])) kind = 'datadog';
+      else if (/^\s*(?:index=|search\b|\|)/m.test(txt)) kind = 'spl';
       else if (/DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(txt)) kind = 'def';
       else if (/SecurityEvent|SigninLogs|AuditLogs/.test(txt)) kind = 'sent';
       if (!queries[kind] && txt.length < 8000) queries[kind] = txt;
     });
-    ucDom.set(title, {tabs, queries});
+    ucDom.set(title, {queries});
   });
 
   const prepared = M.ucs.map(uc => {
@@ -7198,11 +7187,18 @@ function _libPrepare() {
       const r = SEV_ORDER[(a.sev || '').toLowerCase()] || 0;
       if (r > maxSev) { maxSev = r; sevTag = SEV_NORM[(a.sev || '').toLowerCase()] || 'low'; }
     }
-    let plats = ucDom.get(uc.t)?.tabs || {};
-    if (!plats.def && !plats.sent && !plats.sigma && !plats.spl && !plats.datadog) {
-      if (uc.src === 'internal') plats = {def:true, sent:true, sigma:true, spl:true};
-      else plats = {def:true, sigma:true};
-    }
+    // Read platform flags from the canonical `pl` field on the matrix
+    // record (built from each UseCase's actual *_kql / *_yaml / *_query
+    // attributes in build_matrix_data). Position 0=Defender (d/-),
+    // 1=Sentinel (s/-), 2=Sigma (g/-), 3=Splunk (p/-), 4=Datadog (D/-).
+    const pl = uc.pl || '';
+    const plats = {
+      def:     pl.charAt(0) === 'd',
+      sent:    pl.charAt(1) === 's',
+      sigma:   pl.charAt(2) === 'g',
+      spl:     pl.charAt(3) === 'p',
+      datadog: pl.charAt(4) === 'D',
+    };
     const queries = ucDom.get(uc.t)?.queries || {};
     const apps = _libExtractApps(uc.t + ' ' + (uc.n || ''));
     const actorTitles = ucArts.map(a => a.title).join(' || ');
