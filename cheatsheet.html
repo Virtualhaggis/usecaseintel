@@ -5978,13 +5978,13 @@ level: high
   <input type="search" id="splunkDmFilter" placeholder="Filter tables…" autocomplete="off">
   <ul id="splunkDmList">
     <li><a href="#spl-dm-Endpoint.Processes" data-table="Endpoint.Processes"><span class="t">Endpoint.Processes</span><span class="n">6</span></a></li>
-<li><a href="#spl-dm-Endpoint.Filesystem" data-table="Endpoint.Filesystem"><span class="t">Endpoint.Filesystem</span><span class="n">4</span></a></li>
-<li><a href="#spl-dm-Endpoint.Registry" data-table="Endpoint.Registry"><span class="t">Endpoint.Registry</span><span class="n">3</span></a></li>
+<li><a href="#spl-dm-Endpoint.Filesystem" data-table="Endpoint.Filesystem"><span class="t">Endpoint.Filesystem</span><span class="n">5</span></a></li>
+<li><a href="#spl-dm-Endpoint.Registry" data-table="Endpoint.Registry"><span class="t">Endpoint.Registry</span><span class="n">4</span></a></li>
 <li><a href="#spl-dm-Network_Traffic.All_Traffic" data-table="Network_Traffic.All_Traffic"><span class="t">Network_Traffic.All_Traffic</span><span class="n">5</span></a></li>
-<li><a href="#spl-dm-Authentication.Authentication" data-table="Authentication.Authentication"><span class="t">Authentication.Authentication</span><span class="n">4</span></a></li>
-<li><a href="#spl-dm-Web.Web" data-table="Web.Web"><span class="t">Web.Web</span><span class="n">4</span></a></li>
-<li><a href="#spl-dm-Network_Resolution.DNS" data-table="Network_Resolution.DNS"><span class="t">Network_Resolution.DNS</span><span class="n">4</span></a></li>
-<li><a href="#spl-dm-Email.All_Email" data-table="Email.All_Email"><span class="t">Email.All_Email</span><span class="n">3</span></a></li>
+<li><a href="#spl-dm-Authentication.Authentication" data-table="Authentication.Authentication"><span class="t">Authentication.Authentication</span><span class="n">5</span></a></li>
+<li><a href="#spl-dm-Web.Web" data-table="Web.Web"><span class="t">Web.Web</span><span class="n">5</span></a></li>
+<li><a href="#spl-dm-Network_Resolution.DNS" data-table="Network_Resolution.DNS"><span class="t">Network_Resolution.DNS</span><span class="n">5</span></a></li>
+<li><a href="#spl-dm-Email.All_Email" data-table="Email.All_Email"><span class="t">Email.All_Email</span><span class="n">5</span></a></li>
   </ul>
 </nav>
 
@@ -5998,7 +5998,7 @@ level: high
         </p>
         <div class="stats">
           <span><strong>8</strong> CIM datamodels curated</span>
-          <span><strong>33</strong> queries</span>
+          <span><strong>40</strong> queries</span>
           <span>Click <strong>Copy</strong> on any query to paste into Splunk Search.</span>
         </div>
       </div>
@@ -6016,8 +6016,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>All processes on a specific host</h4>
-        <p>Host triage. Replace `&lt;DeviceName&gt;`. Pulls every process exec via accelerated CIM.</p>
+        <h4>All processes for a user</h4>
+        <p>User triage — every process exec tied to one identity in the last 24h. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6028,14 +6028,14 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
     from datamodel=Endpoint.Processes
-    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+    where Processes.user=&lt;UserName&gt; earliest=-24h@h
+    by Processes.dest, Processes.process_name, _time span=10m
 | `drop_dm_object_name(Processes)`
 | sort -_time</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
     from datamodel=Endpoint.Processes
-    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+    where Processes.user=&lt;UserName&gt; earliest=-24h@h
+    by Processes.dest, Processes.process_name, _time span=10m
 | `drop_dm_object_name(Processes)`
 | sort -_time</code></pre>
       </div>
@@ -6044,8 +6044,8 @@ level: high
 
     <article class="query" id="q-1">
       <header>
-        <h4>All processes by a specific user</h4>
-        <p>User-scoped activity. Replace `&lt;UserName&gt;`.</p>
+        <h4>All processes on a host</h4>
+        <p>Host triage — every process exec on one device. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6054,16 +6054,16 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
     from datamodel=Endpoint.Processes
-    where Processes.user=&lt;UserName&gt; earliest=-24h@h
-    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
+    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Processes.user, Processes.process_name, _time span=1m
 | `drop_dm_object_name(Processes)`
 | sort -_time</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
     from datamodel=Endpoint.Processes
-    where Processes.user=&lt;UserName&gt; earliest=-24h@h
-    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
+    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Processes.user, Processes.process_name, _time span=1m
 | `drop_dm_object_name(Processes)`
 | sort -_time</code></pre>
       </div>
@@ -6072,8 +6072,8 @@ level: high
 
     <article class="query" id="q-2">
       <header>
-        <h4>LOLBin executions (living-off-the-land)</h4>
-        <p>Built-in binaries adversaries abuse. High-signal when chained with unusual parents/cmdlines.</p>
+        <h4>Children of a specific process</h4>
+        <p>What did `&lt;parent.exe&gt;` spawn? Replace the parent process name.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6082,36 +6082,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count, values(Processes.process) AS cmdline
     from datamodel=Endpoint.Processes
-    where Processes.process_name in (
-        &quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wmic.exe&quot;,
-        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;cscript.exe&quot;,
-        &quot;wscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;msbuild.exe&quot;,
-        &quot;installutil.exe&quot;,&quot;regasm.exe&quot;,&quot;regsvcs.exe&quot;
-    ) earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| where parent_process_name!=&quot;explorer.exe&quot;</code></pre>
-        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    where Processes.parent_process_name=&lt;parent.exe&gt; earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count, values(Processes.process) AS cmdline
     from datamodel=Endpoint.Processes
-    where Processes.process_name in (
-        &quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wmic.exe&quot;,
-        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;cscript.exe&quot;,
-        &quot;wscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;msbuild.exe&quot;,
-        &quot;installutil.exe&quot;,&quot;regasm.exe&quot;,&quot;regsvcs.exe&quot;
-    ) earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| where parent_process_name!=&quot;explorer.exe&quot;</code></pre>
+    where Processes.parent_process_name=&lt;parent.exe&gt; earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>Office app spawning a script host</h4>
-        <p>Document-macro execution chain — Word/Excel/Outlook spawning powershell/mshta/regsvr32.</p>
+        <h4>Find every host that ran a binary</h4>
+        <p>Binary-name pivot. Replace `&lt;binary.exe&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6120,25 +6106,21 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name in (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;wordpad.exe&quot;,&quot;msaccess.exe&quot;)
-        and Processes.process_name in (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,&quot;rundll32.exe&quot;,&quot;wmic.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;)
-        earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process</code></pre>
-        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    where Processes.process_name=&lt;binary.exe&gt; earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name in (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;wordpad.exe&quot;,&quot;msaccess.exe&quot;)
-        and Processes.process_name in (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,&quot;rundll32.exe&quot;,&quot;wmic.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;)
-        earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process</code></pre>
+    where Processes.process_name=&lt;binary.exe&gt; earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-4">
       <header>
-        <h4>Find a process by hash</h4>
+        <h4>Find every host that ran a hash</h4>
         <p>IOC pivot — every host that ran a binary with this SHA256. Replace `&lt;sha256&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
@@ -6150,11 +6132,11 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.process_hash=&lt;sha256&gt; earliest=-7d@d
+    where Processes.process_hash=&lt;sha256&gt; earliest=-30d@d
     by Processes.dest, Processes.user, Processes.process_name, Processes.process</code></pre>
         <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.process_hash=&lt;sha256&gt; earliest=-7d@d
+    where Processes.process_hash=&lt;sha256&gt; earliest=-30d@d
     by Processes.dest, Processes.user, Processes.process_name, Processes.process</code></pre>
       </div>
     </article>
@@ -6162,8 +6144,8 @@ level: high
 
     <article class="query" id="q-5">
       <header>
-        <h4>Anomalous parent-child pairs (rare)</h4>
-        <p>Process-tree statistical-rarity hunt — flag pairs that occur fewer than 5 times in a week.</p>
+        <h4>Process tree for a user during a time window</h4>
+        <p>Reconstruct what a user was doing between `&lt;start&gt;` and `&lt;end&gt;` (use `-2h@h`, `-30m@m`, etc).</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6174,18 +6156,16 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-5-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Processes
-    where earliest=-7d@d
-    by Processes.parent_process_name, Processes.process_name
+    where Processes.user=&lt;UserName&gt; earliest=&lt;start&gt; latest=&lt;end&gt;
+    by _time, Processes.dest, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| where count &lt; 5
-| sort count</code></pre>
+| sort _time</code></pre>
         <pre class="spl-mode-body" id="q-5-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Processes
-    where earliest=-7d@d
-    by Processes.parent_process_name, Processes.process_name
+    where Processes.user=&lt;UserName&gt; earliest=&lt;start&gt; latest=&lt;end&gt;
+    by _time, Processes.dest, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| where count &lt; 5
-| sort count</code></pre>
+| sort _time</code></pre>
       </div>
     </article>
 
@@ -6195,7 +6175,7 @@ level: high
 <section class="table-section" id="spl-dm-Endpoint.Filesystem" data-table="Endpoint.Filesystem">
   <header class="table-header">
     <h2>Endpoint.Filesystem</h2>
-    <p class="muted">15 columns · 4 queries</p>
+    <p class="muted">15 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>host</code> · <code>dest</code> · <code>user</code> · <code>file_name</code> · <code>file_path</code> · <code>file_hash</code> · <code>file_size</code> · <code>file_create_time</code> · <code>file_modify_time</code> · <code>action</code> · <code>process_name</code> · <code>process_path</code> · <code>process_id</code> · <code>vendor_product</code></p>
@@ -6204,8 +6184,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>File writes by a specific process</h4>
-        <p>What did `&lt;binary.exe&gt;` create? Replace the process name.</p>
+        <h4>All file activity on a host</h4>
+        <p>Host triage — every create / modify / delete on one device. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6216,20 +6196,22 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
+    where Filesystem.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Filesystem.user, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name, _time span=10m
+| sort -_time</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
+    where Filesystem.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Filesystem.user, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name, _time span=10m
+| sort -_time</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>File writes under a path</h4>
-        <p>Track payloads under known persistence / staging directories. Replace `&lt;path&gt;` fragment.</p>
+        <h4>All file activity for a user</h4>
+        <p>User triage. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6238,22 +6220,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(Filesystem.process_name) AS writers
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path&gt;*&quot; earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(Filesystem.process_name) AS writers
+    where Filesystem.user=&lt;UserName&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path&gt;*&quot; earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
+    where Filesystem.user=&lt;UserName&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Files written under user temp / appdata</h4>
-        <p>Common dropper-staging location.</p>
+        <h4>Files written by a process</h4>
+        <p>What did `&lt;binary.exe&gt;` create? Replace the process name.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6264,28 +6246,20 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot;
-        and (Filesystem.file_path=&quot;*\\AppData\\Local\\Temp\\*&quot;
-             OR Filesystem.file_path=&quot;*\\AppData\\Roaming\\*&quot;
-             OR Filesystem.file_path=&quot;*\\Public\\*&quot;)
-        earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path</code></pre>
+    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
         <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action=&quot;created&quot;
-        and (Filesystem.file_path=&quot;*\\AppData\\Local\\Temp\\*&quot;
-             OR Filesystem.file_path=&quot;*\\AppData\\Roaming\\*&quot;
-             OR Filesystem.file_path=&quot;*\\Public\\*&quot;)
-        earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path</code></pre>
+    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>Hash-IOC sweep across the fleet</h4>
-        <p>Was this hash ever written? Replace `&lt;sha256&gt;`.</p>
+        <h4>Files written under a directory path</h4>
+        <p>Directory pivot. Replace `&lt;path-fragment&gt;` (e.g. `\\AppData\\Local\\Temp\\`).</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6294,11 +6268,35 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, values(Filesystem.dest) AS hosts
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, values(Filesystem.process_name) AS writers
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path-fragment&gt;*&quot; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, values(Filesystem.process_name) AS writers
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path-fragment&gt;*&quot; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Hash-IOC sweep across the fleet</h4>
+        <p>Was this hash ever written? Replace `&lt;sha256&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count, values(Filesystem.dest) AS hosts
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash=&lt;sha256&gt; earliest=-30d@d
     by Filesystem.file_name</code></pre>
-        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, values(Filesystem.dest) AS hosts
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count, values(Filesystem.dest) AS hosts
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash=&lt;sha256&gt; earliest=-30d@d
     by Filesystem.file_name</code></pre>
@@ -6311,7 +6309,7 @@ level: high
 <section class="table-section" id="spl-dm-Endpoint.Registry" data-table="Endpoint.Registry">
   <header class="table-header">
     <h2>Endpoint.Registry</h2>
-    <p class="muted">13 columns · 3 queries</p>
+    <p class="muted">13 columns · 4 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>host</code> · <code>dest</code> · <code>user</code> · <code>registry_path</code> · <code>registry_key_name</code> · <code>registry_value_name</code> · <code>registry_value_data</code> · <code>registry_value_type</code> · <code>action</code> · <code>process_name</code> · <code>process_id</code> · <code>vendor_product</code></p>
@@ -6320,8 +6318,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>Run / RunOnce key writes</h4>
-        <p>Persistence under classic ASEP locations.</p>
+        <h4>All registry activity on a host</h4>
+        <p>Host triage — every registry write / modify / delete on one device. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6332,28 +6330,20 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.action=&quot;modified&quot;
-        and (Registry.registry_path=&quot;*\\Run\\*&quot;
-             OR Registry.registry_path=&quot;*\\RunOnce\\*&quot;
-             OR Registry.registry_path=&quot;*\\Image File Execution Options\\*&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+    where Registry.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Registry.user, Registry.action, Registry.process_name, Registry.registry_path, Registry.registry_value_name</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Registry
-    where Registry.action=&quot;modified&quot;
-        and (Registry.registry_path=&quot;*\\Run\\*&quot;
-             OR Registry.registry_path=&quot;*\\RunOnce\\*&quot;
-             OR Registry.registry_path=&quot;*\\Image File Execution Options\\*&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+    where Registry.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Registry.user, Registry.action, Registry.process_name, Registry.registry_path, Registry.registry_value_name</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>New service installations (registry-derived)</h4>
-        <p>Service-creation under HKLM\SYSTEM\CurrentControlSet\Services.</p>
+        <h4>Registry activity for a user</h4>
+        <p>User triage. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6364,26 +6354,20 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.action=&quot;created&quot;
-        and Registry.registry_path=&quot;*\\Services\\*&quot;
-        and Registry.registry_value_name in (&quot;ImagePath&quot;,&quot;ServiceDll&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+    where Registry.user=&lt;UserName&gt; earliest=-24h@h
+    by Registry.dest, Registry.action, Registry.process_name, Registry.registry_path</code></pre>
         <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Registry
-    where Registry.action=&quot;created&quot;
-        and Registry.registry_path=&quot;*\\Services\\*&quot;
-        and Registry.registry_value_name in (&quot;ImagePath&quot;,&quot;ServiceDll&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+    where Registry.user=&lt;UserName&gt; earliest=-24h@h
+    by Registry.dest, Registry.action, Registry.process_name, Registry.registry_path</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Defender / AV registry tamper</h4>
-        <p>Disabling Microsoft Defender via registry — adversary defense-evasion.</p>
+        <h4>Registry writes under a key path</h4>
+        <p>Key-path pivot. Replace `&lt;path-fragment&gt;` (e.g. `\\Run\\` or `\\Services\\`).</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6394,16 +6378,40 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.registry_path=&quot;*\\Microsoft\\Windows Defender*&quot;
-        and Registry.action in (&quot;modified&quot;,&quot;created&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data</code></pre>
+    where Registry.action in (&quot;created&quot;,&quot;modified&quot;)
+        and Registry.registry_path=&quot;*&lt;path-fragment&gt;*&quot; earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path, Registry.registry_value_data</code></pre>
         <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Endpoint.Registry
-    where Registry.registry_path=&quot;*\\Microsoft\\Windows Defender*&quot;
-        and Registry.action in (&quot;modified&quot;,&quot;created&quot;)
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data</code></pre>
+    where Registry.action in (&quot;created&quot;,&quot;modified&quot;)
+        and Registry.registry_path=&quot;*&lt;path-fragment&gt;*&quot; earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path, Registry.registry_value_data</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Find which process wrote a registry value</h4>
+        <p>Pivot for an interesting key — who set it? Replace `&lt;value-name&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, values(Registry.registry_value_data) AS data
+    from datamodel=Endpoint.Registry
+    where Registry.registry_value_name=&lt;value-name&gt; Registry.action in (&quot;created&quot;,&quot;modified&quot;)
+        earliest=-7d@d
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, values(Registry.registry_value_data) AS data
+    from datamodel=Endpoint.Registry
+    where Registry.registry_value_name=&lt;value-name&gt; Registry.action in (&quot;created&quot;,&quot;modified&quot;)
+        earliest=-7d@d
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path</code></pre>
       </div>
     </article>
 
@@ -6422,8 +6430,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>Outbound traffic from a host</h4>
-        <p>All allowed outbound from one host. Replace `&lt;DeviceName&gt;`.</p>
+        <h4>All outbound from a host</h4>
+        <p>Host triage — every allowed outbound connection. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6436,25 +6444,25 @@ level: high
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.src=&lt;DeviceName&gt;
         and All_Traffic.action=&quot;allowed&quot;
-        and All_Traffic.dest_category!=&quot;internal&quot;
         earliest=-24h@h
     by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
-| `drop_dm_object_name(All_Traffic)`</code></pre>
+| `drop_dm_object_name(All_Traffic)`
+| sort -_time</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.src=&lt;DeviceName&gt;
         and All_Traffic.action=&quot;allowed&quot;
-        and All_Traffic.dest_category!=&quot;internal&quot;
         earliest=-24h@h
     by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
-| `drop_dm_object_name(All_Traffic)`</code></pre>
+| `drop_dm_object_name(All_Traffic)`
+| sort -_time</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Connections to a specific destination IP</h4>
+        <h4>All connections to an IP</h4>
         <p>IP IOC pivot — every host that talked to it. Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
@@ -6464,11 +6472,11 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest_ip=&lt;IP&gt; earliest=-7d@d
     by All_Traffic.src, All_Traffic.user</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest_ip=&lt;IP&gt; earliest=-7d@d
     by All_Traffic.src, All_Traffic.user</code></pre>
@@ -6478,8 +6486,8 @@ level: high
 
     <article class="query" id="q-2">
       <header>
-        <h4>Beaconing — periodic outbound, low fan-out</h4>
-        <p>Inter-beacon stddev with stable destinations. Strong C2 signal.</p>
+        <h4>All connections on a port from a host</h4>
+        <p>Port-specific triage. Replace `&lt;DeviceName&gt;` and `&lt;port&gt;` (e.g. 3389, 22, 445).</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6490,30 +6498,22 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category!=&quot;internal&quot; earliest=-24h@h
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600</code></pre>
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.dest_port=&lt;port&gt; earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.action, _time span=5m</code></pre>
         <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category!=&quot;internal&quot; earliest=-24h@h
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600</code></pre>
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.dest_port=&lt;port&gt; earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.action, _time span=5m</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>Suspicious dest port (RDP / SSH from unusual sources)</h4>
-        <p>Internal-to-internet RDP/SSH — usually shouldn&#x27;t happen.</p>
+        <h4>Top destinations for a host</h4>
+        <p>What&#x27;s a host been talking to most? Useful for first-look beaconing review.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6522,28 +6522,28 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
-        and All_Traffic.src_category=&quot;internal&quot;
-        and All_Traffic.dest_category=&quot;external&quot;
-        earliest=-24h@h
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port</code></pre>
-        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action=&quot;allowed&quot; earliest=-24h@h
+    by All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| sort - count</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
-        and All_Traffic.src_category=&quot;internal&quot;
-        and All_Traffic.dest_category=&quot;external&quot;
-        earliest=-24h@h
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port</code></pre>
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action=&quot;allowed&quot; earliest=-24h@h
+    by All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| sort - count</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-4">
       <header>
-        <h4>Large outbound transfer (potential exfil)</h4>
-        <p>Volume-based exfiltration heuristic — top N hosts by outbound bytes today.</p>
+        <h4>Failed / denied connections from a host</h4>
+        <p>What&#x27;s the firewall blocking from this host? Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6552,22 +6552,16 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` sum(All_Traffic.bytes_out) AS bytes_out
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category=&quot;external&quot; earliest=-24h@h
-    by All_Traffic.src
-| `drop_dm_object_name(All_Traffic)`
-| sort - bytes_out
-| head 25
-| eval bytes_out_mb=round(bytes_out/1024/1024,2)</code></pre>
-        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false sum(All_Traffic.bytes_out) AS bytes_out
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action!=&quot;allowed&quot; earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.action</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category=&quot;external&quot; earliest=-24h@h
-    by All_Traffic.src
-| `drop_dm_object_name(All_Traffic)`
-| sort - bytes_out
-| head 25
-| eval bytes_out_mb=round(bytes_out/1024/1024,2)</code></pre>
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action!=&quot;allowed&quot; earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.action</code></pre>
       </div>
     </article>
 
@@ -6577,7 +6571,7 @@ level: high
 <section class="table-section" id="spl-dm-Authentication.Authentication" data-table="Authentication.Authentication">
   <header class="table-header">
     <h2>Authentication.Authentication</h2>
-    <p class="muted">17 columns · 4 queries</p>
+    <p class="muted">17 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>user</code> · <code>src_user</code> · <code>src_user_id</code> · <code>user_id</code> · <code>action</code> · <code>app</code> · <code>authentication_method</code> · <code>authentication_service</code> · <code>duration</code> · <code>session_id</code> · <code>signature</code> · <code>signature_id</code> · <code>reason</code> · <code>vendor_product</code></p>
@@ -6586,8 +6580,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>Failed authentications by user</h4>
-        <p>Per-user failure count. Replace `&lt;UserName&gt;` to scope, or remove the where to scan all users.</p>
+        <h4>All authentication events for a user</h4>
+        <p>User triage — every login (success + fail) for one identity. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6598,14 +6592,14 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
-    by Authentication.user, Authentication.src, _time span=10m
+    where Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.action, Authentication.src, Authentication.dest, _time span=10m
 | `drop_dm_object_name(Authentication)`
 | sort -_time</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
-    by Authentication.user, Authentication.src, _time span=10m
+    where Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.action, Authentication.src, Authentication.dest, _time span=10m
 | `drop_dm_object_name(Authentication)`
 | sort -_time</code></pre>
       </div>
@@ -6614,8 +6608,8 @@ level: high
 
     <article class="query" id="q-1">
       <header>
-        <h4>Brute-force / spray detector</h4>
-        <p>Many targets per source within a window — credential-spray pattern.</p>
+        <h4>All logins from an IP</h4>
+        <p>IP pivot — every account this address has authenticated against. Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6624,28 +6618,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` dc(Authentication.user) AS unique_users count
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;failure&quot; earliest=-1h@h
-    by Authentication.src
-| `drop_dm_object_name(Authentication)`
-| where unique_users&gt;10
-| sort - unique_users</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false dc(Authentication.user) AS unique_users count
+    where Authentication.src=&lt;IP&gt; earliest=-7d@d
+    by Authentication.user, Authentication.action, Authentication.dest</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;failure&quot; earliest=-1h@h
-    by Authentication.src
-| `drop_dm_object_name(Authentication)`
-| where unique_users&gt;10
-| sort - unique_users</code></pre>
+    where Authentication.src=&lt;IP&gt; earliest=-7d@d
+    by Authentication.user, Authentication.action, Authentication.dest</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Successful login after failure burst</h4>
-        <p>Spray success pattern — same src ≥5 failures then ≥1 success within 10 min.</p>
+        <h4>Logins to a specific host</h4>
+        <p>Host pivot — who&#x27;s logged on (and tried to log on) here? Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6656,28 +6644,20 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where earliest=-24h@h
-    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
-| `drop_dm_object_name(Authentication)`
-| eventstats count(eval(action=&quot;failure&quot;)) AS fail_n count(eval(action=&quot;success&quot;)) AS ok_n by src, user
-| where fail_n&gt;=5 AND ok_n&gt;=1
-| sort - _time</code></pre>
+    where Authentication.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Authentication.user, Authentication.src, Authentication.action</code></pre>
         <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Authentication.Authentication
-    where earliest=-24h@h
-    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
-| `drop_dm_object_name(Authentication)`
-| eventstats count(eval(action=&quot;failure&quot;)) AS fail_n count(eval(action=&quot;success&quot;)) AS ok_n by src, user
-| where fail_n&gt;=5 AND ok_n&gt;=1
-| sort - _time</code></pre>
+    where Authentication.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Authentication.user, Authentication.src, Authentication.action</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>Logins from new geographies</h4>
-        <p>Geo-anomaly hunt — look for src IPs the user hasn&#x27;t used in 30 days.</p>
+        <h4>Failed authentications for a user</h4>
+        <p>Fast triage on a user&#x27;s failures. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6686,30 +6666,38 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` values(Authentication.src) AS src_30d
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot; earliest=-30d@d latest=-1d@d
-    by Authentication.user
-| append [
-  | tstats `summariesonly` values(Authentication.src) AS src_today
-      from datamodel=Authentication.Authentication
-      where Authentication.action=&quot;success&quot; earliest=-1d@d
-      by Authentication.user
-  ]
-| stats values(*) AS * by user
-| eval new_src=mvfilter(NOT match(src_today, src_30d))</code></pre>
-        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false values(Authentication.src) AS src_30d
+    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.src, Authentication.dest, Authentication.reason, _time span=10m</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
     from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot; earliest=-30d@d latest=-1d@d
-    by Authentication.user
-| append [
-  | tstats summariesonly=false values(Authentication.src) AS src_today
-      from datamodel=Authentication.Authentication
-      where Authentication.action=&quot;success&quot; earliest=-1d@d
-      by Authentication.user
-  ]
-| stats values(*) AS * by user
-| eval new_src=mvfilter(NOT match(src_today, src_30d))</code></pre>
+    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.src, Authentication.dest, Authentication.reason, _time span=10m</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>All source IPs a user has used</h4>
+        <p>Find the geographic / network footprint for one identity. Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` values(Authentication.src) AS src_ips, count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot; Authentication.user=&lt;UserName&gt; earliest=-30d@d
+    by Authentication.user</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false values(Authentication.src) AS src_ips, count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot; Authentication.user=&lt;UserName&gt; earliest=-30d@d
+    by Authentication.user</code></pre>
       </div>
     </article>
 
@@ -6719,7 +6707,7 @@ level: high
 <section class="table-section" id="spl-dm-Web.Web" data-table="Web.Web">
   <header class="table-header">
     <h2>Web.Web</h2>
-    <p class="muted">19 columns · 4 queries</p>
+    <p class="muted">19 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>user</code> · <code>url</code> · <code>url_domain</code> · <code>url_length</code> · <code>uri_path</code> · <code>uri_query</code> · <code>http_method</code> · <code>http_user_agent</code> · <code>http_content_type</code> · <code>http_referrer</code> · <code>status</code> · <code>response_time</code> · <code>bytes</code> · <code>bytes_in</code> · <code>bytes_out</code> · <code>category</code></p>
@@ -6728,8 +6716,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>HTTP traffic from a single source</h4>
-        <p>Replace `&lt;src&gt;` with hostname or IP. Pivots web-proxy logs.</p>
+        <h4>All HTTP traffic for a user</h4>
+        <p>User triage — every web request for one identity. Replace `&lt;UserName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6740,11 +6728,11 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
     from datamodel=Web.Web
-    where Web.src=&lt;src&gt; earliest=-24h@h
+    where Web.user=&lt;UserName&gt; earliest=-24h@h
     by Web.url_domain, Web.http_method, Web.status, _time span=10m</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
     from datamodel=Web.Web
-    where Web.src=&lt;src&gt; earliest=-24h@h
+    where Web.user=&lt;UserName&gt; earliest=-24h@h
     by Web.url_domain, Web.http_method, Web.status, _time span=10m</code></pre>
       </div>
     </article>
@@ -6752,8 +6740,8 @@ level: high
 
     <article class="query" id="q-1">
       <header>
-        <h4>Suspicious User-Agent strings</h4>
-        <p>Generic / scriptable / red-team UAs — high-signal proxy hunt.</p>
+        <h4>All HTTP traffic from a source</h4>
+        <p>Source pivot. Replace `&lt;src&gt;` with hostname or IP.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6762,38 +6750,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(Web.url_domain) AS domains
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, sum(Web.bytes_out) AS bytes_out
     from datamodel=Web.Web
-    where (Web.http_user_agent=&quot;python-requests*&quot;
-        OR Web.http_user_agent=&quot;curl*&quot;
-        OR Web.http_user_agent=&quot;powershell*&quot;
-        OR Web.http_user_agent=&quot;*Cobalt*&quot;
-        OR Web.http_user_agent=&quot;*sqlmap*&quot;
-        OR Web.http_user_agent=&quot;*nikto*&quot;
-        OR Web.http_user_agent=&quot;Mozilla/4.0 (compatible; MSIE 7.0; Win64*&quot;
-        OR Web.http_user_agent=&quot;Mozilla/5.0 (Windows NT 6.1*&quot;)
-        earliest=-24h@h
-    by Web.src, Web.http_user_agent</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(Web.url_domain) AS domains
+    where Web.src=&lt;src&gt; earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, sum(Web.bytes_out) AS bytes_out
     from datamodel=Web.Web
-    where (Web.http_user_agent=&quot;python-requests*&quot;
-        OR Web.http_user_agent=&quot;curl*&quot;
-        OR Web.http_user_agent=&quot;powershell*&quot;
-        OR Web.http_user_agent=&quot;*Cobalt*&quot;
-        OR Web.http_user_agent=&quot;*sqlmap*&quot;
-        OR Web.http_user_agent=&quot;*nikto*&quot;
-        OR Web.http_user_agent=&quot;Mozilla/4.0 (compatible; MSIE 7.0; Win64*&quot;
-        OR Web.http_user_agent=&quot;Mozilla/5.0 (Windows NT 6.1*&quot;)
-        earliest=-24h@h
-    by Web.src, Web.http_user_agent</code></pre>
+    where Web.src=&lt;src&gt; earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>New / never-seen URL domains</h4>
-        <p>First-time-seen domain hunt — usually phishing landing or C2 staging.</p>
+        <h4>All requests to a domain</h4>
+        <p>Domain pivot — every host that fetched it. Replace `&lt;domain&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6802,26 +6774,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count, values(Web.url) AS urls
     from datamodel=Web.Web
-    where earliest=-30d@d
-    by Web.url_domain
-| `drop_dm_object_name(Web)`
-| where first_seen &gt;= relative_time(now(), &quot;-1d@d&quot;)</code></pre>
-        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen
+    where Web.url_domain=&lt;domain&gt; earliest=-7d@d
+    by Web.src, Web.user, Web.http_method, Web.status</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count, values(Web.url) AS urls
     from datamodel=Web.Web
-    where earliest=-30d@d
-    by Web.url_domain
-| `drop_dm_object_name(Web)`
-| where first_seen &gt;= relative_time(now(), &quot;-1d@d&quot;)</code></pre>
+    where Web.url_domain=&lt;domain&gt; earliest=-7d@d
+    by Web.src, Web.user, Web.http_method, Web.status</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>HTTP-to-IP requests (skip-DNS)</h4>
-        <p>Outbound HTTP where Host is a raw IP — adversary skipping DNS resolution.</p>
+        <h4>Requests with a User-Agent</h4>
+        <p>UA pivot — find every host using a specific UA. Replace `&lt;UA-fragment&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6832,12 +6800,40 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
     from datamodel=Web.Web
-    where Web.url_domain=&quot;[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*&quot; earliest=-24h@h
-    by Web.src, Web.url, Web.http_method</code></pre>
+    where Web.http_user_agent=&quot;*&lt;UA-fragment&gt;*&quot; earliest=-24h@h
+    by Web.src, Web.url_domain, Web.http_user_agent</code></pre>
         <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
     from datamodel=Web.Web
-    where Web.url_domain=&quot;[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*&quot; earliest=-24h@h
-    by Web.src, Web.url, Web.http_method</code></pre>
+    where Web.http_user_agent=&quot;*&lt;UA-fragment&gt;*&quot; earliest=-24h@h
+    by Web.src, Web.url_domain, Web.http_user_agent</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Top domains for a user</h4>
+        <p>What&#x27;s a user been browsing most? Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.user=&lt;UserName&gt; earliest=-24h@h
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| sort - count</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count
+    from datamodel=Web.Web
+    where Web.user=&lt;UserName&gt; earliest=-24h@h
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| sort - count</code></pre>
       </div>
     </article>
 
@@ -6847,7 +6843,7 @@ level: high
 <section class="table-section" id="spl-dm-Network_Resolution.DNS" data-table="Network_Resolution.DNS">
   <header class="table-header">
     <h2>Network_Resolution.DNS</h2>
-    <p class="muted">13 columns · 4 queries</p>
+    <p class="muted">13 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>src_ip</code> · <code>dest_ip</code> · <code>query</code> · <code>query_type</code> · <code>answer</code> · <code>reply_code</code> · <code>reply_code_id</code> · <code>transport</code> · <code>duration</code> · <code>vendor_product</code></p>
@@ -6856,8 +6852,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>DNS queries from a single host</h4>
-        <p>Replace `&lt;DeviceName&gt;`. Pivots DNS logs.</p>
+        <h4>All DNS queries from a host</h4>
+        <p>Host triage — every name resolution from one device. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6880,8 +6876,8 @@ level: high
 
     <article class="query" id="q-1">
       <header>
-        <h4>DNS NXDOMAIN spike per host</h4>
-        <p>DGA / failed-C2 indicator — many NXDOMAINs from one source.</p>
+        <h4>Hosts that resolved a domain</h4>
+        <p>Domain pivot — every device that asked for it. Replace `&lt;domain&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6890,28 +6886,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Network_Resolution.DNS
-    where DNS.reply_code=&quot;NXDOMAIN&quot; earliest=-1h@h
-    by DNS.src
-| `drop_dm_object_name(DNS)`
-| where count &gt; 100
-| sort - count</code></pre>
-        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+    where DNS.query=&lt;domain&gt; earliest=-7d@d
+    by DNS.src</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Network_Resolution.DNS
-    where DNS.reply_code=&quot;NXDOMAIN&quot; earliest=-1h@h
-    by DNS.src
-| `drop_dm_object_name(DNS)`
-| where count &gt; 100
-| sort - count</code></pre>
+    where DNS.query=&lt;domain&gt; earliest=-7d@d
+    by DNS.src</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Long DNS query strings (TXT-tunnel)</h4>
-        <p>DNS tunneling — abnormally long query labels indicate data smuggled in DNS.</p>
+        <h4>DNS queries that resolved to an IP</h4>
+        <p>IP-back-pivot — what names point to this address? Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6920,24 +6910,22 @@ level: high
           <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
         </div>
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Network_Resolution.DNS
-    where DNS.query_type=&quot;TXT&quot; earliest=-24h@h
-    by DNS.src
-| where avg_len &gt; 50 OR max_len &gt; 200</code></pre>
-        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
+    where DNS.answer=&lt;IP&gt; earliest=-7d@d
+    by DNS.query, DNS.src</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Network_Resolution.DNS
-    where DNS.query_type=&quot;TXT&quot; earliest=-24h@h
-    by DNS.src
-| where avg_len &gt; 50 OR max_len &gt; 200</code></pre>
+    where DNS.answer=&lt;IP&gt; earliest=-7d@d
+    by DNS.query, DNS.src</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-3">
       <header>
-        <h4>Newly-observed TLDs (suspicious .ru / .su / .top / .xyz)</h4>
-        <p>Exclude common cloud-CDN TLDs.</p>
+        <h4>Top domains for a host</h4>
+        <p>What&#x27;s a host been resolving most? Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6948,18 +6936,42 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
     from datamodel=Network_Resolution.DNS
-    where (DNS.query=&quot;*.ru&quot; OR DNS.query=&quot;*.su&quot; OR DNS.query=&quot;*.top&quot;
-            OR DNS.query=&quot;*.xyz&quot; OR DNS.query=&quot;*.work&quot; OR DNS.query=&quot;*.icu&quot;
-            OR DNS.query=&quot;*.zip&quot;)
-        earliest=-24h@h
-    by DNS.src, DNS.query</code></pre>
+    where DNS.src=&lt;DeviceName&gt; earliest=-24h@h
+    by DNS.query
+| `drop_dm_object_name(DNS)`
+| sort - count</code></pre>
         <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
     from datamodel=Network_Resolution.DNS
-    where (DNS.query=&quot;*.ru&quot; OR DNS.query=&quot;*.su&quot; OR DNS.query=&quot;*.top&quot;
-            OR DNS.query=&quot;*.xyz&quot; OR DNS.query=&quot;*.work&quot; OR DNS.query=&quot;*.icu&quot;
-            OR DNS.query=&quot;*.zip&quot;)
-        earliest=-24h@h
-    by DNS.src, DNS.query</code></pre>
+    where DNS.src=&lt;DeviceName&gt; earliest=-24h@h
+    by DNS.query
+| `drop_dm_object_name(DNS)`
+| sort - count</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>DNS failures from a host</h4>
+        <p>NXDOMAIN / SERVFAIL responses — failed C2 / DGA / typo-squat indicator.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=&lt;DeviceName&gt;
+        and DNS.reply_code in (&quot;NXDOMAIN&quot;,&quot;SERVFAIL&quot;,&quot;REFUSED&quot;) earliest=-24h@h
+    by DNS.query, DNS.reply_code</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=&lt;DeviceName&gt;
+        and DNS.reply_code in (&quot;NXDOMAIN&quot;,&quot;SERVFAIL&quot;,&quot;REFUSED&quot;) earliest=-24h@h
+    by DNS.query, DNS.reply_code</code></pre>
       </div>
     </article>
 
@@ -6969,7 +6981,7 @@ level: high
 <section class="table-section" id="spl-dm-Email.All_Email" data-table="Email.All_Email">
   <header class="table-header">
     <h2>Email.All_Email</h2>
-    <p class="muted">15 columns · 3 queries</p>
+    <p class="muted">15 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>_time</code> · <code>src_user</code> · <code>recipient</code> · <code>subject</code> · <code>message_id</code> · <code>internal_message_id</code> · <code>message_size</code> · <code>delay</code> · <code>filename</code> · <code>file_hash</code> · <code>url</code> · <code>src</code> · <code>src_ip</code> · <code>vendor_product</code> · <code>action</code></p>
@@ -6978,8 +6990,8 @@ level: high
   
     <article class="query" id="q-0">
       <header>
-        <h4>Inbound email by sender</h4>
-        <p>Pivot for a phish-sender investigation. Replace `&lt;email-or-domain&gt;`.</p>
+        <h4>All inbound for a recipient</h4>
+        <p>Recipient triage — every email this user received. Replace `&lt;email&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -6990,20 +7002,22 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
-    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
-    by Email.recipient, Email.subject</code></pre>
+    where Email.recipient=&lt;email&gt; earliest=-7d@d
+    by Email.src_user, Email.subject, Email.action, _time span=1h
+| sort -_time</code></pre>
         <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
-    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
-    by Email.recipient, Email.subject</code></pre>
+    where Email.recipient=&lt;email&gt; earliest=-7d@d
+    by Email.src_user, Email.subject, Email.action, _time span=1h
+| sort -_time</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Email with executable / archive attachments</h4>
-        <p>High-signal phish hunt.</p>
+        <h4>All emails from a sender</h4>
+        <p>Sender pivot. Replace `&lt;email-or-domain&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -7014,22 +7028,20 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
-    where Email.filename in (&quot;*.exe&quot;,&quot;*.scr&quot;,&quot;*.lnk&quot;,&quot;*.iso&quot;,&quot;*.img&quot;,&quot;*.vhd&quot;,&quot;*.vhdx&quot;,&quot;*.html&quot;,&quot;*.hta&quot;,&quot;*.js&quot;,&quot;*.vbs&quot;,&quot;*.cpl&quot;,&quot;*.msi&quot;)
-        earliest=-7d@d
-    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
+    by Email.recipient, Email.subject, Email.action</code></pre>
         <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
-    where Email.filename in (&quot;*.exe&quot;,&quot;*.scr&quot;,&quot;*.lnk&quot;,&quot;*.iso&quot;,&quot;*.img&quot;,&quot;*.vhd&quot;,&quot;*.vhdx&quot;,&quot;*.html&quot;,&quot;*.hta&quot;,&quot;*.js&quot;,&quot;*.vbs&quot;,&quot;*.cpl&quot;,&quot;*.msi&quot;)
-        earliest=-7d@d
-    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
+    by Email.recipient, Email.subject, Email.action</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Quarantined / blocked emails</h4>
-        <p>Look at what got stopped — pivot via subject for similar campaigns.</p>
+        <h4>Emails by subject</h4>
+        <p>Subject-line pivot. Replace `&lt;subject-fragment&gt;`.</p>
       </header>
       <div class="kql-block spl-toggle-group">
         <div class="spl-mode-toggle">
@@ -7040,12 +7052,60 @@ level: high
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
-    where Email.action in (&quot;blocked&quot;,&quot;quarantined&quot;) earliest=-7d@d
-    by Email.src_user, Email.subject, Email.recipient</code></pre>
+    where Email.subject=&quot;*&lt;subject-fragment&gt;*&quot; earliest=-7d@d
+    by Email.src_user, Email.recipient, Email.action, Email.filename</code></pre>
         <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
-    where Email.action in (&quot;blocked&quot;,&quot;quarantined&quot;) earliest=-7d@d
-    by Email.src_user, Email.subject, Email.recipient</code></pre>
+    where Email.subject=&quot;*&lt;subject-fragment&gt;*&quot; earliest=-7d@d
+    by Email.src_user, Email.recipient, Email.action, Email.filename</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Emails with an attachment name / extension</h4>
+        <p>Filename pivot. Replace `&lt;filename-or-ext&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.filename=&quot;*&lt;filename-or-ext&gt;*&quot; earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where Email.filename=&quot;*&lt;filename-or-ext&gt;*&quot; earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Emails with a URL</h4>
+        <p>URL pivot — every recipient who got a message containing this link. Replace `&lt;url-fragment&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.url=&quot;*&lt;url-fragment&gt;*&quot; earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.subject</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where Email.url=&quot;*&lt;url-fragment&gt;*&quot; earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.subject</code></pre>
       </div>
     </article>
 

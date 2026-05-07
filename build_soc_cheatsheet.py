@@ -1803,90 +1803,84 @@ SPLUNK_DATAMODELS: dict[str, list[str]] = {
 
 SPLUNK_QUERIES: dict[str, list[tuple[str, str, str]]] = {
     "Endpoint.Processes": [
-        ("All processes on a specific host",
-         "Host triage. Replace `<DeviceName>`. Pulls every process exec via accelerated CIM.",
+        ("All processes for a user",
+         "User triage — every process exec tied to one identity in the last 24h. Replace `<UserName>`.",
+         '''| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
+    from datamodel=Endpoint.Processes
+    where Processes.user=<UserName> earliest=-24h@h
+    by Processes.dest, Processes.process_name, _time span=10m
+| `drop_dm_object_name(Processes)`
+| sort -_time'''),
+
+        ("All processes on a host",
+         "Host triage — every process exec on one device. Replace `<DeviceName>`.",
          '''| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
     from datamodel=Endpoint.Processes
     where Processes.dest=<DeviceName> earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+    by Processes.user, Processes.process_name, _time span=1m
 | `drop_dm_object_name(Processes)`
 | sort -_time'''),
 
-        ("All processes by a specific user",
-         "User-scoped activity. Replace `<UserName>`.",
-         '''| tstats `summariesonly` count
+        ("Children of a specific process",
+         "What did `<parent.exe>` spawn? Replace the parent process name.",
+         '''| tstats `summariesonly` count, values(Processes.process) AS cmdline
     from datamodel=Endpoint.Processes
-    where Processes.user=<UserName> earliest=-24h@h
-    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
-| `drop_dm_object_name(Processes)`
-| sort -_time'''),
+    where Processes.parent_process_name=<parent.exe> earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name'''),
 
-        ("LOLBin executions (living-off-the-land)",
-         "Built-in binaries adversaries abuse. High-signal when chained with unusual parents/cmdlines.",
-         '''| tstats `summariesonly` count
+        ("Find every host that ran a binary",
+         "Binary-name pivot. Replace `<binary.exe>`.",
+         '''| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.process_name in (
-        "powershell.exe","pwsh.exe","cmd.exe","wmic.exe",
-        "rundll32.exe","regsvr32.exe","mshta.exe","cscript.exe",
-        "wscript.exe","bitsadmin.exe","certutil.exe","msbuild.exe",
-        "installutil.exe","regasm.exe","regsvcs.exe"
-    ) earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| where parent_process_name!="explorer.exe"'''),
+    where Processes.process_name=<binary.exe> earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process'''),
 
-        ("Office app spawning a script host",
-         "Document-macro execution chain — Word/Excel/Outlook spawning powershell/mshta/regsvr32.",
-         '''| tstats `summariesonly` count
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name in ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","wordpad.exe","msaccess.exe")
-        and Processes.process_name in ("powershell.exe","cmd.exe","mshta.exe","regsvr32.exe","rundll32.exe","wmic.exe","cscript.exe","wscript.exe")
-        earliest=-24h@h
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process'''),
-
-        ("Find a process by hash",
+        ("Find every host that ran a hash",
          "IOC pivot — every host that ran a binary with this SHA256. Replace `<sha256>`.",
          '''| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
     from datamodel=Endpoint.Processes
-    where Processes.process_hash=<sha256> earliest=-7d@d
+    where Processes.process_hash=<sha256> earliest=-30d@d
     by Processes.dest, Processes.user, Processes.process_name, Processes.process'''),
 
-        ("Anomalous parent-child pairs (rare)",
-         "Process-tree statistical-rarity hunt — flag pairs that occur fewer than 5 times in a week.",
+        ("Process tree for a user during a time window",
+         "Reconstruct what a user was doing between `<start>` and `<end>` (use `-2h@h`, `-30m@m`, etc).",
          '''| tstats `summariesonly` count
     from datamodel=Endpoint.Processes
-    where earliest=-7d@d
-    by Processes.parent_process_name, Processes.process_name
+    where Processes.user=<UserName> earliest=<start> latest=<end>
+    by _time, Processes.dest, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| where count < 5
-| sort count'''),
+| sort _time'''),
     ],
 
     "Endpoint.Filesystem": [
-        ("File writes by a specific process",
+        ("All file activity on a host",
+         "Host triage — every create / modify / delete on one device. Replace `<DeviceName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.dest=<DeviceName> earliest=-24h@h
+    by Filesystem.user, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name, _time span=10m
+| sort -_time'''),
+
+        ("All file activity for a user",
+         "User triage. Replace `<UserName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.user=<UserName> earliest=-24h@h
+    by Filesystem.dest, Filesystem.action, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name'''),
+
+        ("Files written by a process",
          "What did `<binary.exe>` create? Replace the process name.",
          '''| tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action="created" Filesystem.process_name=<binary.exe> earliest=-24h@h
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name'''),
 
-        ("File writes under a path",
-         "Track payloads under known persistence / staging directories. Replace `<path>` fragment.",
+        ("Files written under a directory path",
+         "Directory pivot. Replace `<path-fragment>` (e.g. `\\\\AppData\\\\Local\\\\Temp\\\\`).",
          '''| tstats `summariesonly` count, values(Filesystem.process_name) AS writers
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action="created" Filesystem.file_path="*<path>*" earliest=-24h@h
+    where Filesystem.action="created" Filesystem.file_path="*<path-fragment>*" earliest=-24h@h
     by Filesystem.dest, Filesystem.user, Filesystem.file_name'''),
-
-        ("Files written under user temp / appdata",
-         "Common dropper-staging location.",
-         '''| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action="created"
-        and (Filesystem.file_path="*\\\\AppData\\\\Local\\\\Temp\\\\*"
-             OR Filesystem.file_path="*\\\\AppData\\\\Roaming\\\\*"
-             OR Filesystem.file_path="*\\\\Public\\\\*")
-        earliest=-24h@h
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path'''),
 
         ("Hash-IOC sweep across the fleet",
          "Was this hash ever written? Replace `<sha256>`.",
@@ -1897,236 +1891,237 @@ SPLUNK_QUERIES: dict[str, list[tuple[str, str, str]]] = {
     ],
 
     "Endpoint.Registry": [
-        ("Run / RunOnce key writes",
-         "Persistence under classic ASEP locations.",
+        ("All registry activity on a host",
+         "Host triage — every registry write / modify / delete on one device. Replace `<DeviceName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.action="modified"
-        and (Registry.registry_path="*\\\\Run\\\\*"
-             OR Registry.registry_path="*\\\\RunOnce\\\\*"
-             OR Registry.registry_path="*\\\\Image File Execution Options\\\\*")
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data'''),
+    where Registry.dest=<DeviceName> earliest=-24h@h
+    by Registry.user, Registry.action, Registry.process_name, Registry.registry_path, Registry.registry_value_name'''),
 
-        ("New service installations (registry-derived)",
-         "Service-creation under HKLM\\SYSTEM\\CurrentControlSet\\Services.",
+        ("Registry activity for a user",
+         "User triage. Replace `<UserName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.action="created"
-        and Registry.registry_path="*\\\\Services\\\\*"
-        and Registry.registry_value_name in ("ImagePath","ServiceDll")
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data'''),
+    where Registry.user=<UserName> earliest=-24h@h
+    by Registry.dest, Registry.action, Registry.process_name, Registry.registry_path'''),
 
-        ("Defender / AV registry tamper",
-         "Disabling Microsoft Defender via registry — adversary defense-evasion.",
+        ("Registry writes under a key path",
+         "Key-path pivot. Replace `<path-fragment>` (e.g. `\\\\Run\\\\` or `\\\\Services\\\\`).",
          '''| tstats `summariesonly` count
     from datamodel=Endpoint.Registry
-    where Registry.registry_path="*\\\\Microsoft\\\\Windows Defender*"
-        and Registry.action in ("modified","created")
-        earliest=-24h@h
-    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data'''),
+    where Registry.action in ("created","modified")
+        and Registry.registry_path="*<path-fragment>*" earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path, Registry.registry_value_data'''),
+
+        ("Find which process wrote a registry value",
+         "Pivot for an interesting key — who set it? Replace `<value-name>`.",
+         '''| tstats `summariesonly` count, values(Registry.registry_value_data) AS data
+    from datamodel=Endpoint.Registry
+    where Registry.registry_value_name=<value-name> Registry.action in ("created","modified")
+        earliest=-7d@d
+    by Registry.dest, Registry.user, Registry.process_name, Registry.registry_path'''),
     ],
 
     "Network_Traffic.All_Traffic": [
-        ("Outbound traffic from a host",
-         "All allowed outbound from one host. Replace `<DeviceName>`.",
+        ("All outbound from a host",
+         "Host triage — every allowed outbound connection. Replace `<DeviceName>`.",
          '''| tstats `summariesonly` count, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.src=<DeviceName>
         and All_Traffic.action="allowed"
-        and All_Traffic.dest_category!="internal"
         earliest=-24h@h
     by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
-| `drop_dm_object_name(All_Traffic)`'''),
+| `drop_dm_object_name(All_Traffic)`
+| sort -_time'''),
 
-        ("Connections to a specific destination IP",
+        ("All connections to an IP",
          "IP IOC pivot — every host that talked to it. Replace `<IP>`.",
-         '''| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+         '''| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports, sum(All_Traffic.bytes_out) AS bytes_out
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest_ip=<IP> earliest=-7d@d
     by All_Traffic.src, All_Traffic.user'''),
 
-        ("Beaconing — periodic outbound, low fan-out",
-         "Inter-beacon stddev with stable destinations. Strong C2 signal.",
+        ("All connections on a port from a host",
+         "Port-specific triage. Replace `<DeviceName>` and `<port>` (e.g. 3389, 22, 445).",
          '''| tstats `summariesonly` count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" All_Traffic.dest_category!="internal" earliest=-24h@h
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600'''),
+    where All_Traffic.src=<DeviceName>
+        and All_Traffic.dest_port=<port> earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.action, _time span=5m'''),
 
-        ("Suspicious dest port (RDP / SSH from unusual sources)",
-         "Internal-to-internet RDP/SSH — usually shouldn't happen.",
+        ("Top destinations for a host",
+         "What's a host been talking to most? Useful for first-look beaconing review.",
+         '''| tstats `summariesonly` count, sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.src=<DeviceName>
+        and All_Traffic.action="allowed" earliest=-24h@h
+    by All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| sort - count'''),
+
+        ("Failed / denied connections from a host",
+         "What's the firewall blocking from this host? Replace `<DeviceName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
-        and All_Traffic.src_category="internal"
-        and All_Traffic.dest_category="external"
-        earliest=-24h@h
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port'''),
-
-        ("Large outbound transfer (potential exfil)",
-         "Volume-based exfiltration heuristic — top N hosts by outbound bytes today.",
-         '''| tstats `summariesonly` sum(All_Traffic.bytes_out) AS bytes_out
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" All_Traffic.dest_category="external" earliest=-24h@h
-    by All_Traffic.src
-| `drop_dm_object_name(All_Traffic)`
-| sort - bytes_out
-| head 25
-| eval bytes_out_mb=round(bytes_out/1024/1024,2)'''),
+    where All_Traffic.src=<DeviceName>
+        and All_Traffic.action!="allowed" earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.action'''),
     ],
 
     "Authentication.Authentication": [
-        ("Failed authentications by user",
-         "Per-user failure count. Replace `<UserName>` to scope, or remove the where to scan all users.",
+        ("All authentication events for a user",
+         "User triage — every login (success + fail) for one identity. Replace `<UserName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where Authentication.action="failure" Authentication.user=<UserName> earliest=-24h@h
-    by Authentication.user, Authentication.src, _time span=10m
+    where Authentication.user=<UserName> earliest=-24h@h
+    by Authentication.action, Authentication.src, Authentication.dest, _time span=10m
 | `drop_dm_object_name(Authentication)`
 | sort -_time'''),
 
-        ("Brute-force / spray detector",
-         "Many targets per source within a window — credential-spray pattern.",
-         '''| tstats `summariesonly` dc(Authentication.user) AS unique_users count
-    from datamodel=Authentication.Authentication
-    where Authentication.action="failure" earliest=-1h@h
-    by Authentication.src
-| `drop_dm_object_name(Authentication)`
-| where unique_users>10
-| sort - unique_users'''),
-
-        ("Successful login after failure burst",
-         "Spray success pattern — same src ≥5 failures then ≥1 success within 10 min.",
+        ("All logins from an IP",
+         "IP pivot — every account this address has authenticated against. Replace `<IP>`.",
          '''| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where earliest=-24h@h
-    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
-| `drop_dm_object_name(Authentication)`
-| eventstats count(eval(action="failure")) AS fail_n count(eval(action="success")) AS ok_n by src, user
-| where fail_n>=5 AND ok_n>=1
-| sort - _time'''),
+    where Authentication.src=<IP> earliest=-7d@d
+    by Authentication.user, Authentication.action, Authentication.dest'''),
 
-        ("Logins from new geographies",
-         "Geo-anomaly hunt — look for src IPs the user hasn't used in 30 days.",
-         '''| tstats `summariesonly` values(Authentication.src) AS src_30d
+        ("Logins to a specific host",
+         "Host pivot — who's logged on (and tried to log on) here? Replace `<DeviceName>`.",
+         '''| tstats `summariesonly` count
     from datamodel=Authentication.Authentication
-    where Authentication.action="success" earliest=-30d@d latest=-1d@d
-    by Authentication.user
-| append [
-  | tstats `summariesonly` values(Authentication.src) AS src_today
-      from datamodel=Authentication.Authentication
-      where Authentication.action="success" earliest=-1d@d
-      by Authentication.user
-  ]
-| stats values(*) AS * by user
-| eval new_src=mvfilter(NOT match(src_today, src_30d))'''),
+    where Authentication.dest=<DeviceName> earliest=-24h@h
+    by Authentication.user, Authentication.src, Authentication.action'''),
+
+        ("Failed authentications for a user",
+         "Fast triage on a user's failures. Replace `<UserName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Authentication.Authentication
+    where Authentication.action="failure" Authentication.user=<UserName> earliest=-24h@h
+    by Authentication.src, Authentication.dest, Authentication.reason, _time span=10m'''),
+
+        ("All source IPs a user has used",
+         "Find the geographic / network footprint for one identity. Replace `<UserName>`.",
+         '''| tstats `summariesonly` values(Authentication.src) AS src_ips, count
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success" Authentication.user=<UserName> earliest=-30d@d
+    by Authentication.user'''),
     ],
 
     "Web.Web": [
-        ("HTTP traffic from a single source",
-         "Replace `<src>` with hostname or IP. Pivots web-proxy logs.",
+        ("All HTTP traffic for a user",
+         "User triage — every web request for one identity. Replace `<UserName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Web.Web
-    where Web.src=<src> earliest=-24h@h
+    where Web.user=<UserName> earliest=-24h@h
     by Web.url_domain, Web.http_method, Web.status, _time span=10m'''),
 
-        ("Suspicious User-Agent strings",
-         "Generic / scriptable / red-team UAs — high-signal proxy hunt.",
-         '''| tstats `summariesonly` count, values(Web.url_domain) AS domains
+        ("All HTTP traffic from a source",
+         "Source pivot. Replace `<src>` with hostname or IP.",
+         '''| tstats `summariesonly` count, sum(Web.bytes_out) AS bytes_out
     from datamodel=Web.Web
-    where (Web.http_user_agent="python-requests*"
-        OR Web.http_user_agent="curl*"
-        OR Web.http_user_agent="powershell*"
-        OR Web.http_user_agent="*Cobalt*"
-        OR Web.http_user_agent="*sqlmap*"
-        OR Web.http_user_agent="*nikto*"
-        OR Web.http_user_agent="Mozilla/4.0 (compatible; MSIE 7.0; Win64*"
-        OR Web.http_user_agent="Mozilla/5.0 (Windows NT 6.1*")
-        earliest=-24h@h
-    by Web.src, Web.http_user_agent'''),
+    where Web.src=<src> earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status'''),
 
-        ("New / never-seen URL domains",
-         "First-time-seen domain hunt — usually phishing landing or C2 staging.",
-         '''| tstats `summariesonly` count, min(_time) AS first_seen
+        ("All requests to a domain",
+         "Domain pivot — every host that fetched it. Replace `<domain>`.",
+         '''| tstats `summariesonly` count, values(Web.url) AS urls
     from datamodel=Web.Web
-    where earliest=-30d@d
-    by Web.url_domain
-| `drop_dm_object_name(Web)`
-| where first_seen >= relative_time(now(), "-1d@d")'''),
+    where Web.url_domain=<domain> earliest=-7d@d
+    by Web.src, Web.user, Web.http_method, Web.status'''),
 
-        ("HTTP-to-IP requests (skip-DNS)",
-         "Outbound HTTP where Host is a raw IP — adversary skipping DNS resolution.",
+        ("Requests with a User-Agent",
+         "UA pivot — find every host using a specific UA. Replace `<UA-fragment>`.",
          '''| tstats `summariesonly` count
     from datamodel=Web.Web
-    where Web.url_domain="[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*" earliest=-24h@h
-    by Web.src, Web.url, Web.http_method'''),
+    where Web.http_user_agent="*<UA-fragment>*" earliest=-24h@h
+    by Web.src, Web.url_domain, Web.http_user_agent'''),
+
+        ("Top domains for a user",
+         "What's a user been browsing most? Replace `<UserName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.user=<UserName> earliest=-24h@h
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| sort - count'''),
     ],
 
     "Network_Resolution.DNS": [
-        ("DNS queries from a single host",
-         "Replace `<DeviceName>`. Pivots DNS logs.",
+        ("All DNS queries from a host",
+         "Host triage — every name resolution from one device. Replace `<DeviceName>`.",
          '''| tstats `summariesonly` count
     from datamodel=Network_Resolution.DNS
     where DNS.src=<DeviceName> earliest=-24h@h
     by DNS.query, DNS.query_type, DNS.reply_code'''),
 
-        ("DNS NXDOMAIN spike per host",
-         "DGA / failed-C2 indicator — many NXDOMAINs from one source.",
+        ("Hosts that resolved a domain",
+         "Domain pivot — every device that asked for it. Replace `<domain>`.",
+         '''| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
+    from datamodel=Network_Resolution.DNS
+    where DNS.query=<domain> earliest=-7d@d
+    by DNS.src'''),
+
+        ("DNS queries that resolved to an IP",
+         "IP-back-pivot — what names point to this address? Replace `<IP>`.",
          '''| tstats `summariesonly` count
     from datamodel=Network_Resolution.DNS
-    where DNS.reply_code="NXDOMAIN" earliest=-1h@h
-    by DNS.src
+    where DNS.answer=<IP> earliest=-7d@d
+    by DNS.query, DNS.src'''),
+
+        ("Top domains for a host",
+         "What's a host been resolving most? Replace `<DeviceName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=<DeviceName> earliest=-24h@h
+    by DNS.query
 | `drop_dm_object_name(DNS)`
-| where count > 100
 | sort - count'''),
 
-        ("Long DNS query strings (TXT-tunnel)",
-         "DNS tunneling — abnormally long query labels indicate data smuggled in DNS.",
-         '''| tstats `summariesonly` avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
-    from datamodel=Network_Resolution.DNS
-    where DNS.query_type="TXT" earliest=-24h@h
-    by DNS.src
-| where avg_len > 50 OR max_len > 200'''),
-
-        ("Newly-observed TLDs (suspicious .ru / .su / .top / .xyz)",
-         "Exclude common cloud-CDN TLDs.",
+        ("DNS failures from a host",
+         "NXDOMAIN / SERVFAIL responses — failed C2 / DGA / typo-squat indicator.",
          '''| tstats `summariesonly` count
     from datamodel=Network_Resolution.DNS
-    where (DNS.query="*.ru" OR DNS.query="*.su" OR DNS.query="*.top"
-            OR DNS.query="*.xyz" OR DNS.query="*.work" OR DNS.query="*.icu"
-            OR DNS.query="*.zip")
-        earliest=-24h@h
-    by DNS.src, DNS.query'''),
+    where DNS.src=<DeviceName>
+        and DNS.reply_code in ("NXDOMAIN","SERVFAIL","REFUSED") earliest=-24h@h
+    by DNS.query, DNS.reply_code'''),
     ],
 
     "Email.All_Email": [
-        ("Inbound email by sender",
-         "Pivot for a phish-sender investigation. Replace `<email-or-domain>`.",
+        ("All inbound for a recipient",
+         "Recipient triage — every email this user received. Replace `<email>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.recipient=<email> earliest=-7d@d
+    by Email.src_user, Email.subject, Email.action, _time span=1h
+| sort -_time'''),
+
+        ("All emails from a sender",
+         "Sender pivot. Replace `<email-or-domain>`.",
          '''| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where Email.src_user=<email-or-domain> earliest=-7d@d
-    by Email.recipient, Email.subject'''),
+    by Email.recipient, Email.subject, Email.action'''),
 
-        ("Email with executable / archive attachments",
-         "High-signal phish hunt.",
+        ("Emails by subject",
+         "Subject-line pivot. Replace `<subject-fragment>`.",
          '''| tstats `summariesonly` count
     from datamodel=Email.All_Email
-    where Email.filename in ("*.exe","*.scr","*.lnk","*.iso","*.img","*.vhd","*.vhdx","*.html","*.hta","*.js","*.vbs","*.cpl","*.msi")
-        earliest=-7d@d
+    where Email.subject="*<subject-fragment>*" earliest=-7d@d
+    by Email.src_user, Email.recipient, Email.action, Email.filename'''),
+
+        ("Emails with an attachment name / extension",
+         "Filename pivot. Replace `<filename-or-ext>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.filename="*<filename-or-ext>*" earliest=-7d@d
     by Email.recipient, Email.src_user, Email.filename, Email.subject'''),
 
-        ("Quarantined / blocked emails",
-         "Look at what got stopped — pivot via subject for similar campaigns.",
+        ("Emails with a URL",
+         "URL pivot — every recipient who got a message containing this link. Replace `<url-fragment>`.",
          '''| tstats `summariesonly` count
     from datamodel=Email.All_Email
-    where Email.action in ("blocked","quarantined") earliest=-7d@d
-    by Email.src_user, Email.subject, Email.recipient'''),
+    where Email.url="*<url-fragment>*" earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.subject'''),
     ],
 }
 
