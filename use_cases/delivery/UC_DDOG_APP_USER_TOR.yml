@@ -1,0 +1,15 @@
+id: UC_DDOG_APP_USER_TOR
+title: Application user activity from Tor
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1090.003
+  name: Multi-hop Proxy
+description: |-
+  App-side activity from Tor exit — anonymisation flag. Datadog default 'User activity from Tor'.
+datadog_query: |-
+  source:application-threats @evt.name:user.tor_activity

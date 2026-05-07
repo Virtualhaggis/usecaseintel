@@ -1,0 +1,15 @@
+id: UC_DDOG_POSTGRES_DB_DELETED
+title: PostgreSQL database dropped
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+description: |-
+  DB dropped — destructive event. Datadog default 'PostgreSQL database deleted'.
+datadog_query: |-
+  source:postgres @evt.name:DROP_DATABASE

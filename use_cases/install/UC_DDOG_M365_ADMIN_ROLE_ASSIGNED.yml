@@ -1,0 +1,16 @@
+id: UC_DDOG_M365_ADMIN_ROLE_ASSIGNED
+title: M365 admin role assigned to user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  User became an M365 admin — privilege drift. Datadog default 'M365 admin role assigned'.
+datadog_query: |-
+  source:m365 @evt.name:"Add member to role"
+  @properties.targetResources.modifiedProperties.newValue:*Administrator*

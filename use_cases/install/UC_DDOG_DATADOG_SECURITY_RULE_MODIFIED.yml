@@ -1,0 +1,15 @@
+id: UC_DDOG_DATADOG_SECURITY_RULE_MODIFIED
+title: Datadog security notification rule modified or deleted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562
+  name: Impair Defenses
+description: |-
+  SIEM rule edited or deleted in Datadog — defender losing detection. Datadog default 'Datadog security notification rule modified or deleted'.
+datadog_query: |-
+  source:audit @evt.name:(security_monitoring_rule.delete OR security_monitoring_rule.update)

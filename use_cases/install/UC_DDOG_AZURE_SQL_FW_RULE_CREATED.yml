@@ -1,0 +1,17 @@
+id: UC_DDOG_AZURE_SQL_FW_RULE_CREATED
+title: Azure SQL Server firewall rule created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Azure SQL firewall rule added — opening DB to a new IP range. Datadog default 'Azure SQL Server Firewall rule created'.
+datadog_query: |-
+  source:azure.activity_logs
+  @operationName.value:Microsoft.Sql/servers/firewallRules/write
+  @properties.activityStatusValue:Succeeded

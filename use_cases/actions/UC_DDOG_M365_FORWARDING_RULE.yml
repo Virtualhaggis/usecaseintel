@@ -1,0 +1,16 @@
+id: UC_DDOG_M365_FORWARDING_RULE
+title: M365 mail-forwarding rule created
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1114.003
+  name: Email Forwarding Rule
+description: |-
+  Auto-forward rule — classic adversary exfil persistence. Datadog default 'M365 forwarding rule created'.
+datadog_query: |-
+  source:m365 @evt.name:("New-InboxRule" OR "Set-InboxRule")
+  @properties.parameters.forwardTo:*

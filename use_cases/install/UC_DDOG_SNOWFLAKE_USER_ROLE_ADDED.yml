@@ -1,0 +1,15 @@
+id: UC_DDOG_SNOWFLAKE_USER_ROLE_ADDED
+title: Snowflake user added to role
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  User got new role — entitlement audit. Datadog default 'Snowflake user added to role'.
+datadog_query: |-
+  source:snowflake @evt.name:GRANT_ROLE

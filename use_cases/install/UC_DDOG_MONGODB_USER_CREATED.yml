@@ -1,0 +1,15 @@
+id: UC_DDOG_MONGODB_USER_CREATED
+title: MongoDB user created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1136
+  name: Create Account
+description: |-
+  New DB user — pivot for legitimacy review. Datadog default 'MongoDB user created'.
+datadog_query: |-
+  source:mongodb @evt.name:createUser

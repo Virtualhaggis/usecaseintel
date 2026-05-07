@@ -1,0 +1,16 @@
+id: UC_DDOG_MONGODB_AUTH_DISABLED
+title: MongoDB authentication disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  MongoDB auth turned off — anyone can connect. Datadog default 'MongoDB authentication disabled'.
+datadog_query: |-
+  source:mongodb @evt.name:setParameter
+  @params.authenticationMechanisms:*disabled*

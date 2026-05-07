@@ -1,0 +1,15 @@
+id: UC_DDOG_SNOWFLAKE_SHARE_MODIFIED
+title: Snowflake share created or modified
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  Cross-account data share opened — direct data-exfil primitive. Datadog default 'Snowflake share created or modified'.
+datadog_query: |-
+  source:snowflake @evt.name:(CREATE_SHARE OR ALTER_SHARE OR ADD_ACCOUNTS_TO_SHARE)

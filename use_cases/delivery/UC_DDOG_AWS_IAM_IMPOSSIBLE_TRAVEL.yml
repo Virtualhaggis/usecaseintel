@@ -1,0 +1,16 @@
+id: UC_DDOG_AWS_IAM_IMPOSSIBLE_TRAVEL
+title: Impossible travel observed for IAM user
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078.004
+  name: Cloud Accounts
+description: |-
+  IAM user activity from geographically distant locations within an impossible-travel window. Datadog default 'Impossible travel observed on IAM user'.
+datadog_query: |-
+  source:cloudtrail @userIdentity.type:IAMUser @evt.outcome:success
+  @network.client.geoip.country.iso_code:*

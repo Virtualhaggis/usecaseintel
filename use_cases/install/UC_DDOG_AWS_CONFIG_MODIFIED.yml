@@ -1,0 +1,16 @@
+id: UC_DDOG_AWS_CONFIG_MODIFIED
+title: AWS Config service modified or stopped
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  AWS Config recorder stopped or deleted — compliance trail blinded. Datadog default 'AWS Config modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(StopConfigurationRecorder OR DeleteConfigurationRecorder OR DeleteDeliveryChannel OR PutConfigurationRecorder)

@@ -1,0 +1,18 @@
+id: UC_DDOG_AWS_ACCESS_KEY_CREATED_ANOMALY
+title: AWS access key created (programmatic credential)
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1136.003
+  name: Cloud Account
+- id: T1098
+  name: Account Manipulation
+description: |-
+  New IAM access key created — long-lived credential issued, watch for abuse. Datadog default 'AWS access key creation by unusual principal'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success @evt.name:CreateAccessKey
+  -@userIdentity.userName:(*ci-* OR *terraform-* OR *automation*)

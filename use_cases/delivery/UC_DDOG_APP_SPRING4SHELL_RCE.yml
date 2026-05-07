@@ -1,0 +1,17 @@
+id: UC_DDOG_APP_SPRING4SHELL_RCE
+title: Spring4Shell RCE attempts (CVE-2022-22963)
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+description: |-
+  Spring4Shell exploitation attempts. Datadog default 'Spring4shell RCE attempts - CVE-2022-22963'.
+datadog_query: |-
+  source:waf_logs @rule.tags:(spring4shell OR cve_2022_22963 OR cve_2022_22965)

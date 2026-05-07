@@ -1,0 +1,18 @@
+id: UC_DDOG_K8S_PRIVILEGED_POD_CREATED
+title: Kubernetes pod created with privileged flag
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1611
+  name: Escape to Host
+- id: T1548
+  name: Abuse Elevation Control Mechanism
+description: |-
+  Privileged pod — direct host-takeover primitive. Datadog default 'Kubernetes pod executed with privileged flag'.
+datadog_query: |-
+  source:kubernetes.audit @verb:create @objectRef.resource:pods
+  @requestObject.spec.containers.securityContext.privileged:true

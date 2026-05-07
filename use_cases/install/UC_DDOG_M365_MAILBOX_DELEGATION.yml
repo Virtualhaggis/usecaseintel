@@ -1,0 +1,15 @@
+id: UC_DDOG_M365_MAILBOX_DELEGATION
+title: M365 mailbox delegation granted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098.002
+  name: Additional Email Delegate Permissions
+description: |-
+  Inbox delegation — adversary inbox-rule pre-staging. Datadog default 'M365 mailbox delegation granted'.
+datadog_query: |-
+  source:m365 @evt.name:("Add-MailboxPermission" OR "Add-RecipientPermission")

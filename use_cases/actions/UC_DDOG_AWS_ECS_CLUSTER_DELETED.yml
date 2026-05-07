@@ -1,0 +1,15 @@
+id: UC_DDOG_AWS_ECS_CLUSTER_DELETED
+title: AWS ECS cluster deleted
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+description: |-
+  ECS cluster removed — workload impact. Datadog default 'AWS ECS cluster deleted'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success @evt.name:DeleteCluster

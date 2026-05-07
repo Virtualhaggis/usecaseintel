@@ -1,0 +1,15 @@
+id: UC_DDOG_SNOWFLAKE_ROLE_CREATED
+title: Snowflake role created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  New Snowflake role defined — privilege drift in the warehouse. Datadog default 'Snowflake role created'.
+datadog_query: |-
+  source:snowflake @evt.name:CREATE_ROLE

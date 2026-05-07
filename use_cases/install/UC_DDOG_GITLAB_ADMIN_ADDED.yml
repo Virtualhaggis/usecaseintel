@@ -1,0 +1,16 @@
+id: UC_DDOG_GITLAB_ADMIN_ADDED
+title: GitLab administrator role granted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  User gained admin on GitLab tenant. Datadog default 'GitLab administrator added'.
+datadog_query: |-
+  source:gitlab @evt.name:(user.access_level_changed OR admin.added)
+  @target.access_level:admin

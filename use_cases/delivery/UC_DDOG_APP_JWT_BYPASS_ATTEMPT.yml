@@ -1,0 +1,17 @@
+id: UC_DDOG_APP_JWT_BYPASS_ATTEMPT
+title: JWT authentication bypass attempt
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  JWT manipulation / none-alg / kid-abuse signatures. Datadog default 'JWT authentication bypass attempt'.
+datadog_query: |-
+  source:waf_logs @rule.tags:(jwt OR jwt_bypass OR none_alg)

@@ -1,0 +1,19 @@
+id: UC_DDOG_AZURE_STORAGE_SOFT_DELETE_DISABLED
+title: Azure storage soft-delete disabled
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+- id: T1490
+  name: Inhibit System Recovery
+description: |-
+  Soft-delete turned off — adversary preparing to destroy blobs without recovery. Datadog default 'Azure storage account soft delete disabled'.
+datadog_query: |-
+  source:azure.activity_logs
+  @operationName.value:Microsoft.Storage/storageAccounts/blobServices/write
+  @properties.responseBody:*"deleteRetentionPolicy":{"enabled":false*

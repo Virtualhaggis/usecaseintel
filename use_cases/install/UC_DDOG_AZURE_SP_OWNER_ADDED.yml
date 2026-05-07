@@ -1,0 +1,16 @@
+id: UC_DDOG_AZURE_SP_OWNER_ADDED
+title: Azure new owner added to service principal
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Service-principal ownership change — adversary getting persistent control of an app identity. Datadog default 'Azure new owner added to service principal'.
+datadog_query: |-
+  source:azure.activeDirectory
+  @evt.name:"Add owner to service principal"

@@ -1,0 +1,15 @@
+id: UC_DDOG_OKTA_USER_LOCKED
+title: Okta user account locked
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110.003
+  name: Password Spraying
+description: |-
+  Okta user lockout — credential-spray indicator (and a paste-target for IP / target lists). Datadog default 'Okta user account locked'.
+datadog_query: |-
+  source:okta @evt.name:user.account.lock

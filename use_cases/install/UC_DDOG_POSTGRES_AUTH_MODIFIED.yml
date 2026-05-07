@@ -1,0 +1,16 @@
+id: UC_DDOG_POSTGRES_AUTH_MODIFIED
+title: PostgreSQL authentication method modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  pg_hba reload or auth setting change — bar lowering. Datadog default 'PostgreSQL authentication method modified'.
+datadog_query: |-
+  source:postgres @evt.name:(pg_hba_reload OR ALTER_SYSTEM)
+  @params.parameter:(authentication OR password_encryption OR ssl)

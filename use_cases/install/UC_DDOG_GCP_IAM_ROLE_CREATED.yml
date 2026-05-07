@@ -1,0 +1,16 @@
+id: UC_DDOG_GCP_IAM_ROLE_CREATED
+title: GCP custom IAM role created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Custom GCP IAM role defined — pivot for hidden-privilege grants. Datadog default 'GCP IAM role created'.
+datadog_query: |-
+  source:gcp.audit
+  @protoPayload.methodName:google.iam.admin.v1.CreateRole

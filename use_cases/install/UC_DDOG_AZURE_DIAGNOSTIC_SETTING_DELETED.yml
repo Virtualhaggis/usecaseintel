@@ -1,0 +1,17 @@
+id: UC_DDOG_AZURE_DIAGNOSTIC_SETTING_DELETED
+title: Azure diagnostic setting deleted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  Azure diagnostic-setting deletion blinds activity-log forwarding to SIEM. Datadog default 'Azure diagnostic setting deleted'.
+datadog_query: |-
+  source:azure.activity_logs
+  @operationName.value:Microsoft.Insights/diagnosticSettings/delete
+  @properties.activityStatusValue:Succeeded

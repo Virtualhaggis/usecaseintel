@@ -1,0 +1,17 @@
+id: UC_DDOG_GCP_EXTERNAL_OWNER_ADDED
+title: GCP project external principal added as owner
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  External email granted project ownership — direct full-takeover risk. Datadog default 'GCP project external principal added as owner'.
+datadog_query: |-
+  source:gcp.audit @protoPayload.methodName:(SetIamPolicy OR setIamPolicy)
+  @protoPayload.serviceData.policyDelta.bindingDeltas.role:roles/owner
+  @protoPayload.serviceData.policyDelta.bindingDeltas.member:user:*

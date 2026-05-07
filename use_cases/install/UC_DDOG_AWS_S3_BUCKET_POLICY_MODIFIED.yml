@@ -1,0 +1,16 @@
+id: UC_DDOG_AWS_S3_BUCKET_POLICY_MODIFIED
+title: AWS S3 bucket policy modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  S3 bucket access policy changed — pivot to find adversary granting themselves read or write. Datadog default 'AWS S3 bucket policy modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(PutBucketPolicy OR DeleteBucketPolicy)

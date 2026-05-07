@@ -1,0 +1,15 @@
+id: UC_DDOG_OKTA_AUTH_POLICY_MODIFIED
+title: Okta authentication / sign-on policy modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Auth policy / rule changed — adversary lowering the auth bar. Datadog default 'Okta authentication policy modified'.
+datadog_query: |-
+  source:okta @evt.name:(policy.lifecycle.update OR policy.rule.update OR policy.lifecycle.delete)

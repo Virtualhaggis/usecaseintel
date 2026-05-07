@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_PAT_CREATED
+title: GitHub personal access token created
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1136
+  name: Create Account
+- id: T1552
+  name: Unsecured Credentials
+description: |-
+  New PAT issued — long-lived credential watch-list. Datadog default 'GitHub personal access token created'.
+datadog_query: |-
+  source:github @evt.name:personal_access_token.access_granted

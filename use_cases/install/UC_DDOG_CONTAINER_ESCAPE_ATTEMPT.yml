@@ -1,0 +1,15 @@
+id: UC_DDOG_CONTAINER_ESCAPE_ATTEMPT
+title: Container escape attempt detected
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1611
+  name: Escape to Host
+description: |-
+  Process tried to break out of container isolation — direct host-compromise primitive. Datadog default 'Container escape attempt detected'.
+datadog_query: |-
+  source:runtime-security @evt.category:container_escape

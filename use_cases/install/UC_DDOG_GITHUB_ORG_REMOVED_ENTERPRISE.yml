@@ -1,0 +1,15 @@
+id: UC_DDOG_GITHUB_ORG_REMOVED_ENTERPRISE
+title: GitHub organization removed from enterprise
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Org dropped out of enterprise scope — admin oversight loss. Datadog default 'GitHub organization removed from enterprise'.
+datadog_query: |-
+  source:github @evt.name:enterprise.remove_organization

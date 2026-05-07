@@ -1,0 +1,15 @@
+id: UC_DDOG_GITHUB_MFA_DISABLED
+title: GitHub organization 2FA requirement removed
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Org-wide 2FA requirement removed — auth bar lowered. Datadog default 'GitHub MFA requirement disabled'.
+datadog_query: |-
+  source:github @evt.name:(org.disable_two_factor_requirement OR org.update_two_factor_requirement)

@@ -1,0 +1,16 @@
+id: UC_DDOG_DATADOG_AUDIT_DISABLED
+title: Datadog audit trail disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  Datadog's own audit logging turned off — meta-blinding. Datadog default 'Datadog audit trail disabled'.
+datadog_query: |-
+  source:audit @evt.name:audit_logs.update
+  @properties.audit_logs_enabled:false

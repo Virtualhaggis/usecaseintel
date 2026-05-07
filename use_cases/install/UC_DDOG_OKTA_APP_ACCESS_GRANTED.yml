@@ -1,0 +1,15 @@
+id: UC_DDOG_OKTA_APP_ACCESS_GRANTED
+title: Okta application access granted to user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  User added to an Okta-mediated app — pivot for entitlement audits. Datadog default 'Okta application access granted'.
+datadog_query: |-
+  source:okta @evt.name:application.user_membership.add

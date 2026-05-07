@@ -1,0 +1,16 @@
+id: UC_DDOG_M365_MFA_DISABLED
+title: M365 MFA disabled for a user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  MFA removed — adversary auth-bar lowering. Datadog default 'M365 MFA disabled'.
+datadog_query: |-
+  source:m365 @evt.name:("Disable Strong Authentication" OR "Update user")
+  @properties.targetResources.modifiedProperties.displayName:StrongAuthenticationRequirement

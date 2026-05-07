@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_REPO_TRANSFER
+title: GitHub repository transfer initiated
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  Repo transferred to another owner — IP-leak path. Datadog default 'GitHub repository transfer initiated'.
+datadog_query: |-
+  source:github @evt.name:(repo.transfer OR repo.transfer_outgoing OR repo.transfer_start)

@@ -1,0 +1,16 @@
+id: UC_DDOG_AWS_IAM_POLICY_MODIFIED
+title: AWS IAM policy created / updated / version changed
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098.003
+  name: Additional Cloud Roles
+description: |-
+  IAM policy added or version changed — privilege drift. Datadog default 'AWS IAM policy modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(CreatePolicy OR CreatePolicyVersion OR SetDefaultPolicyVersion OR PutUserPolicy OR PutRolePolicy OR PutGroupPolicy)

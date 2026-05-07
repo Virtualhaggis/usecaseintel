@@ -1,0 +1,15 @@
+id: UC_DDOG_GITLAB_PAT_GENERATED
+title: GitLab personal access token generated
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1136
+  name: Create Account
+description: |-
+  New GitLab PAT issued — credential watch-list. Datadog default 'GitLab personal access token generated'.
+datadog_query: |-
+  source:gitlab @evt.name:user.token.create

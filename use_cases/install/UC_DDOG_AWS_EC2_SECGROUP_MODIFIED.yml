@@ -1,0 +1,16 @@
+id: UC_DDOG_AWS_EC2_SECGROUP_MODIFIED
+title: AWS EC2 security group rules modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  EC2 security-group rules changed — adversary opening a path or covering tracks. Datadog default 'AWS EC2 security group modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(AuthorizeSecurityGroupIngress OR AuthorizeSecurityGroupEgress OR ModifySecurityGroupRules OR RevokeSecurityGroupIngress)

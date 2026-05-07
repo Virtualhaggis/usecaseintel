@@ -1,0 +1,18 @@
+id: UC_DDOG_AWS_LAMBDA_MODIFIED
+title: AWS Lambda function code or configuration modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1648
+  name: Serverless Execution
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Lambda function code/config changed — adversary persistence via serverless backdoor. Datadog default 'AWS Lambda function modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(UpdateFunctionCode OR UpdateFunctionConfiguration OR PutFunctionConcurrency OR AddPermission)

@@ -1,0 +1,15 @@
+id: UC_DDOG_DATADOG_LOGIN_METHOD_CHANGED
+title: Datadog organization login method changed
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Org SSO/SAML setting changed — auth-flow tampering. Datadog default 'Datadog organization login method changed'.
+datadog_query: |-
+  source:audit @evt.name:(saml.update OR saml.disable OR org.login.update)

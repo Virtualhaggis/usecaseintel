@@ -1,0 +1,16 @@
+id: UC_DDOG_GCP_LOGGING_BUCKET_DELETED
+title: GCP Cloud Logging bucket deleted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  Cloud Logging bucket removed — audit trail destroyed. Datadog default 'GCP Logging Bucket deleted'.
+datadog_query: |-
+  source:gcp.audit
+  @protoPayload.methodName:google.logging.v2.ConfigServiceV2.DeleteBucket

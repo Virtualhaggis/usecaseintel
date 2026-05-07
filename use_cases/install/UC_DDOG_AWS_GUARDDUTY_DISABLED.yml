@@ -1,0 +1,17 @@
+id: UC_DDOG_AWS_GUARDDUTY_DISABLED
+title: AWS GuardDuty detector disabled or deleted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.001
+  name: Disable or Modify Tools
+description: |-
+  GuardDuty turned off — defenders' main AWS-native threat detection silenced. Datadog default 'AWS GuardDuty detector disabled'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(DeleteDetector OR DisableOrganizationAdminAccount OR UpdateDetector)
+  @requestParameters.enable:false

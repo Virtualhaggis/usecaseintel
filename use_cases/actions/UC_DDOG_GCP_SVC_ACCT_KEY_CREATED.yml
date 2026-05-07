@@ -1,0 +1,18 @@
+id: UC_DDOG_GCP_SVC_ACCT_KEY_CREATED
+title: GCP service-account key created
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1136.003
+  name: Cloud Account
+- id: T1552
+  name: Unsecured Credentials
+description: |-
+  New SA key issued — long-lived credential exfil risk. Datadog default 'GCP Service Account key created'.
+datadog_query: |-
+  source:gcp.audit
+  @protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey

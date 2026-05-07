@@ -1,0 +1,15 @@
+id: UC_DDOG_POSTGRES_SUPERUSER_CREATED
+title: PostgreSQL superuser role created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  Superuser role created — DBA-level privilege drift. Datadog default 'PostgreSQL role created with superuser'.
+datadog_query: |-
+  source:postgres @evt.name:CREATE_ROLE @params.superuser:true

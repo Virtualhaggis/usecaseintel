@@ -1,0 +1,16 @@
+id: UC_DDOG_GCP_FIREWALL_RULE_MODIFIED
+title: GCP Compute Engine firewall rule modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  VPC firewall rule changed — adversary opening or covering a path. Datadog default 'GCP Compute Engine firewall rule modified'.
+datadog_query: |-
+  source:gcp.audit
+  @protoPayload.methodName:(beta.compute.firewalls.insert OR v1.compute.firewalls.patch OR v1.compute.firewalls.delete)

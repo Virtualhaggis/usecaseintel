@@ -1,0 +1,19 @@
+id: UC_DDOG_AZURE_KEYVAULT_KEYS_ACCESSED
+title: Azure Key Vault keys / secrets read
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1555.005
+  name: Password Managers
+- id: T1552.001
+  name: Credentials In Files
+description: |-
+  Key Vault secret/key reads — pivot for credential-theft tradecraft. Datadog default 'Azure Key Vault access keys viewed'.
+datadog_query: |-
+  source:azure.activity_logs
+  @operationName.value:(Microsoft.KeyVault/vaults/keys/read OR Microsoft.KeyVault/vaults/secrets/read)
+  @properties.activityStatusValue:Succeeded

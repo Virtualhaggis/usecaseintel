@@ -1,0 +1,15 @@
+id: UC_DDOG_MONGODB_USER_PRIVESCAL
+title: MongoDB user role escalated
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  DB user got a higher role — privilege drift. Datadog default 'MongoDB user privilege escalated'.
+datadog_query: |-
+  source:mongodb @evt.name:(grantRolesToUser OR updateUser)

@@ -1,0 +1,17 @@
+id: UC_DDOG_OKTA_MFA_BYPASS
+title: Okta MFA bypass attempt
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  MFA challenge failed in a way that suggests a bypass attempt. Datadog default 'Okta MFA bypass attempt'.
+datadog_query: |-
+  source:okta @outcome.reason:*MFA*
+  @evt.name:(user.authentication.auth_via_mfa OR user.session.start)
+  @outcome.result:FAILURE

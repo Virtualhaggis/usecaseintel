@@ -1,0 +1,16 @@
+id: UC_DDOG_GITLAB_SSO_DISABLED
+title: GitLab SSO disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  SSO turned off — auth fallback to local creds. Datadog default 'GitLab SSO disabled'.
+datadog_query: |-
+  source:gitlab @evt.name:application_setting.update
+  @change:sso_enabled @target.value:false

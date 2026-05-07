@@ -1,0 +1,15 @@
+id: UC_DDOG_MONGODB_DB_DELETED
+title: MongoDB database dropped
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+description: |-
+  DB dropped — destructive event. Datadog default 'MongoDB database deleted'.
+datadog_query: |-
+  source:mongodb @evt.name:dropDatabase
