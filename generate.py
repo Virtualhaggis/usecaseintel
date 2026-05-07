@@ -5758,6 +5758,32 @@ ul.intel-types-doc code{
    the analyst sees only the bodies they filtered for. */
 details.uc.uc-platform-hidden{display:none !important;}
 
+/* Splunk SPL nested Summarised / Non-summarised toggle. Only renders
+   when the query has a tstats acceleration form that's worth toggling. */
+.spl-mode-toggle{
+  display:flex; gap:4px; align-items:center;
+  margin:0 0 8px 0; padding:4px 6px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid var(--border); border-radius:6px;
+  flex-wrap:wrap;
+}
+.spl-mode-btn{
+  background:transparent; border:0; color:var(--muted);
+  padding:4px 10px; border-radius:4px; cursor:pointer;
+  font:inherit; font-size:11px; font-weight:500;
+  transition:color 0.12s, background 0.12s;
+}
+.spl-mode-btn:hover{color:var(--text);}
+.spl-mode-btn.active{
+  background:rgba(113,112,255,0.16);
+  color:var(--text);
+}
+.spl-mode-hint{
+  font-size:10.5px; color:var(--muted-2); margin-left:8px;
+}
+.spl-mode-body{display:none;}
+.spl-mode-body.active{display:block;}
+
 /* ----- Share buttons + deeplink highlight ---------------------------- */
 .share-btn{
   background:transparent; border:1px solid transparent;
@@ -6773,6 +6799,22 @@ document.addEventListener('click', e => {
   btn.classList.add('active');
   const tgt = parent.querySelector('#' + btn.dataset.target);
   if (tgt) tgt.classList.add('active');
+});
+
+// ----- Splunk SPL Summarised / Non-summarised toggle -------------------
+// The SPL pane on tstats-based UCs renders both an accelerated body
+// (summariesonly=true via the macro) and an auto-derived non-accelerated
+// body (summariesonly=false). The user toggles between them; persists
+// nothing — every UC defaults to "Summarised" on page load.
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.spl-mode-btn');
+  if (!btn) return;
+  const parent = btn.closest('.tab-content');
+  if (!parent) return;
+  parent.querySelectorAll('.spl-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+  parent.querySelectorAll('.spl-mode-body').forEach(p => {
+    p.classList.toggle('active', p.id === btn.dataset.target);
+  });
 });
 
 // ----- Toggle kill chain ----------------------------------------------
@@ -9482,6 +9524,49 @@ def compute_severity(article_text: str, ind: dict, ucs: list, techs: list) -> st
 SEV_LABEL = {"crit": "Critical", "high": "High", "med": "Medium", "low": "Low"}
 
 
+# =============================================================================
+# Splunk SPL — accelerated (summarised) vs non-accelerated variant
+# =============================================================================
+# CIM data-model acceleration is environment-dependent. Plenty of SOCs run
+# Splunk without acceleration enabled, so a `tstats summariesonly=true` query
+# would return zero rows for them. We emit both forms when applicable: the
+# fast accelerated query (default) plus an auto-derived non-accelerated
+# variant that runs against raw data without needing the summary index.
+
+def _spl_make_unsummarised(spl: str) -> str:
+    """Convert an accelerated tstats query to the non-accelerated form.
+    Strategy:
+      1. Replace the `summariesonly` macro with `summariesonly=false`.
+      2. Replace explicit `summariesonly=true|t|1` with `summariesonly=false`.
+      3. If the tstats invocation has no summariesonly arg at all, add it.
+    Returns the original query unchanged when there's no tstats / nothing
+    to convert."""
+    if not spl:
+        return spl
+    if "tstats" not in spl.lower():
+        return spl  # raw `search index=...` queries already work without acceleration
+    out = spl
+    # Pattern 1: `summariesonly` macro
+    out = re.sub(r"`summariesonly`", "summariesonly=false", out)
+    # Pattern 2: literal summariesonly=true|t|1
+    out = re.sub(r"\bsummariesonly\s*=\s*(?:true|t|1|yes|y)\b",
+                  "summariesonly=false", out, flags=re.IGNORECASE)
+    # Pattern 3: tstats with no summariesonly arg at all — inject one right after `tstats`
+    if not re.search(r"\bsummariesonly\s*=", out, flags=re.IGNORECASE):
+        out = re.sub(r"(\|\s*tstats\b)(\s+)",
+                      r"\1 summariesonly=false\2", out, count=1, flags=re.IGNORECASE)
+    return out
+
+
+def _spl_has_dual_form(spl: str) -> bool:
+    """True when the query has both an accelerated and non-accelerated
+    representation worth showing as a toggle."""
+    if not spl:
+        return False
+    alt = _spl_make_unsummarised(spl)
+    return alt != spl
+
+
 def render_indicators(ind: dict, techniques: list) -> str:
     out = []
     def block(label, items, cls=""):
@@ -9579,9 +9664,32 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
             f'<button class="tab-btn{" active" if i == 0 else ""}" data-target="{uid}-{suffix}">{label}</button>'
             for i, (suffix, label, _) in enumerate(populated)
         )
+        # Splunk SPL gets a nested Summarised/Non-summarised toggle when the
+        # tstats-form has a non-accelerated variant. The toggle is purely
+        # client-side; the canonical body stays the accelerated one so any
+        # downstream consumer (rule_packs export, drawer scrape) still picks
+        # up the same SPL it always did.
+        def _pane_body(suffix: str, body: str) -> str:
+            if suffix == "spl" and _spl_has_dual_form(body):
+                alt = _spl_make_unsummarised(body)
+                return (
+                    f'<div class="spl-mode-toggle">'
+                    f'  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="{uid}-spl-acc">Summarised</button>'
+                    f'  <button class="spl-mode-btn" data-spl-mode="raw" data-target="{uid}-spl-raw">Non-summarised</button>'
+                    f'  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>'
+                    f'</div>'
+                    f'<pre class="spl-mode-body active" id="{uid}-spl-acc">'
+                    f'<button class="copy-btn">COPY</button><code>{html.escape(body)}</code></pre>'
+                    f'<pre class="spl-mode-body" id="{uid}-spl-raw">'
+                    f'<button class="copy-btn">COPY</button><code>{html.escape(alt)}</code></pre>'
+                )
+            return (
+                f'<pre><button class="copy-btn">COPY</button>'
+                f'<code>{html.escape(body)}</code></pre>'
+            )
         tab_panes = "\n    ".join(
             f'<div class="tab-content{" active" if i == 0 else ""}" id="{uid}-{suffix}">'
-            f'<pre><button class="copy-btn">COPY</button><code>{html.escape(body)}</code></pre>'
+            f'{_pane_body(suffix, body)}'
             f'</div>'
             for i, (suffix, _, body) in enumerate(populated)
         )
