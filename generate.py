@@ -7154,34 +7154,28 @@ function _libPrepare() {
   if (!M || !Array.isArray(M.ucs)) return [];
   const arts = M.arts || [];
 
-  // Pull just the raw query bodies from the rendered DOM so the drawer can
-  // display them on click. Platform flags are NOT derived from DOM any more
-  // — they come from each MATRIX record's authoritative `pl` field below.
-  // The old selector (#articles .article) silently matched nothing because
-  // the cards are <article class="card"> inside #view-articles, so every
-  // UC fell through to a fallback that wrongly tagged bespoke UCs as
-  // def+sigma only. That hid every Datadog UC from the Library.
+  // Pull each UC's per-platform query bodies straight off the rendered
+  // tab-content divs. The id suffix tells us the platform unambiguously
+  // (e.g. id="art-01-uc0-datadog") which is far more reliable than
+  // content-sniffing the query text — KQL pipes can look like SPL,
+  // Datadog queries don't always start with "source:", etc.
+  // Platform flags themselves are read from each MATRIX record's
+  // canonical `pl` field below; this map is used only by the drawer
+  // to display the actual query body when a UC is opened.
   const ucDom = new Map();
+  const KIND_BY_SUFFIX = {kql:'def', sentinel:'sent', sigma:'sigma', datadog:'datadog', spl:'spl'};
   document.querySelectorAll('#view-articles article.card details.uc').forEach(d => {
     const title = (d.querySelector('summary .uc-title')?.textContent || d.querySelector('summary')?.textContent || '').trim();
     if (!title) return;
     const queries = {};
-    // The query body lives inside <pre><button>COPY</button><code>...</code></pre>.
-    // Reading <pre>.textContent concatenates "COPY" with the query string and
-    // breaks the (^|\s)source: anchor for Datadog detection. Read from <code>
-    // (or the parent's data-query if rendered that way) so the actual query
-    // text starts the string.
-    d.querySelectorAll('pre').forEach(pre => {
-      const codeEl = pre.querySelector('code');
-      const txt = (codeEl ? codeEl.textContent : pre.textContent) || '';
-      if (!txt.trim()) return;
-      let kind = 'other';
-      if (/^\s*title:/m.test(txt) && /\bdetection:/.test(txt)) kind = 'sigma';
-      else if (/(^|\s)source:[a-z][a-z0-9._-]+(\s|$)/i.test(txt) && /@[A-Za-z][A-Za-z0-9._-]+:/.test(txt) && !/\|/.test(txt.split('\n')[0])) kind = 'datadog';
-      else if (/^\s*(?:index=|search\b|\|)/m.test(txt)) kind = 'spl';
-      else if (/DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(txt)) kind = 'def';
-      else if (/SecurityEvent|SigninLogs|AuditLogs/.test(txt)) kind = 'sent';
-      if (!queries[kind] && txt.length < 8000) queries[kind] = txt;
+    d.querySelectorAll('.tab-content').forEach(tc => {
+      const m = (tc.id || '').match(/-(kql|sentinel|sigma|datadog|spl)$/);
+      if (!m) return;
+      const codeEl = tc.querySelector('pre code');
+      const txt = (codeEl ? codeEl.textContent : '').trim();
+      if (!txt || txt.length > 8000) return;
+      const kind = KIND_BY_SUFFIX[m[1]];
+      if (kind && !queries[kind]) queries[kind] = txt;
     });
     ucDom.set(title, {queries});
   });
