@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 7, 2026
 08:11 AM
 0 
-
-
 A 20-year-old California man was sentenced to 78 months in prison for serving as a home invader and money launderer in a criminal ring that stole over $250 million in cryptocurrency.
-
-
-Marlon Ferro (also known online as GothFerrari and Marlo) was arrested on May 13, 2025, carrying two firearms and a fake identification document. He pleaded guilty in October and was also ordered to pa…
+Marlon Ferro (also known online as GothFerrari and Marlo) was arrested on May 13, 2025, carrying two firearms and a fake identification document. He pleaded guilty in October and was also ordered to pay $2.5 m…
 
 ## Indicators of Compromise (high-fidelity only)
 

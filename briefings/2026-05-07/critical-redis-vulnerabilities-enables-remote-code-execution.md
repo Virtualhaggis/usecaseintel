@@ -10,12 +10,8 @@ Home Cyber Security News
 Critical Redis Vulnerabilities Enables Remote Code Execution Attacks 
 By Abinaya 
 May 7, 2026 
-
-
-
-
 Five dangerous vulnerabilities in Redis expose Redis Cloud, Redis Software, and all open-source community editions to potential remote code execution, giving authenticated attackers a direct path to compromise affected systems.
-All require authenticated access to exploit, but successful exploitation can lead to arbitrary code execution , full system compromise, data ex…
+All require authenticated access to exploit, but successful exploitation can lead to arbitrary code execution , full system compromise, data exfiltrati…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,8 +37,10 @@ All require authenticated access to exploit, but successful exploitation can lea
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1203** — Exploitation for Client Execution
-- **T1505.003** — Server Software Component: Web Shell
-- **T1098.004** — Account Manipulation: SSH Authorized Keys
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
@@ -50,61 +48,84 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Redis instances exposed to 2026-05 RCE advisory CVEs (RESTORE / Lua / VectorSets)
+### [LLM] redis-server spawning shell/scripting child — post-RCE indicator (CVE-2026-23479/25243/25588/25589)
 
-`UC_6_8` · phase: **recon** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-23479","CVE-2026-25243","CVE-2026-25588","CVE-2026-25589","CVE-2026-23631") by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity dest
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="redis-server" AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","ash","python","python3","perl","ruby","php","nc","ncat","socat","curl","wget","chmod","chown","busybox","base64","xxd") OR Processes.process_path IN ("/tmp/*","/dev/shm/*","/var/tmp/*","/run/shm/*")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-23479","CVE-2026-25243","CVE-2026-25588","CVE-2026-25589","CVE-2026-23631")
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | project CveId, CvssScore, IsExploitAvailable) on CveId
-| project DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc, DeviceName asc
-```
-
-### [LLM] redis-server (Linux) spawning shell / scripting / network LOLBins — RESTORE or Lua RCE
-
-`UC_6_9` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as child_path from datamodel=Endpoint.Processes where (Processes.parent_process_name=redis-server OR Processes.parent_process_path="*/redis-server") AND Processes.process_name IN (sh,bash,dash,zsh,ksh,curl,wget,nc,ncat,python,python3,perl,ruby,socat,php,node,xterm) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
+// CVE-2026-23479 / 25243 / 25588 / 25589 / 23631 — post-exploit child of redis-server
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "redis-server"
-| where FileName in~ ("sh","bash","dash","zsh","ksh","curl","wget","nc","ncat","python","python3","perl","ruby","socat","php","node","xterm")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
+| where FileName in~ ("sh","bash","dash","zsh","ksh","ash","python","python3","perl","ruby","php","nc","ncat","socat","curl","wget","chmod","chown","busybox","base64","xxd")
+   or FolderPath has_any ("/tmp/","/dev/shm/","/var/tmp/","/run/shm/")
+   or ProcessCommandLine has_any ("/tmp/","/dev/shm/","bash -i","sh -i","/bin/sh -c","curl http","wget http")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Unauthorized modification of Redis configuration or persistence files (post-RCE artefact)
+### [LLM] Redis crash with Lua engine stack trace in syslog (CVE-2026-23479 / CVE-2026-23631 exploitation symptom)
 
-`UC_6_10` · phase: **actions** · confidence: **Medium**
+`UC_11_9` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("redis.conf","dump.rdb","appendonly.aof","users.acl") OR Filesystem.file_path IN ("*/redis/*.conf","*/redis/*.rdb","*/redis/*.aof")) AND Filesystem.action IN ("created","modified","written") AND Filesystem.process_name!=redis-server AND Filesystem.process_name!=systemd AND Filesystem.process_name!=apt AND Filesystem.process_name!=dpkg AND Filesystem.process_name!=yum AND Filesystem.process_name!=rpm AND Filesystem.process_name!=ansible by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+index=* (sourcetype=syslog OR sourcetype=linux_secure OR sourcetype=linux_messages OR source="*/messages" OR source="*/syslog" OR source="*/journal*")
+  (process=redis-server OR "redis-server")
+  ("lua_" OR "lj_" OR "Lua engine" OR "luaCallFunction" OR "scripting.c")
+  ("SIGSEGV" OR "Assertion failed" OR "crash report" OR "Backtrace:" OR "=== REDIS BUG REPORT START" OR "FATAL")
+| stats min(_time) as firstTime max(_time) as lastTime count values(_raw) as samples by host
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+// MDE for Linux surfaces redis crashes via DeviceEvents/AdditionalFields when systemd-coredump fires.
+DeviceEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ ("redis.conf","dump.rdb","appendonly.aof","users.acl")
-   or (FolderPath has "/redis" and (FileName endswith ".conf" or FileName endswith ".rdb" or FileName endswith ".aof"))
-| where InitiatingProcessFileName !in~ ("redis-server","systemd","apt","apt-get","dpkg","yum","dnf","rpm","ansible","ansible-playbook","puppet","chef-client","salt-minion","helm","kubelet")
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where InitiatingProcessFileName =~ "redis-server"
+   or FileName =~ "redis-server"
+   or AdditionalFields has "redis-server"
+| where ActionType in ("ProcessCrashed","ProcessTerminated","AbnormalProcessTermination")
+   or AdditionalFields has_any ("SIGSEGV","lua_","lj_","Lua engine","luaCallFunction","scripting.c","Assertion failed")
+| project Timestamp, DeviceName, ActionType, FileName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, AdditionalFields
+| order by Timestamp desc
+```
+
+### [LLM] redis-server initiating outbound connection to public IP — possible post-RCE C2/payload pull
+
+`UC_11_10` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name="redis-server" AND All_Traffic.dest_category!="internal" AND NOT (All_Traffic.dest="10.0.0.0/8" OR All_Traffic.dest="172.16.0.0/12" OR All_Traffic.dest="192.168.0.0/16" OR All_Traffic.dest="127.0.0.0/8") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// Anti-baseline: redis-server hitting a public IP it has not contacted in the last 30d
+let baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1h))
+    | where InitiatingProcessFileName =~ "redis-server"
+    | summarize by DeviceId, RemoteIP;
+DeviceNetworkEvents
+| where Timestamp > ago(1h)
+| where InitiatingProcessFileName =~ "redis-server"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionRequest")
+| where RemoteIPType == "Public"
+| where not(RemoteIP startswith "127.") and not(RemoteIP startswith "169.254.")
+| join kind=leftanti baseline on DeviceId, RemoteIP
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
@@ -345,7 +366,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Redis Vulnerabilities Enables Remote Code Execution Attacks
 
-`UC_6_7` · phase: **exploit** · confidence: **High**
+`UC_11_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -402,4 +423,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

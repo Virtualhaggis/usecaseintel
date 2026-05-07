@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Socket NuGet supply-chain stealer staging file at C:\ProgramData\Microsoft OneDrive\keys.dat
 
-`UC_14_14` · phase: **actions** · confidence: **High**
+`UC_19_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### [LLM] NuGet bmrxntfj C2 beacon to dns-providersa2[.]com or VDSINA Amsterdam VPS
 
-`UC_14_15` · phase: **c2** · confidence: **High**
+`UC_19_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceNetworkEvents
 
 ### [LLM] Execution of we4ftg.exe / s4.exe stealer dropped by IR.* NuGet packages
 
-`UC_14_16` · phase: **install** · confidence: **High**
+`UC_19_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -522,7 +522,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious NuGet Packages Target Browser Credentials, SSH Keys, and Crypto Wallet
 
-`UC_14_13` · phase: **exploit** · confidence: **High**
+`UC_19_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

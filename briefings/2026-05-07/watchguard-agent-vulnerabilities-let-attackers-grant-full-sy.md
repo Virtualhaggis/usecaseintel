@@ -10,13 +10,9 @@ Home Cyber Security News
 WatchGuard Agent Vulnerabilities Let Attackers Grant Full SYSTEM Privileges on Windows 
 By Abinaya 
 May 7, 2026 
-
-
-
-
 WatchGuard has released urgent security updates to address multiple high-severity vulnerabilities affecting the WatchGuard Agent on Windows.
 The most critical of these flaws allows authenticated local attackers to escalate their privileges to the highest system level, granting them complete control over the compromised machine.
-Additional vulnerabilit…
+Additional vulnerabilities disc…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -33,12 +29,74 @@ Additional vulnerabilit…
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1068** — Exploitation for Privileged Escalation
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vulnerable WatchGuard Agent for Windows ≤ 1.25.02.0000 (WGSA-2026-00013)
+
+`UC_10_4` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-6787","CVE-2026-6788","CVE-2026-41288","CVE-2026-41286","CVE-2026-41287") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cvss
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - cvss
+```
+
+**Defender KQL:**
+```kql
+let WatchGuardCVEs = dynamic(["CVE-2026-6787","CVE-2026-6788","CVE-2026-41288","CVE-2026-41286","CVE-2026-41287"]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (WatchGuardCVEs)
+   or (SoftwareVendor has_any ("watchguard","panda") and SoftwareName has_any ("agent","aether") and SoftwareVersion startswith "1.25.02")
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp,*) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+```
+
+### [LLM] WatchGuard Agent service spawning shells / LOLBins (post-EOP via CVE-2026-6787/6788/41288)
+
+`UC_10_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("AgentSvc.exe","Agent Service.exe","WGAgent.exe") OR Processes.parent_process_path="*\\Panda Security\\Panda Aether Agent\\*" OR Processes.parent_process_path="*\\WatchGuard\\*Agent*\\*") (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","net.exe","net1.exe","whoami.exe","reg.exe","sc.exe","schtasks.exe","bitsadmin.exe","certutil.exe")) NOT (Processes.user IN ("*$","*SYSTEM") AND Processes.process_name="msiexec.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_integrity_level
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let AgentBinaries = dynamic(["agentsvc.exe","agent service.exe","wgagent.exe"]);
+let AgentPaths = dynamic([@"\Panda Security\Panda Aether Agent\", @"\WatchGuard\Agent\", @"\WatchGuard\Endpoint Agent\"]);
+let SuspiciousChildren = dynamic(["cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","net.exe","net1.exe","whoami.exe","reg.exe","sc.exe","schtasks.exe","bitsadmin.exe","certutil.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ (AgentBinaries)
+    or InitiatingProcessFolderPath has_any (AgentPaths)
+| where FileName in~ (SuspiciousChildren)
+| where InitiatingProcessIntegrityLevel in ("System","High")
+| where not(FileName =~ "msiexec.exe" and ProcessCommandLine has_any ("/i","/x","REINSTALL"))
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ParentIntegrity = InitiatingProcessIntegrityLevel,
+          ChildImage  = FolderPath,
+          ChildName   = FileName,
+          ChildCmd    = ProcessCommandLine,
+          ChildIntegrity = ProcessIntegrityLevel,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -101,7 +159,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — WatchGuard Agent Vulnerabilities Let Attackers Grant Full SYSTEM Privileges on W
 
-`UC_5_3` · phase: **exploit** · confidence: **High**
+`UC_10_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,4 +216,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

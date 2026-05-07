@@ -10,12 +10,8 @@ Home Cyber Security News
 Scammers Use Short-Lived VoIP Numbers and Reuse Windows to Defeat Reputation-Based Blocking 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 Phone-based scams are evolving faster than most security filters can keep up with. Attackers are now leaning heavily on Voice over Internet Protocol (VoIP) numbers that disappear before detection systems can flag them, leaving users exposed and defenders scrambling.
-These scam campaigns arrive through email, where attackers embed phon…
+These scam campaigns arrive through email, where attackers embed phone number…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -29,11 +25,10 @@ These scam campaigns arrive through email, where attackers embed phon…
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1566.004** — Phishing: Spearphishing Voice
 - **T1566.001** — Phishing: Spearphishing Attachment
-- **T1036** — Masquerading
-- **T1583.003** — Acquire Infrastructure: Virtual Private Server
 - **T1656** — Impersonation
+- **T1566** — Phishing
+- **T1583.003** — Acquire Infrastructure: Virtual Private Server
 
 ## Kill chain phases observed
 
@@ -41,76 +36,96 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Inbound TOAD email with HEIC attachment impersonating PayPal/Geek Squad/McAfee/Norton
+### [LLM] HEIC attachment in inbound email impersonating PayPal/Geek Squad/McAfee/Norton (TOAD callback lure)
 
-`UC_1_3` · phase: **delivery** · confidence: **High**
+`UC_6_3` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Email.file_name) as file_name values(Email.subject) as subject values(Email.recipient) as recipient values(Email.src_user) as src_user from datamodel=Email where Email.action=delivered Email.is_inbound=true (Email.file_name="*.heic" OR Email.file_name="*.HEIC" OR Email.file_name="*.heif") by Email.message_id Email.src_user Email.recipient
+| `drop_dm_object_name(Email)`
+| eval brand_hit=if(match(lower(subject), "paypal|geek\s*squad|mcafee|norton|lifelock|amazon|apple|best\s*buy|microsoft|coinbase"),1,0)
+| where brand_hit=1
+| eval reason="HEIC attachment + brand-impersonation subject = TOAD callback lure (Cisco Talos Feb-Mar 2025)"
+| table firstTime lastTime src_user recipient subject file_name reason
+| convert ctime(firstTime) ctime(lastTime)
+```
 
 **Defender KQL:**
 ```kql
-// TOAD: HEIC attachment + named brand impersonation (Cisco Talos, Feb-Mar 2025)
-let ToadBrands = dynamic(["paypal","geek squad","geeksquad","best buy","mcafee","norton","lifelock"]);
-let LureTerms = dynamic(["renewal","refund","invoice","subscription","order","charge","auto-renew","cancellation","unauthorized","purchase","receipt","confirmation"]);
-let HeicAttachments = EmailAttachmentInfo
+// HEIC attachment in inbound email + brand-impersonation subject = TOAD callback lure
+let BrandRegex = @"(?i)paypal|geek\s*squad|mcafee|norton|lifelock|amazon|apple|best\s*buy|microsoft\s+(store|365)|coinbase|invoice|order\s+confirm|subscription\s+renew|antivirus|auto[-\s]*renew";
+let HeicMessages = EmailAttachmentInfo
     | where Timestamp > ago(7d)
-    | where FileType =~ "HEIC" or FileName endswith ".heic" or FileName endswith ".heif"
-    | project NetworkMessageId, FileName, FileType, FileSize, AttSha256 = SHA256;
+    | where FileType in~ ("heic","heif") or FileName endswith ".heic" or FileName endswith ".heif"
+    | project NetworkMessageId, AttachmentFileName = FileName, AttachmentFileType = FileType, AttachmentSHA256 = SHA256;
 EmailEvents
 | where Timestamp > ago(7d)
 | where EmailDirection == "Inbound"
 | where DeliveryAction in ("Delivered","DeliveredAsSpam")
-| where Subject has_any (ToadBrands) or SenderDisplayName has_any (ToadBrands)
-| where Subject has_any (LureTerms)                                  // lure language pairs with brand
-| where SenderFromDomain !endswith "paypal.com"                      // exclude legit paypal.com
-    and SenderFromDomain !endswith "bestbuy.com"
-    and SenderFromDomain !endswith "mcafee.com"
-    and SenderFromDomain !endswith "norton.com"
-    and SenderFromDomain !endswith "nortonlifelock.com"
-    and SenderFromDomain !endswith "lifelock.com"
-| join kind=inner HeicAttachments on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, SenderDisplayName,
-          RecipientEmailAddress, Subject, FileName, FileType, FileSize, AttSha256, DeliveryAction
+| where Subject matches regex BrandRegex
+| join kind=inner HeicMessages on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderFromDomain,
+          RecipientEmailAddress, Subject, AttachmentFileName, AttachmentFileType, AttachmentSHA256,
+          DeliveryAction, DeliveryLocation, AuthenticationDetails
 | order by Timestamp desc
 ```
 
-### [LLM] TOAD callback number recycled across unrelated lure subjects (sequential DID reuse hunt)
+### [LLM] Same VoIP callback number recurring across unrelated lures within Talos 14-day cool-down
 
-`UC_1_4` · phase: **delivery** · confidence: **Medium**
+`UC_6_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Email.subject) as subjects values(Email.src_user) as senders values(Email.recipient) as recipients values(Email.src_user_domain) as sender_domains from datamodel=Email where Email.action=delivered Email.is_inbound=true by Email.subject
+| `drop_dm_object_name(Email)`
+| rex field=subject "(?<phone_raw>(?:\+?1[\s\.\-]?)?\(?[2-9]\d{2}\)?[\s\.\-]?[2-9]\d{2}[\s\.\-]?\d{4})"
+| where isnotnull(phone_raw)
+| eval phone=replace(phone_raw, "[^0-9]", "")
+| eval phone=if(len(phone)==10, "1".phone, phone)
+| eval lure=case(match(lower(subject),"order\s+(confirm|#|number|placed)"),"OrderConfirmation", match(lower(subject),"subscription|auto[-\s]*renew|renewal|expir"),"SubscriptionRenewal", match(lower(subject),"invoice|payment|charge|refund|transaction"),"FinancialAlert", match(lower(subject),"support|geek\s*squad|antivirus|mcafee|norton"),"TechSupport", match(lower(subject),"delivery|shipped|package|tracking"),"Shipping", true(),"Other")
+| stats min(firstSeen) as firstSeen max(lastSeen) as lastSeen dc(lure) as distinct_lures values(lure) as lure_buckets dc(subject) as distinct_subjects values(subject) as sample_subjects dc(sender_domains) as distinct_sender_domains values(sender_domains) as sender_domains dc(recipients) as recipient_count sum(count) as message_count by phone
+| where distinct_lures>=2 AND distinct_sender_domains>=2 AND (lastSeen-firstSeen)<=1209600
+| eval reason="VoIP number reused across ".distinct_lures." lure themes from ".distinct_sender_domains." sender domains within 14d (Talos median number lifespan)"
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - distinct_lures
+```
 
 **Defender KQL:**
 ```kql
-// Hunt: same toll-free CPaaS DID recycled across distinct senders + lure subjects
-// Article: 14-day median number lifespan; 68 of 1,962 numbers reused on consecutive days;
-// same number reappears in unrelated lures (order confirmation, subscription, financial alert).
-let LookbackDays = 14d;          // matches Talos's observed median number lifespan
-let ToadBrands = dynamic(["paypal","geek squad","geeksquad","best buy","mcafee","norton","lifelock","docusign","microsoft 365","microsoft365"]);
-let PhoneRx = @"(?i)(?:\+?1[\s.\-]?)?\(?(8(?:00|33|44|55|66|77|88))\)?[\s.\-]?(\d{3})[\s.\-]?(\d{4})";
+// VoIP-number reuse across unrelated lures - cluster on extracted phone digits over 14d
+let Lookback = 14d;
+let PhoneRegex = @"(?:\+?1[\s\.\-]?)?\(?[2-9]\d{2}\)?[\s\.\-]?[2-9]\d{2}[\s\.\-]?\d{4}";
 EmailEvents
-| where Timestamp > ago(LookbackDays)
+| where Timestamp > ago(Lookback)
 | where EmailDirection == "Inbound"
 | where DeliveryAction in ("Delivered","DeliveredAsSpam")
-| extend Phone = extract(PhoneRx, 0, Subject)
-| where isnotempty(Phone)
-| extend PhoneNorm = replace_regex(Phone, @"[\s.\-\(\)\+]", "")
-| extend PhoneNorm = iif(strlen(PhoneNorm) == 11 and PhoneNorm startswith "1", substring(PhoneNorm, 1, 10), PhoneNorm)
-| where strlen(PhoneNorm) == 10
-| extend BrandHit = iif(Subject has_any (ToadBrands), 1, 0)
-| summarize
-    DistinctSenderDomains = dcount(SenderFromDomain),
-    DistinctSenders       = dcount(SenderFromAddress),
-    DistinctSubjects      = dcount(Subject),
-    DistinctRecipients    = dcount(RecipientEmailAddress),
-    BrandsTouched         = make_set_if(Subject, BrandHit == 1, 8),
-    SampleSubjects        = make_set(Subject, 6),
-    SampleSenders         = make_set(SenderFromAddress, 6),
-    FirstSeen             = min(Timestamp),
-    LastSeen              = max(Timestamp),
-    DaysActive            = dcount(bin(Timestamp, 1d)),
-    TotalEmails           = count()
-  by PhoneNorm
-// reuse-pattern thresholds derived from Talos: 68/1962 (~3.5%) numbers reused across
-// consecutive days; multi-sender + multi-subject clustering is the high-fidelity signal
-| where DistinctSenderDomains >= 3 and DistinctSubjects >= 3 and TotalEmails >= 5
-| order by DistinctSenderDomains desc, TotalEmails desc
+| where Subject matches regex PhoneRegex
+| extend PhoneRaw = extract(PhoneRegex, 0, Subject)
+| extend Phone = replace_regex(PhoneRaw, @"[^0-9]", "")
+| extend Phone = iff(strlen(Phone) == 10, strcat("1", Phone), Phone)
+| where strlen(Phone) == 11
+| extend LureBucket = case(
+    Subject matches regex @"(?i)order\s+(confirm|#|number|placed)",          "OrderConfirmation",
+    Subject matches regex @"(?i)subscription|auto[-\s]*renew|renewal|expir",  "SubscriptionRenewal",
+    Subject matches regex @"(?i)invoice|payment|charge|refund|transaction",   "FinancialAlert",
+    Subject matches regex @"(?i)support|tech\s+support|geek\s*squad|antivirus|mcafee|norton", "TechSupport",
+    Subject matches regex @"(?i)delivery|shipped|package|tracking",           "Shipping",
+    "Other")
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            DistinctLures = dcount(LureBucket),
+            LureBuckets = make_set(LureBucket),
+            DistinctSubjects = dcount(Subject),
+            SampleSubjects = make_set(Subject, 10),
+            DistinctSenderDomains = dcount(SenderFromDomain),
+            SenderDomains = make_set(SenderFromDomain, 20),
+            RecipientCount = dcount(RecipientEmailAddress),
+            MessageCount = count()
+            by Phone
+| where DistinctLures >= 2 and DistinctSenderDomains >= 2
+| extend WindowDays = datetime_diff('day', LastSeen, FirstSeen)
+| where WindowDays <= 14
+| order by DistinctLures desc, MessageCount desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -258,4 +273,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

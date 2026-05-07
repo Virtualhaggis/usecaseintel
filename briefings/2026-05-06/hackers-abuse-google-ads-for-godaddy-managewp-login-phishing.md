@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WrongPress: browser navigation to ManageWP phishing lookalike (manageewpbest.it.com)
 
-`UC_18_10` · phase: **delivery** · confidence: **High**
+`UC_23_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hunt: first-time-seen ManageWP lookalike host across the org (WrongPress rotation)
 
-`UC_18_11` · phase: **delivery** · confidence: **Medium**
+`UC_23_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -444,7 +444,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers abuse Google ads for GoDaddy ManageWP login phishing
 
-`UC_18_9` · phase: **exploit** · confidence: **High**
+`UC_23_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

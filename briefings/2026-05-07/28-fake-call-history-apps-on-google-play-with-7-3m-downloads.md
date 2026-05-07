@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CallPhantom Android scam — Firebase RTDB C2 / payment-URL beacon
 
-`UC_10_11` · phase: **c2** · confidence: **High**
+`UC_15_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union isfuzzy=true
 
 ### [LLM] CallPhantom APK SHA1 sweep across endpoint and proxy file telemetry
 
-`UC_10_12` · phase: **delivery** · confidence: **High**
+`UC_15_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,7 +466,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 28 Fake Call History Apps on Google Play with 7.3M+ Downloads Trick Users to Ste
 
-`UC_10_10` · phase: **exploit** · confidence: **High**
+`UC_15_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

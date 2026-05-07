@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DEEP#DOOR Python backdoor C2 via bore.pub Rust tunneling service
 
-`UC_85_15` · phase: **c2** · confidence: **High**
+`UC_87_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ union _network, _dns
 
 ### [LLM] DEEP#DOOR dropper artefacts: install_obf.bat execution and svc.py extraction
 
-`UC_85_16` · phase: **install** · confidence: **High**
+`UC_87_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ union _proc, _file
 
 ### [LLM] DEEP#DOOR persistence: python.exe registered as Run key / Startup / Scheduled task
 
-`UC_85_17` · phase: **install** · confidence: **High**
+`UC_87_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -559,7 +559,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Python Backdoor Uses Tunneling Service to Steal Browser and Cloud Credential
 
-`UC_85_14` · phase: **exploit** · confidence: **High**
+`UC_87_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

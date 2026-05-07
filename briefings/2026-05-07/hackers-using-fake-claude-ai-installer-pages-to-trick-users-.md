@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Using Fake Claude AI Installer Pages to Trick Users Into Running Malware on Their Systems 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 Hackers are using convincing fake pages for Claude AI to trick users into running malware on their own systems. The campaign, known as “InstallFix” or the Fake Claude Installer threat, marks a sharp shift in how cybercriminals exploit the trust people place in artificial intelligence tools. 
-Instead of targeting software vulnera…
+Instead of targeting software vulnerabilities…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -43,10 +39,13 @@ Instead of targeting software vulnera…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1218.005** — System Binary Proxy Execution: Mshta
+- **T1566.002** — Phishing: Spearphishing Link
 - **T1583.008** — Acquire Infrastructure: Malvertising
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
-- **T1105** — Ingress Tool Transfer
+- **T1573** — Encrypted Channel
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 
 ## Kill chain phases observed
 
@@ -54,80 +53,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] InstallFix / Fake Claude Installer: mshta.exe fetching claude.msixbundle polyglot
+### [LLM] InstallFix fake-Claude installer: mshta.exe fetching claude.msixbundle from download-version.1-5-8.com
 
-`UC_0_8` · phase: **delivery** · confidence: **High**
+`UC_5_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=mshta.exe OR Processes.original_file_name=mshta.exe) AND (Processes.process="*claude.msixbundle*" OR Processes.process="*download-version.1-5-8.com*" OR Processes.process="*oakenfjrod*" OR Processes.process="*.msixbundle*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_name Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent_process_name values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="mshta.exe" (Processes.process="*claude.msixbundle*" OR Processes.process="*download-version.1-5-8.com*" OR Processes.process="*download-version[.]1-5-8[.]com*") by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where FileName =~ "mshta.exe"
-| where ProcessCommandLine has_any ("claude.msixbundle", "download-version.1-5-8.com", "oakenfjrod", ".msixbundle")
-| project Timestamp, DeviceName, AccountName,
-          ProcessCommandLine,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          SHA256, InitiatingProcessSHA256
+| where ProcessCommandLine has_any ("claude.msixbundle", "download-version.1-5-8.com", "download-version[.]1-5-8[.]com")
+| project Timestamp, DeviceName, AccountName, AccountDomain,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          MshtaCmd    = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] InstallFix C2 egress to oakenfjrod[.]ru victim-unique subdomains or stage-5 IPs
+### [LLM] InstallFix Stage-4 C2 callback to oakenfjrod[.]ru victim-unique subdomain or known IOC IPs
 
-`UC_0_9` · phase: **c2** · confidence: **High**
+`UC_5_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("104.21.0.95","185.177.239.255","77.91.97.244") OR All_Traffic.url="*oakenfjrod.ru*" OR All_Traffic.url="*download-version.1-5-8.com*" OR All_Traffic.dest="*oakenfjrod.ru" OR All_Traffic.dest="*download-version.1-5-8.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=t count from datamodel=Network_Resolution where (Network_Resolution.DNS.query="*oakenfjrod.ru" OR Network_Resolution.DNS.query="*download-version.1-5-8.com") by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name(Network_Resolution.DNS)`]
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("104.21.0.95","185.177.239.255","77.91.97.244") OR All_Traffic.dest="*oakenfjrod.ru" OR All_Traffic.dest="*.oakenfjrod.ru" OR All_Traffic.dest="hosted-by.yeezyhost.net") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let SuspectIPs = dynamic(["104.21.0.95","185.177.239.255","77.91.97.244"]);
-let SuspectDomains = dynamic(["oakenfjrod.ru","download-version.1-5-8.com"]);
+let _ioc_ips = dynamic(["104.21.0.95","185.177.239.255","77.91.97.244"]);
+let _ioc_domains = dynamic(["oakenfjrod.ru","hosted-by.yeezyhost.net","download-version.1-5-8.com"]);
 union isfuzzy=true
   ( DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where RemoteIP in (SuspectIPs)
-       or RemoteUrl has_any (SuspectDomains)
-    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteIP, RemotePort, RemoteUrl, ActionType
-  ),
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (_ioc_ips)
+        or (isnotempty(RemoteUrl) and (RemoteUrl has_any (_ioc_domains) or RemoteUrl matches regex @"(?i)\.oakenfjrod\.ru" or RemoteUrl contains "/cloude-"))
+    | project Timestamp, DeviceName, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort,
+              InitiatingProcessAccountName ),
   ( DeviceEvents
-    | where Timestamp > ago(14d)
+    | where Timestamp > ago(30d)
     | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q has_any (SuspectDomains)
-    | project Timestamp, DeviceName, InitiatingProcessFileName, Q
-  )
+    | extend DnsName = tostring(parse_json(AdditionalFields).QueryName)
+    | where DnsName endswith ".oakenfjrod.ru" or DnsName =~ "oakenfjrod.ru" or DnsName =~ "hosted-by.yeezyhost.net" or DnsName =~ "download-version.1-5-8.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, DnsName,
+              InitiatingProcessAccountName=tostring(InitiatingProcessAccountName) )
 | order by Timestamp desc
 ```
 
-### [LLM] ClickFix paste artefact — RunMRU registry value containing mshta + .msixbundle URL
+### [LLM] InstallFix process tree: mshta.exe spawning SysWOW64 cmd/PowerShell with split-variable powershell reconstruction
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_5_10` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Explorer\\RunMRU*" AND (Registry.registry_value_data="*mshta*" OR Registry.registry_value_data="*.msixbundle*" OR Registry.registry_value_data="*oakenfjrod*" OR Registry.registry_value_data="*download-version.1-5-8.com*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name="mshta.exe" AND (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=process "(?i)(?<susp_amsi>amsi(initfailed|scanbuffer|context))|(?<susp_ssl>servercertificatevalidationcallback|servicepointmanager)|(?<susp_split>(\$\w+\s*\+\s*\$\w+\s*\+\s*\$\w+))|(?<syswow>syswow64\\(?:windowspowershell|cmd))" | where isnotnull(susp_amsi) OR isnotnull(susp_ssl) OR isnotnull(susp_split) OR isnotnull(syswow) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceRegistryEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"Explorer\RunMRU"
-| where RegistryValueData has_any ("mshta", ".msixbundle", "oakenfjrod", "download-version.1-5-8.com", "claude.msixbundle")
-| project Timestamp, DeviceName,
-          User = InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RegistryKey, RegistryValueName, RegistryValueData
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "mshta.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
+| where AccountName !endswith "$"
+// Article-specific evasion fingerprints: SysWOW64 PowerShell, AMSI patch,
+// SSL-validation bypass, or split-variable string reconstruction
+| where ProcessCommandLine matches regex @"(?i)SysWOW64\\(WindowsPowerShell|cmd)"
+     or ProcessCommandLine has_any ("AmsiInitFailed","amsiInitFailed","AmsiScanBuffer","ServerCertificateValidationCallback","ServicePointManager")
+     or ProcessCommandLine matches regex @"\$\w+\s*\+\s*\$\w+\s*\+\s*\$\w+"
+     or InitiatingProcessCommandLine has_any ("claude.msixbundle","download-version.1-5-8.com")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
@@ -378,4 +386,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

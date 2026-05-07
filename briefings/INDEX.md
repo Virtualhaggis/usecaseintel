@@ -10,17 +10,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-07
 - [28 fake call history apps on google play with 7 3m downloads](./2026-05-07/28-fake-call-history-apps-on-google-play-with-7-3m-downloads.md)
+- [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
 - [critical redis vulnerabilities enables remote code execution](./2026-05-07/critical-redis-vulnerabilities-enables-remote-code-execution.md)
 - [crypto gang member gets 6 5 years for role in 230 million he](./2026-05-07/crypto-gang-member-gets-6-5-years-for-role-in-230-million-he.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
 - [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [hackers using fake claude ai installer pages to trick users ](./2026-05-07/hackers-using-fake-claude-ai-installer-pages-to-trick-users-.md)
+- [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
 - [malicious nuget packages target browser credentials ssh keys](./2026-05-07/malicious-nuget-packages-target-browser-credentials-ssh-keys.md)
+- [one click total shutdown the patient zero webinar on killing](./2026-05-07/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [palo alto networks firewall zero day rce vulnerability explo](./2026-05-07/palo-alto-networks-firewall-zero-day-rce-vulnerability-explo.md)
+- [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [scammers use short lived voip numbers and reuse windows to d](./2026-05-07/scammers-use-short-lived-voip-numbers-and-reuse-windows-to-d.md)
+- [the browser is breaking your dlp how data slips past modern ](./2026-05-07/the-browser-is-breaking-your-dlp-how-data-slips-past-modern-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
 - [uat 8302 uses custom malware and open source tools to steal ](./2026-05-07/uat-8302-uses-custom-malware-and-open-source-tools-to-steal-.md)
@@ -60,11 +65,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [critical apache http 2 flaw cve 2026 23918 enables dos and p](./2026-05-05/critical-apache-http-2-flaw-cve-2026-23918-enables-dos-and-p.md)
 - [daemon tools supply chain attack compromises official instal](./2026-05-05/daemon-tools-supply-chain-attack-compromises-official-instal.md)
-- [daemon tools trojanized in supply chain attack to deploy bac](./2026-05-05/daemon-tools-trojanized-in-supply-chain-attack-to-deploy-bac.md)
-- [instructure hacker claims data theft from 8 800 schools univ](./2026-05-05/instructure-hacker-claims-data-theft-from-8-800-schools-univ.md)
 - [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [microsoft details phishing campaign targeting 35 000 users a](./2026-05-05/microsoft-details-phishing-campaign-targeting-35-000-users-a.md)
-- [new stealthy quasar linux malware targets software developer](./2026-05-05/new-stealthy-quasar-linux-malware-targets-software-developer.md)
 - [scarcruft hacks gaming platform to deploy birdcall malware o](./2026-05-05/scarcruft-hacks-gaming-platform-to-deploy-birdcall-malware-o.md)
 - [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
@@ -127,9 +129,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what to look for in an exposure management platform and what](./2026-04-29/what-to-look-for-in-an-exposure-management-platform-and-what.md)
 
 ## 2026-04-28
-- [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
-- [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
 - [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)
 
 ## 2026-04-24
@@ -142,7 +142,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-23
 - [can ai attack the cloud lessons from building an autonomous ](./2026-04-23/can-ai-attack-the-cloud-lessons-from-building-an-autonomous-.md)
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)
-- [fast16 mystery shadowbrokers reference reveals high precisio](./2026-04-23/fast16-mystery-shadowbrokers-reference-reveals-high-precisio.md)
+- [fast16 mystery shadow brokers reference reveals high precisi](./2026-04-23/fast16-mystery-shadow-brokers-reference-reveals-high-precisi.md)
 - [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
 - [it pays to be a forever student](./2026-04-23/it-pays-to-be-a-forever-student.md)

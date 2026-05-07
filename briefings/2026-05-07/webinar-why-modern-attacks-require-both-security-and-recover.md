@@ -11,15 +11,9 @@ By BleepingComputer
 May 7, 2026
 08:00 AM
 0 
-
-
 Cyberattacks are evolving faster than many MSP defenses can keep up, with phishing now serving as the primary engine behind modern cybercrime.
-
-
 On Thursday, May 14, 2026 at 2:00 PM ET, BleepingComputer will host a live webinar titled " From phishing to fallout: Why MSPs must rethink both security and recovery " with Austin O'Saben and Adam Marget of Kaseya.
-
-
-The webinar explores…
+The webinar explores how AI-driv…
 
 ## Indicators of Compromise (high-fidelity only)
 
