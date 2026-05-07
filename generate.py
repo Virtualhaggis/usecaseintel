@@ -12036,6 +12036,381 @@ def write_technique_pages(matrix_data: dict, base_url: str = "https://clankeruse
     return written
 
 
+# =============================================================================
+# Per-actor landing pages — mirror of the technique pages, one indexable
+# HTML hub per tracked threat actor (APT29, Lazarus, ScarCruft, etc).
+# =============================================================================
+
+def _actor_slug(name: str) -> str:
+    """URL slug — lowercase, alphanumeric + dashes."""
+    s = re.sub(r"[^a-z0-9]+", "-", (name or "").lower()).strip("-")
+    return s[:80] or "unknown"
+
+
+def _render_actor_page(actor: dict, technique_view: dict,
+                        base_url: str = "https://clankerusecase.com") -> str:
+    """One static HTML page per threat actor — mirrors the technique-page
+    pattern. Aggregates: profile (country, motivation, aliases, MITRE ID),
+    stats (UCs, articles, techniques, IOCs), top techniques (cross-linked
+    to the per-technique pages), UC list, article list, IOC summary, and
+    the MITRE official-spec link when MITRE-attributed."""
+    name = actor.get("name", "Unknown actor")
+    country = actor.get("country") or ""
+    flag = actor.get("flag") or ""
+    motivation = actor.get("motivation") or ""
+    aliases = actor.get("aliases") or []
+    mitre_id = actor.get("mitre_id") or ""
+    mitre_desc = actor.get("mitre_description") or ""
+    techs = actor.get("techs") or []
+    top_techs = actor.get("top_techs") or techs[:3]
+    iocs = actor.get("iocs") or {}
+    articles = actor.get("articles") or []
+    ucs = actor.get("ucs") or []
+    first_seen = actor.get("first_seen") or ""
+    last_seen = actor.get("last_seen") or ""
+    is_mitre_only = actor.get("is_mitre_only", False)
+
+    slug = _actor_slug(name)
+
+    # Aliases pill row
+    aliases_html = ""
+    if aliases:
+        aliases_html = (
+            '<div class="section"><h2>Known aliases</h2><div class="subs">'
+            + "".join(f'<span style="font-size:12px;font-family:var(--mono);'
+                      f'padding:5px 11px;border-radius:5px;background:var(--panel);'
+                      f'border:1px solid var(--border);">{html.escape(a)}</span>'
+                      for a in aliases)
+            + "</div></div>"
+        )
+
+    # Top techniques — cross-link to /techniques/<TID>.html
+    top_tech_html = ""
+    if top_techs:
+        items = []
+        for tid in top_techs:
+            tname = technique_view.get(tid, {}).get("name", tid)
+            items.append(
+                f'<a href="../techniques/{html.escape(tid)}.html">'
+                f'{html.escape(tid)} · {html.escape(tname)}</a>'
+            )
+        top_tech_html = (
+            '<div class="section"><h2>Top techniques</h2><div class="subs">'
+            + "".join(items) + "</div></div>"
+        )
+
+    # Full technique list when there are more than the top ones
+    if len(techs) > len(top_techs):
+        items = []
+        for tid in techs:
+            if tid in (top_techs or []):
+                continue
+            tname = technique_view.get(tid, {}).get("name", tid)
+            items.append(
+                f'<a href="../techniques/{html.escape(tid)}.html">'
+                f'{html.escape(tid)} · {html.escape(tname)}</a>'
+            )
+        if items:
+            top_tech_html += (
+                '<div class="section"><h2>All other tracked techniques</h2>'
+                '<div class="subs" style="max-height:240px;overflow:auto;">'
+                + "".join(items) + "</div></div>"
+            )
+
+    # UC list — show titles + sources + platform badges
+    uc_parts = []
+    for uc in ucs[:50]:
+        title = uc.get("title", "Untitled UC")
+        # Build platform badges from the UC's available bodies
+        badges = []
+        if uc.get("defender_kql"):
+            badges.append('<span class="pl-d" title="Defender KQL">D</span>')
+        if uc.get("sentinel_kql"):
+            badges.append('<span class="pl-s" title="Sentinel KQL">S</span>')
+        if uc.get("sigma_yaml"):
+            badges.append('<span class="pl-g" title="Sigma">Σ</span>')
+        if uc.get("splunk_spl"):
+            badges.append('<span class="pl-p" title="Splunk SPL">P</span>')
+        if uc.get("datadog_query"):
+            badges.append('<span class="pl-D" title="Datadog Cloud SIEM">DD</span>')
+        platforms_html = '<span class="pl">' + "".join(badges) + '</span>' if badges else ""
+        # Source pill — bespoke (article-bound), llm (actor-profile), or mitre-match
+        kind = uc.get("source_kind") or ""
+        if kind == "actor-bespoke":
+            src_label, src_cls = "LLM · profile", "bespoke"
+        elif uc.get("is_mitre_match"):
+            src_label, src_cls = "MITRE match", "internal"
+        elif title.startswith("[LLM]"):
+            src_label, src_cls = "Bespoke", "bespoke"
+        else:
+            src_label, src_cls = "Internal", "internal"
+        href = f"{base_url}/#actor-{html.escape(slug)}"
+        uc_parts.append(
+            f'<a class="uc-card" href="{href}">'
+            f'  <span class="t">{html.escape(title)}</span>'
+            f'  <span class="meta">'
+            f'    <span class="src {src_cls}">{html.escape(src_label)}</span>'
+            f'    {platforms_html}'
+            f'  </span>'
+            f'</a>'
+        )
+    if uc_parts:
+        uc_section = (
+            f'<div class="section"><h2>Detection use cases ({len(ucs)})</h2>'
+            f'{"".join(uc_parts)}'
+            + (f'<p style="color:var(--muted2);font-size:12px;margin-top:12px;">'
+               f'Showing the top 50 of {len(ucs)} — open the actor on the main site '
+               f'for the full list.</p>' if len(ucs) > 50 else "")
+            + '</div>'
+        )
+    else:
+        uc_section = (
+            '<div class="section"><h2>Detection use cases</h2>'
+            '<div class="empty">No use cases yet — this actor is in the catalogue '
+            'but no UC has been authored or auto-generated for them. Check the '
+            'main Threat Actors tab for live updates.</div></div>'
+        )
+
+    # Article list
+    art_parts = []
+    for a in articles[:30]:
+        atitle = a.get("title", "")
+        link = a.get("link", "")
+        date = a.get("published") or a.get("date") or ""
+        source = a.get("source") or ""
+        sev = (a.get("sev") or "low").lower()
+        href = link or f"{base_url}/"
+        art_parts.append(
+            f'<div class="art-row">'
+            f'  <a class="at" href="{html.escape(href)}" target="_blank" rel="noopener">'
+            f'    <span class="sev {sev}">{html.escape(sev)}</span>'
+            f'    {html.escape(atitle)}</a>'
+            f'  <span class="am">{html.escape(source)} · {html.escape(date)}</span>'
+            f'</div>'
+        )
+    if art_parts:
+        art_section = (
+            f'<div class="section"><h2>Threat-intel articles ({len(articles)})</h2>'
+            f'{"".join(art_parts)}'
+            + (f'<p style="color:var(--muted2);font-size:12px;margin-top:12px;">'
+               f'Showing the most recent 30 of {len(articles)}.</p>' if len(articles) > 30 else "")
+            + '</div>'
+        )
+    else:
+        art_section = ""
+
+    # IOC summary
+    ioc_parts = []
+    for kind, label, items in [
+        ("domains", "Domains", iocs.get("domains") or []),
+        ("ips", "IP addresses", iocs.get("ips") or []),
+        ("sha256", "SHA-256 hashes", iocs.get("sha256") or []),
+        ("cves", "CVEs", iocs.get("cves") or []),
+    ]:
+        if not items:
+            continue
+        chips = " ".join(
+            f'<code style="font-size:11px;font-family:var(--mono);'
+            f'padding:2px 7px;border-radius:4px;background:var(--panel);'
+            f'border:1px solid var(--border);color:var(--muted);">{html.escape(str(i))[:24]}</code>'
+            for i in items[:25]
+        )
+        more = f' <span style="color:var(--muted2);font-size:11px;">+{len(items) - 25} more</span>' if len(items) > 25 else ""
+        ioc_parts.append(
+            f'<div style="margin-bottom:14px;">'
+            f'  <h3 style="font-size:12px;font-family:var(--mono);'
+            f'letter-spacing:0.04em;text-transform:uppercase;color:var(--muted);'
+            f'margin:0 0 8px 0;">{html.escape(label)} ({len(items)})</h3>'
+            f'  <div style="display:flex;flex-wrap:wrap;gap:6px;">{chips}{more}</div>'
+            f'</div>'
+        )
+    ioc_section = (
+        f'<div class="section"><h2>Tracked indicators</h2>{"".join(ioc_parts)}</div>'
+        if ioc_parts else ""
+    )
+
+    # CTAs
+    mitre_cta = ""
+    if mitre_id:
+        mitre_cta = (
+            f'<a href="https://attack.mitre.org/groups/{html.escape(mitre_id)}/" '
+            f'target="_blank" rel="noopener">MITRE ATT&CK group spec ({mitre_id}) ↗</a>'
+        )
+    cta = (
+        f'<div class="cta">'
+        f'  <a class="primary" href="{base_url}/#actor-{html.escape(slug)}">View full actor card →</a>'
+        f'  <a href="{base_url}/#tab-actors">All threat actors</a>'
+        f'  {mitre_cta}'
+        f'</div>'
+    )
+
+    # Lead paragraph
+    n_ucs = len(ucs)
+    n_arts = len(articles)
+    n_techs = len(techs)
+    activity_window = ""
+    if first_seen and last_seen:
+        activity_window = f" Active in our corpus from {html.escape(first_seen)} to {html.escape(last_seen)}."
+    elif first_seen or last_seen:
+        activity_window = f" Active around {html.escape(first_seen or last_seen)}."
+
+    motiv_clause = ""
+    if motivation:
+        motiv_clause = f" Primary motivation: <strong>{html.escape(motivation.title())}</strong>."
+    country_clause = ""
+    if country and not is_mitre_only:
+        country_clause = f" Attributed to <strong>{html.escape(country)}</strong>."
+    elif country:
+        country_clause = f" {html.escape(country)}-aligned."
+
+    lead = (
+        f"<strong>{flag} {html.escape(name)}</strong> is a tracked threat actor in the "
+        f"Clankerusecase corpus.{country_clause}{motiv_clause} "
+        f"We map <strong>{n_ucs}</strong> detection use case"
+        f"{'s' if n_ucs != 1 else ''} to this actor across <strong>{n_techs}</strong> "
+        f"MITRE ATT&CK technique{'s' if n_techs != 1 else ''}, with "
+        f"<strong>{n_arts}</strong> threat-intel article{'s' if n_arts != 1 else ''} "
+        f"citing them.{activity_window}"
+    )
+
+    meta_desc_short = (
+        f"{name} threat actor profile — {country or 'unknown attribution'}, "
+        f"{n_ucs} detection use cases across Defender / Sentinel / Sigma / "
+        f"Splunk / Datadog. {n_arts} cited articles, {n_techs} ATT&CK techniques."
+    )[:280]
+
+    canonical = f"{base_url}/actors/{slug}.html"
+    title_text = f"{name}{(' (' + ', '.join(aliases[:3]) + ')') if aliases else ''} — Threat actor profile · Clankerusecase"
+
+    # MITRE description block (if available and non-empty)
+    mitre_block = ""
+    if mitre_desc and len(mitre_desc.strip()) > 20:
+        # Trim to first 800 chars for the SEO surface
+        desc_short = mitre_desc.strip()
+        if len(desc_short) > 800:
+            desc_short = desc_short[:797].rstrip() + "…"
+        mitre_block = (
+            f'<div class="section"><h2>About this actor (MITRE)</h2>'
+            f'<p style="color:var(--text);font-size:14px;line-height:1.7;'
+            f'max-width:820px;">{html.escape(desc_short)}</p></div>'
+        )
+
+    sev_dist = actor.get("sev_dist") or {}
+    sev_block = ""
+    if any(sev_dist.values() if isinstance(sev_dist, dict) else []):
+        # Tiny stat strip showing severity distribution of cited articles
+        sev_pills = "".join(
+            f'<span class="sev {k}" style="margin-right:6px;">{html.escape(k)} {v}</span>'
+            for k, v in sev_dist.items() if v
+        )
+        sev_block = f'<div style="margin-bottom:18px;">{sev_pills}</div>'
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(title_text)}</title>
+<meta name="description" content="{html.escape(meta_desc_short)}">
+<link rel="canonical" href="{html.escape(canonical)}">
+<link rel="icon" type="image/png" href="{base_url}/logo.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{html.escape(name)} — Threat actor profile · Clankerusecase">
+<meta property="og:description" content="{html.escape(meta_desc_short)}">
+<meta property="og:url" content="{html.escape(canonical)}">
+<meta property="og:image" content="{base_url}/logo.png">
+<meta property="og:site_name" content="Clankerusecase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{html.escape(name)} — Threat actor profile">
+<meta name="twitter:description" content="{html.escape(meta_desc_short)}">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "{canonical}",
+  "name": "{html.escape(name)}",
+  "alternateName": {__import__('json').dumps(aliases)},
+  "description": "{html.escape(meta_desc_short)}",
+  "url": "{canonical}",
+  "publisher": {{ "@type": "Organization", "name": "Clankerusecase",
+                  "url": "{base_url}/" }}{("," if mitre_id else "")}
+  {('"sameAs": ["https://attack.mitre.org/groups/' + mitre_id + '/"]') if mitre_id else ''}
+}}
+</script>
+<style>{_TECH_PAGE_STYLE}</style>
+</head>
+<body>
+<header class="tp">
+  <a href="{base_url}/" class="brand">
+    <img src="{base_url}/logo.png" alt="">
+    <div>Clankerusecase<div class="sub">Threat-actor profile</div></div>
+  </a>
+  <a href="{base_url}/" class="back">← Back to main site</a>
+</header>
+<main>
+  <div class="crumb">
+    <a href="{base_url}/">Home</a><span class="sep">/</span>
+    <a href="{base_url}/#tab-actors">Threat Actors</a><span class="sep">/</span>
+    {html.escape(name)}
+  </div>
+  <h1 class="title"><span class="tid">{flag}</span>{html.escape(name)}</h1>
+  <p class="lead">{lead}</p>
+  {sev_block}
+  {cta}
+  <div class="stats">
+    <div class="stat"><span class="n">{n_ucs}</span><span class="l">Use cases</span></div>
+    <div class="stat"><span class="n">{n_arts}</span><span class="l">Articles</span></div>
+    <div class="stat"><span class="n">{n_techs}</span><span class="l">Techniques</span></div>
+    <div class="stat"><span class="n">{len(iocs.get('domains', [])) + len(iocs.get('ips', [])) + len(iocs.get('sha256', []))}</span><span class="l">IOCs</span></div>
+  </div>
+  {mitre_block}
+  {aliases_html}
+  {top_tech_html}
+  {uc_section}
+  {art_section}
+  {ioc_section}
+</main>
+<footer>
+  Auto-generated from the Clankerusecase actor catalogue. Re-built every 2 hours.
+  {('<br>Reference: <a href="https://attack.mitre.org/groups/' + html.escape(mitre_id) + '/" target="_blank" rel="noopener">attack.mitre.org/groups/' + html.escape(mitre_id) + '</a>') if mitre_id else ''}
+</footer>
+</body>
+</html>
+"""
+
+
+def write_actor_pages(actors_serialisable: list, technique_view: dict,
+                       base_url: str = "https://clankerusecase.com") -> int:
+    """Emit one static HTML page per tracked threat actor under actors/.
+    Returns the count written. Wipes the directory first so deletes
+    propagate when actors rotate out of the corpus."""
+    if not actors_serialisable:
+        return 0
+    out_dir = Path(__file__).parent / "actors"
+    if out_dir.exists():
+        import shutil
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    seen: set[str] = set()
+    written = 0
+    for actor in actors_serialisable:
+        name = actor.get("name") or ""
+        if not name:
+            continue
+        slug = _actor_slug(name)
+        if slug in seen:
+            continue
+        seen.add(slug)
+        try:
+            page = _render_actor_page(actor, technique_view or {}, base_url)
+            (out_dir / f"{slug}.html").write_text(page, encoding="utf-8")
+            written += 1
+        except (OSError, KeyError) as e:
+            print(f"    [!] actor page failed for {name}: {str(e)[:80]}")
+    print(f"[*] Actor landing pages: {written}  ->  actors/")
+    return written
+
+
 def write_briefings(articles_meta, articles_raw_index):
     BRIEFINGS_DIR.mkdir(exist_ok=True)
     written = []
@@ -13025,6 +13400,13 @@ def main():
     ))
     actors_json = __import__("json").dumps(actors_serialisable, separators=(",", ":"))
     print(f"[*] Threat actors detected: {len(actors_serialisable)} unique  ->  page payload")
+    # Static per-actor landing pages — same SEO + share pattern as the
+    # technique pages: one indexable URL per actor at /actors/<slug>.html
+    # with profile, UCs, articles, IOCs, MITRE link.
+    if matrix_data:
+        write_actor_pages(actors_serialisable, matrix_data.get("techniques") or {})
+    else:
+        write_actor_pages(actors_serialisable, {})
 
     page = (
         HTML_HEAD
@@ -13079,6 +13461,14 @@ def main():
             for tp in sorted(techniques_root.glob("*.html")):
                 sitemap_urls.append(
                     (f"https://clankerusecase.com/techniques/{tp.name}",
+                     "0.7", "weekly")
+                )
+        # Per-actor landing pages.
+        actors_root = _Path(__file__).with_name("actors")
+        if actors_root.exists():
+            for ap in sorted(actors_root.glob("*.html")):
+                sitemap_urls.append(
+                    (f"https://clankerusecase.com/actors/{ap.name}",
                      "0.7", "weekly")
                 )
         sitemap_urls = sitemap_urls[:50000]  # protocol cap

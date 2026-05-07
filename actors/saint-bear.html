@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Saint Bear (Saint Bear, Storm-0587, TA471) — Threat actor profile · Clankerusecase</title>
+<meta name="description" content="Saint Bear threat actor profile — ??, 14 detection use cases across Defender / Sentinel / Sigma / Splunk / Datadog. 0 cited articles, 18 ATT&amp;CK techniques.">
+<link rel="canonical" href="https://clankerusecase.com/actors/saint-bear.html">
+<link rel="icon" type="image/png" href="https://clankerusecase.com/logo.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Saint Bear — Threat actor profile · Clankerusecase">
+<meta property="og:description" content="Saint Bear threat actor profile — ??, 14 detection use cases across Defender / Sentinel / Sigma / Splunk / Datadog. 0 cited articles, 18 ATT&amp;CK techniques.">
+<meta property="og:url" content="https://clankerusecase.com/actors/saint-bear.html">
+<meta property="og:image" content="https://clankerusecase.com/logo.png">
+<meta property="og:site_name" content="Clankerusecase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Saint Bear — Threat actor profile">
+<meta name="twitter:description" content="Saint Bear threat actor profile — ??, 14 detection use cases across Defender / Sentinel / Sigma / Splunk / Datadog. 0 cited articles, 18 ATT&amp;CK techniques.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": "https://clankerusecase.com/actors/saint-bear.html",
+  "name": "Saint Bear",
+  "alternateName": ["Saint Bear", "Storm-0587", "TA471", "UAC-0056", "Lorec53"],
+  "description": "Saint Bear threat actor profile — ??, 14 detection use cases across Defender / Sentinel / Sigma / Splunk / Datadog. 0 cited articles, 18 ATT&amp;CK techniques.",
+  "url": "https://clankerusecase.com/actors/saint-bear.html",
+  "publisher": { "@type": "Organization", "name": "Clankerusecase",
+                  "url": "https://clankerusecase.com/" },
+  "sameAs": ["https://attack.mitre.org/groups/G1031/"]
+}
+</script>
+<style>
+:root{--bg:#08090a;--panel:#16171b;--panel2:#1f2024;--text:#f7f8f8;--muted:#8a8f98;
+--muted2:#62656a;--accent:#7170ff;--accent2:#9b8afb;--ok:#4cb782;--warn:#e2a93f;
+--bad:#eb5757;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+--code:#1a1b1e;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 500px at 50% -10%,rgba(113,112,255,0.06),transparent 60%),var(--bg);
+background-attachment:fixed;color:var(--text);
+font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+font-size:14px;line-height:1.6;letter-spacing:-0.005em;
+-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none}a:hover{color:var(--accent);text-decoration:underline}
+header.tp{position:sticky;top:0;z-index:50;background:rgba(8,9,10,0.85);
+backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid var(--border);
+padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:17px}
+.brand img{width:32px;height:32px;border-radius:7px;border:1px solid var(--border2)}
+.brand .sub{color:var(--muted);font-weight:500;font-size:12px}
+.back{margin-left:auto;color:var(--muted);font-size:12.5px;border:1px solid var(--border);
+padding:6px 12px;border-radius:5px}
+.back:hover{color:var(--text);border-color:var(--border2);background:var(--panel)}
+main{max-width:1080px;margin:0 auto;padding:32px 28px}
+.crumb{font-size:11.5px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase;margin-bottom:14px}
+.crumb a{color:var(--muted)}.crumb .sep{margin:0 8px;color:var(--border2)}
+h1.title{font-size:30px;line-height:1.18;margin:0 0 6px 0;font-weight:600;letter-spacing:-0.018em}
+h1 .tid{font-family:var(--mono);font-size:18px;color:var(--accent2);margin-right:12px;
+padding:4px 10px;border-radius:5px;background:rgba(113,112,255,0.10);
+border:1px solid rgba(113,112,255,0.30);vertical-align:middle}
+.lead{color:var(--muted);font-size:15px;margin:8px 0 18px 0;max-width:820px}
+.tactic-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tactic-pill{font-size:11.5px;font-family:var(--mono);letter-spacing:0.02em;
+padding:5px 11px;border-radius:99px;background:rgba(113,112,255,0.10);
+color:var(--accent2);border:1px solid rgba(113,112,255,0.30)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;padding:14px 18px;
+background:var(--panel);border:1px solid var(--border);border-radius:8px;
+margin-bottom:24px}
+.stats .stat{display:flex;flex-direction:column;gap:2px}
+.stats .n{font-size:22px;font-weight:600;color:var(--accent2)}
+.stats .l{font-size:11px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase}
+.section{margin:28px 0}
+.section h2{font-size:13px;font-family:var(--mono);letter-spacing:0.06em;
+text-transform:uppercase;color:var(--muted);margin:0 0 14px 0;padding-bottom:8px;
+border-bottom:1px solid var(--border)}
+.uc-card{background:var(--panel);border:1px solid var(--border);border-radius:7px;
+padding:14px 16px;margin-bottom:10px;transition:border-color 0.12s,background 0.12s}
+.uc-card:hover{border-color:var(--accent);background:var(--panel2)}
+.uc-card .t{font-weight:500;font-size:14.5px;display:block;color:var(--text);margin-bottom:4px}
+.uc-card .meta{font-size:11.5px;color:var(--muted2);display:flex;flex-wrap:wrap;gap:10px;
+align-items:center;font-family:var(--mono);letter-spacing:0.02em}
+.uc-card .src{padding:1px 8px;border-radius:99px;font-weight:600;font-size:10px;
+text-transform:uppercase;letter-spacing:0.06em}
+.src.internal{background:rgba(76,183,130,0.16);color:#9bdfc1;border:1px solid rgba(76,183,130,0.40)}
+.src.bespoke{background:rgba(155,138,251,0.14);color:var(--accent2);border:1px solid rgba(155,138,251,0.36)}
+.src.escu{background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.uc-card .pl{display:inline-flex;gap:3px;margin-left:auto}
+.uc-card .pl span{font-size:9.5px;font-weight:700;width:18px;height:18px;
+display:inline-flex;align-items:center;justify-content:center;border-radius:4px;
+font-family:var(--mono)}
+.pl .pl-d{background:rgba(80,200,160,0.18);color:#9bdfc1}
+.pl .pl-s{background:rgba(110,160,255,0.18);color:#a8c8ff}
+.pl .pl-g{background:rgba(255,170,90,0.18);color:#ffcc99}
+.pl .pl-p{background:rgba(220,120,200,0.18);color:#f5b8e0}
+.pl .pl-D{background:rgba(120,90,200,0.20);color:#c8aff8}
+.art-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.art-row:last-child{border:0}
+.art-row .at{display:block;color:var(--text);margin-bottom:3px}
+.art-row .am{font-size:11.5px;color:var(--muted2);font-family:var(--mono)}
+.sev{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;
+font-family:var(--mono);font-weight:700;text-transform:uppercase;
+letter-spacing:0.05em;margin-right:8px}
+.sev.crit{background:rgba(235,87,87,0.18);color:#ff8888;border:1px solid rgba(235,87,87,0.40)}
+.sev.high{background:rgba(226,169,63,0.16);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.sev.med{background:rgba(113,112,255,0.14);color:var(--accent2);border:1px solid rgba(113,112,255,0.34)}
+.sev.low{background:rgba(76,183,130,0.14);color:#9bdfc1;border:1px solid rgba(76,183,130,0.34)}
+.subs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px 0}
+.subs a{font-size:11.5px;font-family:var(--mono);padding:4px 10px;border-radius:5px;
+background:var(--panel);border:1px solid var(--border);color:var(--text)}
+.subs a:hover{border-color:var(--accent);text-decoration:none;background:var(--panel2)}
+.parent-link{font-size:12.5px;color:var(--muted);margin:8px 0}
+.cta{display:flex;gap:10px;margin:18px 0 24px 0;flex-wrap:wrap}
+.cta a{padding:8px 14px;border-radius:6px;font-size:12.5px;font-weight:500;
+border:1px solid var(--border2);background:var(--panel);color:var(--text)}
+.cta a.primary{background:rgba(113,112,255,0.16);border-color:rgba(113,112,255,0.40);
+color:var(--accent2)}
+.cta a:hover{border-color:var(--accent);text-decoration:none}
+.empty{padding:18px;text-align:center;color:var(--muted2);font-size:13px;
+background:var(--panel);border:1px dashed var(--border2);border-radius:7px}
+footer{padding:32px 28px;text-align:center;color:var(--muted2);font-size:11.5px;
+border-top:1px solid var(--border);margin-top:48px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<header class="tp">
+  <a href="https://clankerusecase.com/" class="brand">
+    <img src="https://clankerusecase.com/logo.png" alt="">
+    <div>Clankerusecase<div class="sub">Threat-actor profile</div></div>
+  </a>
+  <a href="https://clankerusecase.com/" class="back">← Back to main site</a>
+</header>
+<main>
+  <div class="crumb">
+    <a href="https://clankerusecase.com/">Home</a><span class="sep">/</span>
+    <a href="https://clankerusecase.com/#tab-actors">Threat Actors</a><span class="sep">/</span>
+    Saint Bear
+  </div>
+  <h1 class="title"><span class="tid">🌐</span>Saint Bear</h1>
+  <p class="lead"><strong>🌐 Saint Bear</strong> is a tracked threat actor in the Clankerusecase corpus. ??-aligned. Primary motivation: <strong>State</strong>. We map <strong>14</strong> detection use cases to this actor across <strong>18</strong> MITRE ATT&CK techniques, with <strong>0</strong> threat-intel articles citing them.</p>
+  
+  <div class="cta">  <a class="primary" href="https://clankerusecase.com/#actor-saint-bear">View full actor card →</a>  <a href="https://clankerusecase.com/#tab-actors">All threat actors</a>  <a href="https://attack.mitre.org/groups/G1031/" target="_blank" rel="noopener">MITRE ATT&CK group spec (G1031) ↗</a></div>
+  <div class="stats">
+    <div class="stat"><span class="n">14</span><span class="l">Use cases</span></div>
+    <div class="stat"><span class="n">0</span><span class="l">Articles</span></div>
+    <div class="stat"><span class="n">18</span><span class="l">Techniques</span></div>
+    <div class="stat"><span class="n">0</span><span class="l">IOCs</span></div>
+  </div>
+  <div class="section"><h2>About this actor (MITRE)</h2><p style="color:var(--text);font-size:14px;line-height:1.7;max-width:820px;">[Saint Bear](https://attack.mitre.org/groups/G1031) is a Russian-nexus threat actor active since early 2021, primarily targeting entities in Ukraine and Georgia. The group is notable for a specific remote access tool, [Saint Bot](https://attack.mitre.org/software/S1018), and information stealer, [OutSteel](https://attack.mitre.org/software/S1017) in campaigns. [Saint Bear](https://attack.mitre.org/groups/G1031) typically relies on phishing or web staging of malicious documents and related file types for initial access, spoofing government or related entities.(Citation: Palo Alto Unit 42 OutSte</p></div>
+  <div class="section"><h2>Known aliases</h2><div class="subs"><span style="font-size:12px;font-family:var(--mono);padding:5px 11px;border-radius:5px;background:var(--panel);border:1px solid var(--border);">Saint Bear</span><span style="font-size:12px;font-family:var(--mono);padding:5px 11px;border-radius:5px;background:var(--panel);border:1px solid var(--border);">Storm-0587</span><span style="font-size:12px;font-family:var(--mono);padding:5px 11px;border-radius:5px;background:var(--panel);border:1px solid var(--border);">TA471</span><span style="font-size:12px;font-family:var(--mono);padding:5px 11px;border-radius:5px;background:var(--panel);border:1px solid var(--border);">UAC-0056</span><span style="font-size:12px;font-family:var(--mono);padding:5px 11px;border-radius:5px;background:var(--panel);border:1px solid var(--border);">Lorec53</span></div></div>
+  <div class="section"><h2>Top techniques</h2><div class="subs"><a href="../techniques/T1027.002.html">T1027.002 · Software Packing</a><a href="../techniques/T1027.013.html">T1027.013 · Encrypted/Encoded File</a><a href="../techniques/T1059.html">T1059 · Command and Scripting Interpreter</a></div></div><div class="section"><h2>All other tracked techniques</h2><div class="subs" style="max-height:240px;overflow:auto;"><a href="../techniques/T1059.001.html">T1059.001 · PowerShell</a><a href="../techniques/T1059.003.html">T1059.003 · Windows Command Shell</a><a href="../techniques/T1059.007.html">T1059.007 · JavaScript</a><a href="../techniques/T1112.html">T1112 · Modify Registry</a><a href="../techniques/T1203.html">T1203 · Exploitation for Client Execution</a><a href="../techniques/T1204.001.html">T1204.001 · Malicious Link</a><a href="../techniques/T1204.002.html">T1204.002 · Malicious File</a><a href="../techniques/T1497.html">T1497 · Virtualization/Sandbox Evasion</a><a href="../techniques/T1553.002.html">T1553.002 · Code Signing</a><a href="../techniques/T1566.001.html">T1566.001 · Spearphishing Attachment</a><a href="../techniques/T1583.006.html">T1583.006 · Web Services</a><a href="../techniques/T1589.002.html">T1589.002 · Email Addresses</a><a href="../techniques/T1608.001.html">T1608.001 · Upload Malware</a><a href="../techniques/T1684.001.html">T1684.001 · Impersonation</a><a href="../techniques/T1685.html">T1685 · Disable or Modify Tools</a></div></div>
+  <div class="section"><h2>Detection use cases (14)</h2><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">[LLM] Saint Bear (UAC-0056) Saint Bot / OutSteel delivery — Office or browser spawns script interpreter that drops PE to %AppData%/%Temp%</span>  <span class="meta">    <span class="src bespoke">LLM · profile</span>    <span class="pl"><span class="pl-s" title="Sentinel KQL">S</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">[LLM] Saint Bot Run-key persistence — script interpreter writes %AppData% binary path to HKCU\...\Run</span>  <span class="meta">    <span class="src bespoke">LLM · profile</span>    <span class="pl"><span class="pl-s" title="Sentinel KQL">S</span><span class="pl-g" title="Sigma">Σ</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Abnormal Security: malicious email opened</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Click on URL whose host doesn&#x27;t match the sender domain</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Command injection exploited (WAF detection)</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Email attachment opened from external sender</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Falco runtime-security alert</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Log4Shell RCE attempts (CVE-2021-44228)</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Office app spawning script/LOLBin child process</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Phishing-link click correlated to endpoint execution</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">PowerShell encoded / obfuscated command</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">Spring4Shell RCE attempts (CVE-2022-22963)</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a><a class="uc-card" href="https://clankerusecase.com/#actor-saint-bear">  <span class="t">User clicked through a Safe Links warning page</span>  <span class="meta">    <span class="src internal">MITRE match</span>      </span></a></div>
+  
+  
+</main>
+<footer>
+  Auto-generated from the Clankerusecase actor catalogue. Re-built every 2 hours.
+  <br>Reference: <a href="https://attack.mitre.org/groups/G1031/" target="_blank" rel="noopener">attack.mitre.org/groups/G1031</a>
+</footer>
+</body>
+</html>
