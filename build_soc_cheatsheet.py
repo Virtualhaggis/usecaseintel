@@ -1738,6 +1738,259 @@ ImProcessCreate
 
 
 # =============================================================================
+# Datadog Cloud SIEM — curated queries per log source.
+#
+# DATADOG_SOURCES is the "schema" — each entry maps a `source:` value to the
+# tagged-attribute paths analysts use most. It powers the schema-collapse
+# section under each source header (same look as the KQL panes).
+#
+# DATADOG_QUERIES are the curated analyst-shift queries: discovery, hunting,
+# investigation. Every body is verbatim Datadog Logs Explorer / Cloud SIEM
+# syntax — `source:` first, `@field.path:value` filters, uppercase boolean
+# operators, `CIDR(@ip, range)` for IP ranges. Time windows are configured
+# at rule level in Datadog so they're absent from the query body.
+# =============================================================================
+
+DATADOG_SOURCES: dict[str, list[str]] = {
+    "cloudtrail": [
+        "@evt.name", "@evt.outcome", "@userIdentity.type", "@userIdentity.userName",
+        "@userIdentity.arn", "@userIdentity.accountId", "@userIdentity.sessionContext.sessionIssuer.userName",
+        "@requestParameters.userName", "@requestParameters.policyArn", "@requestParameters.bucketName",
+        "@responseElements.user.userName", "@network.client.ip", "@aws.region", "@aws.account.id",
+    ],
+    "azure.activity_logs": [
+        "@operationName.value", "@properties.eventName", "@properties.activityStatusValue",
+        "@identity.claim.upn", "@identity.claim.appid", "@network.client.ip",
+        "@properties.resource", "@resource.resourceGroup", "@resource.subscriptionId",
+    ],
+    "azure.activeDirectory": [
+        "@evt.name", "@usr.id", "@usr.email", "@user.userPrincipalName",
+        "@network.client.ip", "@network.client.geoip.country.iso_code",
+        "@properties.status.errorCode", "@properties.appDisplayName",
+        "@properties.riskState", "@properties.riskLevelDuringSignIn",
+        "@properties.authenticationProtocol", "@properties.deviceDetail.deviceId",
+    ],
+    "windows.security": [
+        "@EventID", "@Image", "@CommandLine", "@User", "@SubjectUserName",
+        "@TargetUserName", "@LogonType", "@WorkstationName", "@IpAddress",
+        "@ProcessName", "@ParentProcessName", "@AccessMask", "@PrivilegeList",
+    ],
+    "windows.sysmon": [
+        "@EventID", "@Image", "@CommandLine", "@ParentImage", "@ParentCommandLine",
+        "@Hashes", "@DestinationIp", "@DestinationPort", "@DestinationHostname",
+        "@SourceIp", "@TargetFilename", "@TargetObject", "@User", "@LogonId",
+    ],
+    "linux.auditd": [
+        "@process.name", "@process.command_line", "@process.executable.path",
+        "@user.name", "@user.id", "@auditd.type", "@network.client.ip",
+        "@network.destination.ip", "@host.name", "@auditd.uid", "@auditd.gid",
+    ],
+    "gcp.audit": [
+        "@protoPayload.methodName", "@protoPayload.authenticationInfo.principalEmail",
+        "@protoPayload.requestMetadata.callerIp", "@protoPayload.serviceName",
+        "@protoPayload.resourceName", "@resource.labels.project_id",
+        "@resource.type", "@severity",
+    ],
+    "kubernetes.audit": [
+        "@verb", "@objectRef.resource", "@objectRef.name", "@objectRef.namespace",
+        "@user.username", "@user.groups", "@sourceIPs",
+        "@requestObject.spec.containers.image", "@requestObject.spec.hostPID",
+        "@requestObject.spec.hostNetwork", "@responseStatus.code",
+    ],
+    "okta": [
+        "@evt.name", "@actor.alternateId", "@actor.id", "@actor.displayName",
+        "@client.ipAddress", "@client.geographicalContext.country",
+        "@client.geographicalContext.city", "@outcome.result", "@outcome.reason",
+        "@authenticationContext.authenticationProvider", "@target.alternateId",
+    ],
+}
+
+
+DATADOG_QUERIES: dict[str, list[tuple[str, str, str]]] = {
+    "cloudtrail": [
+        ("Root account interactive use",
+         "Any console / API action by the AWS root identity. Should be ZERO under steady state — every hit is investigable.",
+         '''source:cloudtrail @userIdentity.type:Root @evt.outcome:success
+-@evt.name:(GetCallerIdentity OR DescribeAccountAttributes)'''),
+
+        ("IAM privilege escalation primitives",
+         "Classic AWS priv-esc paths: attach admin policy, create access key, update assume-role policy.",
+         '''source:cloudtrail @evt.outcome:success
+@evt.name:(AttachUserPolicy OR AttachGroupPolicy OR AttachRolePolicy
+           OR PutUserPolicy OR PutGroupPolicy OR PutRolePolicy
+           OR CreateAccessKey OR UpdateAssumeRolePolicy
+           OR CreateLoginProfile OR UpdateLoginProfile OR PassRole)
+@requestParameters.policyArn:*Administrator*
+-@userIdentity.userName:(terraform-* OR ci-* OR cd-*)'''),
+
+        ("S3 public-bucket exposure",
+         "Bucket policy / ACL changes that loosen public access. Pair with the bucket name as a resource pivot.",
+         '''source:cloudtrail @evt.outcome:success
+@evt.name:(PutBucketAcl OR PutBucketPolicy OR PutPublicAccessBlock
+           OR DeletePublicAccessBlock OR DeleteBucketPolicy)
+@requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllUsers*'''),
+    ],
+
+    "azure.activity_logs": [
+        ("Storage account key listing",
+         "Adversary post-compromise enumeration — listing storage keys grants direct blob/file access bypassing IAM.",
+         '''source:azure.activity_logs
+@operationName.value:Microsoft.Storage/storageAccounts/listKeys/action
+@properties.activityStatusValue:Succeeded
+-@identity.claim.appid:(00000003-0000-0000-c000-000000000000)'''),
+
+        ("Resource deletion at scale",
+         "Bulk Azure resource removal — ransomware / wiper / disgruntled-admin signal.",
+         '''source:azure.activity_logs
+@operationName.value:*delete*
+@properties.activityStatusValue:Succeeded
+-@identity.claim.upn:(*svc-* OR *automation*)'''),
+
+        ("Disabled-account / break-glass usage",
+         "Activity from an identity outside the standard auth flow — ie a hard-coded admin or break-glass account.",
+         '''source:azure.activity_logs
+@identity.claim.upn:(*break-glass* OR *emergency-access* OR *admin-override*)'''),
+    ],
+
+    "azure.activeDirectory": [
+        ("Failed password / lockout from foreign geos",
+         "Sign-in failures (bad password 50126, locked 50053) from high-risk geographies.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
+@properties.status.errorCode:(50126 OR 50053 OR 50055 OR 50057 OR 50064)
+@network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)'''),
+
+        ("OAuth illicit-grant — risky app consent",
+         "Apps acquiring scopes that read mail / files; pivot via the app's appId for lateral hunt.",
+         '''source:azure.activeDirectory @evt.name:"Add app role assignment to service principal"
+@properties.appDisplayName:*
+-@properties.appDisplayName:(Microsoft* OR "Office 365" OR "Azure*")'''),
+
+        ("MFA fatigue / push-bombing pattern",
+         "Same user → many MFA prompts in a tight window — adversary spraying push to wear the user down.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
+@properties.authenticationDetails.authenticationMethod:"Mobile app notification"
+@properties.status.errorCode:(50158 OR 500121 OR 500133)'''),
+    ],
+
+    "windows.security": [
+        ("Failed authentication burst — single user",
+         "Win EID 4625 with the same TargetUserName from many SourceWorkstation values.",
+         '''source:windows.security @EventID:4625
+-@TargetUserName:*$'''),
+
+        ("Privileged group changes",
+         "Domain-Admins / Enterprise-Admins / Schema-Admins membership churn — EID 4732/4756/4728.",
+         '''source:windows.security @EventID:(4732 OR 4756 OR 4728)
+@TargetUserName:(*Domain* OR *Enterprise* OR *Schema* OR *Admin*)'''),
+
+        ("Service-installation persistence",
+         "EID 7045 — service install. Most legitimate services come from MSI / Windows Update; standalone ones are suspicious.",
+         '''source:windows.security @EventID:7045
+-@ServiceFileName:(*\\\\Windows\\\\* OR *\\\\Program Files\\\\* OR *MsiExec*)'''),
+    ],
+
+    "windows.sysmon": [
+        ("Office-spawning-script / LOLBin chain",
+         "WINWORD/EXCEL/POWERPNT spawning powershell/mshta/regsvr32 — classic doc-macro execution. Both casings: Datadog is case-sensitive.",
+         '''source:windows.sysmon @EventID:1
+@ParentImage:(*\\\\winword.exe OR *\\\\WINWORD.EXE OR *\\\\excel.exe OR *\\\\EXCEL.EXE OR *\\\\powerpnt.exe OR *\\\\POWERPNT.EXE)
+@Image:(*\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\regsvr32.exe OR *\\\\RegSvr32.exe OR *\\\\rundll32.exe OR *\\\\RunDll32.exe)'''),
+
+        ("Persistence-key write (Run/RunOnce/Services)",
+         "Sysmon EID 13 — registry value set under classic ASEP locations.",
+         '''source:windows.sysmon @EventID:13
+@TargetObject:(*\\\\Run\\\\* OR *\\\\RunOnce\\\\* OR *\\\\Services\\\\* OR "*Image File Execution Options*" OR *\\\\Winlogon\\\\*)'''),
+
+        ("Outbound network connection from a script host",
+         "Sysmon EID 3 from cscript / wscript / mshta / powershell — script-host beaconing.",
+         '''source:windows.sysmon @EventID:3
+@Image:(*\\\\cscript.exe OR *\\\\wscript.exe OR *\\\\mshta.exe OR *\\\\powershell.exe OR *\\\\pwsh.exe)
+-CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)'''),
+    ],
+
+    "linux.auditd": [
+        ("Suspicious shell child of a web server",
+         "httpd/nginx/php-fpm spawning a shell — webshell signal.",
+         '''source:linux.auditd @auditd.type:EXECVE
+@process.name:(bash OR sh OR zsh OR ksh OR dash)
+@process.parent_executable_path:(*nginx* OR *httpd* OR *apache2* OR *php-fpm*)'''),
+
+        ("Privilege escalation via SUID binary",
+         "EXECVE of known SUID-abuse binaries from a non-root context.",
+         '''source:linux.auditd @auditd.type:EXECVE
+@process.command_line:(*"chmod +x"* OR *"setuid"* OR *"sudo -i"* OR *"sudo su"*)
+-@process.executable.path:/usr/lib/snapd/*'''),
+
+        ("Cron / systemd persistence write",
+         "File creation under cron.d, cron.daily, /etc/systemd/system — non-root persistence vehicle.",
+         '''source:linux.auditd @auditd.type:PATH
+@auditd.path:(/etc/cron.d/* OR /etc/cron.daily/* OR /etc/cron.hourly/*
+              OR /etc/systemd/system/*.service OR /var/spool/cron/*)'''),
+    ],
+
+    "gcp.audit": [
+        ("Service account key creation",
+         "GCP service-account key creation — long-lived credential exfil risk.",
+         '''source:gcp.audit
+@protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey
+@severity:NOTICE
+-@protoPayload.authenticationInfo.principalEmail:*@*.gserviceaccount.com'''),
+
+        ("IAM policy binding to allUsers / allAuthenticatedUsers",
+         "Public-everyone IAM binding — almost always a misconfig or a data-exposure intent.",
+         '''source:gcp.audit
+@protoPayload.methodName:(SetIamPolicy OR setIamPolicy)
+@protoPayload.serviceData.policyDelta.bindingDeltas.member:(allUsers OR allAuthenticatedUsers)'''),
+
+        ("Compute instance metadata service access from a workload",
+         "Adversary using IMDS to lift the GCE service-account token. Anomalous when the calling principal isn't `gce-instance-svc`.",
+         '''source:gcp.audit
+@protoPayload.methodName:*compute.instances.get*
+@protoPayload.requestMetadata.callerIp:169.254.169.254'''),
+    ],
+
+    "kubernetes.audit": [
+        ("Privileged / hostPID / hostNetwork pod creation",
+         "Container break-out primitives — privileged container, host-PID share, host networking. Any one is a flag; combinations are alert-grade.",
+         '''source:kubernetes.audit @verb:create @objectRef.resource:pods
+(@requestObject.spec.containers.securityContext.privileged:true
+ OR @requestObject.spec.hostPID:true
+ OR @requestObject.spec.hostNetwork:true)'''),
+
+        ("kubectl exec into running pod",
+         "Live shell inside a workload — operationally legitimate for engineers, but anomalous in production namespaces.",
+         '''source:kubernetes.audit @verb:create @objectRef.subresource:exec
+@objectRef.namespace:(prod-* OR production OR live-*)
+-@user.username:(*ci-* OR *cd-* OR system:serviceaccount:*)'''),
+
+        ("ServiceAccount token mounted automatically (overprovisioned RBAC)",
+         "Token auto-mount + cluster-admin binding = full takeover. Hunt for new bindings to risky cluster roles.",
+         '''source:kubernetes.audit
+@verb:create
+@objectRef.resource:(clusterrolebindings OR rolebindings)
+@requestObject.roleRef.name:(cluster-admin OR admin OR edit)'''),
+    ],
+
+    "okta": [
+        ("Sign-in success after MFA failure burst",
+         "Successful authentication preceded by ≥5 MFA failures in 10 min — likely fatigue / push-bomb success.",
+         '''source:okta @evt.name:user.session.start @outcome.result:SUCCESS
+@authenticationContext.authenticationProvider:FACTOR_PROVIDER'''),
+
+        ("Account-lock from a single source IP",
+         "user.account.lock concentrated on one source IP — credential stuffing in progress.",
+         '''source:okta @evt.name:user.account.lock'''),
+
+        ("Admin role assignment outside provisioning workflow",
+         "Direct grant of an Okta admin role from a human session. Almost always the provisioning service should do this — humans doing it = privilege drift.",
+         '''source:okta @evt.name:user.account.privilege.grant
+@target.type:User
+-@actor.alternateId:(*scim* OR *api-token* OR *workflows*)'''),
+    ],
+}
+
+
+# =============================================================================
 # Render
 # =============================================================================
 
@@ -1966,6 +2219,15 @@ def main() -> None:
         SENTINEL_QUERIES, SENTINEL_SCHEMA, id_prefix="sentinel-table-",
         list_id="sentinelTableList", filter_id="sentinelTableFilter")
 
+    # Datadog Cloud SIEM uses log-source names in place of table names. The
+    # _build_pane helper is shape-agnostic — we pass DATADOG_SOURCES as the
+    # "schema" so the analyst sees attribute paths in the schema-collapse
+    # under each source heading.
+    (ddog_sidebar, ddog_sections,
+     ddog_curated, ddog_total_q, ddog_schema_tables) = _build_pane(
+        DATADOG_QUERIES, DATADOG_SOURCES, id_prefix="datadog-source-",
+        list_id="datadogSourceList", filter_id="datadogSourceFilter")
+
     sigma_rules = _load_sigma_rules()
     sigma_sections, sigma_count = render_sigma_pane(sigma_rules)
 
@@ -1980,6 +2242,11 @@ def main() -> None:
         sent_curated=sent_curated,
         sent_total_q=sent_total_q,
         sent_schema_tables=sent_schema_tables,
+        ddog_sidebar=ddog_sidebar,
+        ddog_sections=ddog_sections,
+        ddog_curated=ddog_curated,
+        ddog_total_q=ddog_total_q,
+        ddog_schema_tables=ddog_schema_tables,
         sigma_sections=sigma_sections,
         sigma_count=sigma_count,
     ), encoding="utf-8")
@@ -1988,6 +2255,8 @@ def main() -> None:
           f"(across {kql_schema_tables} schema tables)")
     print(f"  Sentinel:  {sent_curated} curated tables, {sent_total_q} queries "
           f"(across {sent_schema_tables} schema tables)")
+    print(f"  Datadog:   {ddog_curated} curated sources, {ddog_total_q} queries "
+          f"(across {ddog_schema_tables} sources)")
     print(f"  Sigma:     {sigma_count} rules pre-compiled (KQL/SPL/Lucene each)")
 
 
@@ -2175,6 +2444,7 @@ a{{color:inherit;text-decoration:none}}
 <nav class="cs-tabs">
   <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
   <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
+  <button class="cs-tab" data-pane="datadog">Datadog <span class="badge">Cloud SIEM</span></button>
   <button class="cs-tab placeholder" data-pane="sigma">Sigma <span class="badge">Under Progress</span></button>
   <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
 </nav>
@@ -2215,6 +2485,25 @@ a{{color:inherit;text-decoration:none}}
       </div>
 
       {sent_sections}
+    </main>
+  </div>
+</div>
+
+<div id="pane-datadog" class="tab-pane">
+  <div class="cs-layout">
+    {ddog_sidebar}
+    <main class="cs-main">
+      <div class="cs-intro">
+        <h1>Datadog · Cloud SIEM logs query</h1>
+        <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body. <strong>Datadog values are case-sensitive</strong> — for binary names and similar strings we emit both casings inside an OR group.</p>
+        <div class="stats">
+          <span><strong>{ddog_curated}</strong> sources curated</span>
+          <span><strong>{ddog_total_q}</strong> queries</span>
+          <span>Click <strong>Copy</strong> on any query to paste into Datadog Logs / Cloud SIEM rule editor.</span>
+        </div>
+      </div>
+
+      {ddog_sections}
     </main>
   </div>
 </div>
@@ -2315,6 +2604,7 @@ a{{color:inherit;text-decoration:none}}
   }}
   bindSidebar('pane-kql',      'tableFilter',         'tableList');
   bindSidebar('pane-sentinel', 'sentinelTableFilter', 'sentinelTableList');
+  bindSidebar('pane-datadog',  'datadogSourceFilter', 'datadogSourceList');
 
   // Make in-pane anchor links work even though both panes use `#table-X`
   // ids. Browser default ignores the second one because of the duplicate;
