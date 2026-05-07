@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cordial/Snarky Spider MFA bypass: auth device removed then new device registered within 30 min by same actor
 
-`UC_76_9` · phase: **install** · confidence: **High**
+`UC_81_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ Removed
 
 ### [LLM] Inbox rule auto-deleting Microsoft account-security / new-device-registration notifications (Cordial/Snarky Spider TTP)
 
-`UC_76_10` · phase: **install** · confidence: **High**
+`UC_81_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ CloudAppEvents
 
 ### [LLM] Rapid SaaS bulk exfil from anonymous/residential-proxy IP within 1 hour of SSO sign-in (Snarky/Cordial Spider speedrun)
 
-`UC_76_11` · phase: **actions** · confidence: **Medium**
+`UC_81_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

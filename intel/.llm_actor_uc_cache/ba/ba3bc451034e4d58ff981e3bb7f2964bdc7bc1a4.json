@@ -1,0 +1,76 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 (ScarCruft) ROKRAT C2 via legitimate cloud-storage APIs (pCloud / Yandex / Dropbox / Box)",
+      "description": "Hunts ROKRAT / DOGCALL beaconing \u2014 APT37 has used pCloud, Yandex Cloud, Dropbox and Box.com REST APIs as a C2 channel for years (a near-signature behaviour first reported by Cisco Talos and Volexity/InkySquid). The detection fires when a non-browser, non-sync-client process \u2014 especially a LOLBin or a binary executing from %APPDATA%/%TEMP% \u2014 reaches one of these cloud APIs, which is the load-bearing TTP that distinguishes ScarCruft from other DPRK clusters (Lazarus / Kimsuky rarely use this exact channel).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN (\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"cloud-api.yandex.com\",\"upload.box.com\",\"api.box.com\") OR All_Traffic.dest_host IN (\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"cloud-api.yandex.com\",\"upload.box.com\",\"api.box.com\")) AND NOT All_Traffic.app IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"Dropbox.exe\",\"OneDrive.exe\",\"YandexDisk.exe\",\"Box.exe\",\"BoxEdit.exe\",\"BoxSync.exe\",\"pCloud.exe\") by host All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | join type=inner host process_name [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_path IN (\"*\\\\AppData\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Public\\\\*\") OR Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\")) by host Processes.process_name Processes.process_path Processes.process Processes.user | `drop_dm_object_name(Processes)`] | table firstTime lastTime host src user app process_name process_path dest dest_port bytes_out | sort - lastTime",
+      "kql": "let _ROKRATCloudHosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"cloud-api.yandex.com\",\"upload.box.com\",\"api.box.com\"]);\nlet _LegitClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"dropbox.exe\",\"onedrive.exe\",\"yandexdisk.exe\",\"box.exe\",\"boxedit.exe\",\"boxsync.exe\",\"pcloud.exe\"]);\nlet _SuspectPaths = dynamic([@\"\\AppData\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", @\"\\Public\\\", @\"\\Users\\Public\\\"]);\nlet _LolBins = dynamic([\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where isnotempty(RemoteUrl)\n| where RemoteUrl has_any (_ROKRATCloudHosts)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessFileName !in~ (_LegitClients)\n| where InitiatingProcessFolderPath has_any (_SuspectPaths)\n     or InitiatingProcessFileName in~ (_LolBins)\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine, InitiatingProcessSHA256,\n          RemoteUrl, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "let _ROKRATCloudHosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"cloud-api.yandex.com\",\"upload.box.com\",\"api.box.com\"]);\nlet _LegitClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"dropbox.exe\",\"onedrive.exe\",\"yandexdisk.exe\",\"box.exe\",\"boxedit.exe\",\"boxsync.exe\",\"pcloud.exe\"]);\nlet _LolBins = dynamic([\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where isnotempty(Url) or isnotempty(DstHostname)\n| where (Url has_any (_ROKRATCloudHosts)) or (DstHostname in~ (_ROKRATCloudHosts))\n| extend ProcName = tolower(tostring(split(ActingProcessName, @\"\\\")[-1]))\n| where isnotempty(ProcName)\n| where ProcName !in (_LegitClients)\n| where ProcName in (_LolBins)\n     or ActingProcessCommandLine has_any (@\"\\AppData\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", @\"\\Public\\\")\n| project TimeGenerated, DvcHostname, SrcUsername, ActingProcessName,\n          ActingProcessCommandLine, Url, DstHostname, DstIpAddr, DstPortNumber\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ROKRAT C2 via Legitimate Cloud Storage APIs\nid: 7c3a1b1c-4e8d-4a02-8b45-9d2f37c90a01\nstatus: experimental\ndescription: Detects ROKRAT/DOGCALL bidirectional C2 over pCloud, Yandex, Dropbox, and Box public APIs from non-browser/non-sync processes. Highly characteristic of APT37 (ScarCruft / Ricochet Chollima / InkySquid).\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://blog.talosintelligence.com/rokrat-reloaded/\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.g0067\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dst:\n    DestinationHostname:\n      - 'api.pcloud.com'\n      - 'eapi.pcloud.com'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'cloud-api.yandex.net'\n      - 'cloud-api.yandex.com'\n      - 'upload.box.com'\n      - 'api.box.com'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\iexplore.exe'\n      - '\\Dropbox.exe'\n      - '\\OneDrive.exe'\n      - '\\YandexDisk.exe'\n      - '\\Box.exe'\n      - '\\BoxEdit.exe'\n      - '\\pCloud.exe'\n  condition: selection_dst and not filter_browsers\nfalsepositives:\n  - Custom backup or sync scripts using these cloud APIs (allowlist by hash/path)\n  - Developer tools embedding the SDKs of these providers\nlevel: high",
+      "rationale": "ROKRAT's defining trait \u2014 and the reason Talos coined the family \u2014 is its abuse of pCloud/Yandex/Dropbox/Box public APIs as a bidirectional C2 (T1102.002), a behaviour APT37 has retained across the 2017\u21922024 ROKRAT/DOGCALL/CHINOTTO/M2RAT lineage. Pinning the detection to a curated host-list AND requiring the client process to be either a LOLBin or live in a user-writable path strips the noise from",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] APT37 HWP/Hancom-Office spawning script interpreters or LOLBins (Ricochet Chollima initial-access chain)",
+      "description": "ScarCruft is one of the only major APT clusters that weaponises HWP/HWPX (Hangul Office Word Processor) documents, exploiting Hancom's GhostScript-derived EPS preview component to drop ROKRAT, KARAE, RICECURRY, or CHINOTTO. The detection fires when Hancom Office processes (Hwp.exe / Hwp32.exe / gbb.exe / gswin32c.exe) \u2014 or, in the more recent LNK delivery, an explorer-launched .lnk \u2014 spawn a script interpreter or download utility, a chain unique to South-Korea-targeted DPRK ops (G0067).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1203",
+        "T1204.002",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as child_path values(Processes.parent_process) as parent_cmdline values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"Hwp.exe\",\"hwp.exe\",\"Hwp32.exe\",\"hwp32.exe\",\"Hwordapp.exe\",\"gbb.exe\",\"gswin32c.exe\",\"gswin64c.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"hh.exe\",\"installutil.exe\",\"msbuild.exe\") AND NOT Processes.user IN (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime",
+      "kql": "let _HancomParents = dynamic([\"hwp.exe\",\"hwp32.exe\",\"hwordapp.exe\",\"gbb.exe\",\"gswin32c.exe\",\"gswin64c.exe\"]);\nlet _SuspChildren = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"hh.exe\",\"installutil.exe\",\"msbuild.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (_HancomParents)\n| where FileName in~ (_SuspChildren)\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd = InitiatingProcessCommandLine,\n          ChildImage = FolderPath,\n          ChildCmd = ProcessCommandLine,\n          ChildSHA256 = SHA256,\n          IsRemoteSession = InitiatingProcessLogonId\n| order by Timestamp desc",
+      "sentinel_kql": "let _HancomParents = dynamic([\"hwp.exe\",\"hwp32.exe\",\"hwordapp.exe\",\"gbb.exe\",\"gswin32c.exe\",\"gswin64c.exe\"]);\nlet _SuspChildren = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"hh.exe\",\"installutil.exe\",\"msbuild.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where AccountType == \"User\"\n| where Account !endswith \"$\"\n| extend ParentName = tolower(tostring(split(ParentProcessName, @\"\\\")[-1]))\n| extend ChildName  = tolower(tostring(split(NewProcessName,  @\"\\\")[-1]))\n| where ParentName in (_HancomParents)\n| where ChildName  in (_SuspChildren)\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, ParentName,\n          NewProcessName, ChildName, CommandLine,\n          TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ScarCruft Hancom Office HWP Spawning Script Interpreter\nid: 9b1c4d22-6f5b-4d33-8c7e-1a2b3c4d5e60\nstatus: experimental\ndescription: Detects Hancom Office (HWP) processes or its embedded GhostScript components spawning PowerShell, cmd, mshta, rundll32, regsvr32, certutil or bitsadmin \u2014 the post-exploitation pattern for APT37 weaponised HWP/HWPX documents.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://www.mandiant.com/resources/blog/apt37-overlooked-north-korean-actor\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.execution\n  - attack.t1203\n  - attack.t1204.002\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.g0067\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\Hwp.exe'\n      - '\\Hwp32.exe'\n      - '\\Hwordapp.exe'\n      - '\\gbb.exe'\n      - '\\gswin32c.exe'\n      - '\\gswin64c.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\mshta.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\curl.exe'\n      - '\\hh.exe'\n      - '\\installutil.exe'\n      - '\\msbuild.exe'\n  condition: selection_parent and selection_child\nfalsepositives:\n  - Internal Hancom macros that legitimately call cmd/PowerShell (rare; allowlist by hash)\nlevel: high",
+      "rationale": "HWP weaponisation is the single most actor-specific TTP in the APT37 playbook \u2014 the format is essentially South-Korea-only, and the CVE-2017-8291 / CVE-2018-4878 / EPS-preview chain that ScarCruft has burned through dozens of variants always lands the same way: Hwp.exe (or its bundled GhostScript components Hancom ships as gbb.exe / gswin32c.exe) becomes the parent of cmd, mshta, or PowerShell tha"
+    }
+  ]
+}

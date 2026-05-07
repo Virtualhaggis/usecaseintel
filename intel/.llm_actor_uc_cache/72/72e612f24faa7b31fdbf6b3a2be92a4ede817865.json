@@ -1,0 +1,125 @@
+{
+  "name": "APT41",
+  "ucs": [
+    {
+      "title": "[LLM] APT41 / Winnti DLL side-load from non-standard staging directory",
+      "description": "Hunts APT41's signature DLL side-loading tradecraft where a benign signed third-party binary (often Notepad++, VMware Tools, DTaskManager, FortiClient, or a renamed Microsoft helper) is dropped to C:\\Users\\Public, C:\\ProgramData, C:\\PerfLogs or C:\\Windows\\Temp and loads an adjacent attacker DLL to launch ShadowPad, Crosswalk, Winnti, MoonBounce or PlugX. The loader-from-staging-dir + adjacent-DLL pair is the high-fidelity APT41/BARIUM marker.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.002",
+        "T1014"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as first_seen max(_time) as last_seen dc(Processes.dest) as host_count values(Processes.parent_process_name) as parent_proc values(Processes.user) as user values(Processes.process_hash) as proc_hash from datamodel=Endpoint.Processes where (Processes.process_path IN (\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\PerfLogs\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\",\"*\\\\Intel\\\\*\",\"*\\\\Recovery\\\\*\") AND Processes.process_path!=\"*\\\\Microsoft\\\\*\" AND Processes.process_path!=\"*\\\\WindowsApps\\\\*\") AND NOT Processes.parent_process_name IN (\"msiexec.exe\",\"setup.exe\",\"TrustedInstaller.exe\",\"WindowsUpdate.exe\") by Processes.dest Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name=\"*.dll\" AND (Filesystem.file_path IN (\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\PerfLogs\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\",\"*\\\\Intel\\\\*\")) by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | rename file_name as side_loaded_dll, file_path as dll_path] | where host_count <= 3 | convert ctime(first_seen) ctime(last_seen) | table first_seen last_seen dest user process_name process_path proc_hash parent_proc side_loaded_dll dll_path host_count",
+      "kql": "let _StagingDirs = dynamic([@\"\\\\users\\\\public\\\\\", @\"\\\\programdata\\\\\", @\"\\\\perflogs\\\\\", @\"\\\\windows\\\\temp\\\\\", @\"\\\\intel\\\\\", @\"\\\\recovery\\\\\"]);\nlet _BenignLoaders = dynamic([\"msiexec.exe\",\"setup.exe\",\"installer.exe\",\"trustedinstaller.exe\",\"wuauclt.exe\",\"omadmclient.exe\"]);\nDeviceImageLoadEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"ImageLoaded\"\n| where InitiatingProcessFileName !in~ (_BenignLoaders)\n| extend _ParentDir = tolower(InitiatingProcessFolderPath)\n| extend _DllDir    = tolower(FolderPath)\n| where _ParentDir has_any (_StagingDirs)         // APT41 routinely stages loaders in Public/ProgramData/PerfLogs\n| where _DllDir == _ParentDir                      // DLL adjacent to the side-loading exe\n| where SHA256 != InitiatingProcessSHA256          // not the loader self-loading\n| where FileName endswith \".dll\"\n| where not(FolderPath startswith @\"C:\\Windows\\System32\\\")\n| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), HostCount=dcount(DeviceName), Hosts=make_set(DeviceName, 25), Cmds=make_set(InitiatingProcessCommandLine, 5) by ParentExe=InitiatingProcessFileName, ParentPath=InitiatingProcessFolderPath, ParentSha=InitiatingProcessSHA256, LoadedDll=FileName, DllSha=SHA256, AccountName=InitiatingProcessAccountName\n| where HostCount <= 3                              // rare across estate = APT-shaped, not enterprise software\n| order by FirstSeen desc",
+      "sentinel_kql": "let _StagingDirs = dynamic([@\"\\\\users\\\\public\\\\\", @\"\\\\programdata\\\\\", @\"\\\\perflogs\\\\\", @\"\\\\windows\\\\temp\\\\\", @\"\\\\intel\\\\\", @\"\\\\recovery\\\\\"]);\nWindowsEvent\n| where TimeGenerated > ago(7d)\n| where Provider == \"Microsoft-Windows-Sysmon\"\n| where EventID == 7                              // Sysmon ImageLoad\n| extend Image       = tolower(tostring(EventData.Image))\n| extend ImageLoaded = tolower(tostring(EventData.ImageLoaded))\n| extend Hashes      = tostring(EventData.Hashes)\n| extend User        = tostring(EventData.User)\n| where Image has_any (_StagingDirs)\n| extend ImageDir = tostring(parse_path(Image).DirectoryPath)\n| extend DllDir   = tostring(parse_path(ImageLoaded).DirectoryPath)\n| where ImageDir == DllDir\n| where ImageLoaded endswith \".dll\"\n| where not(ImageLoaded startswith @\"c:\\windows\\system32\\\")\n| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), HostCount=dcount(Computer), Hosts=make_set(Computer, 25) by Image, ImageLoaded, Hashes, User\n| where HostCount <= 3\n| order by FirstSeen desc",
+      "sigma_yaml": "title: APT41 DLL Side-Load From Non-Standard Staging Directory\nid: 8c2fa1b4-7e1a-4f18-9b0e-7b1cf41a2f01\nstatus: experimental\ndescription: Detects DLL side-loading patterns characteristic of APT41 / Winnti / BARIUM where a benign third-party signed binary in a writable staging directory loads an adjacent DLL.\nreferences:\n  - https://attack.mitre.org/groups/G0096/\n  - https://www.mandiant.com/resources/apt41-dual-espionage-and-cyber-crime-operation\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.defense_evasion\n  - attack.persistence\n  - attack.t1574.002\n  - attack.t1036.005\n  - attack.g0096\nlogsource:\n  product: windows\n  category: image_load\ndetection:\n  selection_path:\n    Image|contains:\n      - '\\Users\\Public\\'\n      - '\\ProgramData\\'\n      - '\\PerfLogs\\'\n      - '\\Windows\\Temp\\'\n      - '\\Intel\\'\n      - '\\Recovery\\'\n  selection_dll:\n    ImageLoaded|endswith: '.dll'\n  filter_system32:\n    ImageLoaded|contains: '\\Windows\\System32\\'\n  filter_installers:\n    Image|endswith:\n      - '\\msiexec.exe'\n      - '\\setup.exe'\n      - '\\TrustedInstaller.exe'\n  condition: selection_path and selection_dll and not (filter_system32 or filter_installers)\nfalsepositives:\n  - Legitimate portable applications staged in user-writable directories\n  - Some software updaters (whitelist by hash after triage)\nlevel: high",
+      "rationale": "DLL side-loading is the single most reported APT41/Winnti tradecraft across Mandiant, FireEye, Kaspersky and Microsoft (BARIUM/Brass Typhoon) reporting \u2014 they prefer signed third-party loaders dropped to user-writable directories and have done so consistently across ShadowPad, Crosswalk, MoonBounce, Speculoos and Winnti 4.0 campaigns. The combination of (legit binary in staging dir) + (adjacent un"
+    },
+    {
+      "title": "[LLM] APT41 BITSAdmin transfer chained to schtasks persistence within 30 minutes",
+      "description": "Hunts the APT41 install/persistence sequence where bitsadmin.exe pulls a payload over HTTP(S) (T1197 + T1105) and is followed within 30 minutes by schtasks.exe /create on the same host establishing scheduled-task persistence (T1053.005). This bitsadmin\u2192schtasks chain has been documented in multiple APT41 intrusions (FBI/CISA AA22, Mandiant) and is rarely executed back-to-back by legitimate users.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1197",
+        "T1105",
+        "T1053.005",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as bits_time values(Processes.process) as bits_cmd values(Processes.user) as bits_user from datamodel=Endpoint.Processes where Processes.process_name=bitsadmin.exe AND (Processes.process=\"*/transfer*\" OR Processes.process=\"*/addfile*\") AND (Processes.process=\"*http://*\" OR Processes.process=\"*https://*\") by Processes.dest | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true min(_time) as schtask_time values(Processes.process) as schtask_cmd values(Processes.user) as schtask_user from datamodel=Endpoint.Processes where Processes.process_name=schtasks.exe AND Processes.process=\"*/create*\" AND (Processes.process=\"* /tr *\" OR Processes.process=\"* /TR *\") by Processes.dest | `drop_dm_object_name(Processes)`] | eval delay_sec = schtask_time - bits_time | where delay_sec >= 0 AND delay_sec <= 1800 | convert ctime(bits_time) ctime(schtask_time) | table bits_time schtask_time delay_sec dest bits_user schtask_user bits_cmd schtask_cmd",
+      "kql": "let LookbackDays = 7d;\nlet WindowMin   = 30;\nlet BitsDownloads = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName =~ \"bitsadmin.exe\"\n    | where ProcessCommandLine has_any (\"/transfer\",\"/addfile\",\"/RAWRETURN\")\n    | where ProcessCommandLine matches regex @\"(?i)https?://\"\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | project BitsTime=Timestamp, DeviceId, DeviceName, BitsAcct=AccountName, BitsCmd=ProcessCommandLine, BitsParent=InitiatingProcessFileName;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName =~ \"schtasks.exe\"\n| where ProcessCommandLine has \"/create\"\n| where ProcessCommandLine matches regex @\"(?i)\\s/tr\\s\"\n| where AccountName !endswith \"$\"\n| join kind=inner BitsDownloads on DeviceId\n| where Timestamp between (BitsTime .. BitsTime + WindowMin * 1m)\n| project DeviceName, BitsAcct, SchTaskAcct=AccountName,\n          BitsTime, SchTaskTime=Timestamp,\n          DelayMin=datetime_diff('minute', Timestamp, BitsTime),\n          BitsCmd, SchTaskCmd=ProcessCommandLine,\n          BitsParent, SchTaskParent=InitiatingProcessFileName\n| order by BitsTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WindowMin   = 30;\nlet Bits = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where NewProcessName endswith \"\\\\bitsadmin.exe\"\n    | where CommandLine has_any (\"/transfer\",\"/addfile\",\"/RAWRETURN\")\n    | where CommandLine matches regex @\"(?i)https?://\"\n    | where Account !endswith \"$\"\n    | project BitsTime=TimeGenerated, Computer, BitsAcct=Account, BitsCmd=CommandLine, BitsParent=ParentProcessName;\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\schtasks.exe\"\n| where CommandLine has \"/create\"\n| where CommandLine matches regex @\"(?i)\\s/tr\\s\"\n| where Account !endswith \"$\"\n| join kind=inner Bits on Computer\n| where TimeGenerated between (BitsTime .. BitsTime + WindowMin * 1m)\n| project Computer, BitsAcct, SchTaskAcct=Account,\n          BitsTime, SchTaskTime=TimeGenerated,\n          DelayMin=datetime_diff('minute', TimeGenerated, BitsTime),\n          BitsCmd, SchTaskCmd=CommandLine, BitsParent, SchTaskParent=ParentProcessName\n| order by BitsTime desc",
+      "sigma_yaml": "",
+      "rationale": "FBI/CISA Joint Advisory AA22 and Mandiant's APT41 reporting (M-Trends 2020/2022) explicitly call out APT41's use of bitsadmin to retrieve second-stage tooling immediately followed by schtasks-based persistence \u2014 the same chain was observed during their U.S. state-government intrusions (2021) and against telco targets. Each command alone is noisy (admins legitimately use both), but bitsadmin /trans",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "BitsTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`BitsTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsAcct",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`BitsAcct` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`BitsCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsParent",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`BitsParent` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "BitsTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`BitsTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsAcct",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`BitsAcct` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsCmd",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`BitsCmd` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "BitsParent",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`BitsParent` is not a canonical column of SecurityEvent."
+        }
+      ]
+    }
+  ]
+}

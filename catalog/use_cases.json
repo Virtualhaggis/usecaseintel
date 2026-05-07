@@ -1,6 +1,6 @@
 {
-  "generated": "2026-05-07T17:44:50Z",
-  "count": 25,
+  "generated": "2026-05-07T19:54:03Z",
+  "count": 177,
   "use_cases": [
     {
       "id": "UC_BEACONING",
@@ -101,6 +101,2802 @@
       ],
       "splunk_spl": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime\n    from datamodel=Endpoint.Filesystem\n    where (Filesystem.file_path=\"*\\Ethereum\\keystore\\*\"\n        OR Filesystem.file_path=\"*\\Bitcoin\\wallet.dat\"\n        OR Filesystem.file_path=\"*\\Exodus\\exodus.wallet*\"\n        OR Filesystem.file_path=\"*\\Electrum\\wallets\\*\"\n        OR Filesystem.file_path=\"*\\MetaMask\\*\"\n        OR Filesystem.file_path=\"*\\Phantom\\*\"\n        OR Filesystem.file_path=\"*\\Atomic\\Local Storage\\*\")\n      AND NOT Filesystem.process_name IN (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user\n| `drop_dm_object_name(Filesystem)`",
       "defender_kql": "DeviceFileEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where FolderPath has_any (@\"\\Ethereum\\keystore\\\", @\"\\Bitcoin\\\", @\"\\Exodus\\\", @\"\\Electrum\\wallets\\\", @\"\\MetaMask\\\", @\"\\Phantom\\\", @\"\\Atomic\\Local Storage\\\")\n| where InitiatingProcessFileName !in~ (\"MetaMask.exe\",\"Exodus.exe\",\"Atomic.exe\",\"electrum.exe\",\"Bitcoin.exe\",\"Phantom.exe\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType\n"
+    },
+    {
+      "id": "UC_DDOG_1PASSWORD_FAILED_SIGNIN_BURST",
+      "title": "1Password failed sign-in burst",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Failed 1Password logins \u2014 credential spray indicator. Datadog default 'Anomalous amount of failed sign-in attempts by 1Password user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_1PASSWORD_IMPOSSIBLE_TRAVEL",
+      "title": "1Password impossible-travel sign-in",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Geographically impossible 1Password sign-in. Datadog default 'Impossible travel event observed from 1Password user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        },
+        {
+          "id": "T1550",
+          "name": "Use Alternate Authentication Material"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_1PASSWORD_ITEM_EXFIL_ATTEMPT",
+      "title": "1Password item exfiltration attempt",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Suspicious item-level access \u2014 credential-theft pattern. Datadog default 'Attempt to exfiltrate a 1Password item by user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_1PASSWORD_TOR_ACTIVITY",
+      "title": "1Password activity from Tor exit node",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "1Password access from Tor \u2014 credential-vault foreign-source flag. Datadog default '1Password activity observed from Tor client IP'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1090.003",
+          "name": "Multi-hop Proxy"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_1PASSWORD_VAULT_EXPORT",
+      "title": "1Password vault export attempted",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Vault export \u2014 bulk credential exfil. Datadog default '1Password vault export attempt by user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        },
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_ABNORMAL_BRUTE_FORCE",
+      "title": "Abnormal Security: brute-force attack detected",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Abnormal Security flagged brute-force activity. Datadog default 'Abnormal Security Brute Force Attack'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_ABNORMAL_LOGIN_NEW_LOCATION",
+      "title": "Abnormal Security: login from new location",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Login from a previously-unseen geo for the user. Datadog default 'Abnormal Security Login New Location'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_ABNORMAL_MALICIOUS_EMAIL",
+      "title": "Abnormal Security: malicious email opened",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "User opened a malicious email Abnormal flagged. Datadog default 'Abnormal Security Malicious Email Opened'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1566.001",
+          "name": "Spearphishing Attachment"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_API_ADMIN_NO_AUTH",
+      "title": "Authentication not detected on admin API endpoint",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Admin API route serving 2xx responses without an Authorization header or session cookie \u2014 exposed admin surface. Datadog default 'Authentication not detected on admin endpoint'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_API_PII_UNAUTH",
+      "title": "Unauthenticated route returns sensitive PII",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "API endpoint without authentication returning PII (email, phone, SSN-shape, card-shape) in its response body \u2014 direct data-exposure path. Datadog default 'Unauthenticated route returns sensitive PII'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1526",
+          "name": "Cloud Service Discovery"
+        },
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_API_RESOURCE_ABUSE",
+      "title": "Excessive resource consumption of third-party API",
+      "kill_chain": "actions",
+      "confidence": "Medium",
+      "description": "Abnormal request volume to a third-party API endpoint \u2014 resource abuse, scraping, or DoS-staging behaviour. Datadog default 'Excessive resource consumption of third-party API'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1496",
+          "name": "Resource Hijacking"
+        },
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_APP_JWT_BYPASS_ATTEMPT",
+      "title": "JWT authentication bypass attempt",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "JWT manipulation / none-alg / kid-abuse signatures. Datadog default 'JWT authentication bypass attempt'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_APP_LFI_EXPLOITED",
+      "title": "Local File Inclusion (LFI) exploited",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "LFI WAF rule fired with 2xx response \u2014 successful file read. Datadog default 'Local file inclusion exploited'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_APP_SPRING4SHELL_RCE",
+      "title": "Spring4Shell RCE attempts (CVE-2022-22963)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Spring4Shell exploitation attempts. Datadog default 'Spring4shell RCE attempts - CVE-2022-22963'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_APP_USER_TOR",
+      "title": "Application user activity from Tor",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "App-side activity from Tor exit \u2014 anonymisation flag. Datadog default 'User activity from Tor'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1090.003",
+          "name": "Multi-hop Proxy"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_ATLASSIAN_ADMIN_GROUP_ADD",
+      "title": "Atlassian user added to administrative group",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User added to an Atlassian admin group. Datadog default 'Atlassian user added to administrative group'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_ATLASSIAN_ADMIN_IMPERSONATION",
+      "title": "Atlassian administrator impersonating user",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Admin took over a user session \u2014 investigate operational legitimacy. Datadog default 'Atlassian administrator impersonated user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_ANOMALOUS_PROTECTION_EVENTS",
+      "title": "Auth0 anomalous attack-protection event spike",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Spike in Auth0 attack-protection trigger events. Datadog default 'Auth0 Anomalous Attack Protection Events'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        },
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_BREACHED_PWD_DETECTION_DISABLED",
+      "title": "Auth0 breached-password detection disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Breached-password detection turned off \u2014 adversary lowering the auth bar. Datadog default 'Auth0 Breached Password Detection Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_BREACHED_PWD_LOGIN",
+      "title": "Auth0 login with known-breached password",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "User authenticated with a credential known from a breach corpus. Datadog default 'Auth0 Breached Password Login'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110.004",
+          "name": "Credential Stuffing"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_BRUTE_FORCE",
+      "title": "Auth0 brute-force attack on user",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Auth0's per-user brute-force lockout fired. Datadog default 'Brute Force Attack on Auth0 User'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_BRUTE_FORCE_PROTECTION_DISABLED",
+      "title": "Auth0 brute-force protection disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Auth0 brute-force protection disabled. Datadog default 'Auth0 Brute Force Protection Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        },
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_CREDENTIAL_STUFFING",
+      "title": "Auth0 credential-stuffing attack",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Auth0's distributed-credential-stuffing detector fired. Datadog default 'Credential Stuffing Attack on Auth0'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110.004",
+          "name": "Credential Stuffing"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_IMPOSSIBLE_TRAVEL",
+      "title": "Auth0 impossible-travel sign-in",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Auth0 successful login from geographically impossible locations. Datadog default 'Impossible Travel Auth0 Login'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AUTH0_SUSPICIOUS_IP_THROTTLING_DISABLED",
+      "title": "Auth0 suspicious-IP throttling disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Auth0 suspicious-IP throttling turned off. Datadog default 'Auth0 Suspicious IP Throttling Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_ACCESS_KEY_CREATED_ANOMALY",
+      "title": "AWS access key created (programmatic credential)",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "New IAM access key created \u2014 long-lived credential issued, watch for abuse. Datadog default 'AWS access key creation by unusual principal'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1136.003",
+          "name": "Cloud Account"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_BRUTE_FORCE_CONSOLE_LOGIN",
+      "title": "AWS brute-force ConsoleLogin then AssumeRole",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Failed ConsoleLogin attempts against the same identity correlated with a successful AssumeRole call shortly after \u2014 credential-spray landing on a privileged role. Datadog default 'Brute forced ConsoleLogin event correlates with assumed role'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        },
+        {
+          "id": "T1550.001",
+          "name": "Application Access Token"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_CLOUDTRAIL_CONFIG_MODIFIED",
+      "title": "AWS CloudTrail logging configuration modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "CloudTrail logging stopped, trail deleted, or selectors changed \u2014 blinding the audit pipeline. Datadog default 'AWS CloudTrail configuration modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_CONFIG_MODIFIED",
+      "title": "AWS Config service modified or stopped",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "AWS Config recorder stopped or deleted \u2014 compliance trail blinded. Datadog default 'AWS Config modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_CONSOLELOGIN_NO_MFA",
+      "title": "AWS Console login without MFA + impossible travel",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "AWS ConsoleLogin events for an identity that didn't use MFA, where the same principal also signed in from a geographically distant location within a tight window (impossible travel). Mirrors Datadog's default rule 'AWS ConsoleLogin without MFA triggered Impossible Travel scenario'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        },
+        {
+          "id": "T1550",
+          "name": "Use Alternate Authentication Material"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_EC2_SECGROUP_MODIFIED",
+      "title": "AWS EC2 security group rules modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "EC2 security-group rules changed \u2014 adversary opening a path or covering tracks. Datadog default 'AWS EC2 security group modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_ECS_CLUSTER_DELETED",
+      "title": "AWS ECS cluster deleted",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "ECS cluster removed \u2014 workload impact. Datadog default 'AWS ECS cluster deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_GUARDDUTY_DISABLED",
+      "title": "AWS GuardDuty detector disabled or deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "GuardDuty turned off \u2014 defenders' main AWS-native threat detection silenced. Datadog default 'AWS GuardDuty detector disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.001",
+          "name": "Disable or Modify Tools"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_IAM_ADMIN_GRANTED",
+      "title": "AWS IAM AdministratorAccess policy applied to a user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "An IAM user / group / role just got AdministratorAccess \u2014 direct admin grant rather than going through the org's standard provisioning path. Datadog default 'AWS IAM AdministratorAccess policy was applied to a user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        },
+        {
+          "id": "T1548",
+          "name": "Abuse Elevation Control Mechanism"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_IAM_IMPOSSIBLE_TRAVEL",
+      "title": "Impossible travel observed for IAM user",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "IAM user activity from geographically distant locations within an impossible-travel window. Datadog default 'Impossible travel observed on IAM user'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_IAM_POLICY_MODIFIED",
+      "title": "AWS IAM policy created / updated / version changed",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "IAM policy added or version changed \u2014 privilege drift. Datadog default 'AWS IAM policy modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098.003",
+          "name": "Additional Cloud Roles"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_KMS_KEY_DELETION",
+      "title": "AWS KMS key deleted or scheduled for deletion",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "KMS key scheduled for deletion or deleted outright \u2014 disables decryption of everything the key wrapped (S3, EBS, RDS). Ransomware / insider-impact pattern. Datadog default 'AWS KMS key deleted or scheduled for deletion'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        },
+        {
+          "id": "T1531",
+          "name": "Account Access Removal"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_LAMBDA_MODIFIED",
+      "title": "AWS Lambda function code or configuration modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Lambda function code/config changed \u2014 adversary persistence via serverless backdoor. Datadog default 'AWS Lambda function modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1648",
+          "name": "Serverless Execution"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_RDS_CLUSTER_DELETED",
+      "title": "AWS RDS DB cluster deleted",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "RDS DB cluster or instance deleted \u2014 destructive impact. Datadog default 'AWS RDS cluster deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_ROOT_ACTIVITY",
+      "title": "AWS root account activity (any action)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Any console / API action by the AWS root identity. Steady-state should be ZERO; every hit is an investigation. Datadog default 'AWS root account activity'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        },
+        {
+          "id": "T1087.004",
+          "name": "Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_S3_BUCKET_POLICY_MODIFIED",
+      "title": "AWS S3 bucket policy modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "S3 bucket access policy changed \u2014 pivot to find adversary granting themselves read or write. Datadog default 'AWS S3 bucket policy modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_S3_BUCKET_PUBLIC",
+      "title": "AWS S3 bucket ACL / policy made public",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "S3 bucket ACL or policy modified to allow access from AllUsers / AllAuthenticatedUsers, or PublicAccessBlock removed. Either misconfig or intentional data-exposure prep. Datadog default 'AWS S3 Bucket ACL made public'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        },
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_SECURITYHUB_DISABLED",
+      "title": "AWS SecurityHub disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "SecurityHub turned off \u2014 aggregated AWS findings silenced. Datadog default 'AWS SecurityHub disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.001",
+          "name": "Disable or Modify Tools"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AWS_VPC_FLOW_LOG_DELETED",
+      "title": "AWS VPC Flow Log deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "VPC Flow Logs deleted \u2014 adversary erasing network-traffic visibility. Datadog default 'AWS VPC Flow Log deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_AD_BRUTE_FORCE",
+      "title": "Azure AD brute-force login",
+      "kill_chain": "delivery",
+      "confidence": "Medium",
+      "description": "Multiple failed Azure AD sign-ins against the same UPN within a short window \u2014 credential spray / brute force. Datadog default 'Azure AD brute force login'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        },
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_AD_GLOBAL_ADMIN_ASSIGNED",
+      "title": "Azure AD member assigned Global Administrator role",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "A user just got the Azure AD Global Administrator role \u2014 top-of-tenant privilege. Datadog default 'Azure AD member assigned Global Administrator role'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        },
+        {
+          "id": "T1548",
+          "name": "Abuse Elevation Control Mechanism"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_AD_MFA_DISABLED",
+      "title": "Azure AD MFA disabled for a user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "MFA was turned off for a user \u2014 adversary post-compromise persistence step (remove the second factor before re-using the credential). Datadog default 'Azure AD MFA disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_DIAGNOSTIC_SETTING_DELETED",
+      "title": "Azure diagnostic setting deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Azure diagnostic-setting deletion blinds activity-log forwarding to SIEM. Datadog default 'Azure diagnostic setting deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_KEYVAULT_KEYS_ACCESSED",
+      "title": "Azure Key Vault keys / secrets read",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Key Vault secret/key reads \u2014 pivot for credential-theft tradecraft. Datadog default 'Azure Key Vault access keys viewed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1555.005",
+          "name": "Password Managers"
+        },
+        {
+          "id": "T1552.001",
+          "name": "Credentials In Files"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_SP_OWNER_ADDED",
+      "title": "Azure new owner added to service principal",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Service-principal ownership change \u2014 adversary getting persistent control of an app identity. Datadog default 'Azure new owner added to service principal'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_SQL_FW_RULE_CREATED",
+      "title": "Azure SQL Server firewall rule created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Azure SQL firewall rule added \u2014 opening DB to a new IP range. Datadog default 'Azure SQL Server Firewall rule created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_STORAGE_SOFT_DELETE_DISABLED",
+      "title": "Azure storage soft-delete disabled",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Soft-delete turned off \u2014 adversary preparing to destroy blobs without recovery. Datadog default 'Azure storage account soft delete disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        },
+        {
+          "id": "T1490",
+          "name": "Inhibit System Recovery"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_AZURE_USER_ADDED_ADMIN_GROUP",
+      "title": "Azure user added to administrative group",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User joined an Azure admin group \u2014 privilege escalation path. Datadog default 'Azure user added to administrative group'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_COMMAND_INJECTION_EXPLOITED",
+      "title": "Command injection exploited (WAF detection)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "WAF telemetry showing successful command-injection against a web application \u2014 shell metacharacters in a request that returned 2xx. Datadog default 'Command injection exploited'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CONFLUENCE_GLOBAL_SETTING_CHANGED",
+      "title": "Confluence global security setting changed",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Global Confluence security setting modified. Datadog default 'Confluence Global Setting Changed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        },
+        {
+          "id": "T1562",
+          "name": "Impair Defenses"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CONFLUENCE_PUBLIC_LINK",
+      "title": "Confluence page public link created",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Public-link sharing of an internal page. Datadog default 'Confluence Public Link Creation'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        },
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CONFLUENCE_SPACE_EXPORT",
+      "title": "Confluence space export",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Space-level export \u2014 bulk content exfil. Datadog default 'Confluence Space Export'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CONTAINER_ESCAPE_ATTEMPT",
+      "title": "Container escape attempt detected",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Process tried to break out of container isolation \u2014 direct host-compromise primitive. Datadog default 'Container escape attempt detected'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1611",
+          "name": "Escape to Host"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CREDENTIAL_STUFFING",
+      "title": "Credential-stuffing attack on application",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Compromised credential pairs reused against a public application \u2014 high-volume login attempts where a small fraction succeed. Datadog default 'Credential Stuffing attack'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110.004",
+          "name": "Credential Stuffing"
+        },
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CROWDSTRIKE_ALERT",
+      "title": "CrowdStrike Falcon alert ingested",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Forwarded CrowdStrike sensor detection \u2014 pivot to the original CS console. Datadog default 'CrowdStrike Alert Detection'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1566",
+          "name": "Phishing"
+        },
+        {
+          "id": "T1204",
+          "name": "User Execution"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_ACCESS_DENIED_SPIKE",
+      "title": "AWS CloudTrail AccessDenied spike",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Burst of AccessDenied errors from one principal \u2014 privilege discovery. Datadog default 'CloudTrail Access Denied Spike'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1526",
+          "name": "Cloud Service Discovery"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_AMI_PUBLIC_SHARING",
+      "title": "AWS EC2 AMI shared publicly",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "AMI launchPermission added 'all' \u2014 image now public. Datadog default 'CloudTrail EC2 AMI Public Sharing'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_BEDROCK_LOGGING_DISABLED",
+      "title": "AWS Bedrock model invocation logging disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Bedrock invocation logs disabled. Datadog default 'CloudTrail Bedrock Model Invocation Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_CLOUDWATCH_RULE_DELETED",
+      "title": "AWS CloudWatch rule deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "CloudWatch rule removed \u2014 alerting / automation may be silenced. Datadog default 'CloudTrail CloudWatch Rule Deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.001",
+          "name": "Disable or Modify Tools"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_DETECTIVE_GRAPH_DELETED",
+      "title": "AWS Detective behaviour graph deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Detective graph deleted \u2014 investigation trail destroyed. Datadog default 'CloudTrail Detective Graph Deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1531",
+          "name": "Account Access Removal"
+        },
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_EBS_DEFAULT_ENCRYPTION_DISABLED",
+      "title": "AWS EBS default encryption disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Default EBS encryption turned off \u2014 new volumes plaintext. Datadog default 'CloudTrail EBS Default Encryption Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.001",
+          "name": "Disable or Modify Tools"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_EBS_SNAPSHOT_PUBLIC",
+      "title": "AWS EBS snapshot made public",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "EBS snapshot exposed to all-AWS \u2014 bulk data exfil path. Datadog default 'CloudTrail EBS Snapshot Made Public'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_EC2_KEY_CREATION",
+      "title": "AWS EC2 key-pair created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "New EC2 key pair issued \u2014 backdoor SSH-access primitive. Datadog default 'CloudTrail EC2 Key Pair Creation'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1199",
+          "name": "Trusted Relationship"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_GUARDDUTY_PUBLISH_DISABLED",
+      "title": "AWS GuardDuty findings publishing disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "GuardDuty stopped publishing findings to S3. Datadog default 'CloudTrail GuardDuty Publishing Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_NACL_MODIFIED",
+      "title": "AWS Network ACL modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "VPC NACL entries changed \u2014 segmentation drift. Datadog default 'CloudTrail Network ACL Modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_ORG_LEAVE",
+      "title": "AWS Organization leave initiated",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Account left the AWS organization \u2014 central control loss. Datadog default 'CloudTrail AWS Organization Leave'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1531",
+          "name": "Account Access Removal"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_ROUTE53_LOGGING_DISABLED",
+      "title": "AWS Route53 query logging disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "DNS query logs deleted \u2014 name-resolution observability lost. Datadog default 'CloudTrail Route53 Query Logging Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_S3_EXFILTRATION",
+      "title": "AWS S3 anomalous bulk download (exfil)",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Anomalous S3 read pattern \u2014 pivot for staged exfil. Datadog default 'CloudTrail S3 Bucket Exfiltration'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_S3_PUBLIC_ACCESS_REMOVED",
+      "title": "AWS S3 public-access-block removed",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "S3 public-access-block disabled \u2014 bucket exposure path. Datadog default 'CloudTrail S3 Public Access Block Removed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1578.001",
+          "name": "Create Cloud Instance"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_CT_SECRETS_RETRIEVAL",
+      "title": "AWS Secrets Manager retrieval by unfamiliar principal",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Secret read by a human / non-automation principal \u2014 credential-theft indicator. Datadog default 'CloudTrail Secrets Manager Retrieval'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATADOG_AUDIT_DISABLED",
+      "title": "Datadog audit trail disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Datadog's own audit logging turned off \u2014 meta-blinding. Datadog default 'Datadog audit trail disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATADOG_DASHBOARD_PUBLIC",
+      "title": "Datadog dashboard made publicly accessible",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Dashboard exposed publicly \u2014 possible PII or token leakage. Datadog default 'Datadog dashboard made publicly accessible'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATADOG_LOGIN_METHOD_CHANGED",
+      "title": "Datadog organization login method changed",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Org SSO/SAML setting changed \u2014 auth-flow tampering. Datadog default 'Datadog organization login method changed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATADOG_SECURITY_RULE_MODIFIED",
+      "title": "Datadog security notification rule modified or deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "SIEM rule edited or deleted in Datadog \u2014 defender losing detection. Datadog default 'Datadog security notification rule modified or deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562",
+          "name": "Impair Defenses"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATADOG_SUSPICIOUS_LOGIN",
+      "title": "Datadog suspicious login",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Datadog console login flagged as suspicious by geo / device fingerprint. Datadog default 'Datadog suspicious login'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DATA_EXFIL_SUCCESSFUL",
+      "title": "Application data exfiltration successful",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Application telemetry showing a large-volume / sensitive-attribute response served to an external endpoint \u2014 data exfil. Datadog default 'Data exfiltration successful'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1041",
+          "name": "Exfiltration Over C2 Channel"
+        },
+        {
+          "id": "T1567",
+          "name": "Exfiltration Over Web Service"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DISTRIBUTED_CREDENTIAL_STUFFING",
+      "title": "Distributed credential-stuffing campaign",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Coordinated credential stuffing across many source IPs \u2014 botnet-style spraying designed to evade per-IP rate limits. Datadog default 'Distributed Credential Stuffing campaign'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        },
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DUO_ADMIN_LOCKOUT",
+      "title": "Cisco Duo admin lockout",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Duo admin locked out after excessive failures. Datadog default 'Cisco Duo Administrator Lockout'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DUO_APP_ENUMERATION",
+      "title": "Cisco Duo application enumeration",
+      "kill_chain": "recon",
+      "confidence": "High",
+      "description": "User browsing the list of Duo-protected applications. Datadog default 'Cisco Duo Application Enumeration'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1592.001",
+          "name": "Hardware"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DUO_BRUTE_FORCE",
+      "title": "Cisco Duo brute-force on protected user",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Repeated failed Duo authentications on the same user. Datadog default 'Cisco Duo Brute Force Attack'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DUO_BYPASS_CODE_CREATION",
+      "title": "Cisco Duo emergency bypass code created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Admin generated a Duo bypass code \u2014 auth-fallback risk. Datadog default 'Cisco Duo Bypass Code Creation'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_DUO_FRAUD_PUSH",
+      "title": "Cisco Duo fraud-marked push notifications",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "User marked Duo push prompts as fraudulent \u2014 push-bombing attempt. Datadog default 'Cisco Duo Fraud Push Notifications'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1621",
+          "name": "Multi-Factor Authentication Request Generation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_FALCO_RUNTIME_ALERT",
+      "title": "Falco runtime-security alert",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Falco kernel-level runtime alert \u2014 high-fidelity container/host detection. Datadog default 'Falco Runtime Alert'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1611",
+          "name": "Escape to Host"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_EXTERNAL_OWNER_ADDED",
+      "title": "GCP project external principal added as owner",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "External email granted project ownership \u2014 direct full-takeover risk. Datadog default 'GCP project external principal added as owner'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_FIREWALL_RULE_MODIFIED",
+      "title": "GCP Compute Engine firewall rule modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "VPC firewall rule changed \u2014 adversary opening or covering a path. Datadog default 'GCP Compute Engine firewall rule modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_IAM_ROLE_CREATED",
+      "title": "GCP custom IAM role created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Custom GCP IAM role defined \u2014 pivot for hidden-privilege grants. Datadog default 'GCP IAM role created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_LOGGING_BUCKET_DELETED",
+      "title": "GCP Cloud Logging bucket deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Cloud Logging bucket removed \u2014 audit trail destroyed. Datadog default 'GCP Logging Bucket deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_LOGGING_SINK_MODIFIED",
+      "title": "GCP Cloud Logging sink modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Cloud Logging sink redirected \u2014 adversary cutting off log forwarding. Datadog default 'GCP logging sink modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.008",
+          "name": "Disable or Modify Cloud Logs"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_STORAGE_PERMS_MODIFIED",
+      "title": "GCP Cloud Storage bucket permissions modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "GCS bucket IAM changed \u2014 possible public exposure. Datadog default 'GCP Cloud Storage bucket permissions modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GCP_SVC_ACCT_KEY_CREATED",
+      "title": "GCP service-account key created",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "New SA key issued \u2014 long-lived credential exfil risk. Datadog default 'GCP Service Account key created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1136.003",
+          "name": "Cloud Account"
+        },
+        {
+          "id": "T1552",
+          "name": "Unsecured Credentials"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_BRANCH_PROTECTION_DISABLED",
+      "title": "GitHub branch protection disabled with force-push bypass",
+      "kill_chain": "install",
+      "confidence": "Medium",
+      "description": "Branch protection rules removed and force-push allowed \u2014 adversary clearing the guard rails to overwrite history or push malicious code. Datadog default 'GitHub branch protection disabled with force push bypass'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562",
+          "name": "Impair Defenses"
+        },
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_MASS_REPO_DELETION",
+      "title": "GitHub mass repository deletion",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Bulk repo deletion in a tight window \u2014 destructive impact. Datadog default 'GitHub Mass Repository Deletion'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        },
+        {
+          "id": "T1531",
+          "name": "Account Access Removal"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_MFA_DISABLED",
+      "title": "GitHub organization 2FA requirement removed",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Org-wide 2FA requirement removed \u2014 auth bar lowered. Datadog default 'GitHub MFA requirement disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_ORG_REMOVED_ENTERPRISE",
+      "title": "GitHub organization removed from enterprise",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Org dropped out of enterprise scope \u2014 admin oversight loss. Datadog default 'GitHub organization removed from enterprise'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_PAT_CREATED",
+      "title": "GitHub personal access token created",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "New PAT issued \u2014 long-lived credential watch-list. Datadog default 'GitHub personal access token created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1136",
+          "name": "Create Account"
+        },
+        {
+          "id": "T1552",
+          "name": "Unsecured Credentials"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_PAT_IMPOSSIBLE_TRAVEL",
+      "title": "GitHub PAT used from impossible-travel locations",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Same PAT seen from geographically distant locations within an impossible-travel window. Datadog default 'GitHub PAT Impossible Travel'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        },
+        {
+          "id": "T1550.001",
+          "name": "Application Access Token"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_PAT_MASS_CLONE",
+      "title": "GitHub personal access token cloning many repositories",
+      "kill_chain": "actions",
+      "confidence": "Medium",
+      "description": "PAT used to clone an unusual number of repositories \u2014 credential theft + source-code exfil. Datadog default 'GitHub personal access token used to clone repositories'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        },
+        {
+          "id": "T1552",
+          "name": "Unsecured Credentials"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_REPO_PUBLIC",
+      "title": "GitHub repository visibility changed to public",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Private repo flipped to public \u2014 unintentional or intentional source-code exposure. Datadog default 'GitHub repository visibility changed to public'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        },
+        {
+          "id": "T1213.003",
+          "name": "Code Repositories"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_REPO_TRANSFER",
+      "title": "GitHub repository transfer initiated",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Repo transferred to another owner \u2014 IP-leak path. Datadog default 'GitHub repository transfer initiated'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        },
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_SAML_OIDC_DISABLED",
+      "title": "GitHub SAML/OIDC SSO disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Org SSO turned off \u2014 auth-bar lowering. Datadog default 'GitHub SAML/OIDC Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_SECRETS_ENUMERATION",
+      "title": "GitHub secrets-API enumeration",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Burst of access to secret-scanning alerts \u2014 adversary harvesting leaked creds. Datadog default 'GitHub Secrets Enumeration via API'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_SECRET_SCANNING_DISABLED",
+      "title": "GitHub secret scanning disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Secret-scanning turned off \u2014 credentials in code go un-flagged. Datadog default 'GitHub secret scanning disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1562.001",
+          "name": "Disable or Modify Tools"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITHUB_SSH_KEY_SUSPICIOUS",
+      "title": "GitHub SSH key added from suspicious IP",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "SSH public key added \u2014 backdoor access primitive; pivot via IP geo. Datadog default 'GitHub SSH Key Added Suspicious'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098.004",
+          "name": "SSH Authorized Keys"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_ADMIN_ADDED",
+      "title": "GitLab administrator role granted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User gained admin on GitLab tenant. Datadog default 'GitLab administrator added'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_BRUTE_FORCE",
+      "title": "GitLab brute-force attack",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Repeated failed GitLab logins. Datadog default 'GitLab Brute Force Attack'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110",
+          "name": "Brute Force"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_GROUP_PUBLIC",
+      "title": "GitLab group visibility changed to public",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Private GitLab group flipped to public \u2014 exposure. Datadog default 'GitLab group visibility changed to public'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_MASS_DOWNLOAD",
+      "title": "GitLab mass repository download",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Anomalous spike in clones from one user / IP \u2014 exfil signal. Datadog default 'GitLab Mass Repository Download'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        },
+        {
+          "id": "T1213.003",
+          "name": "Code Repositories"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_MFA_DISABLED",
+      "title": "GitLab user MFA disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User self-disabled MFA on GitLab. Datadog default 'GitLab MFA Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_PASSWORD_RESET_SUSPICIOUS",
+      "title": "GitLab password reset from suspicious IP",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Password reset event \u2014 investigate alongside originating IP / geo. Datadog default 'GitLab password reset from suspicious IP'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        },
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_PAT_GENERATED",
+      "title": "GitLab personal access token generated",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "New GitLab PAT issued \u2014 credential watch-list. Datadog default 'GitLab personal access token generated'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1136",
+          "name": "Create Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_PROJECT_VISIBILITY",
+      "title": "GitLab project visibility changed (public)",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Project flipped to public \u2014 IP-leak risk. Datadog default 'GitLab Project Visibility Changed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1538",
+          "name": "Cloud Service Dashboard"
+        },
+        {
+          "id": "T1213.003",
+          "name": "Code Repositories"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GITLAB_SSO_DISABLED",
+      "title": "GitLab SSO disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "SSO turned off \u2014 auth fallback to local creds. Datadog default 'GitLab SSO disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_ADMIN_2SV_DISABLED",
+      "title": "Google Workspace admin disabled 2SV for OU",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Two-step verification turned off for an organisational unit. Datadog default 'Google Workspace Admin 2SV Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_EMAIL_FORWARDING_EXTERNAL",
+      "title": "Google Workspace email auto-forwarding to external domain",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Auto-forward to a non-corporate domain \u2014 classic mail exfil. Datadog default 'Google Workspace Email Forwarding External'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1114.003",
+          "name": "Email Forwarding Rule"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_OAUTH_KEY_ACCOUNT_CHANGES",
+      "title": "Google Workspace OAuth key making account changes",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "OAuth service-account key creating or modifying users. Datadog default 'Google Workspace OAuth Key Account Changes'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1550.001",
+          "name": "Application Access Token"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_SVCACCT_UNFAMILIAR",
+      "title": "Google Workspace service account modifying group membership",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Unexpected SA modifying group memberships. Datadog default 'Google Workspace Service Account Unfamiliar Activity'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        },
+        {
+          "id": "T1078.004",
+          "name": "Cloud Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_TOR_CLIENT_ACCESS",
+      "title": "Google Workspace access from Tor exit node",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Workspace activity from Tor \u2014 anonymisation flag. Datadog default 'Google Workspace Tor Client Access'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1090.003",
+          "name": "Multi-hop Proxy"
+        },
+        {
+          "id": "T1205.002",
+          "name": "Socket Filters"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_USER_2SV_DISABLED",
+      "title": "Google Workspace user disabled 2SV on own account",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User self-disabled 2SV \u2014 adversary post-compromise persistence step. Datadog default 'Google Workspace User 2SV Disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_GWS_USER_ADMIN_ASSIGNMENT",
+      "title": "Google Workspace admin role assigned to user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User granted Workspace admin privileges. Datadog default 'Google Workspace User Admin Role Assignment'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098.003",
+          "name": "Additional Cloud Roles"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_IMPOSSIBLE_TRAVEL_BUSINESS_LOGIC",
+      "title": "Impossible travel from application business-logic event",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Successful authentication for the same user from geographically distant locations within a window that's physically impossible to traverse. Datadog default 'Impossible travel observed from business logic event'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1550",
+          "name": "Use Alternate Authentication Material"
+        },
+        {
+          "id": "T1078",
+          "name": "Valid Accounts"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_K8S_CLUSTER_ROLE_DELETED",
+      "title": "Kubernetes ClusterRole / binding deleted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "ClusterRole / binding removed \u2014 defenders losing access or adversary covering tracks. Datadog default 'Kubernetes ClusterRole binding deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1531",
+          "name": "Account Access Removal"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_K8S_PRIVILEGED_POD_CREATED",
+      "title": "Kubernetes pod created with privileged flag",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Privileged pod \u2014 direct host-takeover primitive. Datadog default 'Kubernetes pod executed with privileged flag'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1611",
+          "name": "Escape to Host"
+        },
+        {
+          "id": "T1548",
+          "name": "Abuse Elevation Control Mechanism"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_K8S_RBAC_BINDING_CREATED",
+      "title": "Kubernetes RBAC role binding created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "RBAC binding added \u2014 privilege drift inside the cluster. Datadog default 'Kubernetes RBAC role binding created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_K8S_SECRET_ACCESSED",
+      "title": "Kubernetes Secret accessed",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Secret read by a non-system principal \u2014 credential-theft signal. Datadog default 'Kubernetes secret accessed'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1552.007",
+          "name": "Container API"
+        },
+        {
+          "id": "T1555",
+          "name": "Credentials from Password Stores"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_K8S_WEBHOOK_MODIFIED",
+      "title": "Kubernetes admission webhook configuration modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Admission webhook changed \u2014 adversary inserting cluster-wide interception. Datadog default 'Kubernetes webhook configuration modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1554",
+          "name": "Compromise Host Software Binary"
+        },
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_LOG4SHELL_RCE",
+      "title": "Log4Shell RCE attempts (CVE-2021-44228)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "JNDI-lookup payloads (${jndi:ldap://...} / ${jndi:rmi://...}) in HTTP headers or request bodies \u2014 Log4Shell exploitation attempts. Datadog default 'Log4shell RCE attempts (CVE-2021-44228)'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_M365_ADMIN_ROLE_ASSIGNED",
+      "title": "M365 admin role assigned to user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User became an M365 admin \u2014 privilege drift. Datadog default 'M365 admin role assigned'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_M365_FORWARDING_RULE",
+      "title": "M365 mail-forwarding rule created",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Auto-forward rule \u2014 classic adversary exfil persistence. Datadog default 'M365 forwarding rule created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1114.003",
+          "name": "Email Forwarding Rule"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_M365_MAILBOX_DELEGATION",
+      "title": "M365 mailbox delegation granted",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Inbox delegation \u2014 adversary inbox-rule pre-staging. Datadog default 'M365 mailbox delegation granted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098.002",
+          "name": "Additional Email Delegate Permissions"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_M365_MFA_DISABLED",
+      "title": "M365 MFA disabled for a user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "MFA removed \u2014 adversary auth-bar lowering. Datadog default 'M365 MFA disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_MONGODB_AUTH_DISABLED",
+      "title": "MongoDB authentication disabled",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "MongoDB auth turned off \u2014 anyone can connect. Datadog default 'MongoDB authentication disabled'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_MONGODB_DB_DELETED",
+      "title": "MongoDB database dropped",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "DB dropped \u2014 destructive event. Datadog default 'MongoDB database deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_MONGODB_USER_CREATED",
+      "title": "MongoDB user created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "New DB user \u2014 pivot for legitimacy review. Datadog default 'MongoDB user created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1136",
+          "name": "Create Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_MONGODB_USER_PRIVESCAL",
+      "title": "MongoDB user role escalated",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "DB user got a higher role \u2014 privilege drift. Datadog default 'MongoDB user privilege escalated'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_OKTA_ADMIN_ROLE_ASSIGNED",
+      "title": "Okta administrative role assigned to user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User gets an Okta admin role \u2014 privilege drift. Datadog default 'Okta administrative role assigned'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_OKTA_APP_ACCESS_GRANTED",
+      "title": "Okta application access granted to user",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User added to an Okta-mediated app \u2014 pivot for entitlement audits. Datadog default 'Okta application access granted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_OKTA_AUTH_POLICY_MODIFIED",
+      "title": "Okta authentication / sign-on policy modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Auth policy / rule changed \u2014 adversary lowering the auth bar. Datadog default 'Okta authentication policy modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_OKTA_MFA_BYPASS",
+      "title": "Okta MFA bypass attempt",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "MFA challenge failed in a way that suggests a bypass attempt. Datadog default 'Okta MFA bypass attempt'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_OKTA_USER_LOCKED",
+      "title": "Okta user account locked",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "Okta user lockout \u2014 credential-spray indicator (and a paste-target for IP / target lists). Datadog default 'Okta user account locked'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1110.003",
+          "name": "Password Spraying"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_POSTGRES_AUTH_MODIFIED",
+      "title": "PostgreSQL authentication method modified",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "pg_hba reload or auth setting change \u2014 bar lowering. Datadog default 'PostgreSQL authentication method modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1556",
+          "name": "Modify Authentication Process"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_POSTGRES_DB_DELETED",
+      "title": "PostgreSQL database dropped",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "DB dropped \u2014 destructive event. Datadog default 'PostgreSQL database deleted'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1485",
+          "name": "Data Destruction"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_POSTGRES_SUPERUSER_CREATED",
+      "title": "PostgreSQL superuser role created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "Superuser role created \u2014 DBA-level privilege drift. Datadog default 'PostgreSQL role created with superuser'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_SNOWFLAKE_ROLE_CREATED",
+      "title": "Snowflake role created",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "New Snowflake role defined \u2014 privilege drift in the warehouse. Datadog default 'Snowflake role created'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_SNOWFLAKE_SHARE_MODIFIED",
+      "title": "Snowflake share created or modified",
+      "kill_chain": "actions",
+      "confidence": "High",
+      "description": "Cross-account data share opened \u2014 direct data-exfil primitive. Datadog default 'Snowflake share created or modified'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1537",
+          "name": "Transfer Data to Cloud Account"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_SNOWFLAKE_USER_ROLE_ADDED",
+      "title": "Snowflake user added to role",
+      "kill_chain": "install",
+      "confidence": "High",
+      "description": "User got new role \u2014 entitlement audit. Datadog default 'Snowflake user added to role'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1098",
+          "name": "Account Manipulation"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_SQL_INJECTION_EXPLOITED",
+      "title": "SQL injection exploited (WAF detection)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "WAF telemetry showing successful SQL injection against a web application \u2014 request payload matched SQLi signatures and returned a 2xx instead of being blocked. Datadog default 'SQL injection exploited'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
+    },
+    {
+      "id": "UC_DDOG_SSRF_EXPLOITED",
+      "title": "SSRF exploited (WAF detection)",
+      "kill_chain": "delivery",
+      "confidence": "High",
+      "description": "WAF telemetry showing successful SSRF \u2014 request includes link-local / metadata IP or internal RFC1918 address as the target, application returned 2xx. Datadog default 'SSRF exploited'.",
+      "implementations": [],
+      "mitre_attack": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application"
+        },
+        {
+          "id": "T1021",
+          "name": "Remote Services"
+        }
+      ],
+      "data_models": [],
+      "splunk_spl": null,
+      "defender_kql": null
     },
     {
       "id": "UC_DNS_TUNNEL",

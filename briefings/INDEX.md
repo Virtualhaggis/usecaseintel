@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_587 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-07
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
+- [australia warns of clickfix attacks pushing vidar stealer ma](./2026-05-07/australia-warns-of-clickfix-attacks-pushing-vidar-stealer-ma.md)
 - [cisa warns of palo alto pan os vulnerability exploited to ga](./2026-05-07/cisa-warns-of-palo-alto-pan-os-vulnerability-exploited-to-ga.md)
 - [critical redis vulnerabilities enables remote code execution](./2026-05-07/critical-redis-vulnerabilities-enables-remote-code-execution.md)
 - [crypto gang member gets 6 5 years for role in 230 million he](./2026-05-07/crypto-gang-member-gets-6-5-years-for-role-in-230-million-he.md)
@@ -17,22 +18,28 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
 - [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [hackers using fake claude ai installer pages to trick users ](./2026-05-07/hackers-using-fake-claude-ai-installer-pages-to-trick-users-.md)
+- [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
 - [new cisco network vulnerability let remote attacker cause do](./2026-05-07/new-cisco-network-vulnerability-let-remote-attacker-cause-do.md)
 - [new ivanti epmm 0 day vulnerability actively exploited in at](./2026-05-07/new-ivanti-epmm-0-day-vulnerability-actively-exploited-in-at.md)
+- [new pcpjack worm steals credentials cleans teampcp infection](./2026-05-07/new-pcpjack-worm-steals-credentials-cleans-teampcp-infection.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-07/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
+- [palo alto networks firewall zero day exploited for nearly a ](./2026-05-07/palo-alto-networks-firewall-zero-day-exploited-for-nearly-a-.md)
 - [palo alto networks firewall zero day rce vulnerability explo](./2026-05-07/palo-alto-networks-firewall-zero-day-rce-vulnerability-explo.md)
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
+- [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [scammers use short lived voip numbers and reuse windows to d](./2026-05-07/scammers-use-short-lived-voip-numbers-and-reuse-windows-to-d.md)
 - [the browser is breaking your dlp how data slips past modern ](./2026-05-07/the-browser-is-breaking-your-dlp-how-data-slips-past-modern-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
 - [uat 8302 uses custom malware and open source tools to steal ](./2026-05-07/uat-8302-uses-custom-malware-and-open-source-tools-to-steal-.md)
+- [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [watchguard agent vulnerabilities let attackers grant full sy](./2026-05-07/watchguard-agent-vulnerabilities-let-attackers-grant-full-sy.md)
 - [webinar why modern attacks require both security and recover](./2026-05-07/webinar-why-modern-attacks-require-both-security-and-recover.md)
+- [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
@@ -50,10 +57,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
-- [palo alto networks firewall zero day exploited for nearly a ](./2026-05-06/palo-alto-networks-firewall-zero-day-exploited-for-nearly-a-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
-- [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
 - [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
 - [why ransomware attacks succeed even when backups exist](./2026-05-06/why-ransomware-attacks-succeed-even-when-backups-exist.md)
 - [windows phone link exploited by cloudz rat to steal credenti](./2026-05-06/windows-phone-link-exploited-by-cloudz-rat-to-steal-credenti.md)
@@ -121,9 +126,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
-- [cisa adds actively exploited connectwise and windows flaws t](./2026-04-29/cisa-adds-actively-exploited-connectwise-and-windows-flaws-t.md)
 - [critical cpanel authentication vulnerability identified upda](./2026-04-29/critical-cpanel-authentication-vulnerability-identified-upda.md)
-- [litellm cve 2026 42208 sql injection exploited within 36 hou](./2026-04-29/litellm-cve-2026-42208-sql-injection-exploited-within-36-hou.md)
 - [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
 - [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
 - [webinar how to automate exposure validation to match the spe](./2026-04-29/webinar-how-to-automate-exposure-validation-to-match-the-spe.md)
@@ -150,7 +153,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uat 4356 s targeting of cisco firepower devices](./2026-04-23/uat-4356-s-targeting-of-cisco-firepower-devices.md)
 
 ## 2026-04-22
-- [ai powered defense for an ai accelerated threat landscape](./2026-04-22/ai-powered-defense-for-an-ai-accelerated-threat-landscape.md)
 - [cisa kev cve 2026 33825 microsoft defender insufficient gran](./2026-04-22/cisa-kev-cve-2026-33825-microsoft-defender-insufficient-gran.md)
 - [ir trends q1 2026 phishing reemerges as top initial access v](./2026-04-22/ir-trends-q1-2026-phishing-reemerges-as-top-initial-access-v.md)
 - [labscon25 replay are your chinese cameras spying for you or ](./2026-04-22/labscon25-replay-are-your-chinese-cameras-spying-for-you-or-.md)
@@ -181,7 +183,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
 - [foxit libraw vulnerabilities](./2026-04-16/foxit-libraw-vulnerabilities.md)
-- [powmix botnet targets czech workforce](./2026-04-16/powmix-botnet-targets-czech-workforce.md)
 - [supply chain dependencies have you checked your blind spot](./2026-04-16/supply-chain-dependencies-have-you-checked-your-blind-spot.md)
 - [the q1 vulnerability pulse](./2026-04-16/the-q1-vulnerability-pulse.md)
 

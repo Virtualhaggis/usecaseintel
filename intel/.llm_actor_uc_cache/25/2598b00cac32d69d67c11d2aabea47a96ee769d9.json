@@ -1,0 +1,96 @@
+{
+  "name": "APT28",
+  "ucs": [
+    {
+      "title": "[LLM] APT28 / Fancy Bear CVE-2023-23397 Outlook NTLM credential coercion via UNC path",
+      "description": "Hunts the GRU Unit 26165 (APT28 / Forest Blizzard / STRONTIUM) zero-click Outlook exploit chain where a crafted calendar/task reminder with a PidLidReminderFileParameter pointing at an attacker-controlled SMB/WebDAV UNC forces Outlook to leak Net-NTLMv2 hashes via outbound SMB (TCP/445) or WebDAV (TCP/80/443) before the user even reads the message. This is APT28-defining tradecraft (CVE-2023-23397, exploited in-the-wild against NATO/defence/EU government targets since at least April 2022).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1212",
+        "T1203"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.bytes_in) as bytes_in from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=\"outlook.exe\" OR All_Traffic.process=\"*\\\\OUTLOOK.EXE\" OR All_Traffic.process=\"*\\\\outlook.exe\") AND (All_Traffic.dest_port=445 OR All_Traffic.dest_port=139 OR (All_Traffic.dest_port IN (80,443) AND All_Traffic.app=\"outlook.exe\" AND All_Traffic.transport=\"tcp\")) AND NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16) by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(\"All_Traffic\")` | where dest_port=445 OR dest_port=139 | eval signal=\"OUTLOOK_NTLM_LEAK_OUTBOUND_SMB\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// APT28 CVE-2023-23397 \u2014 outlook.exe initiating outbound SMB/WebDAV to a public IP\n// Forest Blizzard zero-click NTLM hash coercion via PidLidReminderFileParameter UNC\nlet LookbackDays = 30d;\nlet OutlookSmbEgress = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName =~ \"outlook.exe\"\n    | where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\",\"ConnectionFailed\")\n    | where RemotePort in (445, 139)        // SMB / NetBIOS\n        or (RemotePort in (80, 443) and Protocol == \"Tcp\")  // WebDAV fallback\n    | where RemoteIPType == \"Public\"        // legitimate Outlook never speaks SMB to the internet\n    | project Timestamp, DeviceName, DeviceId, AccountName=InitiatingProcessAccountName,\n              RemoteIP, RemotePort, RemoteUrl,\n              OutlookCmd = InitiatingProcessCommandLine,\n              OutlookSha = InitiatingProcessSHA256;\n// Correlate with a freshly delivered email to the same recipient in the last 24h\n// \u2014 strong signal the trigger was a malicious appointment / task item\nlet RecentInbound = EmailEvents\n    | where Timestamp > ago(LookbackDays)\n    | where EmailDirection == \"Inbound\"\n    | where DeliveryAction in (\"Delivered\",\"DeliveredAsSpam\")\n    | project EmailTime = Timestamp, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, Subject, NetworkMessageId,\n              AuthenticationDetails;\nOutlookSmbEgress\n| join kind=leftouter (\n    RecentInbound\n    | summarize arg_max(EmailTime, *) by RecipientEmailAddress\n  ) on $left.AccountName == $right.RecipientEmailAddress\n| extend MinutesSinceMail = datetime_diff('minute', Timestamp, EmailTime)\n| project Timestamp, DeviceName, AccountName, RemoteIP, RemotePort,\n          OutlookCmd, RecentSender = SenderFromAddress, RecentSubject = Subject,\n          MinutesSinceMail\n| order by Timestamp desc",
+      "sentinel_kql": "// APT28 CVE-2023-23397 \u2014 Sentinel via DeviceNetworkEvents (MDE connector) or ImNetworkSession (ASIM)\nlet LookbackDays = 30d;\nDeviceNetworkEvents\n| where TimeGenerated > ago(LookbackDays)\n| where InitiatingProcessFileName =~ \"outlook.exe\"\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\",\"ConnectionFailed\")\n| where RemotePort in (445, 139)\n   or (RemotePort in (80, 443) and Protocol == \"Tcp\" and RemoteUrl has_any (\"webdav\",\"/dav/\"))\n| where RemoteIPType == \"Public\"\n| project TimeGenerated, DeviceName, DeviceId,\n          AccountName = InitiatingProcessAccountName,\n          RemoteIP, RemotePort, RemoteUrl,\n          OutlookCmd = InitiatingProcessCommandLine,\n          OutlookSha = InitiatingProcessSHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT28 Outlook NTLM Coercion via Outbound SMB/WebDAV (CVE-2023-23397)\nid: a28e2024-fb01-4f28-b28f-cve202323397ap\nstatus: experimental\ndescription: Detects outlook.exe initiating outbound SMB (TCP/445, /139) or WebDAV connections to a public IP \u2014 the hallmark of APT28 / Forest Blizzard exploitation of CVE-2023-23397 (PidLidReminderFileParameter UNC coercion leaking Net-NTLMv2 hashes).\nreferences:\n  - https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-23397\n  - https://www.microsoft.com/en-us/security/blog/2023/12/04/star-blizzard-increases-sophistication-and-evasion-in-ongoing-attacks/\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.credential_access\n  - attack.t1187\n  - attack.t1212\n  - detection.threat_hunting\n  - apt28\n  - cve.2023.23397\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_outlook:\n    Image|endswith: '\\outlook.exe'\n  selection_smb:\n    DestinationPort:\n      - 445\n      - 139\n  filter_private:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '127.0.0.0/8'\n      - '169.254.0.0/16'\n  condition: selection_outlook and selection_smb and not filter_private\nfalsepositives:\n  - Misconfigured Outlook clients reaching SMB shares over the public internet (extremely rare)\n  - Penetration-testing tooling intentionally exercising the same CVE\nlevel: high",
+      "rationale": "outlook.exe never legitimately initiates outbound SMB to the public internet \u2014 corporate SMB/445 stays on-prem to file servers (RFC1918). APT28 / Forest Blizzard's CVE-2023-23397 exploitation is the canonical reason this would happen: a crafted .msg with PidLidReminderFileParameter=\\\\attacker.tld\\share\\sound.wav causes Outlook to silently auth to the UNC and leak Net-NTLMv2 \u2014 zero user interaction",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceNetworkEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceNetworkEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT28 password-spray from residential proxies \u2192 legacy auth \u2192 MFA-bypass mailbox access",
+      "description": "Hunts APT28 / Fancy Bear's well-documented mass-credential-collection chain (T1110.003 password spray \u2192 T1078.004 cloud account \u2192 T1114.002 mailbox collection) where the actor sprays Entra/M365 credentials from residential-proxy / TOR / VPS infrastructure (e.g. the mass-spray campaign disclosed by Microsoft and NCSC in 2023-2024) and pivots to graph/EWS mailbox access. Combines the spray fingerprint (many failures + few successes from the same IPs/ASN, often using legacy 'Other clients' auth) with the post-auth IMAP/EWS mailbox sweep that defines this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1110.003",
+        "T1078.004",
+        "T1114.002",
+        "T1090.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime dc(Authentication.user) as users_targeted dc(eval(if('Authentication.action'=\"failure\",Authentication.user,null()))) as failed_users dc(eval(if('Authentication.action'=\"success\",Authentication.user,null()))) as success_users values(Authentication.user) as user_sample values(Authentication.app) as apps from datamodel=Authentication.Authentication where Authentication.signature_id IN (\"50126\",\"50053\",\"50055\",\"50057\",\"50064\",\"50076\",\"50140\",\"0\") AND (Authentication.app=\"Microsoft Office 365\" OR Authentication.src_category=\"cloud\" OR Authentication.authentication_method IN (\"IMAP\",\"POP\",\"SMTP\",\"Other clients\",\"Exchange ActiveSync\")) by Authentication.src Authentication.src_country Authentication.app | `drop_dm_object_name(\"Authentication\")` | where failed_users >= 20 AND success_users >= 1 | eval spray_ratio=round(success_users / failed_users, 3) | eval signal=\"APT28_M365_PASSWORD_SPRAY_LEGACY_AUTH\" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - failed_users",
+      "kql": "// APT28 / Fancy Bear M365 password-spray + legacy-auth pivot\n// Microsoft TI fingerprint: residential-proxy / TOR sources, IMAP/POP/SMTP/'Other clients',\n// many failures + few successes per source IP, then mailbox enumeration via Graph/EWS.\nlet LookbackDays = 7d;\nlet SprayWindow = 1h;\nlet MinFailures = 20;       // empirical: P95 of legitimate failed-login bursts per IP\nlet MaxSuccessRatio = 0.10; // sprays succeed on <10% of guesses; corp logins >>10%\nlet AnonInfra = AADSignInEventsBeta\n    | where Timestamp > ago(LookbackDays)\n    | where ClientAppUsed in (\"Other clients\",\"IMAP4\",\"POP3\",\"Authenticated SMTP\",\"Exchange ActiveSync\",\"Exchange Online PowerShell\")\n        or IsAnonymousProxy == true\n    | summarize FailedUsers   = dcountif(AccountUpn, ErrorCode != 0),\n                SuccessUsers  = dcountif(AccountUpn, ErrorCode == 0),\n                FirstSeen     = min(Timestamp),\n                LastSeen      = max(Timestamp),\n                ClientApps    = make_set(ClientAppUsed, 10),\n                Countries     = make_set(Country, 10),\n                SampleVictims = make_set_if(AccountUpn, ErrorCode == 0, 25)\n                by IPAddress, bin(Timestamp, SprayWindow)\n    | where FailedUsers >= MinFailures\n        and SuccessUsers >= 1\n        and (todouble(SuccessUsers) / todouble(FailedUsers)) <= MaxSuccessRatio;\n// Stage 2: did any of the cracked accounts immediately do mailbox-access volume\n// consistent with APT28's Graph/EWS sweep? (T1114.002)\nlet Victims = AnonInfra | mv-expand SampleVictims | extend AccountUpn = tostring(SampleVictims) | distinct AccountUpn;\nlet MailSweeps = CloudAppEvents\n    | where Timestamp > ago(LookbackDays)\n    | where Application in (\"Microsoft Exchange Online\",\"Office 365\",\"Microsoft Graph\")\n    | where ActionType in (\"MailItemsAccessed\",\"Send\",\"SearchQueryPerformed\",\"FolderBind\",\"MessageBind\")\n        or ActivityType has_any (\"MailItemsAccessed\",\"SearchQueryPerformed\")\n    | extend AccountUpn = tostring(AccountDisplayName)\n    | where AccountUpn in (Victims) or AccountObjectId in (Victims)\n    | summarize MailActions = count(),\n                ActionVariety = dcount(ActionType),\n                FirstSweep = min(Timestamp)\n                by AccountUpn, IPAddress;\nAnonInfra\n| join kind=leftouter MailSweeps on $left.IPAddress == $right.IPAddress\n| project SprayWindow=Timestamp, IPAddress, FailedUsers, SuccessUsers,\n          SuccessRatio = round(todouble(SuccessUsers)/todouble(FailedUsers), 3),\n          ClientApps, Countries, SampleVictims,\n          PostAuthMailActions = MailActions, PostAuthVictim = AccountUpn1\n| order by FailedUsers desc",
+      "sentinel_kql": "// APT28 / Fancy Bear M365 password-spray (Sentinel SigninLogs view)\nlet LookbackDays = 7d;\nlet SprayWindow = 1h;\nlet MinFailures = 20;\nlet MaxSuccessRatio = 0.10;\nlet Interactive = SigninLogs\n    | where TimeGenerated > ago(LookbackDays)\n    | project TimeGenerated, UserPrincipalName, IPAddress, ResultType, ClientAppUsed,\n              Country = tostring(parse_json(LocationDetails).countryOrRegion),\n              AppDisplayName, RiskLevelDuringSignIn;\nlet NonInteractive = AADNonInteractiveUserSignInLogs\n    | where TimeGenerated > ago(LookbackDays)\n    | project TimeGenerated, UserPrincipalName, IPAddress, ResultType, ClientAppUsed,\n              Country = tostring(parse_json(parse_json(tostring(DeviceDetail)))[\"deviceId\"]),\n              AppDisplayName, RiskLevelDuringSignIn;\nunion isfuzzy=true Interactive, NonInteractive\n| where ClientAppUsed in (\"Other clients\",\"IMAP4\",\"POP3\",\"Authenticated SMTP\",\"Exchange ActiveSync\",\"Exchange Online PowerShell\")\n   or RiskLevelDuringSignIn in (\"medium\",\"high\")\n| summarize FailedUsers   = dcountif(UserPrincipalName, ResultType != 0),\n            SuccessUsers  = dcountif(UserPrincipalName, ResultType == 0),\n            FirstSeen     = min(TimeGenerated),\n            LastSeen      = max(TimeGenerated),\n            ClientApps    = make_set(ClientAppUsed, 10),\n            Countries     = make_set(Country, 10),\n            SampleVictims = make_set_if(UserPrincipalName, ResultType == 0, 25)\n            by IPAddress, bin(TimeGenerated, SprayWindow)\n| where FailedUsers >= MinFailures\n    and SuccessUsers >= 1\n    and (todouble(SuccessUsers)/todouble(FailedUsers)) <= MaxSuccessRatio\n| project SprayWindow=TimeGenerated, IPAddress, FailedUsers, SuccessUsers,\n          SuccessRatio = round(todouble(SuccessUsers)/todouble(FailedUsers), 3),\n          ClientApps, Countries, SampleVictims\n| order by FailedUsers desc",
+      "sigma_yaml": "",
+      "rationale": "This chain matches Microsoft's published APT28 / Forest Blizzard / STRONTIUM playbook (MSTIC blogs 2022-2024 and joint NCSC/NSA advisories): GRU 26165 conducts large-scale credential collection from anonymising infrastructure, leverages legacy auth protocols that bypass modern MFA (IMAP/POP/SMTP/Exchange ActiveSync \u2014 all surface as 'Other clients' in Entra), and immediately pivots to mailbox harve"
+    }
+  ]
+}

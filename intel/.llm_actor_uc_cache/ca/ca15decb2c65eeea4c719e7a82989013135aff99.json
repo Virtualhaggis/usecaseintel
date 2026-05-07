@@ -1,0 +1,192 @@
+{
+  "name": "Silk Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Silk Typhoon (HAFNIUM) Exchange ProxyLogon/ProxyShell chain \u2014 w3wp.exe spawning shell/LOLBin children",
+      "description": "Hunts the canonical Hafnium post-exploitation pattern: after exploiting on-prem Exchange (ProxyLogon CVE-2021-26855/26857/26858/27065 or ProxyShell), the IIS worker process w3wp.exe under an Exchange app pool spawns cmd/powershell/cscript/certutil/procdump etc. to drop a China Chopper-style .aspx web shell, dump credentials, or stage data. This sequence is the most documented Silk Typhoon TTP across MSTIC, CISA AA21-062A and Mandiant.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.001",
+        "T1059.003",
+        "T1505"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name=\"w3wp.exe\" AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"procdump.exe\",\"procdump64.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"ipconfig.exe\",\"nltest.exe\",\"wmic.exe\",\"schtasks.exe\",\"sc.exe\",\"reg.exe\",\"7z.exe\",\"makecab.exe\") by host Processes.user Processes.parent_process Processes.process Processes.process_name Processes.parent_process_id Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | rename host as dest | sort - lastTime",
+      "kql": "// Silk Typhoon / HAFNIUM \u2014 Exchange exploitation post-compromise child process\nlet _exchange_apppools = dynamic([\"MSExchangeOWAAppPool\",\"MSExchangeECPAppPool\",\"MSExchangeServicesAppPool\",\"MSExchangeRpcProxyAppPool\",\"MSExchangeMapiFrontEndAppPool\",\"MSExchangeAutodiscoverAppPool\",\"MSExchange\"]);\nlet _suspicious_children = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"procdump.exe\",\"procdump64.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"ipconfig.exe\",\"nltest.exe\",\"wmic.exe\",\"schtasks.exe\",\"sc.exe\",\"reg.exe\",\"7z.exe\",\"7za.exe\",\"makecab.exe\",\"curl.exe\",\"wget.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where InitiatingProcessCommandLine has_any (_exchange_apppools)\n| where FileName in~ (_suspicious_children)\n| extend SuspectAspxDrop = iif(ProcessCommandLine has_any (\".aspx\",\"echo \",\"out-file\",\"set-content\",\"add-content\",@\"\\\\inetpub\\\\wwwroot\",@\"\\\\FrontEnd\\\\HttpProxy\\\\owa\\\\auth\",@\"\\\\Exchange Server\\\\V15\\\\\"), true, false)\n| extend LsassTouch    = iif(ProcessCommandLine has_any (\"lsass\",\"comsvcs.dll\",\"MiniDump\",\"sekurlsa\"), true, false)\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          Child = FileName,\n          ChildCmd = ProcessCommandLine,\n          ChildSHA256 = SHA256,\n          SuspectAspxDrop, LsassTouch\n| order by Timestamp desc",
+      "sentinel_kql": "// Silk Typhoon / HAFNIUM \u2014 Exchange w3wp.exe \u2192 shell/LOLBin (4688)\nlet _suspicious_children = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"procdump.exe\",\"procdump64.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"wmic.exe\",\"schtasks.exe\",\"sc.exe\",\"reg.exe\",\"7z.exe\",\"7za.exe\",\"makecab.exe\",\"curl.exe\",\"wget.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where ParentProcessName endswith @\"\\w3wp.exe\"\n| where NewProcessName has_any (_suspicious_children)\n| extend ChildLeaf = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ChildLeaf in (_suspicious_children)\n| extend SuspectAspxDrop = iif(CommandLine has_any (\".aspx\",\"echo \",\"out-file\",\"set-content\",\"add-content\",@\"\\inetpub\\wwwroot\",@\"\\FrontEnd\\HttpProxy\\owa\\auth\",@\"\\Exchange Server\\V15\\\"), true, false)\n| extend LsassTouch    = iif(CommandLine has_any (\"lsass\",\"comsvcs.dll\",\"MiniDump\",\"sekurlsa\"), true, false)\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, SuspectAspxDrop, LsassTouch\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Silk Typhoon - Exchange w3wp.exe Spawning Shell or LOLBin Child\nid: 9b3a3f5e-7c5e-4f2c-a611-silk-typhoon-w3wp\nstatus: experimental\ndescription: Detects HAFNIUM/Silk Typhoon post-exploitation of on-prem Exchange where the IIS worker w3wp.exe (Exchange app pool) spawns a command-shell or LOLBin to deploy a web shell, dump LSASS, or perform discovery.\nreferences:\n  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-062a\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.initial_access\n  - attack.t1190\n  - attack.persistence\n  - attack.t1505.003\n  - attack.execution\n  - attack.t1059\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\w3wp.exe'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\mshta.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\procdump.exe'\n      - '\\procdump64.exe'\n      - '\\net.exe'\n      - '\\whoami.exe'\n      - '\\systeminfo.exe'\n      - '\\wmic.exe'\n      - '\\schtasks.exe'\n      - '\\7z.exe'\n  condition: selection_parent and selection_child\nfalsepositives:\n  - Custom Exchange management scripts run via OWA admin tooling (rare).\nlevel: high",
+      "rationale": "This is the signature Silk Typhoon / HAFNIUM intrusion chain documented by MSTIC and CISA in 2021 and re-observed in 2022-2024 ProxyShell/ProxyNotShell follow-on activity: exploit Exchange auth bypass \u2192 write China Chopper .aspx into \\FrontEnd\\HttpProxy\\owa\\auth\\ or \\inetpub\\wwwroot via w3wp.exe \u2192 child cmd/PowerShell/procdump for credential theft and discovery. Pinning the parent to w3wp.exe unde",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Silk Typhoon (HAFNIUM) LSASS credential dump via rundll32 + comsvcs.dll MiniDump or ProcDump",
+      "description": "Hunts Silk Typhoon's documented credential-access tradecraft post-Exchange compromise: dumping LSASS using built-in comsvcs.dll MiniDump export via rundll32 (LOLBin pattern) or dropping Sysinternals procdump64 to harvest lsass.exe. Both methods are explicitly cited in Microsoft and CISA Hafnium advisories and feed the actor's downstream lateral movement (T1078, T1021).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003",
+        "T1003.001",
+        "T1059.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=\"rundll32.exe\" AND Processes.process=\"*comsvcs*\" AND Processes.process=\"*MiniDump*\") OR (Processes.process_name IN (\"procdump.exe\",\"procdump64.exe\") AND Processes.process=\"*lsass*\") OR (Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND Processes.process=\"*MiniDumpWriteDump*\") OR (Processes.process_name=\"tasklist.exe\" AND Processes.process=\"*lsass*\") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | rename host as dest | sort - lastTime",
+      "kql": "// Silk Typhoon / HAFNIUM \u2014 LSASS credential dump (comsvcs MiniDump, procdump, MiniDumpWriteDump)\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n   or InitiatingProcessFileName =~ \"w3wp.exe\"   // keep SYSTEM/IIS \u2014 actor pivots from web shell\n| where (FileName =~ \"rundll32.exe\"\n         and ProcessCommandLine matches regex @\"(?i)comsvcs(\\.dll)?[ ,\\\"]+\\s*#?\\s*-?MiniDump\")\n     or (FileName in~ (\"procdump.exe\",\"procdump64.exe\")\n         and ProcessCommandLine has \"lsass\")\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n         and ProcessCommandLine matches regex @\"(?i)(MiniDumpWriteDump|Out-Minidump|Get-ProcessId\\s+lsass|Invoke-NinjaCopy)\")\n     or (ProcessCommandLine has_all (\"makecab\", \"lsass\"))\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          FileName, ProcessCommandLine,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          GrandParent = InitiatingProcessParentFileName,\n          ChildSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Silk Typhoon / HAFNIUM \u2014 LSASS dump via rundll32+comsvcs / procdump / MiniDumpWriteDump (4688)\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend Leaf = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where (Leaf == \"rundll32.exe\"\n         and CommandLine matches regex @\"(?i)comsvcs(\\.dll)?[ ,\\\"]+\\s*#?\\s*-?MiniDump\")\n     or (Leaf in (\"procdump.exe\",\"procdump64.exe\")\n         and CommandLine has \"lsass\")\n     or (Leaf in (\"powershell.exe\",\"pwsh.exe\")\n         and CommandLine matches regex @\"(?i)(MiniDumpWriteDump|Out-Minidump|Get-ProcessId\\s+lsass|Invoke-NinjaCopy)\")\n     or (CommandLine has_all (\"makecab\",\"lsass\"))\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Silk Typhoon - LSASS Credential Dump via comsvcs.dll MiniDump or ProcDump\nid: 4d2a7c91-1b3f-4d8b-9c0c-silk-typhoon-lsass\nstatus: experimental\ndescription: Detects HAFNIUM/Silk Typhoon credential-access tradecraft - LSASS memory dump via the built-in comsvcs.dll MiniDump export through rundll32, Sysinternals ProcDump targeting lsass, or PowerShell MiniDumpWriteDump. All three are documented Hafnium TTPs from the on-prem Exchange intrusion campaign and follow-on activity.\nreferences:\n  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/\n  - https://attack.mitre.org/groups/G0125/\nauthor: SOC Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.credential_access\n  - attack.t1003\n  - attack.t1003.001\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  comsvcs:\n    Image|endswith: '\\rundll32.exe'\n    CommandLine|contains|all:\n      - 'comsvcs'\n      - 'MiniDump'\n  procdump:\n    Image|endswith:\n      - '\\procdump.exe'\n      - '\\procdump64.exe'\n    CommandLine|contains: 'lsass'\n  powershell_mdwd:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n    CommandLine|contains:\n      - 'MiniDumpWriteDump'\n      - 'Out-Minidump'\n      - 'Invoke-NinjaCopy'\n  makecab_lsass:\n    CommandLine|contains|all:\n      - 'makecab'\n      - 'lsass'\n  condition: comsvcs or procdump or powershell_mdwd or makecab_lsass\nfalsepositives:\n  - Authorised IR / forensic teams using ProcDump under change control.\nlevel: high",
+      "rationale": "MSTIC's HAFNIUM technical write-up and CISA AA21-062A specifically call out Silk Typhoon dumping LSASS via Sysinternals procdump64 and via rundll32 invoking the comsvcs.dll MiniDump export \u2014 both used to obtain credentials for Exchange admin / domain accounts after web shell deployment. The rundll32+comsvcs MiniDump pattern in particular has near-zero benign baseline (it's a documented LOLBAS-only",
+      "_field_issues_autofix": [
+        "Process -> ProcessId"
+      ],
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "MiniDump",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MiniDump` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MiniDumpWriteDump",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MiniDumpWriteDump` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Out",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Out` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Minidump",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Minidump` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Get",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Get` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NinjaCopy",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`NinjaCopy` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues_autofix": [
+        "Process -> ProcessId"
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "MiniDump",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MiniDump` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MiniDumpWriteDump",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MiniDumpWriteDump` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Out",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Out` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Minidump",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Minidump` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Get",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Get` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NinjaCopy",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`NinjaCopy` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}
