@@ -9,10 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-07
+- [google chrome 148 released with fix for 127 security vulnera](./2026-05-07/google-chrome-148-released-with-fix-for-127-security-vulnera.md)
+- [massive 2 45b request ddos attack used 1 2 million ips to ev](./2026-05-07/massive-2-45b-request-ddos-attack-used-1-2-million-ips-to-ev.md)
 - [new femitbot network uses telegram mini apps to push crypto ](./2026-05-07/new-femitbot-network-uses-telegram-mini-apps-to-push-crypto-.md)
 - [new phishing attack weaponizing event invitations to steal l](./2026-05-07/new-phishing-attack-weaponizing-event-invitations-to-steal-l.md)
 - [new salat malware uses quic and websocket channels for steal](./2026-05-07/new-salat-malware-uses-quic-and-websocket-channels-for-steal.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
+- [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 
 ## 2026-05-06
 - [argo cd s serversidediff vulnerability enables kubernetes se](./2026-05-06/argo-cd-s-serversidediff-vulnerability-enables-kubernetes-se.md)
@@ -33,12 +36,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
-- [new majordomo rce vulnerability exposes servers to code exec](./2026-05-06/new-majordomo-rce-vulnerability-exposes-servers-to-code-exec.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [qlnx targets developers with credential theft designed for s](./2026-05-06/qlnx-targets-developers-with-credential-theft-designed-for-s.md)
-- [taiwan high speed rail hacked using radio signal spoofing at](./2026-05-06/taiwan-high-speed-rail-hacked-using-radio-signal-spoofing-at.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
 - [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
@@ -124,7 +125,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what to look for in an exposure management platform and what](./2026-04-29/what-to-look-for-in-an-exposure-management-platform-and-what.md)
 
 ## 2026-04-28
-- [after mythos new playbooks for a zero window era](./2026-04-28/after-mythos-new-playbooks-for-a-zero-window-era.md)
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
 - [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)

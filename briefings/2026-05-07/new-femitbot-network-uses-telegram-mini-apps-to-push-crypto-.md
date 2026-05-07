@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection to FEMITBOT crypto-fraud phishing domains
 
-`UC_2_9` · phase: **delivery** · confidence: **High**
+`UC_5_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] FEMITBOT API fingerprint hunt - /api/public/init or /api/public/telegramLogin URI access
 
-`UC_2_10` · phase: **delivery** · confidence: **Medium**
+`UC_5_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
