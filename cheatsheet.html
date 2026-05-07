@@ -159,6 +159,31 @@ a{color:inherit;text-decoration:none}
 .sigma-pane.active{display:block}
 .sigma-pane pre{margin:0;padding:14px 18px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;background:var(--code-bg);border-radius:0 0 var(--r-md) var(--r-md)}
 
+/* Splunk SPL Summarised / Non-summarised toggle (mirrors generate.py's
+   article-card pattern). Wraps in .spl-toggle-group so the click handler
+   can scope to one query at a time. */
+.spl-toggle-group{position:relative}
+.spl-mode-toggle{
+  display:flex;gap:4px;align-items:center;flex-wrap:wrap;
+  padding:6px 10px;
+  background:rgba(255,255,255,0.03);
+  border-radius:var(--r-sm) var(--r-sm) 0 0;
+  border-bottom:1px solid var(--border);
+}
+.spl-mode-btn{
+  background:transparent;border:0;color:var(--muted);
+  padding:4px 10px;border-radius:4px;cursor:pointer;
+  font:inherit;font-size:11px;font-weight:500;
+  transition:color 0.12s,background 0.12s;
+}
+.spl-mode-btn:hover{color:var(--text)}
+.spl-mode-btn.active{
+  background:rgba(113,112,255,0.16);color:var(--text);
+}
+.spl-mode-hint{font-size:10.5px;color:var(--muted-2);margin-left:8px}
+.spl-mode-body{display:none}
+.spl-mode-body.active{display:block}
+
 /* Mobile */
 @media (max-width: 900px) {
   .cs-layout{grid-template-columns:1fr}
@@ -183,8 +208,8 @@ a{color:inherit;text-decoration:none}
   <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
   <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
   <button class="cs-tab" data-pane="datadog">Datadog <span class="badge">Cloud SIEM</span></button>
-  <button class="cs-tab placeholder" data-pane="sigma">Sigma <span class="badge">Under Progress</span></button>
-  <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
+  <button class="cs-tab" data-pane="spl">SPL <span class="badge">Splunk · CIM</span></button>
+  <button class="cs-tab" data-pane="sigma">Sigma <span class="badge">Platform-neutral</span></button>
 </nav>
 
 <div id="pane-kql" class="tab-pane active">
@@ -3786,6 +3811,9 @@ ImProcessCreate
 <li><a href="#datadog-source-gcp.audit" data-table="gcp.audit"><span class="t">gcp.audit</span><span class="n">6</span></a></li>
 <li><a href="#datadog-source-kubernetes.audit" data-table="kubernetes.audit"><span class="t">kubernetes.audit</span><span class="n">6</span></a></li>
 <li><a href="#datadog-source-okta" data-table="okta"><span class="t">okta</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-slack" data-table="slack"><span class="t">slack</span><span class="n">4</span></a></li>
+<li><a href="#datadog-source-microsoft.teams" data-table="microsoft.teams"><span class="t">microsoft.teams</span><span class="n">4</span></a></li>
+<li><a href="#datadog-source-salesforce" data-table="salesforce"><span class="t">salesforce</span><span class="n">4</span></a></li>
   </ul>
 </nav>
 
@@ -3793,9 +3821,12 @@ ImProcessCreate
       <div class="cs-intro">
         <h1>Datadog · Cloud SIEM logs query</h1>
         <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body.</p>
+        <p style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:8px 14px;margin:10px 0 12px 0;font-size:12.5px;">
+          <strong>Reference Tables</strong> let you maintain large IOC / known-bad / allowlist tables in Datadog and pivot via them in queries — handy for IP-block / hash-list / domain-list filters that grow over time. Syntax: <code>CIDR(@network.client.ip, *RefTable:bad_ips_v2*)</code> or <code>@process.name IN *RefTable:lolbins*</code>. Build / upload tables under <em>Logs → Configuration → Reference Tables</em>; queries below use literal lists for clarity but swap in a Reference Table any time a list grows past ~100 entries.
+        </p>
         <div class="stats">
-          <span><strong>9</strong> sources curated</span>
-          <span><strong>53</strong> queries</span>
+          <span><strong>12</strong> sources curated</span>
+          <span><strong>65</strong> queries</span>
           <span>Click <strong>Copy</strong> on any query to paste into Datadog Logs / Cloud SIEM rule editor.</span>
         </div>
       </div>
@@ -4582,6 +4613,193 @@ ImProcessCreate
 
 </section>
 
+
+<section class="table-section" id="datadog-source-slack" data-table="slack">
+  <header class="table-header">
+    <h2>slack</h2>
+    <p class="muted">9 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>@evt.name</code> · <code>@actor.user.email</code> · <code>@actor.user.name</code> · <code>@actor.user.team</code> · <code>@context.ip_address</code> · <code>@context.location.country</code> · <code>@entity.channel</code> · <code>@entity.file</code> · <code>@entity.app</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>All activity for a user</h4>
+        <p>User triage — every Slack event tied to one identity. Replace `&lt;email&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:slack @actor.user.email:&lt;email&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>File downloads from external workspaces</h4>
+        <p>Cross-workspace file lift — external collaboration risk.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:slack @evt.name:file_downloaded
+@actor.user.team:&lt;external-team-id&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>App / integration installed</h4>
+        <p>New third-party Slack app — pivot for OAuth-scope review.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:slack @evt.name:app_installed</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Channel made public</h4>
+        <p>Private channel flipped to public.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:slack @evt.name:public_channel_created
+OR (@evt.name:channel_settings_updated @change.field:visibility @change.new:public)</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="datadog-source-microsoft.teams" data-table="microsoft.teams">
+  <header class="table-header">
+    <h2>microsoft.teams</h2>
+    <p class="muted">9 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>@evt.name</code> · <code>@user.userPrincipalName</code> · <code>@user.id</code> · <code>@network.client.ip</code> · <code>@team.id</code> · <code>@team.displayName</code> · <code>@channel.id</code> · <code>@channel.displayName</code> · <code>@app.displayName</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>All Teams activity for a user</h4>
+        <p>User triage. Replace `&lt;upn&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:microsoft.teams @user.userPrincipalName:&lt;upn&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>External user added to a team</h4>
+        <p>Guest-user invite — pivot for org-policy enforcement.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:microsoft.teams @evt.name:MemberAdded
+@user.userPrincipalName:*#EXT#*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Teams app installed in a tenant</h4>
+        <p>New tenant-wide app installation. Replace `&lt;appName&gt;` if scoping.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:microsoft.teams @evt.name:AppInstalled</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Federated chat with external organisation</h4>
+        <p>External-tenant chat session — guest collaboration / data-leak risk.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:microsoft.teams @evt.name:MessageSent
+@chat.chatType:meetingChat OR @chat.chatType:oneOnOne
+@user.userPrincipalName:*#EXT#*</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="datadog-source-salesforce" data-table="salesforce">
+  <header class="table-header">
+    <h2>salesforce</h2>
+    <p class="muted">9 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>@evt.name</code> · <code>@usr.id</code> · <code>@usr.username</code> · <code>@usr.email</code> · <code>@network.client.ip</code> · <code>@object.type</code> · <code>@object.name</code> · <code>@event.type</code> · <code>@status</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>All activity for a user</h4>
+        <p>User triage. Replace `&lt;username&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:salesforce @usr.username:&lt;username&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Mass record export (Data Loader / report export)</h4>
+        <p>Bulk-export pattern — credential / data exfil indicator.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:salesforce
+@evt.name:(REPORT_EXPORT OR DATA_EXPORT OR BULK_API)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Login from a new IP</h4>
+        <p>Pivot for credential-stuffing or impossible-travel hunts.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:salesforce @evt.name:Login @status:Success
+@network.client.ip:*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Permission set assignment</h4>
+        <p>Privilege drift in Salesforce — user gets new permissions.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:salesforce @evt.name:PermissionSetAssignment</code></pre>
+      </div>
+    </article>
+
+</section>
+
     </main>
   </div>
 </div>
@@ -4589,22 +4807,56 @@ ImProcessCreate
 <div id="pane-sigma" class="tab-pane">
   <main class="cs-main">
     <div class="cs-intro">
-      <h1>Sigma · platform-neutral detection rules
-        <span class="badge" style="margin-left:10px;font-family:var(--mono);font-size:11.5px;padding:3px 10px;border-radius:99px;background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;vertical-align:middle;">Under Progress</span>
-      </h1>
-      <p style="background:rgba(226,169,63,0.06);border:1px solid rgba(226,169,63,0.20);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;">
-        <strong style="color:var(--warn);">Coverage is being expanded.</strong>
-        15 rules ship today across the kill-chain phases below. Sigma is opt-in by design — we author rules for single-event-shape detections where Sigma's detection: schema fits cleanly. The remaining UCs in the matrix are queued for Sigma authoring; check back as the catalogue fills out.
-      </p>
-      <p>Each rule below is a self-contained Sigma YAML, pre-compiled to Defender
-      KQL, Splunk SPL, and Elastic Lucene at build time. Click a tab on any
-      card to copy the format you need — no Sigma toolchain required on your
-      laptop. Source rules live under <code>sigma_rules/</code>; re-run
-      <code>python build_soc_cheatsheet.py</code> after editing to refresh
-      compiled output.</p>
+      <h1>Sigma · platform-neutral detection rules</h1>
+      <p>Sigma is a generic, YAML-based signature format for SIEM detections. Each rule below is a self-contained Sigma YAML, pre-compiled to Defender KQL, Splunk SPL, and Elastic Lucene at build time — copy whichever format your SIEM speaks. Source rules live under <code>sigma_rules/</code>; re-run <code>python build_soc_cheatsheet.py</code> after editing to refresh.</p>
+
+      <details style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:10px 14px;margin:12px 0 14px 0;font-size:12.5px;line-height:1.6;">
+        <summary style="cursor:pointer;font-weight:600;color:var(--accent-2);font-size:13px;">Sigma syntax cheat sheet — click to expand</summary>
+        <p style="margin-top:10px;"><strong>Top-level fields</strong>:</p>
+        <pre style="font-size:11.5px;background:var(--code-bg);padding:10px;border-radius:var(--r-sm);overflow-x:auto;"><code>title:        # Short, descriptive
+id:           # UUID — gives the rule a stable identity
+status:       # stable | test | experimental | deprecated | unsupported
+description:  # 1-3 sentences on what it catches
+references:   # URLs to relevant intel / vendor advisories
+author:       # Free-form
+date:         # 2026/05/07
+tags:         # attack.t1059, attack.execution, etc — MITRE ATT&amp;CK
+logsource:    # Where the rule applies
+  product:    #   windows / linux / macos / aws / azure / etc
+  service:    #   security / sysmon / cloudtrail / ...
+  category:   #   process_creation / file_event / network_connection / ...
+detection:    # The actual matching logic
+  selection:  #   Match condition — ANDed by default within a block
+  filter:     #   Optional — fields to exclude
+  condition:  # selection and not filter / 1 of selection_* / etc.
+falsepositives: [...]
+level:        # informational | low | medium | high | critical</code></pre>
+        <p><strong>Field modifiers</strong> (suffix after the field name):</p>
+        <ul style="margin:6px 0 0 18px;padding:0;">
+          <li><code>field|contains: value</code> — substring match</li>
+          <li><code>field|startswith: value</code> / <code>|endswith: value</code></li>
+          <li><code>field|re: regex</code> — Sigma regex (PCRE-flavoured)</li>
+          <li><code>field|all: [a, b]</code> — list AND (must contain all)</li>
+          <li><code>field|cased</code> — case-sensitive (default is case-insensitive)</li>
+          <li><code>field|windash</code> — accept either <code>-</code> or <code>/</code> as the prefix to a Windows-style flag (e.g. <code>-encodedcommand</code> or <code>/encodedcommand</code>)</li>
+          <li><code>field|expand</code> — expand placeholders defined under <code>placeholders:</code></li>
+        </ul>
+        <p style="margin-top:10px;"><strong>Compilation cheat sheet</strong> — what each Sigma construct becomes:</p>
+        <ul style="margin:6px 0 0 18px;padding:0;">
+          <li><code>field|contains: x</code> → KQL <code>field has "x"</code> · SPL <code>field="*x*"</code> · Lucene <code>field:*x*</code></li>
+          <li><code>field|startswith: x</code> → KQL <code>field startswith "x"</code> · SPL <code>field="x*"</code> · Lucene <code>field:x*</code></li>
+          <li><code>field: [a, b, c]</code> → KQL <code>field in ("a","b","c")</code> · SPL <code>field IN ("a","b","c")</code></li>
+          <li><code>condition: 1 of selection_*</code> → OR across every block whose name matches</li>
+          <li><code>condition: all of selection_*</code> → AND across every matching block</li>
+          <li><code>timeframe: 5m</code> + aggregation — only some backends support; Splunk does, Defender doesn't</li>
+        </ul>
+        <p style="margin-top:10px;"><strong>When Sigma is the right tool</strong>: single-event-shape detections (one log line matches → fire). <strong>When it isn't</strong>: multi-stage temporal correlation, threshold-over-window aggregations, joins across data sources — those don't compile cleanly to all backends. Author those directly in KQL or SPL instead.</p>
+        <p style="margin:10px 0 0 0;"><strong>Reference</strong>: <a href="https://github.com/SigmaHQ/sigma" style="color:var(--accent-2);">SigmaHQ/sigma</a> — the canonical rule repo + the latest spec.</p>
+      </details>
+
       <div class="stats">
         <span><strong>15</strong> rules</span>
-        <span>3 backends pre-compiled</span>
+        <span>3 backends pre-compiled (KQL · SPL · Lucene)</span>
         <span>Add new rules to <code>sigma_rules/&lt;kill_chain&gt;/</code> and rebuild.</span>
       </div>
     </div>
@@ -5720,15 +5972,1086 @@ level: high
 </div>
 
 <div id="pane-spl" class="tab-pane">
-  <div class="cs-main" style="max-width:680px;margin:48px auto">
-    <div class="placeholder-pane">
-      <h2>SPL cheat sheet — under progress</h2>
-      <p>The Splunk SPL counterpart to this catalog is in active build-out. The
-      project's curated UCs already include a CIM-conformant <code>splunk_spl</code>
-      block per use case — expect a focused, schema-aware SPL cheat sheet here
-      shortly. In the meantime, every Sigma rule above already compiles to SPL —
-      grab the SPL tab on the card you want.</p>
-    </div>
+  <div class="cs-layout">
+    
+<nav class="cs-sidebar">
+  <input type="search" id="splunkDmFilter" placeholder="Filter tables…" autocomplete="off">
+  <ul id="splunkDmList">
+    <li><a href="#spl-dm-Endpoint.Processes" data-table="Endpoint.Processes"><span class="t">Endpoint.Processes</span><span class="n">6</span></a></li>
+<li><a href="#spl-dm-Endpoint.Filesystem" data-table="Endpoint.Filesystem"><span class="t">Endpoint.Filesystem</span><span class="n">4</span></a></li>
+<li><a href="#spl-dm-Endpoint.Registry" data-table="Endpoint.Registry"><span class="t">Endpoint.Registry</span><span class="n">3</span></a></li>
+<li><a href="#spl-dm-Network_Traffic.All_Traffic" data-table="Network_Traffic.All_Traffic"><span class="t">Network_Traffic.All_Traffic</span><span class="n">5</span></a></li>
+<li><a href="#spl-dm-Authentication.Authentication" data-table="Authentication.Authentication"><span class="t">Authentication.Authentication</span><span class="n">4</span></a></li>
+<li><a href="#spl-dm-Web.Web" data-table="Web.Web"><span class="t">Web.Web</span><span class="n">4</span></a></li>
+<li><a href="#spl-dm-Network_Resolution.DNS" data-table="Network_Resolution.DNS"><span class="t">Network_Resolution.DNS</span><span class="n">4</span></a></li>
+<li><a href="#spl-dm-Email.All_Email" data-table="Email.All_Email"><span class="t">Email.All_Email</span><span class="n">3</span></a></li>
+  </ul>
+</nav>
+
+    <main class="cs-main">
+      <div class="cs-intro">
+        <h1>Splunk · CIM datamodels (SPL)</h1>
+        <p>Pick a CIM datamodel from the sidebar — every query is verbatim Splunk SPL using <code>tstats</code> against accelerated datamodels. House style: <code>summariesonly</code> macro for fast tstats; <code>drop_dm_object_name(&lt;DM&gt;)</code> to flatten object-prefixed fields; <code>&lt;placeholder&gt;</code> fields the analyst replaces during a shift.</p>
+        <p style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:10px 14px;margin:12px 0 14px 0;font-size:12.5px;line-height:1.55;">
+          <strong>tstats vs <code>| from datamodel:</code> vs raw search.</strong>
+          <code>tstats</code> queries against an accelerated CIM model are the fastest path — they read the precomputed summary index. If your env has no CIM acceleration, every tstats query below has a <strong>Non-summarised</strong> toggle that switches to <code>summariesonly=false</code> (slower but works without the summary). Raw <code>search index=...</code> queries always work but won't benefit from any acceleration.
+        </p>
+        <div class="stats">
+          <span><strong>8</strong> CIM datamodels curated</span>
+          <span><strong>33</strong> queries</span>
+          <span>Click <strong>Copy</strong> on any query to paste into Splunk Search.</span>
+        </div>
+      </div>
+
+      
+<section class="table-section" id="spl-dm-Endpoint.Processes" data-table="Endpoint.Processes">
+  <header class="table-header">
+    <h2>Endpoint.Processes</h2>
+    <p class="muted">20 columns · 6 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>host</code> · <code>dest</code> · <code>user</code> · <code>process_name</code> · <code>process_path</code> · <code>process</code> · <code>process_id</code> · <code>process_guid</code> · <code>process_hash</code> · <code>parent_process_name</code> · <code>parent_process_path</code> · <code>parent_process</code> · <code>parent_process_id</code> · <code>parent_process_guid</code> · <code>process_integrity_level</code> · <code>action</code> · <code>vendor_product</code> · <code>user_id</code> · <code>session_id</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>All processes on a specific host</h4>
+        <p>Host triage. Replace `&lt;DeviceName&gt;`. Pulls every process exec via accelerated CIM.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
+    from datamodel=Endpoint.Processes
+    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+| `drop_dm_object_name(Processes)`
+| sort -_time</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
+    from datamodel=Endpoint.Processes
+    where Processes.dest=&lt;DeviceName&gt; earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+| `drop_dm_object_name(Processes)`
+| sort -_time</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>All processes by a specific user</h4>
+        <p>User-scoped activity. Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.user=&lt;UserName&gt; earliest=-24h@h
+    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
+| `drop_dm_object_name(Processes)`
+| sort -_time</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Processes
+    where Processes.user=&lt;UserName&gt; earliest=-24h@h
+    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
+| `drop_dm_object_name(Processes)`
+| sort -_time</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>LOLBin executions (living-off-the-land)</h4>
+        <p>Built-in binaries adversaries abuse. High-signal when chained with unusual parents/cmdlines.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.process_name in (
+        &quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wmic.exe&quot;,
+        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;cscript.exe&quot;,
+        &quot;wscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;msbuild.exe&quot;,
+        &quot;installutil.exe&quot;,&quot;regasm.exe&quot;,&quot;regsvcs.exe&quot;
+    ) earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| where parent_process_name!=&quot;explorer.exe&quot;</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Processes
+    where Processes.process_name in (
+        &quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wmic.exe&quot;,
+        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;cscript.exe&quot;,
+        &quot;wscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;msbuild.exe&quot;,
+        &quot;installutil.exe&quot;,&quot;regasm.exe&quot;,&quot;regsvcs.exe&quot;
+    ) earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| where parent_process_name!=&quot;explorer.exe&quot;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Office app spawning a script host</h4>
+        <p>Document-macro execution chain — Word/Excel/Outlook spawning powershell/mshta/regsvr32.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name in (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;wordpad.exe&quot;,&quot;msaccess.exe&quot;)
+        and Processes.process_name in (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,&quot;rundll32.exe&quot;,&quot;wmic.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;)
+        earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name in (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;wordpad.exe&quot;,&quot;msaccess.exe&quot;)
+        and Processes.process_name in (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,&quot;regsvr32.exe&quot;,&quot;rundll32.exe&quot;,&quot;wmic.exe&quot;,&quot;cscript.exe&quot;,&quot;wscript.exe&quot;)
+        earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Find a process by hash</h4>
+        <p>IOC pivot — every host that ran a binary with this SHA256. Replace `&lt;sha256&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
+    from datamodel=Endpoint.Processes
+    where Processes.process_hash=&lt;sha256&gt; earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen, max(_time) AS last_seen
+    from datamodel=Endpoint.Processes
+    where Processes.process_hash=&lt;sha256&gt; earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Anomalous parent-child pairs (rare)</h4>
+        <p>Process-tree statistical-rarity hunt — flag pairs that occur fewer than 5 times in a week.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-5-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-5-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-5-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where earliest=-7d@d
+    by Processes.parent_process_name, Processes.process_name
+| `drop_dm_object_name(Processes)`
+| where count &lt; 5
+| sort count</code></pre>
+        <pre class="spl-mode-body" id="q-5-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Processes
+    where earliest=-7d@d
+    by Processes.parent_process_name, Processes.process_name
+| `drop_dm_object_name(Processes)`
+| where count &lt; 5
+| sort count</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Endpoint.Filesystem" data-table="Endpoint.Filesystem">
+  <header class="table-header">
+    <h2>Endpoint.Filesystem</h2>
+    <p class="muted">15 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>host</code> · <code>dest</code> · <code>user</code> · <code>file_name</code> · <code>file_path</code> · <code>file_hash</code> · <code>file_size</code> · <code>file_create_time</code> · <code>file_modify_time</code> · <code>action</code> · <code>process_name</code> · <code>process_path</code> · <code>process_id</code> · <code>vendor_product</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>File writes by a specific process</h4>
+        <p>What did `&lt;binary.exe&gt;` create? Replace the process name.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.process_name=&lt;binary.exe&gt; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>File writes under a path</h4>
+        <p>Track payloads under known persistence / staging directories. Replace `&lt;path&gt;` fragment.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(Filesystem.process_name) AS writers
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path&gt;*&quot; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(Filesystem.process_name) AS writers
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot; Filesystem.file_path=&quot;*&lt;path&gt;*&quot; earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_name</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Files written under user temp / appdata</h4>
+        <p>Common dropper-staging location.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot;
+        and (Filesystem.file_path=&quot;*\\AppData\\Local\\Temp\\*&quot;
+             OR Filesystem.file_path=&quot;*\\AppData\\Roaming\\*&quot;
+             OR Filesystem.file_path=&quot;*\\Public\\*&quot;)
+        earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action=&quot;created&quot;
+        and (Filesystem.file_path=&quot;*\\AppData\\Local\\Temp\\*&quot;
+             OR Filesystem.file_path=&quot;*\\AppData\\Roaming\\*&quot;
+             OR Filesystem.file_path=&quot;*\\Public\\*&quot;)
+        earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Hash-IOC sweep across the fleet</h4>
+        <p>Was this hash ever written? Replace `&lt;sha256&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count, values(Filesystem.dest) AS hosts
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash=&lt;sha256&gt; earliest=-30d@d
+    by Filesystem.file_name</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count, values(Filesystem.dest) AS hosts
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash=&lt;sha256&gt; earliest=-30d@d
+    by Filesystem.file_name</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Endpoint.Registry" data-table="Endpoint.Registry">
+  <header class="table-header">
+    <h2>Endpoint.Registry</h2>
+    <p class="muted">13 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>host</code> · <code>dest</code> · <code>user</code> · <code>registry_path</code> · <code>registry_key_name</code> · <code>registry_value_name</code> · <code>registry_value_data</code> · <code>registry_value_type</code> · <code>action</code> · <code>process_name</code> · <code>process_id</code> · <code>vendor_product</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Run / RunOnce key writes</h4>
+        <p>Persistence under classic ASEP locations.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.action=&quot;modified&quot;
+        and (Registry.registry_path=&quot;*\\Run\\*&quot;
+             OR Registry.registry_path=&quot;*\\RunOnce\\*&quot;
+             OR Registry.registry_path=&quot;*\\Image File Execution Options\\*&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Registry
+    where Registry.action=&quot;modified&quot;
+        and (Registry.registry_path=&quot;*\\Run\\*&quot;
+             OR Registry.registry_path=&quot;*\\RunOnce\\*&quot;
+             OR Registry.registry_path=&quot;*\\Image File Execution Options\\*&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>New service installations (registry-derived)</h4>
+        <p>Service-creation under HKLM\SYSTEM\CurrentControlSet\Services.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.action=&quot;created&quot;
+        and Registry.registry_path=&quot;*\\Services\\*&quot;
+        and Registry.registry_value_name in (&quot;ImagePath&quot;,&quot;ServiceDll&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Registry
+    where Registry.action=&quot;created&quot;
+        and Registry.registry_path=&quot;*\\Services\\*&quot;
+        and Registry.registry_value_name in (&quot;ImagePath&quot;,&quot;ServiceDll&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Defender / AV registry tamper</h4>
+        <p>Disabling Microsoft Defender via registry — adversary defense-evasion.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.registry_path=&quot;*\\Microsoft\\Windows Defender*&quot;
+        and Registry.action in (&quot;modified&quot;,&quot;created&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Endpoint.Registry
+    where Registry.registry_path=&quot;*\\Microsoft\\Windows Defender*&quot;
+        and Registry.action in (&quot;modified&quot;,&quot;created&quot;)
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Network_Traffic.All_Traffic" data-table="Network_Traffic.All_Traffic">
+  <header class="table-header">
+    <h2>Network_Traffic.All_Traffic</h2>
+    <p class="muted">21 columns · 5 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>src_ip</code> · <code>dest_ip</code> · <code>src_port</code> · <code>dest_port</code> · <code>transport</code> · <code>protocol</code> · <code>action</code> · <code>bytes</code> · <code>bytes_in</code> · <code>bytes_out</code> · <code>packets</code> · <code>duration</code> · <code>user</code> · <code>process</code> · <code>rule</code> · <code>vendor_product</code> · <code>src_category</code> · <code>dest_category</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Outbound traffic from a host</h4>
+        <p>All allowed outbound from one host. Replace `&lt;DeviceName&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count, sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action=&quot;allowed&quot;
+        and All_Traffic.dest_category!=&quot;internal&quot;
+        earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
+| `drop_dm_object_name(All_Traffic)`</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count, sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.src=&lt;DeviceName&gt;
+        and All_Traffic.action=&quot;allowed&quot;
+        and All_Traffic.dest_category!=&quot;internal&quot;
+        earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
+| `drop_dm_object_name(All_Traffic)`</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Connections to a specific destination IP</h4>
+        <p>IP IOC pivot — every host that talked to it. Replace `&lt;IP&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_ip=&lt;IP&gt; earliest=-7d@d
+    by All_Traffic.src, All_Traffic.user</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_ip=&lt;IP&gt; earliest=-7d@d
+    by All_Traffic.src, All_Traffic.user</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Beaconing — periodic outbound, low fan-out</h4>
+        <p>Inter-beacon stddev with stable destinations. Strong C2 signal.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category!=&quot;internal&quot; earliest=-24h@h
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category!=&quot;internal&quot; earliest=-24h@h
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Suspicious dest port (RDP / SSH from unusual sources)</h4>
+        <p>Internal-to-internet RDP/SSH — usually shouldn&#x27;t happen.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
+        and All_Traffic.src_category=&quot;internal&quot;
+        and All_Traffic.dest_category=&quot;external&quot;
+        earliest=-24h@h
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
+        and All_Traffic.src_category=&quot;internal&quot;
+        and All_Traffic.dest_category=&quot;external&quot;
+        earliest=-24h@h
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Large outbound transfer (potential exfil)</h4>
+        <p>Volume-based exfiltration heuristic — top N hosts by outbound bytes today.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-4-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-4-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-4-acc"><code>| tstats `summariesonly` sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category=&quot;external&quot; earliest=-24h@h
+    by All_Traffic.src
+| `drop_dm_object_name(All_Traffic)`
+| sort - bytes_out
+| head 25
+| eval bytes_out_mb=round(bytes_out/1024/1024,2)</code></pre>
+        <pre class="spl-mode-body" id="q-4-raw"><code>| tstats summariesonly=false sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; All_Traffic.dest_category=&quot;external&quot; earliest=-24h@h
+    by All_Traffic.src
+| `drop_dm_object_name(All_Traffic)`
+| sort - bytes_out
+| head 25
+| eval bytes_out_mb=round(bytes_out/1024/1024,2)</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Authentication.Authentication" data-table="Authentication.Authentication">
+  <header class="table-header">
+    <h2>Authentication.Authentication</h2>
+    <p class="muted">17 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>user</code> · <code>src_user</code> · <code>src_user_id</code> · <code>user_id</code> · <code>action</code> · <code>app</code> · <code>authentication_method</code> · <code>authentication_service</code> · <code>duration</code> · <code>session_id</code> · <code>signature</code> · <code>signature_id</code> · <code>reason</code> · <code>vendor_product</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Failed authentications by user</h4>
+        <p>Per-user failure count. Replace `&lt;UserName&gt;` to scope, or remove the where to scan all users.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.user, Authentication.src, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| sort -_time</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;failure&quot; Authentication.user=&lt;UserName&gt; earliest=-24h@h
+    by Authentication.user, Authentication.src, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| sort -_time</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Brute-force / spray detector</h4>
+        <p>Many targets per source within a window — credential-spray pattern.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` dc(Authentication.user) AS unique_users count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;failure&quot; earliest=-1h@h
+    by Authentication.src
+| `drop_dm_object_name(Authentication)`
+| where unique_users&gt;10
+| sort - unique_users</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false dc(Authentication.user) AS unique_users count
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;failure&quot; earliest=-1h@h
+    by Authentication.src
+| `drop_dm_object_name(Authentication)`
+| where unique_users&gt;10
+| sort - unique_users</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Successful login after failure burst</h4>
+        <p>Spray success pattern — same src ≥5 failures then ≥1 success within 10 min.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Authentication.Authentication
+    where earliest=-24h@h
+    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
+| `drop_dm_object_name(Authentication)`
+| eventstats count(eval(action=&quot;failure&quot;)) AS fail_n count(eval(action=&quot;success&quot;)) AS ok_n by src, user
+| where fail_n&gt;=5 AND ok_n&gt;=1
+| sort - _time</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Authentication.Authentication
+    where earliest=-24h@h
+    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
+| `drop_dm_object_name(Authentication)`
+| eventstats count(eval(action=&quot;failure&quot;)) AS fail_n count(eval(action=&quot;success&quot;)) AS ok_n by src, user
+| where fail_n&gt;=5 AND ok_n&gt;=1
+| sort - _time</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Logins from new geographies</h4>
+        <p>Geo-anomaly hunt — look for src IPs the user hasn&#x27;t used in 30 days.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` values(Authentication.src) AS src_30d
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot; earliest=-30d@d latest=-1d@d
+    by Authentication.user
+| append [
+  | tstats `summariesonly` values(Authentication.src) AS src_today
+      from datamodel=Authentication.Authentication
+      where Authentication.action=&quot;success&quot; earliest=-1d@d
+      by Authentication.user
+  ]
+| stats values(*) AS * by user
+| eval new_src=mvfilter(NOT match(src_today, src_30d))</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false values(Authentication.src) AS src_30d
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot; earliest=-30d@d latest=-1d@d
+    by Authentication.user
+| append [
+  | tstats summariesonly=false values(Authentication.src) AS src_today
+      from datamodel=Authentication.Authentication
+      where Authentication.action=&quot;success&quot; earliest=-1d@d
+      by Authentication.user
+  ]
+| stats values(*) AS * by user
+| eval new_src=mvfilter(NOT match(src_today, src_30d))</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Web.Web" data-table="Web.Web">
+  <header class="table-header">
+    <h2>Web.Web</h2>
+    <p class="muted">19 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>user</code> · <code>url</code> · <code>url_domain</code> · <code>url_length</code> · <code>uri_path</code> · <code>uri_query</code> · <code>http_method</code> · <code>http_user_agent</code> · <code>http_content_type</code> · <code>http_referrer</code> · <code>status</code> · <code>response_time</code> · <code>bytes</code> · <code>bytes_in</code> · <code>bytes_out</code> · <code>category</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>HTTP traffic from a single source</h4>
+        <p>Replace `&lt;src&gt;` with hostname or IP. Pivots web-proxy logs.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.src=&lt;src&gt; earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status, _time span=10m</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Web.Web
+    where Web.src=&lt;src&gt; earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status, _time span=10m</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Suspicious User-Agent strings</h4>
+        <p>Generic / scriptable / red-team UAs — high-signal proxy hunt.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count, values(Web.url_domain) AS domains
+    from datamodel=Web.Web
+    where (Web.http_user_agent=&quot;python-requests*&quot;
+        OR Web.http_user_agent=&quot;curl*&quot;
+        OR Web.http_user_agent=&quot;powershell*&quot;
+        OR Web.http_user_agent=&quot;*Cobalt*&quot;
+        OR Web.http_user_agent=&quot;*sqlmap*&quot;
+        OR Web.http_user_agent=&quot;*nikto*&quot;
+        OR Web.http_user_agent=&quot;Mozilla/4.0 (compatible; MSIE 7.0; Win64*&quot;
+        OR Web.http_user_agent=&quot;Mozilla/5.0 (Windows NT 6.1*&quot;)
+        earliest=-24h@h
+    by Web.src, Web.http_user_agent</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count, values(Web.url_domain) AS domains
+    from datamodel=Web.Web
+    where (Web.http_user_agent=&quot;python-requests*&quot;
+        OR Web.http_user_agent=&quot;curl*&quot;
+        OR Web.http_user_agent=&quot;powershell*&quot;
+        OR Web.http_user_agent=&quot;*Cobalt*&quot;
+        OR Web.http_user_agent=&quot;*sqlmap*&quot;
+        OR Web.http_user_agent=&quot;*nikto*&quot;
+        OR Web.http_user_agent=&quot;Mozilla/4.0 (compatible; MSIE 7.0; Win64*&quot;
+        OR Web.http_user_agent=&quot;Mozilla/5.0 (Windows NT 6.1*&quot;)
+        earliest=-24h@h
+    by Web.src, Web.http_user_agent</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>New / never-seen URL domains</h4>
+        <p>First-time-seen domain hunt — usually phishing landing or C2 staging.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count, min(_time) AS first_seen
+    from datamodel=Web.Web
+    where earliest=-30d@d
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| where first_seen &gt;= relative_time(now(), &quot;-1d@d&quot;)</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count, min(_time) AS first_seen
+    from datamodel=Web.Web
+    where earliest=-30d@d
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| where first_seen &gt;= relative_time(now(), &quot;-1d@d&quot;)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>HTTP-to-IP requests (skip-DNS)</h4>
+        <p>Outbound HTTP where Host is a raw IP — adversary skipping DNS resolution.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.url_domain=&quot;[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*&quot; earliest=-24h@h
+    by Web.src, Web.url, Web.http_method</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    from datamodel=Web.Web
+    where Web.url_domain=&quot;[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*&quot; earliest=-24h@h
+    by Web.src, Web.url, Web.http_method</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Network_Resolution.DNS" data-table="Network_Resolution.DNS">
+  <header class="table-header">
+    <h2>Network_Resolution.DNS</h2>
+    <p class="muted">13 columns · 4 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>src</code> · <code>dest</code> · <code>src_ip</code> · <code>dest_ip</code> · <code>query</code> · <code>query_type</code> · <code>answer</code> · <code>reply_code</code> · <code>reply_code_id</code> · <code>transport</code> · <code>duration</code> · <code>vendor_product</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>DNS queries from a single host</h4>
+        <p>Replace `&lt;DeviceName&gt;`. Pivots DNS logs.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=&lt;DeviceName&gt; earliest=-24h@h
+    by DNS.query, DNS.query_type, DNS.reply_code</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=&lt;DeviceName&gt; earliest=-24h@h
+    by DNS.query, DNS.query_type, DNS.reply_code</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>DNS NXDOMAIN spike per host</h4>
+        <p>DGA / failed-C2 indicator — many NXDOMAINs from one source.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.reply_code=&quot;NXDOMAIN&quot; earliest=-1h@h
+    by DNS.src
+| `drop_dm_object_name(DNS)`
+| where count &gt; 100
+| sort - count</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Resolution.DNS
+    where DNS.reply_code=&quot;NXDOMAIN&quot; earliest=-1h@h
+    by DNS.src
+| `drop_dm_object_name(DNS)`
+| where count &gt; 100
+| sort - count</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Long DNS query strings (TXT-tunnel)</h4>
+        <p>DNS tunneling — abnormally long query labels indicate data smuggled in DNS.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
+    from datamodel=Network_Resolution.DNS
+    where DNS.query_type=&quot;TXT&quot; earliest=-24h@h
+    by DNS.src
+| where avg_len &gt; 50 OR max_len &gt; 200</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
+    from datamodel=Network_Resolution.DNS
+    where DNS.query_type=&quot;TXT&quot; earliest=-24h@h
+    by DNS.src
+| where avg_len &gt; 50 OR max_len &gt; 200</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Newly-observed TLDs (suspicious .ru / .su / .top / .xyz)</h4>
+        <p>Exclude common cloud-CDN TLDs.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-3-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-3-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-3-acc"><code>| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where (DNS.query=&quot;*.ru&quot; OR DNS.query=&quot;*.su&quot; OR DNS.query=&quot;*.top&quot;
+            OR DNS.query=&quot;*.xyz&quot; OR DNS.query=&quot;*.work&quot; OR DNS.query=&quot;*.icu&quot;
+            OR DNS.query=&quot;*.zip&quot;)
+        earliest=-24h@h
+    by DNS.src, DNS.query</code></pre>
+        <pre class="spl-mode-body" id="q-3-raw"><code>| tstats summariesonly=false count
+    from datamodel=Network_Resolution.DNS
+    where (DNS.query=&quot;*.ru&quot; OR DNS.query=&quot;*.su&quot; OR DNS.query=&quot;*.top&quot;
+            OR DNS.query=&quot;*.xyz&quot; OR DNS.query=&quot;*.work&quot; OR DNS.query=&quot;*.icu&quot;
+            OR DNS.query=&quot;*.zip&quot;)
+        earliest=-24h@h
+    by DNS.src, DNS.query</code></pre>
+      </div>
+    </article>
+
+</section>
+
+
+<section class="table-section" id="spl-dm-Email.All_Email" data-table="Email.All_Email">
+  <header class="table-header">
+    <h2>Email.All_Email</h2>
+    <p class="muted">15 columns · 3 queries</p>
+    <details class="schema">
+      <summary>Schema (click to expand)</summary>
+      <p class="cols"><code>_time</code> · <code>src_user</code> · <code>recipient</code> · <code>subject</code> · <code>message_id</code> · <code>internal_message_id</code> · <code>message_size</code> · <code>delay</code> · <code>filename</code> · <code>file_hash</code> · <code>url</code> · <code>src</code> · <code>src_ip</code> · <code>vendor_product</code> · <code>action</code></p>
+    </details>
+  </header>
+  
+    <article class="query" id="q-0">
+      <header>
+        <h4>Inbound email by sender</h4>
+        <p>Pivot for a phish-sender investigation. Replace `&lt;email-or-domain&gt;`.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-0-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-0-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-0-acc"><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
+    by Email.recipient, Email.subject</code></pre>
+        <pre class="spl-mode-body" id="q-0-raw"><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where Email.src_user=&lt;email-or-domain&gt; earliest=-7d@d
+    by Email.recipient, Email.subject</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Email with executable / archive attachments</h4>
+        <p>High-signal phish hunt.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-1-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-1-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-1-acc"><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.filename in (&quot;*.exe&quot;,&quot;*.scr&quot;,&quot;*.lnk&quot;,&quot;*.iso&quot;,&quot;*.img&quot;,&quot;*.vhd&quot;,&quot;*.vhdx&quot;,&quot;*.html&quot;,&quot;*.hta&quot;,&quot;*.js&quot;,&quot;*.vbs&quot;,&quot;*.cpl&quot;,&quot;*.msi&quot;)
+        earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+        <pre class="spl-mode-body" id="q-1-raw"><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where Email.filename in (&quot;*.exe&quot;,&quot;*.scr&quot;,&quot;*.lnk&quot;,&quot;*.iso&quot;,&quot;*.img&quot;,&quot;*.vhd&quot;,&quot;*.vhdx&quot;,&quot;*.html&quot;,&quot;*.hta&quot;,&quot;*.js&quot;,&quot;*.vbs&quot;,&quot;*.cpl&quot;,&quot;*.msi&quot;)
+        earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.filename, Email.subject</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Quarantined / blocked emails</h4>
+        <p>Look at what got stopped — pivot via subject for similar campaigns.</p>
+      </header>
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-2-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-2-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-2-acc"><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.action in (&quot;blocked&quot;,&quot;quarantined&quot;) earliest=-7d@d
+    by Email.src_user, Email.subject, Email.recipient</code></pre>
+        <pre class="spl-mode-body" id="q-2-raw"><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where Email.action in (&quot;blocked&quot;,&quot;quarantined&quot;) earliest=-7d@d
+    by Email.src_user, Email.subject, Email.recipient</code></pre>
+      </div>
+    </article>
+
+</section>
+
+    </main>
   </div>
 </div>
 
@@ -5745,12 +7068,17 @@ level: high
     });
   });
 
-  // Copy buttons (works in any pane)
+  // Copy buttons (works in any pane). When the query has a Summarised/
+  // Non-summarised toggle, copy whichever variant is currently active.
   document.querySelectorAll('.copy').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const code = btn.parentElement.querySelector('code').innerText;
+      const block = btn.closest('.kql-block, .spl-toggle-group') || btn.parentElement;
+      const activeBody = block.querySelector('.spl-mode-body.active code');
+      const fallback   = block.querySelector('code');
+      const codeEl = activeBody || fallback;
+      if (!codeEl) return;
       try {
-        await navigator.clipboard.writeText(code);
+        await navigator.clipboard.writeText(codeEl.innerText);
         btn.classList.add('copied');
         const orig = btn.textContent;
         btn.textContent = '✓ Copied';
@@ -5790,6 +7118,21 @@ level: high
   bindSidebar('pane-kql',      'tableFilter',         'tableList');
   bindSidebar('pane-sentinel', 'sentinelTableFilter', 'sentinelTableList');
   bindSidebar('pane-datadog',  'datadogSourceFilter', 'datadogSourceList');
+  bindSidebar('pane-spl',      'splunkDmFilter',      'splunkDmList');
+
+  // Splunk SPL Summarised / Non-summarised toggle — same pattern as the
+  // article-card surface: scoped via .spl-toggle-group so each query's
+  // toggle is independent.
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.spl-mode-btn');
+    if (!btn) return;
+    const parent = btn.closest('.spl-toggle-group');
+    if (!parent) return;
+    parent.querySelectorAll('.spl-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+    parent.querySelectorAll('.spl-mode-body').forEach(p => {
+      p.classList.toggle('active', p.id === btn.dataset.target);
+    });
+  });
 
   // Make in-pane anchor links work even though both panes use `#table-X`
   // ids. Browser default ignores the second one because of the duplicate;

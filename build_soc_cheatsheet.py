@@ -1738,6 +1738,400 @@ ImProcessCreate
 
 
 # =============================================================================
+# Splunk SPL — curated queries per CIM datamodel.
+#
+# SPLUNK_DATAMODELS is the "schema" we render in the schema-collapse under
+# each datamodel header. SPLUNK_QUERIES is the analyst-shift query set —
+# triage starts, pivots by host/user/IP, common slices. House style:
+#   • tstats over CIM datamodels for fast queries when CIM acceleration
+#     is enabled (use the `summariesonly` macro)
+#   • drop_dm_object_name(<DM>) to flatten object-prefixed fields
+#   • Times in -24h@h / now style
+#   • <placeholder> fields the analyst replaces during a shift
+# =============================================================================
+
+SPLUNK_DATAMODELS: dict[str, list[str]] = {
+    "Endpoint.Processes": [
+        "_time", "host", "dest", "user", "process_name", "process_path",
+        "process", "process_id", "process_guid", "process_hash",
+        "parent_process_name", "parent_process_path", "parent_process",
+        "parent_process_id", "parent_process_guid", "process_integrity_level",
+        "action", "vendor_product", "user_id", "session_id",
+    ],
+    "Endpoint.Filesystem": [
+        "_time", "host", "dest", "user", "file_name", "file_path",
+        "file_hash", "file_size", "file_create_time", "file_modify_time",
+        "action", "process_name", "process_path", "process_id",
+        "vendor_product",
+    ],
+    "Endpoint.Registry": [
+        "_time", "host", "dest", "user", "registry_path",
+        "registry_key_name", "registry_value_name", "registry_value_data",
+        "registry_value_type", "action", "process_name", "process_id",
+        "vendor_product",
+    ],
+    "Network_Traffic.All_Traffic": [
+        "_time", "src", "dest", "src_ip", "dest_ip", "src_port", "dest_port",
+        "transport", "protocol", "action", "bytes", "bytes_in", "bytes_out",
+        "packets", "duration", "user", "process", "rule",
+        "vendor_product", "src_category", "dest_category",
+    ],
+    "Authentication.Authentication": [
+        "_time", "src", "dest", "user", "src_user", "src_user_id",
+        "user_id", "action", "app", "authentication_method",
+        "authentication_service", "duration", "session_id",
+        "signature", "signature_id", "reason", "vendor_product",
+    ],
+    "Web.Web": [
+        "_time", "src", "dest", "user", "url", "url_domain", "url_length",
+        "uri_path", "uri_query", "http_method", "http_user_agent",
+        "http_content_type", "http_referrer", "status", "response_time",
+        "bytes", "bytes_in", "bytes_out", "category",
+    ],
+    "Network_Resolution.DNS": [
+        "_time", "src", "dest", "src_ip", "dest_ip", "query", "query_type",
+        "answer", "reply_code", "reply_code_id", "transport",
+        "duration", "vendor_product",
+    ],
+    "Email.All_Email": [
+        "_time", "src_user", "recipient", "subject", "message_id",
+        "internal_message_id", "message_size", "delay", "filename",
+        "file_hash", "url", "src", "src_ip", "vendor_product", "action",
+    ],
+}
+
+
+SPLUNK_QUERIES: dict[str, list[tuple[str, str, str]]] = {
+    "Endpoint.Processes": [
+        ("All processes on a specific host",
+         "Host triage. Replace `<DeviceName>`. Pulls every process exec via accelerated CIM.",
+         '''| tstats `summariesonly` count, values(Processes.process) AS process, values(Processes.parent_process_name) AS parent
+    from datamodel=Endpoint.Processes
+    where Processes.dest=<DeviceName> earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, _time span=1m
+| `drop_dm_object_name(Processes)`
+| sort -_time'''),
+
+        ("All processes by a specific user",
+         "User-scoped activity. Replace `<UserName>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.user=<UserName> earliest=-24h@h
+    by Processes.dest, Processes.process_name, Processes.process, _time span=10m
+| `drop_dm_object_name(Processes)`
+| sort -_time'''),
+
+        ("LOLBin executions (living-off-the-land)",
+         "Built-in binaries adversaries abuse. High-signal when chained with unusual parents/cmdlines.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.process_name in (
+        "powershell.exe","pwsh.exe","cmd.exe","wmic.exe",
+        "rundll32.exe","regsvr32.exe","mshta.exe","cscript.exe",
+        "wscript.exe","bitsadmin.exe","certutil.exe","msbuild.exe",
+        "installutil.exe","regasm.exe","regsvcs.exe"
+    ) earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| where parent_process_name!="explorer.exe"'''),
+
+        ("Office app spawning a script host",
+         "Document-macro execution chain — Word/Excel/Outlook spawning powershell/mshta/regsvr32.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name in ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","wordpad.exe","msaccess.exe")
+        and Processes.process_name in ("powershell.exe","cmd.exe","mshta.exe","regsvr32.exe","rundll32.exe","wmic.exe","cscript.exe","wscript.exe")
+        earliest=-24h@h
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process'''),
+
+        ("Find a process by hash",
+         "IOC pivot — every host that ran a binary with this SHA256. Replace `<sha256>`.",
+         '''| tstats `summariesonly` count, min(_time) AS first_seen, max(_time) AS last_seen
+    from datamodel=Endpoint.Processes
+    where Processes.process_hash=<sha256> earliest=-7d@d
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process'''),
+
+        ("Anomalous parent-child pairs (rare)",
+         "Process-tree statistical-rarity hunt — flag pairs that occur fewer than 5 times in a week.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Processes
+    where earliest=-7d@d
+    by Processes.parent_process_name, Processes.process_name
+| `drop_dm_object_name(Processes)`
+| where count < 5
+| sort count'''),
+    ],
+
+    "Endpoint.Filesystem": [
+        ("File writes by a specific process",
+         "What did `<binary.exe>` create? Replace the process name.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action="created" Filesystem.process_name=<binary.exe> earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name'''),
+
+        ("File writes under a path",
+         "Track payloads under known persistence / staging directories. Replace `<path>` fragment.",
+         '''| tstats `summariesonly` count, values(Filesystem.process_name) AS writers
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action="created" Filesystem.file_path="*<path>*" earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_name'''),
+
+        ("Files written under user temp / appdata",
+         "Common dropper-staging location.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action="created"
+        and (Filesystem.file_path="*\\\\AppData\\\\Local\\\\Temp\\\\*"
+             OR Filesystem.file_path="*\\\\AppData\\\\Roaming\\\\*"
+             OR Filesystem.file_path="*\\\\Public\\\\*")
+        earliest=-24h@h
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path'''),
+
+        ("Hash-IOC sweep across the fleet",
+         "Was this hash ever written? Replace `<sha256>`.",
+         '''| tstats `summariesonly` count, values(Filesystem.dest) AS hosts
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash=<sha256> earliest=-30d@d
+    by Filesystem.file_name'''),
+    ],
+
+    "Endpoint.Registry": [
+        ("Run / RunOnce key writes",
+         "Persistence under classic ASEP locations.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.action="modified"
+        and (Registry.registry_path="*\\\\Run\\\\*"
+             OR Registry.registry_path="*\\\\RunOnce\\\\*"
+             OR Registry.registry_path="*\\\\Image File Execution Options\\\\*")
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data'''),
+
+        ("New service installations (registry-derived)",
+         "Service-creation under HKLM\\SYSTEM\\CurrentControlSet\\Services.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.action="created"
+        and Registry.registry_path="*\\\\Services\\\\*"
+        and Registry.registry_value_name in ("ImagePath","ServiceDll")
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_data'''),
+
+        ("Defender / AV registry tamper",
+         "Disabling Microsoft Defender via registry — adversary defense-evasion.",
+         '''| tstats `summariesonly` count
+    from datamodel=Endpoint.Registry
+    where Registry.registry_path="*\\\\Microsoft\\\\Windows Defender*"
+        and Registry.action in ("modified","created")
+        earliest=-24h@h
+    by Registry.dest, Registry.user, Registry.registry_path, Registry.registry_value_name, Registry.registry_value_data'''),
+    ],
+
+    "Network_Traffic.All_Traffic": [
+        ("Outbound traffic from a host",
+         "All allowed outbound from one host. Replace `<DeviceName>`.",
+         '''| tstats `summariesonly` count, sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.src=<DeviceName>
+        and All_Traffic.action="allowed"
+        and All_Traffic.dest_category!="internal"
+        earliest=-24h@h
+    by All_Traffic.dest, All_Traffic.dest_port, _time span=10m
+| `drop_dm_object_name(All_Traffic)`'''),
+
+        ("Connections to a specific destination IP",
+         "IP IOC pivot — every host that talked to it. Replace `<IP>`.",
+         '''| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_ip=<IP> earliest=-7d@d
+    by All_Traffic.src, All_Traffic.user'''),
+
+        ("Beaconing — periodic outbound, low fan-out",
+         "Inter-beacon stddev with stable destinations. Strong C2 signal.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" All_Traffic.dest_category!="internal" earliest=-24h@h
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600'''),
+
+        ("Suspicious dest port (RDP / SSH from unusual sources)",
+         "Internal-to-internet RDP/SSH — usually shouldn't happen.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest_port in (22,3389,5985,5986,4444,8443)
+        and All_Traffic.src_category="internal"
+        and All_Traffic.dest_category="external"
+        earliest=-24h@h
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port'''),
+
+        ("Large outbound transfer (potential exfil)",
+         "Volume-based exfiltration heuristic — top N hosts by outbound bytes today.",
+         '''| tstats `summariesonly` sum(All_Traffic.bytes_out) AS bytes_out
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" All_Traffic.dest_category="external" earliest=-24h@h
+    by All_Traffic.src
+| `drop_dm_object_name(All_Traffic)`
+| sort - bytes_out
+| head 25
+| eval bytes_out_mb=round(bytes_out/1024/1024,2)'''),
+    ],
+
+    "Authentication.Authentication": [
+        ("Failed authentications by user",
+         "Per-user failure count. Replace `<UserName>` to scope, or remove the where to scan all users.",
+         '''| tstats `summariesonly` count
+    from datamodel=Authentication.Authentication
+    where Authentication.action="failure" Authentication.user=<UserName> earliest=-24h@h
+    by Authentication.user, Authentication.src, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| sort -_time'''),
+
+        ("Brute-force / spray detector",
+         "Many targets per source within a window — credential-spray pattern.",
+         '''| tstats `summariesonly` dc(Authentication.user) AS unique_users count
+    from datamodel=Authentication.Authentication
+    where Authentication.action="failure" earliest=-1h@h
+    by Authentication.src
+| `drop_dm_object_name(Authentication)`
+| where unique_users>10
+| sort - unique_users'''),
+
+        ("Successful login after failure burst",
+         "Spray success pattern — same src ≥5 failures then ≥1 success within 10 min.",
+         '''| tstats `summariesonly` count
+    from datamodel=Authentication.Authentication
+    where earliest=-24h@h
+    by _time span=1m, Authentication.src, Authentication.user, Authentication.action
+| `drop_dm_object_name(Authentication)`
+| eventstats count(eval(action="failure")) AS fail_n count(eval(action="success")) AS ok_n by src, user
+| where fail_n>=5 AND ok_n>=1
+| sort - _time'''),
+
+        ("Logins from new geographies",
+         "Geo-anomaly hunt — look for src IPs the user hasn't used in 30 days.",
+         '''| tstats `summariesonly` values(Authentication.src) AS src_30d
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success" earliest=-30d@d latest=-1d@d
+    by Authentication.user
+| append [
+  | tstats `summariesonly` values(Authentication.src) AS src_today
+      from datamodel=Authentication.Authentication
+      where Authentication.action="success" earliest=-1d@d
+      by Authentication.user
+  ]
+| stats values(*) AS * by user
+| eval new_src=mvfilter(NOT match(src_today, src_30d))'''),
+    ],
+
+    "Web.Web": [
+        ("HTTP traffic from a single source",
+         "Replace `<src>` with hostname or IP. Pivots web-proxy logs.",
+         '''| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.src=<src> earliest=-24h@h
+    by Web.url_domain, Web.http_method, Web.status, _time span=10m'''),
+
+        ("Suspicious User-Agent strings",
+         "Generic / scriptable / red-team UAs — high-signal proxy hunt.",
+         '''| tstats `summariesonly` count, values(Web.url_domain) AS domains
+    from datamodel=Web.Web
+    where (Web.http_user_agent="python-requests*"
+        OR Web.http_user_agent="curl*"
+        OR Web.http_user_agent="powershell*"
+        OR Web.http_user_agent="*Cobalt*"
+        OR Web.http_user_agent="*sqlmap*"
+        OR Web.http_user_agent="*nikto*"
+        OR Web.http_user_agent="Mozilla/4.0 (compatible; MSIE 7.0; Win64*"
+        OR Web.http_user_agent="Mozilla/5.0 (Windows NT 6.1*")
+        earliest=-24h@h
+    by Web.src, Web.http_user_agent'''),
+
+        ("New / never-seen URL domains",
+         "First-time-seen domain hunt — usually phishing landing or C2 staging.",
+         '''| tstats `summariesonly` count, min(_time) AS first_seen
+    from datamodel=Web.Web
+    where earliest=-30d@d
+    by Web.url_domain
+| `drop_dm_object_name(Web)`
+| where first_seen >= relative_time(now(), "-1d@d")'''),
+
+        ("HTTP-to-IP requests (skip-DNS)",
+         "Outbound HTTP where Host is a raw IP — adversary skipping DNS resolution.",
+         '''| tstats `summariesonly` count
+    from datamodel=Web.Web
+    where Web.url_domain="[0-9]*\\.[0-9]*\\.[0-9]*\\.[0-9]*" earliest=-24h@h
+    by Web.src, Web.url, Web.http_method'''),
+    ],
+
+    "Network_Resolution.DNS": [
+        ("DNS queries from a single host",
+         "Replace `<DeviceName>`. Pivots DNS logs.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.src=<DeviceName> earliest=-24h@h
+    by DNS.query, DNS.query_type, DNS.reply_code'''),
+
+        ("DNS NXDOMAIN spike per host",
+         "DGA / failed-C2 indicator — many NXDOMAINs from one source.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where DNS.reply_code="NXDOMAIN" earliest=-1h@h
+    by DNS.src
+| `drop_dm_object_name(DNS)`
+| where count > 100
+| sort - count'''),
+
+        ("Long DNS query strings (TXT-tunnel)",
+         "DNS tunneling — abnormally long query labels indicate data smuggled in DNS.",
+         '''| tstats `summariesonly` avg(DNS.query_length) AS avg_len max(DNS.query_length) AS max_len count
+    from datamodel=Network_Resolution.DNS
+    where DNS.query_type="TXT" earliest=-24h@h
+    by DNS.src
+| where avg_len > 50 OR max_len > 200'''),
+
+        ("Newly-observed TLDs (suspicious .ru / .su / .top / .xyz)",
+         "Exclude common cloud-CDN TLDs.",
+         '''| tstats `summariesonly` count
+    from datamodel=Network_Resolution.DNS
+    where (DNS.query="*.ru" OR DNS.query="*.su" OR DNS.query="*.top"
+            OR DNS.query="*.xyz" OR DNS.query="*.work" OR DNS.query="*.icu"
+            OR DNS.query="*.zip")
+        earliest=-24h@h
+    by DNS.src, DNS.query'''),
+    ],
+
+    "Email.All_Email": [
+        ("Inbound email by sender",
+         "Pivot for a phish-sender investigation. Replace `<email-or-domain>`.",
+         '''| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.src_user=<email-or-domain> earliest=-7d@d
+    by Email.recipient, Email.subject'''),
+
+        ("Email with executable / archive attachments",
+         "High-signal phish hunt.",
+         '''| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.filename in ("*.exe","*.scr","*.lnk","*.iso","*.img","*.vhd","*.vhdx","*.html","*.hta","*.js","*.vbs","*.cpl","*.msi")
+        earliest=-7d@d
+    by Email.recipient, Email.src_user, Email.filename, Email.subject'''),
+
+        ("Quarantined / blocked emails",
+         "Look at what got stopped — pivot via subject for similar campaigns.",
+         '''| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where Email.action in ("blocked","quarantined") earliest=-7d@d
+    by Email.src_user, Email.subject, Email.recipient'''),
+    ],
+}
+
+
+# =============================================================================
 # Datadog Cloud SIEM — curated queries per log source.
 #
 # DATADOG_SOURCES is the "schema" — each entry maps a `source:` value to the
@@ -1802,6 +2196,21 @@ DATADOG_SOURCES: dict[str, list[str]] = {
         "@client.ipAddress", "@client.geographicalContext.country",
         "@client.geographicalContext.city", "@outcome.result", "@outcome.reason",
         "@authenticationContext.authenticationProvider", "@target.alternateId",
+    ],
+    "slack": [
+        "@evt.name", "@actor.user.email", "@actor.user.name",
+        "@actor.user.team", "@context.ip_address", "@context.location.country",
+        "@entity.channel", "@entity.file", "@entity.app",
+    ],
+    "microsoft.teams": [
+        "@evt.name", "@user.userPrincipalName", "@user.id",
+        "@network.client.ip", "@team.id", "@team.displayName",
+        "@channel.id", "@channel.displayName", "@app.displayName",
+    ],
+    "salesforce": [
+        "@evt.name", "@usr.id", "@usr.username", "@usr.email",
+        "@network.client.ip", "@object.type", "@object.name",
+        "@event.type", "@status",
     ],
 }
 
@@ -2074,6 +2483,67 @@ DATADOG_QUERIES: dict[str, list[tuple[str, str, str]]] = {
          "Direct grants of Okta admin roles to a user — anomalous outside scim/automation.",
          '''source:okta @evt.name:user.account.privilege.grant'''),
     ],
+
+    "slack": [
+        ("All activity for a user",
+         "User triage — every Slack event tied to one identity. Replace `<email>`.",
+         '''source:slack @actor.user.email:<email>'''),
+
+        ("File downloads from external workspaces",
+         "Cross-workspace file lift — external collaboration risk.",
+         '''source:slack @evt.name:file_downloaded
+@actor.user.team:<external-team-id>'''),
+
+        ("App / integration installed",
+         "New third-party Slack app — pivot for OAuth-scope review.",
+         '''source:slack @evt.name:app_installed'''),
+
+        ("Channel made public",
+         "Private channel flipped to public.",
+         '''source:slack @evt.name:public_channel_created
+OR (@evt.name:channel_settings_updated @change.field:visibility @change.new:public)'''),
+    ],
+
+    "microsoft.teams": [
+        ("All Teams activity for a user",
+         "User triage. Replace `<upn>`.",
+         '''source:microsoft.teams @user.userPrincipalName:<upn>'''),
+
+        ("External user added to a team",
+         "Guest-user invite — pivot for org-policy enforcement.",
+         '''source:microsoft.teams @evt.name:MemberAdded
+@user.userPrincipalName:*#EXT#*'''),
+
+        ("Teams app installed in a tenant",
+         "New tenant-wide app installation. Replace `<appName>` if scoping.",
+         '''source:microsoft.teams @evt.name:AppInstalled'''),
+
+        ("Federated chat with external organisation",
+         "External-tenant chat session — guest collaboration / data-leak risk.",
+         '''source:microsoft.teams @evt.name:MessageSent
+@chat.chatType:meetingChat OR @chat.chatType:oneOnOne
+@user.userPrincipalName:*#EXT#*'''),
+    ],
+
+    "salesforce": [
+        ("All activity for a user",
+         "User triage. Replace `<username>`.",
+         '''source:salesforce @usr.username:<username>'''),
+
+        ("Mass record export (Data Loader / report export)",
+         "Bulk-export pattern — credential / data exfil indicator.",
+         '''source:salesforce
+@evt.name:(REPORT_EXPORT OR DATA_EXPORT OR BULK_API)'''),
+
+        ("Login from a new IP",
+         "Pivot for credential-stuffing or impossible-travel hunts.",
+         '''source:salesforce @evt.name:Login @status:Success
+@network.client.ip:*'''),
+
+        ("Permission set assignment",
+         "Privilege drift in Salesforce — user gets new permissions.",
+         '''source:salesforce @evt.name:PermissionSetAssignment'''),
+    ],
 }
 
 
@@ -2081,18 +2551,61 @@ DATADOG_QUERIES: dict[str, list[tuple[str, str, str]]] = {
 # Render
 # =============================================================================
 
+# Splunk SPL summarised/non-summarised conversion. Mirrors the helpers in
+# generate.py — duplicated locally so build_soc_cheatsheet.py stays fast at
+# import time (no need to load the full pipeline catalog just to render a
+# cheat sheet).
+import re as _re_spl
+
+
+def _spl_make_unsummarised(spl: str) -> str:
+    if not spl or "tstats" not in spl.lower():
+        return spl
+    out = spl
+    out = _re_spl.sub(r"`summariesonly`", "summariesonly=false", out)
+    out = _re_spl.sub(r"\bsummariesonly\s*=\s*(?:true|t|1|yes|y)\b",
+                       "summariesonly=false", out, flags=_re_spl.IGNORECASE)
+    if not _re_spl.search(r"\bsummariesonly\s*=", out, flags=_re_spl.IGNORECASE):
+        out = _re_spl.sub(r"(\|\s*tstats\b)(\s+)",
+                            r"\1 summariesonly=false\2", out, count=1,
+                            flags=_re_spl.IGNORECASE)
+    return out
+
+
+def _spl_has_dual_form(spl: str) -> bool:
+    return bool(spl) and _spl_make_unsummarised(spl) != spl
+
+
 def render_query(q: tuple[str, str, str], i: int) -> str:
-    title, desc, kql = q
+    title, desc, body = q
+    # Splunk SPL queries that use the `summariesonly` macro / tstats get a
+    # nested Summarised / Non-summarised toggle so analysts on non-CIM-
+    # accelerated environments can flip to the working variant inline.
+    if _spl_has_dual_form(body):
+        alt = _spl_make_unsummarised(body)
+        block = f"""
+      <div class="kql-block spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="q-{i}-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="q-{i}-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre class="spl-mode-body active" id="q-{i}-acc"><code>{html.escape(body)}</code></pre>
+        <pre class="spl-mode-body" id="q-{i}-raw"><code>{html.escape(alt)}</code></pre>
+      </div>"""
+    else:
+        block = f"""
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>{html.escape(body)}</code></pre>
+      </div>"""
     return f"""
     <article class="query" id="q-{i}">
       <header>
         <h4>{html.escape(title)}</h4>
         <p>{html.escape(desc)}</p>
-      </header>
-      <div class="kql-block">
-        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>{html.escape(kql)}</code></pre>
-      </div>
+      </header>{block}
     </article>
 """
 
@@ -2315,6 +2828,12 @@ def main() -> None:
         DATADOG_QUERIES, DATADOG_SOURCES, id_prefix="datadog-source-",
         list_id="datadogSourceList", filter_id="datadogSourceFilter")
 
+    # Splunk SPL — CIM datamodels in place of tables.
+    (spl_sidebar, spl_sections,
+     spl_curated, spl_total_q, spl_schema_tables) = _build_pane(
+        SPLUNK_QUERIES, SPLUNK_DATAMODELS, id_prefix="spl-dm-",
+        list_id="splunkDmList", filter_id="splunkDmFilter")
+
     sigma_rules = _load_sigma_rules()
     sigma_sections, sigma_count = render_sigma_pane(sigma_rules)
 
@@ -2334,6 +2853,11 @@ def main() -> None:
         ddog_curated=ddog_curated,
         ddog_total_q=ddog_total_q,
         ddog_schema_tables=ddog_schema_tables,
+        spl_sidebar=spl_sidebar,
+        spl_sections=spl_sections,
+        spl_curated=spl_curated,
+        spl_total_q=spl_total_q,
+        spl_schema_tables=spl_schema_tables,
         sigma_sections=sigma_sections,
         sigma_count=sigma_count,
     ), encoding="utf-8")
@@ -2344,6 +2868,8 @@ def main() -> None:
           f"(across {sent_schema_tables} schema tables)")
     print(f"  Datadog:   {ddog_curated} curated sources, {ddog_total_q} queries "
           f"(across {ddog_schema_tables} sources)")
+    print(f"  Splunk:    {spl_curated} curated CIM datamodels, {spl_total_q} queries "
+          f"(across {spl_schema_tables} datamodels)")
     print(f"  Sigma:     {sigma_count} rules pre-compiled (KQL/SPL/Lucene each)")
 
 
@@ -2508,6 +3034,31 @@ a{{color:inherit;text-decoration:none}}
 .sigma-pane.active{{display:block}}
 .sigma-pane pre{{margin:0;padding:14px 18px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;background:var(--code-bg);border-radius:0 0 var(--r-md) var(--r-md)}}
 
+/* Splunk SPL Summarised / Non-summarised toggle (mirrors generate.py's
+   article-card pattern). Wraps in .spl-toggle-group so the click handler
+   can scope to one query at a time. */
+.spl-toggle-group{{position:relative}}
+.spl-mode-toggle{{
+  display:flex;gap:4px;align-items:center;flex-wrap:wrap;
+  padding:6px 10px;
+  background:rgba(255,255,255,0.03);
+  border-radius:var(--r-sm) var(--r-sm) 0 0;
+  border-bottom:1px solid var(--border);
+}}
+.spl-mode-btn{{
+  background:transparent;border:0;color:var(--muted);
+  padding:4px 10px;border-radius:4px;cursor:pointer;
+  font:inherit;font-size:11px;font-weight:500;
+  transition:color 0.12s,background 0.12s;
+}}
+.spl-mode-btn:hover{{color:var(--text)}}
+.spl-mode-btn.active{{
+  background:rgba(113,112,255,0.16);color:var(--text);
+}}
+.spl-mode-hint{{font-size:10.5px;color:var(--muted-2);margin-left:8px}}
+.spl-mode-body{{display:none}}
+.spl-mode-body.active{{display:block}}
+
 /* Mobile */
 @media (max-width: 900px) {{
   .cs-layout{{grid-template-columns:1fr}}
@@ -2532,8 +3083,8 @@ a{{color:inherit;text-decoration:none}}
   <button class="cs-tab active" data-pane="kql">KQL <span class="badge">Defender XDR</span></button>
   <button class="cs-tab" data-pane="sentinel">KQL <span class="badge">Sentinel</span></button>
   <button class="cs-tab" data-pane="datadog">Datadog <span class="badge">Cloud SIEM</span></button>
-  <button class="cs-tab placeholder" data-pane="sigma">Sigma <span class="badge">Under Progress</span></button>
-  <button class="cs-tab placeholder" data-pane="spl">SPL <span class="badge">Under Progress</span></button>
+  <button class="cs-tab" data-pane="spl">SPL <span class="badge">Splunk · CIM</span></button>
+  <button class="cs-tab" data-pane="sigma">Sigma <span class="badge">Platform-neutral</span></button>
 </nav>
 
 <div id="pane-kql" class="tab-pane active">
@@ -2583,6 +3134,9 @@ a{{color:inherit;text-decoration:none}}
       <div class="cs-intro">
         <h1>Datadog · Cloud SIEM logs query</h1>
         <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body.</p>
+        <p style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:8px 14px;margin:10px 0 12px 0;font-size:12.5px;">
+          <strong>Reference Tables</strong> let you maintain large IOC / known-bad / allowlist tables in Datadog and pivot via them in queries — handy for IP-block / hash-list / domain-list filters that grow over time. Syntax: <code>CIDR(@network.client.ip, *RefTable:bad_ips_v2*)</code> or <code>@process.name IN *RefTable:lolbins*</code>. Build / upload tables under <em>Logs → Configuration → Reference Tables</em>; queries below use literal lists for clarity but swap in a Reference Table any time a list grows past ~100 entries.
+        </p>
         <div class="stats">
           <span><strong>{ddog_curated}</strong> sources curated</span>
           <span><strong>{ddog_total_q}</strong> queries</span>
@@ -2598,22 +3152,56 @@ a{{color:inherit;text-decoration:none}}
 <div id="pane-sigma" class="tab-pane">
   <main class="cs-main">
     <div class="cs-intro">
-      <h1>Sigma · platform-neutral detection rules
-        <span class="badge" style="margin-left:10px;font-family:var(--mono);font-size:11.5px;padding:3px 10px;border-radius:99px;background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36);text-transform:uppercase;letter-spacing:0.04em;font-weight:600;vertical-align:middle;">Under Progress</span>
-      </h1>
-      <p style="background:rgba(226,169,63,0.06);border:1px solid rgba(226,169,63,0.20);border-radius:var(--r-md);padding:10px 14px;margin-bottom:14px;">
-        <strong style="color:var(--warn);">Coverage is being expanded.</strong>
-        {sigma_count} rules ship today across the kill-chain phases below. Sigma is opt-in by design — we author rules for single-event-shape detections where Sigma's detection: schema fits cleanly. The remaining UCs in the matrix are queued for Sigma authoring; check back as the catalogue fills out.
-      </p>
-      <p>Each rule below is a self-contained Sigma YAML, pre-compiled to Defender
-      KQL, Splunk SPL, and Elastic Lucene at build time. Click a tab on any
-      card to copy the format you need — no Sigma toolchain required on your
-      laptop. Source rules live under <code>sigma_rules/</code>; re-run
-      <code>python build_soc_cheatsheet.py</code> after editing to refresh
-      compiled output.</p>
+      <h1>Sigma · platform-neutral detection rules</h1>
+      <p>Sigma is a generic, YAML-based signature format for SIEM detections. Each rule below is a self-contained Sigma YAML, pre-compiled to Defender KQL, Splunk SPL, and Elastic Lucene at build time — copy whichever format your SIEM speaks. Source rules live under <code>sigma_rules/</code>; re-run <code>python build_soc_cheatsheet.py</code> after editing to refresh.</p>
+
+      <details style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:10px 14px;margin:12px 0 14px 0;font-size:12.5px;line-height:1.6;">
+        <summary style="cursor:pointer;font-weight:600;color:var(--accent-2);font-size:13px;">Sigma syntax cheat sheet — click to expand</summary>
+        <p style="margin-top:10px;"><strong>Top-level fields</strong>:</p>
+        <pre style="font-size:11.5px;background:var(--code-bg);padding:10px;border-radius:var(--r-sm);overflow-x:auto;"><code>title:        # Short, descriptive
+id:           # UUID — gives the rule a stable identity
+status:       # stable | test | experimental | deprecated | unsupported
+description:  # 1-3 sentences on what it catches
+references:   # URLs to relevant intel / vendor advisories
+author:       # Free-form
+date:         # 2026/05/07
+tags:         # attack.t1059, attack.execution, etc — MITRE ATT&amp;CK
+logsource:    # Where the rule applies
+  product:    #   windows / linux / macos / aws / azure / etc
+  service:    #   security / sysmon / cloudtrail / ...
+  category:   #   process_creation / file_event / network_connection / ...
+detection:    # The actual matching logic
+  selection:  #   Match condition — ANDed by default within a block
+  filter:     #   Optional — fields to exclude
+  condition:  # selection and not filter / 1 of selection_* / etc.
+falsepositives: [...]
+level:        # informational | low | medium | high | critical</code></pre>
+        <p><strong>Field modifiers</strong> (suffix after the field name):</p>
+        <ul style="margin:6px 0 0 18px;padding:0;">
+          <li><code>field|contains: value</code> — substring match</li>
+          <li><code>field|startswith: value</code> / <code>|endswith: value</code></li>
+          <li><code>field|re: regex</code> — Sigma regex (PCRE-flavoured)</li>
+          <li><code>field|all: [a, b]</code> — list AND (must contain all)</li>
+          <li><code>field|cased</code> — case-sensitive (default is case-insensitive)</li>
+          <li><code>field|windash</code> — accept either <code>-</code> or <code>/</code> as the prefix to a Windows-style flag (e.g. <code>-encodedcommand</code> or <code>/encodedcommand</code>)</li>
+          <li><code>field|expand</code> — expand placeholders defined under <code>placeholders:</code></li>
+        </ul>
+        <p style="margin-top:10px;"><strong>Compilation cheat sheet</strong> — what each Sigma construct becomes:</p>
+        <ul style="margin:6px 0 0 18px;padding:0;">
+          <li><code>field|contains: x</code> → KQL <code>field has "x"</code> · SPL <code>field="*x*"</code> · Lucene <code>field:*x*</code></li>
+          <li><code>field|startswith: x</code> → KQL <code>field startswith "x"</code> · SPL <code>field="x*"</code> · Lucene <code>field:x*</code></li>
+          <li><code>field: [a, b, c]</code> → KQL <code>field in ("a","b","c")</code> · SPL <code>field IN ("a","b","c")</code></li>
+          <li><code>condition: 1 of selection_*</code> → OR across every block whose name matches</li>
+          <li><code>condition: all of selection_*</code> → AND across every matching block</li>
+          <li><code>timeframe: 5m</code> + aggregation — only some backends support; Splunk does, Defender doesn't</li>
+        </ul>
+        <p style="margin-top:10px;"><strong>When Sigma is the right tool</strong>: single-event-shape detections (one log line matches → fire). <strong>When it isn't</strong>: multi-stage temporal correlation, threshold-over-window aggregations, joins across data sources — those don't compile cleanly to all backends. Author those directly in KQL or SPL instead.</p>
+        <p style="margin:10px 0 0 0;"><strong>Reference</strong>: <a href="https://github.com/SigmaHQ/sigma" style="color:var(--accent-2);">SigmaHQ/sigma</a> — the canonical rule repo + the latest spec.</p>
+      </details>
+
       <div class="stats">
         <span><strong>{sigma_count}</strong> rules</span>
-        <span>3 backends pre-compiled</span>
+        <span>3 backends pre-compiled (KQL · SPL · Lucene)</span>
         <span>Add new rules to <code>sigma_rules/&lt;kill_chain&gt;/</code> and rebuild.</span>
       </div>
     </div>
@@ -2622,15 +3210,25 @@ a{{color:inherit;text-decoration:none}}
 </div>
 
 <div id="pane-spl" class="tab-pane">
-  <div class="cs-main" style="max-width:680px;margin:48px auto">
-    <div class="placeholder-pane">
-      <h2>SPL cheat sheet — under progress</h2>
-      <p>The Splunk SPL counterpart to this catalog is in active build-out. The
-      project's curated UCs already include a CIM-conformant <code>splunk_spl</code>
-      block per use case — expect a focused, schema-aware SPL cheat sheet here
-      shortly. In the meantime, every Sigma rule above already compiles to SPL —
-      grab the SPL tab on the card you want.</p>
-    </div>
+  <div class="cs-layout">
+    {spl_sidebar}
+    <main class="cs-main">
+      <div class="cs-intro">
+        <h1>Splunk · CIM datamodels (SPL)</h1>
+        <p>Pick a CIM datamodel from the sidebar — every query is verbatim Splunk SPL using <code>tstats</code> against accelerated datamodels. House style: <code>summariesonly</code> macro for fast tstats; <code>drop_dm_object_name(&lt;DM&gt;)</code> to flatten object-prefixed fields; <code>&lt;placeholder&gt;</code> fields the analyst replaces during a shift.</p>
+        <p style="background:rgba(113,112,255,0.06);border:1px solid rgba(113,112,255,0.20);border-radius:var(--r-md);padding:10px 14px;margin:12px 0 14px 0;font-size:12.5px;line-height:1.55;">
+          <strong>tstats vs <code>| from datamodel:</code> vs raw search.</strong>
+          <code>tstats</code> queries against an accelerated CIM model are the fastest path — they read the precomputed summary index. If your env has no CIM acceleration, every tstats query below has a <strong>Non-summarised</strong> toggle that switches to <code>summariesonly=false</code> (slower but works without the summary). Raw <code>search index=...</code> queries always work but won't benefit from any acceleration.
+        </p>
+        <div class="stats">
+          <span><strong>{spl_curated}</strong> CIM datamodels curated</span>
+          <span><strong>{spl_total_q}</strong> queries</span>
+          <span>Click <strong>Copy</strong> on any query to paste into Splunk Search.</span>
+        </div>
+      </div>
+
+      {spl_sections}
+    </main>
   </div>
 </div>
 
@@ -2647,12 +3245,17 @@ a{{color:inherit;text-decoration:none}}
     }});
   }});
 
-  // Copy buttons (works in any pane)
+  // Copy buttons (works in any pane). When the query has a Summarised/
+  // Non-summarised toggle, copy whichever variant is currently active.
   document.querySelectorAll('.copy').forEach(btn => {{
     btn.addEventListener('click', async () => {{
-      const code = btn.parentElement.querySelector('code').innerText;
+      const block = btn.closest('.kql-block, .spl-toggle-group') || btn.parentElement;
+      const activeBody = block.querySelector('.spl-mode-body.active code');
+      const fallback   = block.querySelector('code');
+      const codeEl = activeBody || fallback;
+      if (!codeEl) return;
       try {{
-        await navigator.clipboard.writeText(code);
+        await navigator.clipboard.writeText(codeEl.innerText);
         btn.classList.add('copied');
         const orig = btn.textContent;
         btn.textContent = '✓ Copied';
@@ -2692,6 +3295,21 @@ a{{color:inherit;text-decoration:none}}
   bindSidebar('pane-kql',      'tableFilter',         'tableList');
   bindSidebar('pane-sentinel', 'sentinelTableFilter', 'sentinelTableList');
   bindSidebar('pane-datadog',  'datadogSourceFilter', 'datadogSourceList');
+  bindSidebar('pane-spl',      'splunkDmFilter',      'splunkDmList');
+
+  // Splunk SPL Summarised / Non-summarised toggle — same pattern as the
+  // article-card surface: scoped via .spl-toggle-group so each query's
+  // toggle is independent.
+  document.addEventListener('click', e => {{
+    const btn = e.target.closest('.spl-mode-btn');
+    if (!btn) return;
+    const parent = btn.closest('.spl-toggle-group');
+    if (!parent) return;
+    parent.querySelectorAll('.spl-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
+    parent.querySelectorAll('.spl-mode-body').forEach(p => {{
+      p.classList.toggle('active', p.id === btn.dataset.target);
+    }});
+  }});
 
   // Make in-pane anchor links work even though both panes use `#table-X`
   // ids. Browser default ignores the second one because of the duplicate;
