@@ -109,11 +109,19 @@ silently returns zero hits for unknown paths.
 - **Prefer `@field.path:exact-value` over free-text search** — Datadog tagged attributes are indexed for fast lookup; free-text matches grep through every log line.
 - **Use `evt.outcome` where it exists** — terser than chasing source-specific status codes.
 - **Time windows are set at rule level**, not in the query — don't try to encode time in the query.
-- **Datadog values are CASE-SENSITIVE** (unlike KQL `=~` / `has`). `@Image:*\\dthelper.exe` will NOT match `DTHelper.exe` and vice versa. There is no case-insensitive operator. To handle vendor-style PascalCase paths plus likely-lowercase variants, emit BOTH casings inside an OR group whenever you reference a binary name, registry key, or other string that could appear in either form:
-  - GOOD: `@Image:(*\\DTHelper.exe OR *\\dthelper.exe)`
-  - GOOD: `@TargetObject:(*\\Run\\* OR *\\run\\*)`
-  - BAD: `@Image:*\\dthelper.exe` (misses real-world `DTHelper.exe` events)
-  CloudTrail/AWS event names (`ConsoleLogin`, `AssumeRole`) and Okta event types (`user.session.start`) have a single canonical casing and don't need duplication. Anything that came out of a Windows / Sysmon / file-system path almost certainly does.
+- **Datadog values are CASE-SENSITIVE** (unlike KQL `=~` / `has`). `@Image:*\\dthelper.exe` will NOT match `DTHelper.exe` and vice versa. There is no case-insensitive operator on `@field:` queries.
+
+  **Three ways to deal with it, ranked best→worst for production**:
+  1. *Best — Datadog Logs Pipeline Processor* (one-time setup per source). Add a "String Builder Processor" or "Attribute Remapper" that lowercases the volatile field into a new attribute, e.g. `@image_lower = lowercase($Image)`. Then queries become `@image_lower:dthelper.exe` and catch every casing without enumerating. The Pipeline Library has remappers for CloudTrail, Sysmon, Windows Security, etc. — recommend this when authoring detections at scale.
+  2. *Cloud SIEM rule expression* — inside the rule editor (not the search bar) you can use `tolower(@Image) = "dthelper.exe"` in the grouping/filter expression. Works without a pipeline change but doesn't help interactive triage in Logs Explorer.
+  3. *Inline — enumerate common casings in an OR group*. Use this when authoring a detection without admin access to pipelines, or for a one-off hunt. Cover at least lowercase, vendor-canonical, and ALL-CAPS:
+     - GOOD: `@Image:(*\\DTHelper.exe OR *\\dthelper.exe OR *\\DTHELPER.EXE)`
+     - GOOD: `@TargetObject:(*\\Run\\* OR *\\run\\*)`
+     - BAD: `@Image:*\\dthelper.exe` (misses real-world `DTHelper.exe` events)
+
+  CloudTrail/AWS event names (`ConsoleLogin`, `AssumeRole`), Okta event types (`user.session.start`), and GCP method names (`google.iam.admin.v1.SetIamPolicy`) ship with a single canonical casing — don't enumerate variants for these. Anything that came out of a Windows / Sysmon / file-system path almost certainly varies.
+
+  **Cannot enumerate exhaustively** — for an n-character binary name like `hello.exe`, there are 2^9 = 512 possible casings. The mitigation chain above (Pipeline Processor > tolower() in rule > common-casings OR) is the production path. We don't try to brute-force every casing in the OR group; we cover the realistic ones.
 - **Group multi-condition queries with parentheses** — `(@a:1 OR @a:2) AND @b:3`.
 - **Negation**: `-@user.name:svc-*` or `NOT (@user.name:svc-*)`.
 - **CIDR for IPs**: `CIDR(@network.client.ip, 10.0.0.0/8)` — function syntax, NOT `@network.client.ip:10.0.0.0/8` (that's a literal-string match and matches nothing).

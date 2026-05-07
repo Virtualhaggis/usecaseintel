@@ -2582,7 +2582,16 @@ a{{color:inherit;text-decoration:none}}
     <main class="cs-main">
       <div class="cs-intro">
         <h1>Datadog · Cloud SIEM logs query</h1>
-        <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body. <strong>Datadog values are case-sensitive</strong> — for binary names and similar strings we emit both casings inside an OR group.</p>
+        <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body.</p>
+        <div style="background:rgba(226,169,63,0.06);border:1px solid rgba(226,169,63,0.20);border-radius:var(--r-md);padding:10px 14px;margin:12px 0 14px 0;font-size:12.5px;line-height:1.55;">
+          <strong style="color:var(--warn);">Heads-up — Datadog <code>@field:</code> queries are case-sensitive.</strong> There's no <code>=~</code> equivalent. <code>@Image:*\\hello.exe</code> won't match <code>Hello.exe</code> or <code>HELLO.EXE</code>. Three ways to handle it, in order of preference:
+          <ol style="margin:8px 0 0 18px;padding:0;">
+            <li><strong>Pipeline Processor (best for prod):</strong> add an Attribute Remapper at ingest that lowercases the field into a new attribute, e.g. <code>@image_lower</code>. Query <code>@image_lower:hello.exe</code> matches every casing. Datadog's Pipeline Library has standard remappers for CloudTrail / Sysmon / Windows Security / etc.</li>
+            <li><strong>Cloud SIEM rule expression:</strong> inside the rule editor (not the search bar), use <code>tolower(@Image) = "hello.exe"</code> in the grouping / filter expression.</li>
+            <li><strong>Inline OR-group of common casings:</strong> for one-off hunts in the search bar — list the realistic variants: <code>@Image:(*\\Hello.exe OR *\\hello.exe OR *\\HELLO.EXE)</code>. Don't try to brute-force every casing (an n-char name has 2<sup>n</sup> variants); cover lowercase, vendor-canonical, and ALL-CAPS.</li>
+          </ol>
+          AWS event names (<code>ConsoleLogin</code>), Okta event types (<code>user.session.start</code>), and GCP method names (<code>google.iam.admin.v1.SetIamPolicy</code>) ship with a single canonical casing — no enumeration needed for those.
+        </div>
         <div class="stats">
           <span><strong>{ddog_curated}</strong> sources curated</span>
           <span><strong>{ddog_total_q}</strong> queries</span>
