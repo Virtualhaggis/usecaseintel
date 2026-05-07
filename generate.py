@@ -6806,16 +6806,34 @@ document.addEventListener('click', e => {
 // (summariesonly=true via the macro) and an auto-derived non-accelerated
 // body (summariesonly=false). The user toggles between them; persists
 // nothing — every UC defaults to "Summarised" on page load.
+//
+// Scoped via .spl-toggle-group so the same handler works for both the
+// article-card surface and the Library drawer surface (different parent
+// containers, same toggle pattern).
 document.addEventListener('click', e => {
   const btn = e.target.closest('.spl-mode-btn');
   if (!btn) return;
-  const parent = btn.closest('.tab-content');
+  const parent = btn.closest('.spl-toggle-group') || btn.closest('.tab-content');
   if (!parent) return;
   parent.querySelectorAll('.spl-mode-btn').forEach(b => b.classList.toggle('active', b === btn));
   parent.querySelectorAll('.spl-mode-body').forEach(p => {
     p.classList.toggle('active', p.id === btn.dataset.target);
   });
 });
+
+// JS port of generate.py:_spl_make_unsummarised — used by the Library
+// drawer to compute the non-accelerated variant of an SPL query without
+// needing it pre-rendered.
+function _splUnsummarised(spl) {
+  if (!spl || !/tstats/i.test(spl)) return spl;
+  let out = spl;
+  out = out.replace(/`summariesonly`/g, 'summariesonly=false');
+  out = out.replace(/\bsummariesonly\s*=\s*(?:true|t|1|yes|y)\b/gi, 'summariesonly=false');
+  if (!/\bsummariesonly\s*=/i.test(out)) {
+    out = out.replace(/(\|\s*tstats\b)(\s+)/i, '$1 summariesonly=false$2');
+  }
+  return out;
+}
 
 // ----- Toggle kill chain ----------------------------------------------
 document.querySelectorAll('.btn[data-target]').forEach(btn => {
@@ -7537,7 +7555,11 @@ function openLibraryDrawer(p) {
   });
   content.querySelectorAll('.lib-copy-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
-      const pre = btn.closest('[data-query-pane]')?.querySelector('pre');
+      const pane = btn.closest('[data-query-pane]');
+      if (!pane) return;
+      // Prefer the .active body when the pane has a Summarised/
+      // Non-summarised toggle; otherwise just take the first <pre>.
+      const pre = pane.querySelector('.spl-mode-body.active') || pane.querySelector('pre');
       if (!pre) return;
       try {
         await navigator.clipboard.writeText(pre.textContent || '');
@@ -7650,12 +7672,35 @@ function _libDetailHtml(p) {
     return `<button class="lib-query-tab ${i === 0 ? 'on' : ''}" data-platform="${k}">${lbl}</button>`;
   }).join('') : '';
   const queryPanes = havePlats.length ? havePlats.map((k, i) => {
+    const meta = ({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query'}[k]);
+    const body = p.queries[k] || '';
+    // Splunk gets the same Summarised / Non-summarised toggle the article
+    // cards have when the query has a tstats acceleration form. Computed
+    // client-side via _splUnsummarised so the drawer doesn't need pre-
+    // baked alternatives.
+    const splAlt = (k === 'spl') ? _splUnsummarised(body) : body;
+    const splDual = (k === 'spl' && splAlt !== body);
+    const drawerUid = 'lib-' + (p.uc.n || p.uc.t || '').replace(/[^A-Za-z0-9_-]/g, '_');
+    let inner;
+    if (splDual) {
+      inner = `<div class="spl-toggle-group">
+        <div class="spl-mode-toggle">
+          <button class="spl-mode-btn active" data-spl-mode="acc" data-target="${drawerUid}-spl-acc">Summarised</button>
+          <button class="spl-mode-btn" data-spl-mode="raw" data-target="${drawerUid}-spl-raw">Non-summarised</button>
+          <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span>
+        </div>
+        <pre class="spl-mode-body active lib-query-pre" id="${drawerUid}-spl-acc">${escapeHtml(body)}</pre>
+        <pre class="spl-mode-body lib-query-pre" id="${drawerUid}-spl-raw">${escapeHtml(splAlt)}</pre>
+      </div>`;
+    } else {
+      inner = `<pre class="lib-query-pre">${escapeHtml(body)}</pre>`;
+    }
     return `<div data-query-pane="${k}" style="${i === 0 ? '' : 'display:none;'}">
       <div class="lib-query-toolbar">
-        <span class="lib-query-meta">${({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query'}[k])}</span>
+        <span class="lib-query-meta">${meta}</span>
         <button type="button" class="lib-copy-btn">Copy</button>
       </div>
-      <pre class="lib-query-pre">${escapeHtml(p.queries[k] || '')}</pre>
+      ${inner}
     </div>`;
   }).join('') : `<div class="lib-section-body" style="color:var(--muted);">Queries for this UC live on the original article cards in the <b>Articles</b> tab — open one of the sightings below to see them inline. (We're working on extracting them into the library directly.)</div>`;
 
@@ -9672,7 +9717,11 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         def _pane_body(suffix: str, body: str) -> str:
             if suffix == "spl" and _spl_has_dual_form(body):
                 alt = _spl_make_unsummarised(body)
+                # Wrapped in .spl-toggle-group so the global click handler
+                # can scope the toggle to this pair of buttons + bodies even
+                # when the surface (article card vs Library drawer) differs.
                 return (
+                    f'<div class="spl-toggle-group">'
                     f'<div class="spl-mode-toggle">'
                     f'  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="{uid}-spl-acc">Summarised</button>'
                     f'  <button class="spl-mode-btn" data-spl-mode="raw" data-target="{uid}-spl-raw">Non-summarised</button>'
@@ -9682,6 +9731,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
                     f'<button class="copy-btn">COPY</button><code>{html.escape(body)}</code></pre>'
                     f'<pre class="spl-mode-body" id="{uid}-spl-raw">'
                     f'<button class="copy-btn">COPY</button><code>{html.escape(alt)}</code></pre>'
+                    f'</div>'
                 )
             return (
                 f'<pre><button class="copy-btn">COPY</button>'
@@ -10678,6 +10728,16 @@ def _write_rule_packs(generated_iso):
             splunk_lines.append(f"# (full multi-line search below)")
             for line in uc.splunk_spl.strip().splitlines():
                 splunk_lines.append(f"#   {line}")
+            # Non-accelerated variant — for SOCs without CIM data-model
+            # acceleration enabled. Same logic, summariesonly=false.
+            if _spl_has_dual_form(uc.splunk_spl):
+                alt = _spl_make_unsummarised(uc.splunk_spl)
+                splunk_lines.append(f"#")
+                splunk_lines.append(f"# --- Non-summarised variant (no CIM acceleration required) ---")
+                splunk_lines.append(f"# Replace the `search =` line above with the body below if your")
+                splunk_lines.append(f"# environment doesn't have CIM data-model acceleration enabled.")
+                for line in alt.strip().splitlines():
+                    splunk_lines.append(f"#   {line}")
             splunk_lines.append(f"cron_schedule = {cron}")
             splunk_lines.append(f"dispatch.earliest_time = -24h@h")
             splunk_lines.append(f"dispatch.latest_time = now")
