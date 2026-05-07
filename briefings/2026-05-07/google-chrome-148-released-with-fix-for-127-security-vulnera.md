@@ -10,12 +10,8 @@ Home Cyber Security News
 Google Chrome 148 Released with Fix for 127 Security Vulnerabilities – Update Now! 
 By Guru Baran 
 May 7, 2026 
-
-
-
-
 Google has officially promoted Chrome 148 to the stable channel for Windows, Mac, and Linux, rolling out version 148.0.7778.96 for Linux and 148.0.7778.96/97 for Windows and Mac, one of the most security-intensive releases in the browser’s recent history, packing 127 security fixes in a single update.
-Of the 127 vulnerabilities addressed, three carry a…
+Of the 127 vulnerabilities addressed, three carry a Critica…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,56 +35,12 @@ Of the 127 vulnerabilities addressed, three carry a…
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1189** — Drive-by Compromise
-- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Chrome < 148.0.7778.96 — endpoints exposed to CVE-2026-7896/7897/7898 (Blink/Mobile/Chromoting RCE)
-
-`UC_2_5` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-7896","CVE-2026-7897","CVE-2026-7898","CVE-2026-7899","CVE-2026-7900","CVE-2026-7901","CVE-2026-7902","CVE-2026-7936") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product
-| `drop_dm_object_name(Vulnerabilities)`
-| where like(vendor_product,"%Chrome%") OR like(signature,"%Chrome%")
-| stats values(cve) as cves values(severity) as severities min(firstSeen) as firstSeen max(lastSeen) as lastSeen by dest vendor_product
-| eval firstSeen=strftime(firstSeen,"%Y-%m-%dT%H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%dT%H:%M:%S")
-| sort 0 - lastSeen
-```
-
-**Defender KQL:**
-```kql
-// Hunt 1 — TVM CVE coverage for the Chrome 148 release
-let Chrome148Cves = dynamic(["CVE-2026-7896","CVE-2026-7897","CVE-2026-7898","CVE-2026-7899","CVE-2026-7900","CVE-2026-7901","CVE-2026-7902","CVE-2026-7936"]);
-let TvmHits = DeviceTvmSoftwareVulnerabilities
-    | where CveId in (Chrome148Cves)
-    | where SoftwareVendor =~ "google" and SoftwareName has "chrome"
-    | summarize CveList = make_set(CveId), MaxSeverity = max(VulnerabilitySeverityLevel),
-                RecommendedKb = any(RecommendedSecurityUpdate)
-              by DeviceId, DeviceName, OSPlatform, SoftwareName, SoftwareVersion;
-// Hunt 2 — fleet inventory below the patched build (catches devices not yet scored by TVM)
-let PatchedBuildParts = pack_array(148, 0, 7778, 96);
-let InvBelow = DeviceTvmSoftwareInventory
-    | where SoftwareVendor =~ "google" and SoftwareName has "chrome"
-    | extend P = split(SoftwareVersion, ".")
-    | extend Major = toint(P[0]), Minor = toint(P[1]), Build = toint(P[2]), Patch = toint(P[3])
-    | extend IsVulnerable = (Major < 148)
-        or (Major == 148 and Minor == 0 and Build < 7778)
-        or (Major == 148 and Minor == 0 and Build == 7778 and Patch < 96)
-    | where IsVulnerable
-    | project DeviceId, DeviceName, OSPlatform, SoftwareName, SoftwareVersion;
-InvBelow
-| join kind=leftouter TvmHits on DeviceId
-| project Timestamp = now(), DeviceName, OSPlatform, SoftwareName, InstalledVersion = SoftwareVersion,
-          PatchedVersion = "148.0.7778.96", CveList, MaxSeverity, RecommendedKb
-| order by MaxSeverity desc, DeviceName asc
-```
 
 ### Scheduled task created with suspicious image / encoded args
 
@@ -265,4 +217,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

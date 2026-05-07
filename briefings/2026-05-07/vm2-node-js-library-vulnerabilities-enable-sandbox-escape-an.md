@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node.exe spawning OS shell or LOLBin child — vm2 sandbox-escape RCE via child_process
 
-`UC_1_3` · phase: **exploit** · confidence: **High**
+`UC_3_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] vm2 sandbox-escape primitive strings in web traffic or node -e payloads
 
-`UC_1_4` · phase: **exploit** · confidence: **Medium**
+`UC_3_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — vm2 Node.js Library Vulnerabilities Enable Sandbox Escape and Arbitrary Code Exe
 
-`UC_1_2` · phase: **exploit** · confidence: **High**
+`UC_3_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

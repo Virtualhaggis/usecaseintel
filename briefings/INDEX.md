@@ -11,6 +11,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-07
 - [google chrome 148 released with fix for 127 security vulnera](./2026-05-07/google-chrome-148-released-with-fix-for-127-security-vulnera.md)
 - [massive 2 45b request ddos attack used 1 2 million ips to ev](./2026-05-07/massive-2-45b-request-ddos-attack-used-1-2-million-ips-to-ev.md)
+- [microsoft teams for android allow users to join third party ](./2026-05-07/microsoft-teams-for-android-allow-users-to-join-third-party-.md)
+- [new clickfix attack targets macos users with fake disk clean](./2026-05-07/new-clickfix-attack-targets-macos-users-with-fake-disk-clean.md)
 - [new femitbot network uses telegram mini apps to push crypto ](./2026-05-07/new-femitbot-network-uses-telegram-mini-apps-to-push-crypto-.md)
 - [new phishing attack weaponizing event invitations to steal l](./2026-05-07/new-phishing-attack-weaponizing-event-invitations-to-steal-l.md)
 - [new salat malware uses quic and websocket channels for steal](./2026-05-07/new-salat-malware-uses-quic-and-websocket-channels-for-steal.md)
@@ -18,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 
 ## 2026-05-06
-- [argo cd s serversidediff vulnerability enables kubernetes se](./2026-05-06/argo-cd-s-serversidediff-vulnerability-enables-kubernetes-se.md)
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
 - [cloudz rat abuses microsoft phone link to steal sms otps and](./2026-05-06/cloudz-rat-abuses-microsoft-phone-link-to-steal-sms-otps-and.md)
@@ -30,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
 - [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
 - [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
-- [member of prolific russian ransomware group sentenced to 102](./2026-05-06/member-of-prolific-russian-ransomware-group-sentenced-to-102.md)
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)

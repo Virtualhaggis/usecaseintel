@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Darkhub Tor hidden service onion address observed in DNS / proxy / web telemetry
 
-`UC_7_8` · phase: **c2** · confidence: **High**
+`UC_9_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ union isfuzzy=true
 
 ### [LLM] Email correspondence with Darkhub operator (darkhubhackers@protonmail.com / @DarkHubs0)
 
-`UC_7_9` · phase: **actions** · confidence: **High**
+`UC_9_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

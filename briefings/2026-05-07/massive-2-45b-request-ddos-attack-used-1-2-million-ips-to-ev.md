@@ -10,13 +10,9 @@ Home Cyber Security News
 Massive 2.45B-Request DDoS Attack Used 1.2 Million IPs to Evade Rate Limits 
 By Abinaya 
 May 7, 2026 
-
-
-
-
 Distributed Denial of Service (DDoS) campaign targeted a large-scale user-generated content platform, unleashing over 2.45 billion malicious requests in just five hours.
 Rather than relying on  brute-force methods , the attackers distributed traffic across 1.2 million unique IP addresses.
-This structural shift exposed a fundamental weakness in traditional rate-l…
+This structural shift exposed a fundamental weakness in traditional rate-limiting …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -33,12 +29,11 @@ This structural shift exposed a fundamental weakness in traditional rate-l…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1498.001** — Direct Network Flood
-- **T1499.002** — Service Exhaustion Flood
-- **T1090** — Proxy
-- **T1090.003** — Multi-hop Proxy
-- **T1498** — Network Denial of Service
-- **T1110.004** — Credential Stuffing
+- **T1498.001** — Network Denial of Service: Direct Network Flood
+- **T1499.002** — Endpoint Denial of Service: Service Exhaustion Flood
+- **T1583.003** — Acquire Infrastructure: Virtual Private Server
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1110.003** — Brute Force: Password Spraying
 
 ## Kill chain phases observed
 
@@ -46,61 +41,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Low-and-slow distributed HTTP flood — high IP fan-out with sub-1-req/9s per-IP cadence
+### [LLM] Distributed low-rate HTTP flood — massive aggregate RPS with sub-10 requests per source IP
 
-`UC_0_5` · phase: **actions** · confidence: **Medium**
+`UC_2_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as TotalRequests dc(Web.src) as DistinctSourceIPs from datamodel=Web.Web by _time span=5m Web.dest
-| `drop_dm_object_name("Web")`
-| eval AvgRequestsPerIP = round(TotalRequests / DistinctSourceIPs, 2)
-| where DistinctSourceIPs >= 10000 AND AvgRequestsPerIP < 5 AND TotalRequests > 50000
-| sort - _time
-| eval signature="Low-and-slow distributed flood: ".DistinctSourceIPs." IPs / ".TotalRequests." reqs / ".AvgRequestsPerIP." per IP"
+| tstats `summariesonly` count as TotalRequests, dc(Web.src) as DistinctSrcIPs from datamodel=Web where Web.action="allowed" by _time span=5m Web.dest Web.site
+| `drop_dm_object_name(Web)`
+| eval AvgReqPerIP = TotalRequests / DistinctSrcIPs
+| eval RPS = TotalRequests / 300
+``` 1,000,000 reqs / 5min ≈ 3,333 RPS sustained — 2.4% of the article's 136k sustained RPS, generous lower bound ```
+| where TotalRequests > 1000000 AND DistinctSrcIPs > 50000 AND AvgReqPerIP < 10
+| sort - _time, - TotalRequests
 ```
 
-### [LLM] Web/Auth traffic from 1337 Services GmbH (AS210558) anonymization infrastructure
+### [LLM] Inbound traffic from named privacy-friendly ASNs — 1337 Services GmbH (AS210558) / Church of Cyberology (AS215125)
 
-`UC_0_6` · phase: **actions** · confidence: **Medium**
+`UC_2_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as Hits values(Web.url) as URLs values(Web.http_user_agent) as UserAgents values(Web.http_method) as Methods from datamodel=Web.Web by Web.src Web.dest _time span=1h
-| `drop_dm_object_name("Web")`
-| where cidrmatch("2.58.56.0/24",src) OR cidrmatch("45.154.98.0/24",src) OR cidrmatch("194.26.192.0/24",src) OR cidrmatch("91.132.144.0/22",src)
-| stats sum(Hits) as Hits dc(URLs) as DistinctURLs values(Methods) as Methods values(UserAgents) as UserAgents by src dest
-| where Hits > 10
-| eval ASN="AS210558 - 1337 Services GmbH (anonymization)"
-| sort - Hits
+| tstats `summariesonly` count as Attempts,
+        dc(Authentication.user) as DistinctUsers,
+        dc(Authentication.src) as DistinctSrcIPs,
+        values(Authentication.action) as Outcomes
+        from datamodel=Authentication
+        where Authentication.src_asn IN (210558, 215125)
+        by _time span=1h Authentication.src_asn Authentication.app
+| `drop_dm_object_name(Authentication)`
+| where Attempts > 5
+| sort - _time, - Attempts
 ```
 
 **Defender KQL:**
 ```kql
-// Sweep Entra sign-ins for sources in 1337 Services GmbH (AS210558)
-// known prefixes — anonymization infra named in DataDome's 2.45B-request DDoS report.
-let AS210558_prefixes = dynamic([
-    "2.58.56.0/24",      // verified via IPinfo (2.58.56.25)
-    "45.154.98.0/24",    // verified via CleanTalk
-    "194.26.192.0/24",   // verified via IPinfo (194.26.192.189)
-    "91.132.144.0/22"
-]);
+// Defender XDR sign-in table doesn't expose ASN as a column, but IsAnonymousProxy is the closest signal
+// Use this as a corroborator alongside the Sentinel ASN query — surface anonymisation-flagged sign-ins
 AADSignInEventsBeta
-| where Timestamp > ago(24h)
-| where ipv4_is_in_any_range(IPAddress, AS210558_prefixes)
-| summarize
-    Attempts       = count(),
-    Failures       = countif(ErrorCode != 0),
-    Successes      = countif(ErrorCode == 0),
-    DistinctUsers  = dcount(AccountUpn),
-    DistinctIPs    = dcount(IPAddress),
-    UserSample     = make_set(AccountUpn, 25),
-    IPSample       = make_set(IPAddress, 25),
-    AppSample      = make_set(Application, 10),
-    UASample       = make_set(UserAgent, 10)
-    by bin(Timestamp, 1h)
+| where Timestamp > ago(7d)
+| where IsAnonymousProxy == true
+| summarize Attempts = count(),
+            Failed   = countif(ErrorCode != 0),
+            Succeeded = countif(ErrorCode == 0),
+            DistinctUsers = dcount(AccountUpn),
+            DistinctIPs   = dcount(IPAddress),
+            SampleUPNs    = make_set(AccountUpn, 25),
+            SampleIPs     = make_set(IPAddress, 25)
+            by bin(Timestamp, 1h), Country
 | where Attempts > 5
-| extend Note = "Source IPs reside in AS210558 (1337 Services GmbH) — anonymization VPN/proxy named in DataDome 2.45B-req DDoS report"
 | order by Timestamp desc
 ```
 
@@ -307,4 +296,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
