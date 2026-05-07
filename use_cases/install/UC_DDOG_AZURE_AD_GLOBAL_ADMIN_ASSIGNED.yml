@@ -1,0 +1,19 @@
+id: UC_DDOG_AZURE_AD_GLOBAL_ADMIN_ASSIGNED
+title: Azure AD member assigned Global Administrator role
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+- id: T1548
+  name: Abuse Elevation Control Mechanism
+description: |-
+  A user just got the Azure AD Global Administrator role — top-of-tenant privilege. Datadog default 'Azure AD member assigned Global Administrator role'.
+datadog_query: |-
+  source:azure.activeDirectory
+  @evt.name:"Add member to role"
+  @properties.targetResources.modifiedProperties.newValue:*"Global Administrator"*

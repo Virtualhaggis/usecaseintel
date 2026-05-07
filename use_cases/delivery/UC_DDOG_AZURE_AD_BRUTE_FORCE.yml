@@ -1,0 +1,19 @@
+id: UC_DDOG_AZURE_AD_BRUTE_FORCE
+title: Azure AD brute-force login
+kill_chain: delivery
+confidence: Medium
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+- id: T1078.004
+  name: Cloud Accounts
+description: |-
+  Multiple failed Azure AD sign-ins against the same UPN within a short window — credential spray / brute force. Datadog default 'Azure AD brute force login'.
+datadog_query: |-
+  source:azure.activeDirectory @evt.name:"Sign-in activity"
+  @properties.status.errorCode:(50126 OR 50053 OR 50055 OR 50057)
+  -@user.userPrincipalName:(*svc-* OR *automation*)

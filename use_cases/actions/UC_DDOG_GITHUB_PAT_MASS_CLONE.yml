@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_PAT_MASS_CLONE
+title: GitHub personal access token cloning many repositories
+kill_chain: actions
+confidence: Medium
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- datadog
+mitre_attack:
+- id: T1555
+  name: Credentials from Password Stores
+- id: T1552
+  name: Unsecured Credentials
+description: |-
+  PAT used to clone an unusual number of repositories — credential theft + source-code exfil. Datadog default 'GitHub personal access token used to clone repositories'.
+datadog_query: |-
+  source:github @evt.name:git.clone @actor.type:PAT

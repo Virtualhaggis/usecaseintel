@@ -1,0 +1,19 @@
+id: UC_DDOG_AWS_S3_BUCKET_PUBLIC
+title: AWS S3 bucket ACL / policy made public
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+- id: T1190
+  name: Exploit Public-Facing Application
+description: |-
+  S3 bucket ACL or policy modified to allow access from AllUsers / AllAuthenticatedUsers, or PublicAccessBlock removed. Either misconfig or intentional data-exposure prep. Datadog default 'AWS S3 Bucket ACL made public'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(PutBucketAcl OR PutBucketPolicy OR DeletePublicAccessBlock OR DeleteBucketPolicy)
+  (@requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllUsers* OR @requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllAuthenticatedUsers*)

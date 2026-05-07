@@ -1,0 +1,18 @@
+id: UC_DDOG_AWS_KMS_KEY_DELETION
+title: AWS KMS key deleted or scheduled for deletion
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+- id: T1531
+  name: Account Access Removal
+description: |-
+  KMS key scheduled for deletion or deleted outright — disables decryption of everything the key wrapped (S3, EBS, RDS). Ransomware / insider-impact pattern. Datadog default 'AWS KMS key deleted or scheduled for deletion'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(ScheduleKeyDeletion OR DisableKey OR DeleteAlias)

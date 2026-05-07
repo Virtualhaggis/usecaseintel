@@ -1,0 +1,19 @@
+id: UC_DDOG_AZURE_AD_MFA_DISABLED
+title: Azure AD MFA disabled for a user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+- id: T1098
+  name: Account Manipulation
+description: |-
+  MFA was turned off for a user — adversary post-compromise persistence step (remove the second factor before re-using the credential). Datadog default 'Azure AD MFA disabled'.
+datadog_query: |-
+  source:azure.activeDirectory
+  @evt.name:("Disable Strong Authentication" OR "Update user")
+  @properties.targetResources.modifiedProperties.displayName:StrongAuthenticationRequirement

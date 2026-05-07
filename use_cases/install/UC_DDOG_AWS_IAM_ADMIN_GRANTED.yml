@@ -1,0 +1,19 @@
+id: UC_DDOG_AWS_IAM_ADMIN_GRANTED
+title: AWS IAM AdministratorAccess policy applied to a user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+- id: T1548
+  name: Abuse Elevation Control Mechanism
+description: |-
+  An IAM user / group / role just got AdministratorAccess — direct admin grant rather than going through the org's standard provisioning path. Datadog default 'AWS IAM AdministratorAccess policy was applied to a user'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(AttachUserPolicy OR AttachGroupPolicy OR AttachRolePolicy)
+  @requestParameters.policyArn:*Administrator*

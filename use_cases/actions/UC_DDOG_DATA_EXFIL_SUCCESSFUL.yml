@@ -1,0 +1,18 @@
+id: UC_DDOG_DATA_EXFIL_SUCCESSFUL
+title: Application data exfiltration successful
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1567
+  name: Exfiltration Over Web Service
+description: |-
+  Application telemetry showing a large-volume / sensitive-attribute response served to an external endpoint — data exfil. Datadog default 'Data exfiltration successful'.
+datadog_query: |-
+  source:application_logs @evt.name:data_export @evt.outcome:success
+  -@network.client.geoip.country.iso_code:<your-business-country>

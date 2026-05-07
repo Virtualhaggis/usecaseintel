@@ -1,0 +1,18 @@
+id: UC_DDOG_AWS_ROOT_ACTIVITY
+title: AWS root account activity (any action)
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078.004
+  name: Cloud Accounts
+- id: T1087.004
+  name: Cloud Account
+description: |-
+  Any console / API action by the AWS root identity. Steady-state should be ZERO; every hit is an investigation. Datadog default 'AWS root account activity'.
+datadog_query: |-
+  source:cloudtrail @userIdentity.type:Root @evt.outcome:success
+  -@evt.name:(GetCallerIdentity OR DescribeAccountAttributes)

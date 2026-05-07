@@ -1,0 +1,17 @@
+id: UC_DDOG_AWS_BRUTE_FORCE_CONSOLE_LOGIN
+title: AWS brute-force ConsoleLogin then AssumeRole
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+- id: T1550.001
+  name: Application Access Token
+description: |-
+  Failed ConsoleLogin attempts against the same identity correlated with a successful AssumeRole call shortly after — credential-spray landing on a privileged role. Datadog default 'Brute forced ConsoleLogin event correlates with assumed role'.
+datadog_query: |-
+  source:cloudtrail (@evt.name:ConsoleLogin @evt.outcome:failure) OR (@evt.name:AssumeRole @evt.outcome:success)

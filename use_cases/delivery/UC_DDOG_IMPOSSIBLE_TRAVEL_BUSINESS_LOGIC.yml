@@ -1,0 +1,18 @@
+id: UC_DDOG_IMPOSSIBLE_TRAVEL_BUSINESS_LOGIC
+title: Impossible travel from application business-logic event
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1550
+  name: Use Alternate Authentication Material
+- id: T1078
+  name: Valid Accounts
+description: |-
+  Successful authentication for the same user from geographically distant locations within a window that's physically impossible to traverse. Datadog default 'Impossible travel observed from business logic event'.
+datadog_query: |-
+  source:application_logs @usr.id:* @evt.outcome:success
+  @network.client.geoip.country.iso_code:*

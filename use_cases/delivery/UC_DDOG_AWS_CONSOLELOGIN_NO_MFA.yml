@@ -1,0 +1,19 @@
+id: UC_DDOG_AWS_CONSOLELOGIN_NO_MFA
+title: AWS Console login without MFA + impossible travel
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078
+  name: Valid Accounts
+- id: T1550
+  name: Use Alternate Authentication Material
+description: |-
+  AWS ConsoleLogin events for an identity that didn't use MFA, where the same principal also signed in from a geographically distant location within a tight window (impossible travel). Mirrors Datadog's default rule 'AWS ConsoleLogin without MFA triggered Impossible Travel scenario'.
+datadog_query: |-
+  source:cloudtrail @evt.name:ConsoleLogin @evt.outcome:success
+  @additionalEventData.MFAUsed:No
+  -@userIdentity.userName:(*break-glass* OR *root)

@@ -1,0 +1,15 @@
+id: UC_DDOG_API_ADMIN_NO_AUTH
+title: Authentication not detected on admin API endpoint
+kill_chain: delivery
+confidence: High
+tier: hunting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+description: |-
+  Admin API route serving 2xx responses without an Authorization header or session cookie — exposed admin surface. Datadog default 'Authentication not detected on admin endpoint'.
+datadog_query: |-
+  source:api_findings @category:authentication @finding.type:(missing_auth OR no_authentication OR unauthenticated_admin)

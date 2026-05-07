@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_BRANCH_PROTECTION_DISABLED
+title: GitHub branch protection disabled with force-push bypass
+kill_chain: install
+confidence: Medium
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562
+  name: Impair Defenses
+- id: T1078
+  name: Valid Accounts
+description: |-
+  Branch protection rules removed and force-push allowed — adversary clearing the guard rails to overwrite history or push malicious code. Datadog default 'GitHub branch protection disabled with force push bypass'.
+datadog_query: |-
+  source:github @evt.name:(branch_protection_rule.destroy OR protected_branch.policy_override)

@@ -1,0 +1,17 @@
+id: UC_DDOG_LOG4SHELL_RCE
+title: Log4Shell RCE attempts (CVE-2021-44228)
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+description: |-
+  JNDI-lookup payloads (${jndi:ldap://...} / ${jndi:rmi://...}) in HTTP headers or request bodies — Log4Shell exploitation attempts. Datadog default 'Log4shell RCE attempts (CVE-2021-44228)'.
+datadog_query: |-
+  source:waf_logs (@http.useragent:*jndi:* OR @http.url:*jndi%3A* OR @http.referer:*jndi:* OR @http.request.body:*jndi:*)

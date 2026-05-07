@@ -1,0 +1,17 @@
+id: UC_DDOG_API_RESOURCE_ABUSE
+title: Excessive resource consumption of third-party API
+kill_chain: actions
+confidence: Medium
+tier: hunting
+fp_rate_estimate: medium
+implementations:
+- datadog
+mitre_attack:
+- id: T1496
+  name: Resource Hijacking
+- id: T1190
+  name: Exploit Public-Facing Application
+description: |-
+  Abnormal request volume to a third-party API endpoint — resource abuse, scraping, or DoS-staging behaviour. Datadog default 'Excessive resource consumption of third-party API'.
+datadog_query: |-
+  source:application_logs @http.url_details.host:* -@http.url_details.host:(*your-domain*)
