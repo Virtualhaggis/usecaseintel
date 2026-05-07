@@ -10,12 +10,8 @@ Home Cyber Security News
 New FEMITBOT Network Uses Telegram Mini Apps to Push Crypto Fraud and Android Malware 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 A new and highly organized fraud network called FEMITBOT has emerged, exploiting Telegram’s Mini App feature to run large-scale cryptocurrency scams and push malicious Android software onto users worldwide. 
-The campaign, which came to light in April 2026, operates through fake apps designed to look like real cryptocurrency exchanges, strea…
+The campaign, which came to light in April 2026, operates through fake apps designed to look like real cryptocurrency exchanges, streaming ser…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -45,10 +41,8 @@ The campaign, which came to light in April 2026, operates through fake apps desi
 - **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1583.001** — Acquire Infrastructure: Domains
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1608.001** — Stage Capabilities: Upload Malware
-- **T1659** — Content Injection
 - **T1583.006** — Acquire Infrastructure: Web Services
+- **T1056.003** — Input Capture: Web Portal Capture
 
 ## Kill chain phases observed
 
@@ -56,101 +50,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Endpoint connection to named FEMITBOT phishing/malware-delivery domains
+### [LLM] Outbound connection to FEMITBOT crypto-fraud phishing domains
 
 `UC_2_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.src) as src values(Web.user) as user from datamodel=Web.Web where Web.dest IN ("zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one","*.zerocap.vip","*.spiderpool.app","*.btcaimining.xyz","*.btcpoolok.cloud","*.cineotv.one") by Web.dest Web.src Web.user
-| `drop_dm_object_name(Web)`
-| append [
-  | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as queries from datamodel=Network_Resolution.DNS where DNS.query IN ("zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one","*.zerocap.vip","*.spiderpool.app","*.btcaimining.xyz","*.btcpoolok.cloud","*.cineotv.one") by DNS.query DNS.src
-  | `drop_dm_object_name(DNS)`
-]
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.http_user_agent) as user_agent from datamodel=Web where Web.url IN ("*zerocap.vip*","*spiderpool.app*","*btcaimining.xyz*","*btcpoolok.cloud*","*cineotv.one*") OR Web.dest IN ("zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one") by Web.src Web.dest Web.action | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query from datamodel=Network_Resolution where DNS.query IN ("zerocap.vip","*.zerocap.vip","spiderpool.app","*.spiderpool.app","btcaimining.xyz","*.btcaimining.xyz","btcpoolok.cloud","*.btcpoolok.cloud","cineotv.one","*.cineotv.one") by DNS.src | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let FemitbotDomains = dynamic(["zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one"]);
-let NetHits = DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any (FemitbotDomains)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DeviceNetworkEvents";
-let DnsHits = DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType == "DnsQueryResponse"
-| extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where Q has_any (FemitbotDomains)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=Q, RemoteIP="", RemotePort=0, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DnsQueryResponse";
-union isfuzzy=true NetHits, DnsHits
-| order by Timestamp desc
-```
-
-### [LLM] Android APK file dropped to Windows endpoint sourced from FEMITBOT domain
-
-`UC_2_10` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name="*.apk" OR Endpoint.Filesystem.file_name="*.APK") by Endpoint.Filesystem.dest Endpoint.Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| join type=inner dest [
-    | tstats summariesonly=t count from datamodel=Web.Web where Web.dest IN ("zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one","*.zerocap.vip","*.spiderpool.app","*.btcaimining.xyz","*.btcpoolok.cloud","*.cineotv.one") by Web.src Web.dest Web.url
-    | `drop_dm_object_name(Web)`
-    | rename src as dest, dest as femitbot_host
-    | fields dest femitbot_host url
-]
-| convert ctime(firstTime) ctime(lastTime)
-| table firstTime lastTime dest user process file_name path femitbot_host url
-```
-
-**Defender KQL:**
-```kql
-let FemitbotDomains = dynamic(["zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one"]);
-let FemitbotImpersonatedNames = dynamic(["bbc","cinetv","cineo","nvidia","coreweave","claro","binance","netflix","spiderpool","zerocap","btcmining","aimining"]);
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FileName endswith ".apk"
-| where FileOriginUrl has_any (FemitbotDomains)
-   or FileOriginReferrerUrl has_any (FemitbotDomains)
-   or (FileName has_any (FemitbotImpersonatedNames) and isnotempty(FileOriginUrl))
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-          FileName, FolderPath, SHA256,
-          FileOriginUrl, FileOriginReferrerUrl, FileOriginIP,
-          DownloaderProcess=InitiatingProcessFileName,
-          DownloaderCmd=InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### [LLM] FEMITBOT backend fingerprint - /api/public/init or /api/public/telegramLogin URI hits
-
-`UC_2_11` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as ua values(Web.src) as src values(Web.user) as user from datamodel=Web.Web where (Web.url="*/api/public/telegramLogin*" OR Web.url="*/api/public/init*") by Web.dest Web.src
-| `drop_dm_object_name(Web)`
-| where match(urls,"(?i)/api/public/(init|telegramLogin)")
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// Defender DeviceNetworkEvents.RemoteUrl typically holds host only and not the URI path,
-// so this hunt is best run against proxy/WAF logs in Sentinel. As a fallback, surface any
-// Defender-side hits where the URL telemetry happens to include the path.
-let FemitbotPaths = dynamic(["/api/public/telegramLogin","/api/public/init"]);
+let femitbot_domains = dynamic(["zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one"]);
+let femitbot_url_substrings = dynamic(["zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any (FemitbotPaths)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteIP, RemoteUrl, RemotePort
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected","DnsQueryResponse")
+| where RemoteUrl has_any (femitbot_url_substrings)
+   or tolower(RemoteUrl) endswith_cs "zerocap.vip"
+   or tolower(RemoteUrl) endswith_cs "spiderpool.app"
+   or tolower(RemoteUrl) endswith_cs "btcaimining.xyz"
+   or tolower(RemoteUrl) endswith_cs "btcpoolok.cloud"
+   or tolower(RemoteUrl) endswith_cs "cineotv.one"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| union (
+    DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q in (femitbot_domains) or Q endswith ".zerocap.vip" or Q endswith ".spiderpool.app" or Q endswith ".btcaimining.xyz" or Q endswith ".btcpoolok.cloud" or Q endswith ".cineotv.one"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=Q, RemoteIP=tostring(""), RemotePort=int(0), ActionType
+  )
 | order by Timestamp desc
+```
+
+### [LLM] FEMITBOT API fingerprint hunt - /api/public/init or /api/public/telegramLogin URI access
+
+`UC_2_10` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.http_user_agent) as user_agent values(Web.http_method) as method values(Web.status) as status from datamodel=Web where (Web.url="*/api/public/init*" OR Web.url="*/api/public/telegramLogin*") AND NOT (Web.dest IN ("telegram.org","*.telegram.org","web.telegram.org")) by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | where count >= 1 | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+// FEMITBOT shared-kit URI fingerprint - catches rotated infra beyond the 5 named domains
+let known_femitbot = dynamic(["zerocap.vip","spiderpool.app","btcaimining.xyz","btcpoolok.cloud","cineotv.one"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("HttpConnectionInspected","ConnectionSuccess","ConnectionAttempt")
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has "/api/public/init" or RemoteUrl has "/api/public/telegramLogin"
+| extend HostMatchesKnown = RemoteUrl has_any (known_femitbot)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(),
+            Devices=make_set(DeviceName, 50), Users=make_set(InitiatingProcessAccountName, 50),
+            SampleUrls=make_set(RemoteUrl, 10), SampleProcs=make_set(InitiatingProcessFileName, 10)
+            by RemoteIP, HostMatchesKnown
+| order by FirstSeen desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -448,4 +405,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

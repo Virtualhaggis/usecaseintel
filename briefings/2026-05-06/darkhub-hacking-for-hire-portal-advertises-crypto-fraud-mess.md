@@ -10,12 +10,8 @@ Home Cyber Security News
 Darkhub Hacking-for-Hire Portal Advertises Crypto Fraud, Message Interception, and Monitoring 
 By Tushar Subhra Dutta 
 May 6, 2026 
-
-
-
-
 A dark web platform calling itself Darkhub has surfaced on the Tor network, openly advertising hacking-for-hire services to anyone willing to pay. 
-The platform presents itself as a one-stop shop for illegal cyber activity, with offerings ranging from breaking into social media accounts to intercepting private messages and manipulat…
+The platform presents itself as a one-stop shop for illegal cyber activity, with offerings ranging from breaking into social media accounts to intercepting private messages and manipulating fina…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,11 +34,10 @@ The platform presents itself as a one-stop shop for illegal cyber activity, with
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1090.003** — Multi-hop Proxy
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090.003** — Proxy: Multi-hop Proxy
-- **T1583.003** — Acquire Infrastructure: Virtual Private Server
-- **T1585.002** — Establish Accounts: Email Accounts
-- **T1589.002** — Gather Victim Identity Information: Email Addresses
+- **T1585** — Establish Accounts
+- **T1589** — Gather Victim Identity Information
 
 ## Kill chain phases observed
 
@@ -50,70 +45,67 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Darkhub Tor hidden service URL referenced in endpoint or network telemetry
+### [LLM] Darkhub Tor hidden service onion address observed in DNS / proxy / web telemetry
 
-`UC_4_8` · phase: **recon** · confidence: **Medium**
+`UC_4_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Web where Web.url="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*" by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)`] | append [| tstats summariesonly=t count from datamodel=Network_Resolution where Network_Resolution.query="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*" by Network_Resolution.src Network_Resolution.query | `drop_dm_object_name(Network_Resolution)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (Network_Resolution.query="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*") by Network_Resolution.src Network_Resolution.query Network_Resolution.dest | `drop_dm_object_name(Network_Resolution)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*" OR Web.dest="*7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let onion = "7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd";
+let DarkhubOnion = "7comssbegmmbxdi7nu7obids2urmkqnmxao5ojbesga3hxmns2yjnxqd";
 union isfuzzy=true
-  ( DeviceProcessEvents
-      | where Timestamp > ago(30d)
-      | where ProcessCommandLine has onion or InitiatingProcessCommandLine has onion
-      | project Timestamp, Source="Process", DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName ),
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where RemoteUrl has onion
-      | project Timestamp, Source="Network", DeviceName, AccountName=InitiatingProcessAccountName, FileName=InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, RemoteUrl, RemoteIP ),
-  ( DeviceFileEvents
-      | where Timestamp > ago(30d)
-      | where FileName has onion or FolderPath has onion
-      | project Timestamp, Source="File", DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName ),
-  ( DeviceEvents
-      | where Timestamp > ago(30d)
-      | where ActionType == "DnsQueryResponse"
-      | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-      | where Q has onion
-      | project Timestamp, Source="DNS", DeviceName, Q, InitiatingProcessFileName )
+  (
+    DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName has DarkhubOnion
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=QueryName, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DNS"
+  ),
+  (
+    DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has DarkhubOnion
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="Network"
+  )
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound contact to Darkhub operator ProtonMail / Telegram handle
+### [LLM] Email correspondence with Darkhub operator (darkhubhackers@protonmail.com / @DarkHubs0)
 
-`UC_4_9` · phase: **recon** · confidence: **Medium**
+`UC_4_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where (All_Email.src_user="darkhubhackers@protonmail.com" OR All_Email.recipient="darkhubhackers@protonmail.com" OR All_Email.subject="*DarkHubs0*" OR All_Email.subject="*darkhub*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.message_id | `drop_dm_object_name(All_Email)` | append [| tstats summariesonly=t count from datamodel=Web where (Web.url="*darkhubhackers*" OR Web.url="*DarkHubs0*" OR Web.url="*t.me/DarkHubs0*") by Web.src Web.user Web.url | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (Email.src_user="darkhubhackers@protonmail.com" OR Email.recipient="darkhubhackers@protonmail.com" OR Email.message="*darkhubhackers@protonmail.com*" OR Email.message="*@DarkHubs0*" OR Email.message="*t.me/DarkHubs0*" OR Email.subject="*darkhubhackers*") by Email.src_user Email.recipient Email.subject Email.message_id | `drop_dm_object_name(Email)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let operator_email = "darkhubhackers@protonmail.com";
-let telegram_handle = "DarkHubs0";
+let DarkhubEmail = "darkhubhackers@protonmail.com";
+let DarkhubTg = dynamic(["@DarkHubs0", "t.me/DarkHubs0", "telegram.me/DarkHubs0"]);
 union isfuzzy=true
-  ( EmailEvents
-      | where Timestamp > ago(30d)
-      | where SenderFromAddress =~ operator_email
-           or SenderMailFromAddress =~ operator_email
-           or RecipientEmailAddress =~ operator_email
-           or Subject has telegram_handle
-           or Subject has "darkhub"
-      | project Timestamp, Source="Email", NetworkMessageId, EmailDirection, DeliveryAction, SenderFromAddress, RecipientEmailAddress, Subject ),
-  ( DeviceProcessEvents
-      | where Timestamp > ago(30d)
-      | where ProcessCommandLine has operator_email or ProcessCommandLine has telegram_handle
-      | project Timestamp, Source="Process", DeviceName, AccountName, FileName, ProcessCommandLine ),
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where RemoteUrl has "t.me/DarkHubs0" or RemoteUrl has "darkhubhackers"
-      | project Timestamp, Source="Network", DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName )
+  (
+    EmailEvents
+    | where Timestamp > ago(30d)
+    | where SenderFromAddress =~ DarkhubEmail
+         or SenderMailFromAddress =~ DarkhubEmail
+         or RecipientEmailAddress =~ DarkhubEmail
+         or Subject has "darkhubhackers"
+         or Subject has "DarkHubs0"
+    | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction, Source="EmailEvents"
+  ),
+  (
+    EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | where Url has_any (DarkhubTg) or Url has "darkhubhackers"
+    | join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction) on NetworkMessageId
+    | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction, IndicatorUrl=Url, Source="EmailUrlInfo"
+  )
 | order by Timestamp desc
 ```
 
@@ -405,4 +397,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

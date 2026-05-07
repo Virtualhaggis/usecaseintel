@@ -10,12 +10,8 @@ Home Cyber Security News
 New Phishing Attack Weaponizing Event Invitations to Steal Login Credentials 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 A large-scale phishing campaign has been quietly targeting organizations across the United States, using fake event invitations as bait. Rather than sending a suspicious attachment or an obvious scam link, attackers lure victims with what appears to be a legitimate party or gathering invitation. 
-Once clicked, those links lead to pages designed to s…
+Once clicked, those links lead to pages designed to steal log…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,8 +37,8 @@ Once clicked, those links lead to pages designed to s…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
 - **T1056.003** — Input Capture: Web Portal Capture
-- **T1111** — Multi-Factor Authentication Interception
 - **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
@@ -51,101 +47,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Event-Invitation Phishing Page Fingerprint: /blocked.html + /favicon.ico + /Image/<brand>.png Chain
+### [LLM] Event-invitation phishing kit URL signature: /blocked.html + /Image/<brand>.png chain
 
 `UC_0_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true values(Web.url) as urls count from datamodel=Web where (Web.url="*/blocked.html" OR Web.url="*/favicon.ico" OR Web.url="*/Image/office360.png" OR Web.url="*/Image/office.png" OR Web.url="*/Image/yahoo.png" OR Web.url="*/Image/google.png" OR Web.url="*/Image/aol.png" OR Web.url="*/Image/email.png") by Web.src, Web.dest, _time span=10m | `drop_dm_object_name(Web)` | eval url_str=mvjoin(urls, "|") | eval has_blocked=if(match(url_str, "/blocked\.html"),1,0) | eval has_favicon=if(match(url_str, "/favicon\.ico"),1,0) | eval has_brand=if(match(url_str, "/Image/(office360|office|yahoo|google|aol|email)\.png"),1,0) | where has_blocked=1 AND has_favicon=1 AND has_brand=1 | table _time, src, dest, urls
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.site) as sites FROM datamodel=Web WHERE (Web.url="*/blocked.html" OR Web.url="*/Image/office360.png" OR Web.url="*/Image/office.png" OR Web.url="*/Image/yahoo.png" OR Web.url="*/Image/google.png" OR Web.url="*/Image/aol.png" OR Web.url="*/Image/email.png") BY Web.src Web.user _time span=10m | `drop_dm_object_name(Web)` | eval url_str=mvjoin(urls,"|") | where match(url_str,"/blocked\.html") AND match(url_str,"/Image/(office360|office|yahoo|google|aol|email)\.png") | search NOT sites IN ("*.microsoft.com","*.google.com","*.yahoo.com","*.aol.com") | convert ctime(firstTime) ctime(lastTime) | table firstTime, lastTime, src, user, sites, urls
 ```
 
 **Defender KQL:**
 ```kql
-// Event-invitation phish-kit URL fingerprint — three-leg request chain on same dest in 10m window
-let LookbackDays = 7d;
-let WindowMinutes = 10m;
+let Window = 10m;
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
+| where Timestamp > ago(7d)
 | where isnotempty(RemoteUrl)
-// Pre-filter to the kit's known paths (cheap term-aligned matches)
-| where RemoteUrl has_any ("/blocked.html","/favicon.ico","/Image/office360.png","/Image/office.png","/Image/yahoo.png","/Image/google.png","/Image/aol.png","/Image/email.png")
-| extend Host = tostring(parse_url(RemoteUrl).Host)
-| where isnotempty(Host)
-// Bucket per device + destination host in 10-minute windows
-| summarize Urls = make_set(RemoteUrl, 50),
-            Hits = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp)
-            by DeviceId, DeviceName, Host, bin(Timestamp, WindowMinutes)
-| extend UrlBlob = strcat_array(Urls, "|")
-| where UrlBlob has "/blocked.html"
-     and UrlBlob has "/favicon.ico"
-     and UrlBlob matches regex @"/Image/(office360|office|yahoo|google|aol|email)\.png"
-| project FirstSeen, LastSeen, DeviceName, Host, Hits, Urls
+| where RemoteUrl has_any ("/blocked.html","/Image/office360.png","/Image/office.png","/Image/yahoo.png","/Image/google.png","/Image/aol.png","/Image/email.png")
+| extend Bucket = bin(Timestamp, Window),
+         Domain = tolower(extract(@"https?://([^/]+)/", 1, RemoteUrl))
+| summarize
+    HasBlocked  = countif(RemoteUrl has "/blocked.html"),
+    HasBrandImg = countif(RemoteUrl has_any ("/Image/office360.png","/Image/office.png","/Image/yahoo.png","/Image/google.png","/Image/aol.png","/Image/email.png")),
+    UrlSamples  = make_set(RemoteUrl, 25),
+    Domains     = make_set(Domain, 5),
+    FirstSeen   = min(Timestamp),
+    LastSeen    = max(Timestamp)
+    by DeviceId, DeviceName, InitiatingProcessFileName, Bucket
+| where HasBlocked >= 1 and HasBrandImg >= 1   // both halves of the campaign request chain in one window
+| where not(Domains has_any ("microsoft.com","google.com","yahoo.com","aol.com","office.com"))
+| project FirstSeen, LastSeen, DeviceName, InitiatingProcessFileName, Domains, UrlSamples
 | order by FirstSeen desc
 ```
 
-### [LLM] RMM Installer (ScreenConnect/ConnectWise/LogMeIn Rescue/Datto/ITarian) Dropped From Browser Visit to Event-Themed Lure
+### [LLM] Phishing kit visitor-ID exfil to /check_telegram_updates.php
 
-`UC_0_10` · phase: **install** · confidence: **Medium**
+`UC_0_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, values(Endpoint.Filesystem.file_path) as path, values(Endpoint.Filesystem.process_name) as proc, values(Endpoint.Filesystem.file_origin_url) as origin from datamodel=Endpoint.Filesystem where (Endpoint.Filesystem.file_name="ScreenConnect.ClientSetup.exe" OR Endpoint.Filesystem.file_name="ScreenConnect.ClientService.exe" OR Endpoint.Filesystem.file_name="ConnectWiseControl.ClientSetup.exe" OR Endpoint.Filesystem.file_name="ConnectWiseControl.exe" OR Endpoint.Filesystem.file_name="LMI_Rescue.exe" OR Endpoint.Filesystem.file_name="LMI-Rescue*.exe" OR Endpoint.Filesystem.file_name="DattoRMM*.exe" OR Endpoint.Filesystem.file_name="AEM*.exe" OR Endpoint.Filesystem.file_name="ITarian*.exe" OR Endpoint.Filesystem.file_name="Comodo*RMM*.exe") (Endpoint.Filesystem.process_name="chrome.exe" OR Endpoint.Filesystem.process_name="msedge.exe" OR Endpoint.Filesystem.process_name="firefox.exe" OR Endpoint.Filesystem.process_name="brave.exe" OR Endpoint.Filesystem.process_name="outlook.exe") by Endpoint.Filesystem.dest, Endpoint.Filesystem.user, Endpoint.Filesystem.file_name, _time | `drop_dm_object_name(Endpoint.Filesystem)` | search origin IN ("*festiveparty*","*getceptionparty*","*celebratieinvitiee*","*party*","*event*","*invit*","*celebrat*","*festive*","*.de/*")
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user) as user values(Web.http_method) as method FROM datamodel=Web WHERE (Web.url="*/check_telegram_updates.php*" OR (Web.url="*/pass.php*" AND Web.url="*/mlog.php*")) BY Web.src Web.site | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | table firstTime, lastTime, src, site, user, urls, method
 ```
 
 **Defender KQL:**
 ```kql
-// RMM installer dropped by browser with origin URL on event-themed/.de phishing host
-let LookbackDays = 7d;
-let RmmFiles = dynamic(["ScreenConnect.ClientSetup","ScreenConnect.ClientService","ConnectWiseControl","LMI_Rescue","LMI-Rescue","DattoRMM","AEMAgent","ITarian","Comodo"]);
-let KnownPhishHosts = dynamic(["festiveparty.us","getceptionparty.de","celebratieinvitiee.de"]);
-DeviceFileEvents
-| where Timestamp > ago(LookbackDays)
-| where ActionType == "FileCreated"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","outlook.exe")
-| where FileName has_any (RmmFiles)
-     or FileName matches regex @"(?i)^(screenconnect|connectwise|logmein|lmi[-_]?rescue|datto|itarian|comodo).*\.(exe|msi)$"
-| where isnotempty(FileOriginUrl)
-| extend OriginHost = tolower(tostring(parse_url(FileOriginUrl).Host))
-| where OriginHost in (KnownPhishHosts)
-     or OriginHost endswith ".de"
-     or OriginHost has_any ("party","event","invit","celebrat","festive","gathering")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, FileName, FolderPath,
-          FileOriginUrl, FileOriginReferrerUrl, OriginHost, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Endpoint Beacon to Event-Phish Credential/OTP Exfil PHP Endpoints (/pass.php /mlog.php /processmail.php /process.php /check_telegram_updates
-
-`UC_0_11` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(Web.url) as urls, values(Web.http_method) as methods from datamodel=Web where (Web.url="*/pass.php" OR Web.url="*/mlog.php" OR Web.url="*/processmail.php" OR Web.url="*/process.php" OR Web.url="*/check_telegram_updates.php") by Web.src, Web.user, Web.dest, _time span=5m | `drop_dm_object_name(Web)` | eval endpoint_type=case(match(mvjoin(urls,"|"),"/pass\.php|/mlog\.php"),"google_creds", match(mvjoin(urls,"|"),"/processmail\.php"),"non_google_creds", match(mvjoin(urls,"|"),"/process\.php"),"otp_submit", match(mvjoin(urls,"|"),"/check_telegram_updates\.php"),"visitor_beacon") | table _time, src, user, dest, endpoint_type, urls, methods
-```
-
-**Defender KQL:**
-```kql
-// Hits to the event-phish kit's credential/OTP exfil PHP endpoints
-let LookbackDays = 7d;
-let ExfilPaths = dynamic(["/pass.php","/mlog.php","/processmail.php","/process.php","/check_telegram_updates.php"]);
+let Window = 10m;
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
+| where Timestamp > ago(7d)
 | where isnotempty(RemoteUrl)
-| where RemoteUrl has_any (ExfilPaths)
-| extend Host = tostring(parse_url(RemoteUrl).Host)
-| extend EndpointType = case(
-    RemoteUrl has "/pass.php" or RemoteUrl has "/mlog.php", "GoogleCredential",
-    RemoteUrl has "/processmail.php", "NonGoogleCredential",
-    RemoteUrl has "/process.php", "OTPSubmission",
-    RemoteUrl has "/check_telegram_updates.php", "VisitorBeacon",
-    "Unknown")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, EndpointType,
-          RemoteUrl, Host, RemoteIP, RemotePort
+| where RemoteUrl has_any ("/check_telegram_updates.php","/pass.php","/mlog.php","/processmail.php","/process.php")
+| extend Domain = tolower(extract(@"https?://([^/]+)/", 1, RemoteUrl)), Bucket = bin(Timestamp, Window)
+| summarize
+    HasTelegramExfil = countif(RemoteUrl has "/check_telegram_updates.php"),
+    HasGoogleFlow    = countif(RemoteUrl has "/pass.php") + countif(RemoteUrl has "/mlog.php"),
+    HasGenericCred   = countif(RemoteUrl has "/processmail.php") + countif(RemoteUrl has "/process.php"),
+    UrlSamples       = make_set(RemoteUrl, 25),
+    FirstSeen        = min(Timestamp),
+    LastSeen         = max(Timestamp)
+    by DeviceId, DeviceName, AccountName, InitiatingProcessFileName, Domain, Bucket
+// /check_telegram_updates.php alone is unique enough; pass.php+mlog.php co-occurrence is the Google-flow signature
+| where HasTelegramExfil > 0 or HasGoogleFlow >= 2 or (HasGenericCred >= 2 and HasGoogleFlow > 0)
+| project FirstSeen, LastSeen, DeviceName, AccountName, InitiatingProcessFileName, Domain, UrlSamples, HasTelegramExfil, HasGoogleFlow, HasGenericCred
+| order by FirstSeen desc
+```
+
+### [LLM] RMM installer (ScreenConnect/ConnectWise/ITarian/Datto/LogMeIn) drop within 30m of phishing-kit visit
+
+`UC_0_11` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true min(_time) as proc_time values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.user) as user FROM datamodel=Endpoint.Processes WHERE (Processes.process_name IN ("ScreenConnect.ClientSetup.exe","ScreenConnect.exe","ITarianClient.exe","ITSMAgent.exe","ConnectWiseControl.ClientSetup.exe","ConnectWiseControl.exe","LMI_Rescue.exe","Rescue.exe","LMI-Rescue-Calling-Card.exe","DattoRMMAgent.exe","AgentSetup_Default.exe","atrmm.exe","Aem.exe")) AND (Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","outlook.exe","explorer.exe","msiexec.exe")) BY Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true min(_time) as visit_time values(Web.url) as visited_url FROM datamodel=Web WHERE (Web.url="*/blocked.html" OR Web.url="*/Image/office360.png" OR Web.url="*/Image/office.png" OR Web.url="*/Image/yahoo.png" OR Web.url="*/Image/google.png" OR Web.url="*/Image/aol.png" OR Web.url="*/Image/email.png" OR Web.url="*/check_telegram_updates.php" OR Web.url="*/mlog.php") BY Web.src | rename Web.src as dest] | eval delay_min=round((proc_time - visit_time)/60, 1) | where delay_min>=0 AND delay_min<=30 | convert ctime(proc_time) ctime(visit_time) | table proc_time, dest, user, process_name, parent, cmd, visit_time, visited_url, delay_min
+```
+
+**Defender KQL:**
+```kql
+let LookbackHours = 24h;
+let CorrelationWindow = 30m;
+let _rmm_bins = dynamic(["ScreenConnect.ClientSetup.exe","ScreenConnect.exe","ITarianClient.exe","ITSMAgent.exe","ConnectWiseControl.ClientSetup.exe","ConnectWiseControl.exe","LMI_Rescue.exe","Rescue.exe","LMI-Rescue-Calling-Card.exe","DattoRMMAgent.exe","AgentSetup_Default.exe","atrmm.exe","Aem.exe"]);
+let _campaign_paths = dynamic(["/blocked.html","/Image/office360.png","/Image/office.png","/Image/yahoo.png","/Image/google.png","/Image/aol.png","/Image/email.png","/check_telegram_updates.php","/mlog.php","/pass.php"]);
+let CampaignVisits = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackHours)
+    | where isnotempty(RemoteUrl)
+    | where RemoteUrl has_any (_campaign_paths)
+    | project DeviceId, VisitTime = Timestamp, VisitedUrl = RemoteUrl;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackHours)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","outlook.exe","explorer.exe","msiexec.exe")
+| where FileName in~ (_rmm_bins)
+| join kind=inner CampaignVisits on DeviceId
+| where Timestamp between (VisitTime .. VisitTime + CorrelationWindow)
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          RmmBinary = FileName, ProcessCommandLine, FolderPath,
+          VisitTime, VisitedUrl,
+          DelayMin = datetime_diff('minute', Timestamp, VisitTime),
+          SHA256
 | order by Timestamp desc
 ```
 
