@@ -3777,15 +3777,15 @@ ImProcessCreate
 <nav class="cs-sidebar">
   <input type="search" id="datadogSourceFilter" placeholder="Filter tables…" autocomplete="off">
   <ul id="datadogSourceList">
-    <li><a href="#datadog-source-cloudtrail" data-table="cloudtrail"><span class="t">cloudtrail</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-azure.activity_logs" data-table="azure.activity_logs"><span class="t">azure.activity_logs</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-azure.activeDirectory" data-table="azure.activeDirectory"><span class="t">azure.activeDirectory</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-windows.security" data-table="windows.security"><span class="t">windows.security</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-windows.sysmon" data-table="windows.sysmon"><span class="t">windows.sysmon</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-linux.auditd" data-table="linux.auditd"><span class="t">linux.auditd</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-gcp.audit" data-table="gcp.audit"><span class="t">gcp.audit</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-kubernetes.audit" data-table="kubernetes.audit"><span class="t">kubernetes.audit</span><span class="n">3</span></a></li>
-<li><a href="#datadog-source-okta" data-table="okta"><span class="t">okta</span><span class="n">3</span></a></li>
+    <li><a href="#datadog-source-cloudtrail" data-table="cloudtrail"><span class="t">cloudtrail</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-azure.activity_logs" data-table="azure.activity_logs"><span class="t">azure.activity_logs</span><span class="n">5</span></a></li>
+<li><a href="#datadog-source-azure.activeDirectory" data-table="azure.activeDirectory"><span class="t">azure.activeDirectory</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-windows.security" data-table="windows.security"><span class="t">windows.security</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-windows.sysmon" data-table="windows.sysmon"><span class="t">windows.sysmon</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-linux.auditd" data-table="linux.auditd"><span class="t">linux.auditd</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-gcp.audit" data-table="gcp.audit"><span class="t">gcp.audit</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-kubernetes.audit" data-table="kubernetes.audit"><span class="t">kubernetes.audit</span><span class="n">6</span></a></li>
+<li><a href="#datadog-source-okta" data-table="okta"><span class="t">okta</span><span class="n">6</span></a></li>
   </ul>
 </nav>
 
@@ -3795,7 +3795,7 @@ ImProcessCreate
         <p>Pick a log source from the sidebar — every query is verbatim Datadog Logs Explorer / Cloud SIEM syntax: <code>source:</code> first, <code>@field.path:value</code> filters, uppercase boolean operators, <code>CIDR(@ip, range)</code> for IP filtering. Time windows are configured at rule level in Datadog so they're absent from the query body. <strong>Datadog values are case-sensitive</strong> — for binary names and similar strings we emit both casings inside an OR group.</p>
         <div class="stats">
           <span><strong>9</strong> sources curated</span>
-          <span><strong>27</strong> queries</span>
+          <span><strong>53</strong> queries</span>
           <span>Click <strong>Copy</strong> on any query to paste into Datadog Logs / Cloud SIEM rule editor.</span>
         </div>
       </div>
@@ -3804,7 +3804,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-cloudtrail" data-table="cloudtrail">
   <header class="table-header">
     <h2>cloudtrail</h2>
-    <p class="muted">14 columns · 3 queries</p>
+    <p class="muted">14 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@evt.name</code> · <code>@evt.outcome</code> · <code>@userIdentity.type</code> · <code>@userIdentity.userName</code> · <code>@userIdentity.arn</code> · <code>@userIdentity.accountId</code> · <code>@userIdentity.sessionContext.sessionIssuer.userName</code> · <code>@requestParameters.userName</code> · <code>@requestParameters.policyArn</code> · <code>@requestParameters.bucketName</code> · <code>@responseElements.user.userName</code> · <code>@network.client.ip</code> · <code>@aws.region</code> · <code>@aws.account.id</code></p>
@@ -3813,46 +3813,74 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Root account interactive use</h4>
-        <p>Any console / API action by the AWS root identity. Should be ZERO under steady state — every hit is investigable.</p>
+        <h4>All API activity for a specific user / role</h4>
+        <p>Triage starting point — every CloudTrail event from one identity. Replace `&lt;userName&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:cloudtrail @userIdentity.type:Root @evt.outcome:success
--@evt.name:(GetCallerIdentity OR DescribeAccountAttributes)</code></pre>
+        <pre><code>source:cloudtrail @userIdentity.userName:&lt;userName&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>IAM privilege escalation primitives</h4>
-        <p>Classic AWS priv-esc paths: attach admin policy, create access key, update assume-role policy.</p>
+        <h4>All API activity from a single source IP</h4>
+        <p>Pivot for an attacker IP found elsewhere (NIDS, WAF, CTI). Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:cloudtrail @evt.outcome:success
-@evt.name:(AttachUserPolicy OR AttachGroupPolicy OR AttachRolePolicy
-           OR PutUserPolicy OR PutGroupPolicy OR PutRolePolicy
-           OR CreateAccessKey OR UpdateAssumeRolePolicy
-           OR CreateLoginProfile OR UpdateLoginProfile OR PassRole)
-@requestParameters.policyArn:*Administrator*
--@userIdentity.userName:(terraform-* OR ci-* OR cd-*)</code></pre>
+        <pre><code>source:cloudtrail @network.client.ip:&lt;IP&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>S3 public-bucket exposure</h4>
-        <p>Bucket policy / ACL changes that loosen public access. Pair with the bucket name as a resource pivot.</p>
+        <h4>All actions on a specific S3 bucket</h4>
+        <p>Investigate exfil / config-change on a named bucket. Replace `&lt;bucketName&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:cloudtrail @evt.outcome:success
-@evt.name:(PutBucketAcl OR PutBucketPolicy OR PutPublicAccessBlock
-           OR DeletePublicAccessBlock OR DeleteBucketPolicy)
-@requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllUsers*</code></pre>
+        <pre><code>source:cloudtrail @requestParameters.bucketName:&lt;bucketName&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Failed actions only (any service)</h4>
+        <p>Quick triage of refused actions — credential-stuffing, perm-discovery, throttled abuse all live here.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:cloudtrail @evt.outcome:failure</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>AssumeRole calls into one role</h4>
+        <p>Who has been assuming a privileged role? Replace `&lt;roleName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:cloudtrail @evt.name:AssumeRole
+@requestParameters.roleArn:*&lt;roleName&gt;*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Console-login attempts from foreign geos</h4>
+        <p>Console authentications from outside the expected business geographies.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:cloudtrail @evt.name:ConsoleLogin
+@network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)</code></pre>
       </div>
     </article>
 
@@ -3862,7 +3890,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-azure.activity_logs" data-table="azure.activity_logs">
   <header class="table-header">
     <h2>azure.activity_logs</h2>
-    <p class="muted">9 columns · 3 queries</p>
+    <p class="muted">9 columns · 5 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@operationName.value</code> · <code>@properties.eventName</code> · <code>@properties.activityStatusValue</code> · <code>@identity.claim.upn</code> · <code>@identity.claim.appid</code> · <code>@network.client.ip</code> · <code>@properties.resource</code> · <code>@resource.resourceGroup</code> · <code>@resource.subscriptionId</code></p>
@@ -3871,43 +3899,64 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Storage account key listing</h4>
-        <p>Adversary post-compromise enumeration — listing storage keys grants direct blob/file access bypassing IAM.</p>
+        <h4>All resource activity in a resource group</h4>
+        <p>Triage scope: every operation against one RG. Replace `&lt;resourceGroupName&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:azure.activity_logs
-@operationName.value:Microsoft.Storage/storageAccounts/listKeys/action
-@properties.activityStatusValue:Succeeded
--@identity.claim.appid:(00000003-0000-0000-c000-000000000000)</code></pre>
+        <pre><code>source:azure.activity_logs @resource.resourceGroup:&lt;resourceGroupName&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Resource deletion at scale</h4>
-        <p>Bulk Azure resource removal — ransomware / wiper / disgruntled-admin signal.</p>
+        <h4>All actions by a specific identity</h4>
+        <p>Pivot for an account under investigation. Replace `&lt;upn-or-appId&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:azure.activity_logs
-@operationName.value:*delete*
-@properties.activityStatusValue:Succeeded
--@identity.claim.upn:(*svc-* OR *automation*)</code></pre>
+(@identity.claim.upn:&lt;upn-or-appId&gt; OR @identity.claim.appid:&lt;upn-or-appId&gt;)</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Disabled-account / break-glass usage</h4>
-        <p>Activity from an identity outside the standard auth flow — ie a hard-coded admin or break-glass account.</p>
+        <h4>All resource deletions</h4>
+        <p>Wide net for destructive activity — sort by time and pivot on the principal.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:azure.activity_logs
-@identity.claim.upn:(*break-glass* OR *emergency-access* OR *admin-override*)</code></pre>
+@operationName.value:*delete*
+@properties.activityStatusValue:Succeeded</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Storage-account key listings</h4>
+        <p>Storage-key reads bypass RBAC on data — strong signal of data-exfil tradecraft.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:azure.activity_logs
+@operationName.value:Microsoft.Storage/storageAccounts/listKeys/action</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Failed Azure operations</h4>
+        <p>Search across denied/failed Azure operations, useful for permission-discovery hunts.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:azure.activity_logs @properties.activityStatusValue:Failed</code></pre>
       </div>
     </article>
 
@@ -3917,7 +3966,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-azure.activeDirectory" data-table="azure.activeDirectory">
   <header class="table-header">
     <h2>azure.activeDirectory</h2>
-    <p class="muted">12 columns · 3 queries</p>
+    <p class="muted">12 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@evt.name</code> · <code>@usr.id</code> · <code>@usr.email</code> · <code>@user.userPrincipalName</code> · <code>@network.client.ip</code> · <code>@network.client.geoip.country.iso_code</code> · <code>@properties.status.errorCode</code> · <code>@properties.appDisplayName</code> · <code>@properties.riskState</code> · <code>@properties.riskLevelDuringSignIn</code> · <code>@properties.authenticationProtocol</code> · <code>@properties.deviceDetail.deviceId</code></p>
@@ -3926,42 +3975,78 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Failed password / lockout from foreign geos</h4>
-        <p>Sign-in failures (bad password 50126, locked 50053) from high-risk geographies.</p>
+        <h4>All sign-in activity for one user</h4>
+        <p>User triage — every sign-in (success + fail). Replace `&lt;upn&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot;
-@properties.status.errorCode:(50126 OR 50053 OR 50055 OR 50057 OR 50064)
-@network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)</code></pre>
+@user.userPrincipalName:&lt;upn&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>OAuth illicit-grant — risky app consent</h4>
-        <p>Apps acquiring scopes that read mail / files; pivot via the app&#x27;s appId for lateral hunt.</p>
+        <h4>All sign-ins from one IP</h4>
+        <p>Pivot for a suspicious source IP — see every account it touched. Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:azure.activeDirectory @evt.name:&quot;Add app role assignment to service principal&quot;
-@properties.appDisplayName:*
--@properties.appDisplayName:(Microsoft* OR &quot;Office 365&quot; OR &quot;Azure*&quot;)</code></pre>
+        <pre><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot;
+@network.client.ip:&lt;IP&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>MFA fatigue / push-bombing pattern</h4>
-        <p>Same user → many MFA prompts in a tight window — adversary spraying push to wear the user down.</p>
+        <h4>Failed sign-ins by error code</h4>
+        <p>Filter to a specific failure mode (50126=bad password, 50053=locked, 50058=no session, 50158=external MFA fail). Replace `&lt;errorCode&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot;
-@properties.authenticationDetails.authenticationMethod:&quot;Mobile app notification&quot;
-@properties.status.errorCode:(50158 OR 500121 OR 500133)</code></pre>
+@properties.status.errorCode:&lt;errorCode&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>OAuth app consent grants</h4>
+        <p>Find every consent given to a third-party app — pivot via appDisplayName for the app footprint.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:azure.activeDirectory
+@evt.name:&quot;Add app role assignment to service principal&quot;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Sign-ins flagged risky by Identity Protection</h4>
+        <p>Identity Protection&#x27;s risk-state field filtered to non-clean states.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot;
+@properties.riskState:(atRisk OR confirmedCompromised)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Sign-ins from foreign geographies</h4>
+        <p>Quick hunt for geographically anomalous logins.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot;
+@network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)</code></pre>
       </div>
     </article>
 
@@ -3971,7 +4056,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-windows.security" data-table="windows.security">
   <header class="table-header">
     <h2>windows.security</h2>
-    <p class="muted">13 columns · 3 queries</p>
+    <p class="muted">13 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@EventID</code> · <code>@Image</code> · <code>@CommandLine</code> · <code>@User</code> · <code>@SubjectUserName</code> · <code>@TargetUserName</code> · <code>@LogonType</code> · <code>@WorkstationName</code> · <code>@IpAddress</code> · <code>@ProcessName</code> · <code>@ParentProcessName</code> · <code>@AccessMask</code> · <code>@PrivilegeList</code></p>
@@ -3980,8 +4065,34 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Failed authentication burst — single user</h4>
-        <p>Win EID 4625 with the same TargetUserName from many SourceWorkstation values.</p>
+        <h4>All security events for one host</h4>
+        <p>Host triage — every Win Security event. Replace `&lt;DeviceName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.security @WorkstationName:&lt;DeviceName&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Logons by a specific user</h4>
+        <p>EID 4624 (logon) for one identity. Replace `&lt;UserName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.security @EventID:4624
+@TargetUserName:&lt;UserName&gt;
+-@TargetUserName:*$</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Failed logons (any user)</h4>
+        <p>EID 4625 — all logon failures. Tune by IP / WorkstationName for hunt.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
@@ -3991,28 +4102,40 @@ ImProcessCreate
     </article>
 
 
-    <article class="query" id="q-1">
+    <article class="query" id="q-3">
       <header>
-        <h4>Privileged group changes</h4>
-        <p>Domain-Admins / Enterprise-Admins / Schema-Admins membership churn — EID 4732/4756/4728.</p>
+        <h4>Account lockouts</h4>
+        <p>EID 4740 — accounts that hit the lockout threshold. Pivot for credential-spray.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:windows.security @EventID:(4732 OR 4756 OR 4728)
-@TargetUserName:(*Domain* OR *Enterprise* OR *Schema* OR *Admin*)</code></pre>
+        <pre><code>source:windows.security @EventID:4740</code></pre>
       </div>
     </article>
 
 
-    <article class="query" id="q-2">
+    <article class="query" id="q-4">
       <header>
-        <h4>Service-installation persistence</h4>
-        <p>EID 7045 — service install. Most legitimate services come from MSI / Windows Update; standalone ones are suspicious.</p>
+        <h4>Process creation by event ID 4688</h4>
+        <p>Process-create audit log if Sysmon isn&#x27;t deployed. Replace `&lt;binary&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:windows.security @EventID:7045
--@ServiceFileName:(*\\Windows\\* OR *\\Program Files\\* OR *MsiExec*)</code></pre>
+        <pre><code>source:windows.security @EventID:4688
+@ProcessName:*&lt;binary&gt;*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Privileged group changes</h4>
+        <p>EID 4732/4756/4728 — adds to local-/domain-/universal-admin groups.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.security @EventID:(4732 OR 4756 OR 4728)
+@TargetUserName:(*Admin* OR *Domain* OR *Enterprise*)</code></pre>
       </div>
     </article>
 
@@ -4022,7 +4145,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-windows.sysmon" data-table="windows.sysmon">
   <header class="table-header">
     <h2>windows.sysmon</h2>
-    <p class="muted">14 columns · 3 queries</p>
+    <p class="muted">14 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@EventID</code> · <code>@Image</code> · <code>@CommandLine</code> · <code>@ParentImage</code> · <code>@ParentCommandLine</code> · <code>@Hashes</code> · <code>@DestinationIp</code> · <code>@DestinationPort</code> · <code>@DestinationHostname</code> · <code>@SourceIp</code> · <code>@TargetFilename</code> · <code>@TargetObject</code> · <code>@User</code> · <code>@LogonId</code></p>
@@ -4031,22 +4154,59 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Office-spawning-script / LOLBin chain</h4>
-        <p>WINWORD/EXCEL/POWERPNT spawning powershell/mshta/regsvr32 — classic doc-macro execution. Both casings: Datadog is case-sensitive.</p>
+        <h4>All sysmon activity on a host</h4>
+        <p>Host triage — full process / network / file / registry activity. Replace `&lt;DeviceName&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:windows.sysmon @EventID:1
-@ParentImage:(*\\winword.exe OR *\\WINWORD.EXE OR *\\excel.exe OR *\\EXCEL.EXE OR *\\powerpnt.exe OR *\\POWERPNT.EXE)
-@Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\regsvr32.exe OR *\\RegSvr32.exe OR *\\rundll32.exe OR *\\RunDll32.exe)</code></pre>
+        <pre><code>source:windows.sysmon @host:&lt;DeviceName&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Persistence-key write (Run/RunOnce/Services)</h4>
-        <p>Sysmon EID 13 — registry value set under classic ASEP locations.</p>
+        <h4>Process creates by image name</h4>
+        <p>EID 1 — every spawn of a binary. Both casings (Datadog is case-sensitive). Replace `&lt;binary.exe&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.sysmon @EventID:1
+@Image:(*\\&lt;binary.exe&gt; OR *\\&lt;BINARY.EXE&gt;)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Network connections to a destination IP</h4>
+        <p>EID 3 — outbound flows to a target. Replace `&lt;IP&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.sysmon @EventID:3
+@DestinationIp:&lt;IP&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>File creates by path</h4>
+        <p>EID 11 — file create/modify. Useful for tracking written payloads. Replace `&lt;path-fragment&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:windows.sysmon @EventID:11
+@TargetFilename:*&lt;path-fragment&gt;*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Registry writes under Run / RunOnce / Services</h4>
+        <p>EID 13 — persistence-key writes under classic ASEP locations.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
@@ -4056,16 +4216,15 @@ ImProcessCreate
     </article>
 
 
-    <article class="query" id="q-2">
+    <article class="query" id="q-5">
       <header>
-        <h4>Outbound network connection from a script host</h4>
-        <p>Sysmon EID 3 from cscript / wscript / mshta / powershell — script-host beaconing.</p>
+        <h4>Image-load (DLL) by hash</h4>
+        <p>EID 7 — find every host that loaded a known-bad DLL. Replace `&lt;sha256&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:windows.sysmon @EventID:3
-@Image:(*\\cscript.exe OR *\\wscript.exe OR *\\mshta.exe OR *\\powershell.exe OR *\\pwsh.exe)
--CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</code></pre>
+        <pre><code>source:windows.sysmon @EventID:7
+@Hashes:*SHA256=&lt;sha256&gt;*</code></pre>
       </div>
     </article>
 
@@ -4075,7 +4234,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-linux.auditd" data-table="linux.auditd">
   <header class="table-header">
     <h2>linux.auditd</h2>
-    <p class="muted">11 columns · 3 queries</p>
+    <p class="muted">11 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@process.name</code> · <code>@process.command_line</code> · <code>@process.executable.path</code> · <code>@user.name</code> · <code>@user.id</code> · <code>@auditd.type</code> · <code>@network.client.ip</code> · <code>@network.destination.ip</code> · <code>@host.name</code> · <code>@auditd.uid</code> · <code>@auditd.gid</code></p>
@@ -4084,42 +4243,75 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Suspicious shell child of a web server</h4>
-        <p>httpd/nginx/php-fpm spawning a shell — webshell signal.</p>
+        <h4>All auditd activity on a host</h4>
+        <p>Host triage. Replace `&lt;host&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:linux.auditd @auditd.type:EXECVE
-@process.name:(bash OR sh OR zsh OR ksh OR dash)
-@process.parent_executable_path:(*nginx* OR *httpd* OR *apache2* OR *php-fpm*)</code></pre>
+        <pre><code>source:linux.auditd @host.name:&lt;host&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Privilege escalation via SUID binary</h4>
-        <p>EXECVE of known SUID-abuse binaries from a non-root context.</p>
+        <h4>Process executions by a user</h4>
+        <p>EXECVE filtered to one user. Replace `&lt;userName&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:linux.auditd @auditd.type:EXECVE
-@process.command_line:(*&quot;chmod +x&quot;* OR *&quot;setuid&quot;* OR *&quot;sudo -i&quot;* OR *&quot;sudo su&quot;*)
--@process.executable.path:/usr/lib/snapd/*</code></pre>
+        <pre><code>source:linux.auditd @auditd.type:EXECVE @user.name:&lt;userName&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Cron / systemd persistence write</h4>
-        <p>File creation under cron.d, cron.daily, /etc/systemd/system — non-root persistence vehicle.</p>
+        <h4>Find a binary by name</h4>
+        <p>Every EXECVE of a binary across the fleet. Replace `&lt;binary&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:linux.auditd @auditd.type:EXECVE
+@process.name:&lt;binary&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Outbound connections to one host</h4>
+        <p>Network destinations from auditd&#x27;s syscall logs. Replace `&lt;IP&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:linux.auditd @network.destination.ip:&lt;IP&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Files written under a path</h4>
+        <p>PATH events filtered to a directory. Replace `&lt;directory&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:linux.auditd @auditd.type:PATH
-@auditd.path:(/etc/cron.d/* OR /etc/cron.daily/* OR /etc/cron.hourly/*
-              OR /etc/systemd/system/*.service OR /var/spool/cron/*)</code></pre>
+@auditd.path:&lt;directory&gt;/*</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Authentication events for a user</h4>
+        <p>USER_AUTH / USER_LOGIN — pam-side authentication trail. Replace `&lt;userName&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:linux.auditd @auditd.type:(USER_AUTH OR USER_LOGIN OR USER_ACCT)
+@user.name:&lt;userName&gt;</code></pre>
       </div>
     </article>
 
@@ -4129,7 +4321,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-gcp.audit" data-table="gcp.audit">
   <header class="table-header">
     <h2>gcp.audit</h2>
-    <p class="muted">8 columns · 3 queries</p>
+    <p class="muted">8 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@protoPayload.methodName</code> · <code>@protoPayload.authenticationInfo.principalEmail</code> · <code>@protoPayload.requestMetadata.callerIp</code> · <code>@protoPayload.serviceName</code> · <code>@protoPayload.resourceName</code> · <code>@resource.labels.project_id</code> · <code>@resource.type</code> · <code>@severity</code></p>
@@ -4138,43 +4330,76 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Service account key creation</h4>
-        <p>GCP service-account key creation — long-lived credential exfil risk.</p>
+        <h4>All audit log activity in a project</h4>
+        <p>Project-level scope. Replace `&lt;project-id&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:gcp.audit
-@protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey
-@severity:NOTICE
--@protoPayload.authenticationInfo.principalEmail:*@*.gserviceaccount.com</code></pre>
+        <pre><code>source:gcp.audit @resource.labels.project_id:&lt;project-id&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>IAM policy binding to allUsers / allAuthenticatedUsers</h4>
-        <p>Public-everyone IAM binding — almost always a misconfig or a data-exposure intent.</p>
+        <h4>Activity by a specific principal</h4>
+        <p>Every method called by one principal email. Replace `&lt;email&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:gcp.audit
-@protoPayload.methodName:(SetIamPolicy OR setIamPolicy)
-@protoPayload.serviceData.policyDelta.bindingDeltas.member:(allUsers OR allAuthenticatedUsers)</code></pre>
+@protoPayload.authenticationInfo.principalEmail:&lt;email&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-2">
       <header>
-        <h4>Compute instance metadata service access from a workload</h4>
-        <p>Adversary using IMDS to lift the GCE service-account token. Anomalous when the calling principal isn&#x27;t `gce-instance-svc`.</p>
+        <h4>Activity from one source IP</h4>
+        <p>Caller IP pivot. Replace `&lt;IP&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
         <pre><code>source:gcp.audit
-@protoPayload.methodName:*compute.instances.get*
-@protoPayload.requestMetadata.callerIp:169.254.169.254</code></pre>
+@protoPayload.requestMetadata.callerIp:&lt;IP&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>IAM policy changes</h4>
+        <p>Every SetIamPolicy across the org — pair with the bindingDeltas.member field for reach.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:gcp.audit
+@protoPayload.methodName:(SetIamPolicy OR setIamPolicy)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-4">
+      <header>
+        <h4>Service account key creations</h4>
+        <p>Long-lived credential creations — pivot for token-exfil tradecraft.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:gcp.audit
+@protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Failed / denied operations</h4>
+        <p>Permission-discovery activity surfaces here.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:gcp.audit @severity:(ERROR OR WARNING)</code></pre>
       </div>
     </article>
 
@@ -4184,7 +4409,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-kubernetes.audit" data-table="kubernetes.audit">
   <header class="table-header">
     <h2>kubernetes.audit</h2>
-    <p class="muted">11 columns · 3 queries</p>
+    <p class="muted">11 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@verb</code> · <code>@objectRef.resource</code> · <code>@objectRef.name</code> · <code>@objectRef.namespace</code> · <code>@user.username</code> · <code>@user.groups</code> · <code>@sourceIPs</code> · <code>@requestObject.spec.containers.image</code> · <code>@requestObject.spec.hostPID</code> · <code>@requestObject.spec.hostNetwork</code> · <code>@responseStatus.code</code></p>
@@ -4193,8 +4418,46 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Privileged / hostPID / hostNetwork pod creation</h4>
-        <p>Container break-out primitives — privileged container, host-PID share, host networking. Any one is a flag; combinations are alert-grade.</p>
+        <h4>All activity in a namespace</h4>
+        <p>Namespace triage. Replace `&lt;namespace&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:kubernetes.audit @objectRef.namespace:&lt;namespace&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-1">
+      <header>
+        <h4>Actions by a user / service account</h4>
+        <p>User pivot. Replace `&lt;username&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:kubernetes.audit @user.username:&lt;username&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Pods created in a namespace</h4>
+        <p>What got deployed where, by whom. Replace `&lt;namespace&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:kubernetes.audit
+@verb:create @objectRef.resource:pods
+@objectRef.namespace:&lt;namespace&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Privileged / hostPID / hostNetwork pod specs</h4>
+        <p>Container break-out primitives.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
@@ -4206,24 +4469,23 @@ ImProcessCreate
     </article>
 
 
-    <article class="query" id="q-1">
+    <article class="query" id="q-4">
       <header>
-        <h4>kubectl exec into running pod</h4>
-        <p>Live shell inside a workload — operationally legitimate for engineers, but anomalous in production namespaces.</p>
+        <h4>kubectl exec sessions</h4>
+        <p>Live shells into running pods — operationally normal for engineers, anomalous in prod namespaces.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:kubernetes.audit @verb:create @objectRef.subresource:exec
-@objectRef.namespace:(prod-* OR production OR live-*)
--@user.username:(*ci-* OR *cd-* OR system:serviceaccount:*)</code></pre>
+        <pre><code>source:kubernetes.audit
+@verb:create @objectRef.subresource:exec</code></pre>
       </div>
     </article>
 
 
-    <article class="query" id="q-2">
+    <article class="query" id="q-5">
       <header>
-        <h4>ServiceAccount token mounted automatically (overprovisioned RBAC)</h4>
-        <p>Token auto-mount + cluster-admin binding = full takeover. Hunt for new bindings to risky cluster roles.</p>
+        <h4>Cluster-admin role bindings</h4>
+        <p>New bindings of high-privilege cluster roles — full-takeover risk.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
@@ -4240,7 +4502,7 @@ ImProcessCreate
 <section class="table-section" id="datadog-source-okta" data-table="okta">
   <header class="table-header">
     <h2>okta</h2>
-    <p class="muted">11 columns · 3 queries</p>
+    <p class="muted">11 columns · 6 queries</p>
     <details class="schema">
       <summary>Schema (click to expand)</summary>
       <p class="cols"><code>@evt.name</code> · <code>@actor.alternateId</code> · <code>@actor.id</code> · <code>@actor.displayName</code> · <code>@client.ipAddress</code> · <code>@client.geographicalContext.country</code> · <code>@client.geographicalContext.city</code> · <code>@outcome.result</code> · <code>@outcome.reason</code> · <code>@authenticationContext.authenticationProvider</code> · <code>@target.alternateId</code></p>
@@ -4249,21 +4511,44 @@ ImProcessCreate
   
     <article class="query" id="q-0">
       <header>
-        <h4>Sign-in success after MFA failure burst</h4>
-        <p>Successful authentication preceded by ≥5 MFA failures in 10 min — likely fatigue / push-bomb success.</p>
+        <h4>All activity for a user</h4>
+        <p>User triage — every Okta event tied to one identity. Replace `&lt;email&gt;`.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:okta @evt.name:user.session.start @outcome.result:SUCCESS
-@authenticationContext.authenticationProvider:FACTOR_PROVIDER</code></pre>
+        <pre><code>source:okta @actor.alternateId:&lt;email&gt;</code></pre>
       </div>
     </article>
 
 
     <article class="query" id="q-1">
       <header>
-        <h4>Account-lock from a single source IP</h4>
-        <p>user.account.lock concentrated on one source IP — credential stuffing in progress.</p>
+        <h4>All activity from one source IP</h4>
+        <p>IP pivot — every account touched from this address. Replace `&lt;IP&gt;`.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:okta @client.ipAddress:&lt;IP&gt;</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-2">
+      <header>
+        <h4>Authentication failures</h4>
+        <p>All failed sign-ins.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:okta @evt.name:user.session.start @outcome.result:FAILURE</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-3">
+      <header>
+        <h4>Account lockouts</h4>
+        <p>user.account.lock — pair with @client.ipAddress to see lockout sources.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
@@ -4272,16 +4557,26 @@ ImProcessCreate
     </article>
 
 
-    <article class="query" id="q-2">
+    <article class="query" id="q-4">
       <header>
-        <h4>Admin role assignment outside provisioning workflow</h4>
-        <p>Direct grant of an Okta admin role from a human session. Almost always the provisioning service should do this — humans doing it = privilege drift.</p>
+        <h4>MFA factor enrolment / reset</h4>
+        <p>New MFA factor or factor reset — adversary persistence path.</p>
       </header>
       <div class="kql-block">
         <button class="copy" type="button" title="Copy to clipboard">Copy</button>
-        <pre><code>source:okta @evt.name:user.account.privilege.grant
-@target.type:User
--@actor.alternateId:(*scim* OR *api-token* OR *workflows*)</code></pre>
+        <pre><code>source:okta @evt.name:(user.mfa.factor.activate OR user.mfa.factor.reset_all OR user.mfa.factor.deactivate)</code></pre>
+      </div>
+    </article>
+
+
+    <article class="query" id="q-5">
+      <header>
+        <h4>Admin privilege grants</h4>
+        <p>Direct grants of Okta admin roles to a user — anomalous outside scim/automation.</p>
+      </header>
+      <div class="kql-block">
+        <button class="copy" type="button" title="Copy to clipboard">Copy</button>
+        <pre><code>source:okta @evt.name:user.account.privilege.grant</code></pre>
       </div>
     </article>
 

@@ -1808,163 +1808,241 @@ DATADOG_SOURCES: dict[str, list[str]] = {
 
 DATADOG_QUERIES: dict[str, list[tuple[str, str, str]]] = {
     "cloudtrail": [
-        ("Root account interactive use",
-         "Any console / API action by the AWS root identity. Should be ZERO under steady state — every hit is investigable.",
-         '''source:cloudtrail @userIdentity.type:Root @evt.outcome:success
--@evt.name:(GetCallerIdentity OR DescribeAccountAttributes)'''),
+        ("All API activity for a specific user / role",
+         "Triage starting point — every CloudTrail event from one identity. Replace `<userName>`.",
+         '''source:cloudtrail @userIdentity.userName:<userName>'''),
 
-        ("IAM privilege escalation primitives",
-         "Classic AWS priv-esc paths: attach admin policy, create access key, update assume-role policy.",
-         '''source:cloudtrail @evt.outcome:success
-@evt.name:(AttachUserPolicy OR AttachGroupPolicy OR AttachRolePolicy
-           OR PutUserPolicy OR PutGroupPolicy OR PutRolePolicy
-           OR CreateAccessKey OR UpdateAssumeRolePolicy
-           OR CreateLoginProfile OR UpdateLoginProfile OR PassRole)
-@requestParameters.policyArn:*Administrator*
--@userIdentity.userName:(terraform-* OR ci-* OR cd-*)'''),
+        ("All API activity from a single source IP",
+         "Pivot for an attacker IP found elsewhere (NIDS, WAF, CTI). Replace `<IP>`.",
+         '''source:cloudtrail @network.client.ip:<IP>'''),
 
-        ("S3 public-bucket exposure",
-         "Bucket policy / ACL changes that loosen public access. Pair with the bucket name as a resource pivot.",
-         '''source:cloudtrail @evt.outcome:success
-@evt.name:(PutBucketAcl OR PutBucketPolicy OR PutPublicAccessBlock
-           OR DeletePublicAccessBlock OR DeleteBucketPolicy)
-@requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllUsers*'''),
+        ("All actions on a specific S3 bucket",
+         "Investigate exfil / config-change on a named bucket. Replace `<bucketName>`.",
+         '''source:cloudtrail @requestParameters.bucketName:<bucketName>'''),
+
+        ("Failed actions only (any service)",
+         "Quick triage of refused actions — credential-stuffing, perm-discovery, throttled abuse all live here.",
+         '''source:cloudtrail @evt.outcome:failure'''),
+
+        ("AssumeRole calls into one role",
+         "Who has been assuming a privileged role? Replace `<roleName>`.",
+         '''source:cloudtrail @evt.name:AssumeRole
+@requestParameters.roleArn:*<roleName>*'''),
+
+        ("Console-login attempts from foreign geos",
+         "Console authentications from outside the expected business geographies.",
+         '''source:cloudtrail @evt.name:ConsoleLogin
+@network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)'''),
     ],
 
     "azure.activity_logs": [
-        ("Storage account key listing",
-         "Adversary post-compromise enumeration — listing storage keys grants direct blob/file access bypassing IAM.",
-         '''source:azure.activity_logs
-@operationName.value:Microsoft.Storage/storageAccounts/listKeys/action
-@properties.activityStatusValue:Succeeded
--@identity.claim.appid:(00000003-0000-0000-c000-000000000000)'''),
+        ("All resource activity in a resource group",
+         "Triage scope: every operation against one RG. Replace `<resourceGroupName>`.",
+         '''source:azure.activity_logs @resource.resourceGroup:<resourceGroupName>'''),
 
-        ("Resource deletion at scale",
-         "Bulk Azure resource removal — ransomware / wiper / disgruntled-admin signal.",
+        ("All actions by a specific identity",
+         "Pivot for an account under investigation. Replace `<upn-or-appId>`.",
+         '''source:azure.activity_logs
+(@identity.claim.upn:<upn-or-appId> OR @identity.claim.appid:<upn-or-appId>)'''),
+
+        ("All resource deletions",
+         "Wide net for destructive activity — sort by time and pivot on the principal.",
          '''source:azure.activity_logs
 @operationName.value:*delete*
-@properties.activityStatusValue:Succeeded
--@identity.claim.upn:(*svc-* OR *automation*)'''),
+@properties.activityStatusValue:Succeeded'''),
 
-        ("Disabled-account / break-glass usage",
-         "Activity from an identity outside the standard auth flow — ie a hard-coded admin or break-glass account.",
+        ("Storage-account key listings",
+         "Storage-key reads bypass RBAC on data — strong signal of data-exfil tradecraft.",
          '''source:azure.activity_logs
-@identity.claim.upn:(*break-glass* OR *emergency-access* OR *admin-override*)'''),
+@operationName.value:Microsoft.Storage/storageAccounts/listKeys/action'''),
+
+        ("Failed Azure operations",
+         "Search across denied/failed Azure operations, useful for permission-discovery hunts.",
+         '''source:azure.activity_logs @properties.activityStatusValue:Failed'''),
     ],
 
     "azure.activeDirectory": [
-        ("Failed password / lockout from foreign geos",
-         "Sign-in failures (bad password 50126, locked 50053) from high-risk geographies.",
+        ("All sign-in activity for one user",
+         "User triage — every sign-in (success + fail). Replace `<upn>`.",
          '''source:azure.activeDirectory @evt.name:"Sign-in activity"
-@properties.status.errorCode:(50126 OR 50053 OR 50055 OR 50057 OR 50064)
+@user.userPrincipalName:<upn>'''),
+
+        ("All sign-ins from one IP",
+         "Pivot for a suspicious source IP — see every account it touched. Replace `<IP>`.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
+@network.client.ip:<IP>'''),
+
+        ("Failed sign-ins by error code",
+         "Filter to a specific failure mode (50126=bad password, 50053=locked, 50058=no session, 50158=external MFA fail). Replace `<errorCode>`.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
+@properties.status.errorCode:<errorCode>'''),
+
+        ("OAuth app consent grants",
+         "Find every consent given to a third-party app — pivot via appDisplayName for the app footprint.",
+         '''source:azure.activeDirectory
+@evt.name:"Add app role assignment to service principal"'''),
+
+        ("Sign-ins flagged risky by Identity Protection",
+         "Identity Protection's risk-state field filtered to non-clean states.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
+@properties.riskState:(atRisk OR confirmedCompromised)'''),
+
+        ("Sign-ins from foreign geographies",
+         "Quick hunt for geographically anomalous logins.",
+         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
 @network.client.geoip.country.iso_code:(CN OR RU OR IR OR KP OR BY)'''),
-
-        ("OAuth illicit-grant — risky app consent",
-         "Apps acquiring scopes that read mail / files; pivot via the app's appId for lateral hunt.",
-         '''source:azure.activeDirectory @evt.name:"Add app role assignment to service principal"
-@properties.appDisplayName:*
--@properties.appDisplayName:(Microsoft* OR "Office 365" OR "Azure*")'''),
-
-        ("MFA fatigue / push-bombing pattern",
-         "Same user → many MFA prompts in a tight window — adversary spraying push to wear the user down.",
-         '''source:azure.activeDirectory @evt.name:"Sign-in activity"
-@properties.authenticationDetails.authenticationMethod:"Mobile app notification"
-@properties.status.errorCode:(50158 OR 500121 OR 500133)'''),
     ],
 
     "windows.security": [
-        ("Failed authentication burst — single user",
-         "Win EID 4625 with the same TargetUserName from many SourceWorkstation values.",
+        ("All security events for one host",
+         "Host triage — every Win Security event. Replace `<DeviceName>`.",
+         '''source:windows.security @WorkstationName:<DeviceName>'''),
+
+        ("Logons by a specific user",
+         "EID 4624 (logon) for one identity. Replace `<UserName>`.",
+         '''source:windows.security @EventID:4624
+@TargetUserName:<UserName>
+-@TargetUserName:*$'''),
+
+        ("Failed logons (any user)",
+         "EID 4625 — all logon failures. Tune by IP / WorkstationName for hunt.",
          '''source:windows.security @EventID:4625
 -@TargetUserName:*$'''),
 
-        ("Privileged group changes",
-         "Domain-Admins / Enterprise-Admins / Schema-Admins membership churn — EID 4732/4756/4728.",
-         '''source:windows.security @EventID:(4732 OR 4756 OR 4728)
-@TargetUserName:(*Domain* OR *Enterprise* OR *Schema* OR *Admin*)'''),
+        ("Account lockouts",
+         "EID 4740 — accounts that hit the lockout threshold. Pivot for credential-spray.",
+         '''source:windows.security @EventID:4740'''),
 
-        ("Service-installation persistence",
-         "EID 7045 — service install. Most legitimate services come from MSI / Windows Update; standalone ones are suspicious.",
-         '''source:windows.security @EventID:7045
--@ServiceFileName:(*\\\\Windows\\\\* OR *\\\\Program Files\\\\* OR *MsiExec*)'''),
+        ("Process creation by event ID 4688",
+         "Process-create audit log if Sysmon isn't deployed. Replace `<binary>`.",
+         '''source:windows.security @EventID:4688
+@ProcessName:*<binary>*'''),
+
+        ("Privileged group changes",
+         "EID 4732/4756/4728 — adds to local-/domain-/universal-admin groups.",
+         '''source:windows.security @EventID:(4732 OR 4756 OR 4728)
+@TargetUserName:(*Admin* OR *Domain* OR *Enterprise*)'''),
     ],
 
     "windows.sysmon": [
-        ("Office-spawning-script / LOLBin chain",
-         "WINWORD/EXCEL/POWERPNT spawning powershell/mshta/regsvr32 — classic doc-macro execution. Both casings: Datadog is case-sensitive.",
-         '''source:windows.sysmon @EventID:1
-@ParentImage:(*\\\\winword.exe OR *\\\\WINWORD.EXE OR *\\\\excel.exe OR *\\\\EXCEL.EXE OR *\\\\powerpnt.exe OR *\\\\POWERPNT.EXE)
-@Image:(*\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\regsvr32.exe OR *\\\\RegSvr32.exe OR *\\\\rundll32.exe OR *\\\\RunDll32.exe)'''),
+        ("All sysmon activity on a host",
+         "Host triage — full process / network / file / registry activity. Replace `<DeviceName>`.",
+         '''source:windows.sysmon @host:<DeviceName>'''),
 
-        ("Persistence-key write (Run/RunOnce/Services)",
-         "Sysmon EID 13 — registry value set under classic ASEP locations.",
+        ("Process creates by image name",
+         "EID 1 — every spawn of a binary. Both casings (Datadog is case-sensitive). Replace `<binary.exe>`.",
+         '''source:windows.sysmon @EventID:1
+@Image:(*\\\\<binary.exe> OR *\\\\<BINARY.EXE>)'''),
+
+        ("Network connections to a destination IP",
+         "EID 3 — outbound flows to a target. Replace `<IP>`.",
+         '''source:windows.sysmon @EventID:3
+@DestinationIp:<IP>'''),
+
+        ("File creates by path",
+         "EID 11 — file create/modify. Useful for tracking written payloads. Replace `<path-fragment>`.",
+         '''source:windows.sysmon @EventID:11
+@TargetFilename:*<path-fragment>*'''),
+
+        ("Registry writes under Run / RunOnce / Services",
+         "EID 13 — persistence-key writes under classic ASEP locations.",
          '''source:windows.sysmon @EventID:13
 @TargetObject:(*\\\\Run\\\\* OR *\\\\RunOnce\\\\* OR *\\\\Services\\\\* OR "*Image File Execution Options*" OR *\\\\Winlogon\\\\*)'''),
 
-        ("Outbound network connection from a script host",
-         "Sysmon EID 3 from cscript / wscript / mshta / powershell — script-host beaconing.",
-         '''source:windows.sysmon @EventID:3
-@Image:(*\\\\cscript.exe OR *\\\\wscript.exe OR *\\\\mshta.exe OR *\\\\powershell.exe OR *\\\\pwsh.exe)
--CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)'''),
+        ("Image-load (DLL) by hash",
+         "EID 7 — find every host that loaded a known-bad DLL. Replace `<sha256>`.",
+         '''source:windows.sysmon @EventID:7
+@Hashes:*SHA256=<sha256>*'''),
     ],
 
     "linux.auditd": [
-        ("Suspicious shell child of a web server",
-         "httpd/nginx/php-fpm spawning a shell — webshell signal.",
-         '''source:linux.auditd @auditd.type:EXECVE
-@process.name:(bash OR sh OR zsh OR ksh OR dash)
-@process.parent_executable_path:(*nginx* OR *httpd* OR *apache2* OR *php-fpm*)'''),
+        ("All auditd activity on a host",
+         "Host triage. Replace `<host>`.",
+         '''source:linux.auditd @host.name:<host>'''),
 
-        ("Privilege escalation via SUID binary",
-         "EXECVE of known SUID-abuse binaries from a non-root context.",
-         '''source:linux.auditd @auditd.type:EXECVE
-@process.command_line:(*"chmod +x"* OR *"setuid"* OR *"sudo -i"* OR *"sudo su"*)
--@process.executable.path:/usr/lib/snapd/*'''),
+        ("Process executions by a user",
+         "EXECVE filtered to one user. Replace `<userName>`.",
+         '''source:linux.auditd @auditd.type:EXECVE @user.name:<userName>'''),
 
-        ("Cron / systemd persistence write",
-         "File creation under cron.d, cron.daily, /etc/systemd/system — non-root persistence vehicle.",
+        ("Find a binary by name",
+         "Every EXECVE of a binary across the fleet. Replace `<binary>`.",
+         '''source:linux.auditd @auditd.type:EXECVE
+@process.name:<binary>'''),
+
+        ("Outbound connections to one host",
+         "Network destinations from auditd's syscall logs. Replace `<IP>`.",
+         '''source:linux.auditd @network.destination.ip:<IP>'''),
+
+        ("Files written under a path",
+         "PATH events filtered to a directory. Replace `<directory>`.",
          '''source:linux.auditd @auditd.type:PATH
-@auditd.path:(/etc/cron.d/* OR /etc/cron.daily/* OR /etc/cron.hourly/*
-              OR /etc/systemd/system/*.service OR /var/spool/cron/*)'''),
+@auditd.path:<directory>/*'''),
+
+        ("Authentication events for a user",
+         "USER_AUTH / USER_LOGIN — pam-side authentication trail. Replace `<userName>`.",
+         '''source:linux.auditd @auditd.type:(USER_AUTH OR USER_LOGIN OR USER_ACCT)
+@user.name:<userName>'''),
     ],
 
     "gcp.audit": [
-        ("Service account key creation",
-         "GCP service-account key creation — long-lived credential exfil risk.",
-         '''source:gcp.audit
-@protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey
-@severity:NOTICE
--@protoPayload.authenticationInfo.principalEmail:*@*.gserviceaccount.com'''),
+        ("All audit log activity in a project",
+         "Project-level scope. Replace `<project-id>`.",
+         '''source:gcp.audit @resource.labels.project_id:<project-id>'''),
 
-        ("IAM policy binding to allUsers / allAuthenticatedUsers",
-         "Public-everyone IAM binding — almost always a misconfig or a data-exposure intent.",
+        ("Activity by a specific principal",
+         "Every method called by one principal email. Replace `<email>`.",
          '''source:gcp.audit
-@protoPayload.methodName:(SetIamPolicy OR setIamPolicy)
-@protoPayload.serviceData.policyDelta.bindingDeltas.member:(allUsers OR allAuthenticatedUsers)'''),
+@protoPayload.authenticationInfo.principalEmail:<email>'''),
 
-        ("Compute instance metadata service access from a workload",
-         "Adversary using IMDS to lift the GCE service-account token. Anomalous when the calling principal isn't `gce-instance-svc`.",
+        ("Activity from one source IP",
+         "Caller IP pivot. Replace `<IP>`.",
          '''source:gcp.audit
-@protoPayload.methodName:*compute.instances.get*
-@protoPayload.requestMetadata.callerIp:169.254.169.254'''),
+@protoPayload.requestMetadata.callerIp:<IP>'''),
+
+        ("IAM policy changes",
+         "Every SetIamPolicy across the org — pair with the bindingDeltas.member field for reach.",
+         '''source:gcp.audit
+@protoPayload.methodName:(SetIamPolicy OR setIamPolicy)'''),
+
+        ("Service account key creations",
+         "Long-lived credential creations — pivot for token-exfil tradecraft.",
+         '''source:gcp.audit
+@protoPayload.methodName:google.iam.admin.v1.CreateServiceAccountKey'''),
+
+        ("Failed / denied operations",
+         "Permission-discovery activity surfaces here.",
+         '''source:gcp.audit @severity:(ERROR OR WARNING)'''),
     ],
 
     "kubernetes.audit": [
-        ("Privileged / hostPID / hostNetwork pod creation",
-         "Container break-out primitives — privileged container, host-PID share, host networking. Any one is a flag; combinations are alert-grade.",
+        ("All activity in a namespace",
+         "Namespace triage. Replace `<namespace>`.",
+         '''source:kubernetes.audit @objectRef.namespace:<namespace>'''),
+
+        ("Actions by a user / service account",
+         "User pivot. Replace `<username>`.",
+         '''source:kubernetes.audit @user.username:<username>'''),
+
+        ("Pods created in a namespace",
+         "What got deployed where, by whom. Replace `<namespace>`.",
+         '''source:kubernetes.audit
+@verb:create @objectRef.resource:pods
+@objectRef.namespace:<namespace>'''),
+
+        ("Privileged / hostPID / hostNetwork pod specs",
+         "Container break-out primitives.",
          '''source:kubernetes.audit @verb:create @objectRef.resource:pods
 (@requestObject.spec.containers.securityContext.privileged:true
  OR @requestObject.spec.hostPID:true
  OR @requestObject.spec.hostNetwork:true)'''),
 
-        ("kubectl exec into running pod",
-         "Live shell inside a workload — operationally legitimate for engineers, but anomalous in production namespaces.",
-         '''source:kubernetes.audit @verb:create @objectRef.subresource:exec
-@objectRef.namespace:(prod-* OR production OR live-*)
--@user.username:(*ci-* OR *cd-* OR system:serviceaccount:*)'''),
+        ("kubectl exec sessions",
+         "Live shells into running pods — operationally normal for engineers, anomalous in prod namespaces.",
+         '''source:kubernetes.audit
+@verb:create @objectRef.subresource:exec'''),
 
-        ("ServiceAccount token mounted automatically (overprovisioned RBAC)",
-         "Token auto-mount + cluster-admin binding = full takeover. Hunt for new bindings to risky cluster roles.",
+        ("Cluster-admin role bindings",
+         "New bindings of high-privilege cluster roles — full-takeover risk.",
          '''source:kubernetes.audit
 @verb:create
 @objectRef.resource:(clusterrolebindings OR rolebindings)
@@ -1972,20 +2050,29 @@ DATADOG_QUERIES: dict[str, list[tuple[str, str, str]]] = {
     ],
 
     "okta": [
-        ("Sign-in success after MFA failure burst",
-         "Successful authentication preceded by ≥5 MFA failures in 10 min — likely fatigue / push-bomb success.",
-         '''source:okta @evt.name:user.session.start @outcome.result:SUCCESS
-@authenticationContext.authenticationProvider:FACTOR_PROVIDER'''),
+        ("All activity for a user",
+         "User triage — every Okta event tied to one identity. Replace `<email>`.",
+         '''source:okta @actor.alternateId:<email>'''),
 
-        ("Account-lock from a single source IP",
-         "user.account.lock concentrated on one source IP — credential stuffing in progress.",
+        ("All activity from one source IP",
+         "IP pivot — every account touched from this address. Replace `<IP>`.",
+         '''source:okta @client.ipAddress:<IP>'''),
+
+        ("Authentication failures",
+         "All failed sign-ins.",
+         '''source:okta @evt.name:user.session.start @outcome.result:FAILURE'''),
+
+        ("Account lockouts",
+         "user.account.lock — pair with @client.ipAddress to see lockout sources.",
          '''source:okta @evt.name:user.account.lock'''),
 
-        ("Admin role assignment outside provisioning workflow",
-         "Direct grant of an Okta admin role from a human session. Almost always the provisioning service should do this — humans doing it = privilege drift.",
-         '''source:okta @evt.name:user.account.privilege.grant
-@target.type:User
--@actor.alternateId:(*scim* OR *api-token* OR *workflows*)'''),
+        ("MFA factor enrolment / reset",
+         "New MFA factor or factor reset — adversary persistence path.",
+         '''source:okta @evt.name:(user.mfa.factor.activate OR user.mfa.factor.reset_all OR user.mfa.factor.deactivate)'''),
+
+        ("Admin privilege grants",
+         "Direct grants of Okta admin roles to a user — anomalous outside scim/automation.",
+         '''source:okta @evt.name:user.account.privilege.grant'''),
     ],
 }
 
