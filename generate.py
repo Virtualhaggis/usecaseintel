@@ -742,8 +742,10 @@ _SENTINEL_SCHEMA_BLOCK = _load_schema_block("sentinel_spec_tables.json")
 # break the rest of the pipeline.
 try:
     from kql_schema_validator import validate_kql as _validate_kql_fields
+    from kql_schema_validator import auto_fix_kql as _auto_fix_kql_fields
 except Exception:
     _validate_kql_fields = None  # type: ignore[assignment]
+    _auto_fix_kql_fields = None  # type: ignore[assignment]
 
 # Sigma rule validator. Optional dependency — pysigma may not be installed.
 try:
@@ -753,9 +755,18 @@ except Exception:
 
 
 def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
-                          issues_key: str = "_field_issues") -> int:
+                          issues_key: str = "_field_issues",
+                          auto_fix: bool = True) -> int:
     """Run the schema validator on uc_dict[kql_key] and attach issues
-    to uc_dict[issues_key]. Returns the issue count.
+    to uc_dict[issues_key]. Returns the issue count remaining AFTER
+    auto-fix.
+
+    When auto_fix=True (default), the auto-fixer rewrites the query
+    in-place for high-confidence wrong-table column references (e.g.
+    `AccountName` on `DeviceFileEvents` → `InitiatingProcessAccountName`)
+    and difflib-near-miss typos (>=0.8 similarity). The fixup log is
+    attached to uc_dict[issues_key + '_autofix'] for audit so we can
+    see what the LLM emitted vs what the pipeline shipped.
 
     Different platforms get different issues_key values so a UC with
     both `defender_kql` + `sentinel_kql` can carry separate audit
@@ -765,6 +776,19 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
     kql = uc_dict.get(kql_key) or ""
     if not kql:
         return 0
+    # Pass 1: auto-fix the easy cases. Saves a re-prompt to the LLM and
+    # turns "100 broken queries" into "queries that are correct without
+    # the analyst noticing they were ever wrong".
+    if auto_fix and _auto_fix_kql_fields is not None:
+        try:
+            fixed_kql, changes = _auto_fix_kql_fields(kql)
+        except Exception as e:
+            uc_dict[issues_key] = [{"kind": "autofix_error", "message": str(e)[:200]}]
+            return 1
+        if changes:
+            uc_dict[kql_key] = fixed_kql
+            uc_dict[issues_key + "_autofix"] = changes
+            kql = fixed_kql
     try:
         issues = _validate_kql_fields(kql)
     except Exception as e:

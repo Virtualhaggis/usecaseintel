@@ -412,6 +412,114 @@ def format_issues(issues: list[Issue]) -> str:
     return "\n".join(f"  - {i['kind']}: {i['message']}" for i in issues)
 
 
+# =============================================================================
+# Auto-fixer — rewrite known wrong-table / near-miss field references in-place
+# =============================================================================
+
+# Common prefix prefixes we try when looking for the right column on a given
+# table. E.g. on DeviceFileEvents, `AccountName` becomes
+# `InitiatingProcessAccountName`.
+_PREFIX_CANDIDATES = ("InitiatingProcess", "Request", "File", "Process", "Target")
+
+
+def _replace_field_outside_strings(text: str, field: str, replacement: str) -> str:
+    """Replace word-boundary references to `field` with `replacement`,
+    skipping any matches inside string literals or comments. Uses the
+    same noise-stripping pass the validator uses to know which spans
+    are string content."""
+    if field == replacement:
+        return text
+    # Build a "blanked" view that hides string + comment contents so we
+    # only replace identifier occurrences in real code.
+    masked = _strip_noise(text)
+    pattern = re.compile(r"(?<![A-Za-z0-9_\.\$])" + re.escape(field) + r"\b")
+    out = []
+    last = 0
+    for m in pattern.finditer(masked):
+        out.append(text[last:m.start()])
+        out.append(replacement)
+        last = m.end()
+    out.append(text[last:])
+    return "".join(out)
+
+
+def _suggest_replacement_for_wrong_table(field: str, table: str) -> str | None:
+    """Given a field that exists on some other table but not on `table`,
+    pick the most plausible column on `table` that the analyst likely
+    meant. Tries known prefixed variants first, then difflib similarity."""
+    cols = SCHEMA.get(table, [])
+    if not cols:
+        return None
+    cset = set(cols)
+    # Try the canonical prefix variants — almost always the right answer
+    # for Device* tables that only carry InitiatingProcess* fields.
+    for prefix in _PREFIX_CANDIDATES:
+        cand = prefix + field
+        if cand in cset:
+            return cand
+    # Try suffix-stripping if the field already has one of those prefixes
+    # but we're on a table that uses a different one (uncommon).
+    for prefix in _PREFIX_CANDIDATES:
+        if field.startswith(prefix):
+            base = field[len(prefix):]
+            if base in cset:
+                return base
+            for p2 in _PREFIX_CANDIDATES:
+                cand = p2 + base
+                if cand in cset:
+                    return cand
+    # Last resort: difflib against the table's columns.
+    import difflib
+    matches = difflib.get_close_matches(field, cols, n=1, cutoff=0.7)
+    return matches[0] if matches else None
+
+
+def auto_fix_kql(kql: str) -> tuple[str, list[str]]:
+    """Apply safe automatic rewrites to a KQL query body for known
+    schema violations the validator can identify with high confidence.
+
+    Returns (fixed_kql, change_log). When change_log is empty, the
+    query was untouched. Conservative by design — only touches
+    wrong-table issues with an obvious correct candidate, and
+    unknown_field near-misses with a >=0.8 difflib ratio.
+    """
+    if not kql:
+        return kql, []
+    issues = validate_kql(kql)
+    if not issues:
+        return kql, []
+    import difflib
+    fixed = kql
+    changes: list[str] = []
+    seen: set[tuple[str, str]] = set()
+    for issue in issues:
+        field = issue.get("field")
+        if not field:
+            continue
+        kind = issue.get("kind")
+        replacement: str | None = None
+        if kind == "wrong_table":
+            tables = issue.get("tables_in_scope") or []
+            if not tables:
+                continue
+            replacement = _suggest_replacement_for_wrong_table(field, tables[0])
+        elif kind == "unknown_field":
+            sugg = issue.get("suggestion")
+            if sugg and difflib.SequenceMatcher(None, field, sugg).ratio() >= 0.8:
+                replacement = sugg
+        if not replacement:
+            continue
+        key = (field, replacement)
+        if key in seen:
+            continue
+        seen.add(key)
+        new_body = _replace_field_outside_strings(fixed, field, replacement)
+        if new_body != fixed:
+            fixed = new_body
+            changes.append(f"{field} -> {replacement}")
+    return fixed, changes
+
+
 if __name__ == "__main__":
     import sys
     if len(sys.argv) < 2:
