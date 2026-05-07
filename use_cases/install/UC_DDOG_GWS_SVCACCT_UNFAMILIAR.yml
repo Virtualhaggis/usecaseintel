@@ -1,0 +1,18 @@
+id: UC_DDOG_GWS_SVCACCT_UNFAMILIAR
+title: Google Workspace service account modifying group membership
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+- id: T1078.004
+  name: Cloud Accounts
+description: |-
+  Unexpected SA modifying group memberships. Datadog default 'Google Workspace Service Account Unfamiliar Activity'.
+datadog_query: |-
+  source:gws.activity @actor.callerType:KEY
+  @evt.name:(ADD_GROUP_MEMBER OR REMOVE_GROUP_MEMBER OR CHANGE_GROUP_MEMBERSHIP)

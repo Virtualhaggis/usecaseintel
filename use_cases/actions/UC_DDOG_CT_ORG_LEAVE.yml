@@ -1,0 +1,15 @@
+id: UC_DDOG_CT_ORG_LEAVE
+title: AWS Organization leave initiated
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1531
+  name: Account Access Removal
+description: |-
+  Account left the AWS organization — central control loss. Datadog default 'CloudTrail AWS Organization Leave'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success @evt.name:LeaveOrganization

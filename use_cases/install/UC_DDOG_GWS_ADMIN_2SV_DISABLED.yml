@@ -1,0 +1,16 @@
+id: UC_DDOG_GWS_ADMIN_2SV_DISABLED
+title: Google Workspace admin disabled 2SV for OU
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Two-step verification turned off for an organisational unit. Datadog default 'Google Workspace Admin 2SV Disabled'.
+datadog_query: |-
+  source:gws.activity @evt.name:CHANGE_TWO_STEP_VERIFICATION_ENROLLMENT
+  @properties.value:false

@@ -1,0 +1,17 @@
+id: UC_DDOG_CROWDSTRIKE_ALERT
+title: CrowdStrike Falcon alert ingested
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1566
+  name: Phishing
+- id: T1204
+  name: User Execution
+description: |-
+  Forwarded CrowdStrike sensor detection — pivot to the original CS console. Datadog default 'CrowdStrike Alert Detection'.
+datadog_query: |-
+  source:crowdstrike @event.name:DetectionSummaryEvent

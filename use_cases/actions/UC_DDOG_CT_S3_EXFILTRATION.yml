@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_S3_EXFILTRATION
+title: AWS S3 anomalous bulk download (exfil)
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  Anomalous S3 read pattern — pivot for staged exfil. Datadog default 'CloudTrail S3 Bucket Exfiltration'.
+datadog_query: |-
+  source:cloudtrail @evt.name:(GetObject OR ListObjectsV2)
+  @evt.outcome:success

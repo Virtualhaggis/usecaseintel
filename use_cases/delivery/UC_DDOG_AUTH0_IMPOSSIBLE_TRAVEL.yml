@@ -1,0 +1,16 @@
+id: UC_DDOG_AUTH0_IMPOSSIBLE_TRAVEL
+title: Auth0 impossible-travel sign-in
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078.004
+  name: Cloud Accounts
+description: |-
+  Auth0 successful login from geographically impossible locations. Datadog default 'Impossible Travel Auth0 Login'.
+datadog_query: |-
+  source:auth0 @evt.name:successful_login
+  @network.client.geoip.country.iso_code:*

@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_NACL_MODIFIED
+title: AWS Network ACL modified
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  VPC NACL entries changed — segmentation drift. Datadog default 'CloudTrail Network ACL Modified'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(CreateNetworkAclEntry OR DeleteNetworkAclEntry OR ReplaceNetworkAclEntry)

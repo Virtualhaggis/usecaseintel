@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_PAT_IMPOSSIBLE_TRAVEL
+title: GitHub PAT used from impossible-travel locations
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078.004
+  name: Cloud Accounts
+- id: T1550.001
+  name: Application Access Token
+description: |-
+  Same PAT seen from geographically distant locations within an impossible-travel window. Datadog default 'GitHub PAT Impossible Travel'.
+datadog_query: |-
+  source:github @actor.type:PAT @network.client.geoip.country.iso_code:*

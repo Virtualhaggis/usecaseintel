@@ -1,0 +1,15 @@
+id: UC_DDOG_GWS_USER_ADMIN_ASSIGNMENT
+title: Google Workspace admin role assigned to user
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098.003
+  name: Additional Cloud Roles
+description: |-
+  User granted Workspace admin privileges. Datadog default 'Google Workspace User Admin Role Assignment'.
+datadog_query: |-
+  source:gws.activity @evt.name:GRANT_ADMIN_PRIVILEGE

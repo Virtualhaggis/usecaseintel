@@ -1,0 +1,15 @@
+id: UC_DDOG_CONFLUENCE_SPACE_EXPORT
+title: Confluence space export
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  Space-level export — bulk content exfil. Datadog default 'Confluence Space Export'.
+datadog_query: |-
+  source:confluence @evt.name:space.exported

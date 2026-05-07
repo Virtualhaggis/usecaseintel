@@ -1,0 +1,15 @@
+id: UC_DDOG_DUO_ADMIN_LOCKOUT
+title: Cisco Duo admin lockout
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+description: |-
+  Duo admin locked out after excessive failures. Datadog default 'Cisco Duo Administrator Lockout'.
+datadog_query: |-
+  source:cisco-duo @evt.name:admin_login @result:failure

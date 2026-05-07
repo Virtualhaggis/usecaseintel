@@ -1,0 +1,15 @@
+id: UC_DDOG_GWS_USER_2SV_DISABLED
+title: Google Workspace user disabled 2SV on own account
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  User self-disabled 2SV — adversary post-compromise persistence step. Datadog default 'Google Workspace User 2SV Disabled'.
+datadog_query: |-
+  source:gws.activity @evt.name:2sv_disable

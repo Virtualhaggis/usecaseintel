@@ -1,0 +1,16 @@
+id: UC_DDOG_DUO_FRAUD_PUSH
+title: Cisco Duo fraud-marked push notifications
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1621
+  name: Multi-Factor Authentication Request Generation
+description: |-
+  User marked Duo push prompts as fraudulent — push-bombing attempt. Datadog default 'Cisco Duo Fraud Push Notifications'.
+datadog_query: |-
+  source:cisco-duo @evt.name:authentication
+  @result:fraud @reason:user_marked_fraud

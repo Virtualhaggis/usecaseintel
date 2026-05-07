@@ -1,0 +1,17 @@
+id: UC_DDOG_GWS_EMAIL_FORWARDING_EXTERNAL
+title: Google Workspace email auto-forwarding to external domain
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1114.003
+  name: Email Forwarding Rule
+description: |-
+  Auto-forward to a non-corporate domain — classic mail exfil. Datadog default 'Google Workspace Email Forwarding External'.
+datadog_query: |-
+  source:gws.activity @evt.name:(CHANGE_GMAIL_SETTING OR CREATE_FILTER)
+  @properties.parameters.forwardingAddress:*
+  -@properties.parameters.forwardingAddress:(*@your-domain.com)

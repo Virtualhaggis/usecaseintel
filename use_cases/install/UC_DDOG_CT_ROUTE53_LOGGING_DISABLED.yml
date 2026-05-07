@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_ROUTE53_LOGGING_DISABLED
+title: AWS Route53 query logging disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  DNS query logs deleted — name-resolution observability lost. Datadog default 'CloudTrail Route53 Query Logging Disabled'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:DeleteQueryLoggingConfig

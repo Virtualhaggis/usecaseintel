@@ -1,0 +1,15 @@
+id: UC_DDOG_AUTH0_BRUTE_FORCE
+title: Auth0 brute-force attack on user
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+description: |-
+  Auth0's per-user brute-force lockout fired. Datadog default 'Brute Force Attack on Auth0 User'.
+datadog_query: |-
+  source:auth0 @evt.name:limit_wc

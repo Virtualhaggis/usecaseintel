@@ -1,0 +1,17 @@
+id: UC_DDOG_AUTH0_ANOMALOUS_PROTECTION_EVENTS
+title: Auth0 anomalous attack-protection event spike
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+- id: T1078
+  name: Valid Accounts
+description: |-
+  Spike in Auth0 attack-protection trigger events. Datadog default 'Auth0 Anomalous Attack Protection Events'.
+datadog_query: |-
+  source:auth0 @evt.name:(limit_wc OR limit_sul OR limit_mu OR pwd_leak)

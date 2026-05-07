@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_EBS_SNAPSHOT_PUBLIC
+title: AWS EBS snapshot made public
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  EBS snapshot exposed to all-AWS — bulk data exfil path. Datadog default 'CloudTrail EBS Snapshot Made Public'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:ModifySnapshotAttribute
+  @requestParameters.createVolumePermission.add.items.group:all

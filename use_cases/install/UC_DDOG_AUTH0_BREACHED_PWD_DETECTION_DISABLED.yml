@@ -1,0 +1,17 @@
+id: UC_DDOG_AUTH0_BREACHED_PWD_DETECTION_DISABLED
+title: Auth0 breached-password detection disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Breached-password detection turned off — adversary lowering the auth bar. Datadog default 'Auth0 Breached Password Detection Disabled'.
+datadog_query: |-
+  source:auth0 @evt.name:tenant_setting_updated
+  @properties.flags.disable_clickjack_protection_headers:false
+  @properties.attack_protection.breached_password_detection.enabled:false

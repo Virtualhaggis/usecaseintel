@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_DETECTIVE_GRAPH_DELETED
+title: AWS Detective behaviour graph deleted
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1531
+  name: Account Access Removal
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  Detective graph deleted — investigation trail destroyed. Datadog default 'CloudTrail Detective Graph Deleted'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success @evt.name:DeleteGraph

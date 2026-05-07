@@ -1,0 +1,16 @@
+id: UC_DDOG_AUTH0_SUSPICIOUS_IP_THROTTLING_DISABLED
+title: Auth0 suspicious-IP throttling disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Auth0 suspicious-IP throttling turned off. Datadog default 'Auth0 Suspicious IP Throttling Disabled'.
+datadog_query: |-
+  source:auth0 @evt.name:tenant_setting_updated
+  @properties.attack_protection.suspicious_ip_throttling.enabled:false

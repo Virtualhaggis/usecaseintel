@@ -1,0 +1,15 @@
+id: UC_DDOG_GITHUB_SAML_OIDC_DISABLED
+title: GitHub SAML/OIDC SSO disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Org SSO turned off — auth-bar lowering. Datadog default 'GitHub SAML/OIDC Disabled'.
+datadog_query: |-
+  source:github @evt.name:(org.disable_saml OR org.disable_oidc OR enterprise.disable_saml)

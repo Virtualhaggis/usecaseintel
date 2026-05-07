@@ -1,0 +1,17 @@
+id: UC_DDOG_GITLAB_MASS_DOWNLOAD
+title: GitLab mass repository download
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+- id: T1213.003
+  name: Code Repositories
+description: |-
+  Anomalous spike in clones from one user / IP — exfil signal. Datadog default 'GitLab Mass Repository Download'.
+datadog_query: |-
+  source:gitlab @evt.name:repository.git_clone

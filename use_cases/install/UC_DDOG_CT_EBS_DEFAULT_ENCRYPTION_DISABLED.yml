@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_EBS_DEFAULT_ENCRYPTION_DISABLED
+title: AWS EBS default encryption disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.001
+  name: Disable or Modify Tools
+description: |-
+  Default EBS encryption turned off — new volumes plaintext. Datadog default 'CloudTrail EBS Default Encryption Disabled'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:DisableEbsEncryptionByDefault

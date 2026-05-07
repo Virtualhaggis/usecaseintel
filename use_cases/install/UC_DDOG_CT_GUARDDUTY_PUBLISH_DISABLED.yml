@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_GUARDDUTY_PUBLISH_DISABLED
+title: AWS GuardDuty findings publishing disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  GuardDuty stopped publishing findings to S3. Datadog default 'CloudTrail GuardDuty Publishing Disabled'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:UpdatePublishingDestination
+  @requestParameters.publishingDestination.status:disabled

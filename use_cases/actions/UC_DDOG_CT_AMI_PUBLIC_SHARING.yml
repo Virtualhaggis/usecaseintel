@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_AMI_PUBLIC_SHARING
+title: AWS EC2 AMI shared publicly
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1537
+  name: Transfer Data to Cloud Account
+description: |-
+  AMI launchPermission added 'all' — image now public. Datadog default 'CloudTrail EC2 AMI Public Sharing'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:ModifyImageAttribute
+  @requestParameters.launchPermission.add.items.group:all

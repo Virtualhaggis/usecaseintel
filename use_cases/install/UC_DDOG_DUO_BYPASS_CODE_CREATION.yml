@@ -1,0 +1,15 @@
+id: UC_DDOG_DUO_BYPASS_CODE_CREATION
+title: Cisco Duo emergency bypass code created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  Admin generated a Duo bypass code — auth-fallback risk. Datadog default 'Cisco Duo Bypass Code Creation'.
+datadog_query: |-
+  source:cisco-duo @evt.name:bypass_code_create

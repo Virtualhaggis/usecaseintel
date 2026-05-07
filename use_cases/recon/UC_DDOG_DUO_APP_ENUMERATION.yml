@@ -1,0 +1,15 @@
+id: UC_DDOG_DUO_APP_ENUMERATION
+title: Cisco Duo application enumeration
+kill_chain: recon
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1592.001
+  name: Hardware
+description: |-
+  User browsing the list of Duo-protected applications. Datadog default 'Cisco Duo Application Enumeration'.
+datadog_query: |-
+  source:cisco-duo @evt.name:application_view

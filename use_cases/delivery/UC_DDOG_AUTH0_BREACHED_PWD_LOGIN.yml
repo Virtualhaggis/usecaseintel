@@ -1,0 +1,16 @@
+id: UC_DDOG_AUTH0_BREACHED_PWD_LOGIN
+title: Auth0 login with known-breached password
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110.004
+  name: Credential Stuffing
+description: |-
+  User authenticated with a credential known from a breach corpus. Datadog default 'Auth0 Breached Password Login'.
+datadog_query: |-
+  source:auth0 @evt.name:successful_login
+  @properties.flagged.breached_password:true

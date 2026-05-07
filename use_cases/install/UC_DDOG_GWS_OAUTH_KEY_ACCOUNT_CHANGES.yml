@@ -1,0 +1,16 @@
+id: UC_DDOG_GWS_OAUTH_KEY_ACCOUNT_CHANGES
+title: Google Workspace OAuth key making account changes
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1550.001
+  name: Application Access Token
+description: |-
+  OAuth service-account key creating or modifying users. Datadog default 'Google Workspace OAuth Key Account Changes'.
+datadog_query: |-
+  source:gws.activity @evt.name:(CREATE_USER OR DELETE_USER OR SUSPEND_USER OR GRANT_ADMIN_PRIVILEGE)
+  @actor.callerType:KEY

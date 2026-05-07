@@ -1,0 +1,17 @@
+id: UC_DDOG_CONFLUENCE_GLOBAL_SETTING_CHANGED
+title: Confluence global security setting changed
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+- id: T1562
+  name: Impair Defenses
+description: |-
+  Global Confluence security setting modified. Datadog default 'Confluence Global Setting Changed'.
+datadog_query: |-
+  source:confluence @evt.name:global.setting.changed

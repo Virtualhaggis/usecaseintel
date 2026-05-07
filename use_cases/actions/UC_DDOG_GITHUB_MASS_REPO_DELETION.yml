@@ -1,0 +1,17 @@
+id: UC_DDOG_GITHUB_MASS_REPO_DELETION
+title: GitHub mass repository deletion
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1485
+  name: Data Destruction
+- id: T1531
+  name: Account Access Removal
+description: |-
+  Bulk repo deletion in a tight window — destructive impact. Datadog default 'GitHub Mass Repository Deletion'.
+datadog_query: |-
+  source:github @evt.name:repo.destroy

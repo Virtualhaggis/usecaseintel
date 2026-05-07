@@ -1,0 +1,15 @@
+id: UC_DDOG_DUO_BRUTE_FORCE
+title: Cisco Duo brute-force on protected user
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+description: |-
+  Repeated failed Duo authentications on the same user. Datadog default 'Cisco Duo Brute Force Attack'.
+datadog_query: |-
+  source:cisco-duo @evt.name:authentication @result:fraud

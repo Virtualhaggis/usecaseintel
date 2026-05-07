@@ -1,0 +1,17 @@
+id: UC_DDOG_GWS_TOR_CLIENT_ACCESS
+title: Google Workspace access from Tor exit node
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1090.003
+  name: Multi-hop Proxy
+- id: T1205.002
+  name: Socket Filters
+description: |-
+  Workspace activity from Tor — anonymisation flag. Datadog default 'Google Workspace Tor Client Access'.
+datadog_query: |-
+  source:gws.activity @network.client.ip_category:tor

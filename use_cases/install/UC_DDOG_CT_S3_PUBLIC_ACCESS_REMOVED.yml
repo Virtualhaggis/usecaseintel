@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_S3_PUBLIC_ACCESS_REMOVED
+title: AWS S3 public-access-block removed
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1578.001
+  name: Create Cloud Instance
+description: |-
+  S3 public-access-block disabled — bucket exposure path. Datadog default 'CloudTrail S3 Public Access Block Removed'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:(DeletePublicAccessBlock OR PutBucketPublicAccessBlock)
+  @requestParameters.PublicAccessBlockConfiguration.BlockPublicAcls:false

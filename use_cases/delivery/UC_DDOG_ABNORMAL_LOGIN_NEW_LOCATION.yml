@@ -1,0 +1,15 @@
+id: UC_DDOG_ABNORMAL_LOGIN_NEW_LOCATION
+title: "Abnormal Security: login from new location"
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1078.004
+  name: Cloud Accounts
+description: |-
+  Login from a previously-unseen geo for the user. Datadog default 'Abnormal Security Login New Location'.
+datadog_query: |-
+  source:abnormal-security @evt.name:login_new_location

@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_BEDROCK_LOGGING_DISABLED
+title: AWS Bedrock model invocation logging disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1562.008
+  name: Disable or Modify Cloud Logs
+description: |-
+  Bedrock invocation logs disabled. Datadog default 'CloudTrail Bedrock Model Invocation Disabled'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success
+  @evt.name:DeleteModelInvocationLoggingConfiguration

@@ -1,0 +1,18 @@
+id: UC_DDOG_AUTH0_BRUTE_FORCE_PROTECTION_DISABLED
+title: Auth0 brute-force protection disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+- id: T1110
+  name: Brute Force
+description: |-
+  Auth0 brute-force protection disabled. Datadog default 'Auth0 Brute Force Protection Disabled'.
+datadog_query: |-
+  source:auth0 @evt.name:tenant_setting_updated
+  @properties.attack_protection.brute_force_protection.enabled:false

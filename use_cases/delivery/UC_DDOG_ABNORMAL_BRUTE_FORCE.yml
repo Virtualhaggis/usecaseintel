@@ -1,0 +1,15 @@
+id: UC_DDOG_ABNORMAL_BRUTE_FORCE
+title: "Abnormal Security: brute-force attack detected"
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1110
+  name: Brute Force
+description: |-
+  Abnormal Security flagged brute-force activity. Datadog default 'Abnormal Security Brute Force Attack'.
+datadog_query: |-
+  source:abnormal-security @evt.name:brute_force_attack

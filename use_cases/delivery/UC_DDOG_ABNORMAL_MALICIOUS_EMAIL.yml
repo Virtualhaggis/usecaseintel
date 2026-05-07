@@ -1,0 +1,15 @@
+id: UC_DDOG_ABNORMAL_MALICIOUS_EMAIL
+title: "Abnormal Security: malicious email opened"
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1566.001
+  name: Spearphishing Attachment
+description: |-
+  User opened a malicious email Abnormal flagged. Datadog default 'Abnormal Security Malicious Email Opened'.
+datadog_query: |-
+  source:abnormal-security @evt.name:malicious_email @action:opened

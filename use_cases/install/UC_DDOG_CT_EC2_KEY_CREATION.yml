@@ -1,0 +1,17 @@
+id: UC_DDOG_CT_EC2_KEY_CREATION
+title: AWS EC2 key-pair created
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1199
+  name: Trusted Relationship
+- id: T1098
+  name: Account Manipulation
+description: |-
+  New EC2 key pair issued — backdoor SSH-access primitive. Datadog default 'CloudTrail EC2 Key Pair Creation'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:success @evt.name:CreateKeyPair

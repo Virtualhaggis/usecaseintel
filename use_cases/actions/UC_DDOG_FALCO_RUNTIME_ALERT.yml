@@ -1,0 +1,17 @@
+id: UC_DDOG_FALCO_RUNTIME_ALERT
+title: Falco runtime-security alert
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1611
+  name: Escape to Host
+- id: T1059
+  name: Command and Scripting Interpreter
+description: |-
+  Falco kernel-level runtime alert — high-fidelity container/host detection. Datadog default 'Falco Runtime Alert'.
+datadog_query: |-
+  source:falco @priority:(Critical OR Error OR Warning)

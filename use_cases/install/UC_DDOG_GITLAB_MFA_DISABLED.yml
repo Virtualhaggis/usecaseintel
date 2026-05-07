@@ -1,0 +1,15 @@
+id: UC_DDOG_GITLAB_MFA_DISABLED
+title: GitLab user MFA disabled
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1556
+  name: Modify Authentication Process
+description: |-
+  User self-disabled MFA on GitLab. Datadog default 'GitLab MFA Disabled'.
+datadog_query: |-
+  source:gitlab @evt.name:user.two_factor_auth_disabled

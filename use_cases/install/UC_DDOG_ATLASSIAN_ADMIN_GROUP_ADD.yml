@@ -1,0 +1,16 @@
+id: UC_DDOG_ATLASSIAN_ADMIN_GROUP_ADD
+title: Atlassian user added to administrative group
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+description: |-
+  User added to an Atlassian admin group. Datadog default 'Atlassian user added to administrative group'.
+datadog_query: |-
+  source:atlassian @evt.name:GroupMembershipChanged
+  @target.group:*Admin*

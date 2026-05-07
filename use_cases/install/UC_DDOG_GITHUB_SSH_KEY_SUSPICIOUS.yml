@@ -1,0 +1,15 @@
+id: UC_DDOG_GITHUB_SSH_KEY_SUSPICIOUS
+title: GitHub SSH key added from suspicious IP
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1098.004
+  name: SSH Authorized Keys
+description: |-
+  SSH public key added — backdoor access primitive; pivot via IP geo. Datadog default 'GitHub SSH Key Added Suspicious'.
+datadog_query: |-
+  source:github @evt.name:public_key.create

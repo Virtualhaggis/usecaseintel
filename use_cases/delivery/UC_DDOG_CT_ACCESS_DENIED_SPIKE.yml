@@ -1,0 +1,16 @@
+id: UC_DDOG_CT_ACCESS_DENIED_SPIKE
+title: AWS CloudTrail AccessDenied spike
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- datadog
+mitre_attack:
+- id: T1526
+  name: Cloud Service Discovery
+description: |-
+  Burst of AccessDenied errors from one principal — privilege discovery. Datadog default 'CloudTrail Access Denied Spike'.
+datadog_query: |-
+  source:cloudtrail @evt.outcome:failure
+  @errorCode:(AccessDenied OR UnauthorizedOperation)
