@@ -7166,12 +7166,18 @@ function _libPrepare() {
     const title = (d.querySelector('summary .uc-title')?.textContent || d.querySelector('summary')?.textContent || '').trim();
     if (!title) return;
     const queries = {};
+    // The query body lives inside <pre><button>COPY</button><code>...</code></pre>.
+    // Reading <pre>.textContent concatenates "COPY" with the query string and
+    // breaks the (^|\s)source: anchor for Datadog detection. Read from <code>
+    // (or the parent's data-query if rendered that way) so the actual query
+    // text starts the string.
     d.querySelectorAll('pre').forEach(pre => {
-      const txt = pre.textContent || '';
+      const codeEl = pre.querySelector('code');
+      const txt = (codeEl ? codeEl.textContent : pre.textContent) || '';
       if (!txt.trim()) return;
       let kind = 'other';
       if (/^\s*title:/m.test(txt) && /\bdetection:/.test(txt)) kind = 'sigma';
-      else if ((/(^|\s)source:[a-z][a-z0-9._-]+\s/i.test(txt)) && /@[a-z][a-z0-9._-]+:/i.test(txt) && !/\|/.test(txt.split('\n')[0])) kind = 'datadog';
+      else if (/(^|\s)source:[a-z][a-z0-9._-]+(\s|$)/i.test(txt) && /@[A-Za-z][A-Za-z0-9._-]+:/.test(txt) && !/\|/.test(txt.split('\n')[0])) kind = 'datadog';
       else if (/^\s*(?:index=|search\b|\|)/m.test(txt)) kind = 'spl';
       else if (/DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents/.test(txt)) kind = 'def';
       else if (/SecurityEvent|SigninLogs|AuditLogs/.test(txt)) kind = 'sent';
@@ -9488,39 +9494,37 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     uid = f"{art_id}-uc{idx}"
     phase_name = next((n for p, n, _ in KILL_CHAIN_PHASES if p == uc.kill_chain), uc.kill_chain)
     conf_cls = uc.confidence.lower()
-    # Build the tabs dynamically — Sentinel/Sigma/Datadog only appear when
-    # the UC carries a body for them. SPL stays last for backward compat
-    # with existing querystring deep-links.
-    sentinel_tab_btn = (
-        f'<button class="tab-btn" data-target="{uid}-sentinel">Sentinel KQL</button>'
-        if skql else ""
-    )
-    sentinel_tab_pane = (
-        f'<div class="tab-content" id="{uid}-sentinel">'
-        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(skql)}</code></pre>'
-        f'</div>'
-        if skql else ""
-    )
-    sigma_tab_btn = (
-        f'<button class="tab-btn" data-target="{uid}-sigma">Sigma</button>'
-        if sigma else ""
-    )
-    sigma_tab_pane = (
-        f'<div class="tab-content" id="{uid}-sigma">'
-        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(sigma)}</code></pre>'
-        f'</div>'
-        if sigma else ""
-    )
-    datadog_tab_btn = (
-        f'<button class="tab-btn" data-target="{uid}-datadog">Datadog</button>'
-        if ddog else ""
-    )
-    datadog_tab_pane = (
-        f'<div class="tab-content" id="{uid}-datadog">'
-        f'<pre><button class="copy-btn">COPY</button><code>{html.escape(ddog)}</code></pre>'
-        f'</div>'
-        if ddog else ""
-    )
+    # Build tabs dynamically — every platform is conditional. The LLM legitimately
+    # produces UCs with NO Defender KQL (e.g. CDN-level DDoS where the relevant
+    # telemetry is web-server / Sentinel logs, not endpoint events). Hard-coding
+    # Defender as the always-active tab left those UCs displaying an empty body.
+    # First non-empty platform becomes the active one; tabs render in canonical
+    # order: Defender → Sentinel → Sigma → Datadog → Splunk.
+    platforms = [
+        ("kql",      "Defender KQL",     kql),
+        ("sentinel", "Sentinel KQL",     skql),
+        ("sigma",    "Sigma",            sigma),
+        ("datadog",  "Datadog",          ddog),
+        ("spl",      "Splunk SPL (CIM)", spl),
+    ]
+    populated = [(suffix, label, body) for suffix, label, body in platforms if body]
+    if not populated:
+        # Edge case: UC has no platform body at all. Render an explanatory
+        # placeholder so the UC still appears (with its title + ATT&CK) but
+        # the absence is obvious to analysts.
+        tab_btns = ""
+        tab_panes = '<div class="tab-content active"><div style="padding:14px 0;color:var(--muted);font-size:12.5px;">No platform-specific query body emitted for this UC. The mapped MITRE techniques and data sources above can be used to look up an equivalent detection in your SIEM.</div></div>'
+    else:
+        tab_btns = "\n      ".join(
+            f'<button class="tab-btn{" active" if i == 0 else ""}" data-target="{uid}-{suffix}">{label}</button>'
+            for i, (suffix, label, _) in enumerate(populated)
+        )
+        tab_panes = "\n    ".join(
+            f'<div class="tab-content{" active" if i == 0 else ""}" id="{uid}-{suffix}">'
+            f'<pre><button class="copy-btn">COPY</button><code>{html.escape(body)}</code></pre>'
+            f'</div>'
+            for i, (suffix, _, body) in enumerate(populated)
+        )
     uslug = _uc_slug(uc)
     return f"""
 <details class="uc" data-uc-slug="{uslug}"{ ' open' if idx == 0 else '' }>
@@ -9537,21 +9541,9 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span>{techs}</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span>{dms}</div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="{uid}-kql">Defender KQL</button>
-      {sentinel_tab_btn}
-      {sigma_tab_btn}
-      {datadog_tab_btn}
-      <button class="tab-btn" data-target="{uid}-spl">Splunk SPL (CIM)</button>
+      {tab_btns}
     </div>
-    <div class="tab-content active" id="{uid}-kql">
-      <pre><button class="copy-btn">COPY</button><code>{html.escape(kql)}</code></pre>
-    </div>
-    {sentinel_tab_pane}
-    {sigma_tab_pane}
-    {datadog_tab_pane}
-    <div class="tab-content" id="{uid}-spl">
-      <pre><button class="copy-btn">COPY</button><code>{html.escape(spl)}</code></pre>
-    </div>
+    {tab_panes}
   </div>
 </details>
 """.strip()
