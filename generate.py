@@ -5729,6 +5729,11 @@ ul.intel-types-doc code{
 .drawer-list .pill.confmedium{color:var(--warn);}
 .drawer-empty{color:var(--muted-2); font-size:12px; font-style:italic; padding:8px 0;}
 
+/* When the Articles-tab Platform filter is active, UCs on visible
+   article cards that don't have the selected platform get hidden so
+   the analyst sees only the bodies they filtered for. */
+details.uc.uc-platform-hidden{display:none !important;}
+
 /* ----- Share buttons + deeplink highlight ---------------------------- */
 .share-btn{
   background:transparent; border:1px solid transparent;
@@ -6954,6 +6959,42 @@ function applySourceFilter() {
     const matchPlat = activePlats.length === 0
                       || activePlats.some(p => platforms.includes(p));
     card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat));
+
+    // Drill in: when a Platform filter is active, also hide UCs on this
+    // card that don't have the selected platform — otherwise users land
+    // on an article that "matches Datadog" but the first UC they see has
+    // no Datadog body, which is confusing. When no platform filter is
+    // active, every UC stays visible.
+    const ucs = card.querySelectorAll('details.uc');
+    let firstVisibleUc = null;
+    ucs.forEach(uc => {
+      const ucPlats = (uc.dataset.platforms || '').split(',').filter(Boolean);
+      const ucMatch = activePlats.length === 0
+                      || activePlats.some(p => ucPlats.includes(p));
+      uc.classList.toggle('uc-platform-hidden', !ucMatch);
+      if (ucMatch && !firstVisibleUc) firstVisibleUc = uc;
+    });
+    // Auto-open the first matching UC so analysts immediately see the
+    // platform body they filtered for. Only re-open when a platform
+    // filter is active, otherwise leave the existing open/closed state.
+    if (activePlats.length && firstVisibleUc) {
+      ucs.forEach(uc => { if (uc !== firstVisibleUc) uc.open = false; });
+      firstVisibleUc.open = true;
+      // Switch the active tab to the filtered platform so the right
+      // query body is visible without an extra click.
+      const targetPlatform = activePlats[0];
+      const tabSuffix = {def:'kql', sent:'sentinel', sigma:'sigma', spl:'spl', datadog:'datadog'}[targetPlatform];
+      if (tabSuffix) {
+        const targetTabBtn = firstVisibleUc.querySelector('.tab-btn[data-target$="-' + tabSuffix + '"]');
+        const targetTabPane = firstVisibleUc.querySelector('.tab-content[id$="-' + tabSuffix + '"]');
+        if (targetTabBtn && targetTabPane) {
+          firstVisibleUc.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+          firstVisibleUc.querySelectorAll('.tab-content').forEach(p => p.classList.remove('active'));
+          targetTabBtn.classList.add('active');
+          targetTabPane.classList.add('active');
+        }
+      }
+    }
   });
   document.querySelectorAll('#navlist .nav-item').forEach(n => {
     const card = document.getElementById(n.dataset.jump);
@@ -9521,8 +9562,21 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
             for i, (suffix, _, body) in enumerate(populated)
         )
     uslug = _uc_slug(uc)
+    # data-platforms drives the Articles-tab Platform filter: when the
+    # user picks Datadog, the JS hides UCs on the visible article cards
+    # that don't have a Datadog query body, so they get a clean view of
+    # only the platform they selected.
+    uc_plats = ",".join(sorted({
+        p for p in [
+            ("def" if uc.defender_kql else None),
+            ("sent" if uc.sentinel_kql else None),
+            ("sigma" if getattr(uc, "sigma_yaml", "") else None),
+            ("spl" if uc.splunk_spl else None),
+            ("datadog" if getattr(uc, "datadog_query", "") else None),
+        ] if p
+    }))
     return f"""
-<details class="uc" data-uc-slug="{uslug}"{ ' open' if idx == 0 else '' }>
+<details class="uc" data-uc-slug="{uslug}" data-platforms="{uc_plats}"{ ' open' if idx == 0 else '' }>
   <summary>
     <span class="uc-title">{html.escape(uc.title)}</span>
     <span class="uc-phase">{html.escape(phase_name)}</span>
