@@ -6019,6 +6019,7 @@ ul.intel-types-doc code{
         <button data-pl="sent" title="Microsoft Sentinel KQL">Sentinel</button>
         <button data-pl="sigma" title="Platform-neutral Sigma">Sigma</button>
         <button data-pl="spl" title="Splunk SPL">SPL</button>
+        <button data-pl="datadog" title="Datadog Cloud SIEM logs query">Datadog</button>
       </div>
       <div class="matrix-stats" id="matrixStats"></div>
     </div>
@@ -8045,7 +8046,7 @@ function tidCellHtml(tid, isSub) {
   if (plSigma) platforms.push('<span class="pl-badge pl-sigma" title="Sigma rule">Σ</span>');
   if (plSpl)   platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
   if (plDdog)  platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
-  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-ddog="${plDdog?1:0}" tabindex="0">
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
