@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>T1505.003 · Web Shell — Clankerusecase MITRE ATT&CK detection coverage</title>
+<meta name="description" content="T1505.003 Web Shell — MITRE ATT&amp;CK technique. 21 detection use cases, 3 threat-intel articles. Defender KQL, Sentinel KQL, Sigma, Splunk SPL, and Datadog Cloud SIEM coverage.">
+<link rel="canonical" href="https://clankerusecase.com/techniques/T1505.003.html">
+<link rel="icon" type="image/png" href="https://clankerusecase.com/logo.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="T1505.003 · Web Shell — Clankerusecase">
+<meta property="og:description" content="T1505.003 Web Shell — MITRE ATT&amp;CK technique. 21 detection use cases, 3 threat-intel articles. Defender KQL, Sentinel KQL, Sigma, Splunk SPL, and Datadog Cloud SIEM coverage.">
+<meta property="og:url" content="https://clankerusecase.com/techniques/T1505.003.html">
+<meta property="og:image" content="https://clankerusecase.com/logo.png">
+<meta property="og:site_name" content="Clankerusecase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="T1505.003 · Web Shell">
+<meta name="twitter:description" content="T1505.003 Web Shell — MITRE ATT&amp;CK technique. 21 detection use cases, 3 threat-intel articles. Defender KQL, Sentinel KQL, Sigma, Splunk SPL, and Datadog Cloud SIEM coverage.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "T1505.003 · Web Shell",
+  "description": "T1505.003 Web Shell — MITRE ATT&amp;CK technique. 21 detection use cases, 3 threat-intel articles. Defender KQL, Sentinel KQL, Sigma, Splunk SPL, and Datadog Cloud SIEM coverage.",
+  "url": "https://clankerusecase.com/techniques/T1505.003.html",
+  "publisher": { "@type": "Organization", "name": "Clankerusecase",
+                  "url": "https://clankerusecase.com/" },
+  "about": { "@type": "DefinedTerm", "name": "Web Shell",
+              "termCode": "T1505.003",
+              "url": "https://attack.mitre.org/techniques/T1505/003" }
+}
+</script>
+<style>
+:root{--bg:#08090a;--panel:#16171b;--panel2:#1f2024;--text:#f7f8f8;--muted:#8a8f98;
+--muted2:#62656a;--accent:#7170ff;--accent2:#9b8afb;--ok:#4cb782;--warn:#e2a93f;
+--bad:#eb5757;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+--code:#1a1b1e;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 500px at 50% -10%,rgba(113,112,255,0.06),transparent 60%),var(--bg);
+background-attachment:fixed;color:var(--text);
+font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+font-size:14px;line-height:1.6;letter-spacing:-0.005em;
+-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none}a:hover{color:var(--accent);text-decoration:underline}
+header.tp{position:sticky;top:0;z-index:50;background:rgba(8,9,10,0.85);
+backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid var(--border);
+padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:17px}
+.brand img{width:32px;height:32px;border-radius:7px;border:1px solid var(--border2)}
+.brand .sub{color:var(--muted);font-weight:500;font-size:12px}
+.back{margin-left:auto;color:var(--muted);font-size:12.5px;border:1px solid var(--border);
+padding:6px 12px;border-radius:5px}
+.back:hover{color:var(--text);border-color:var(--border2);background:var(--panel)}
+main{max-width:1080px;margin:0 auto;padding:32px 28px}
+.crumb{font-size:11.5px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase;margin-bottom:14px}
+.crumb a{color:var(--muted)}.crumb .sep{margin:0 8px;color:var(--border2)}
+h1.title{font-size:30px;line-height:1.18;margin:0 0 6px 0;font-weight:600;letter-spacing:-0.018em}
+h1 .tid{font-family:var(--mono);font-size:18px;color:var(--accent2);margin-right:12px;
+padding:4px 10px;border-radius:5px;background:rgba(113,112,255,0.10);
+border:1px solid rgba(113,112,255,0.30);vertical-align:middle}
+.lead{color:var(--muted);font-size:15px;margin:8px 0 18px 0;max-width:820px}
+.tactic-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tactic-pill{font-size:11.5px;font-family:var(--mono);letter-spacing:0.02em;
+padding:5px 11px;border-radius:99px;background:rgba(113,112,255,0.10);
+color:var(--accent2);border:1px solid rgba(113,112,255,0.30)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;padding:14px 18px;
+background:var(--panel);border:1px solid var(--border);border-radius:8px;
+margin-bottom:24px}
+.stats .stat{display:flex;flex-direction:column;gap:2px}
+.stats .n{font-size:22px;font-weight:600;color:var(--accent2)}
+.stats .l{font-size:11px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase}
+.section{margin:28px 0}
+.section h2{font-size:13px;font-family:var(--mono);letter-spacing:0.06em;
+text-transform:uppercase;color:var(--muted);margin:0 0 14px 0;padding-bottom:8px;
+border-bottom:1px solid var(--border)}
+.uc-card{background:var(--panel);border:1px solid var(--border);border-radius:7px;
+padding:14px 16px;margin-bottom:10px;transition:border-color 0.12s,background 0.12s}
+.uc-card:hover{border-color:var(--accent);background:var(--panel2)}
+.uc-card .t{font-weight:500;font-size:14.5px;display:block;color:var(--text);margin-bottom:4px}
+.uc-card .meta{font-size:11.5px;color:var(--muted2);display:flex;flex-wrap:wrap;gap:10px;
+align-items:center;font-family:var(--mono);letter-spacing:0.02em}
+.uc-card .src{padding:1px 8px;border-radius:99px;font-weight:600;font-size:10px;
+text-transform:uppercase;letter-spacing:0.06em}
+.src.internal{background:rgba(76,183,130,0.16);color:#9bdfc1;border:1px solid rgba(76,183,130,0.40)}
+.src.bespoke{background:rgba(155,138,251,0.14);color:var(--accent2);border:1px solid rgba(155,138,251,0.36)}
+.src.escu{background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.uc-card .pl{display:inline-flex;gap:3px;margin-left:auto}
+.uc-card .pl span{font-size:9.5px;font-weight:700;width:18px;height:18px;
+display:inline-flex;align-items:center;justify-content:center;border-radius:4px;
+font-family:var(--mono)}
+.pl .pl-d{background:rgba(80,200,160,0.18);color:#9bdfc1}
+.pl .pl-s{background:rgba(110,160,255,0.18);color:#a8c8ff}
+.pl .pl-g{background:rgba(255,170,90,0.18);color:#ffcc99}
+.pl .pl-p{background:rgba(220,120,200,0.18);color:#f5b8e0}
+.pl .pl-D{background:rgba(120,90,200,0.20);color:#c8aff8}
+.art-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.art-row:last-child{border:0}
+.art-row .at{display:block;color:var(--text);margin-bottom:3px}
+.art-row .am{font-size:11.5px;color:var(--muted2);font-family:var(--mono)}
+.sev{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;
+font-family:var(--mono);font-weight:700;text-transform:uppercase;
+letter-spacing:0.05em;margin-right:8px}
+.sev.crit{background:rgba(235,87,87,0.18);color:#ff8888;border:1px solid rgba(235,87,87,0.40)}
+.sev.high{background:rgba(226,169,63,0.16);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.sev.med{background:rgba(113,112,255,0.14);color:var(--accent2);border:1px solid rgba(113,112,255,0.34)}
+.sev.low{background:rgba(76,183,130,0.14);color:#9bdfc1;border:1px solid rgba(76,183,130,0.34)}
+.subs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px 0}
+.subs a{font-size:11.5px;font-family:var(--mono);padding:4px 10px;border-radius:5px;
+background:var(--panel);border:1px solid var(--border);color:var(--text)}
+.subs a:hover{border-color:var(--accent);text-decoration:none;background:var(--panel2)}
+.parent-link{font-size:12.5px;color:var(--muted);margin:8px 0}
+.cta{display:flex;gap:10px;margin:18px 0 24px 0;flex-wrap:wrap}
+.cta a{padding:8px 14px;border-radius:6px;font-size:12.5px;font-weight:500;
+border:1px solid var(--border2);background:var(--panel);color:var(--text)}
+.cta a.primary{background:rgba(113,112,255,0.16);border-color:rgba(113,112,255,0.40);
+color:var(--accent2)}
+.cta a:hover{border-color:var(--accent);text-decoration:none}
+.empty{padding:18px;text-align:center;color:var(--muted2);font-size:13px;
+background:var(--panel);border:1px dashed var(--border2);border-radius:7px}
+footer{padding:32px 28px;text-align:center;color:var(--muted2);font-size:11.5px;
+border-top:1px solid var(--border);margin-top:48px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<header class="tp">
+  <a href="https://clankerusecase.com/" class="brand">
+    <img src="https://clankerusecase.com/logo.png" alt="">
+    <div>Clankerusecase<div class="sub">MITRE ATT&CK detection coverage</div></div>
+  </a>
+  <a href="https://clankerusecase.com/" class="back">← Back to main site</a>
+</header>
+<main>
+  <div class="crumb">
+    <a href="https://clankerusecase.com/">Home</a><span class="sep">/</span>
+    <a href="https://clankerusecase.com/#tab-attack-matrix">MITRE Matrix</a><span class="sep">/</span>
+    Persistence<span class="sep">/</span>
+    T1505.003
+  </div>
+  <h1 class="title"><span class="tid">T1505.003</span>Web Shell</h1>
+  <p class="lead"><strong>T1505.003</strong> — Web Shell is a MITRE ATT&CK technique in the Persistence tactic. Clankerusecase tracks <strong>21</strong> detection use cases covering it and <strong>3</strong> threat-intel articles citing it.</p>
+  <div class='tactic-row'><span class="tactic-pill">Persistence</span></div>
+  <div class="cta">  <a class="primary" href="https://clankerusecase.com/#technique-T1505.003">View on the matrix →</a>  <a href="https://clankerusecase.com/#uc-search-T1505.003">Filter Detection Library</a>  <a href="https://attack.mitre.org/techniques/T1505/003" target="_blank" rel="noopener">MITRE official spec ↗</a></div>
+  <div class="stats">
+    <div class="stat"><span class="n">21</span><span class="l">Use cases</span></div>
+    <div class="stat"><span class="n">3</span><span class="l">Articles</span></div>
+    <div class="stat"><span class="n">0</span><span class="l">Sub-techniques</span></div>
+    <div class="stat"><span class="n">1</span><span class="l">Tactic</span></div>
+  </div>
+  <div class="parent-link">↑ Parent technique: <a href="T1505.html">T1505 · Server Software Component</a></div>
+  <div class="section"><h2>Use cases covering this technique (21)</h2><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Detect Exchange Web Shell</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">MS Exchange Mailbox Replication service writing Active Server Pages</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Windows SharePoint Spinstall0 Webshell File Creation</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Windows Suspicious Child Process Spawned From WebServer</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Windows WSUS Spawning Shell</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Cisco Configuration Archive Logging Analysis</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · hunting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Cisco Secure Firewall - Privileged Command Execution via HTTP</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · hunting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Exploit Public Facing Application via Apache Commons Text</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · hunting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Spring4Shell Payload URL Request</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Supernova Webshell</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Tomcat Session Deserialization Attempt</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · hunting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Tomcat Session File Upload Attempt</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · hunting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Web JSP Request via URL</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Windows SharePoint Spinstall0 GET Request</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Windows SharePoint ToolPane Endpoint Exploitation Attempt</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">Detect Webshell Exploit Behavior</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">W3WP Spawning Shell</span>  <span class="meta">    <span class="src escu">ESCU</span>    actions · alerting    <span class="pl"><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">[LLM] Ivanti EPMM webshell drop — JSP file written under /mi/tomcat/webapps/mifs/</span>  <span class="meta">    <span class="src bespoke">Bespoke</span>    install · alerting    <span class="pl"><span class="pl-d" title="Defender KQL">D</span><span class="pl-s" title="Sentinel KQL">S</span><span class="pl-g" title="Sigma">Σ</span><span class="pl-p" title="Splunk SPL">P</span><span class="pl-D" title="Datadog Cloud SIEM">DD</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">[LLM] MetInfo CVE-2026-29014 webshell drop into /cache/weixin/ directory</span>  <span class="meta">    <span class="src bespoke">Bespoke</span>    install · alerting    <span class="pl"><span class="pl-d" title="Defender KQL">D</span><span class="pl-s" title="Sentinel KQL">S</span><span class="pl-g" title="Sigma">Σ</span><span class="pl-p" title="Splunk SPL">P</span><span class="pl-D" title="Datadog Cloud SIEM">DD</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">[LLM] MetInfo CVE-2026-29014 post-exploit shell spawned by PHP/web-server on Linux</span>  <span class="meta">    <span class="src bespoke">Bespoke</span>    actions · alerting    <span class="pl"><span class="pl-d" title="Defender KQL">D</span><span class="pl-s" title="Sentinel KQL">S</span><span class="pl-g" title="Sigma">Σ</span><span class="pl-p" title="Splunk SPL">P</span><span class="pl-D" title="Datadog Cloud SIEM">DD</span></span>  </span></a><a class="uc-card" href="https://clankerusecase.com/#uc-search-T1505.003">  <span class="t">[LLM] Godzilla web shell on IIS/Exchange — w3wp.exe spawning recon/cmd children (SHADOW-EARTH-053)</span>  <span class="meta">    <span class="src bespoke">Bespoke</span>    install · alerting    <span class="pl"><span class="pl-d" title="Defender KQL">D</span><span class="pl-s" title="Sentinel KQL">S</span><span class="pl-g" title="Sigma">Σ</span><span class="pl-p" title="Splunk SPL">P</span></span>  </span></a></div>
+  <div class="section"><h2>Articles citing this technique (3)</h2><div class="art-row">  <a class="at" href="https://clankerusecase.com/#art-09"><span class="sev high">high</span>  Ivanti warns of new EPMM flaw exploited in zero-day attacks</a>  <span class="am">art-09</span></div><div class="art-row">  <a class="at" href="https://clankerusecase.com/#art-57"><span class="sev high">high</span>  MetInfo CMS CVE-2026-29014 Exploited for Remote Code Execution Attacks</a>  <span class="am">art-57</span></div><div class="art-row">  <a class="at" href="https://clankerusecase.com/#art-82"><span class="sev crit">crit</span>  China-Linked Hackers Target Asian Governments, NATO State, Journalists, and Activists</a>  <span class="am">art-82</span></div></div>
+</main>
+<footer>
+  Auto-generated from the Clankerusecase use-case catalogue. Re-built every 2 hours.
+  <br>Reference: <a href="https://attack.mitre.org/techniques/T1505/003" target="_blank" rel="noopener">attack.mitre.org/techniques/T1505/003</a>
+</footer>
+</body>
+</html>

@@ -11368,6 +11368,365 @@ def write_share_stubs(articles_meta, articles_raw_index, base_url: str = "https:
     print(f"[*] Share stubs written: {art_n} articles + {uc_n} UCs  ->  share/")
 
 
+# =============================================================================
+# Per-technique landing pages — one indexable HTML page per MITRE ATT&CK
+# technique, aggregating UCs that cover it + articles that cite it.
+# =============================================================================
+
+# Stylesheet shared by every technique page. Lean — no JS, single inline
+# <style> block. Pages are static; the dynamic site lives at /index.html.
+_TECH_PAGE_STYLE = """
+:root{--bg:#08090a;--panel:#16171b;--panel2:#1f2024;--text:#f7f8f8;--muted:#8a8f98;
+--muted2:#62656a;--accent:#7170ff;--accent2:#9b8afb;--ok:#4cb782;--warn:#e2a93f;
+--bad:#eb5757;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+--code:#1a1b1e;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 500px at 50% -10%,rgba(113,112,255,0.06),transparent 60%),var(--bg);
+background-attachment:fixed;color:var(--text);
+font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+font-size:14px;line-height:1.6;letter-spacing:-0.005em;
+-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none}a:hover{color:var(--accent);text-decoration:underline}
+header.tp{position:sticky;top:0;z-index:50;background:rgba(8,9,10,0.85);
+backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid var(--border);
+padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:17px}
+.brand img{width:32px;height:32px;border-radius:7px;border:1px solid var(--border2)}
+.brand .sub{color:var(--muted);font-weight:500;font-size:12px}
+.back{margin-left:auto;color:var(--muted);font-size:12.5px;border:1px solid var(--border);
+padding:6px 12px;border-radius:5px}
+.back:hover{color:var(--text);border-color:var(--border2);background:var(--panel)}
+main{max-width:1080px;margin:0 auto;padding:32px 28px}
+.crumb{font-size:11.5px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase;margin-bottom:14px}
+.crumb a{color:var(--muted)}.crumb .sep{margin:0 8px;color:var(--border2)}
+h1.title{font-size:30px;line-height:1.18;margin:0 0 6px 0;font-weight:600;letter-spacing:-0.018em}
+h1 .tid{font-family:var(--mono);font-size:18px;color:var(--accent2);margin-right:12px;
+padding:4px 10px;border-radius:5px;background:rgba(113,112,255,0.10);
+border:1px solid rgba(113,112,255,0.30);vertical-align:middle}
+.lead{color:var(--muted);font-size:15px;margin:8px 0 18px 0;max-width:820px}
+.tactic-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tactic-pill{font-size:11.5px;font-family:var(--mono);letter-spacing:0.02em;
+padding:5px 11px;border-radius:99px;background:rgba(113,112,255,0.10);
+color:var(--accent2);border:1px solid rgba(113,112,255,0.30)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;padding:14px 18px;
+background:var(--panel);border:1px solid var(--border);border-radius:8px;
+margin-bottom:24px}
+.stats .stat{display:flex;flex-direction:column;gap:2px}
+.stats .n{font-size:22px;font-weight:600;color:var(--accent2)}
+.stats .l{font-size:11px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase}
+.section{margin:28px 0}
+.section h2{font-size:13px;font-family:var(--mono);letter-spacing:0.06em;
+text-transform:uppercase;color:var(--muted);margin:0 0 14px 0;padding-bottom:8px;
+border-bottom:1px solid var(--border)}
+.uc-card{background:var(--panel);border:1px solid var(--border);border-radius:7px;
+padding:14px 16px;margin-bottom:10px;transition:border-color 0.12s,background 0.12s}
+.uc-card:hover{border-color:var(--accent);background:var(--panel2)}
+.uc-card .t{font-weight:500;font-size:14.5px;display:block;color:var(--text);margin-bottom:4px}
+.uc-card .meta{font-size:11.5px;color:var(--muted2);display:flex;flex-wrap:wrap;gap:10px;
+align-items:center;font-family:var(--mono);letter-spacing:0.02em}
+.uc-card .src{padding:1px 8px;border-radius:99px;font-weight:600;font-size:10px;
+text-transform:uppercase;letter-spacing:0.06em}
+.src.internal{background:rgba(76,183,130,0.16);color:#9bdfc1;border:1px solid rgba(76,183,130,0.40)}
+.src.bespoke{background:rgba(155,138,251,0.14);color:var(--accent2);border:1px solid rgba(155,138,251,0.36)}
+.src.escu{background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.uc-card .pl{display:inline-flex;gap:3px;margin-left:auto}
+.uc-card .pl span{font-size:9.5px;font-weight:700;width:18px;height:18px;
+display:inline-flex;align-items:center;justify-content:center;border-radius:4px;
+font-family:var(--mono)}
+.pl .pl-d{background:rgba(80,200,160,0.18);color:#9bdfc1}
+.pl .pl-s{background:rgba(110,160,255,0.18);color:#a8c8ff}
+.pl .pl-g{background:rgba(255,170,90,0.18);color:#ffcc99}
+.pl .pl-p{background:rgba(220,120,200,0.18);color:#f5b8e0}
+.pl .pl-D{background:rgba(120,90,200,0.20);color:#c8aff8}
+.art-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.art-row:last-child{border:0}
+.art-row .at{display:block;color:var(--text);margin-bottom:3px}
+.art-row .am{font-size:11.5px;color:var(--muted2);font-family:var(--mono)}
+.sev{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;
+font-family:var(--mono);font-weight:700;text-transform:uppercase;
+letter-spacing:0.05em;margin-right:8px}
+.sev.crit{background:rgba(235,87,87,0.18);color:#ff8888;border:1px solid rgba(235,87,87,0.40)}
+.sev.high{background:rgba(226,169,63,0.16);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.sev.med{background:rgba(113,112,255,0.14);color:var(--accent2);border:1px solid rgba(113,112,255,0.34)}
+.sev.low{background:rgba(76,183,130,0.14);color:#9bdfc1;border:1px solid rgba(76,183,130,0.34)}
+.subs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px 0}
+.subs a{font-size:11.5px;font-family:var(--mono);padding:4px 10px;border-radius:5px;
+background:var(--panel);border:1px solid var(--border);color:var(--text)}
+.subs a:hover{border-color:var(--accent);text-decoration:none;background:var(--panel2)}
+.parent-link{font-size:12.5px;color:var(--muted);margin:8px 0}
+.cta{display:flex;gap:10px;margin:18px 0 24px 0;flex-wrap:wrap}
+.cta a{padding:8px 14px;border-radius:6px;font-size:12.5px;font-weight:500;
+border:1px solid var(--border2);background:var(--panel);color:var(--text)}
+.cta a.primary{background:rgba(113,112,255,0.16);border-color:rgba(113,112,255,0.40);
+color:var(--accent2)}
+.cta a:hover{border-color:var(--accent);text-decoration:none}
+.empty{padding:18px;text-align:center;color:var(--muted2);font-size:13px;
+background:var(--panel);border:1px dashed var(--border2);border-radius:7px}
+footer{padding:32px 28px;text-align:center;color:var(--muted2);font-size:11.5px;
+border-top:1px solid var(--border);margin-top:48px;font-family:var(--mono)}
+"""
+
+
+_PL_BADGE_LABELS = {
+    "d": ("pl-d", "D", "Defender KQL"),
+    "s": ("pl-s", "S", "Sentinel KQL"),
+    "g": ("pl-g", "Σ", "Sigma"),
+    "p": ("pl-p", "P", "Splunk SPL"),
+    "D": ("pl-D", "DD", "Datadog Cloud SIEM"),
+}
+
+
+def _render_technique_page(tid: str, technique_view: dict, matrix_data: dict,
+                            base_url: str = "https://clankerusecase.com") -> str:
+    """One static HTML page summarising one MITRE ATT&CK technique.
+
+    Aggregates: name + ID + tactics, kill-chain context, sub-techniques (or
+    parent), every UC that covers this technique with platform badges, every
+    article citing it, and links out to MITRE's canonical doc + the in-app
+    matrix view + Detection Library filtered to this technique."""
+    tinfo = technique_view.get(tid, {})
+    name = tinfo.get("name", tid)
+    parent_tid = tinfo.get("parent")
+    subs = tinfo.get("subs") or []
+    tactics = tinfo.get("tactics") or []
+    is_sub = bool(tinfo.get("is_sub"))
+
+    ucs = matrix_data.get("tech_ucs", {}).get(tid, [])
+    arts = matrix_data.get("tech_arts", {}).get(tid, [])
+    uc_records = matrix_data.get("ucs") or []
+    art_records = matrix_data.get("arts") or []
+
+    # Tactic row
+    tactic_pills = "".join(
+        f'<span class="tactic-pill">{html.escape(TACTIC_DISPLAY.get(t, t))}</span>'
+        for t in tactics
+    )
+
+    # Sub-techniques or parent link
+    sub_block = ""
+    if subs:
+        sub_links = "".join(
+            f'<a href="{html.escape(s)}.html">{html.escape(s)} · '
+            f'{html.escape(technique_view.get(s, {}).get("name", s))}</a>'
+            for s in subs
+        )
+        sub_block = f'<div class="section"><h2>Sub-techniques ({len(subs)})</h2><div class="subs">{sub_links}</div></div>'
+    elif is_sub and parent_tid:
+        pname = technique_view.get(parent_tid, {}).get("name", parent_tid)
+        sub_block = (
+            f'<div class="parent-link">↑ Parent technique: '
+            f'<a href="{html.escape(parent_tid)}.html">{html.escape(parent_tid)} · '
+            f'{html.escape(pname)}</a></div>'
+        )
+
+    # UC list
+    uc_html_parts = []
+    for uc_idx in ucs:
+        if uc_idx >= len(uc_records):
+            continue
+        uc = uc_records[uc_idx]
+        title = uc.get("t", "Untitled")
+        src = uc.get("src", "internal")
+        pl = uc.get("pl", "") or ""
+        # Platform badges from the pl string
+        badges = []
+        for i, ch in enumerate(pl):
+            if ch == "-":
+                continue
+            cls, lbl, full = _PL_BADGE_LABELS.get(ch, ("", ch, ch))
+            if cls:
+                badges.append(f'<span class="{cls}" title="{html.escape(full)}">{html.escape(lbl)}</span>')
+        platforms_html = '<span class="pl">' + "".join(badges) + '</span>' if badges else ""
+        # Source pill
+        src_label = {"internal": "Internal", "bespoke": "Bespoke", "escu": "ESCU"}.get(src, src.title())
+        # Tier
+        tier = uc.get("tier", "")
+        tier_html = f' · {html.escape(tier)}' if tier else ""
+        # Phase
+        ph = uc.get("ph", "")
+        # Link target — internal UCs use the variable name; bespoke don't
+        # have a stable hash slug here (would need _uc_slug computation).
+        # Point to the in-app filtered Library by technique instead.
+        href = f"{base_url}/#uc-search-{html.escape(tid)}"
+        uc_html_parts.append(
+            f'<a class="uc-card" href="{href}">'
+            f'  <span class="t">{html.escape(title)}</span>'
+            f'  <span class="meta">'
+            f'    <span class="src {src}">{html.escape(src_label)}</span>'
+            f'    {ph}{tier_html}'
+            f'    {platforms_html}'
+            f'  </span>'
+            f'</a>'
+        )
+    if uc_html_parts:
+        uc_section = (
+            f'<div class="section"><h2>Use cases covering this technique ({len(ucs)})</h2>'
+            f'{"".join(uc_html_parts)}</div>'
+        )
+    else:
+        uc_section = (
+            f'<div class="section"><h2>Use cases covering this technique</h2>'
+            f'<div class="empty">No use cases yet — this technique is in the matrix '
+            f'but no UC explicitly maps to it. Articles citing it may still appear below.</div></div>'
+        )
+
+    # Articles
+    art_html_parts = []
+    for a_idx in arts:
+        if a_idx >= len(art_records):
+            continue
+        ar = art_records[a_idx]
+        atitle = ar.get("title", "")
+        sev = ar.get("sev", "low")
+        # We don't have a published date or link in the matrix art record.
+        # Use the article id (e.g. "art-23") for an in-app deeplink.
+        aid = ar.get("id", "")
+        href = f"{base_url}/#{html.escape(aid)}" if aid else f"{base_url}/"
+        art_html_parts.append(
+            f'<div class="art-row">'
+            f'  <a class="at" href="{href}"><span class="sev {sev}">{html.escape(sev)}</span>'
+            f'  {html.escape(atitle)}</a>'
+            f'  <span class="am">{html.escape(aid)}</span>'
+            f'</div>'
+        )
+    if art_html_parts:
+        art_section = (
+            f'<div class="section"><h2>Articles citing this technique ({len(arts)})</h2>'
+            f'{"".join(art_html_parts)}</div>'
+        )
+    else:
+        art_section = ""
+
+    # CTAs
+    mitre_url = "https://attack.mitre.org/techniques/" + tid.replace(".", "/")
+    cta = (
+        f'<div class="cta">'
+        f'  <a class="primary" href="{base_url}/#technique-{html.escape(tid)}">View on the matrix →</a>'
+        f'  <a href="{base_url}/#uc-search-{html.escape(tid)}">Filter Detection Library</a>'
+        f'  <a href="{html.escape(mitre_url)}" target="_blank" rel="noopener">MITRE official spec ↗</a>'
+        f'</div>'
+    )
+
+    # Lead paragraph + meta description (used both visibly and in <meta>)
+    primary_tactic = TACTIC_DISPLAY.get(tactics[0], tactics[0]) if tactics else "MITRE ATT&CK"
+    n_ucs = len(ucs)
+    n_arts = len(arts)
+    uc_word = "use case" if n_ucs == 1 else "use cases"
+    art_word = "article" if n_arts == 1 else "articles"
+    arts_clause = f" and <strong>{n_arts}</strong> threat-intel {art_word} citing it" if n_arts else ""
+    tactic_clause = f" in the {html.escape(primary_tactic)} tactic" if tactics else ""
+    lead = (
+        f"<strong>{html.escape(tid)}</strong> — {html.escape(name)} is a MITRE ATT&CK "
+        f"technique{tactic_clause}. "
+        f"Clankerusecase tracks <strong>{n_ucs}</strong> detection {uc_word} covering it"
+        f"{arts_clause}."
+    )
+    meta_desc = (
+        f"{tid} {name} — MITRE ATT&CK technique. {n_ucs} detection use cases, "
+        f"{n_arts} threat-intel articles. Defender KQL, Sentinel KQL, Sigma, "
+        f"Splunk SPL, and Datadog Cloud SIEM coverage."
+    )
+
+    canonical = f"{base_url}/techniques/{tid}.html"
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(tid)} · {html.escape(name)} — Clankerusecase MITRE ATT&CK detection coverage</title>
+<meta name="description" content="{html.escape(meta_desc)}">
+<link rel="canonical" href="{html.escape(canonical)}">
+<link rel="icon" type="image/png" href="{base_url}/logo.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{html.escape(tid)} · {html.escape(name)} — Clankerusecase">
+<meta property="og:description" content="{html.escape(meta_desc)}">
+<meta property="og:url" content="{html.escape(canonical)}">
+<meta property="og:image" content="{base_url}/logo.png">
+<meta property="og:site_name" content="Clankerusecase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{html.escape(tid)} · {html.escape(name)}">
+<meta name="twitter:description" content="{html.escape(meta_desc)}">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "{html.escape(tid)} · {html.escape(name)}",
+  "description": "{html.escape(meta_desc)}",
+  "url": "{canonical}",
+  "publisher": {{ "@type": "Organization", "name": "Clankerusecase",
+                  "url": "{base_url}/" }},
+  "about": {{ "@type": "DefinedTerm", "name": "{html.escape(name)}",
+              "termCode": "{html.escape(tid)}",
+              "url": "{html.escape(mitre_url)}" }}
+}}
+</script>
+<style>{_TECH_PAGE_STYLE}</style>
+</head>
+<body>
+<header class="tp">
+  <a href="{base_url}/" class="brand">
+    <img src="{base_url}/logo.png" alt="">
+    <div>Clankerusecase<div class="sub">MITRE ATT&CK detection coverage</div></div>
+  </a>
+  <a href="{base_url}/" class="back">← Back to main site</a>
+</header>
+<main>
+  <div class="crumb">
+    <a href="{base_url}/">Home</a><span class="sep">/</span>
+    <a href="{base_url}/#tab-attack-matrix">MITRE Matrix</a><span class="sep">/</span>
+    {(html.escape(primary_tactic) + '<span class="sep">/</span>') if tactics else ''}
+    {html.escape(tid)}
+  </div>
+  <h1 class="title"><span class="tid">{html.escape(tid)}</span>{html.escape(name)}</h1>
+  <p class="lead">{lead}</p>
+  {("<div class='tactic-row'>" + tactic_pills + "</div>") if tactic_pills else ""}
+  {cta}
+  <div class="stats">
+    <div class="stat"><span class="n">{n_ucs}</span><span class="l">Use cases</span></div>
+    <div class="stat"><span class="n">{n_arts}</span><span class="l">Articles</span></div>
+    <div class="stat"><span class="n">{len(subs)}</span><span class="l">Sub-techniques</span></div>
+    <div class="stat"><span class="n">{len(tactics)}</span><span class="l">Tactic{'s' if len(tactics) != 1 else ''}</span></div>
+  </div>
+  {sub_block}
+  {uc_section}
+  {art_section}
+</main>
+<footer>
+  Auto-generated from the Clankerusecase use-case catalogue. Re-built every 2 hours.
+  <br>Reference: <a href="{html.escape(mitre_url)}" target="_blank" rel="noopener">attack.mitre.org/techniques/{html.escape(tid.replace('.', '/'))}</a>
+</footer>
+</body>
+</html>
+"""
+
+
+def write_technique_pages(matrix_data: dict, base_url: str = "https://clankerusecase.com") -> int:
+    """Emit one static HTML page per technique under techniques/. Returns
+    the count written. Wipes the directory first so deletes propagate."""
+    if not matrix_data:
+        return 0
+    technique_view = matrix_data.get("techniques") or {}
+    out_dir = Path(__file__).parent / "techniques"
+    if out_dir.exists():
+        import shutil
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    written = 0
+    for tid in technique_view:
+        try:
+            page = _render_technique_page(tid, technique_view, matrix_data, base_url)
+            (out_dir / f"{tid}.html").write_text(page, encoding="utf-8")
+            written += 1
+        except OSError:
+            # Skip if filesystem chokes on the tid (shouldn't happen with T-IDs)
+            pass
+    print(f"[*] Technique landing pages: {written}  ->  techniques/")
+    return written
+
+
 def write_briefings(articles_meta, articles_raw_index):
     BRIEFINGS_DIR.mkdir(exist_ok=True)
     written = []
@@ -12069,6 +12428,10 @@ def main():
         print(f"[*] Matrix: {matrix_data['stats']['total_techs']} techniques, "
               f"{matrix_data['stats']['total_subs']} sub-techniques, "
               f"{matrix_data['stats']['covered_techs']} with use-case or article coverage")
+        # Emit a static HTML landing page per technique. Indexable + linkable
+        # individually — every T-ID gets /techniques/<TID>.html with UC list,
+        # article list, MITRE link, and JSON-LD structured data.
+        write_technique_pages(matrix_data)
     matrix_json = __import__("json").dumps(matrix_data) if matrix_data else "null"
 
     # ===== MITRE-sourced groups =====================================
@@ -12400,6 +12763,15 @@ def main():
                         (f"https://github.com/Virtualhaggis/usecaseintel/blob/main/{rel}",
                          "0.6", "monthly")
                     )
+        # Per-technique landing pages. One indexable URL per MITRE T-ID
+        # at techniques/<TID>.html — high-value SEO surface.
+        techniques_root = _Path(__file__).with_name("techniques")
+        if techniques_root.exists():
+            for tp in sorted(techniques_root.glob("*.html")):
+                sitemap_urls.append(
+                    (f"https://clankerusecase.com/techniques/{tp.name}",
+                     "0.7", "weekly")
+                )
         sitemap_urls = sitemap_urls[:50000]  # protocol cap
         xml_lines = ['<?xml version="1.0" encoding="UTF-8"?>',
                      '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
