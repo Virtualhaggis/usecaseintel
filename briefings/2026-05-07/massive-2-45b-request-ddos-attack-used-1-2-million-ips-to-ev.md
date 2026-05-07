@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Distributed low-rate HTTP flood — massive aggregate RPS with sub-10 requests per source IP
 
-`UC_5_5` · phase: **actions** · confidence: **Medium**
+`UC_10_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound traffic from named privacy-friendly ASNs — 1337 Services GmbH (AS210558) / Church of Cyberology (AS215125)
 
-`UC_5_6` · phase: **actions** · confidence: **High**
+`UC_10_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

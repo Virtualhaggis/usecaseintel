@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Used Claude AI to Attack on Water and Drainage Utility Systems 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 A new threat intelligence report has revealed that an unknown group of hackers used a commercial AI tool to target the systems of a municipal water and drainage utility in Monterrey, Mexico. 
-The attack, which took place in January 2026, marks one of the earliest known real-world cases where an adversary used AI to identify and attempt to access industria…
+The attack, which took place in January 2026, marks one of the earliest known real-world cases where an adversary used AI to identify and attempt to access industrial contro…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,74 +34,12 @@ The attack, which took place in January 2026, marks one of the earliest known re
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1588.007** — Obtain Capabilities: Artificial Intelligence
-- **T1595** — Active Scanning
-- **T1110.003** — Brute Force: Password Spraying
-- **T1046** — Network Service Discovery
-- **T0812** — Default Credentials (ICS)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] BACKUPOSINT v9.0 APEX PREDATOR (AI-generated Python framework) execution
-
-`UC_1_9` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","python3.exe","pythonw.exe","py.exe","python3") OR Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","py.exe","python3")) AND (Processes.process="*BACKUPOSINT*" OR Processes.process="*APEX_PREDATOR*" OR Processes.process="*apex predator*" OR Processes.process="*apex_predator*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// BACKUPOSINT v9.0 APEX PREDATOR — AI-written Python offensive framework (Dragos / SADM 2026)
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName in~ ("python.exe","python3.exe","pythonw.exe","py.exe","python3")
-   or InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","py.exe","python3")
-| where ProcessCommandLine has_any ("BACKUPOSINT","APEX_PREDATOR","apex_predator","APEX PREDATOR")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          SHA256, MD5
-| order by Timestamp desc
-```
-
-### [LLM] Password-spray against internal vNode/SCADA web interface from IT host
-
-`UC_1_10` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count as Attempts dc(_time) as DistinctSeconds min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443,8090,4840,1880) AND (All_Traffic.src_category="internal" OR cidrmatch("10.0.0.0/8",All_Traffic.src) OR cidrmatch("172.16.0.0/12",All_Traffic.src) OR cidrmatch("192.168.0.0/16",All_Traffic.src)) AND (All_Traffic.dest_category IN ("ot","ics","scada","internal") OR cidrmatch("10.0.0.0/8",All_Traffic.dest) OR cidrmatch("172.16.0.0/12",All_Traffic.dest) OR cidrmatch("192.168.0.0/16",All_Traffic.dest)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name span=15m | `drop_dm_object_name(All_Traffic)` | where Attempts > 100 AND DistinctSeconds > 60 | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// East-west password-spray candidate against internal vNode / SCADA WebUI (SADM 2026 TTP)
-// Bursty internal->internal HTTP from a scripting / LOLBin parent on common SCADA/HMI web ports
-let Industrial_Web_Ports = dynamic([80,443,8080,8443,8090,1880,4840]);
-let Sprayer_Tools = dynamic(["python.exe","python3.exe","pythonw.exe","py.exe","powershell.exe","pwsh.exe","curl.exe","wget.exe","hydra.exe","crackmapexec.exe","nxc.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where ActionType in ("ConnectionAttempt","ConnectionFailed","ConnectionSuccess")
-| where ipv4_is_private(LocalIP) and ipv4_is_private(RemoteIP)
-| where RemotePort in (Industrial_Web_Ports)
-| where InitiatingProcessFileName in~ (Sprayer_Tools)
-| summarize Attempts = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp),
-            DistinctMinutes = dcount(bin(Timestamp, 1m)),
-            SampleCmd = any(InitiatingProcessCommandLine),
-            SampleUser = any(InitiatingProcessAccountName)
-            by DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort
-| where Attempts > 100 and DistinctMinutes >= 3   // sustained spray pattern, not a one-off probe
-| order by Attempts desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -398,7 +332,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Used Claude AI to Attack on Water and Drainage Utility Systems
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_6_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -448,4 +382,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

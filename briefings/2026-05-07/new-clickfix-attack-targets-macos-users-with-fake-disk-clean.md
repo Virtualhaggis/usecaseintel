@@ -116,7 +116,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] macOS ClickFix Terminal-pasted curl piped to base64/gunzip into osascript or shell
 
-`UC_4_14` · phase: **delivery** · confidence: **High**
+`UC_9_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### [LLM] macOS ClickFix persistence: fake Google Keystone plist, /tmp/helper, .mainhelper backdoor
 
-`UC_4_15` · phase: **install** · confidence: **High**
+`UC_9_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ DeviceFileEvents
 
 ### [LLM] macOS endpoint contacting ClickFix loader/script/helper C2, exfil endpoint or Telegram fallback bot
 
-`UC_4_16` · phase: **c2** · confidence: **High**
+`UC_9_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -596,7 +596,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ClickFix Attack Targets macOS Users With Fake Disk Cleanup and Utility Lures
 
-`UC_4_13` · phase: **install** · confidence: **High**
+`UC_9_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

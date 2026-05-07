@@ -1,0 +1,76 @@
+{
+  "name": "Volt Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Volt Typhoon netsh portproxy relay setup on edge / SOHO-pivot hosts (CISA AA24-038A)",
+      "description": "Hunts the netsh interface portproxy v4tov4 listener Volt Typhoon (Vanguard Panda / VOLTZITE) consistently uses to turn compromised internet-facing servers and SOHO routers into TCP relays for hands-on-keyboard pivoting into US critical-infrastructure networks. CISA, NSA and Microsoft all called this out as a signature TTP and the corresponding HKLM\\SYSTEM\\CurrentControlSet\\Services\\PortProxy\\v4tov4\\tcp registry value is a high-fidelity, low-volume artifact of the same activity.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1090.001",
+        "T1090.002",
+        "T1059.003",
+        "T1112"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=\"netsh.exe\" (Processes.process=\"*interface portproxy*v4tov4*\" OR Processes.process=\"*portproxy add v4tov4*\" OR Processes.process=\"*portproxy*listenport*connectaddress*\") NOT Processes.user IN (\"*$\",\"NT AUTHORITY\\\\SYSTEM\") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_path) as regpath values(Registry.process_name) as proc from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Services\\\\PortProxy\\\\v4tov4\\\\tcp\\\\*\" by host Registry.dest | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let lookback = 14d;\nlet portproxy_proc = DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where AccountName !endswith \"$\"\n    | where FileName =~ \"netsh.exe\"\n    | where ProcessCommandLine has \"portproxy\"\n    | where ProcessCommandLine has_any (\"v4tov4\", \"add v4\", \"listenport\", \"connectaddress\")\n    | project Timestamp, DeviceName, AccountName,\n              Source = \"Process\",\n              Evidence = ProcessCommandLine,\n              Parent = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              IsRemote = tostring(IsInitiatingProcessRemoteSession);\nlet portproxy_reg = DeviceRegistryEvents\n    | where Timestamp > ago(lookback)\n    | where ActionType in (\"RegistryValueSet\", \"RegistryKeyCreated\")\n    | where RegistryKey has @\"\\Services\\PortProxy\\v4tov4\\tcp\"\n    | project Timestamp, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              Source = \"Registry\",\n              Evidence = strcat(RegistryKey, \" -> \", RegistryValueName, \" = \", RegistryValueData),\n              Parent = InitiatingProcessParentFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              IsRemote = \"\";\nunion portproxy_proc, portproxy_reg\n| order by Timestamp desc",
+      "sentinel_kql": "let lookback = 14d;\nlet portproxy_proc = SecurityEvent\n    | where TimeGenerated > ago(lookback)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where NewProcessName endswith \"\\\\netsh.exe\"\n    | where CommandLine has \"portproxy\"\n    | where CommandLine has_any (\"v4tov4\", \"add v4\", \"listenport\", \"connectaddress\")\n    | project TimeGenerated, Computer, Account,\n              Source = \"Process\",\n              Evidence = CommandLine,\n              Parent = ParentProcessName;\nlet portproxy_reg = ImRegistryEvent\n    | where TimeGenerated > ago(lookback)\n    | where RegistryKey has @\"\\Services\\PortProxy\\v4tov4\\tcp\"\n    | project TimeGenerated,\n              Computer = DvcHostname,\n              Account = ActorUsername,\n              Source = \"Registry\",\n              Evidence = strcat(RegistryKey, \" -> \", RegistryValue, \" = \", RegistryValueData),\n              Parent = ActingProcessName;\nunion portproxy_proc, portproxy_reg\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Volt Typhoon netsh portproxy v4tov4 relay setup\nid: 8c2f9b71-2e44-4e3e-b1d0-7f2e9c1a6bba\nstatus: experimental\ndescription: Detects the netsh interface portproxy v4tov4 command line that Volt Typhoon (CISA AA24-038A) uses to turn compromised internet-facing hosts and SOHO routers into hands-on-keyboard pivot relays.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a\n  - https://attack.mitre.org/groups/G1017/\nauthor: Detection Engineering\ndate: 2024/02/07\ntags:\n  - attack.command_and_control\n  - attack.t1090.001\n  - attack.t1090.002\n  - g1017\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith: '\\netsh.exe'\n  selection_cmd:\n    CommandLine|contains: 'portproxy'\n    CommandLine|contains:\n      - 'v4tov4'\n      - 'add v4'\n      - 'listenport'\n      - 'connectaddress'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection_img and selection_cmd and not filter_machine_acct\nfields:\n  - Image\n  - CommandLine\n  - ParentImage\n  - User\n  - Computer\nfalsepositives:\n  - Network engineers manually configuring port forwards on jumpboxes (rare; should be allow-listed by host)\n  - Containerization tooling that wraps netsh portproxy (very rare on workstations)\nlevel: high",
+      "rationale": "Volt Typhoon's playbook on compromised Cisco RV320s, NETGEAR ProSAFE, ASUS RT, FatPipe MPVPN, and Fortinet edge devices funnels traffic into victim networks via TCP relays, and once inside they have repeatedly stood up netsh portproxy on Windows servers as an intermediate hop (documented in CISA AA24-038A and Microsoft's Volt Typhoon writeup). Generic APTs prefer reverse SOCKS, RAT C2, or commerci",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents, DeviceRegistryEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "yaml/sigma error: Duplicate key '{k}'"
+      ]
+    },
+    {
+      "title": "[LLM] Volt Typhoon NTDS.dit theft via ntdsutil IFM + vssadmin shadow-copy on Domain Controllers",
+      "description": "Hunts Volt Typhoon's signature on-DC credential extraction chain: ntdsutil 'activate instance ntds' + 'ifm' 'create full' (Install-From-Media) and/or vssadmin create shadow \u2192 copy of \\Windows\\NTDS\\ntds.dit + SYSTEM hive to a staging directory. Microsoft's MTR and CISA AA24-038A explicitly attribute this exact ntdsutil IFM command sequence to Volt Typhoon, distinguishing them from China-nexus peers that prefer Mimikatz / DCSync.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.003",
+        "T1003",
+        "T1059.003",
+        "T1074.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where ( (Processes.process_name=\"ntdsutil.exe\" AND Processes.process=\"*ifm*\" AND (Processes.process=\"*create full*\" OR Processes.process=\"*create*ifm*\")) OR (Processes.process_name=\"ntdsutil.exe\" AND Processes.process=\"*ac i ntds*\") OR (Processes.process_name=\"vssadmin.exe\" AND Processes.process=\"*create shadow*\" AND Processes.process=\"*for=C:*\") OR (Processes.process_name=\"powershell.exe\" AND (Processes.process=\"*Win32_ShadowCopy*Create*\" OR Processes.process=\"*ntds.dit*\")) OR (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"esentutl.exe\",\"robocopy.exe\",\"xcopy.exe\") AND Processes.process=\"*ntds.dit*\") ) NOT Processes.user IN (\"*$\") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | eventstats dc(process_name) as distinct_techniques by dest user | where distinct_techniques>=1 | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let lookback = 14d;\nlet ntds_proc = DeviceProcessEvents\n    | where Timestamp > ago(lookback)\n    | where AccountName !endswith \"$\"\n    | where (FileName =~ \"ntdsutil.exe\"\n             and ProcessCommandLine has_any (\"ifm\", \"create full\", \"ac i ntds\", \"activate instance ntds\"))\n         or (FileName =~ \"vssadmin.exe\"\n             and ProcessCommandLine has \"create shadow\"\n             and ProcessCommandLine has_any (\"for=C:\", \"/for=C:\"))\n         or (FileName in~ (\"powershell.exe\", \"pwsh.exe\")\n             and (ProcessCommandLine has_all (\"Win32_ShadowCopy\", \"Create\")\n                  or ProcessCommandLine has \"ntds.dit\"))\n         or (FileName in~ (\"cmd.exe\", \"esentutl.exe\", \"robocopy.exe\", \"xcopy.exe\")\n             and ProcessCommandLine has \"ntds.dit\")\n    | project Timestamp, DeviceName, AccountName,\n              FileName, ProcessCommandLine,\n              Parent = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              IsRemote = tostring(IsInitiatingProcessRemoteSession);\nlet ntds_file = DeviceFileEvents\n    | where Timestamp > ago(lookback)\n    | where ActionType in (\"FileCreated\", \"FileRenamed\")\n    | where FileName =~ \"ntds.dit\"\n         or FolderPath has_any (@\"\\IFM\\\", @\"\\Active Directory\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\Perflogs\\\")\n            and (FileName =~ \"ntds.dit\" or FileName endswith \".dit\")\n    | where InitiatingProcessFileName !in~ (\"lsass.exe\", \"ntds.exe\")\n    | project Timestamp, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              FileName = strcat(\"FileWrite:\", FileName),\n              ProcessCommandLine = strcat(FolderPath, \"\\\\\", FileName),\n              Parent = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              IsRemote = \"\";\nunion ntds_proc, ntds_file\n| summarize Events = count(),\n            Techniques = make_set(FileName, 8),\n            Cmds = make_set(ProcessCommandLine, 8),\n            Parents = make_set(Parent, 8),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp)\n            by DeviceName, AccountName\n| where array_length(Techniques) >= 1\n| order by LastSeen desc",
+      "sentinel_kql": "let lookback = 14d;\nlet ntds_proc = SecurityEvent\n    | where TimeGenerated > ago(lookback)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where (NewProcessName endswith \"\\\\ntdsutil.exe\"\n             and (CommandLine has_any (\"ifm\", \"create full\", \"ac i ntds\", \"activate instance ntds\")))\n         or (NewProcessName endswith \"\\\\vssadmin.exe\"\n             and CommandLine has \"create shadow\"\n             and CommandLine has \"for=C:\")\n         or (NewProcessName has_any (\"\\\\powershell.exe\", \"\\\\pwsh.exe\")\n             and (CommandLine has_all (\"Win32_ShadowCopy\", \"Create\") or CommandLine has \"ntds.dit\"))\n         or (NewProcessName has_any (\"\\\\cmd.exe\", \"\\\\esentutl.exe\", \"\\\\robocopy.exe\", \"\\\\xcopy.exe\")\n             and CommandLine has \"ntds.dit\")\n    | project TimeGenerated, Computer, Account,\n              Process = NewProcessName,\n              CmdLine = CommandLine,\n              Parent = ParentProcessName;\nlet ntds_file = ImFileEvent\n    | where TimeGenerated > ago(lookback)\n    | where EventType in (\"FileCreated\", \"FileRenamed\")\n    | where TargetFileName =~ \"ntds.dit\"\n         or (TargetFileName endswith \".dit\"\n             and TargetFilePath has_any (@\"\\IFM\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\Perflogs\\\"))\n    | project TimeGenerated,\n              Computer = DvcHostname,\n              Account = ActorUsername,\n              Process = strcat(\"FileWrite:\", TargetFileName),\n              CmdLine = TargetFilePath,\n              Parent = ActingProcessName;\nunion ntds_proc, ntds_file\n| summarize Events = count(),\n            Techniques = make_set(Process, 8),\n            Cmds = make_set(CmdLine, 8),\n            Parents = make_set(Parent, 8),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated)\n            by Computer, Account\n| order by LastSeen desc",
+      "sigma_yaml": "",
+      "rationale": "Volt Typhoon (Vanguard Panda / BRONZE SILHOUETTE / VOLTZITE) is a state-aligned cluster targeting US critical infrastructure (water, energy, comms, transport) for pre-positioning. Their LOTL discipline avoids Mimikatz / Cobalt Strike \u2014 instead Microsoft and CISA documented the exact sequence: 'ntdsutil.exe \"ac i ntds\" \"ifm\" \"create full C:\\Windows\\Temp\\Pro\"' on a DC, often paired with vssadmin sha",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceFileEvents, DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    }
+  ]
+}

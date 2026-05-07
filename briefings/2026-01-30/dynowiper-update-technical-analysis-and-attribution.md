@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper drop in C:\inetpub\pub\ — schtask.exe / *_update.exe execution
 
-`UC_214_9` · phase: **install** · confidence: **High**
+`UC_213_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ let WindowDays = 30d;
 
 ### [LLM] rsocx reverse SOCKS5 to 31.172.71.5:8008 (Sandworm Polish energy intrusion)
 
-`UC_214_10` · phase: **c2** · confidence: **High**
+`UC_213_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ let WindowDays = 30d;
 
 ### [LLM] ZOV wiper post-wipe shell command + LocWall.jpg wallpaper drop (Sandworm)
 
-`UC_214_11` · phase: **actions** · confidence: **High**
+`UC_213_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -367,7 +367,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_214_8` · phase: **exploit** · confidence: **High**
+`UC_213_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

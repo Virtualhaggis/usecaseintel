@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_586 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,15 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-07
+- [28 fake call history apps on google play with 7 3m downloads](./2026-05-07/28-fake-call-history-apps-on-google-play-with-7-3m-downloads.md)
 - [critical ollama memory leak vulnerability exposes 300 000 se](./2026-05-07/critical-ollama-memory-leak-vulnerability-exposes-300-000-se.md)
+- [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
+- [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [google chrome 148 released with fix for 127 security vulnera](./2026-05-07/google-chrome-148-released-with-fix-for-127-security-vulnera.md)
 - [hackers used claude ai to attack on water and drainage utili](./2026-05-07/hackers-used-claude-ai-to-attack-on-water-and-drainage-utili.md)
+- [malicious nuget packages target browser credentials ssh keys](./2026-05-07/malicious-nuget-packages-target-browser-credentials-ssh-keys.md)
 - [massive 2 45b request ddos attack used 1 2 million ips to ev](./2026-05-07/massive-2-45b-request-ddos-attack-used-1-2-million-ips-to-ev.md)
 - [microsoft teams for android allow users to join third party ](./2026-05-07/microsoft-teams-for-android-allow-users-to-join-third-party-.md)
 - [new clickfix attack targets macos users with fake disk clean](./2026-05-07/new-clickfix-attack-targets-macos-users-with-fake-disk-clean.md)
-- [new femitbot network uses telegram mini apps to push crypto ](./2026-05-07/new-femitbot-network-uses-telegram-mini-apps-to-push-crypto-.md)
-- [new phishing attack weaponizing event invitations to steal l](./2026-05-07/new-phishing-attack-weaponizing-event-invitations-to-steal-l.md)
-- [new salat malware uses quic and websocket channels for steal](./2026-05-07/new-salat-malware-uses-quic-and-websocket-channels-for-steal.md)
+- [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
@@ -38,7 +40,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
-- [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
+- [palo alto networks firewall zero day exploited for nearly a ](./2026-05-06/palo-alto-networks-firewall-zero-day-exploited-for-nearly-a-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
@@ -63,9 +65,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [scarcruft hacks gaming platform to deploy birdcall malware o](./2026-05-05/scarcruft-hacks-gaming-platform-to-deploy-birdcall-malware-o.md)
 - [student hacked taiwan high speed rail to trigger emergency b](./2026-05-05/student-hacked-taiwan-high-speed-rail-to-trigger-emergency-b.md)
 - [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
-- [the eol blind spot in your cve feed what sca tools miss](./2026-05-05/the-eol-blind-spot-in-your-cve-feed-what-sca-tools-miss.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
-- [vimeo data breach exposes personal information of 119 000 pe](./2026-05-05/vimeo-data-breach-exposes-personal-information-of-119-000-pe.md)
 - [we scanned 1 million exposed ai services here s how bad the ](./2026-05-05/we-scanned-1-million-exposed-ai-services-here-s-how-bad-the-.md)
 - [weaver e cology rce flaw cve 2026 22679 actively exploited v](./2026-05-05/weaver-e-cology-rce-flaw-cve-2026-22679-actively-exploited-v.md)
 
@@ -205,7 +205,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-08
 - [cracks in the bedrock agent god mode](./2026-04-08/cracks-in-the-bedrock-agent-god-mode.md)
-- [financial cyberthreats in 2025 and the outlook for 2026](./2026-04-08/financial-cyberthreats-in-2025-and-the-outlook-for-2026.md)
 
 ## 2026-04-07
 - [as breakout time accelerates prevention first cybersecurity ](./2026-04-07/as-breakout-time-accelerates-prevention-first-cybersecurity-.md)
@@ -383,7 +382,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-14
 - [is it time for internet services to adopt identity verificat](./2026-01-14/is-it-time-for-internet-services-to-adopt-identity-verificat.md)
-- [labscon25 replay hacktivism and war a clarifying discussion](./2026-01-14/labscon25-replay-hacktivism-and-war-a-clarifying-discussion.md)
 
 ## 2026-01-13
 - [your personal information is on the dark web what happens ne](./2026-01-13/your-personal-information-is-on-the-dark-web-what-happens-ne.md)
