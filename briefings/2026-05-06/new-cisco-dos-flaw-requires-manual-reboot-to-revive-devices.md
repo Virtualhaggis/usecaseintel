@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Exposure: Cisco CNC <=7.1 and NSO <=6.4.1.2 vulnerable to CVE-2026-20188 unauth DoS
 
-`UC_34_1` · phase: **recon** · confidence: **High**
+`UC_35_1` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

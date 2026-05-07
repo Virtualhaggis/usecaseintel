@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AccountDumpling – Inbound AppSheet relay email impersonating Meta/Facebook Support
 
-`UC_79_9` · phase: **delivery** · confidence: **High**
+`UC_80_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ EmailEvents
 
 ### [LLM] AccountDumpling – Click on AppSheet-delivered link landing on Netlify/Vercel/Google-Drive Meta-themed page
 
-`UC_79_10` · phase: **delivery** · confidence: **High**
+`UC_80_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ UrlClickEvents
 
 ### [LLM] AccountDumpling attribution – Endpoint connection to phamtaitan[.]vn (operator infrastructure)
 
-`UC_79_11` · phase: **c2** · confidence: **Medium**
+`UC_80_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable WatchGuard Agent for Windows ≤ 1.25.02.0000 (WGSA-2026-00013)
 
-`UC_19_4` · phase: **recon** · confidence: **High**
+`UC_20_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] WatchGuard Agent service spawning shells / LOLBins (post-EOP via CVE-2026-6787/6788/41288)
 
-`UC_19_5` · phase: **exploit** · confidence: **High**
+`UC_20_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — WatchGuard Agent Vulnerabilities Let Attackers Grant Full SYSTEM Privileges on W
 
-`UC_19_3` · phase: **exploit** · confidence: **High**
+`UC_20_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

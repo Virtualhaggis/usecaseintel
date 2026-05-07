@@ -453,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ThreatsDay Bulletin: SMS Blaster Busts, OpenEMR Flaws, 600K Roblox Hacks and 25
 
-`UC_92_14` · phase: **exploit** · confidence: **High**
+`UC_93_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

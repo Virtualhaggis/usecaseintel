@@ -39,6 +39,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [watchguard agent vulnerabilities let attackers grant full sy](./2026-05-07/watchguard-agent-vulnerabilities-let-attackers-grant-full-sy.md)
 - [webinar why modern attacks require both security and recover](./2026-05-07/webinar-why-modern-attacks-require-both-security-and-recover.md)
+- [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
 - [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
 
 ## 2026-05-06
@@ -134,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-28
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
-- [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)
 
 ## 2026-04-24
 - [cisa kev cve 2024 57726 simplehelp missing authorization vul](./2026-04-24/cisa-kev-cve-2024-57726-simplehelp-missing-authorization-vul.md)

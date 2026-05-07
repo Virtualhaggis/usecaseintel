@@ -11,15 +11,9 @@ By Bill Toulas
 May 7, 2026
 02:35 PM
 0 
-
-
 A new malware framework called PCPJack is stealing credentials from exposed cloud infrastructure while actively removing TeamPCP's access to the systems.
-
-
 Among the targeted services are Docker, Kubernetes, Redis, MongoDB, RayML, and vulnerable web applications. In many cases, the threat actor moves laterally on the network.
-
-
-SentinelLabs researchers say that PCPJack appears designed…
+SentinelLabs researchers say that PCPJack appears designed for large-s…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,12 +33,116 @@ SentinelLabs researchers say that PCPJack appears designed…
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1567** — Exfiltration Over Web Service
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1041** — Exfiltration Over C2 Channel
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1505** — Server Software Component
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PCPJack Linux orchestrator: bootstrap.sh launching python monitor.py
+
+`UC_1_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os=Linux ((Processes.parent_process_name=bash AND Processes.parent_process="*bootstrap.sh*") OR (Processes.process_name IN ("python","python3") AND Processes.process="*monitor.py*") OR (Processes.process="*bootstrap.sh*" AND Processes.process IN ("*mkdir*","*pip install*","*systemctl*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// PCPJack: bootstrap.sh -> python monitor.py orchestrator chain on Linux
+let LinuxHosts = DeviceInfo
+    | where OSPlatform =~ "Linux"
+    | summarize by DeviceId;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where DeviceId in (LinuxHosts)
+| where AccountName !endswith "$"
+| where (FileName in~ ("python","python3") and ProcessCommandLine has "monitor.py")
+    or (InitiatingProcessCommandLine has "bootstrap.sh" and FileName in~ ("python","python3","curl","wget","pip","pip3","mkdir","systemctl","crontab"))
+    or (FileName =~ "bash" and ProcessCommandLine has "bootstrap.sh")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] PCPJack credential exfiltration to api.telegram.org from Linux server workload
+
+`UC_1_7` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.bytes_out) as bytes_out from datamodel=Web.Web where (Web.url="*api.telegram.org*" OR Web.url="*telegram.org/bot*" OR Web.dest="api.telegram.org") by Web.src Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | join type=outer src [ search index=* sourcetype=*linux* | stats count by host | rename host as src ] | where isnotnull(count) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// PCPJack: Telegram exfiltration from Linux server
+let LinuxHosts = DeviceInfo
+    | where OSPlatform =~ "Linux"
+    | summarize by DeviceId, DeviceName;
+let TelegramTraffic = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemoteUrl has "telegram.org" or RemoteUrl has "api.telegram.org"
+    | where DeviceId in ((LinuxHosts | project DeviceId));
+let TelegramDns = DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has "telegram.org"
+    | where DeviceId in ((LinuxHosts | project DeviceId))
+    | project Timestamp, DeviceId, DeviceName, RemoteUrl=Q,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName;
+union isfuzzy=true
+    (TelegramTraffic | project Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP,
+                              InitiatingProcessFileName, InitiatingProcessCommandLine,
+                              InitiatingProcessAccountName=InitiatingProcessAccountName),
+    (TelegramDns)
+| where InitiatingProcessFileName !in~ ("telegram-cli","telegram-desktop")
+| order by Timestamp desc
+```
+
+### [LLM] Redis-server writing to crontab paths (PCPJack Redis cron-rewrite persistence)
+
+`UC_1_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("redis-server","redis-sentinel") (Filesystem.file_path="/var/spool/cron/*" OR Filesystem.file_path="/etc/cron.d/*" OR Filesystem.file_path="/etc/crontab*" OR Filesystem.file_path="/etc/cron.hourly/*" OR Filesystem.file_path="/etc/cron.daily/*" OR Filesystem.file_path="/var/spool/anacron/*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// PCPJack: redis-server writing into cron persistence paths via CONFIG SET dir + BGSAVE
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("redis-server","redis-sentinel")
+| where FolderPath has_any (
+    "/var/spool/cron/",
+    "/etc/cron.d/",
+    "/etc/crontab",
+    "/etc/cron.hourly/",
+    "/etc/cron.daily/",
+    "/etc/cron.weekly/",
+    "/var/spool/anacron/")
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -159,7 +257,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PCPJack worm steals credentials, cleans TeamPCP infections
 
-`UC_0_5` · phase: **exploit** · confidence: **High**
+`UC_1_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -216,4 +314,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

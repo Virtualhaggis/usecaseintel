@@ -11,12 +11,8 @@ By Bill Toulas
 May 7, 2026
 02:00 PM
 0 
-
-
 The Australian Cyber Security Center (ACSC) is warning organizations of an ongoing malware campaign using the ClickFix social engineering technique to distribute  the Vidar Stealer info-stealing malware.
-
-
-ClickFix is a social engineering attack technique that tricks users into executing malicious commands, usually through fake CAPTCHA or browser verification prompts displayed on comp…
+ClickFix is a social engineering attack technique that tricks users into executing malicious commands, usually through fake CAPTCHA or browser verification prompts displayed on compromised …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -33,10 +29,15 @@ ClickFix is a social engineering attack technique that tricks users into executi
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1218.005** — System Binary Proxy Execution: Mshta
 - **T1102.001** — Web Service: Dead Drop Resolver
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1105** — Ingress Tool Transfer
+- **T1567** — Exfiltration Over Web Service
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
 
 ## Kill chain phases observed
 
@@ -44,61 +45,80 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Vidar Stealer dead-drop URL fetch via Steam profile or Telegram by non-browser process
+### [LLM] ClickFix Run-dialog PowerShell/mshta paste delivering Vidar Stealer
 
-`UC_1_5` · phase: **c2** · confidence: **High**
+`UC_2_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_url) as dest_url values(All_Traffic.user) as user values(All_Traffic.dest_ip) as dest_ip from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_url="*steamcommunity.com/profiles/*" OR All_Traffic.dest_url="*t.me/*" OR All_Traffic.dest_url="*telegram.me/*") AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","Steam.exe","steamwebhelper.exe","Telegram.exe","Updater.exe") by host All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | rename app as process_name | sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe") AND (Processes.process="*IEX*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*iwr *" OR Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Net.WebClient*" OR Processes.process="*FromBase64String*" OR Processes.process="*-EncodedCommand*" OR Processes.process="*-enc *" OR Processes.process="*-ec *" OR Processes.process="*mshta*http*" OR Processes.process="*curl *http*" OR Processes.process="*certutil*-urlcache*" OR Processes.process="*msiexec*/i*http*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","Steam.exe","steamwebhelper.exe","Telegram.exe"]);
-DeviceNetworkEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl matches regex @"(?i)(steamcommunity\.com/profiles/[0-9]{15,20}|(?:t|telegram)\.me/[A-Za-z0-9_]{3,32})"
-| where InitiatingProcessFileName !in~ (_browsers)
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe")
+| where ProcessCommandLine has_any ("IEX","Invoke-Expression","Invoke-WebRequest","iwr ","DownloadString","DownloadFile","Net.WebClient","FromBase64String","-EncodedCommand","-enc ","-ec ","curl http","certutil -urlcache","mshta http","msiexec /i http")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] ClickFix Run-dialog spawn followed by Vidar Steam/Telegram dead-drop fetch within 15 minutes
+### [LLM] Vidar Stealer dead-drop C2 resolution via Steam profile or Telegram URL
 
-`UC_1_6` · phase: **install** · confidence: **High**
+`UC_2_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as ClickFixTime values(Processes.process) as ClickFixCmd values(Processes.process_name) as ClickFixChild values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","wscript.exe","cscript.exe") AND (Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*iwr *" OR Processes.process="*IEX *" OR Processes.process="* IEX(" OR Processes.process="*FromBase64String*" OR Processes.process="*-EncodedCommand*" OR Processes.process="* -enc *" OR Processes.process="*-w hidden*" OR Processes.process="*WindowStyle Hidden*" OR Processes.process="*mshta*http*" OR Processes.process="*certutil*-urlcache*") by host Processes.user | `drop_dm_object_name(Processes)` | join type=inner host [ | tstats `summariesonly` min(_time) as NetTime values(All_Traffic.dest_url) as dest_url values(All_Traffic.app) as net_process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_url="*steamcommunity.com/profiles/*" OR All_Traffic.dest_url="*t.me/*" OR All_Traffic.dest_url="*telegram.me/*") AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","Steam.exe","steamwebhelper.exe","Telegram.exe") by host | `drop_dm_object_name(All_Traffic)` ] | eval delay_seconds = NetTime - ClickFixTime | where delay_seconds >= 0 AND delay_seconds <= 900 | table host user ClickFixTime ClickFixChild ClickFixCmd NetTime net_process dest_url delay_seconds | sort - ClickFixTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.url="*steamcommunity.com/profiles/*" OR All_Traffic.url="*steamcommunity.com/id/*" OR All_Traffic.url="*t.me/*" OR All_Traffic.url="*telegram.me/*" OR All_Traffic.url="*telegra.ph/*" OR All_Traffic.dest="steamcommunity.com" OR All_Traffic.dest="t.me" OR All_Traffic.dest="telegram.me" OR All_Traffic.dest="telegra.ph") AND All_Traffic.app!="chrome.exe" AND All_Traffic.app!="msedge.exe" AND All_Traffic.app!="firefox.exe" AND All_Traffic.app!="brave.exe" AND All_Traffic.app!="opera.exe" AND All_Traffic.app!="iexplore.exe" AND All_Traffic.app!="steam.exe" AND All_Traffic.app!="steamwebhelper.exe" AND All_Traffic.app!="telegram.exe" AND All_Traffic.app!="discord.exe" AND All_Traffic.app!="slack.exe" AND All_Traffic.app!="msteams.exe" AND All_Traffic.app!="outlook.exe" by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 7d;
-let WindowMin = 15;
-let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","Steam.exe","steamwebhelper.exe","Telegram.exe"]);
-let ClickFixSpawn =
-    DeviceProcessEvents
-    | where Timestamp > ago(LookbackDays)
-    | where InitiatingProcessFileName =~ "explorer.exe"
-    | where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe","wscript.exe","cscript.exe")
-    | where ProcessCommandLine has_any ("DownloadString","DownloadFile","Invoke-Expression","Invoke-WebRequest","IEX(","iwr ","FromBase64String","-EncodedCommand","-enc ","-EC ","WindowStyle Hidden","-w hidden","-w 1","mshta http","certutil -urlcache","curl http")
-    | where AccountName !endswith "$"
-    | project ClickFixTime=Timestamp, DeviceId, DeviceName, AccountName, ChildFile=FileName, ChildCmd=ProcessCommandLine;
+let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","operagx.exe","vivaldi.exe","arc.exe","safari.exe"]);
+let _legit_clients = dynamic(["steam.exe","steamwebhelper.exe","steamservice.exe","telegram.exe","telegramdesktop.exe","discord.exe","slack.exe","msteams.exe","outlook.exe","msedgewebview2.exe","whatsapp.exe"]);
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl matches regex @"(?i)(steamcommunity\.com/profiles/[0-9]{15,20}|(?:t|telegram)\.me/[A-Za-z0-9_]{3,32})"
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RemoteUrl has_any ("steamcommunity.com/profiles/","steamcommunity.com/id/","t.me/","telegram.me/","telegra.ph/")
 | where InitiatingProcessFileName !in~ (_browsers)
-| project NetTime=Timestamp, DeviceId, NetProcess=InitiatingProcessFileName, NetCmd=InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| join kind=inner ClickFixSpawn on DeviceId
-| where NetTime between (ClickFixTime .. ClickFixTime + WindowMin * 1m)
-| extend DelayMin = datetime_diff('minute', NetTime, ClickFixTime)
-| project ClickFixTime, NetTime, DelayMin, DeviceName, AccountName, ChildFile, ChildCmd, NetProcess, NetCmd, RemoteUrl, RemoteIP
-| order by ClickFixTime desc
+| where InitiatingProcessFileName !in~ (_legit_clients)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] Vidar Stealer self-deletion: PE in user-writable temp deletes itself within minutes of execution
+
+`UC_2_7` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\AppData\\Roaming\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\ProgramData\\*" OR Processes.process_path="*\\Windows\\Temp\\*") AND Processes.user!="*$" by _time Processes.dest Processes.user Processes.process_path Processes.process_name Processes.process_hash | rename Processes.* as * | rename _time as ExecTime | join type=inner dest [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action="deleted" AND (Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\ProgramData\\*") by _time Filesystem.dest Filesystem.file_path Filesystem.process_name | rename Filesystem.* as *, _time as DelTime | rename file_path as DeletedPath ] | where DeletedPath==process_path AND DelTime>=ExecTime AND DelTime<=ExecTime+300 | table ExecTime DelTime dest user process_path process_name process_hash
+```
+
+**Defender KQL:**
+```kql
+let _drops = dynamic([@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Users\Public\", @"\ProgramData\", @"\Windows\Temp\"]);
+let _execs = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where AccountName !endswith "$"
+    | where FolderPath has_any (_drops)
+    | where FileName endswith ".exe"
+    | project ExecTime = Timestamp, DeviceId, DeviceName, ExecAccount = AccountName, ExecPath = FolderPath, ExecFile = FileName, ExecSha = SHA256, ExecCmd = ProcessCommandLine, ExecParent = InitiatingProcessFileName;
+let _deletes = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "FileDeleted"
+    | where FolderPath has_any (_drops)
+    | where FileName endswith ".exe"
+    | project DelTime = Timestamp, DeviceId, DelPath = FolderPath, DelFile = FileName, DelInitiator = InitiatingProcessFileName, DelInitiatorCmd = InitiatingProcessCommandLine;
+_execs
+| join kind=inner _deletes on DeviceId
+| where DelPath =~ ExecPath
+| where DelTime between (ExecTime .. ExecTime + 5m)
+| project ExecTime, DelTime, DelaySec = datetime_diff('second', DelTime, ExecTime), DeviceName, ExecAccount, ExecPath, ExecSha, ExecParent, ExecCmd, DelInitiator, DelInitiatorCmd
+| order by ExecTime desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -310,4 +330,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
