@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DPRK laptop-farm telltale: multiple remote-access tools installed on one corporate endpoint
 
-`UC_13_0` · phase: **install** · confidence: **High**
+`UC_15_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### [LLM] KVM-over-IP hardware (PiKVM / TinyPilot / JetKVM) connected to corporate laptop
 
-`UC_13_1` · phase: **install** · confidence: **High**
+`UC_15_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceEvents
 
 ### [LLM] Multiple distinct corporate identities authenticating from one residential / non-corporate IP
 
-`UC_13_2` · phase: **c2** · confidence: **Medium**
+`UC_15_2` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
