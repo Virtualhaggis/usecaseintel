@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_586 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_587 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,8 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-07
-- [28 fake call history apps on google play with 7 3m downloads](./2026-05-07/28-fake-call-history-apps-on-google-play-with-7-3m-downloads.md)
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
+- [cisa warns of palo alto pan os vulnerability exploited to ga](./2026-05-07/cisa-warns-of-palo-alto-pan-os-vulnerability-exploited-to-ga.md)
 - [critical redis vulnerabilities enables remote code execution](./2026-05-07/critical-redis-vulnerabilities-enables-remote-code-execution.md)
 - [crypto gang member gets 6 5 years for role in 230 million he](./2026-05-07/crypto-gang-member-gets-6-5-years-for-role-in-230-million-he.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
@@ -18,7 +18,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [hackers using fake claude ai installer pages to trick users ](./2026-05-07/hackers-using-fake-claude-ai-installer-pages-to-trick-users-.md)
 - [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
-- [malicious nuget packages target browser credentials ssh keys](./2026-05-07/malicious-nuget-packages-target-browser-credentials-ssh-keys.md)
+- [new cisco network vulnerability let remote attacker cause do](./2026-05-07/new-cisco-network-vulnerability-let-remote-attacker-cause-do.md)
+- [new ivanti epmm 0 day vulnerability actively exploited in at](./2026-05-07/new-ivanti-epmm-0-day-vulnerability-actively-exploited-in-at.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-07/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [palo alto networks firewall zero day rce vulnerability explo](./2026-05-07/palo-alto-networks-firewall-zero-day-rce-vulnerability-explo.md)
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
@@ -343,6 +344,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dynowiper update technical analysis and attribution](./2026-01-30/dynowiper-update-technical-analysis-and-attribution.md)
 
 ## 2026-01-29
+- [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-01-29/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
 - [silent brothers ollama hosts form anonymous ai network beyon](./2026-01-29/silent-brothers-ollama-hosts-form-anonymous-ai-network-beyon.md)
 
 ## 2026-01-28
@@ -722,7 +724,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2023 38950 zkteco biotime path traversal vulner](./2025-05-19/cisa-kev-cve-2023-38950-zkteco-biotime-path-traversal-vulner.md)
 - [cisa kev cve 2024 11182 mdaemon email server cross site scri](./2025-05-19/cisa-kev-cve-2024-11182-mdaemon-email-server-cross-site-scri.md)
 - [cisa kev cve 2025 27920 srimax output messenger directory tr](./2025-05-19/cisa-kev-cve-2025-27920-srimax-output-messenger-directory-tr.md)
-- [cisa kev cve 2026 1340 ivanti endpoint manager mobile epmm c](./2025-05-19/cisa-kev-cve-2026-1340-ivanti-endpoint-manager-mobile-epmm-c.md)
+- [cisa kev cve 2025 4428 ivanti endpoint manager mobile epmm c](./2025-05-19/cisa-kev-cve-2025-4428-ivanti-endpoint-manager-mobile-epmm-c.md)
 - [cisa kev cve 2026 1603 ivanti endpoint manager epm authentic](./2025-05-19/cisa-kev-cve-2026-1603-ivanti-endpoint-manager-epm-authentic.md)
 
 ## 2025-05-15
@@ -1138,6 +1140,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2019 7256 nice linear emerge e3 series os comma](./2024-03-25/cisa-kev-cve-2019-7256-nice-linear-emerge-e3-series-os-comma.md)
 - [cisa kev cve 2021 44529 ivanti endpoint manager cloud servic](./2024-03-25/cisa-kev-cve-2021-44529-ivanti-endpoint-manager-cloud-servic.md)
 - [cisa kev cve 2026 21643 fortinet forticlient ems sql injecti](./2024-03-25/cisa-kev-cve-2026-21643-fortinet-forticlient-ems-sql-injecti.md)
-
-## 2024-03-07
-- [cisa kev cve 2024 27198 jetbrains teamcity authentication by](./2024-03-07/cisa-kev-cve-2024-27198-jetbrains-teamcity-authentication-by.md)

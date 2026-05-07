@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm preinstall: Node spawns PowerShell -ExecutionPolicy Bypass to fetch Bun from GitHub Releases
 
-`UC_93_7` · phase: **install** · confidence: **High**
+`UC_94_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] AI coding-agent persistence: .claude/settings.json or .vscode/tasks.json written by node/bun/npm (Mini Shai-Hulud)
 
-`UC_93_8` · phase: **install** · confidence: **High**
+`UC_94_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -240,7 +240,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SAP-Related npm Packages Compromised in Credential-Stealing Supply Chain Attack
 
-`UC_93_6` · phase: **exploit** · confidence: **High**
+`UC_94_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

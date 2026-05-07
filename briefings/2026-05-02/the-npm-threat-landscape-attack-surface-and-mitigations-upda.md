@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud 'Third Coming' C2 beacon to audit.checkmarx[.]cx /v1/telemetry
 
-`UC_71_10` · phase: **c2** · confidence: **High**
+`UC_72_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### [LLM] Shai-Hulud preinstall: node spawning Bun runtime to execute bw1.js / setup.mjs
 
-`UC_71_11` · phase: **install** · confidence: **High**
+`UC_72_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud GitHub dead-drop fallback: api.github.com search for 'beautifulcastle'
 
-`UC_71_12` · phase: **c2** · confidence: **High**
+`UC_72_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,7 +432,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_71_9` · phase: **exploit** · confidence: **High**
+`UC_72_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 7, 2026
 09:45 AM
 0 
-
-
 Two U.S. nationals were sentenced to 18 months in prison each for operating so-called laptop farms that helped North Korean IT workers fraudulently obtain remote employment at nearly 70 American companies.
-
-
-Matthew Isaac Knoot and Erick Ntekereze Prince are the seventh and eighth U.S.-based "laptop farmers" sent to prison since the start of the year as part of a federal initiative tar…
+Matthew Isaac Knoot and Erick Ntekereze Prince are the seventh and eighth U.S.-based "laptop farmers" sent to prison since the start of the year as part of a federal initiative targeting N…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -25,10 +21,9 @@ Matthew Isaac Knoot and Erick Ntekereze Prince are the seventh and eighth U.S.-b
 ## MITRE ATT&CK Techniques
 
 - **T1219** — Remote Access Software
-- **T1078** — Valid Accounts
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1199** — Trusted Relationship
 - **T1133** — External Remote Services
+- **T1200** — Hardware Additions
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -36,70 +31,108 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DPRK IT-worker laptop-farm: unauthorised RMM client install on corporate endpoint
+### [LLM] DPRK laptop-farm telltale: multiple remote-access tools installed on one corporate endpoint
 
-`UC_3_0` · phase: **install** · confidence: **High**
+`UC_6_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND (Filesystem.file_name IN ("AnyDesk.exe","rustdesk.exe","RustDesk.exe","TeamViewer.exe","TeamViewer_Service.exe","SRStreamer.exe","chrome_remote_desktop_host.exe","ScreenConnect.ClientService.exe","AnyViewer.exe","JumpDesktop.exe","Splashtop Streamer.exe") OR Filesystem.file_path IN ("*\\AnyDesk\\*","*\\RustDesk\\*","*\\TeamViewer\\*","*\\Splashtop\\*","*\\Chrome Remote Desktop\\*","*\\AnyViewer\\*","*\\JumpDesktop\\*")) AND NOT Filesystem.process_name IN ("IntuneManagementExtension.exe","CcmExec.exe","ccmexec.exe","TrustedInstaller.exe") AND NOT (Filesystem.user="*$" OR Filesystem.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE")) by host Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as tools dc(Processes.process_name) as tool_count from datamodel=Endpoint.Processes where Processes.process_name IN ("anydesk.exe","AnyDesk.exe","teamviewer.exe","TeamViewer.exe","teamviewer_service.exe","TeamViewer_Service.exe","rustdesk.exe","RustDesk.exe","remoting_host.exe","chrome_remote_desktop_host.exe","SplashtopStreamer.exe","splashtopstreamer.exe","LogMeIn.exe","logmein.exe","g2mlauncher.exe","GoToMyPC.exe","gotomypc.exe","ScreenConnect.WindowsClient.exe","screenconnect.windowsclient.exe","tvnserver.exe","vncserver.exe","winvnc.exe","AteraAgent.exe","ZA.exe","Supremo.exe","NateOnMain.exe") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | stats min(firstTime) as firstTime max(lastTime) as lastTime values(process_name) as tools dc(process_name) as tool_count by dest user | where tool_count >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// DPRK laptop-farm: user-context install of remote-desktop / RMM software on a corporate endpoint
-let RmmBinaries = dynamic(["AnyDesk.exe","rustdesk.exe","RustDesk.exe","TeamViewer.exe","TeamViewer_Service.exe","Splashtop Streamer.exe","SRStreamer.exe","chrome_remote_desktop_host.exe","ScreenConnect.ClientService.exe","AnyViewer.exe","JumpDesktop.exe"]);
-let RmmInstallPaths = dynamic([@"\AnyDesk\", @"\RustDesk\", @"\TeamViewer\", @"\Splashtop\", @"\Chrome Remote Desktop\", @"\AnyViewer\", @"\JumpDesktop\"]);
-let CorporateMgmt = dynamic(["IntuneManagementExtension.exe","ccmexec.exe","CcmExec.exe","TrustedInstaller.exe"]);
-DeviceFileEvents
+// DPRK laptop-farm: ≥2 distinct remote-access tools observed on the same device within 14d
+let _rmm_tools = dynamic([
+    "anydesk.exe","teamviewer.exe","teamviewer_service.exe","rustdesk.exe",
+    "chrome_remote_desktop_host.exe","remoting_host.exe",
+    "splashtopstreamer.exe","sragent.exe",
+    "logmein.exe","g2mlauncher.exe","gotomypc.exe",
+    "screenconnect.windowsclient.exe","screenconnect.exe",
+    "tvnserver.exe","vncserver.exe","winvnc.exe","ultravnc.exe",
+    "ateraagent.exe","zohoassist.exe","supremo.exe","meshagent.exe",
+    "nateonmain.exe","airdroid.exe","parsec.exe"
+]);
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where FileName in~ (_rmm_tools) or InitiatingProcessFileName in~ (_rmm_tools)
+| extend Tool = iif(FileName in~ (_rmm_tools), tolower(FileName), tolower(InitiatingProcessFileName))
+| summarize ToolCount  = dcount(Tool),
+            Tools      = make_set(Tool, 20),
+            FirstSeen  = min(Timestamp),
+            LastSeen   = max(Timestamp),
+            Users      = make_set(AccountName, 10),
+            SampleCmds = make_set(ProcessCommandLine, 10)
+            by DeviceId, DeviceName
+| where ToolCount >= 2     // 2+ distinct RMM tools on one host = laptop-farm signature
+| order by ToolCount desc, FirstSeen asc
+```
+
+### [LLM] KVM-over-IP hardware (PiKVM / TinyPilot / JetKVM) connected to corporate laptop
+
+`UC_6_1` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_key_name) as keys values(Registry.registry_value_data) as vals from datamodel=Endpoint.Registry where Registry.registry_path="*\\USB\\*" (Registry.registry_value_data="*PiKVM*" OR Registry.registry_value_data="*pikvm*" OR Registry.registry_value_data="*TinyPilot*" OR Registry.registry_value_data="*tinypilot*" OR Registry.registry_value_data="*JetKVM*" OR Registry.registry_value_data="*NanoKVM*" OR Registry.registry_value_data="*CAFEBABE*") by Registry.dest Registry.user | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// KVM-over-IP hardware connected to corporate endpoint — PiKVM / TinyPilot / JetKVM / NanoKVM
+DeviceEvents
 | where Timestamp > ago(30d)
-| where ActionType == "FileCreated"
-| where FileName in~ (RmmBinaries) or FolderPath has_any (RmmInstallPaths)
-| where InitiatingProcessFileName !in~ (CorporateMgmt)               // exclude legit MDM / SCCM pushes
-| where InitiatingProcessAccountName !endswith "$"                    // exclude machine accounts
-| where InitiatingProcessAccountSid !in~ ("S-1-5-18","S-1-5-19","S-1-5-20")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessAccountUpn
+| where ActionType in ("PnpDeviceConnected","UsbDriveMounted")
+| where AdditionalFields has_any ("PiKVM","pikvm","TinyPilot","tinypilot","JetKVM","jetkvm","NanoKVM","nanokvm","CAFEBABE","cafebabe")
+| extend AF = parse_json(AdditionalFields)
+| project Timestamp, DeviceName, DeviceId,
+          ActionType,
+          DeviceDescription = tostring(AF.DeviceDescription),
+          ClassName         = tostring(AF.ClassName),
+          VendorIds         = tostring(AF.VendorIds),
+          ProductId         = tostring(AF.ProductId),
+          SerialNumber      = tostring(AF.SerialNumber),
+          InitiatingProcessAccountName, InitiatingProcessFileName,
+          AdditionalFields
 | order by Timestamp desc
 ```
 
-### [LLM] DPRK laptop-farm signature: multiple distinct corporate UPNs signing in from a single non-corporate IP
+### [LLM] Multiple distinct corporate identities authenticating from one residential / non-corporate IP
 
-`UC_3_1` · phase: **c2** · confidence: **Medium**
+`UC_6_2` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true min(_time) as firstSeen max(_time) as lastSeen dc(Authentication.user) as user_count values(Authentication.user) as users values(Authentication.app) as apps from datamodel=Authentication where Authentication.action="success" AND Authentication.signature_id IN ("Sign-in activity","UserLoggedIn","Interactive") AND NOT (Authentication.src IN ("203.0.113.0/24","198.51.100.0/24")) AND NOT match(Authentication.user,"#EXT#|\$$") by Authentication.src | `drop_dm_object_name(Authentication)` | where user_count >= 2 | eval firstSeen=strftime(firstSeen,"%Y-%m-%d %H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%d %H:%M:%S") | sort - user_count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as users dc(Authentication.user) as user_count values(Authentication.app) as apps from datamodel=Authentication where Authentication.action="success" Authentication.signature_id="AADSignIn" by Authentication.src Authentication.src_category | `drop_dm_object_name(Authentication)` | where user_count >= 3 AND src_category!="corporate_egress" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// DPRK laptop-farm signature: ≥2 corporate UPNs sign in interactively from the same non-corporate public IP (30d)
-let KnownCorpEgress = dynamic(["203.0.113.0/24","198.51.100.0/24"]);   // <-- replace with corp egress / VPN concentrator CIDRs
+// DPRK laptop-farm topology: 3+ distinct corporate UPNs sign in from one external IP within 7d
+let _corp_egress = dynamic([]);  // populate with org's known VPN / proxy / NAT egress IPs
 AADSignInEventsBeta
-| where Timestamp > ago(30d)
-| where ErrorCode == 0                                                  // successful auth only
-| where IsInteractive == true
-| where AccountUpn !contains "#EXT#"                                    // skip B2B guests
+| where Timestamp > ago(7d)
+| where ErrorCode == 0                                  // successful auth only
 | where isnotempty(IPAddress)
-| where not(ipv4_is_in_any_range(IPAddress, KnownCorpEgress))
-| where not(ipv4_is_private(IPAddress))                                 // residential public IPs only
-| summarize FirstSeen   = min(Timestamp),
-            LastSeen    = max(Timestamp),
-            UserCount   = dcount(AccountUpn),
-            Users       = make_set(AccountUpn, 50),
-            Apps        = make_set(Application, 25),
-            Country     = any(Country),
-            City        = any(City),
-            ASN         = any(NetworkLocationDetails)
+| where not(ipv4_is_private(IPAddress))
+| where not(ipv4_is_in_any_range(IPAddress, _corp_egress))
+| where AccountUpn !contains "#EXT#"                    // exclude guests
+| summarize Users      = make_set(AccountUpn, 50),
+            UserCount  = dcount(AccountUpn),
+            Apps       = make_set(Application, 20),
+            Countries  = make_set(Country, 10),
+            ASNs       = make_set(NetworkLocationDetails, 10),
+            FirstSeen  = min(Timestamp),
+            LastSeen   = max(Timestamp),
+            SignInCount = count()
             by IPAddress
-| where UserCount >= 2                                                   // 2 = empirical floor; raise to 3+ in tenants with shared home networks
-| order by UserCount desc, LastSeen desc
+| where UserCount >= 3                                  // 3+ distinct UPNs from same public IP
+| extend SpanHours = datetime_diff('hour', LastSeen, FirstSeen)
+| order by UserCount desc
 ```
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

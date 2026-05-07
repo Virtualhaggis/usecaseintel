@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Code of Conduct AiTM phish lure — inbound email by sender, subject, and PDF filename
 
-`UC_58_6` · phase: **delivery** · confidence: **High**
+`UC_59_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ HitMail
 
 ### [LLM] Workstation egress to Code of Conduct AiTM landing-page domains (compliance-protectionoutlook[.]de et al.)
 
-`UC_58_7` · phase: **delivery** · confidence: **High**
+`UC_59_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ union Clicks, NetConn, DnsQueries
 
 ### [LLM] AiTM token theft — successful Entra ID sign-in from new IP within 30 min of clicking COC phishing URL
 
-`UC_58_8` · phase: **c2** · confidence: **High**
+`UC_59_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
