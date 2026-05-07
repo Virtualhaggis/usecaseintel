@@ -1,0 +1,147 @@
+{
+  "name": "MuddyWater",
+  "ucs": [
+    {
+      "title": "[LLM] MuddyWater (MERCURY / Mango Sandstorm) RMM-tool initial access via spearphishing-attached installer",
+      "description": "Hunts MuddyWater's signature 2022-2024 intrusion pattern: spearphish delivers a PDF/HTML pointing to a ConnectWise Control (ScreenConnect), Atera, SimpleHelp, RemoteUtilities or Syncro MSI/EXE that drops in Downloads/Temp and is launched by a browser, mail client, or msiexec. CISA AA22-055A and Microsoft's Mango Sandstorm reporting both pin this exact tooling \u2014 it's the cluster's most reliable foothold tradecraft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.002",
+        "T1219",
+        "T1204.001",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as parent_process from datamodel=Endpoint.Filesystem where Filesystem.action IN (\"created\",\"renamed\") (Filesystem.file_name IN (\"ScreenConnect.ClientSetup.msi\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"AteraAgent.msi\",\"AteraAgent.exe\",\"setup_atera.msi\",\"rutserv.exe\",\"rfusclient.exe\",\"RemoteUtilitiesViewer.exe\",\"SimpleHelp.exe\",\"Remote Access.exe\",\"SyncroLive.Agent.Installer.exe\",\"Syncro.Installer.exe\",\"AnyDesk.exe\") OR Filesystem.file_path IN (\"*\\\\ScreenConnect*\",\"*\\\\AteraAgent*\",\"*\\\\Remote Utilities*\",\"*\\\\SimpleHelp*\",\"*\\\\Syncro*\")) (Filesystem.file_path IN (\"*\\\\Downloads\\\\*\",\"*\\\\Temp\\\\*\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\Users\\\\Public\\\\*\")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | join type=inner dest [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"winrar.exe\",\"7zg.exe\",\"explorer.exe\",\"WINWORD.EXE\",\"EXCEL.EXE\") (Processes.process_name=\"msiexec.exe\" OR Processes.process IN (\"*ScreenConnect*\",\"*AteraAgent*\",\"*RemoteUtilities*\",\"*SimpleHelp*\",\"*Syncro*\")) by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name _time | `drop_dm_object_name(Processes)` | rename _time as exec_time] | where exec_time>=firstTime AND exec_time<=lastTime+1800 | `security_content_ctime(firstTime)`",
+      "kql": "let RmmFileNames = dynamic([\"screenconnect.clientsetup.msi\",\"screenconnect.clientservice.exe\",\"screenconnect.windowsclient.exe\",\"ateraagent.msi\",\"ateraagent.exe\",\"setup_atera.msi\",\"rutserv.exe\",\"rfusclient.exe\",\"remoteutilitiesviewer.exe\",\"simplehelp.exe\",\"remote access.exe\",\"syncrolive.agent.installer.exe\",\"syncro.installer.exe\",\"anydesk.exe\"]);\nlet RmmFolderTokens = dynamic([@\"\\ScreenConnect\",@\"\\Atera\",@\"\\Remote Utilities\",@\"\\SimpleHelp\",@\"\\Syncro\",@\"\\AnyDesk\"]);\nlet DropZones = dynamic([@\"\\Downloads\\\",@\"\\Temp\\\",@\"\\AppData\\Local\\Temp\\\",@\"\\Users\\Public\\\"]);\nlet BrowserOrMail = dynamic([\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"winrar.exe\",\"7zg.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\"]);\nlet Drops = DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\")\n    | where (tolower(FileName) in (RmmFileNames)) or FolderPath has_any (RmmFolderTokens)\n    | where FolderPath has_any (DropZones)\n    | where InitiatingProcessFileName in~ (BrowserOrMail) or InitiatingProcessFileName =~ \"msiexec.exe\"\n    | project DropTime = Timestamp, DeviceId, DeviceName, FileName, FolderPath,\n              DropParent = InitiatingProcessFileName, AccountName = InitiatingProcessAccountName;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (BrowserOrMail) or InitiatingProcessFileName =~ \"msiexec.exe\"\n| where (FileName =~ \"msiexec.exe\" and ProcessCommandLine has_any (\"ScreenConnect\",\"Atera\",\"RemoteUtilities\",\"SimpleHelp\",\"Syncro\"))\n     or FolderPath has_any (RmmFolderTokens)\n     or tolower(FileName) in (RmmFileNames)\n| join kind=inner Drops on DeviceId\n| where Timestamp between (DropTime .. DropTime + 30m)\n| project DropTime, ExecTime = Timestamp, DeviceName, AccountName,\n          DroppedFile = strcat(FolderPath, \"\\\\\", FileName),\n          DropParent, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256\n| order by ExecTime desc",
+      "sentinel_kql": "let RmmFileTokens = dynamic([\"ScreenConnect\",\"AteraAgent\",\"Atera Networks\",\"Remote Utilities\",\"rutserv.exe\",\"rfusclient.exe\",\"SimpleHelp\",\"Syncro\",\"SyncroLive\",\"AnyDesk\"]);\nlet BrowserOrMail = dynamic([\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"winrar.exe\",\"7zg.exe\",\"explorer.exe\",\"winword.exe\",\"excel.exe\"]);\nlet Drops = ImFileEvent\n    | where TimeGenerated > ago(7d)\n    | where EventType in (\"FileCreated\",\"FileRenamed\")\n    | where TargetFileName has_any (RmmFileTokens) or TargetFilePath has_any (RmmFileTokens)\n    | where TargetFilePath has_any (@\"\\Downloads\\\", @\"\\Temp\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Public\\\")\n    | where ActingProcessName has_any (BrowserOrMail) or ActingProcessName has \"msiexec.exe\"\n    | project DropTime = TimeGenerated, DvcHostname, TargetFilePath, TargetFileName,\n              DropParent = ActingProcessName, ActorUsername;\nImProcessCreate\n| where TimeGenerated > ago(7d)\n| where ParentProcessName has_any (BrowserOrMail) or ParentProcessName has \"msiexec.exe\"\n| where TargetProcessCommandLine has_any (RmmFileTokens) or TargetProcessName has_any (RmmFileTokens)\n| join kind=inner Drops on $left.DvcHostname == $right.DvcHostname\n| where TimeGenerated between (DropTime .. DropTime + 30m)\n| project DropTime, ExecTime = TimeGenerated, DvcHostname, ActorUsername,\n          DroppedFile = TargetFilePath, DropParent,\n          ChildImage = TargetProcessName, ChildCmd = TargetProcessCommandLine\n| order by ExecTime desc",
+      "sigma_yaml": "",
+      "rationale": "Every major MuddyWater write-up since 2020 (CISA AA22-055A, Microsoft Mango Sandstorm 2023, Group-IB Seedworm 2022, Proofpoint TA450 2024) calls out the *exact same* loadout: a spearphish landing page that hands the victim a fully-signed RMM installer. Detecting the file drop AND the user-launched install from a browser/mailer parent within minutes is the cluster's narrowest behavioural fingerprin"
+    },
+    {
+      "title": "[LLM] MuddyWater POWERSTATS / MuddyC3 mshta-to-PowerShell loader chain",
+      "description": "Catches the second-stage execution pattern documented for MuddyWater's POWERSTATS, POWERSTATS-NG, MuddyC3 and POWGOOP loaders: a Maldoc / HTA dropper invokes mshta.exe (often against a hosted .hta or via inline VBScript) which spawns powershell.exe with base64/-w hidden/IEX cradles to fetch the next stage. ClearSky, Trend Micro Earth Vetala, and Talos POWGOOP reports all describe this exact chain.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1218.005",
+        "T1059.001",
+        "T1059.005",
+        "T1027.010",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.process_name=\"mshta.exe\" (Processes.process IN (\"*http*\",\"*vbscript:*\",\"*javascript:*\",\"*.hta*\")) Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"explorer.exe\",\"cmd.exe\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name _time | `drop_dm_object_name(Processes)` | rename _time as mshta_time | join type=inner dest user [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name=\"mshta.exe\" Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\") (Processes.process IN (\"*-w hidden*\",\"*-WindowStyle Hidden*\",\"*-enc*\",\"*EncodedCommand*\",\"*-nop*\",\"*FromBase64String*\",\"*DownloadString*\",\"*IEX*\",\"*Invoke-Expression*\")) by Processes.dest Processes.user Processes.process Processes.process_name _time | `drop_dm_object_name(Processes)` | rename _time as ps_time process as ps_cmd] | where ps_time>=mshta_time AND ps_time<=mshta_time+120 | table mshta_time ps_time dest user parent_process_name cmdline ps_cmd | sort - mshta_time",
+      "kql": "let MshtaParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"explorer.exe\",\"cmd.exe\"]);\nlet PsBadCmd = dynamic([\"-w hidden\",\"-windowstyle hidden\",\"-enc\",\"encodedcommand\",\"-nop\",\"-noprofile\",\"frombase64string\",\"downloadstring\",\"downloaddata\",\"iex\",\"invoke-expression\",\"invoke-restmethod\"]);\nlet Mshta = DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where FileName =~ \"mshta.exe\"\n    | where InitiatingProcessFileName in~ (MshtaParents)\n    | where ProcessCommandLine has_any (\"http://\",\"https://\",\"vbscript:\",\"javascript:\",\".hta\")\n    | where AccountName !endswith \"$\"\n    | project MshtaTime = Timestamp, DeviceId, DeviceName, AccountName,\n              MshtaParent = InitiatingProcessFileName,\n              MshtaCmd = ProcessCommandLine,\n              MshtaPid = ProcessId;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"mshta.exe\"\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n| where tolower(ProcessCommandLine) has_any (PsBadCmd)\n| join kind=inner Mshta on DeviceId\n| where Timestamp between (MshtaTime .. MshtaTime + 2m)\n| extend B64 = extract(@\"(?i)(?:-(?:e(?:nc(?:odedcommand)?)?))\\s+([A-Za-z0-9+/=]{20,})\", 1, ProcessCommandLine)\n| extend Decoded = iif(isnotempty(B64), base64_decode_tostring(B64), \"\")\n| project MshtaTime, ChildTime = Timestamp, DeviceName, AccountName,\n          MshtaParent, MshtaCmd,\n          ChildImage = FileName, ChildCmd = ProcessCommandLine,\n          Decoded\n| order by MshtaTime desc",
+      "sentinel_kql": "let MshtaParents = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"explorer.exe\",\"cmd.exe\"]);\nlet PsBadCmd = dynamic([\"-w hidden\",\"-windowstyle hidden\",\"-enc\",\"encodedcommand\",\"-nop\",\"-noprofile\",\"frombase64string\",\"downloadstring\",\"downloaddata\",\"iex\",\"invoke-expression\",\"invoke-restmethod\"]);\nlet Mshta = SecurityEvent\n    | where TimeGenerated > ago(7d)\n    | where EventID == 4688\n    | where NewProcessName endswith \"\\\\mshta.exe\"\n    | where ParentProcessName has_any (MshtaParents)\n    | where CommandLine has_any (\"http://\",\"https://\",\"vbscript:\",\"javascript:\",\".hta\")\n    | where Account !endswith \"$\"\n    | project MshtaTime = TimeGenerated, Computer, Account,\n              MshtaParent = ParentProcessName,\n              MshtaCmd = CommandLine,\n              MshtaPid = NewProcessId;\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\mshta.exe\"\n| where NewProcessName has_any (\"\\\\powershell.exe\",\"\\\\pwsh.exe\",\"\\\\cmd.exe\")\n| where tolower(CommandLine) has_any (PsBadCmd)\n| join kind=inner Mshta on Computer\n| where TimeGenerated between (MshtaTime .. MshtaTime + 2m)\n| extend B64 = extract(@\"(?i)(?:-(?:e(?:nc(?:odedcommand)?)?))\\s+([A-Za-z0-9+/=]{20,})\", 1, CommandLine)\n| extend Decoded = iif(isnotempty(B64), base64_decode_tostring(B64), \"\")\n| project MshtaTime, ChildTime = TimeGenerated, Computer, Account,\n          MshtaParent, MshtaCmd,\n          ChildImage = NewProcessName, ChildCmd = CommandLine, Decoded\n| order by MshtaTime desc",
+      "sigma_yaml": "title: MuddyWater Mshta to PowerShell Loader Chain\nid: 7d3e8f1c-9c20-4b2a-aa12-mw-mshta-ps01\nstatus: experimental\ndescription: Detects mshta.exe spawned by Office/script-host parents executing a remote .hta or vb/jsscript URI, immediately followed by powershell.exe with hidden/encoded/IEX cradles - signature MuddyWater POWERSTATS/MuddyC3 chain.\nauthor: SOC Detection Engineering\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-055a\n  - https://www.microsoft.com/en-us/security/blog/2023/04/18/mercury-and-dev-1084-destructive-attack-on-hybrid-environment/\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\mshta.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - '-w hidden'\n      - '-WindowStyle Hidden'\n      - '-enc'\n      - 'EncodedCommand'\n      - 'FromBase64String'\n      - 'DownloadString'\n      - 'Invoke-Expression'\n      - 'IEX'\n      - 'Invoke-RestMethod'\n  condition: selection_parent and selection_child and selection_cmd\nfalsepositives:\n  - Legacy admin scripts that wrap PowerShell behind HTA installers\nlevel: high\ntags:\n  - attack.execution\n  - attack.t1218.005\n  - attack.t1059.001\n  - attack.g0069\n",
+      "rationale": "MuddyWater's POWERSTATS / POWERSTATS-NG / MuddyC3 / POWGOOP families have leaned on mshta.exe -> PowerShell as their second-stage loader since at least 2017 (Trend Micro POWERSTATS, ClearSky 2018, Cisco Talos 2022 POWGOOP, Deep Instinct PhonyC2 2023). The narrow shape - Office/script-host parent of mshta loading a remote URI/HTA, then mshta itself spawning hidden+encoded PowerShell within 2 minute",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Za",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Za` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MshtaTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaParent",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MshtaParent` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MshtaCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Decoded",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "DeviceId",
+          "message": "`Decoded` is not a canonical column of DeviceProcessEvents. Did you mean `DeviceId`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Za",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Za` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MshtaTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaParent",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MshtaParent` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MshtaCmd",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`MshtaCmd` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Decoded",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Decoded` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

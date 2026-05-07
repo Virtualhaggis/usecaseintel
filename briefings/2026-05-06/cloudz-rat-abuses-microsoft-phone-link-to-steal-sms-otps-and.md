@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CloudZ Pheno plugin staging — pheno.exe in Windows\TEMP and PhoneExperiences SQLite targeting
 
-`UC_3_12` · phase: **actions** · confidence: **High**
+`UC_8_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ union isfuzzy=true
 
 ### [LLM] CloudZ persistence — SystemWindowsApis scheduled task spawning regasm.exe as SYSTEM
 
-`UC_3_13` · phase: **install** · confidence: **High**
+`UC_8_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union isfuzzy=true
 
 ### [LLM] CloudZ C2 staging — HELLOHIALL Pastebin dead-drop and *.hellohiall.workers.dev egress
 
-`UC_3_14` · phase: **c2** · confidence: **High**
+`UC_8_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -533,7 +533,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CloudZ RAT Abuses Microsoft Phone Link to Steal SMS OTPs and Mobile Notification
 
-`UC_3_11` · phase: **exploit** · confidence: **High**
+`UC_8_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

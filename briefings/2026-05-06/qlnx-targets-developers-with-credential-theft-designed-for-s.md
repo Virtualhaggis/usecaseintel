@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] QLNX rootkit / PAM hook libraries written or ld.so.preload tampered
 
-`UC_5_13` · phase: **install** · confidence: **High**
+`UC_10_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX hidden credential-log + persistence-file artefacts
 
-`UC_5_14` · phase: **install** · confidence: **High**
+`UC_10_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX runtime GCC compilation of embedded rootkit/PAM source
 
-`UC_5_15` · phase: **install** · confidence: **Medium**
+`UC_10_15` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — QLNX Targets Developers With Credential Theft Designed for Supply Chain Compromi
 
-`UC_5_12` · phase: **install** · confidence: **High**
+`UC_10_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

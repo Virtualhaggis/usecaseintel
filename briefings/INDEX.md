@@ -8,6 +8,12 @@ _589 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-07
+- [new femitbot network uses telegram mini apps to push crypto ](./2026-05-07/new-femitbot-network-uses-telegram-mini-apps-to-push-crypto-.md)
+- [new phishing attack weaponizing event invitations to steal l](./2026-05-07/new-phishing-attack-weaponizing-event-invitations-to-steal-l.md)
+- [new salat malware uses quic and websocket channels for steal](./2026-05-07/new-salat-malware-uses-quic-and-websocket-channels-for-steal.md)
+- [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
+
 ## 2026-05-06
 - [argo cd s serversidediff vulnerability enables kubernetes se](./2026-05-06/argo-cd-s-serversidediff-vulnerability-enables-kubernetes-se.md)
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
@@ -15,10 +21,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cloudz rat abuses microsoft phone link to steal sms otps and](./2026-05-06/cloudz-rat-abuses-microsoft-phone-link-to-steal-sms-otps-and.md)
 - [critical vm2 sandbox bug lets attackers execute code on host](./2026-05-06/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-host.md)
 - [daemon tools devs confirm breach release malware free versio](./2026-05-06/daemon-tools-devs-confirm-breach-release-malware-free-versio.md)
+- [darkhub hacking for hire portal advertises crypto fraud mess](./2026-05-06/darkhub-hacking-for-hire-portal-advertises-crypto-fraud-mess.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
-- [hackers use microsoft teams to steal credentials and manipul](./2026-05-06/hackers-use-microsoft-teams-to-steal-credentials-and-manipul.md)
 - [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
 - [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
 - [member of prolific russian ransomware group sentenced to 102](./2026-05-06/member-of-prolific-russian-ransomware-group-sentenced-to-102.md)
@@ -27,14 +33,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [muddywater hackers use chaos ransomware as a decoy in attack](./2026-05-06/muddywater-hackers-use-chaos-ransomware-as-a-decoy-in-attack.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
-- [new fanwei e cology10 server vulnerability could let attacke](./2026-05-06/new-fanwei-e-cology10-server-vulnerability-could-let-attacke.md)
 - [new majordomo rce vulnerability exposes servers to code exec](./2026-05-06/new-majordomo-rce-vulnerability-exposes-servers-to-code-exec.md)
-- [new phishing to rmm attacks how analysts can detect trusted ](./2026-05-06/new-phishing-to-rmm-attacks-how-analysts-can-detect-trusted-.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [qlnx targets developers with credential theft designed for s](./2026-05-06/qlnx-targets-developers-with-credential-theft-designed-for-s.md)
-- [salesforce marketing cloud vulnerability opened door to emai](./2026-05-06/salesforce-marketing-cloud-vulnerability-opened-door-to-emai.md)
 - [taiwan high speed rail hacked using radio signal spoofing at](./2026-05-06/taiwan-high-speed-rail-hacked-using-radio-signal-spoofing-at.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
@@ -212,9 +215,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-06
 - [cisa kev cve 2026 35616 fortinet forticlient ems improper ac](./2026-04-06/cisa-kev-cve-2026-35616-fortinet-forticlient-ems-improper-ac.md)
 - [understanding current threats to kubernetes environments](./2026-04-06/understanding-current-threats-to-kubernetes-environments.md)
-
-## 2026-04-03
-- [when an attacker meets a group of agents navigating amazon b](./2026-04-03/when-an-attacker-meets-a-group-of-agents-navigating-amazon-b.md)
 
 ## 2026-04-01
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)

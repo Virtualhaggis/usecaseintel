@@ -11,15 +11,9 @@ By Bill Toulas
 May 6, 2026
 05:36 PM
 0 
-
-
 A phishing campaign delivered through Google sponsored search results is targeting credentials for ManageWP, GoDaddy’s platform for managing fleets of WordPress websites.
-
-
 The threat actor is using an adversary-in-the-middle (AitM) approach where the fake login page acts as a real-time proxy between the victim and the legitimate ManageWP service.
-
-
-ManageWP is a centralized remote admin…
+ManageWP is a centralized remote administration pl…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,7 +34,7 @@ ManageWP is a centralized remote admin…
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1583.008** — Acquire Infrastructure: Malvertising
 - **T1557** — Adversary-in-the-Middle
-- **T1583.001** — Acquire Infrastructure: Domains
+- **T1539** — Steal Web Session Cookie
 
 ## Kill chain phases observed
 
@@ -48,81 +42,33 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Browser navigation to non-canonical 'managewp' lookalike host (Guardio AitM campaign)
+### [LLM] Browser navigation to ManageWP look-alike domain (Google-Ads typosquat phishing)
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium**
+`UC_5_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.src) as src values(Web.app) as browser from datamodel=Web.Web where (Web.url="*managewp*" OR Web.url="*manage-wp*" OR Web.url="*managewordpress*") AND NOT (Web.url="*managewp.com*" OR Web.url="*godaddy.com*" OR Web.url="*secureserver.net*") AND Web.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","safari") by Web.dest Web.url_domain Web.app Web.user | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*managewp*" OR Web.url="*manage-wp*" OR Web.url="*manage_wp*" OR Web.dest="*managewp*" OR Web.dest="*manage-wp*") AND NOT (Web.url="*managewp.com*" OR Web.dest="*managewp.com" OR Web.url="*godaddy.com*" OR Web.dest="*godaddy.com" OR Web.url="*secureserver.net*" OR Web.dest="*secureserver.net") AND Web.app IN ("chrome","msedge","firefox","brave","opera","arc","vivaldi") by Web.src Web.user Web.url Web.dest Web.http_referrer Web.app Web.action | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// Hunt: browser hits a non-canonical host containing 'managewp' — Guardio AitM kit lookalike
-let _legit_substr = dynamic(["managewp.com","godaddy.com","secureserver.net"]);
-let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe"]);
+let _legit_hosts = dynamic(["managewp.com","www.managewp.com","app.managewp.com","orion.managewp.com","static.managewp.com","secure.managewp.com","api.managewp.com","godaddy.com","www.godaddy.com","secureserver.net"]);
+let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe","vivaldi.exe"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName in~ (_browsers)
 | where isnotempty(RemoteUrl)
-| extend lurl = tolower(RemoteUrl)
-// keyword anchor — 'managewp' is a term, 'manage-wp'/'manage_wp' need contains because '-'/'_' split terms
-| where lurl has_any ("managewp","managewordpress")
-     or lurl contains "manage-wp"
-     or lurl contains "manage_wp"
-| where not(lurl contains "managewp.com")
-     and not(lurl contains "godaddy.com")
-     and not(lurl contains "secureserver.net")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP,
+| where RemoteUrl has_any ("managewp","manage-wp","manage_wp")
+| extend Host = tolower(tostring(parse_url(RemoteUrl).Host))
+| where Host !in~ (_legit_hosts)
+| where not(Host endswith ".managewp.com")
+| where not(Host endswith ".godaddy.com")
+| where not(Host endswith ".secureserver.net")
+| project Timestamp, DeviceName, AccountName,
           InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
+          RemoteUrl, Host, RemoteIP, RemotePort
 | order by Timestamp desc
-```
-
-### [LLM] First-time-seen 'managewp'-keyword external domain across the org (typosquat baseline anti-join)
-
-`UC_0_6` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Web.Web where earliest=-30d@d latest=-4h@h (Web.url="*managewp*" OR Web.url="*manage-wp*" OR Web.url="*managewordpress*") AND NOT (Web.url="*managewp.com*" OR Web.url="*godaddy.com*" OR Web.url="*secureserver.net*") by Web.url_domain | `drop_dm_object_name(Web)` | rename url_domain as baseline_domain | append [| tstats `summariesonly` count min(_time) as firstTime values(Web.user) as users values(Web.dest) as src values(Web.url) as urls dc(Web.dest) as host_count from datamodel=Web.Web where earliest=-4h@h (Web.url="*managewp*" OR Web.url="*manage-wp*" OR Web.url="*managewordpress*") AND NOT (Web.url="*managewp.com*" OR Web.url="*godaddy.com*" OR Web.url="*secureserver.net*") by Web.url_domain | `drop_dm_object_name(Web)` | rename url_domain as recent_domain] | stats values(*) as * by recent_domain | search NOT [| tstats `summariesonly` count from datamodel=Web.Web where earliest=-30d@d latest=-4h@h by Web.url_domain | `drop_dm_object_name(Web)` | rename url_domain as recent_domain | fields recent_domain] | convert ctime(firstTime)
-```
-
-**Defender KQL:**
-```kql
-// First-time-seen 'managewp'-keyword external host — 30d anti-join baseline
-let _keyword_filter = (T:(Timestamp:datetime, RemoteUrl:string)) {
-    T
-    | where isnotempty(RemoteUrl)
-    | extend lurl = tolower(RemoteUrl)
-    | where lurl has_any ("managewp","managewordpress")
-         or lurl contains "manage-wp"
-         or lurl contains "manage_wp"
-    | where not(lurl contains "managewp.com")
-         and not(lurl contains "godaddy.com")
-         and not(lurl contains "secureserver.net")
-};
-let Baseline =
-    DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(4h))
-    | invoke _keyword_filter()
-    | extend host = tostring(split(replace_string(replace_string(lurl,"https://",""),"http://",""),"/")[0])
-    | summarize by host;
-DeviceNetworkEvents
-| where Timestamp > ago(4h)
-| invoke _keyword_filter()
-| extend host = tostring(split(replace_string(replace_string(lurl,"https://",""),"http://",""),"/")[0])
-| join kind=leftanti Baseline on host
-| summarize FirstSeen = min(Timestamp),
-            HostsAffected = dcount(DeviceName),
-            Devices = make_set(DeviceName, 25),
-            Users = make_set(AccountName, 25),
-            SampleUrl = any(RemoteUrl),
-            Browsers = make_set(InitiatingProcessFileName, 5)
-            by host
-| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -339,4 +285,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

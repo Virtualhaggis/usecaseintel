@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater Stagecomp/Darkcomp execution & C2 (ms_upd.exe / game.exe / 172.86.126.208)
 
-`UC_18_10` · phase: **install** · confidence: **High**
+`UC_19_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ union isfuzzy=true
 
 ### [LLM] DWAgent and AnyDesk co-deployed on the same host within 24h (MuddyWater dual-RMM)
 
-`UC_18_11` · phase: **install** · confidence: **High**
+`UC_19_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ HostsRunningDWAgent
 
 ### [LLM] Notepad/Wordpad spawned by Quick Assist, AnyDesk, DWAgent or msra.exe (Teams cred-typing lure)
 
-`UC_18_12` · phase: **actions** · confidence: **Medium**
+`UC_19_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -474,7 +474,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MuddyWater hackers use Chaos ransomware as a decoy in attacks
 
-`UC_18_9` · phase: **exploit** · confidence: **High**
+`UC_19_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,343 @@
+{
+  "name": "APT41",
+  "ucs": [
+    {
+      "title": "[LLM] APT41 / Wicked Panda IIS web-shell post-exploitation (w3wp \u2192 recon LOLBin chain)",
+      "description": "Hunts suspicious child processes spawned by an IIS / Tomcat / Nginx worker \u2014 the canonical signal of an ASPXSpy or China Chopper webshell being driven interactively. APT41 (BARIUM, Brass Typhoon) routinely chains T1190 exploitation of internet-facing apps (Citrix CVE-2019-19781, Zoho ManageEngine ADSelfService Plus CVE-2021-40539, Confluence, Log4Shell, USAHerds) into web-shell drop, then issues ad-hoc `whoami` / `net` / `nltest` / `certutil` / `bitsadmin` recon and stager pulls under the IIS application-pool identity.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.001",
+        "T1059.003",
+        "T1087.001",
+        "T1087.002",
+        "T1082",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"node.exe\",\"nginx.exe\") AND Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"wmic.exe\",\"nltest.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"reg.exe\") AND NOT (Processes.user=\"*$\" OR Processes.user=\"NT AUTHORITY\\\\SYSTEM\") by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "kql": "// APT41 webshell-driven recon under IIS / app-server worker process\nlet LookbackHours = 24h;\nlet _web_workers = dynamic([\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"node.exe\",\"nginx.exe\",\"java.exe\"]);\nlet _recon_lolbins = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"wmic.exe\",\"nltest.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"reg.exe\",\"hostname.exe\",\"ping.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackHours)\n| where InitiatingProcessFileName in~ (_web_workers)\n| where FileName in~ (_recon_lolbins)\n| where AccountName !endswith \"$\"\n| extend IsCertUtilDownload = (FileName =~ \"certutil.exe\" and ProcessCommandLine has_any (\"-urlcache\",\"-split\",\"-decode\",\"-f http\",\"-f https\"))\n| extend IsBitsTransfer = (FileName =~ \"bitsadmin.exe\" and ProcessCommandLine has \"/transfer\")\n| extend IsDomainRecon = (FileName in~ (\"net.exe\",\"net1.exe\",\"nltest.exe\") and ProcessCommandLine has_any (\"group\",\"localgroup\",\"domain_trusts\",\"dclist\",\"user /domain\",\"view\"))\n| project Timestamp, DeviceName, AccountName,\n          ParentBin = InitiatingProcessFileName,\n          ParentPath = InitiatingProcessFolderPath,\n          ChildBin = FileName, ChildCmd = ProcessCommandLine,\n          IsCertUtilDownload, IsBitsTransfer, IsDomainRecon, SHA256\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),\n            UniqueChildren = dcount(ChildBin),\n            ChildBins = make_set(ChildBin, 25),\n            CmdSamples = make_set(ChildCmd, 25),\n            DownloadHits = countif(IsCertUtilDownload or IsBitsTransfer),\n            ReconHits = countif(IsDomainRecon)\n            by DeviceName, AccountName, ParentBin\n| where UniqueChildren >= 2 or DownloadHits > 0 or ReconHits > 0\n| order by LastSeen desc",
+      "sentinel_kql": "// APT41 webshell-driven recon under IIS / app-server worker process \u2014 Sentinel SecurityEvent (4688)\nlet LookbackHours = 24h;\nlet _web_workers = dynamic([\"w3wp.exe\",\"httpd.exe\",\"tomcat.exe\",\"tomcat9.exe\",\"node.exe\",\"nginx.exe\",\"java.exe\"]);\nlet _recon_lolbins = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"mshta.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"wmic.exe\",\"nltest.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"netstat.exe\",\"reg.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackHours)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ParentBin = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| extend ChildBin  = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ParentBin in (_web_workers)\n| where ChildBin in (_recon_lolbins)\n| extend IsCertUtilDownload = (ChildBin == \"certutil.exe\" and CommandLine has_any (\"-urlcache\",\"-split\",\"-decode\",\"-f http\",\"-f https\"))\n| extend IsBitsTransfer = (ChildBin == \"bitsadmin.exe\" and CommandLine has \"/transfer\")\n| extend IsDomainRecon = (ChildBin in (\"net.exe\",\"net1.exe\",\"nltest.exe\") and CommandLine has_any (\"group\",\"localgroup\",\"domain_trusts\",\"dclist\",\"user /domain\",\"view\"))\n| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),\n            UniqueChildren = dcount(ChildBin),\n            ChildBins = make_set(ChildBin, 25),\n            CmdSamples = make_set(CommandLine, 25),\n            DownloadHits = countif(IsCertUtilDownload or IsBitsTransfer),\n            ReconHits = countif(IsDomainRecon)\n            by Computer, Account, ParentBin\n| where UniqueChildren >= 2 or DownloadHits > 0 or ReconHits > 0\n| order by LastSeen desc",
+      "sigma_yaml": "title: APT41 Webshell Post-Exploitation via IIS / App-Server Worker Process\nid: c4a7e132-8b5c-4f3d-a91e-apt41wsrecon01\nstatus: experimental\ndescription: Detects suspicious recon / LOLBin child processes spawned by web-server worker processes (w3wp, tomcat, nginx, node) \u2014 the characteristic post-exploitation footprint of APT41 / BARIUM / Wicked Panda China Chopper / ASPXSpy webshells following T1190 exploitation of internet-facing apps.\nreferences:\n  - https://attack.mitre.org/groups/G0096/\n  - https://www.mandiant.com/resources/blog/apt41-us-state-governments\n  - https://www.mandiant.com/resources/blog/apt41-initiates-global-intrusion-campaign-using-multiple-exploits\nauthor: Detection Engineering\ndate: 2026/05/07\ntags:\n  - attack.initial-access\n  - attack.execution\n  - attack.discovery\n  - attack.t1190\n  - attack.t1505.003\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.t1087.002\n  - attack.t1082\n  - attack.g0096\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\w3wp.exe'\n      - '\\httpd.exe'\n      - '\\tomcat.exe'\n      - '\\tomcat9.exe'\n      - '\\node.exe'\n      - '\\nginx.exe'\n      - '\\java.exe'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\mshta.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\whoami.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\ipconfig.exe'\n      - '\\systeminfo.exe'\n      - '\\tasklist.exe'\n      - '\\wmic.exe'\n      - '\\nltest.exe'\n      - '\\quser.exe'\n      - '\\arp.exe'\n      - '\\reg.exe'\n  filter_machine_account:\n    User|endswith: '$'\n  condition: selection_parent and selection_child and not filter_machine_account\nfalsepositives:\n  - Legitimate diagnostic scripts run by web admins under the application-pool identity\n  - Some monitoring tools invoke whoami / ipconfig from w3wp for healthchecks \u2014 baseline & allow-list\nlevel: high",
+      "rationale": "APT41 has a multi-year, well-documented playbook of compromising internet-facing application servers (Citrix NetScaler, Zoho ManageEngine, USAHerds, Confluence, Log4Shell, IIS via deserialization) and dropping ASPXSpy / China Chopper / custom .aspx web shells. Operator interaction with those shells produces an unmistakable telemetry signature: the web-server worker process \u2014 never normally a paren",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT41 staging chain: certutil/bitsadmin download \u2192 masqueraded scheduled-task persistence",
+      "description": "Correlates an inbound payload pull via certutil / bitsadmin / PowerShell IWR with a scheduled-task creation on the SAME host within 30 minutes whose task name masquerades as a legitimate Microsoft component (T1036.004 / T1036.005). APT41 / Brass Typhoon repeatedly stages KEYPLUG, DUSTPAN, DUSTTRAP, ScrambleCross and CROSSWALK loaders this way and registers persistence with names like `\\Microsoft\\Windows\\AppID\\EPolicyManager`, `OneDriveUpdater`, `MicrosoftEdgeUpdateTask`, `WindowsDefenderUpdate` to blend into svchost / Microsoft scheduled-task tree.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1105",
+        "T1197",
+        "T1053.005",
+        "T1036.004",
+        "T1036.005",
+        "T1059.001",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as download_time values(Processes.process) as download_cmd values(Processes.process_name) as download_bin from datamodel=Endpoint.Processes where ((Processes.process_name=certutil.exe AND (Processes.process=\"*-urlcache*\" OR Processes.process=\"*-split*\" OR Processes.process=\"*-decode*\" OR Processes.process=\"*-f http*\")) OR (Processes.process_name=bitsadmin.exe AND Processes.process=\"*/transfer*\") OR ((Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) AND (Processes.process=\"*DownloadString*\" OR Processes.process=\"*DownloadFile*\" OR Processes.process=\"*Invoke-WebRequest*\" OR Processes.process=\"*WebClient*\"))) AND NOT Processes.user=\"*$\" by host Processes.user | `drop_dm_object_name(Processes)` | join type=inner host [ | tstats summariesonly=true min(_time) as task_time values(Processes.process) as task_cmd from datamodel=Endpoint.Processes where Processes.process_name IN (schtasks.exe,at.exe) AND Processes.process=\"*/create*\" AND (Processes.process=\"*Microsoft\\\\Windows\\\\*\" OR Processes.process=\"*Update*\" OR Processes.process=\"*Defender*\" OR Processes.process=\"*Edge*\" OR Processes.process=\"*OneDrive*\" OR Processes.process=\"*NetSvc*\" OR Processes.process=\"*Spooler*\" OR Processes.process=\"*TimeBroker*\" OR Processes.process=\"*WindowsBackup*\") by host Processes.user | `drop_dm_object_name(Processes)` ] | where task_time >= download_time AND task_time <= download_time+1800 | eval delay_sec = task_time - download_time | convert ctime(download_time) ctime(task_time) | table host user download_bin download_cmd task_cmd delay_sec download_time task_time | sort - task_time",
+      "kql": "// APT41 stage-then-persist: download \u2192 masqueraded scheduled task within 30 min on same host\nlet LookbackHours = 24h;\nlet WindowMin = 30m;\nlet downloads =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackHours)\n    | where AccountName !endswith \"$\"\n    | where (FileName =~ \"certutil.exe\"\n             and ProcessCommandLine has_any (\"-urlcache\",\"-split\",\"-decode\",\"-f http\",\"-f https\"))\n         or (FileName =~ \"bitsadmin.exe\" and ProcessCommandLine has \"/transfer\")\n         or (FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n             and ProcessCommandLine has_any (\"DownloadString\",\"DownloadFile\",\"Invoke-WebRequest\",\"iwr \",\"Net.WebClient\",\"Start-BitsTransfer\"))\n    | project DownloadTime = Timestamp, DeviceId, DeviceName, AccountName,\n              DownloadBin = FileName, DownloadCmd = ProcessCommandLine,\n              DownloadParent = InitiatingProcessFileName;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackHours)\n| where FileName in~ (\"schtasks.exe\",\"at.exe\")\n| where ProcessCommandLine has_any (\"/create\",\"-Create\",\"/run\")\n| where AccountName !endswith \"$\"\n// APT41-style task-name masquerading \u2014 Microsoft / Windows / vendor-update mimicry\n| where ProcessCommandLine matches regex @\"(?i)/tn\\s+\\\"?\\\\?(Microsoft\\\\Windows\\\\|Windows\\\\|.*Update|.*Defender|.*Security|.*NetSvc|.*Spooler|.*TimeBroker|.*Edge|.*OneDrive|.*Google|.*Adobe|.*WindowsBackup|.*EPolicyManager|.*AppID)\"\n| join kind=inner downloads on DeviceId\n| where Timestamp between (DownloadTime .. DownloadTime + WindowMin)\n| extend DelaySec = datetime_diff('second', Timestamp, DownloadTime)\n| project DownloadTime, TaskCreateTime = Timestamp, DelaySec,\n          DeviceName, AccountName,\n          DownloadParent, DownloadBin, DownloadCmd,\n          TaskBin = FileName, TaskCmd = ProcessCommandLine,\n          TaskParent = InitiatingProcessFileName\n| order by TaskCreateTime desc",
+      "sentinel_kql": "// APT41 stage-then-persist on the same host within 30 min \u2014 Sentinel SecurityEvent (4688)\nlet LookbackHours = 24h;\nlet WindowMin = 30m;\nlet downloads =\n    SecurityEvent\n    | where TimeGenerated > ago(LookbackHours)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | extend ChildBin = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n    | where (ChildBin == \"certutil.exe\"\n             and CommandLine has_any (\"-urlcache\",\"-split\",\"-decode\",\"-f http\",\"-f https\"))\n         or (ChildBin == \"bitsadmin.exe\" and CommandLine has \"/transfer\")\n         or (ChildBin in (\"powershell.exe\",\"pwsh.exe\")\n             and CommandLine has_any (\"DownloadString\",\"DownloadFile\",\"Invoke-WebRequest\",\"iwr \",\"Net.WebClient\",\"Start-BitsTransfer\"))\n    | project DownloadTime = TimeGenerated, Computer, Account,\n              DownloadBin = ChildBin, DownloadCmd = CommandLine,\n              DownloadParent = ParentProcessName;\nSecurityEvent\n| where TimeGenerated > ago(LookbackHours)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend TaskBin = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where TaskBin in (\"schtasks.exe\",\"at.exe\")\n| where CommandLine has_any (\"/create\",\"-Create\",\"/run\")\n| where CommandLine matches regex @\"(?i)/tn\\s+\\\"?\\\\?(Microsoft\\\\Windows\\\\|Windows\\\\|.*Update|.*Defender|.*Security|.*NetSvc|.*Spooler|.*TimeBroker|.*Edge|.*OneDrive|.*Google|.*Adobe|.*WindowsBackup|.*EPolicyManager|.*AppID)\"\n| join kind=inner downloads on Computer\n| where TimeGenerated between (DownloadTime .. DownloadTime + WindowMin)\n| extend DelaySec = datetime_diff('second', TimeGenerated, DownloadTime)\n| project DownloadTime, TaskCreateTime = TimeGenerated, DelaySec,\n          Computer, Account,\n          DownloadParent, DownloadBin, DownloadCmd,\n          TaskBin, TaskCmd = CommandLine, TaskParent = ParentProcessName\n| order by TaskCreateTime desc",
+      "sigma_yaml": "",
+      "rationale": "Mandiant's 2022 (`Does This Look Infected?`), 2023 and 2024 reporting on APT41 \u2014 including the DUSTPAN / DUSTTRAP / KEYPLUG family \u2014 repeatedly highlights the same install pattern: a LOLBin (most often `certutil -urlcache -split -f`, `bitsadmin /transfer`, or PowerShell `Net.WebClient`) pulls down the loader, followed within seconds-to-minutes by a `schtasks /create` whose `/tn` value sits inside ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Microsoft",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Microsoft` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Defender",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Defender` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Security",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": "MSRCSeverity",
+          "message": "`Security` is not a canonical column of DeviceProcessEvents, Update. Did you mean `MSRCSeverity`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NetSvc",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`NetSvc` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Spooler",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Spooler` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "TimeBroker",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`TimeBroker` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Edge",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Edge` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "OneDrive",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`OneDrive` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Google",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Google` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Adobe",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Adobe` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WindowsBackup",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`WindowsBackup` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EPolicyManager",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`EPolicyManager` is not a canonical column of DeviceProcessEvents, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "AppID",
+          "tables_in_scope": [
+            "DeviceProcessEvents",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`AppID` is not a canonical column of DeviceProcessEvents, Update."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Microsoft",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Microsoft` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Defender",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Defender` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Security",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": "MSRCSeverity",
+          "message": "`Security` is not a canonical column of SecurityEvent, Update. Did you mean `MSRCSeverity`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NetSvc",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`NetSvc` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Spooler",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Spooler` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "TimeBroker",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`TimeBroker` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Edge",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Edge` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "OneDrive",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`OneDrive` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Google",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Google` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Adobe",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`Adobe` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WindowsBackup",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`WindowsBackup` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EPolicyManager",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`EPolicyManager` is not a canonical column of SecurityEvent, Update."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "AppID",
+          "tables_in_scope": [
+            "SecurityEvent",
+            "Update"
+          ],
+          "suggestion": null,
+          "message": "`AppID` is not a canonical column of SecurityEvent, Update."
+        }
+      ]
+    }
+  ]
+}
