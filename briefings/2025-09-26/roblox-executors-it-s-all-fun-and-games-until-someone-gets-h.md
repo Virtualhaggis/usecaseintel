@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Roblox script executor binary execution (Solara, KRNL, Fluxus, Synapse X, Wave) on managed endpoint
 
-`UC_337_3` · phase: **install** · confidence: **High**
+`UC_336_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### [LLM] Chaos ransomware behaviour following fake Solara/Roblox-executor launch (shadow-copy wipe)
 
-`UC_337_4` · phase: **actions** · confidence: **High**
+`UC_336_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### [LLM] Roblox executor process beaconing to LummaC2 .shop infrastructure
 
-`UC_337_5` · phase: **c2** · confidence: **High**
+`UC_336_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

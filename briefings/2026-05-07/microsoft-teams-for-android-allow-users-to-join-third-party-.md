@@ -10,13 +10,9 @@ Home Android
 Microsoft Teams for Android Allow Users to Join Third-Party Meetings via SIP 
 By Abinaya 
 May 7, 2026 
-
-
-
-
 Microsoft is expanding interoperability in its mobile communication ecosystem by allowing Microsoft Teams users on Android devices to join third-party meetings via the Session Initiation Protocol (SIP).
 Recently detailed on the Microsoft 365 roadmap, this upcoming feature addresses a major enterprise demand for seamless cross-platform communication.
-With SIP, Android users…
+With SIP, Android users will no…
 
 ## Indicators of Compromise (high-fidelity only)
 

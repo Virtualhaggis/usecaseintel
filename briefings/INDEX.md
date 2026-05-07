@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,23 +9,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-07
+- [critical ollama memory leak vulnerability exposes 300 000 se](./2026-05-07/critical-ollama-memory-leak-vulnerability-exposes-300-000-se.md)
 - [google chrome 148 released with fix for 127 security vulnera](./2026-05-07/google-chrome-148-released-with-fix-for-127-security-vulnera.md)
+- [hackers used claude ai to attack on water and drainage utili](./2026-05-07/hackers-used-claude-ai-to-attack-on-water-and-drainage-utili.md)
 - [massive 2 45b request ddos attack used 1 2 million ips to ev](./2026-05-07/massive-2-45b-request-ddos-attack-used-1-2-million-ips-to-ev.md)
 - [microsoft teams for android allow users to join third party ](./2026-05-07/microsoft-teams-for-android-allow-users-to-join-third-party-.md)
 - [new clickfix attack targets macos users with fake disk clean](./2026-05-07/new-clickfix-attack-targets-macos-users-with-fake-disk-clean.md)
 - [new femitbot network uses telegram mini apps to push crypto ](./2026-05-07/new-femitbot-network-uses-telegram-mini-apps-to-push-crypto-.md)
 - [new phishing attack weaponizing event invitations to steal l](./2026-05-07/new-phishing-attack-weaponizing-event-invitations-to-steal-l.md)
 - [new salat malware uses quic and websocket channels for steal](./2026-05-07/new-salat-malware-uses-quic-and-websocket-channels-for-steal.md)
+- [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
-- [cloudz rat abuses microsoft phone link to steal sms otps and](./2026-05-06/cloudz-rat-abuses-microsoft-phone-link-to-steal-sms-otps-and.md)
 - [critical vm2 sandbox bug lets attackers execute code on host](./2026-05-06/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-host.md)
 - [daemon tools devs confirm breach release malware free versio](./2026-05-06/daemon-tools-devs-confirm-breach-release-malware-free-versio.md)
-- [darkhub hacking for hire portal advertises crypto fraud mess](./2026-05-06/darkhub-hacking-for-hire-portal-advertises-crypto-fraud-mess.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
@@ -39,7 +40,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto networks warns of firewall rce zero day exploited ](./2026-05-06/palo-alto-networks-warns-of-firewall-rce-zero-day-exploited-.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
-- [qlnx targets developers with credential theft designed for s](./2026-05-06/qlnx-targets-developers-with-credential-theft-designed-for-s.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [webinar why network incidents escalate and how to fix respon](./2026-05-06/webinar-why-network-incidents-escalate-and-how-to-fix-respon.md)
 - [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
@@ -126,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-28
 - [brazilian lofygang resurfaces after three years with minecra](./2026-04-28/brazilian-lofygang-resurfaces-after-three-years-with-minecra.md)
-- [critical unpatched flaw leaves hugging face lerobot open to ](./2026-04-28/critical-unpatched-flaw-leaves-hugging-face-lerobot-open-to-.md)
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
 - [researchers discover critical github cve 2026 3854 rce flaw ](./2026-04-28/researchers-discover-critical-github-cve-2026-3854-rce-flaw-.md)
 - [simplifying aws defense with microsoft sentinel ueba](./2026-04-28/simplifying-aws-defense-with-microsoft-sentinel-ueba.md)

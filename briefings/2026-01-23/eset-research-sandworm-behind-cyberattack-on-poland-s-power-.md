@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper deployment from shared inetpub\pub directory (Sandworm, Poland Dec 2025)
 
-`UC_225_1` · phase: **install** · confidence: **High**
+`UC_224_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### [LLM] rsocx SOCKS5 reverse proxy beacon to 31.172.71.5:8008 (Sandworm Poland C2)
 
-`UC_225_2` · phase: **c2** · confidence: **High**
+`UC_224_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union isfuzzy=true
 
 ### [LLM] DynoWiper PDB-string + vagrant build artefact in loaded modules
 
-`UC_225_3` · phase: **install** · confidence: **Medium**
+`UC_224_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Event-invitation phishing kit URL signature: /blocked.html + /Image/<brand>.png chain
 
-`UC_5_9` · phase: **delivery** · confidence: **High**
+`UC_8_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### [LLM] Phishing kit visitor-ID exfil to /check_telegram_updates.php
 
-`UC_5_10` · phase: **actions** · confidence: **High**
+`UC_8_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### [LLM] RMM installer (ScreenConnect/ConnectWise/ITarian/Datto/LogMeIn) drop within 30m of phishing-kit visit
 
-`UC_5_11` · phase: **install** · confidence: **Medium**
+`UC_8_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 New ClickFix Attack Targets macOS Users With Fake Disk Cleanup and Utility Lures 
 By Tushar Subhra Dutta 
 May 7, 2026 
-
-
-
-
 A new wave of cyberattacks is putting macOS users in the crosshairs, and this time the bait looks almost too familiar. Attackers are disguising their malware as helpful disk cleanup tools and system utilities, tricking people into running dangerous commands directly on their own computers. 
-The campaign, known as ClickFix, works by placing fake …
+The campaign, known as ClickFix, works by placing fake troubles…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -99,18 +95,18 @@ The campaign, known as ClickFix, works by placing fake …
 - **T1027** — Obfuscated Files or Information
 - **T1543.001** — Persistence (article-specific)
 - **T1543.004** — Persistence (article-specific)
-- **T1204.004** — Malicious Copy and Paste
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1059.002** — Command and Scripting Interpreter: AppleScript
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1140** — Deobfuscate/Decode Files or Information
+- **T1105** — Ingress Tool Transfer
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1547.011** — Plist File Modification
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102.002** — Web Service: Bidirectional Communication
-- **T1041** — Exfiltration Over C2 Channel
-- **T1568** — Dynamic Resolution
-- **T1543.001** — Create or Modify System Process: Launch Agent
-- **T1543.004** — Create or Modify System Process: Launch Daemon
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
+- **T1573** — Encrypted Channel
 
 ## Kill chain phases observed
 
@@ -118,109 +114,105 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] macOS ClickFix Terminal-paste loader: shell/osascript curl|sh + base64+gunzip pipeline
+### [LLM] macOS ClickFix Terminal-pasted curl piped to base64/gunzip into osascript or shell
 
-`UC_1_14` · phase: **delivery** · confidence: **High**
+`UC_4_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os IN ("macOS","Mac OS X","Darwin") AND Processes.parent_process_name IN ("Terminal","Terminal.app","bash","zsh","sh") AND ((Processes.process_name IN ("bash","sh","zsh") AND match(Processes.process,"(?i)curl\s") AND match(Processes.process,"(?i)\|\s*(ba)?sh(\s|$)")) OR (Processes.process_name="osascript" AND match(Processes.process,"(?i)base64") AND match(Processes.process,"(?i)gunzip")) OR match(Processes.process,"(?i)(cleanmymacos\.org|macclean\.craft\.me|macos-disk-space\.medium\.com|apple-mac-fix-hidden\.medium\.com|mac-storage-guide\.squarespace\.com|claudecodedoc\.squarespace\.com|rapidfilevault[45]\.sbs|cauterizespray\.icu|enslaveculprit\.digital|resilientlimb\.icu|swift-sh\.com|domenpozh\.net|dialerformac\.com|/script\.sh)")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os="macOS" AND Processes.parent_process_name IN ("Terminal","bash","zsh","sh","dash","login") AND Processes.process="*curl*" AND (Processes.process="*base64*" OR Processes.process="*gunzip*" OR Processes.process="*gzip -d*") AND (Processes.process="*osascript*" OR Processes.process="*| sh*" OR Processes.process="*| bash*" OR Processes.process="*| zsh*" OR Processes.process="*|sh*" OR Processes.process="*|bash*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// macOS ClickFix paste — curl piped to base64/gunzip into osascript or shell
+let MacDevices = DeviceInfo | where OSPlatform =~ "macOS" | distinct DeviceId;
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("Terminal","Terminal.app","bash","zsh","sh")
-   or InitiatingProcessFolderPath has "/Applications/Utilities/Terminal.app"
-| where AccountName !endswith "$"
-| where (
-    (FileName in~ ("bash","sh","zsh")
-     and ProcessCommandLine has "curl"
-     and (ProcessCommandLine has "| sh" or ProcessCommandLine has "|sh"
-          or ProcessCommandLine has "| bash" or ProcessCommandLine has "|bash"))
-    or (FileName =~ "osascript"
-        and ProcessCommandLine has "base64"
-        and ProcessCommandLine has "gunzip")
-    or ProcessCommandLine has_any (
-         "cleanmymacos.org","macclean.craft.me","macos-disk-space.medium.com",
-         "apple-mac-fix-hidden.medium.com","mac-storage-guide.squarespace.com",
-         "claudecodedoc.squarespace.com","rapidfilevault4.sbs","rapidfilevault5.sbs",
-         "cauterizespray.icu","enslaveculprit.digital","resilientlimb.icu",
-         "swift-sh.com","domenpozh.net","dialerformac.com","/script.sh")
-  )
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] ClickFix macOS C2 / payload-delivery infrastructure sweep (Macsync, Shub, AMOS)
-
-`UC_1_15` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("95.85.251.177","138.124.93.32","168.100.9.122","199.217.98.33","38.244.158.103","45.94.47.204") OR All_Traffic.dest_host IN ("cleanmymacos.org","mac-storage-guide.squarespace.com","claudecodedoc.squarespace.com","domenpozh.net","macos-disk-space.medium.com","macclean.craft.me","apple-mac-fix-hidden.medium.com","rapidfilevault4.sbs","rapidfilevault5.sbs","coco-fun2.com","nitlebuf.com","yablochnisok.com","mentaorb.com","seagalnssteavens.com","filefastdata.com","metramon.com","octopixeldate.com","datasphere.us.com","dialerformac.com","swift-sh.com","0x666.info","honestly.ink","pla7ina.cfd","play67.cc","cauterizespray.icu","enslaveculprit.digital","resilientlimb.icu","rvdownloads.com","famiode.com","contatoplus.com","woupp.com","octopox.com","avipstudios.com","joytion.com","laislivon.com","reachnv.com","vagturk.com","futampako.com","joeyapple.com","wusetail.com","aforvm.com","ouilov.com","malext.com","rebidy.com")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`
-```
-
-**Defender KQL:**
-```kql
-let _ips = dynamic(["95.85.251.177","138.124.93.32","168.100.9.122","199.217.98.33","38.244.158.103","45.94.47.204"]);
-let _domains = dynamic([
-  "cleanmymacos.org","mac-storage-guide.squarespace.com","claudecodedoc.squarespace.com",
-  "domenpozh.net","macos-disk-space.medium.com","macclean.craft.me",
-  "apple-mac-fix-hidden.medium.com","rapidfilevault4.sbs","rapidfilevault5.sbs",
-  "coco-fun2.com","nitlebuf.com","yablochnisok.com","mentaorb.com",
-  "seagalnssteavens.com","filefastdata.com","metramon.com","octopixeldate.com",
-  "datasphere.us.com","dialerformac.com","swift-sh.com","0x666.info",
-  "honestly.ink","pla7ina.cfd","play67.cc","cauterizespray.icu",
-  "enslaveculprit.digital","resilientlimb.icu","rvdownloads.com","famiode.com",
-  "contatoplus.com","woupp.com","octopox.com","avipstudios.com","joytion.com",
-  "laislivon.com","reachnv.com","vagturk.com","futampako.com","joeyapple.com",
-  "wusetail.com","aforvm.com","ouilov.com","malext.com","rebidy.com"]);
-DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (_ips)
-   or (isnotempty(RemoteUrl) and RemoteUrl has_any (_domains))
-| extend Variant = case(
-    RemoteUrl has_any ("rapidfilevault4.sbs","rapidfilevault5.sbs","swift-sh.com","dialerformac.com","coco-fun2.com","nitlebuf.com","yablochnisok.com","mentaorb.com","seagalnssteavens.com","filefastdata.com","metramon.com","octopixeldate.com","datasphere.us.com"),"loader-campaign",
-    RemoteUrl has_any ("cauterizespray.icu","enslaveculprit.digital","resilientlimb.icu","0x666.info","honestly.ink","pla7ina.cfd","play67.cc") or RemoteIP == "95.85.251.177","script-campaign",
-    RemoteUrl has_any ("rvdownloads.com","famiode.com","contatoplus.com","woupp.com","octopox.com","avipstudios.com","joytion.com","laislivon.com") or (RemoteUrl has "/contact" and RemoteIP in ("138.124.93.32","168.100.9.122","199.217.98.33","38.244.158.103")),"helper-campaign",
-    RemoteUrl has_any ("reachnv.com","vagturk.com","futampako.com","joeyapple.com"),"update-install-variant",
-    RemoteUrl has_any ("wusetail.com","aforvm.com","ouilov.com","malext.com","rebidy.com") or RemoteIP == "45.94.47.204","bot-payload",
-    "clickfix-lure")
-| project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, Variant,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where DeviceId in (MacDevices)
+   or InitiatingProcessFileName in~ ("Terminal","bash","zsh","sh","dash","login")
+| where InitiatingProcessFileName in~ ("Terminal","bash","zsh","sh","dash","login")
+| where ProcessCommandLine has "curl"
+| where ProcessCommandLine has_any ("base64", "gunzip", "gzip -d")
+| where ProcessCommandLine has_any ("osascript", "| sh", "| bash", "| zsh", "|sh", "|bash", "|zsh")
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd     = InitiatingProcessCommandLine,
+          ChildProcess  = FileName,
+          ChildCmd      = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] macOS ClickFix persistence: fake Google Keystone LaunchAgent + .mainhelper/.agent backdoor staging
+### [LLM] macOS ClickFix persistence: fake Google Keystone plist, /tmp/helper, .mainhelper backdoor
 
-`UC_1_16` · phase: **install** · confidence: **High**
+`UC_4_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="*Library/LaunchAgents/com.google.keystone.agent.plist" OR Filesystem.file_path="*Library/Application Support/Google/GoogleUpdate.app/Contents/MacOS/GoogleUpdate*" OR Filesystem.file_path IN ("/tmp/helper","/tmp/starter") OR Filesystem.file_name IN (".mainhelper",".agent")) AND NOT Filesystem.process_name IN ("ksinstall","GoogleSoftwareUpdateAgent","GoogleSoftwareUpdate") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") AND ( (Filesystem.file_name="com.google.keystone.agent.plist" AND Filesystem.file_path="*LaunchAgents*") OR Filesystem.file_path="*GoogleUpdate.app/Contents/MacOS*" OR (Filesystem.file_path="/tmp/" AND Filesystem.file_name IN ("helper","starter")) OR Filesystem.file_name IN (".mainhelper",".agent") ) AND NOT Filesystem.process_name IN ("ksinstall","ksadmin","GoogleSoftwareUpdateAgent","installd","mdmclient","Install Google Software Update.app") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// macOS ClickFix persistence — Microsoft IOC paths / filenames
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where (
-      FolderPath has @"/Library/LaunchAgents/com.google.keystone.agent.plist"
-   or FolderPath has @"/Library/Application Support/Google/GoogleUpdate.app/Contents/MacOS/GoogleUpdate"
-   or FolderPath in (@"/tmp/helper", @"/tmp/starter")
-   or FileName in (".mainhelper", ".agent")
-   or (FolderPath has @"/Library/LaunchAgents/" and FileName endswith ".plist"
-       and InitiatingProcessFileName in~ ("bash","sh","zsh","osascript","curl","Terminal"))
-  )
-| where InitiatingProcessFileName !in~ ("ksinstall","GoogleSoftwareUpdateAgent","GoogleSoftwareUpdate","GoogleSoftwareUpdateDaemon")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FileName =~ "com.google.keystone.agent.plist" and FolderPath has "LaunchAgents")
+   or FolderPath contains "GoogleUpdate.app/Contents/MacOS"
+   or (FolderPath in ("/tmp/","/private/tmp/") and FileName in~ ("helper","starter"))
+   or FileName in~ (".mainhelper",".agent")
+   or (FolderPath has "LaunchAgents" and FileName matches regex @"(?i)^com\.[a-z0-9]{6,}\.plist$")
+// strip legitimate Google Software Update installer noise
+| where InitiatingProcessFileName !in~ ("ksinstall","ksadmin","GoogleSoftwareUpdateAgent","installd","mdmclient")
+| project Timestamp, DeviceName, ActionType,
+          FileName, FolderPath, SHA256,
           InitiatingProcessFileName, InitiatingProcessFolderPath,
           InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] macOS endpoint contacting ClickFix loader/script/helper C2, exfil endpoint or Telegram fallback bot
+
+`UC_4_16` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("95.85.251.177","138.124.93.32","168.100.9.122","199.217.98.33","38.244.158.103","45.94.47.204") OR All_Traffic.dest_host IN ("rapidfilevault4.sbs","rapidfilevault5.sbs","coco-fun2.com","nitlebuf.com","yablochnisok.com","mentaorb.com","seagalnssteavens.com","filefastdata.com","metramon.com","octopixeldate.com","datasphere.us.com","dialerformac.com","swift-sh.com","0x666.info","honestly.ink","pla7ina.cfd","play67.cc","cleanmymacos.org","domenpozh.net","macclean.craft.me","macos-disk-space.medium.com","apple-mac-fix-hidden.medium.com","mac-storage-guide.squarespace.com","claudecodedoc.squarespace.com","cauterizespray.icu","enslaveculprit.digital","resilientlimb.icu","rvdownloads.com","famiode.com","contatoplus.com","woupp.com","octopox.com","avipstudios.com","joytion.com","laislivon.com","reachnv.com","vagturk.com","futampako.com","joeyapple.com","wusetail.com","aforvm.com","ouilov.com","malext.com","rebidy.com","t.me")) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.url | `drop_dm_object_name(All_Traffic)` | search NOT (dest_host="t.me" AND NOT url="*ax03bot*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// macOS ClickFix C2 / exfil IOC sweep
+let ClickFixDomains = dynamic([
+  "rapidfilevault4.sbs","rapidfilevault5.sbs","coco-fun2.com","nitlebuf.com",
+  "yablochnisok.com","mentaorb.com","seagalnssteavens.com","filefastdata.com",
+  "metramon.com","octopixeldate.com","datasphere.us.com","dialerformac.com",
+  "swift-sh.com","0x666.info","honestly.ink","pla7ina.cfd","play67.cc",
+  "cleanmymacos.org","domenpozh.net","macclean.craft.me",
+  "macos-disk-space.medium.com","apple-mac-fix-hidden.medium.com",
+  "mac-storage-guide.squarespace.com","claudecodedoc.squarespace.com",
+  "cauterizespray.icu","enslaveculprit.digital","resilientlimb.icu",
+  "rvdownloads.com","famiode.com","contatoplus.com","woupp.com","octopox.com",
+  "avipstudios.com","joytion.com","laislivon.com",
+  "reachnv.com","vagturk.com","futampako.com","joeyapple.com",
+  "wusetail.com","aforvm.com","ouilov.com","malext.com","rebidy.com"
+]);
+let ClickFixIPs = dynamic([
+  "95.85.251.177","138.124.93.32","168.100.9.122",
+  "199.217.98.33","38.244.158.103","45.94.47.204"
+]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (ClickFixIPs)
+   or RemoteUrl has_any (ClickFixDomains)
+   or RemoteUrl has "/ax03bot"          // Telegram fallback bot
+   or (RemoteUrl endswith "/script.sh" and RemoteUrl has_any ("cauterizespray","enslaveculprit","resilientlimb"))
+   or (RemoteUrl endswith "/contact" and RemoteIP in ("138.124.93.32","168.100.9.122","199.217.98.33","38.244.158.103"))
+| project Timestamp, DeviceName, AccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
@@ -604,7 +596,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New ClickFix Attack Targets macOS Users With Fake Disk Cleanup and Utility Lures
 
-`UC_1_13` · phase: **install** · confidence: **High**
+`UC_4_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

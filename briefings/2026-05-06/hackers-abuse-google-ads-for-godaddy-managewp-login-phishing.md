@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser navigation to ManageWP look-alike domain (Google-Ads typosquat phishing)
 
-`UC_10_5` · phase: **delivery** · confidence: **Medium**
+`UC_12_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

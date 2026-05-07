@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Node.js process spawning shell or LOLBin children (vm2 CVE-2026-26956 sandbox escape post-exploit)
 
-`UC_12_2` · phase: **exploit** · confidence: **High**
+`UC_14_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### [LLM] Inventory hunt: vulnerable vm2 (<3.10.5) installations on Node.js 25 hosts
 
-`UC_12_3` · phase: **recon** · confidence: **Medium**
+`UC_14_3` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ _vm2_hosts
 
 ### Article-specific behavioural hunt — Critical vm2 sandbox bug lets attackers execute code on hosts
 
-`UC_12_1` · phase: **exploit** · confidence: **High**
+`UC_14_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
