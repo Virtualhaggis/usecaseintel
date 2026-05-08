@@ -10,12 +10,8 @@ Home Cyber Security News
 New PCPJack Worm Targets Docker, Kubernetes, Redis, and MongoDB for Credential Theft 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A sophisticated new malware framework called PCPJack has been found actively targeting cloud environments across the internet, hunting for exposed services and stripping away credentials at scale. 
-The worm zeroes in on Docker, Kubernetes, Redis, and MongoDB deployments, turning misconfigured or vulnerable systems into footholds for credenti…
+The worm zeroes in on Docker, Kubernetes, Redis, and MongoDB deployments, turning misconfigured or vulnerable systems into footholds for credential theft…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,13 +42,14 @@ The worm zeroes in on Docker, Kubernetes, Redis, and MongoDB deployments, turnin
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.004** — Unix Shell
 - **T1105** — Ingress Tool Transfer
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1571** — Non-Standard Port
+- **T1036.005** — Match Legitimate Name or Location
+- **T1564.001** — Hidden Files and Directories
+- **T1567** — Exfiltration Over Web Service
+- **T1573.001** — Symmetric Cryptography
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1556** — Modify Authentication Process
 
 ## Kill chain phases observed
 
@@ -60,78 +57,74 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PCPJack working directory and Python module drop in /var/lib/.spm/
+### [LLM] PCPJack worm working directory and Sliver staging on Linux (/var/lib/.spm/, /var/tmp/apt-daily-upgrade)
 
-`UC_2_11` · phase: **install** · confidence: **High**
+`UC_8_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_names values(Filesystem.process_name) as process_names from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/var/lib/.spm/*" OR Filesystem.file_name IN ("monitor.py","worm.py","crypto_util.py","cloud_scan.py","cloud_ranges.py","lateral.py","extractor.py","bootstrap.sh","check.sh","_lat.py","_cu.py","_cr.py","_csc.py","harvest.jsonl")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/var/lib/.spm/*" OR Filesystem.file_path="/var/tmp/apt-daily-upgrade*" OR Filesystem.file_name IN ("bootstrap.sh","check.sh","monitor.py","worm.py","_lat.py","lateral.py","_cu.py","crypto_util.py","_cr.py","cloud_ranges.py","_csc.py","cloud_scan.py","extractor.py","run_script.py","update.bin","update-386.bin","update-arm.bin")) by host Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process_path="/var/tmp/apt-daily-upgrade*" OR Processes.process_path="/var/lib/.spm/*" OR Processes.process_name IN ("bootstrap.sh","check.sh","monitor.py","worm.py","update.bin","update-386.bin","update-arm.bin")) by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | sort 0 firstTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+// PCPJack worm artifacts on Linux endpoints — file drops + process spawn from
+// /var/lib/.spm/ working dir or the /var/tmp/apt-daily-upgrade Sliver path.
+let PCPJackFiles = dynamic(["bootstrap.sh","check.sh","monitor.py","worm.py","_lat.py","lateral.py","_cu.py","crypto_util.py","_cr.py","cloud_ranges.py","_csc.py","cloud_scan.py","extractor.py","run_script.py","update.bin","update-386.bin","update-arm.bin"]);
+union isfuzzy=true
+  ( DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath startswith "/var/lib/.spm/"
+         or FolderPath == "/var/tmp/apt-daily-upgrade"   // Sliver masquerade — apt-daily.timer is /lib/systemd, not /var/tmp
+         or FileName in (PCPJackFiles)
+    | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              SignalSource = "file" ),
+  ( DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath startswith "/var/lib/.spm"
+         or FolderPath has "/var/tmp/apt-daily-upgrade"
+         or FileName in (PCPJackFiles)
+         or ProcessCommandLine has "/var/lib/.spm"
+         or ProcessCommandLine has "/var/tmp/apt-daily-upgrade"
+    | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              AccountName, SignalSource = "process" )
+| order by Timestamp desc
+```
+
+### [LLM] PCPJack credential exfiltration to typosquat cdn.cloudfront-js.com on TCP/7443/8443
+
+`UC_8_12` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.user) as user values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="cdn.cloudfront-js.com" OR All_Traffic.dest="*.cloudfront-js.com" OR All_Traffic.dest_host="*cloudfront-js.com") OR (All_Traffic.dest_port IN (7443,8443) AND All_Traffic.dest_host="*cloudfront-js*") by host All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | sort 0 firstTime
+```
+
+**Defender KQL:**
+```kql
+// PCPJack C2 / exfil to the typosquat cdn.cloudfront-js.com — the article
+// confirms the operator uses ports 8443 and 7443. cloudfront-js.com is NOT
+// owned by AWS/CloudFront (the legitimate apex is cloudfront.net).
+DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath has "/var/lib/.spm"
-   or FileName in~ ("monitor.py","worm.py","crypto_util.py","cloud_scan.py","cloud_ranges.py","lateral.py","extractor.py","bootstrap.sh","check.sh","_lat.py","_cu.py","_cr.py","_csc.py","harvest.jsonl")
-   or (FolderPath has "/etc/systemd/system" and FileName in~ ("spm-worker.service","sys-monitor.service"))
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where (RemoteUrl has "cloudfront-js.com" or RemoteUrl endswith "cloudfront-js.com")
+     or (RemotePort in (7443, 8443) and RemoteUrl has "cloudfront-js")
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort, Protocol
 | order by Timestamp desc
 ```
 
-### [LLM] Sliver beacon staged as /var/tmp/apt-daily-upgrade
+### [LLM] PCPJack initial access via CVE-2025-29927 — Next.js x-middleware-subrequest header bypass
 
-`UC_2_12` · phase: **install** · confidence: **High**
+`UC_8_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_names values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/var/tmp/apt-daily-upgrade*" OR Filesystem.file_name IN ("update.bin","update-386.bin","update-arm.bin")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_path="/var/tmp/apt-daily-upgrade*" by Processes.dest Processes.user Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _sliver_sha1 = dynamic(["005587975a483876c1fa26b64b418931019be38f","2fab324eb0d927846c8744dc0e217beea65138e0","6060da100b5cd587131a1c11a20d6e0108604744"]);
-let _file_hits = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileCreated","FileModified","FileRenamed")
-    | where FolderPath has "/var/tmp/apt-daily-upgrade"
-       or FileName in~ ("update.bin","update-386.bin","update-arm.bin")
-       or SHA1 in (_sliver_sha1)
-    | project Timestamp, DeviceName, EventType="FileWrite", Path = strcat(FolderPath,"/",FileName), SHA1, SHA256, Actor = InitiatingProcessFileName, ActorCmd = InitiatingProcessCommandLine, AccountName = InitiatingProcessAccountName;
-let _proc_hits = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has "/var/tmp/apt-daily-upgrade" or SHA1 in (_sliver_sha1)
-    | project Timestamp, DeviceName, EventType="ProcessExec", Path = strcat(FolderPath,"/",FileName), SHA1, SHA256, Actor = InitiatingProcessFileName, ActorCmd = ProcessCommandLine, AccountName;
-union _file_hits, _proc_hits
-| order by Timestamp desc
-```
-
-### [LLM] PCPJack credential exfiltration to typosquat cdn.cloudfront-js.com on 7443/8443
-
-`UC_2_13` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="cdn.cloudfront-js.com" OR All_Traffic.dest_host="*.cloudfront-js.com" OR All_Traffic.url="*cloudfront-js.com*") OR (All_Traffic.dest_port IN (7443,8443) AND (All_Traffic.url="*/u*" OR All_Traffic.dest_host="*cloudfront-js*")) by All_Traffic.dest All_Traffic.dest_host All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="*cloudfront-js.com" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _net = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where (RemoteUrl has "cloudfront-js.com" or RemoteUrl =~ "cdn.cloudfront-js.com")
-         or (RemotePort in (7443, 8443) and RemoteUrl has "cloudfront-js")
-    | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Proto=Protocol, ActorProc=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine, ActorUser=InitiatingProcessAccountName;
-let _dns = DeviceEvents
-    | where Timestamp > ago(7d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q endswith "cloudfront-js.com"
-    | project Timestamp, DeviceName, Q, ActorProc=InitiatingProcessFileName, ActorCmd=InitiatingProcessCommandLine;
-union _net, _dns
-| order by Timestamp desc
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.status) as status values(Web.url) as url from datamodel=Web.Web where Web.http_user_agent="*" by Web.src Web.dest Web.url_domain | `drop_dm_object_name(Web)` | join type=inner [ search index=* sourcetype IN ("iis","ms:iis:default","nginx:plus:access","nginx:access","apache:access","aws:elb:accesslogs","cef") ("x-middleware-subrequest" OR "x_middleware_subrequest" OR "X-Middleware-Subrequest") | rex field=_raw "(?i)x[_-]middleware[_-]subrequest:\s*(?<xmw_value>[^\\r\\n\"]+)" | stats values(xmw_value) as xmw_value count by src dest url_domain ] | sort 0 firstTime
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -426,7 +419,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PCPJack Worm Targets Docker, Kubernetes, Redis, and MongoDB for Credential T
 
-`UC_2_10` · phase: **exploit** · confidence: **High**
+`UC_8_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -486,4 +479,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

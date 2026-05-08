@@ -10,12 +10,8 @@ Home Cyber Security News
 Trellix Breach – RansomHouse Claims Access to Parts of Source Code 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 Trellix, the global cybersecurity firm formed from the merger of McAfee Enterprise and FireEye, has confirmed unauthorized access to a portion of its source code repository, with the RansomHouse ransomware group formally claiming responsibility for the attack.
-Trellix reported a data breach involving unauthorized access to a portion of its source code repository, whic…
+Trellix reported a data breach involving unauthorized access to a portion of its source code repository, which was di…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -31,78 +27,12 @@ Trellix reported a data breach involving unauthorized access to a portion of its
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1204.002** — User Execution: Malicious File
-- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
-- **T1082** — System Information Discovery
-- **T1016** — System Network Configuration Discovery
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] RansomHouse MrAgent ESXi firewall disable + esxcli reconnaissance chain
-
-`UC_0_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name="esxcli" (Processes.process="*network firewall set*--enabled*false*" OR Processes.process="*network nic list*" OR Processes.process="*ip interface ipv4 get*") by Processes.dest Processes.user Processes.process _time span=1s | `drop_dm_object_name(Processes)` | eval evt=case(match(cmd,"firewall set.*--enabled\s+false"),"fw_off", match(cmd,"network nic list"),"recon_nic", match(cmd,"ip interface ipv4 get"),"recon_ip") | stats min(_time) as firstSeen max(_time) as lastSeen values(evt) as evts values(cmd) as cmds by dest user | where mvcount(evts)>=2 AND mvfind(evts,"fw_off")>=0 AND (lastSeen-firstSeen)<=600
-```
-
-**Defender KQL:**
-```kql
-// MrAgent ESXi initialisation: esxcli recon + firewall disable within 10 min on the same host
-let _win = 10m;
-let _fw = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "esxcli" or InitiatingProcessFileName =~ "esxcli" or ProcessCommandLine has "esxcli"
-    | where ProcessCommandLine has "network firewall set" and ProcessCommandLine has "--enabled" and ProcessCommandLine has "false"
-    | project FwTime = Timestamp, DeviceId, DeviceName, FwAccount = AccountName, FwCmd = ProcessCommandLine;
-let _recon = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "esxcli" or InitiatingProcessFileName =~ "esxcli" or ProcessCommandLine has "esxcli"
-    | where ProcessCommandLine has_any ("network nic list", "ip interface ipv4 get")
-    | where ProcessCommandLine has "--formatter" and ProcessCommandLine has "csv"
-    | project ReconTime = Timestamp, DeviceId, ReconCmd = ProcessCommandLine;
-_fw
-| join kind=inner _recon on DeviceId
-| where ReconTime between (FwTime - _win .. FwTime + _win)
-| project DeviceName, FwAccount, FwTime, FwCmd, ReconTime, ReconCmd,
-          DeltaSec = datetime_diff('second', FwTime, ReconTime)
-| order by FwTime desc
-```
-
-### [LLM] RansomHouse MrAgent binary launched with C2 IP:port argument list
-
-`UC_0_6` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="mragent" OR Processes.process="*/mragent *" OR Processes.process="./mragent *") Processes.process="*.*.*.*:*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=process "(?<c2_endpoints>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5})(,\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5})*)" | where isnotnull(c2_endpoints)
-```
-
-**Defender KQL:**
-```kql
-// MrAgent binary executed with embedded IP:port C2 endpoints
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName =~ "mragent"
-   or InitiatingProcessFileName =~ "mragent"
-   or FolderPath has "mragent"
-   or ProcessCommandLine has "mragent"
-| where ProcessCommandLine matches regex @"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5}\b"
-| extend C2 = extract_all(@"(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}:\d{2,5})", ProcessCommandLine)
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, C2,
-          ParentImage = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -225,7 +155,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trellix Breach – RansomHouse Claims Access to Parts of Source Code
 
-`UC_0_4` · phase: **exploit** · confidence: **High**
+`UC_5_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -275,4 +205,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

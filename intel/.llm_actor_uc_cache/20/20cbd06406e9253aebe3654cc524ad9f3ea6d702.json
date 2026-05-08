@@ -1,0 +1,149 @@
+{
+  "name": "Famous Chollima",
+  "ucs": [
+    {
+      "title": "[LLM] Famous Chollima 'Contagious Interview' chain \u2014 npm/node spawning curl|python C2 followed by browser credential & crypto-wallet theft",
+      "description": "Hunts the trademark DPRK 'Contagious Interview' infection chain (BeaverTail JS stealer \u2192 InvisibleFerret Python backdoor) where a developer is tricked into running a malicious npm package or 'coding test'. Detects node/npm/yarn spawning curl/wget/python/powershell that reaches out to attacker infrastructure, followed within 30 minutes by access to Chromium 'Login Data', Cookies, password-manager files, or known crypto-wallet directories on the same host \u2014 the exact tradecraft published by Unit42, Mandiant (UNC5267) and CrowdStrike on FAMOUS CHOLLIMA / Sapphire Sleet (Microsoft) / TA444.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1195.002",
+        "T1204.002",
+        "T1059.001",
+        "T1059.006",
+        "T1555.003",
+        "T1539",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) AS firstTime max(_time) AS lastTime values(Processes.process) AS cmd values(Processes.parent_process) AS parent_cmd values(Processes.process_name) AS child from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"node.exe\",\"npm.exe\",\"npm.cmd\",\"yarn.exe\",\"pnpm.exe\",\"npx.cmd\",\"bash.exe\",\"sh.exe\",\"wsl.exe\")) AND (Processes.process_name IN (\"curl.exe\",\"wget.exe\",\"python.exe\",\"python3.exe\",\"pythonw.exe\",\"powershell.exe\",\"pwsh.exe\")) AND (Processes.process=\"*http*\" OR Processes.process=\"*-c *\" OR Processes.process=\"*base64*\" OR Processes.process=\"*urllib*\" OR Processes.process=\"*urlretrieve*\" OR Processes.process=\"*DownloadString*\" OR Processes.process=\"*-OutFile*\") AND Processes.user!=\"*$\" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | rename dest AS host | join type=inner host [ | tstats summariesonly=true count values(Filesystem.file_path) AS sensitive_artifacts from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\Login Data*\" OR Filesystem.file_path=\"*\\\\Cookies*\" OR Filesystem.file_path=\"*\\\\Local State*\" OR Filesystem.file_path=\"*MetaMask*\" OR Filesystem.file_path=\"*Exodus*\" OR Filesystem.file_path=\"*\\\\Solana\\\\*\" OR Filesystem.file_path=\"*\\\\Wallets\\\\*\" OR Filesystem.file_path=\"*1Password*\" OR Filesystem.file_path=\"*\\\\Bitwarden\\\\*\" OR Filesystem.file_path=\"*\\\\.ssh\\\\id_*\") AND Filesystem.action=\"read\" by Filesystem.dest | `drop_dm_object_name(Filesystem)` | rename dest AS host ] | where lastTime - firstTime <= 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 14d;\nlet WindowMinutes = 30m;\nlet DevParents = dynamic([\"node.exe\",\"npm.exe\",\"npm.cmd\",\"yarn.exe\",\"pnpm.exe\",\"npx.cmd\",\"bash.exe\",\"sh.exe\",\"wsl.exe\"]);\nlet C2Children = dynamic([\"curl.exe\",\"wget.exe\",\"python.exe\",\"python3.exe\",\"pythonw.exe\",\"powershell.exe\",\"pwsh.exe\"]);\nlet StealerArtifacts = dynamic([@\"\\Login Data\",@\"\\Cookies\",@\"\\Local State\",@\"MetaMask\",@\"Exodus\",@\"\\Solana\\\",@\"\\Wallets\\\",@\"1Password\",@\"\\Bitwarden\\\",@\"\\.ssh\\id_\"]);\nlet SuspectExec = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (DevParents)\n    | where FileName in~ (C2Children)\n    | where AccountName !endswith \"$\"\n    | where ProcessCommandLine has_any (\"http://\",\"https://\",\"-c \",\"base64\",\"urllib\",\"urlretrieve\",\"DownloadString\",\"-OutFile\",\"-enc\",\"IEX\",\"Invoke-Expression\")\n    | project ExecTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FolderPath, ChildCmd = ProcessCommandLine, ReportId;\nlet StealerHits = DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FolderPath has_any (StealerArtifacts) or FileName has_any (StealerArtifacts)\n    | where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")    // legitimate browser self-access\n    | project FileTime = Timestamp, DeviceId, AccessedPath = strcat(FolderPath, FileName), AccessingProcess = InitiatingProcessFileName;\nSuspectExec\n| join kind=inner StealerHits on DeviceId\n| where FileTime between (ExecTime .. ExecTime + WindowMinutes)\n| extend DelaySec = datetime_diff('second', FileTime, ExecTime)\n| project ExecTime, FileTime, DelaySec, DeviceName, AccountName,\n          ParentCmd, ChildImage, ChildCmd, AccessingProcess, AccessedPath\n| order by ExecTime desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet WindowMinutes = 30m;\nlet DevParents = dynamic([\"node.exe\",\"npm.exe\",\"npm.cmd\",\"yarn.exe\",\"pnpm.exe\",\"npx.cmd\",\"bash.exe\",\"sh.exe\",\"wsl.exe\"]);\nlet C2Children = dynamic([\"curl.exe\",\"wget.exe\",\"python.exe\",\"python3.exe\",\"pythonw.exe\",\"powershell.exe\",\"pwsh.exe\"]);\nlet StealerArtifacts = dynamic([@\"\\Login Data\",@\"\\Cookies\",@\"\\Local State\",@\"MetaMask\",@\"Exodus\",@\"\\Solana\\\",@\"\\Wallets\\\",@\"1Password\",@\"\\Bitwarden\\\",@\"\\.ssh\\id_\"]);\nlet SuspectExec = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | extend ParentBin = tostring(split(ParentProcessName, '\\\\')[-1]),\n             ChildBin  = tostring(split(TargetProcessName, '\\\\')[-1])\n    | where ParentBin in~ (DevParents) and ChildBin in~ (C2Children)\n    | where ActorUsername !endswith \"$\"\n    | where TargetProcessCommandLine has_any (\"http://\",\"https://\",\"-c \",\"base64\",\"urllib\",\"urlretrieve\",\"DownloadString\",\"-OutFile\",\"-enc\",\"IEX\",\"Invoke-Expression\")\n    | project ExecTime = TimeGenerated, DvcHostname, ActorUsername,\n              ParentCmd = ParentProcessCommandLine,\n              ChildCmd = TargetProcessCommandLine;\nlet StealerHits = ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where TargetFilePath has_any (StealerArtifacts) or TargetFileName has_any (StealerArtifacts)\n    | extend ActingBin = tostring(split(ActingProcessName, '\\\\')[-1])\n    | where ActingBin !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n    | project FileTime = TimeGenerated, DvcHostname, AccessedPath = TargetFilePath, AccessingProcess = ActingProcessName;\nSuspectExec\n| join kind=inner StealerHits on DvcHostname\n| where FileTime between (ExecTime .. ExecTime + WindowMinutes)\n| extend DelaySec = datetime_diff('second', FileTime, ExecTime)\n| project ExecTime, FileTime, DelaySec, DvcHostname, ActorUsername,\n          ParentCmd, ChildCmd, AccessingProcess, AccessedPath\n| order by ExecTime desc",
+      "sigma_yaml": "",
+      "rationale": "Famous Chollima (CrowdStrike) \u2014 also tracked as Sapphire Sleet (Microsoft), UNC5267 (Mandiant), TA444 \u2014 operate the 'Contagious Interview' / DEV#POPPER campaign in which DPRK operatives pose as recruiters, hand a target a fake coding test or malicious npm package, and watch for execution. The dropper is BeaverTail (a JavaScript stealer that runs under Node) and its second stage InvisibleFerret is ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "StealerHits",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`StealerHits` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExecTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ExecTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildImage",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChildImage` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChildCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TargetFilePath",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "exists_on": [
+            "ImFileEvent"
+          ],
+          "message": "`TargetFilePath` is not a column of ImProcessCreate; it does exist on ImFileEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "StealerHits",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`StealerHits` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ExecTime",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": "EventEndTime",
+          "message": "`ExecTime` is not a canonical column of ImProcessCreate. Did you mean `EventEndTime`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentCmd",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`ParentCmd` is not a canonical column of ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildCmd",
+          "tables_in_scope": [
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`ChildCmd` is not a canonical column of ImProcessCreate."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Famous Chollima DPRK 'IT-worker' laptop-farm tradecraft \u2014 silent unattended-access RMM provisioning on corporate dev/engineering endpoints",
+      "description": "Hunts the laptop-farm pattern reported by FBI/DOJ/Mandiant/CrowdStrike: a DPRK operative hired under a false identity receives a corporate laptop at a US/EU facilitator address and immediately configures unattended remote-control software (AnyDesk, ChromeRemoteDesktopHost, RustDesk, TeamViewer) so handlers in DPRK/PRC can drive the workstation. Detects the silent install / set-password / start-with-windows / service-install command lines emitted during that provisioning step on a corporate-managed device, scoped to non-IT user accounts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1133",
+        "T1078",
+        "T1569.002",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) AS firstTime max(_time) AS lastTime values(Processes.process) AS cmd values(Processes.parent_process_name) AS parent from datamodel=Endpoint.Processes where (Processes.process_name IN (\"AnyDesk.exe\",\"ChromeRemoteDesktopHost.exe\",\"remoting_host.exe\",\"RustDesk.exe\",\"rustdesk.exe\",\"TeamViewer_Service.exe\",\"TeamViewer.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\") OR Processes.parent_process_name IN (\"AnyDesk.exe\",\"ChromeRemoteDesktopHost.exe\",\"remoting_host.exe\",\"RustDesk.exe\",\"TeamViewer_Service.exe\",\"ScreenConnect.ClientService.exe\")) AND (Processes.process=\"*--set-password*\" OR Processes.process=\"*SetPassword*\" OR Processes.process=\"*--silent*\" OR Processes.process=\"*--install*\" OR Processes.process=\"*--start-with-win*\" OR Processes.process=\"*--service*\" OR Processes.process=\"*/silent*\" OR Processes.process=\"*--unattended*\" OR Processes.process=\"*-pw *\" OR Processes.process=\"*--password *\" OR Processes.process=\"*--start*--service*\") AND Processes.user!=\"*$\" AND Processes.user!=\"SYSTEM\" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "let LookbackDays = 30d;\nlet RmmTools = dynamic([\"AnyDesk.exe\",\"ChromeRemoteDesktopHost.exe\",\"remoting_host.exe\",\"RustDesk.exe\",\"rustdesk.exe\",\"TeamViewer_Service.exe\",\"TeamViewer.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"UltraVNC.exe\",\"winvnc.exe\"]);\nlet UnattendedFlags = dynamic([\"--set-password\",\"SetPassword\",\"--silent\",\"--install\",\"--start-with-win\",\"--service\",\"/silent\",\"--unattended\",\"-pw \",\"--password \",\"--start --service\",\"--register-service\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where (FileName in~ (RmmTools)) or (InitiatingProcessFileName in~ (RmmTools))\n| where AccountName !endswith \"$\" and AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where ProcessCommandLine has_any (UnattendedFlags) or InitiatingProcessCommandLine has_any (UnattendedFlags)\n| join kind=leftouter (\n    DeviceInfo\n    | summarize arg_max(Timestamp, OSPlatform, JoinType, IsAzureADJoined, PublicIP, MachineGroup) by DeviceId\n  ) on DeviceId\n| join kind=leftouter (\n    IdentityInfo\n    | summarize arg_max(Timestamp, JobTitle, Department, City, Country, IsAccountEnabled) by AccountUpn\n  ) on $left.AccountUpn == $right.AccountUpn\n| project Timestamp, DeviceName, AccountUpn, JobTitle, Department, Country,\n          RmmTool = FileName, RmmCmd = ProcessCommandLine,\n          ParentTool = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,\n          PublicIP, JoinType, MachineGroup\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nlet RmmTools = dynamic([\"AnyDesk.exe\",\"ChromeRemoteDesktopHost.exe\",\"remoting_host.exe\",\"RustDesk.exe\",\"rustdesk.exe\",\"TeamViewer_Service.exe\",\"TeamViewer.exe\",\"ScreenConnect.ClientService.exe\",\"ScreenConnect.WindowsClient.exe\",\"UltraVNC.exe\",\"winvnc.exe\"]);\nlet UnattendedFlags = dynamic([\"--set-password\",\"SetPassword\",\"--silent\",\"--install\",\"--start-with-win\",\"--service\",\"/silent\",\"--unattended\",\"-pw \",\"--password \",\"--start --service\",\"--register-service\"]);\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| extend ChildBin  = tostring(split(TargetProcessName, '\\\\')[-1]),\n         ParentBin = tostring(split(ParentProcessName, '\\\\')[-1])\n| where ChildBin in~ (RmmTools) or ParentBin in~ (RmmTools)\n| where ActorUsername !endswith \"$\" and ActorUsername !in~ (\"system\",\"local service\",\"network service\")\n| where TargetProcessCommandLine has_any (UnattendedFlags) or ParentProcessCommandLine has_any (UnattendedFlags)\n| join kind=leftouter (\n    IdentityInfo\n    | summarize arg_max(TimeGenerated, JobTitle, Department, Country, IsAccountEnabled) by AccountUpn\n  ) on $left.ActorUsername == $right.AccountUpn\n| project TimeGenerated, DvcHostname, ActorUsername, JobTitle, Department, Country,\n          RmmTool = ChildBin, RmmCmd = TargetProcessCommandLine,\n          ParentTool = ParentBin, ParentCmd = ParentProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Famous Chollima DPRK IT-Worker \u2014 Silent Unattended RMM Provisioning\nid: 4b8d2e2a-9d2f-4a9b-9e5a-6d6f1b4c3a21\nstatus: experimental\ndescription: Detects unattended-access provisioning of remote-control software (AnyDesk, Chrome Remote Desktop, RustDesk, TeamViewer, ScreenConnect) on corporate endpoints \u2014 the laptop-farm tradecraft used by DPRK 'Famous Chollima' / Sapphire Sleet IT-worker operatives to grant handlers persistent control of company-issued devices.\nreferences:\n    - https://www.crowdstrike.com/adversaries/famous-chollima/\n    - https://www.justice.gov/usao-edva/pr/north-korean-it-worker-laptop-farm\n    - https://cloud.google.com/blog/topics/threat-intelligence/mitigating-dprk-it-worker-threat\nauthor: SOC Detection Engineering\ndate: 2025/05/08\ntags:\n    - attack.initial_access\n    - attack.command_and_control\n    - attack.t1219\n    - attack.t1133\n    - attack.t1078\n    - dprk.famous_chollima\nlogsource:\n    category: process_creation\n    product: windows\ndetection:\n    selection_image:\n        Image|endswith:\n            - '\\AnyDesk.exe'\n            - '\\ChromeRemoteDesktopHost.exe'\n            - '\\remoting_host.exe'\n            - '\\RustDesk.exe'\n            - '\\rustdesk.exe'\n            - '\\TeamViewer_Service.exe'\n            - '\\TeamViewer.exe'\n            - '\\ScreenConnect.ClientService.exe'\n            - '\\UltraVNC.exe'\n            - '\\winvnc.exe'\n    selection_flags:\n        CommandLine|contains:\n            - '--set-password'\n            - 'SetPassword'\n            - '--silent'\n            - '--install'\n            - '--start-with-win'\n            - '--service'\n            - '/silent'\n            - '--unattended'\n            - '-pw '\n            - '--password '\n            - '--register-service'\n    filter_machine:\n        User|endswith: '$'\n    filter_system:\n        User|contains:\n            - 'SYSTEM'\n            - 'LOCAL SERVICE'\n            - 'NETWORK SERVICE'\n    condition: selection_image and selection_flags and not filter_machine and not filter_system\nfalsepositives:\n    - Sanctioned IT/helpdesk RMM rollouts \u2014 exclude IT user accounts and packaging hosts.\n    - Vendor-driven endpoint imaging \u2014 bake legitimate config commands into a deny-list.\nlevel: high\n",
+      "rationale": "FBI/DOJ indictments and Mandiant's UNC5267 reporting on the DPRK 'IT-worker' / laptop-farm scheme repeatedly identify the same on-host tell: a freshly-issued corporate device has its RMM stack silently configured for unattended access in the first hours/days the operative possesses it (AnyDesk `--set-password` + `--start-with-win`, ChromeRemoteDesktopHost service install, RustDesk silent service r"
+    }
+  ]
+}

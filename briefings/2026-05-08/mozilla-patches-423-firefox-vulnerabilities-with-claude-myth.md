@@ -205,7 +205,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mozilla Patches 423 Firefox Vulnerabilities with Claude Mythos and Other AI Mode
 
-`UC_7_5` · phase: **exploit** · confidence: **High**
+`UC_13_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

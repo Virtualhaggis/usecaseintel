@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Next.js Pages Router i18n middleware bypass via locale-less /_next/data JSON fetches (CVE-2026-44573)
 
-`UC_13_6` · phase: **exploit** · confidence: **Medium**
+`UC_19_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Next.js App Router middleware bypass via .rsc / segment-prefetch transport variants
 
-`UC_13_7` · phase: **exploit** · confidence: **Medium**
+`UC_19_7` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Self-hosted Next.js Node.js process reaching cloud metadata endpoint (SSRF post-exploit, CVE-2026-44578)
 
-`UC_13_8` · phase: **actions** · confidence: **High**
+`UC_19_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -279,7 +279,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Critical Vulnerabilities Patched in Next.js and React Server Components
 
-`UC_13_5` · phase: **exploit** · confidence: **High**
+`UC_19_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

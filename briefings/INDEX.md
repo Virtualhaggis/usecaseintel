@@ -9,36 +9,38 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-08
+- [cisa gives feds four days to patch ivanti flaw exploited as ](./2026-05-08/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-.md)
 - [critical spring vulnerabilities expose arbitrary files and g](./2026-05-08/critical-spring-vulnerabilities-expose-arbitrary-files-and-g.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
+- [darkmoon ai powered autonomous penetration testing platform ](./2026-05-08/darkmoon-ai-powered-autonomous-penetration-testing-platform-.md)
 - [dirty frag linux vulnerability let attackers gain root privi](./2026-05-08/dirty-frag-linux-vulnerability-let-attackers-gain-root-privi.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
+- [hackers abuse signed logitech installer to deploy tclbanker ](./2026-05-08/hackers-abuse-signed-logitech-installer-to-deploy-tclbanker-.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [mozilla patches 423 firefox vulnerabilities with claude myth](./2026-05-08/mozilla-patches-423-firefox-vulnerabilities-with-claude-myth.md)
 - [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
+- [new infostealer campaign uses github releases for payload ho](./2026-05-08/new-infostealer-campaign-uses-github-releases-for-payload-ho.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [new nwhstealer delivery chain uses bun loader anti vm checks](./2026-05-08/new-nwhstealer-delivery-chain-uses-bun-loader-anti-vm-checks.md)
 - [new pcpjack worm targets docker kubernetes redis and mongodb](./2026-05-08/new-pcpjack-worm-targets-docker-kubernetes-redis-and-mongodb.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
+- [quasar linux rat steals developer credentials for software s](./2026-05-08/quasar-linux-rat-steals-developer-credentials-for-software-s.md)
 - [trellix breach ransomhouse claims access to parts of source ](./2026-05-08/trellix-breach-ransomhouse-claims-access-to-parts-of-source-.md)
+- [trellix source code breach claimed by ransomhouse hackers](./2026-05-08/trellix-source-code-breach-claimed-by-ransomhouse-hackers.md)
 - [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
 - [australia warns of clickfix attacks pushing vidar stealer ma](./2026-05-07/australia-warns-of-clickfix-attacks-pushing-vidar-stealer-ma.md)
 - [canvas login portals hacked in mass shinyhunters extortion c](./2026-05-07/canvas-login-portals-hacked-in-mass-shinyhunters-extortion-c.md)
-- [cisa warns of palo alto pan os vulnerability exploited to ga](./2026-05-07/cisa-warns-of-palo-alto-pan-os-vulnerability-exploited-to-ga.md)
 - [crypto gang member gets 6 5 years for role in 230 million he](./2026-05-07/crypto-gang-member-gets-6-5-years-for-role-in-230-million-he.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
-- [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [fixing the password problem is as easy as 123456](./2026-05-07/fixing-the-password-problem-is-as-easy-as-123456.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
-- [new cisco network vulnerability let remote attacker cause do](./2026-05-07/new-cisco-network-vulnerability-let-remote-attacker-cause-do.md)
-- [new ivanti epmm 0 day vulnerability actively exploited in at](./2026-05-07/new-ivanti-epmm-0-day-vulnerability-actively-exploited-in-at.md)
 - [new pcpjack worm steals credentials cleans teampcp infection](./2026-05-07/new-pcpjack-worm-steals-credentials-cleans-teampcp-infection.md)
 - [new tclbanker malware self spreads over whatsapp and outlook](./2026-05-07/new-tclbanker-malware-self-spreads-over-whatsapp-and-outlook.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-07/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
@@ -61,7 +63,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
-- [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
 - [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
 - [labscon25 replay please connect to the foreign entity to enh](./2026-05-06/labscon25-replay-please-connect-to-the-foreign-entity-to-enh.md)
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
@@ -136,7 +137,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
-- [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
 - [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
 
 ## 2026-04-28

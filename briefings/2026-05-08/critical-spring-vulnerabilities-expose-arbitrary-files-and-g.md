@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Spring Cloud Config Server directory traversal exploitation (CVE-2026-40982)
 
-`UC_10_7` · phase: **exploit** · confidence: **High**
+`UC_16_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] Spring Cloud Config Server JVM spawns shell or recon utility (post-exploit)
 
-`UC_10_8` · phase: **exploit** · confidence: **High**
+`UC_16_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -336,7 +336,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Spring Vulnerabilities Expose Arbitrary Files and GCP Secrets
 
-`UC_10_6` · phase: **exploit** · confidence: **High**
+`UC_16_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

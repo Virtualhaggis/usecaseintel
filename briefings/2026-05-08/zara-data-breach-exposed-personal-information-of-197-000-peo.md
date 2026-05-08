@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 8, 2026
 06:42 AM
 0 
-
-
 Hackers who gained access to the databases of Spanish fast-fashion retailer Zara stole data belonging to more than 197,000 customers, according to data breach notification service Have I Been Pwned.
-
-
-Zara has over 1,500 company-managed and franchised stores worldwide and is the flagship brand of the Inditex Group, one of the world's largest fashion distribution groups, which also own…
+Zara has over 1,500 company-managed and franchised stores worldwide and is the flagship brand of the Inditex Group, one of the world's largest fashion distribution groups, which also owns Bershk…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -29,13 +25,14 @@ Zara has over 1,500 company-managed and franchised stores worldwide and is the f
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1199** — Trusted Relationship
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1567** — Exfiltration Over Web Service
-- **T1528** — Steal Application Access Token
-- **T1566.004** — Phishing: Spearphishing Voice
 - **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1090.003** — Proxy: Multi-hop Proxy
 - **T1098.005** — Account Manipulation: Device Registration
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
@@ -43,77 +40,79 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ShinyHunters Anodot OAuth abuse — BigQuery data extraction by compromised SaaS integrator
+### [LLM] ShinyHunters (UNC6661/UNC6671) SSO sign-in from named Mandiant proxy IPs
 
-`UC_1_3` · phase: **actions** · confidence: **High**
+`UC_7_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, values(Change.object) as objects, values(Change.src) as src_ips, dc(Change.object) as object_count, min(_time) as first_seen, max(_time) as last_seen from datamodel=Change where Change.vendor="google" AND (Change.user="*anodot*" OR Change.user="*Anodot*") AND (Change.object_category="*bigquery*" OR Change.object_path="*bigquery.googleapis.com*") by Change.user, Change.action
-| `drop_dm_object_name(Change)`
-| where count > 0
-| sort - count
+| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Authentication.dest) as dest, values(Authentication.app) as app, values(Authentication.user_agent) as user_agents from datamodel=Authentication where Authentication.action=success Authentication.src IN ("24.242.93.122","149.50.97.144","73.135.228.98","76.64.54.159","142.127.171.133") (Authentication.app IN ("azuread","aad","entra","okta","google_workspace","salesforce") OR Authentication.signature_id IN ("user.session.start","Sign-in activity")) by Authentication.user, Authentication.src, Authentication.app | `drop_dm_object_name(Authentication)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Defender for Cloud Apps surfaces GCP audit activity via the GCP connector
-CloudAppEvents
+let _shAttackerIps = dynamic(["24.242.93.122","149.50.97.144","73.135.228.98","76.64.54.159","142.127.171.133"]);
+AADSignInEventsBeta
 | where Timestamp > ago(7d)
-| where Application has_any ("Google Cloud Platform","GCP","BigQuery")
-| where (AccountDisplayName has "anodot" or AccountId has "anodot"
-        or tostring(RawEventData) has "anodot" or tostring(AdditionalFields) has "anodot")
-| where ActionType has_any ("Run query","Export","Extract","InsertJob","GetTable","ListTables","TableData")
-| extend Caller = tostring(parse_json(tostring(RawEventData)).protoPayload.authenticationInfo.principalEmail),
-         CallerIP = tostring(parse_json(tostring(RawEventData)).protoPayload.requestMetadata.callerIp),
-         Method = tostring(parse_json(tostring(RawEventData)).protoPayload.methodName)
-| project Timestamp, Application, ActionType, Caller, CallerIP, Method, ObjectName, IPAddress, CountryCode, RawEventData
+| where IPAddress in (_shAttackerIps)
+| where ErrorCode == 0
+| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country, City,
+          Application, AppDisplayName, ClientAppUsed, UserAgent,
+          ConditionalAccessStatus, RiskLevelDuringSignIn
 | order by Timestamp desc
 ```
 
-### [LLM] ShinyHunters vishing-to-SaaS chain — new MFA method enrolled then burst of distinct SaaS app sign-ins
+### [LLM] MFA method registered within 60 min of Entra sign-in from ShinyHunters proxy/anonymous IP
 
-`UC_1_4` · phase: **c2** · confidence: **High**
+`UC_7_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, values(Authentication.app) as apps, dc(Authentication.app) as app_count, values(Authentication.src) as src_ips, dc(Authentication.src) as src_ip_count, min(_time) as first_seen, max(_time) as last_seen from datamodel=Authentication where Authentication.action="success" AND Authentication.app IN ("Salesforce","SAP","Slack","Adobe","Atlassian","Zendesk","Dropbox","Microsoft 365","Office 365","Google Workspace","Workday","ServiceNow","Dropbox Business") by Authentication.user, _time span=1h
-| `drop_dm_object_name(Authentication)`
-| where app_count >= 4
-| join type=inner user [
-    | tstats summariesonly=true min(_time) as mfa_reg_time from datamodel=Change where Change.action="created" AND (Change.object_category="mfa_method" OR Change.object="AuthenticationMethod" OR Change.change_type="AAA") by Change.user, _time span=1h
-    | `drop_dm_object_name(Change)`
-    | rename Change.user as user
-  ]
-| where first_seen >= mfa_reg_time AND first_seen <= mfa_reg_time + 3600
-| sort - app_count
+| tstats summariesonly=true min(_time) as signin_time, values(Authentication.src) as signin_src from datamodel=Authentication where Authentication.action=success (Authentication.src IN ("24.242.93.122","149.50.97.144","73.135.228.98","76.64.54.159","142.127.171.133") OR Authentication.tag="anonymous" OR Authentication.risk_level IN ("medium","high")) Authentication.app IN ("azuread","aad","entra","okta") by Authentication.user | `drop_dm_object_name(Authentication)` | join type=inner user [ | tstats summariesonly=true min(_time) as mfa_time, values(Change.object) as mfa_object from datamodel=Change where Change.action IN ("created","modified") Change.object_category IN ("user","authentication_method","security_info") (Change.command IN ("Add registered security info","User registered security info","Register security info","Add device registration") OR Change.change_type="*MFA*") by Change.user | `drop_dm_object_name(Change)` | rename Change.user as user ] | where mfa_time >= signin_time AND (mfa_time - signin_time) <= 3600 | eval delay_min=round((mfa_time-signin_time)/60,1) | table user, signin_src, signin_time, mfa_time, delay_min, mfa_object | sort - mfa_time
 ```
 
 **Defender KQL:**
 ```kql
-// Stage 1 — MFA / authentication-method registration in last 7d
-let MfaReg = IdentityDirectoryEvents
+let _shAttackerIps = dynamic(["24.242.93.122","149.50.97.144","73.135.228.98","76.64.54.159","142.127.171.133"]);
+let _windowMin = 60;
+let _suspectSignins = AADSignInEventsBeta
+    | where Timestamp > ago(7d)
+    | where ErrorCode == 0
+    | where IPAddress in (_shAttackerIps) or IsAnonymousProxy == true or RiskLevelDuringSignIn in ("medium","high")
+    | project SigninTime = Timestamp, AccountUpn, IPAddress, Country, Application, UserAgent;
+IdentityDirectoryEvents
 | where Timestamp > ago(7d)
-| where ActionType has_any ("Update user","User registered security info","Forced password reset")
-   or AdditionalFields has_any ("AuthenticationMethod","StrongAuthentication","securityInfo","phoneAuthenticationMethod","microsoftAuthenticatorAuthenticationMethod")
-| project MfaUpn = tolower(TargetAccountUpn), MfaTime = Timestamp, MfaActor = AccountUpn, MfaIp = IPAddress;
-// Stage 2 — same user successfully authenticating to 4+ distinct SaaS apps within 60min of the MFA change
-AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| where Application in~ ("Salesforce","SAP","SAP Concur","Slack","Adobe Creative Cloud","Atlassian","Atlassian Cloud","Zendesk","Dropbox","Dropbox Business","Microsoft 365","Office 365 Exchange Online","Google Workspace","Workday","ServiceNow")
-| extend AccountUpnLower = tolower(AccountUpn)
-| join kind=inner MfaReg on $left.AccountUpnLower == $right.MfaUpn
-| where Timestamp between (MfaTime .. MfaTime + 60m)
-| summarize Apps = make_set(Application,32),
-            AppCount = dcount(Application),
-            SourceIPs = make_set(IPAddress,16),
-            Countries = make_set(Country,8),
-            FirstAppSignIn = min(Timestamp),
-            LastAppSignIn = max(Timestamp)
-            by AccountUpn, MfaTime, MfaActor, MfaIp
-| where AppCount >= 4
-| order by FirstAppSignIn desc
+| where ActionType has_any ("User registered security info","User registered all required security info","Add registered security info","Strong Authentication phone added","Update user")
+| join kind=inner _suspectSignins on $left.AccountUpn == $right.AccountUpn
+| where Timestamp between (SigninTime .. SigninTime + _windowMin * 1m)
+| project SigninTime, MfaChangeTime = Timestamp,
+          DelayMin = datetime_diff('minute', Timestamp, SigninTime),
+          AccountUpn, IPAddress, Country, Application,
+          ActionType, UserAgent, AdditionalFields
+| order by MfaChangeTime desc
+```
+
+### [LLM] OAuth consent granted to 'ToogleBox Recall' Gmail/M365 add-on (ShinyHunters MFA-notification hide)
+
+`UC_7_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Change.src) as src, values(Change.user_agent) as user_agents from datamodel=Change where Change.action IN ("created","granted","modified") (Change.object_category IN ("oauth_application","oauth_grant","application") OR Change.command IN ("Consent to application","Add OAuth2PermissionGrant","Add delegated permission grant")) (Change.object="*ToogleBox*" OR Change.object_attrs="*ToogleBox*") by Change.user, Change.object, Change.vendor_product | `drop_dm_object_name(Change)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application in~ ("Microsoft Entra ID","Microsoft 365","Office 365","Google Workspace")
+| where ActionType has_any ("Consent to application","Add application","Add OAuth2PermissionGrant","Add delegated permission grant","authorize","oauth2_authorize","AUTHORIZE")
+| extend RawData = tostring(RawEventData)
+| extend AppName = tostring(parse_json(RawData).TargetResources[0].displayName)
+| where AppName has "ToogleBox" or ObjectName has "ToogleBox" or RawData has "ToogleBox Recall" or AdditionalFields has "ToogleBox"
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, City,
+          UserAgent, Application, ActionType, ObjectName, AppName, ActivityObjects, AdditionalFields
+| order by Timestamp desc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -203,4 +202,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

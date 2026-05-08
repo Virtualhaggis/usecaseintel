@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] User exposure to Canvas/Instructure defacement window (ShinyHunters extortion, 7 May 2026)
 
-`UC_14_5` · phase: **actions** · confidence: **High**
+`UC_20_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] Microsoft Entra OAuth device-code grant flow — ShinyHunters vishing-driven SSO compromise
 
-`UC_14_6` · phase: **install** · confidence: **Medium**
+`UC_20_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
