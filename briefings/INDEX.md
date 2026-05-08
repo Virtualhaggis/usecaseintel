@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-08
 - [dirty frag linux vulnerability let attackers gain root privi](./2026-05-08/dirty-frag-linux-vulnerability-let-attackers-gain-root-privi.md)
+- [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
 
 ## 2026-05-07
@@ -130,7 +131,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
-- [critical cpanel authentication vulnerability identified upda](./2026-04-29/critical-cpanel-authentication-vulnerability-identified-upda.md)
 - [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
 - [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
 - [webinar how to automate exposure validation to match the spe](./2026-04-29/webinar-how-to-automate-exposure-validation-to-match-the-spe.md)

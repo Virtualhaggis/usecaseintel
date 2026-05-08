@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] redis-server spawning shell/scripting child — post-RCE indicator (CVE-2026-23479/25243/25588/25589)
 
-`UC_25_8` · phase: **exploit** · confidence: **High**
+`UC_26_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Redis crash with Lua engine stack trace in syslog (CVE-2026-23479 / CVE-2026-23631 exploitation symptom)
 
-`UC_25_9` · phase: **exploit** · confidence: **Medium**
+`UC_26_9` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceEvents
 
 ### [LLM] redis-server initiating outbound connection to public IP — possible post-RCE C2/payload pull
 
-`UC_25_10` · phase: **c2** · confidence: **Medium**
+`UC_26_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -366,7 +366,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Redis Vulnerabilities Enables Remote Code Execution Attacks
 
-`UC_25_7` · phase: **exploit** · confidence: **High**
+`UC_26_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

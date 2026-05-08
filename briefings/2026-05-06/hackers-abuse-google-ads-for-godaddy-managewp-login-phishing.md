@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WrongPress: browser navigation to ManageWP phishing lookalike (manageewpbest.it.com)
 
-`UC_35_5` · phase: **delivery** · confidence: **High**
+`UC_36_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hunt: first-time-seen ManageWP lookalike host across the org (WrongPress rotation)
 
-`UC_35_6` · phase: **delivery** · confidence: **Medium**
+`UC_36_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
