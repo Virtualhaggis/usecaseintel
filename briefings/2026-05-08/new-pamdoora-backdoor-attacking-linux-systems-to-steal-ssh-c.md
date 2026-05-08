@@ -10,12 +10,8 @@ Home Cyber Security News
 New PamDOORa Backdoor Attacking Linux Systems to Steal SSH Credentials 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A new backdoor called PamDOORa has emerged as a serious and growing threat to Linux systems, targeting one of the most trusted components of the operating system to silently steal SSH credentials. 
-The malware was advertised for sale on a Russian-speaking cybercrime forum called Rehub, with its complete source code initially listed at $1,600 before the se…
+The malware was advertised for sale on a Russian-speaking cybercrime forum called Rehub, with its complete source code initially listed at $1,600 before the seller sla…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -31,10 +27,9 @@ The malware was advertised for sale on a Russian-speaking cybercrime forum calle
 - **T1204.002** — User Execution: Malicious File
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
 - **T1543** — Create or Modify System Process
-- **T1070.002** — Indicator Removal: Clear Linux or Mac System Logs
-- **T1070.006** — Indicator Removal: Timestomp
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1041** — Exfiltration Over C2 Channel
+- **T1070.002** — Indicator Removal: Clear Linux or Mac System Logs
 
 ## Kill chain phases observed
 
@@ -42,13 +37,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PamDOORa PAM hijack: pam_linux.so drop or /etc/pam.d/sshd modification on Linux
+### [LLM] PamDOORa — /etc/pam.d/sshd tamper or drop of malicious pam_linux.so PAM module
 
 `UC_0_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND ((Filesystem.file_path="/etc/pam.d/sshd") OR (Filesystem.file_name="pam_linux.so" AND Filesystem.file_path IN ("/lib/security/*","/lib64/security/*","/usr/lib/security/*","/lib/x86_64-linux-gnu/security/*"))) AND NOT Filesystem.process_name IN ("apt","apt-get","dpkg","yum","dnf","rpm","zypper","pacman","unattended-upgr") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/pam.d/sshd" OR Filesystem.file_path="/etc/pam.d/*" OR Filesystem.file_name="pam_linux.so") AND Filesystem.action IN ("created","modified","write","renamed") NOT Filesystem.process_name IN ("apt","apt-get","dpkg","rpm","yum","dnf","zypper","authselect","pam-auth-update","puppet","ansible","cfengine-execd","chef-client","salt-minion") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -56,90 +51,68 @@ _(none detected from narrative keywords)_
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (FolderPath =~ "/etc/pam.d/" and FileName =~ "sshd")
-   or (FileName =~ "pam_linux.so"
-       and FolderPath has_any ("/lib/security","/lib64/security","/usr/lib/security","/lib/x86_64-linux-gnu/security"))
-| where InitiatingProcessFileName !in~ ("apt","apt-get","dpkg","yum","dnf","rpm","zypper","pacman","unattended-upgr","systemd","snapd")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where (FolderPath startswith "/etc/pam.d/" or FileName =~ "pam_linux.so")
+| where InitiatingProcessFileName !in~ ("apt","apt-get","dpkg","rpm","yum","dnf","zypper","authselect","pam-auth-update","puppet","ansible","cfengine-execd","chef-client","salt-minion")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] PamDOORa anti-forensics: tampering with lastlog / btmp / utmp / wtmp
+### [LLM] PamDOORa — sshd-spawned netcat exfil to TCP 1234 (PAM credential drop)
 
 `UC_0_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("dd","truncate","shred","sed","bash","sh","zsh","dash","python","python3","perl") AND (Processes.process="*/var/log/wtmp*" OR Processes.process="*/var/log/btmp*" OR Processes.process="*/var/log/lastlog*" OR Processes.process="*/var/run/utmp*") AND NOT Processes.parent_process_name IN ("logrotate","systemd","systemd-logind") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="sshd" AND Processes.process_name IN ("nc","ncat","netcat","nc.openbsd","nc.traditional","ncat.openbsd") AND Processes.process="*1234*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let AuthLogs = dynamic(["/var/log/wtmp","/var/log/btmp","/var/log/lastlog","/var/run/utmp"]);
-let FileTamper = DeviceFileEvents
+// PamDOORa exfil — netcat to port 1234 spawned under sshd
+let SshdDescendants = DeviceProcessEvents
     | where Timestamp > ago(7d)
-    | where ActionType in ("FileDeleted","FileRenamed","FileModified")
-    | where strcat(FolderPath, FileName) in~ (AuthLogs)
-       or (FolderPath has_any ("/var/log","/var/run") and FileName in~ ("wtmp","btmp","lastlog","utmp"))
-    | where InitiatingProcessFileName !in~ ("sshd","login","systemd","systemd-logind","logrotate","cron","crond","init","agetty")
-    | project Timestamp, DeviceName, Source="FileEvent", Action=ActionType,
-              Path=strcat(FolderPath, FileName),
-              Actor=InitiatingProcessAccountName,
-              ProcName=InitiatingProcessFileName,
-              CmdLine=InitiatingProcessCommandLine;
-let ProcRedir = DeviceProcessEvents
+    | where InitiatingProcessFileName =~ "sshd" or InitiatingProcessParentFileName =~ "sshd";
+SshdDescendants
+| where FileName in~ ("nc","ncat","netcat","nc.openbsd","nc.traditional","ncat.openbsd")
+| where ProcessCommandLine has "1234"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| union (
+    DeviceNetworkEvents
     | where Timestamp > ago(7d)
-    | where ProcessCommandLine has_any ("/var/log/wtmp","/var/log/btmp","/var/log/lastlog","/var/run/utmp")
-    | where ProcessCommandLine matches regex @"(?i)(>\s*/var/(log|run)/(wtmp|btmp|utmp|lastlog)|truncate\s+-s\s*0|shred\s+-[uvfz]+\s+/var/(log|run)/(wtmp|btmp|utmp|lastlog)|:\s*>\s*/var/(log|run)/(wtmp|btmp|utmp|lastlog))"
-    | project Timestamp, DeviceName, Source="ProcEvent", Action="CmdLineRedirect",
-              Path=ProcessCommandLine,
-              Actor=AccountName,
-              ProcName=FileName,
-              CmdLine=ProcessCommandLine;
-union FileTamper, ProcRedir
+    | where RemotePort == 1234
+    | where InitiatingProcessFileName in~ ("nc","ncat","netcat","nc.openbsd","nc.traditional")
+         or InitiatingProcessParentFileName =~ "sshd"
+         or InitiatingProcessCommandLine has "tn.sh"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              FileName=InitiatingProcessFileName,
+              ProcessCommandLine=InitiatingProcessCommandLine,
+              InitiatingProcessFileName=InitiatingProcessParentFileName,
+              InitiatingProcessCommandLine=tostring(parse_json(AdditionalFields)),
+              InitiatingProcessParentFileName, SHA256=InitiatingProcessSHA256
+)
 | order by Timestamp desc
 ```
 
-### [LLM] PamDOORa credential exfil: pam_exec spawning tn.sh and netcat to TCP/1234
+### [LLM] PamDOORa — Anti-forensic wipe of utmp / wtmp / btmp / lastlog
 
-`UC_0_6` · phase: **c2** · confidence: **Medium**
+`UC_0_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="sshd" OR Processes.parent_process_name="pam_exec" OR Processes.process="*pam_exec*") AND ( Processes.process="*tn.sh*" OR (Processes.process_name IN ("nc","ncat","netcat","netcat.openbsd","netcat.traditional") AND Processes.process="*1234*") OR (Processes.process_name IN ("sh","bash","dash","zsh") AND Processes.process="*/tmp/*") ) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/var/log/wtmp","/var/log/btmp","/var/log/lastlog","/var/run/utmp","/run/utmp") AND Filesystem.action IN ("deleted","truncated","modified","renamed") NOT Filesystem.process_name IN ("logrotate","systemd-logind","login","sshd","systemd","systemd-tmpfiles","savelog","init") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let AuthSpawn = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("sshd","pam_exec")
-         or InitiatingProcessParentFileName in~ ("sshd","pam_exec")
-         or InitiatingProcessCommandLine has "pam_exec";
-let ScriptOrNc = AuthSpawn
-    | where (FileName =~ "tn.sh" or ProcessCommandLine has "tn.sh")
-         or (FileName in~ ("nc","ncat","netcat","netcat.openbsd","netcat.traditional")
-             and ProcessCommandLine has "1234")
-         or (FileName in~ ("sh","bash","dash","zsh")
-             and ProcessCommandLine matches regex @"(?i)/tmp/[a-z0-9._-]+\.sh");
-let NcEgress = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemotePort == 1234
-    | where InitiatingProcessFileName in~ ("nc","ncat","netcat","netcat.openbsd","netcat.traditional")
-         or InitiatingProcessParentFileName in~ ("sshd","pam_exec","sh","bash","dash")
-    | project Timestamp, DeviceName, Source="Network",
-              Process=InitiatingProcessFileName,
-              Parent=InitiatingProcessParentFileName,
-              CmdLine=InitiatingProcessCommandLine,
-              RemoteIP, RemotePort;
-ScriptOrNc
-| project Timestamp, DeviceName, Source="Process",
-          Process=FileName, Parent=InitiatingProcessFileName,
-          CmdLine=ProcessCommandLine,
-          RemoteIP=tostring(""), RemotePort=toint(0)
-| union NcEgress
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| extend FullPath = strcat(FolderPath, iif(FolderPath endswith "/", "", "/"), FileName)
+| where FullPath in ("/var/log/wtmp","/var/log/btmp","/var/log/lastlog","/var/run/utmp","/run/utmp")
+| where ActionType in ("FileDeleted","FileModified","FileRenamed")
+| where InitiatingProcessFileName !in~ ("logrotate","systemd-logind","login","sshd","systemd","systemd-tmpfiles","savelog","init")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FullPath
 | order by Timestamp desc
 ```
 
@@ -289,4 +262,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

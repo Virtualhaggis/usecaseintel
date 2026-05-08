@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Deploy Modular RAT With Credential Theft and Screenshot Capture Capabilities 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A newly identified malware campaign is targeting senior executives and government investigators across Southeast Asia, using a modular Remote Access Trojan capable of stealing credentials, capturing screenshots, and maintaining deep persistence on infected systems. 
-The operation, dubbed Operation GriefLure, is running two simultaneous campa…
+The operation, dubbed Operation GriefLure, is running two simultaneous campaigns hit…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -50,14 +46,15 @@ The operation, dubbed Operation GriefLure, is running two simultaneous campa…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
-- **T1105** — Ingress Tool Transfer
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1584.004** — Compromise Infrastructure: Server
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1583.003** — Acquire Infrastructure: Virtual Private Server
+- **T1027.013** — Encrypted/Encoded File
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1055.012** — Process Injection: Process Hollowing
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 
 ## Kill chain phases observed
 
@@ -65,125 +62,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Operation GriefLure: LNK-spawned ftp.exe with script-flag download
+### [LLM] Operation GriefLure C2 callback to whatsappcenter[.]com / 38.54.122.188 (KAOPU-HK)
 
-`UC_1_11` · phase: **delivery** · confidence: **High**
+`UC_1_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_name from datamodel=Endpoint.Processes where Processes.process_name="ftp.exe" (Processes.process="*-s:*" OR Processes.process="*/s:*" OR Processes.parent_process="*.lnk*") (Processes.parent_process_name="explorer.exe" OR Processes.parent_process_name="cmd.exe" OR Processes.parent_process_name="conhost.exe") by host Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="38.54.122.188" OR All_Traffic.dest_ip="38.54.122.188") by All_Traffic.src, All_Traffic.user, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query="*whatsappcenter.com*" by DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)`] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*whatsappcenter.com*" OR Web.dest="38.54.122.188") by Web.src, Web.user, Web.url, Web.dest, Web.http_user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let GriefLureC2Ips = dynamic(["38.54.122.188"]);
+let GriefLureC2Hosts = dynamic(["whatsappcenter.com"]);
+union isfuzzy=true
+( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (GriefLureC2Ips)
+        or RemoteUrl has_any (GriefLureC2Hosts)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              RemoteIP, RemoteUrl, RemotePort, Protocol,
+              Proc=InitiatingProcessFileName, ProcCmd=InitiatingProcessCommandLine,
+              ProcPath=InitiatingProcessFolderPath, ProcSHA256=InitiatingProcessSHA256,
+              Source="Network" ),
+( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has_any (GriefLureC2Hosts)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              RemoteIP="", RemoteUrl=Q, RemotePort=int(0), Protocol="DNS",
+              Proc=InitiatingProcessFileName, ProcCmd=InitiatingProcessCommandLine,
+              ProcPath=InitiatingProcessFolderPath, ProcSHA256=InitiatingProcessSHA256,
+              Source="DNS" )
+| order by Timestamp desc
+```
+
+### [LLM] GriefLure runtime payload assembly: cmd.exe `copy /b` of fake .doc chunks in C:\Users\Public
+
+`UC_1_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdLines values(Processes.parent_process_name) as parents values(Processes.parent_process) as parentCmds from datamodel=Endpoint.Processes where Processes.process_name IN ("cmd.exe","Cmd.Exe","CMD.EXE") AND (Processes.process="*copy /b*" OR Processes.process="*copy /B*" OR Processes.process="*COPY /B*") AND (Processes.process="*\\Users\\Public\\*" OR Processes.process="*\\Public\\Documents\\*" OR Processes.process="*\\Public\\Downloads\\*" OR Processes.process="*C:\\Users\\Public*") AND Processes.process="*.doc*" by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | where count>=1
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName =~ "ftp.exe"
+| where FileName =~ "cmd.exe"
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","cmd.exe","conhost.exe","wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any ("-s:","/s:") 
-   or InitiatingProcessCommandLine has ".lnk"
-   or InitiatingProcessCommandLine has @"\Users\Public\"
-| project Timestamp, DeviceName, AccountName,
+// Article: payload assembled at runtime with `copy /b` from chunked .doc files in C:\Users\Public
+| where ProcessCommandLine has "copy"
+| where ProcessCommandLine has "/b" or ProcessCommandLine has "/B"
+| where ProcessCommandLine has_any (@"\Users\Public\", @"\Public\Documents\", @"\Public\Downloads\", @"C:\Users\Public")
+| where ProcessCommandLine contains ".doc"
+// `+` between source files is the canonical copy-concat separator; not required (script may iterate)
+| extend HasConcat = ProcessCommandLine contains "+"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, HasConcat,
           ParentImage = InitiatingProcessFolderPath,
+          ParentName  = InitiatingProcessFileName,
           ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
+          GrandParent = InitiatingProcessParentFileName,
           SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Operation GriefLure: chunked .doc payload assembly via cmd copy /b in C:\Users\Public
+### [LLM] GriefLure explorer.exe respawn from Public/Temp staging directories or LOLBin parents
 
-`UC_1_12` · phase: **install** · confidence: **High**
+`UC_1_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="cmd.exe" Processes.process="*copy*/b*" (Processes.process="*\\Users\\Public\\*" OR Processes.process="*.doc+*" OR Processes.process="*.doc *.doc*") by host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=cmd "(?i)(?<frag_count>(\.doc[a-z]?\s*\+\s*){2,})" | where isnotnull(frag_count) OR like(cmd,"%\\Users\\Public\\%") | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdLine values(Processes.parent_process) as parentCmd from datamodel=Endpoint.Processes where Processes.process_name="explorer.exe" AND Processes.parent_process_name!="userinit.exe" AND Processes.parent_process_name!="winlogon.exe" AND Processes.parent_process_name!="explorer.exe" AND Processes.parent_process_name!="svchost.exe" AND Processes.parent_process_name!="runtimebroker.exe" AND (Processes.parent_process="*\\Users\\Public\\*" OR Processes.parent_process="*\\AppData\\Local\\Temp\\*" OR Processes.parent_process="*\\Windows\\Temp\\*" OR Processes.parent_process_name IN ("cmd.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","ftp.exe","powershell.exe","pwsh.exe","th5znehec.exe")) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Stage A: cmd.exe issuing binary-mode multi-fragment copy in Public
-let AssemblyCmds = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "cmd.exe"
-    | where AccountName !endswith "$"
-    | where ProcessCommandLine matches regex @"(?i)copy\s+/b"
-    | where ProcessCommandLine has @"\Users\Public\"
-        or ProcessCommandLine matches regex @"(?i)\.doc[a-z]?\s*\+\s*[^\s]+\.doc"
-    | project AsmTime = Timestamp, DeviceId, DeviceName, AccountName,
-              AssemblyCmd = ProcessCommandLine,
-              InitiatingProcessFileName;
-// Stage B: companion .doc drops from same process within 5 min before assembly
-let DocDrops = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "FileCreated"
-    | where FolderPath has @"\Users\Public\"
-    | where FileName endswith ".doc" or FileName endswith ".docx"
-    | summarize FragCount = dcount(FileName),
-                Fragments = make_set(FileName, 25),
-                DropStart = min(Timestamp),
-                DropEnd   = max(Timestamp)
-        by DeviceId, InitiatingProcessFileName
-    | where FragCount >= 3;
-AssemblyCmds
-| join kind=inner DocDrops on DeviceId
-| where AsmTime between (DropStart .. DropEnd + 5m)
-| project AsmTime, DeviceName, AccountName, AssemblyCmd,
-          FragCount, Fragments, DropStart, DropEnd
-| order by AsmTime desc
-```
-
-### [LLM] Operation GriefLure C2 + payload-hash sweep (whatsappcenter[.]com / 38.54.122.188)
-
-`UC_1_13` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="whatsappcenter.com" OR All_Traffic.dest="*.whatsappcenter.com" OR All_Traffic.dest_ip="38.54.122.188") by host All_Traffic.src All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("35af2cf5494181920b8624c7b719d39590e2a5ff5eaa1a2fa1ba86b2b5aa9b43","bc090d75f51c293d916c40d4b21094faaec191a42d97448c92d264875bf1f17b","197f11a7b0003aa7da58a3302cfa2a96a670de91d39ddebc7a51ac1d9404a7e6","f34f550147c2792c1ff2a003d15be89e5573f0896c5aa6126068baa4621ef416","bc83817c6d2bf8df1d58eac946a12b5e2566b2ffe15cf96f37c711c4b755512b","61e9d76f07334843df561fe4bac449fb6fdaed5e5eb91480bded225f3d265c5f","ee6330870087f66a237a7f7c115b65beb042299f12eae1e9004e016686d0c387","91a15554ec9e49c00c5ca301f276bd79d346968651d54204743a08a3ca8a5067","a49155df50963d2412534090bbd967749268bd013881ddb81d78b87f91cdc15b","7f80add94ee8107a79c87a9b4ccbd33e39eccd1596748a5b88629dd6ac11b86d") by host Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let GriefLureC2Domains = dynamic(["whatsappcenter.com"]);
-let GriefLureC2IPs = dynamic(["38.54.122.188"]);
-let GriefLureSHA256 = dynamic([
-    "35af2cf5494181920b8624c7b719d39590e2a5ff5eaa1a2fa1ba86b2b5aa9b43",
-    "bc090d75f51c293d916c40d4b21094faaec191a42d97448c92d264875bf1f17b",
-    "197f11a7b0003aa7da58a3302cfa2a96a670de91d39ddebc7a51ac1d9404a7e6",
-    "f34f550147c2792c1ff2a003d15be89e5573f0896c5aa6126068baa4621ef416",
-    "bc83817c6d2bf8df1d58eac946a12b5e2566b2ffe15cf96f37c711c4b755512b",
-    "61e9d76f07334843df561fe4bac449fb6fdaed5e5eb91480bded225f3d265c5f",
-    "ee6330870087f66a237a7f7c115b65beb042299f12eae1e9004e016686d0c387",
-    "91a15554ec9e49c00c5ca301f276bd79d346968651d54204743a08a3ca8a5067",
-    "a49155df50963d2412534090bbd967749268bd013881ddb81d78b87f91cdc15b",
-    "7f80add94ee8107a79c87a9b4ccbd33e39eccd1596748a5b88629dd6ac11b86d"]);
-union isfuzzy=true
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where (RemoteUrl has_any (GriefLureC2Domains))
-         or (RemoteIP in (GriefLureC2IPs))
-    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-              Hit = strcat("NET:", coalesce(RemoteUrl, RemoteIP)),
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteIP, RemotePort ),
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (GriefLureSHA256)
-    | project Timestamp, DeviceName,
-              AccountName = InitiatingProcessAccountName,
-              Hit = strcat("FILE:", FileName, " sha256=", SHA256),
-              InitiatingProcessFileName,
-              InitiatingProcessCommandLine = InitiatingProcessCommandLine,
-              RemoteIP = "", RemotePort = int(null) ),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (GriefLureSHA256) or InitiatingProcessSHA256 in (GriefLureSHA256)
-    | project Timestamp, DeviceName, AccountName,
-              Hit = strcat("PROC:", FileName, " sha256=", SHA256),
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteIP = "", RemotePort = int(null) )
+let _trusted_parents = dynamic(["userinit.exe","winlogon.exe","explorer.exe","svchost.exe","runtimebroker.exe"]);
+let _lolbin_parents = dynamic(["cmd.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","ftp.exe","powershell.exe","pwsh.exe","th5znehec.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "explorer.exe"
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName !in~ (_trusted_parents)
+| where InitiatingProcessFolderPath has_any (@"\Users\Public\", @"\AppData\Local\Temp\", @"\Windows\Temp\")
+   or InitiatingProcessFileName in~ (_lolbin_parents)
+| project Timestamp, DeviceName, AccountName,
+          ChildPath  = FolderPath,
+          ChildIL    = ProcessIntegrityLevel,
+          ChildElev  = ProcessTokenElevation,
+          ParentName = InitiatingProcessFileName,
+          ParentPath = InitiatingProcessFolderPath,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ParentSHA  = InitiatingProcessSHA256,
+          GrandParent = InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -546,4 +520,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

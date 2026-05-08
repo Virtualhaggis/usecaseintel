@@ -10,12 +10,8 @@ Home Cyber Security
 Škoda Security Incident Exposes Customers Data From Online Shop 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 Škoda Auto has disclosed a significant IT security incident affecting its official online shop, revealing that unauthorized individuals exploited a vulnerability in the platform’s standard shop software to gain temporary unauthorized access to customer data.
-During routine technical security monitoring, Škoda’s IT team identified that attackers had leveraged a flaw in the sho…
+During routine technical security monitoring, Škoda’s IT team identified that attackers had leveraged a flaw in the shop’s unde…
 
 ## Indicators of Compromise (high-fidelity only)
 
