@@ -10,13 +10,9 @@ Home Cyber Attack News
 Hackers Leveraged Hugging Face and ClawHub With 575+ Malicious Skills to Deploy Malware 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 An active malware distribution campaign abusing two prominent AI platforms Hugging Face and ClawHub to deliver trojans, cryptominers, and infostealers disguised as legitimate AI tools and agent extensions.
 The campaign marks a significant evolution in supply chain attacks, shifting from traditional software repositories to trusted AI ecosystems.
-Wit…
+Within the …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -45,14 +41,14 @@ Wit…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
 - **T1105** — Ingress Tool Transfer
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1608.001** — Stage Capabilities: Upload Malware
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1102** — Web Service
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1496** — Resource Hijacking
+- **T1055** — Process Injection
 
 ## Kill chain phases observed
 
@@ -60,44 +56,37 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] OpenClaw/Hugging Face campaign C2 beacon (velvet-parrot.com / 91.92.242.30)
+### [LLM] ClawHub/OpenClaw Cryptominer C2 — velvet-parrot.com / 91.92.242.30
 
-`UC_3_12` · phase: **c2** · confidence: **High**
+`UC_6_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest="91.92.242.30" OR All_Traffic.dest_host="velvet-parrot.com" OR All_Traffic.dest_host="*.velvet-parrot.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="velvet-parrot.com" OR DNS.query="*.velvet-parrot.com" OR DNS.answer="91.92.242.30") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*velvet-parrot.com*" OR Processes.process="*91.92.242.30*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)`]
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="91.92.242.30" OR All_Traffic.dest="velvet-parrot.com" OR All_Traffic.dest_host="velvet-parrot.com" OR All_Traffic.dest_host="*.velvet-parrot.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.user host | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count from datamodel=Network_Resolution.DNS where (DNS.query="velvet-parrot.com" OR DNS.query="*.velvet-parrot.com" OR DNS.answer="91.92.242.30") by DNS.src DNS.query DNS.answer host | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let _ips = dynamic(["91.92.242.30"]);
-let _hosts = dynamic(["velvet-parrot.com"]);
-union isfuzzy=true
-( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP in (_ips) or RemoteUrl has_any (_hosts)
-    | project Timestamp, DeviceName, Source="NetConn", InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort ),
-( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-    | where QueryName has_any (_hosts)
-    | project Timestamp, DeviceName, Source="DNS", InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP="", RemoteUrl=QueryName, RemotePort=int(null) ),
-( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has_any ("velvet-parrot.com", "91.92.242.30")
-    | project Timestamp, DeviceName, Source="CmdLine", InitiatingProcessFileName=FileName, InitiatingProcessCommandLine=ProcessCommandLine, InitiatingProcessAccountName=AccountName, RemoteIP="", RemoteUrl="", RemotePort=int(null) )
+let _ip = dynamic(["91.92.242.30"]);
+let _dom = dynamic(["velvet-parrot.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (_ip)
+   or RemoteUrl has_any (_dom)
+| project Timestamp, DeviceName, DeviceId, ActionType,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
-### [LLM] Script interpreter or LOLBin fetching payload from huggingface.co dataset/resolve URL
+### [LLM] Hugging Face dataset / repo payload retrieval via PowerShell, cmd or LOLBin downloader
 
-`UC_3_13` · phase: **delivery** · confidence: **Medium**
+`UC_6_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe","wscript.exe","cscript.exe","mshta.exe")) AND (Processes.process="*huggingface.co/datasets/*" OR Processes.process="*huggingface.co/*/resolve/*" OR Processes.process="*huggingface.co/resolve/*" OR Processes.process="*hf.co/datasets/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process) as parents from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bitsadmin.exe","certutil.exe") AND (Processes.process="*huggingface.co*" OR Processes.process="*hf.co/*") AND (Processes.process="*Invoke-WebRequest*" OR Processes.process="*DownloadString*" OR Processes.process="*DownloadFile*" OR Processes.process="*Start-BitsTransfer*" OR Processes.process="*-OutFile*" OR Processes.process="*iwr *" OR Processes.process="*curl *" OR Processes.process="*wget *" OR Processes.process="*Invoke-Expression*" OR Processes.process="* IEX*" OR Processes.process="*urlcache*" OR Processes.process="*-urlcache*") by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
@@ -105,58 +94,39 @@ union isfuzzy=true
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe","wscript.exe","cscript.exe","mshta.exe")
-   or InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
-| where ProcessCommandLine has_any ("huggingface.co/datasets/", "huggingface.co/resolve/", "/resolve/main/", "hf.co/datasets/")
-   and ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","DownloadString","DownloadFile","Net.WebClient","Start-BitsTransfer","bitsadmin","/transfer","curl ","-OutFile","-o ","certutil","-urlcache","-split","wget ")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
-          SHA256
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bitsadmin.exe","certutil.exe")
+   or InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bitsadmin.exe","certutil.exe")
+| where ProcessCommandLine has_any ("huggingface.co","hf.co/")
+| where ProcessCommandLine has_any ("Invoke-WebRequest","DownloadString","DownloadFile","Start-BitsTransfer","-OutFile","iwr ","Invoke-Expression","IEX(","IEX ","-urlcache","curl ","wget ")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Defender exclusion path added followed by scheduled task creation within 10 minutes
+### [LLM] svchost.exe Masquerading — Cryptominer Drop From Non-System Path
 
-`UC_3_14` · phase: **install** · confidence: **High**
+`UC_6_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as exclusionTime from datamodel=Endpoint.Processes where (Processes.process="*Add-MpPreference*" OR Processes.process="*Set-MpPreference*") AND (Processes.process="*ExclusionPath*" OR Processes.process="*ExclusionExtension*" OR Processes.process="*ExclusionProcess*") by Processes.dest Processes.user Processes.process as exclusionCmd | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats `summariesonly` count min(_time) as taskTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" AND Processes.process="*/create*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Register-ScheduledTask*" OR Processes.process="*New-ScheduledTask*")) by Processes.dest Processes.user Processes.process as taskCmd | `drop_dm_object_name(Processes)`] | eval delaySec=taskTime-exclusionTime | where delaySec>=0 AND delaySec<=600 | table exclusionTime taskTime delaySec dest user exclusionCmd taskCmd
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name="svchost.exe" AND NOT (Processes.process_path="*\\Windows\\System32\\*" OR Processes.process_path="*\\Windows\\SysWOW64\\*" OR Processes.process_path="*\\Windows\\WinSxS\\*") by host Processes.user Processes.process_path Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let WindowMin = 10m;
-let Exclusions =
-    union isfuzzy=true
-    ( DeviceProcessEvents
-        | where Timestamp > ago(30d)
-        | where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
-        | where ProcessCommandLine has_any ("ExclusionPath","ExclusionExtension","ExclusionProcess")
-        | project ExclusionTime = Timestamp, DeviceId, DeviceName, AccountName,
-                  ExclusionSource = "Process", ExclusionDetail = ProcessCommandLine ),
-    ( DeviceRegistryEvents
-        | where Timestamp > ago(30d)
-        | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-        | where RegistryKey has @"Microsoft\Windows Defender\Exclusions\Paths"
-           or RegistryKey has @"Microsoft\Windows Defender\Exclusions\Extensions"
-           or RegistryKey has @"Microsoft\Windows Defender\Exclusions\Processes"
-        | project ExclusionTime = Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName,
-                  ExclusionSource = "Registry", ExclusionDetail = strcat(RegistryKey, "  ", RegistryValueName, "=", RegistryValueData) );
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create")
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Register-ScheduledTask","New-ScheduledTask","schtasks /create","schtasks.exe /create"))
-| project TaskTime = Timestamp, DeviceId, DeviceName, AccountName,
-          TaskCmd = ProcessCommandLine, TaskBinary = FileName,
-          TaskParent = InitiatingProcessFileName
-| join kind=inner Exclusions on DeviceId
-| where TaskTime between (ExclusionTime .. ExclusionTime + WindowMin)
-| extend DelaySec = datetime_diff('second', TaskTime, ExclusionTime)
-| project ExclusionTime, TaskTime, DelaySec, DeviceName, AccountName,
-          ExclusionSource, ExclusionDetail, TaskBinary, TaskCmd, TaskParent
-| order by TaskTime desc
+| where FileName =~ "svchost.exe"
+| where not(FolderPath startswith @"C:\Windows\System32\")
+| where not(FolderPath startswith @"C:\Windows\SysWOW64\")
+| where not(FolderPath startswith @"C:\Windows\WinSxS\")
+| where InitiatingProcessFileName !in~ ("trustedinstaller.exe","msiexec.exe")
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName,
+          ProcessCommandLine, SHA256, InitiatingProcessFileName,
+          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -507,7 +477,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Leveraged Hugging Face and ClawHub With 575+ Malicious Skills to Deploy
 
-`UC_3_11` · phase: **exploit** · confidence: **High**
+`UC_6_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

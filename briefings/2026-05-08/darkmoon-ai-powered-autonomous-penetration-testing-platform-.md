@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DarkMoon autonomous pentest framework — repository acquisition (ASCIT31/Dark-Moon clone or download)
 
-`UC_9_7` · phase: **weapon** · confidence: **High**
+`UC_12_7` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### [LLM] DarkMoon scanner CLI invocation (darkmoon.sh with TARGET: directive)
 
-`UC_9_8` · phase: **recon** · confidence: **High**
+`UC_12_8` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -347,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DarkMoon AI-Powered Autonomous Penetration Testing Platform With 50+ Tools
 
-`UC_9_6` · phase: **exploit** · confidence: **High**
+`UC_12_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

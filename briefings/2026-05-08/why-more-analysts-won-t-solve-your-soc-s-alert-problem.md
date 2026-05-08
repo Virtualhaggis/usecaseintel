@@ -11,15 +11,9 @@ Sponsored by Prophet Security
 May 8, 2026
 10:02 AM
 0 
-
-
 By Rich Perkins, Principal Sales Engineer, Prophet Security 
-
-
 Your security spend has roughly doubled in six years . Your time-to-investigate and respond hasn't moved. Your CFO is asking why the security headcount keeps growing while the metrics that matter to the business don't.
-
-
-The architecture under your SOC is the reason. Not your team. Not your tooling investment. Not yo…
+The architecture under your SOC is the reason. Not your team. Not your tooling investment. Not your hiring fu…
 
 ## Indicators of Compromise (high-fidelity only)
 

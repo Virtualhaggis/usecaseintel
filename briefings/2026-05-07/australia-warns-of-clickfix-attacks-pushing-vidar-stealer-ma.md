@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClickFix Run-dialog PowerShell/mshta paste delivering Vidar Stealer
 
-`UC_26_5` · phase: **delivery** · confidence: **High**
+`UC_29_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] Vidar Stealer dead-drop C2 resolution via Steam profile or Telegram URL
 
-`UC_26_6` · phase: **c2** · confidence: **High**
+`UC_29_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### [LLM] Vidar Stealer self-deletion: PE in user-writable temp deletes itself within minutes of execution
 
-`UC_26_7` · phase: **install** · confidence: **Medium**
+`UC_29_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

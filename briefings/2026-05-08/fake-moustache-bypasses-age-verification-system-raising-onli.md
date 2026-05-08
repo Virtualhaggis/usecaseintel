@@ -10,12 +10,8 @@ Home Cyber Security News
 Fake Moustache Bypasses Age Verification System Raising Online Safety Act Concerns 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A 12-year-old boy grabbed an eyebrow pencil, drew a moustache on his face, held it up to his screen, and was verified as 15 years old. That single moment, shared by a parent in a UK survey, says more about online age verification than any technical report could. 
-The UK Online Safety Act came into force in July 2025, and while it was meant to …
+The UK Online Safety Act came into force in July 2025, and while it was meant to be a tur…
 
 ## Indicators of Compromise (high-fidelity only)
 

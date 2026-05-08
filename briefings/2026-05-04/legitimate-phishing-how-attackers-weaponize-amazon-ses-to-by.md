@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound phishing via Amazon SES with e-signature lure linking to AWS-hosted infrastructure
 
-`UC_80_4` · phase: **delivery** · confidence: **High**
+`UC_82_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ SuspectMail
 
 ### [LLM] Click on Amazon SES-routed phishing link to AWS-hosted credential-harvest page
 
-`UC_80_5` · phase: **delivery** · confidence: **High**
+`UC_82_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ UrlClickEvents
 
 ### [LLM] Compromised IAM key prepares SES for mass phishing (CreateAccessKey + AttachUserPolicy + SendEmail burst)
 
-`UC_80_6` · phase: **weapon** · confidence: **Medium**
+`UC_82_6` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

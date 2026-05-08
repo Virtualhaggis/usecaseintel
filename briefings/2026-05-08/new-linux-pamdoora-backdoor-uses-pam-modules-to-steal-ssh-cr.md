@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PamDOORa: New PAM shared-object dropped outside package-manager context
 
-`UC_17_4` · phase: **install** · confidence: **High**
+`UC_20_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### [LLM] PamDOORa: Authentication-log tampering on Linux (auth.log/secure/wtmp/btmp/lastlog)
 
-`UC_17_5` · phase: **actions** · confidence: **High**
+`UC_20_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceFileEvents
 
 ### [LLM] PamDOORa: pam_exec injection / PAM config modification under /etc/pam.d
 
-`UC_17_6` · phase: **install** · confidence: **High**
+`UC_20_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

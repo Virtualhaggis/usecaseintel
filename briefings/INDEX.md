@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,20 +10,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-08
 - [cisa gives feds four days to patch ivanti flaw exploited as ](./2026-05-08/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-.md)
+- [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [darkmoon ai powered autonomous penetration testing platform ](./2026-05-08/darkmoon-ai-powered-autonomous-penetration-testing-platform-.md)
+- [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [fake moustache bypasses age verification system raising onli](./2026-05-08/fake-moustache-bypasses-age-verification-system-raising-onli.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [hackers abuse signed logitech installer to deploy tclbanker ](./2026-05-08/hackers-abuse-signed-logitech-installer-to-deploy-tclbanker-.md)
 - [hackers leveraged hugging face and clawhub with 575 maliciou](./2026-05-08/hackers-leveraged-hugging-face-and-clawhub-with-575-maliciou.md)
+- [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
-- [mozilla patches 423 firefox vulnerabilities with claude myth](./2026-05-08/mozilla-patches-423-firefox-vulnerabilities-with-claude-myth.md)
 - [new infostealer campaign uses github releases for payload ho](./2026-05-08/new-infostealer-campaign-uses-github-releases-for-payload-ho.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [new nwhstealer delivery chain uses bun loader anti vm checks](./2026-05-08/new-nwhstealer-delivery-chain-uses-bun-loader-anti-vm-checks.md)
 - [new pcpjack worm targets docker kubernetes redis and mongodb](./2026-05-08/new-pcpjack-worm-targets-docker-kubernetes-redis-and-mongodb.md)
 - [new zichatbot malware uses zulip rest apis as command and co](./2026-05-08/new-zichatbot-malware-uses-zulip-rest-apis-as-command-and-co.md)
+- [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
 - [quasar linux rat steals developer credentials for software s](./2026-05-08/quasar-linux-rat-steals-developer-credentials-for-software-s.md)
@@ -54,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
-- [webinar why modern attacks require both security and recover](./2026-05-07/webinar-why-modern-attacks-require-both-security-and-recover.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
 - [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
 
@@ -137,7 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-29
 - [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
-- [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
 
 ## 2026-04-28
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
@@ -202,6 +203,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2012 1854 microsoft visual basic for applicatio](./2026-04-13/cisa-kev-cve-2012-1854-microsoft-visual-basic-for-applicatio.md)
 - [cisa kev cve 2020 9715 adobe acrobat use after free vulnerab](./2026-04-13/cisa-kev-cve-2020-9715-adobe-acrobat-use-after-free-vulnerab.md)
 - [cisa kev cve 2023 21529 microsoft exchange server deserializ](./2026-04-13/cisa-kev-cve-2023-21529-microsoft-exchange-server-deserializ.md)
+- [cisa kev cve 2026 21643 fortinet forticlient ems sql injecti](./2026-04-13/cisa-kev-cve-2026-21643-fortinet-forticlient-ems-sql-injecti.md)
 - [cisa kev cve 2026 34621 adobe acrobat and reader prototype p](./2026-04-13/cisa-kev-cve-2026-34621-adobe-acrobat-and-reader-prototype-p.md)
 - [janelarat a financial threat targeting users in latin americ](./2026-04-13/janelarat-a-financial-threat-targeting-users-in-latin-americ.md)
 
@@ -1137,4 +1139,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-03-25
 - [cisa kev cve 2019 7256 nice linear emerge e3 series os comma](./2024-03-25/cisa-kev-cve-2019-7256-nice-linear-emerge-e3-series-os-comma.md)
 - [cisa kev cve 2021 44529 ivanti endpoint manager cloud servic](./2024-03-25/cisa-kev-cve-2021-44529-ivanti-endpoint-manager-cloud-servic.md)
-- [cisa kev cve 2026 21643 fortinet forticlient ems sql injecti](./2024-03-25/cisa-kev-cve-2026-21643-fortinet-forticlient-ems-sql-injecti.md)

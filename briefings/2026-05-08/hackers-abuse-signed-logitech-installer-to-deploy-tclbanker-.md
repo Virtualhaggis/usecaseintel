@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TCLBANKER DLL sideload via signed Logi AI Prompt Builder (screen_retriever_plugin.dll)
 
-`UC_7_10` · phase: **install** · confidence: **High**
+`UC_10_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ union ImageLoadHits, FileCreateHits
 
 ### [LLM] TCLBANKER C2 / phishing infrastructure egress (ef971a42.workers.dev + REF3076 domains)
 
-`UC_7_11` · phase: **c2** · confidence: **High**
+`UC_10_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse Signed Logitech Installer to Deploy TCLBANKER Banking Trojan
 
-`UC_7_9` · phase: **exploit** · confidence: **High**
+`UC_10_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

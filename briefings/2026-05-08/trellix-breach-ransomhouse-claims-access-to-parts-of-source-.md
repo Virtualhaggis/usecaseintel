@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RansomHouse MrAgent ESXi reconnaissance — esxcli formatter=csv + uname + firewall disable
 
-`UC_10_5` · phase: **install** · confidence: **High**
+`UC_13_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### [LLM] Mario ESXi mass VM shutdown — burst of esxcli/vim-cmd power-off prior to encryption
 
-`UC_10_6` · phase: **actions** · confidence: **High**
+`UC_13_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] Known RansomHouse Mario ESXi & MrAgent Windows SHA256 IOC sweep
 
-`UC_10_7` · phase: **install** · confidence: **High**
+`UC_13_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -245,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trellix Breach – RansomHouse Claims Access to Parts of Source Code
 
-`UC_10_4` · phase: **exploit** · confidence: **High**
+`UC_13_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
