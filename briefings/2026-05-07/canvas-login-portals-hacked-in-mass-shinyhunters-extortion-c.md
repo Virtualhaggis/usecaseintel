@@ -11,12 +11,8 @@ By Lawrence Abrams
 May 7, 2026
 06:36 PM
 1 
-
-
 The ShinyHunters extortion gang has breached education technology giant Instructure again, this time exploiting a vulnerability to deface Canvas login portals for hundreds of colleges and universities.
-
-
-The defacements, which were visible for roughly 30 minutes before being taken offline, displayed a message from ShinyHunters claiming responsibility for the earlier Instructure …
+The defacements, which were visible for roughly 30 minutes before being taken offline, displayed a message from ShinyHunters claiming responsibility for the earlier Instructure breach a…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -34,10 +30,11 @@ The defacements, which were visible for roughly 30 minutes before being taken of
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
-- **T1528** — Steal Application Access Token
+- **T1491.002** — External Defacement
+- **T1657** — Financial Theft
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1530** — Data from Cloud Storage
-- **T1213** — Data from Information Repositories
+- **T1528** — Steal Application Access Token
+- **T1621** — Multi-Factor Authentication Request Generation
 
 ## Kill chain phases observed
 
@@ -45,71 +42,60 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ShinyHunters Microsoft Entra device code authentication grant - vishing baseline anomaly
+### [LLM] User exposure to Canvas/Instructure defacement window (ShinyHunters extortion, 7 May 2026)
 
-`UC_0_5` · phase: **c2** · confidence: **High**
+`UC_0_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as apps values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where (Authentication.signature="*deviceCode*" OR Authentication.signature="*device code*" OR Authentication.signature_method="deviceCode") Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | join type=left user [ | tstats `summariesonly` count as historic_devicecode_count from datamodel=Authentication where (Authentication.signature="*deviceCode*" OR Authentication.signature_method="deviceCode") earliest=-30d@d latest=-1d@d by Authentication.user | `drop_dm_object_name(Authentication)` ] | where isnull(historic_devicecode_count) OR historic_devicecode_count<=1 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count values(Web.url) as urls values(Web.user) as users min(_time) as first_seen max(_time) as last_seen from datamodel=Web where (Web.url="*instructure.com*" OR Web.url="*canvaslms.com*" OR Web.url="*/canvas/login*") earliest="05/07/2026:17:30:00" latest="05/07/2026:20:00:00" by Web.src, Web.user, Web.dest
+| `drop_dm_object_name(Web)`
+| sort 0 - first_seen
 ```
 
 **Defender KQL:**
 ```kql
-// ShinyHunters device code vishing hunt: successful Entra device code grants by users not on 30d baseline
-let Baseline =
-    AADSignInEventsBeta
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where ErrorCode == 0
-    | where AuthenticationProcessingDetails has_cs "deviceCode"
-        or AuthenticationProcessingDetails has "Device Code"
-    | summarize BaselineCount = count() by AccountUpn;
+let DefacementStart = datetime(2026-05-07 17:30:00);
+let DefacementEnd   = datetime(2026-05-07 20:00:00);
+DeviceNetworkEvents
+| where Timestamp between (DefacementStart .. DefacementEnd)
+| where RemoteUrl has_any ("instructure.com","canvaslms.com")
+   or RemoteUrl matches regex @"(?i)//canvas\.[a-z0-9-]+\.(edu|ac\.[a-z]{2}|org)"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari.exe","arc.exe","opera.exe")
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count(), SampleUrl = any(RemoteUrl)
+          by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by FirstSeen asc
+```
+
+### [LLM] Microsoft Entra OAuth device-code grant flow — ShinyHunters vishing-driven SSO compromise
+
+`UC_0_6` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Authentication.app) as apps values(Authentication.src) as src_ips values(Authentication.signature) as signatures min(_time) as first_seen max(_time) as last_seen from datamodel=Authentication where Authentication.action="success" (Authentication.signature="*deviceCode*" OR Authentication.signature="*Device Code*" OR Authentication.authentication_method="deviceCode" OR Authentication.signature_id="*deviceCode*") by Authentication.user, Authentication.dest
+| `drop_dm_object_name(Authentication)`
+| where mvcount(src_ips) > 0
+| sort 0 - last_seen
+```
+
+**Defender KQL:**
+```kql
 AADSignInEventsBeta
-| where Timestamp > ago(1d)
+| where Timestamp > ago(7d)
 | where ErrorCode == 0
-| where AuthenticationProcessingDetails has_cs "deviceCode"
-    or AuthenticationProcessingDetails has "Device Code"
-| join kind=leftanti Baseline on AccountUpn
-| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City,
-          Application, ApplicationId, ResourceDisplayName, ClientAppUsed,
-          DeviceName, OSPlatform, Browser, RiskLevelDuringSignIn,
-          AuthenticationProcessingDetails
+| where AuthenticationDetails has "Device Code"
+   or AuthenticationProcessingDetails has "Device Code"
+   or AuthenticationDetails has "deviceCode"
+| extend RiskyContext = iff(IsAnonymousProxy == true
+                            or RiskLevelDuringSignIn in ("medium","high")
+                            or RiskState in~ ("atRisk","confirmedCompromised")
+                            or ClientAppUsed has "Other", true, false)
+| project Timestamp, AccountUpn, IPAddress, Country, City,
+          ApplicationId, Application, ResourceDisplayName,
+          ClientAppUsed, IsAnonymousProxy, RiskLevelDuringSignIn, RiskState,
+          AuthenticationDetails, RiskyContext
 | order by Timestamp desc
-```
-
-### [LLM] ShinyHunters post-token SSO fan-out - single user accessing many distinct SaaS resource apps in short window
-
-`UC_0_6` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Authentication.app) as distinct_apps values(Authentication.app) as apps values(Authentication.src) as src_ips count from datamodel=Authentication where Authentication.action=success Authentication.signature_id="AzureActiveDirectorySignInLogs" by Authentication.user _time span=15m | `drop_dm_object_name(Authentication)` | where distinct_apps >= 8 | join type=left user [ | tstats `summariesonly` avg(distinct_apps_baseline) as avg_baseline_apps from datamodel=Authentication where earliest=-30d@d latest=-1d@d by Authentication.user _time span=15m | rename Authentication.user as user | stats avg(eval(distinct_apps_baseline)) as avg_baseline_apps by user ] | where isnull(avg_baseline_apps) OR distinct_apps >= 3*avg_baseline_apps
-```
-
-**Defender KQL:**
-```kql
-// SaaS app fan-out following suspected token theft - 8+ distinct AAD resource apps from one user in 15m
-let WindowMin = 15m;
-let FanoutThreshold = 8;
-let HighValueResources = dynamic([
-    "Salesforce","Slack","Dropbox","Atlassian","Zendesk","Adobe","SAP",
-    "Box","ServiceNow","Workday","GitHub","Snowflake","Confluence","Jira",
-    "Office 365 Exchange Online","Office 365 SharePoint Online","Microsoft Graph",
-    "OneDrive","Google Workspace"]);
-AADSignInEventsBeta
-| where Timestamp > ago(1d)
-| where ErrorCode == 0
-| where isnotempty(ResourceDisplayName)
-| summarize DistinctApps = dcount(ResourceDisplayName),
-            AppList = make_set(ResourceDisplayName, 50),
-            HighValueHits = dcountif(ResourceDisplayName, ResourceDisplayName in (HighValueResources)),
-            SrcIPs = make_set(IPAddress, 10),
-            Countries = make_set(Country, 5),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-            by AccountUpn, bin(Timestamp, WindowMin)
-| where DistinctApps >= FanoutThreshold and HighValueHits >= 2
-| order by DistinctApps desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -316,4 +302,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
