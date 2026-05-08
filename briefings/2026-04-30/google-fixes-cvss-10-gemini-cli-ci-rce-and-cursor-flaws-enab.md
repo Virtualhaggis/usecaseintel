@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Git hook execution from .git/hooks via Cursor agent autonomous git checkout (CVE-2026-26268)
 
-`UC_102_4` · phase: **exploit** · confidence: **High**
+`UC_104_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Gemini CLI --yolo mode spawning shell child via run_shell_command (CVSS 10 workspace-trust bypass)
 
-`UC_102_5` · phase: **exploit** · confidence: **High**
+`UC_104_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

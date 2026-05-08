@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 8, 2026
 04:45 AM
 0 
-
-
 A 34-year-old Virginia man was found guilty of conspiring to destroy dozens of government databases after getting fired from his job as a federal contractor.
-
-
-In 2016, Sohaib Akhter and his twin brother and co-defendant Muneeb Akhter were also sentenced to several years in prison after pleading guilty to accessing U.S. State Department systems without authorization and steali…
+In 2016, Sohaib Akhter and his twin brother and co-defendant Muneeb Akhter were also sentenced to several years in prison after pleading guilty to accessing U.S. State Department systems without authorization and stealing the p…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -25,11 +21,10 @@ In 2016, Sohaib Akhter and his twin brother and co-defendant Muneeb Akhter were 
 ## MITRE ATT&CK Techniques
 
 - **T1485** — Data Destruction
+- **T1565.001** — Stored Data Manipulation
 - **T1070.001** — Indicator Removal: Clear Windows Event Logs
-- **T1490** — Inhibit System Recovery
-- **T1078.002** — Valid Accounts: Domain Accounts
 - **T1070.004** — Indicator Removal: File Deletion
-- **T1561.002** — Disk Wipe: Disk Structure Wipe
+- **T1561.001** — Disk Content Wipe
 
 ## Kill chain phases observed
 
@@ -37,131 +32,98 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] SQL Server mass DROP DATABASE / SET READ_ONLY by single account (Akhter-style insider wipe)
+### [LLM] Mass database/document file deletion burst by single user account
 
-`UC_0_0` · phase: **actions** · confidence: **High**
+`UC_5_0` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents values(Processes.dest) as dest from datamodel=Endpoint.Processes where Processes.process_name IN ("sqlcmd.exe","osql.exe","powershell.exe","pwsh.exe","SSMS.exe","Microsoft.SqlServer.Management.PowerShell.RunPowerShell.exe") (Processes.process="*DROP DATABASE*" OR Processes.process="*sp_detach_db*" OR Processes.process="*SET READ_ONLY*" OR Processes.process="*sp_cycle_errorlog*" OR Processes.process="*sp_delete_backuphistory*" OR Processes.process="*Remove-SqlDatabase*" OR Processes.process="*Invoke-Sqlcmd*DROP*DATABASE*") by Processes.user Processes.dest _time span=1h | `drop_dm_object_name(Processes)` | stats min(firstTime) as firstTime max(lastTime) as lastTime sum(count) as totalCmds dc(_time) as bucketsHit values(cmdlines) as cmdlines values(parents) as parents by user dest | where totalCmds>=3 | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | sort - totalCmds
+| tstats `summariesonly` count as file_count, dc(Filesystem.file_path) as distinct_files, values(Filesystem.file_name) as file_names, values(Filesystem.file_path) as file_paths, values(Filesystem.process_name) as processes, min(_time) as first_delete, max(_time) as last_delete from datamodel=Endpoint.Filesystem where Filesystem.action=deleted (Filesystem.file_name="*.mdf" OR Filesystem.file_name="*.ldf" OR Filesystem.file_name="*.ndf" OR Filesystem.file_name="*.bak" OR Filesystem.file_name="*.trn" OR Filesystem.file_name="*.mdb" OR Filesystem.file_name="*.accdb" OR Filesystem.file_name="*.sql" OR Filesystem.file_name="*.sqlite" OR Filesystem.file_name="*.db" OR Filesystem.file_name="*.dbf" OR Filesystem.file_name="*.bacpac" OR Filesystem.file_name="*.dacpac" OR Filesystem.file_name="*.dump") AND NOT (Filesystem.user="*$" OR Filesystem.user="SYSTEM" OR Filesystem.user="LOCAL SERVICE" OR Filesystem.user="NETWORK SERVICE") by Filesystem.dest, Filesystem.user, _time span=1h | `drop_dm_object_name(Filesystem)` | where distinct_files >= 25 | sort - distinct_files
 ```
 
 **Defender KQL:**
 ```kql
-// 3+ destructive SQL statements from one user on one host within a 1h window
-let window = 1h;
-let sql_clients = dynamic(["sqlcmd.exe","osql.exe","powershell.exe","pwsh.exe","ssms.exe","microsoft.sqlserver.management.powershell.runpowershell.exe"]);
-let destructive_tsql = dynamic(["DROP DATABASE","sp_detach_db","SET READ_ONLY","sp_cycle_errorlog","sp_delete_backuphistory","Remove-SqlDatabase"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ (sql_clients)
-| where ProcessCommandLine has_any (destructive_tsql)
-| extend Statement = case(
-    ProcessCommandLine has "DROP DATABASE", "DropDatabase",
-    ProcessCommandLine has "SET READ_ONLY", "WriteProtect",
-    ProcessCommandLine has "sp_detach_db", "DetachDatabase",
-    ProcessCommandLine has "sp_cycle_errorlog", "CycleErrorLog",
-    ProcessCommandLine has "sp_delete_backuphistory", "PurgeBackupHistory",
-    ProcessCommandLine has "Remove-SqlDatabase", "RemoveSqlDatabase",
-    "Other")
-| summarize Cmds = count(),
-            DistinctActions = dcount(Statement),
-            Actions = make_set(Statement),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            SampleCmd = any(ProcessCommandLine)
-        by DeviceName, AccountName, bin(Timestamp, window)
-| where Cmds >= 3 or DistinctActions >= 2     // any combo of write-protect + drop is high-fidelity
-| order by LastSeen desc
+DeviceFileEvents
+| where Timestamp > ago(24h)
+| where ActionType == "FileDeleted"
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessAccountName !in~ ("system","local service","network service")
+| where FileName endswith ".mdf" or FileName endswith ".ldf" or FileName endswith ".ndf"
+    or FileName endswith ".bak" or FileName endswith ".trn"
+    or FileName endswith ".mdb" or FileName endswith ".accdb"
+    or FileName endswith ".sql" or FileName endswith ".sqlite" or FileName endswith ".db"
+    or FileName endswith ".dbf" or FileName endswith ".bacpac" or FileName endswith ".dacpac"
+    or FileName endswith ".dump"
+| summarize FilesDeleted = count(),
+            DistinctFiles = dcount(strcat(FolderPath, FileName)),
+            FirstDelete = min(Timestamp),
+            LastDelete = max(Timestamp),
+            SampleFiles = make_set(FileName, 25),
+            Folders = make_set(FolderPath, 15),
+            Processes = make_set(InitiatingProcessFileName, 10)
+            by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1h)
+| where DistinctFiles >= 25     // 25 = empirical mass-deletion floor; the Akhter case wiped ~96 in several hours
+| order by DistinctFiles desc
 ```
 
-### [LLM] Windows Server 2012+ event/application log cleared by interactive user account post-destruction
+### [LLM] Windows event log / USN journal clearing on user endpoint (anti-forensics)
 
-`UC_0_1` · phase: **actions** · confidence: **High**
+`UC_5_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.user!="*$" Processes.user!="SYSTEM" Processes.user!="LOCAL SERVICE" Processes.user!="NETWORK SERVICE" ((Processes.process_name="wevtutil.exe" AND (Processes.process="*cl *" OR Processes.process="*clear-log*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Clear-EventLog*" OR Processes.process="*Remove-EventLog*" OR Processes.process="*Limit-EventLog*-RetentionDays 0*" OR Processes.process="*WevtUtil*cl *")) OR (Processes.process_name="fsutil.exe" AND Processes.process="*usn deletejournal*")) by Processes.dest Processes.user Processes.process Processes.parent_process_name _time | `drop_dm_object_name(Processes)` | append [search index=wineventlog (EventCode=1102 OR EventCode=104) | rename Computer as dest, SubjectUserName as user, Channel as process | eval cmdlines="EventLogCleared:".process | table _time dest user process cmdlines parent_process_name] | stats min(firstTime) as firstTime max(lastTime) as lastTime values(cmdlines) as evidence count by dest user | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | where count>=1 | sort - lastTime
+| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent, min(_time) as first_seen, max(_time) as last_seen from datamodel=Endpoint.Processes where (Processes.process_name="wevtutil.exe" AND (Processes.process="* cl *" OR Processes.process="* clear-log *" OR Processes.process="*/cl *")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Clear-EventLog*" OR Processes.process="*Remove-EventLog*" OR Processes.process="*wevtutil*cl *" OR Processes.process="*Limit-EventLog*-Retention*")) OR (Processes.process_name="fsutil.exe" AND Processes.process="*usn deletejournal*") OR (Processes.process_name="WMIC.exe" AND Processes.process="*NTEVENTLOG*Cleareventlog*") AND NOT (Processes.user="*$" OR Processes.user="SYSTEM") by Processes.dest, Processes.user, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - last_seen
 ```
 
 **Defender KQL:**
 ```kql
-// Defender XDR — process-based + DeviceEvents fallback for log-clear actions
-let window = 1h;
-let wipe_cmds = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where AccountName !endswith "$"
-    | where AccountName !in~ ("system","local service","network service")
-    | where (FileName =~ "wevtutil.exe" and (ProcessCommandLine has "cl " or ProcessCommandLine has "clear-log"))
-         or (FileName in~ ("powershell.exe","pwsh.exe")
-              and (ProcessCommandLine has "Clear-EventLog"
-                or ProcessCommandLine has "Remove-EventLog"
-                or ProcessCommandLine has "WevtUtil" and ProcessCommandLine has "cl "))
-         or (FileName =~ "fsutil.exe" and ProcessCommandLine has "usn" and ProcessCommandLine has "deletejournal")
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-              ParentImage = InitiatingProcessFileName,
-              IsRemote = IsInitiatingProcessRemoteSession;
-// Optional correlation: same user did file/DB deletes in prior 60 min on same host
-let destructive = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType == "FileDeleted"
-    | where InitiatingProcessAccountName !endswith "$"
-    | summarize DeletedFiles = count(),
-                FirstDelete = min(Timestamp),
-                LastDelete  = max(Timestamp)
-            by DeviceName, InitiatingProcessAccountName, bin(Timestamp, window)
-    | where DeletedFiles >= 25;     // bulk-delete threshold; tune per estate
-wipe_cmds
-| join kind=leftouter destructive on $left.DeviceName == $right.DeviceName, $left.AccountName == $right.InitiatingProcessAccountName
-| extend ProximateBulkDelete = iff(isnotempty(LastDelete) and Timestamp between (LastDelete .. LastDelete + window), true, false)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          ParentImage, IsRemote, ProximateBulkDelete, DeletedFiles
-| order by Timestamp desc
-```
-
-### [LLM] Company-issued endpoint OS-reinstall / mass wipe by interactive user before device return
-
-`UC_0_2` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.user!="*$" Processes.user!="SYSTEM" Processes.parent_process_name!="ccmexec.exe" Processes.parent_process_name!="IntuneManagementExtension.exe" ((Processes.process_name="sysprep.exe" AND Processes.process="*/generalize*") OR (Processes.process_name="systemreset.exe" AND (Processes.process="*-factoryreset*" OR Processes.process="*-cleanpc*")) OR (Processes.process_name="cipher.exe" AND Processes.process="*/w:*") OR (Processes.process_name="diskpart.exe" AND Processes.process="*clean*") OR (Processes.process_name="format.com" AND Processes.process="*/q*") OR (Processes.process_name="manage-bde.exe" AND (Processes.process="*-off*" OR Processes.process="*-forcerecovery*")) OR (Processes.process_name="dism.exe" AND Processes.process="*/Apply-Image*") OR (Processes.process_name="reagentc.exe" AND Processes.process="*/boottore*") OR (Processes.process_name="vssadmin.exe" AND Processes.process="*delete shadows*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name _time | `drop_dm_object_name(Processes)` | stats min(firstTime) as firstTime max(lastTime) as lastTime dc(process_name) as distinctTools values(process) as cmdlines values(parent_process_name) as parents sum(count) as count by dest user | where distinctTools>=2 OR count>=3 | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// Surfaces interactive endpoint-wipe tool clusters; pivot on (Device, Account)
-let window = 2h;
-let wipe_tools = dynamic(["sysprep.exe","systemreset.exe","cipher.exe","diskpart.exe","format.com","manage-bde.exe","dism.exe","reagentc.exe","vssadmin.exe"]);
-let known_mgmt_parents = dynamic(["ccmexec.exe","intunemanagementextension.exe","msiexec.exe","trustedinstaller.exe","taskhostw.exe"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
 | where AccountName !in~ ("system","local service","network service")
-| where InitiatingProcessFileName !in~ (known_mgmt_parents)
-| where FileName in~ (wipe_tools)
-| where (FileName =~ "sysprep.exe"     and ProcessCommandLine has "/generalize")
-     or (FileName =~ "systemreset.exe" and (ProcessCommandLine has "-factoryreset" or ProcessCommandLine has "-cleanpc"))
-     or (FileName =~ "cipher.exe"      and ProcessCommandLine has "/w:")
-     or (FileName =~ "diskpart.exe"    and ProcessCommandLine has "clean")
-     or (FileName =~ "format.com"      and ProcessCommandLine has "/q")
-     or (FileName =~ "manage-bde.exe"  and (ProcessCommandLine has "-off" or ProcessCommandLine has "-forcerecovery"))
-     or (FileName =~ "dism.exe"        and ProcessCommandLine has "/Apply-Image")
-     or (FileName =~ "reagentc.exe"    and ProcessCommandLine has "/boottore")
-     or (FileName =~ "vssadmin.exe"    and ProcessCommandLine has "delete shadows")
-| summarize Events = count(),
-            DistinctTools = dcount(FileName),
-            Tools = make_set(FileName),
-            Cmds  = make_set(ProcessCommandLine, 10),
-            FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp)
-        by DeviceName, AccountName, bin(Timestamp, window)
-| where DistinctTools >= 2 or Events >= 3   // tool-cluster heuristic — single sysprep is normal IT
-| order by LastSeen desc
+| where (FileName =~ "wevtutil.exe" and ProcessCommandLine has_any (" cl "," clear-log ","/cl "))
+    or (FileName in~ ("powershell.exe","pwsh.exe")
+        and ProcessCommandLine has_any ("Clear-EventLog","Remove-EventLog","wevtutil cl ","wevtutil clear-log","Limit-EventLog -Retention"))
+    or (FileName =~ "fsutil.exe" and ProcessCommandLine has "usn deletejournal")
+    or (FileName =~ "wmic.exe" and ProcessCommandLine has "NTEVENTLOG" and ProcessCommandLine has "Cleareventlog")
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          IsRemoteSession = InitiatingProcessTokenElevation
+| order by Timestamp desc
+```
+
+### [LLM] Pre-return endpoint wipe: cipher /w, sdelete, format, diskpart clean on a user laptop
+
+`UC_5_2` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent, min(_time) as first_seen, max(_time) as last_seen from datamodel=Endpoint.Processes where ((Processes.process_name="cipher.exe" AND Processes.process="*/w*") OR (Processes.process_name IN ("sdelete.exe","sdelete64.exe")) OR (Processes.process_name="format.com" AND (Processes.process="* /p:*" OR Processes.process="*/p:*")) OR (Processes.process_name="diskpart.exe" AND Processes.process="*clean*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Format-Volume*" OR Processes.process="*Clear-Disk*" OR Processes.process="*Initialize-Disk -PartitionStyle*")) OR (Processes.process_name="manage-bde.exe" AND Processes.process="*-forcerecovery*")) AND NOT (Processes.user="*$" OR Processes.user="SYSTEM") by Processes.dest, Processes.user, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - last_seen
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where AccountName !in~ ("system","local service","network service")
+| where (FileName =~ "cipher.exe" and ProcessCommandLine has "/w")
+    or (FileName in~ ("sdelete.exe","sdelete64.exe"))
+    or (FileName =~ "format.com" and ProcessCommandLine has_any (" /p:","/p:"))
+    or (FileName =~ "diskpart.exe" and ProcessCommandLine has "clean")
+    or (FileName in~ ("powershell.exe","pwsh.exe")
+        and ProcessCommandLine has_any ("Format-Volume","Clear-Disk","Initialize-Disk -PartitionStyle"))
+    or (FileName =~ "manage-bde.exe" and ProcessCommandLine has "-forcerecovery")
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine
+| order by Timestamp desc
 ```
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

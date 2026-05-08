@@ -1,0 +1,60 @@
+{
+  "name": "BlackCat",
+  "ucs": [
+    {
+      "title": "[LLM] BlackCat/ALPHV (Noberus) encryptor execution via Rust binary --access-token / --child / --propagated CLI flags",
+      "description": "Hunts the BlackCat/ALPHV Rust-based encryptor by its mandatory command-line flags. The binary refuses to run without `--access-token=<32-byte hex>` (acts as a license/mutex check unique to this RaaS family) and operators commonly chain it with `--child`, `--paths`, `--prop-file`, `--propagated`, `--no-prop-servers`, `--safeboot`, or `--drag-and-drop` \u2014 none of which appear in any legitimate Windows binary. CrowdStrike tracks this actor as SCATTERED SPIDER's preferred RaaS (also Noberus per Symantec/Mandiant).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1486",
+        "T1059.003",
+        "T1564.006",
+        "T1490"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where Processes.user!=\"*$\" AND (Processes.process=\"*--access-token=*\" OR (Processes.process=\"*--access-token *\" AND (Processes.process=\"*--child*\" OR Processes.process=\"*--paths*\" OR Processes.process=\"*--prop-file*\" OR Processes.process=\"*--propagated*\" OR Processes.process=\"*--no-prop-servers*\" OR Processes.process=\"*--safeboot*\" OR Processes.process=\"*--drag-and-drop*\"))) by host Processes.user Processes.process_name Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n// BlackCat/ALPHV Rust encryptor mandatory flag \u2014 32-byte hex access token unique to this family\n| where ProcessCommandLine has \"--access-token\"\n// Strengthen with any of the operator-chain flags the binary exposes\n| where ProcessCommandLine has_any (\n    \"--child\", \"--paths\", \"--prop-file\", \"--propagated\",\n    \"--no-prop-servers\", \"--no-prop\", \"--no-net\",\n    \"--no-vm-kill\", \"--safeboot\", \"--safeboot-instance\",\n    \"--drag-and-drop\", \"--extra-verbose\", \"--logs\"\n  )\n| extend AccessToken = extract(@\"--access-token[= ]([A-Fa-f0-9]{32,})\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,\n          ProcessCommandLine, AccessToken,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n// BlackCat/ALPHV Rust encryptor mandatory access-token argument\n| where CommandLine has \"--access-token\"\n| where CommandLine has_any (\n    \"--child\", \"--paths\", \"--prop-file\", \"--propagated\",\n    \"--no-prop-servers\", \"--no-prop\", \"--no-net\",\n    \"--no-vm-kill\", \"--safeboot\", \"--safeboot-instance\",\n    \"--drag-and-drop\", \"--extra-verbose\", \"--logs\"\n  )\n| extend AccessToken = extract(@\"--access-token[= ]([A-Fa-f0-9]{32,})\", 1, CommandLine)\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,\n          ParentProcessName, AccessToken, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: BlackCat/ALPHV Ransomware Encryptor CLI Flags\nid: 6c8a4d9e-3b41-4f2c-a6e7-8b9c1d2f3e4a\nstatus: experimental\ndescription: Detects execution of the BlackCat/ALPHV (Noberus) Rust-based ransomware encryptor identified by its mandatory --access-token flag combined with operator chain flags (--child, --paths, --propagated, --safeboot, etc.)\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2022/06/13/the-many-lives-of-blackcat-ransomware/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-353a\n  - https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/noberus-blackcat-alphv-rust-ransomware\nauthor: SOC Detection Engineering\ndate: 2026/05/08\ntags:\n  - attack.impact\n  - attack.t1486\n  - attack.t1564.006\n  - attack.t1490\n  - detection.threat_hunting\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_token:\n    CommandLine|contains: '--access-token'\n  selection_chain:\n    CommandLine|contains:\n      - '--child'\n      - '--paths'\n      - '--prop-file'\n      - '--propagated'\n      - '--no-prop-servers'\n      - '--no-prop'\n      - '--no-net'\n      - '--no-vm-kill'\n      - '--safeboot'\n      - '--safeboot-instance'\n      - '--drag-and-drop'\n      - '--extra-verbose'\n  condition: selection_token and selection_chain\nfalsepositives:\n  - Extremely low \u2014 these flag combinations are unique to the BlackCat Rust binary and do not appear in legitimate Windows tooling\nlevel: critical",
+      "rationale": "The `--access-token=<hex>` argument is BlackCat/ALPHV-specific \u2014 Microsoft, Symantec, and CISA AA23-353A all document it as a hard-coded mutex/license gate without which the Rust binary aborts. No mainstream legitimate software ships a `--access-token` + `--child` + `--paths` + `--propagated` flag combination. Unlike a generic ransomware UC keying on shadow-copy deletion (which BlackCat shares wit",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    },
+    {
+      "title": "[LLM] BlackCat/ALPHV safe-mode-with-networking pivot \u2014 bcdedit safeboot followed by service-create + forced reboot",
+      "description": "Hunts BlackCat's signature defense-evasion chain: operators reboot victims into Safe Mode with Networking (where most EDR/AV agents are inactive) using `bcdedit /set {current} safeboot network`, drop a persistence service or RunOnce entry to launch the encryptor on next boot, then force a reboot. Documented by Sophos, Trend Micro, and Microsoft in 2022-2024 ALPHV intrusions; the same pattern was reused in the Change Healthcare/Optum incident (Feb 2024). Distinguishes ALPHV from Conti/LockBit which rarely touch BCD safeboot.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1564.006",
+        "T1562.009",
+        "T1543.003",
+        "T1529"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as proc values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.user!=\"*$\" AND ((Processes.process_name=bcdedit.exe AND Processes.process=\"*safeboot*\" AND (Processes.process=\"*network*\" OR Processes.process=\"*minimal*\")) OR (Processes.process_name=shutdown.exe AND Processes.process=\"*/r*\") OR (Processes.process_name=reg.exe AND Processes.process=\"*SafeBoot*\") OR (Processes.process_name=sc.exe AND Processes.process=\"*safeboot*\")) by host Processes.user _time | `drop_dm_object_name(Processes)` | eventstats dc(proc) as distinct_proc_count by host | where distinct_proc_count >= 2 | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let LookbackDays = 7d;\nlet WindowMin = 30m;\nlet SafeBootCfg = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | where (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has \"safeboot\"\n              and ProcessCommandLine has_any (\"network\", \"minimal\", \"{current}\", \"{default}\"))\n         or (FileName =~ \"reg.exe\" and ProcessCommandLine has @\"\\SafeBoot\\Network\")\n         or (FileName =~ \"sc.exe\" and ProcessCommandLine has \"safeboot\")\n    | project ConfigTime = Timestamp, DeviceName, AccountName,\n              ConfigCmd = ProcessCommandLine,\n              ConfigParent = InitiatingProcessFileName;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where (FileName =~ \"shutdown.exe\" and ProcessCommandLine has_any (\"/r\", \"-r\"))\n     or (FileName =~ \"shutdown.exe\" and ProcessCommandLine has \"/f\")\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\") and ProcessCommandLine has_any (\"Restart-Computer\",\"shutdown /r\"))\n| join kind=inner SafeBootCfg on DeviceName\n| where Timestamp between (ConfigTime .. ConfigTime + WindowMin)\n| project ConfigTime, RebootTime = Timestamp, DeviceName, AccountName,\n          ConfigCmd, RebootCmd = ProcessCommandLine,\n          DelaySec = datetime_diff('second', Timestamp, ConfigTime),\n          ConfigParent\n| order by ConfigTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WindowMin = 30m;\nlet SafeBootCfg = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where Account !endswith \"$\"\n    | where (NewProcessName endswith \"\\\\bcdedit.exe\" and CommandLine has \"safeboot\"\n              and CommandLine has_any (\"network\", \"minimal\", \"{current}\", \"{default}\"))\n         or (NewProcessName endswith \"\\\\reg.exe\" and CommandLine has @\"\\SafeBoot\\Network\")\n         or (NewProcessName endswith \"\\\\sc.exe\" and CommandLine has \"safeboot\")\n    | project ConfigTime = TimeGenerated, Computer, Account,\n              ConfigCmd = CommandLine, ParentProcessName;\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where (NewProcessName endswith \"\\\\shutdown.exe\" and CommandLine has_any (\"/r\", \"-r\", \"/f\"))\n     or (NewProcessName endswith_any (\"\\\\powershell.exe\",\"\\\\pwsh.exe\") and CommandLine has_any (\"Restart-Computer\",\"shutdown /r\"))\n| join kind=inner SafeBootCfg on Computer\n| where TimeGenerated between (ConfigTime .. ConfigTime + WindowMin)\n| project ConfigTime, RebootTime = TimeGenerated, Computer, Account,\n          ConfigCmd, RebootCmd = CommandLine,\n          DelaySec = datetime_diff('second', TimeGenerated, ConfigTime)\n| order by ConfigTime desc",
+      "sigma_yaml": "",
+      "rationale": "BCD safe-boot manipulation is one of the few defense-evasion techniques BlackCat operators have institutionalised across affiliates \u2014 Microsoft's 'Many Lives of BlackCat' (June 2022) and Sophos X-Ops post-mortems on multiple ALPHV intrusions specifically call out the `bcdedit /set {current} safeboot network` \u2192 service create \u2192 reboot chain. Conti, LockBit 3.0, Royal, and BlackBasta either skip saf"
+    }
+  ]
+}

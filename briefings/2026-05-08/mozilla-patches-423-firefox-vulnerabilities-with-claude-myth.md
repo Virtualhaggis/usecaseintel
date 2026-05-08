@@ -10,12 +10,8 @@ Home Cyber Security News
 Mozilla Patches 423 Firefox Vulnerabilities with Claude Mythos and Other AI Models 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 Mozilla has fixed a total of 423 Firefox security bugs in April 2026 alone, a figure nearly 20 times higher than its monthly average of about 21 bugs throughout 2025, driven by a groundbreaking agentic AI pipeline built around Anthropic’s Claude Mythos Preview and other large language models.
-The surge was triggered by Mozilla’s early access to Claude …
+The surge was triggered by Mozilla’s early access to Claude Mythos P…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -209,7 +205,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mozilla Patches 423 Firefox Vulnerabilities with Claude Mythos and Other AI Mode
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_7_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

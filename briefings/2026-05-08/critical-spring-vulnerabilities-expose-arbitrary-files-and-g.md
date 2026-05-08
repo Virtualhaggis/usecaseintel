@@ -10,13 +10,9 @@ Home Cyber Security News
 Critical Spring Vulnerabilities Expose Arbitrary Files and GCP Secrets 
 By Abinaya 
 May 8, 2026 
-
-
-
-
 Spring Cloud Config provides crucial server-side and client-side support for externalized configuration in distributed systems.
 Recently, the Spring development team disclosed four security vulnerabilities impacting the Spring Cloud Config Server. 
-These flaws range from medium to critical severity, exposing environments to unauthorized arbitrary file access, cloud s…
+These flaws range from medium to critical severity, exposing environments to unauthorized arbitrary file access, cloud secrets l…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,8 +35,7 @@ These flaws range from medium to critical severity, exposing environments to una
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1083** — File and Directory Discovery
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1592.002** — Gather Victim Host Information: Software
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -48,69 +43,88 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Spring Cloud Config Server directory-traversal probe (CVE-2026-40982)
+### [LLM] Spring Cloud Config Server directory traversal exploitation (CVE-2026-40982)
 
-`UC_4_7` · phase: **exploit** · confidence: **High**
+`UC_10_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_method) as methods from datamodel=Web where (Web.uri_path="*..%2f*" OR Web.uri_path="*..%2F*" OR Web.uri_path="*..%5c*" OR Web.uri_path="*..%5C*" OR Web.uri_path="*%2e%2e*" OR Web.uri_path="*%2E%2E*" OR Web.uri_path="*..%252f*" OR Web.uri_path="*..%252F*" OR Web.uri_query="*..%2f*" OR Web.uri_query="*%2e%2e*" OR Web.url="*..%2f*" OR Web.url="*%2e%2e*") AND (Web.dest_port IN (8888,8761,8080,8443) OR Web.uri_path="*/master/*" OR Web.uri_path="*/default/*" OR Web.uri_path="*/encrypt*" OR Web.uri_path="*/decrypt*") by Web.src Web.dest Web.dest_port Web.uri_path | `drop_dm_object_name(Web)` | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | sort -count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.status) as statuses values(Web.src) as sources from datamodel=Web where (Web.url="*..%2f*" OR Web.url="*..%2F*" OR Web.url="*..%5c*" OR Web.url="*..%5C*" OR Web.url="*%2e%2e%2f*" OR Web.url="*%2e%2e/*" OR Web.url="*%252e%252e*" OR Web.url="*../../*") AND (Web.dest_port=8888 OR Web.url="*/encrypt*" OR Web.url="*/decrypt*" OR Web.url="*configserver*" OR Web.url="*.properties*" OR Web.url="*.yml*" OR Web.url="*.json*") by Web.dest Web.src Web.url Web.http_method Web.status
+| `drop_dm_object_name(Web)`
+| where status>=200 AND status<500
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-40982 — Defender XDR doesn't ingest inbound HTTP request URIs, so this is a coarse network proxy: hosts running java + Spring Cloud Config Server that receive bursty external inbound connections on the default config-server ports.
-let SpringConfig = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where (FileName has "java" or InitiatingProcessFileName has "java")
-      and (ProcessCommandLine has_any ("spring-cloud-config-server","ConfigServerApplication","org.springframework.cloud.config.server")
-           or InitiatingProcessCommandLine has_any ("spring-cloud-config-server","ConfigServerApplication","org.springframework.cloud.config.server"))
-    | distinct DeviceId, DeviceName;
+// CVE-2026-40982 — MDE has no inbound HTTP request telemetry. This is an exposure-and-pivot
+// hunt: surface Spring Cloud Config Server JVMs and the public IPs that hit them on the
+// default port. The actual path-traversal exploit-attempt detection lives in sentinel_kql
+// against W3CIISLog / CommonSecurityLog / AppServiceHTTPLogs.
+let Lookback = 7d;
+let SpringConfigHosts = DeviceProcessEvents
+    | where Timestamp > ago(Lookback)
+    | where FileName in~ ("java","java.exe")
+    | where ProcessCommandLine has_any (
+        "spring-cloud-config-server",
+        "spring.cloud.config.server",
+        "ConfigServerApplication",
+        "configserver.jar",
+        "spring.config.name=configserver")
+    | summarize JvmFirstSeen = min(Timestamp), JvmCmd = any(ProcessCommandLine)
+                by DeviceId, DeviceName;
 DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess")
-| where LocalPort in (8888, 8761, 8080, 8443)
-| where DeviceId in ((SpringConfig | project DeviceId))
+| where Timestamp > ago(Lookback)
+| where ActionType in ("InboundConnectionAccepted","ListeningConnectionCreated")
 | where RemoteIPType == "Public"
-| summarize Connections = count(),
-            DistinctSources = dcount(RemoteIP),
-            SampleIPs = make_set(RemoteIP, 25)
-            by DeviceName, LocalPort, bin(Timestamp, 15m)
-| where DistinctSources >= 5 or Connections > 100   // probe / scanner cadence
-| order by Timestamp desc
+| join kind=inner SpringConfigHosts on DeviceId
+| summarize InboundFromPublic = dcount(RemoteIP),
+            SamplePublicIPs = make_set(RemoteIP, 50),
+            ListenerPorts = make_set(LocalPort, 25),
+            FirstInbound = min(Timestamp),
+            LastInbound = max(Timestamp)
+            by DeviceName, JvmCmd
+| order by InboundFromPublic desc
 ```
 
-### [LLM] Spring Cloud Config Server externally exposed and unpatched (CVE-2026-40982 / -40981 / -41002 / -41004)
+### [LLM] Spring Cloud Config Server JVM spawns shell or recon utility (post-exploit)
 
-`UC_4_8` · phase: **recon** · confidence: **Medium**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as binaries values(Processes.user) as users from datamodel=Endpoint.Processes where (Processes.process_name="java.exe" OR Processes.process_name="java") AND (Processes.process="*spring-cloud-config-server*" OR Processes.process="*ConfigServerApplication*" OR Processes.process="*org.springframework.cloud.config.server*") by Processes.dest | `drop_dm_object_name(Processes)` | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | join type=left dest [| tstats summariesonly=t count as InboundConns dc(All_Traffic.src) as DistinctSrc values(All_Traffic.src) as src_ips from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8888,8761,8080) AND All_Traffic.action="allowed" by All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | rename dest as dest] | where InboundConns>0
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="java" OR Processes.parent_process_name="java.exe") AND (Processes.parent_process="*spring-cloud-config-server*" OR Processes.parent_process="*spring.cloud.config.server*" OR Processes.parent_process="*ConfigServerApplication*" OR Processes.parent_process="*configserver.jar*") AND (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","pwsh","python","python3","perl","curl","wget","nc","ncat","whoami","whoami.exe","id","hostname","hostname.exe","uname","cat","systeminfo.exe","tasklist.exe")) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// Asset hunt — hosts running affected Spring Cloud Config Server with public-internet inbound on default ports
-let SpringConfig = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName has "java" or InitiatingProcessFileName has "java"
-    | where ProcessCommandLine has_any ("spring-cloud-config-server","ConfigServerApplication","org.springframework.cloud.config.server")
-         or InitiatingProcessCommandLine has_any ("spring-cloud-config-server","ConfigServerApplication","org.springframework.cloud.config.server")
-    | summarize FirstSeen = min(Timestamp), SampleCmd = any(coalesce(ProcessCommandLine, InitiatingProcessCommandLine)) by DeviceId, DeviceName;
-let Listening = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("ListeningConnectionCreated","InboundConnectionAccepted","ConnectionSuccess")
-    | where LocalPort in (8888, 8761, 8080, 8443)
-    | summarize InboundConns = count(),
-                ExternalSources = dcountif(RemoteIP, RemoteIPType == "Public"),
-                SampleExternalIPs = make_setif(RemoteIP, RemoteIPType == "Public", 25)
-                by DeviceId, LocalPort;
-SpringConfig
-| join kind=inner Listening on DeviceId
-| extend Affected = "CVE-2026-40982 / -40981 / -41002 / -41004"
-| project FirstSeen, DeviceName, LocalPort, InboundConns, ExternalSources, SampleExternalIPs, SampleCmd, Affected
-| order by ExternalSources desc, InboundConns desc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java","java.exe")
+| where InitiatingProcessCommandLine has_any (
+    "spring-cloud-config-server",
+    "spring.cloud.config.server",
+    "ConfigServerApplication",
+    "configserver.jar",
+    "spring.config.name=configserver")
+| where FileName in~ (
+    "sh","bash","dash","zsh",
+    "cmd.exe","powershell.exe","pwsh.exe","pwsh",
+    "python","python3","perl","ruby",
+    "curl","wget","nc","ncat",
+    "whoami","whoami.exe","id","hostname","hostname.exe",
+    "uname","cat","type.exe",
+    "systeminfo.exe","tasklist.exe","net.exe","net1.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentJavaCmd = InitiatingProcessCommandLine,
+          ChildBin = FileName,
+          ChildCmd = ProcessCommandLine,
+          ChildSha256 = SHA256,
+          ParentPid = InitiatingProcessId,
+          ChildPid = ProcessId
+| order by Timestamp desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -322,7 +336,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Spring Vulnerabilities Expose Arbitrary Files and GCP Secrets
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_10_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -379,4 +393,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

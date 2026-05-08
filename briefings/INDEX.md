@@ -17,6 +17,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mozilla patches 423 firefox vulnerabilities with claude myth](./2026-05-08/mozilla-patches-423-firefox-vulnerabilities-with-claude-myth.md)
 - [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
+- [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
+- [new nwhstealer delivery chain uses bun loader anti vm checks](./2026-05-08/new-nwhstealer-delivery-chain-uses-bun-loader-anti-vm-checks.md)
+- [new pcpjack worm targets docker kubernetes redis and mongodb](./2026-05-08/new-pcpjack-worm-targets-docker-kubernetes-redis-and-mongodb.md)
+- [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
+- [trellix breach ransomhouse claims access to parts of source ](./2026-05-08/trellix-breach-ransomhouse-claims-access-to-parts-of-source-.md)
+- [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
@@ -29,7 +35,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
 - [fixing the password problem is as easy as 123456](./2026-05-07/fixing-the-password-problem-is-as-easy-as-123456.md)
-- [hackers using fake claude ai installer pages to trick users ](./2026-05-07/hackers-using-fake-claude-ai-installer-pages-to-trick-users-.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
 - [new cisco network vulnerability let remote attacker cause do](./2026-05-07/new-cisco-network-vulnerability-let-remote-attacker-cause-do.md)
@@ -42,11 +47,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
-- [scammers use short lived voip numbers and reuse windows to d](./2026-05-07/scammers-use-short-lived-voip-numbers-and-reuse-windows-to-d.md)
 - [the browser is breaking your dlp how data slips past modern ](./2026-05-07/the-browser-is-breaking-your-dlp-how-data-slips-past-modern-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
-- [uat 8302 uses custom malware and open source tools to steal ](./2026-05-07/uat-8302-uses-custom-malware-and-open-source-tools-to-steal-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [webinar why modern attacks require both security and recover](./2026-05-07/webinar-why-modern-attacks-require-both-security-and-recover.md)
@@ -56,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
-- [critical vm2 sandbox bug lets attackers execute code on host](./2026-05-06/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-host.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
@@ -136,8 +138,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 - [new wave of dprk attacks uses ai inserted npm malware fake f](./2026-04-29/new-wave-of-dprk-attacks-uses-ai-inserted-npm-malware-fake-f.md)
 - [sap related npm packages compromised in credential stealing ](./2026-04-29/sap-related-npm-packages-compromised-in-credential-stealing-.md)
-- [webinar how to automate exposure validation to match the spe](./2026-04-29/webinar-how-to-automate-exposure-validation-to-match-the-spe.md)
-- [what to look for in an exposure management platform and what](./2026-04-29/what-to-look-for-in-an-exposure-management-platform-and-what.md)
 
 ## 2026-04-28
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)

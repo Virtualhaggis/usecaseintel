@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 8, 2026
 03:45 AM
 0 
-
-
 A new Linux zero-day vulnerability, named Dirty Frag, allows local attackers to gain root privileges on most major Linux distributions with a single command.
-
-
-Security researcher Hyunwoo Kim, who disclosed the flaw earlier today and published a proof-of-concept (PoC) exploit, says this privilege escalation flaw was introduced roughly nine years ago in the Linux kernel's algif_aead cr…
+Security researcher Hyunwoo Kim, who disclosed the flaw earlier today and published a proof-of-concept (PoC) exploit, says this privilege escalation flaw was introduced roughly nine years ago in the Linux kernel's algif_aead cryptograp…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -25,10 +21,9 @@ Security researcher Hyunwoo Kim, who disclosed the flaw earlier today and publis
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1068** — Exploitation for Privilege Escalation
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1098.004** — Account Manipulation: SSH Authorized Keys
-- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
+- **T1068** — Exploitation for Privilege Escalation
+- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
 
 ## Kill chain phases observed
 
@@ -36,71 +31,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Dirty Frag Linux LPE — modprobe blacklist mitigation deployment tracking
+### [LLM] Tampering with Dirty Frag kernel module mitigation file (/etc/modprobe.d/dirtyfrag.conf)
 
-`UC_3_1` · phase: **install** · confidence: **High**
+`UC_9_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="rmmod" AND Processes.process="*esp4*" AND Processes.process="*esp6*" AND Processes.process="*rxrpc*" by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="/etc/modprobe.d/dirtyfrag.conf" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.action) as action values(Filesystem.process_id) as process_id values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path="/etc/modprobe.d/dirtyfrag.conf" Filesystem.action IN ("deleted","modified","renamed","overwritten") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","puppet","chef-client","ansible-playbook","salt-minion")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FolderPath has "/etc/modprobe.d/" and FileName =~ "dirtyfrag.conf"
-  | where ActionType in ("FileCreated","FileModified","FileRenamed")
-  | project Timestamp, DeviceName, Source="file:dirtyfrag.conf", FolderPath, FileName,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where FileName =~ "rmmod"
-  | where ProcessCommandLine has "esp4" and ProcessCommandLine has "esp6" and ProcessCommandLine has "rxrpc"
-  | project Timestamp, DeviceName, Source="proc:rmmod-esp-rxrpc", FolderPath, FileName,
-            InitiatingProcessFileName=InitiatingProcessFileName,
-            InitiatingProcessCommandLine=ProcessCommandLine,
-            InitiatingProcessAccountName=AccountName )
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has @"/etc/modprobe.d"
+| where FileName =~ "dirtyfrag.conf"
+| where ActionType in ("FileDeleted","FileModified","FileRenamed","FileCreated")
+| where InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","puppet","chef-client","ansible-playbook","salt-minion","unattended-upgrade")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### [LLM] Dirty Frag post-exploitation — non-root Linux process modifies /etc/shadow|/etc/passwd|/etc/sudoers
+### [LLM] Manual load of Dirty Frag vulnerable kernel modules (esp4/esp6/rxrpc) outside of init/IPsec/AFS
 
-`UC_3_2` · phase: **exploit** · confidence: **High**
+`UC_9_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/shadow" OR Filesystem.file_path="/etc/passwd" OR Filesystem.file_path="/etc/sudoers" OR Filesystem.file_path="/etc/sudoers.d/*" OR Filesystem.file_path="/root/.ssh/authorized_keys") AND Filesystem.action IN ("modified","created","write","renamed") AND Filesystem.user!="root" AND Filesystem.user!="0" AND Filesystem.user!="unknown" AND Filesystem.user!="" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("modprobe","insmod","kmod") (Processes.process="*esp4*" OR Processes.process="*esp6*" OR Processes.process="*rxrpc*") NOT Processes.parent_process_name IN ("systemd","systemd-modules-load","systemd-udevd","networkd-dispatcher","NetworkManager","charon","pluto","libreswan","strongswan","openafs","afsd","kmod") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let _linux_hosts = DeviceInfo
-    | where OSPlatform =~ "Linux"
-    | summarize arg_max(Timestamp, *) by DeviceId
-    | project DeviceId;
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where DeviceId in (_linux_hosts)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (FolderPath in ("/etc/shadow","/etc/passwd","/etc/sudoers"))
-     or (FolderPath startswith "/etc/sudoers.d/")
-     or (FolderPath endswith "/.ssh/authorized_keys" and FolderPath has "/root/")
-| where InitiatingProcessAccountName != "root"
-     and isnotempty(InitiatingProcessAccountName)
-     and InitiatingProcessAccountSid !in ("S-1-5-18","0")
-| where InitiatingProcessFileName !in~ ("passwd","chpasswd","useradd","usermod","userdel","groupadd","visudo","pwck","vipw","sudo")  // exclude legitimate setuid helpers that already enforce policy
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| where FileName in~ ("modprobe","insmod","kmod")
+| where ProcessCommandLine matches regex @"(?i)(^|[\s/])(esp4|esp6|rxrpc)([\s/.]|$)"
+| where InitiatingProcessFileName !in~ ("systemd","systemd-modules-load","systemd-udevd","networkd-dispatcher","NetworkManager","charon","pluto","libreswan","strongswan","openafs","afsd","kmod")
+| where AccountName != ""
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — New Linux 'Dirty Frag' zero-day gives root on all major distros
 
-`UC_3_0` · phase: **install** · confidence: **High**
+`UC_9_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,4 +113,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
