@@ -10,13 +10,9 @@ Home Cyber Security News
 New Infostealer Campaign Uses GitHub Releases for Payload Hosting and Evasion 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A newly discovered cyberespionage campaign is using a deceptively simple tactic to slip past security defenses: disguising malware as a humanitarian aid request while hiding the real payload on GitHub. 
 Researchers have named this operation “HumanitarianBait,” and it is far more capable than its plain-looking lure suggests.
-The campaign starts with…
+The campaign starts with a phish…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -47,16 +43,16 @@ The campaign starts with…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
-- **T1567** — Exfiltration Over Web Service
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1564.003** — Hide Artifacts: Hidden Window
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
+- **T1102** — Web Service
+- **T1105** — Ingress Tool Transfer
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
+- **T1140** — Deobfuscate/Decode Files or Information
 
 ## Kill chain phases observed
 
@@ -64,109 +60,87 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] HumanitarianBait payload pull from github.com/leravalera2/dtfls Releases
+### [LLM] HumanitarianBait C2 beacon to 159.198.41.140 / GitHub Releases payload pull from leravalera2/dtfls
 
-`UC_1_13` · phase: **delivery** · confidence: **High**
+`UC_6_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web where (Web.url="*github.com/leravalera2/dtfls*" OR Web.url="*leravalera2/dtfls/releases/download*") by Web.src Web.user Web.url
-| `drop_dm_object_name(Web)`
-| append [
-  | tstats summariesonly=true count values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_name="data.zip" by Filesystem.dest Filesystem.user
-  | `drop_dm_object_name(Filesystem)`
-]
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="159.198.41.140" OR All_Traffic.dest_ip="159.198.41.140") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="data.zip" (Filesystem.file_path="*leravalera2*" OR Filesystem.url="*leravalera2/dtfls*" OR Filesystem.file_hash IN ("a5b782901829861a6f458db404e8ec1a99c65a48393525e681742bb2a5db454d","9be61c95056fd6b63565cf51a196f2615f5360c0a42e616b2a618473e9d60a21","8a100cbdf79231e70cee2364ebd9a4433fda6b4de4929d705f26f7b68d6aeb79")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let Lookback = 30d;
-let RepoPath = "leravalera2/dtfls";
+let _campaignIps = dynamic(["159.198.41.140"]);
+let _campaignHashes = dynamic(["8a100cbdf79231e70cee2364ebd9a4433fda6b4de4929d705f26f7b68d6aeb79","9be61c95056fd6b63565cf51a196f2615f5360c0a42e616b2a618473e9d60a21","a5b782901829861a6f458db404e8ec1a99c65a48393525e681742bb2a5db454d"]);
 union isfuzzy=true
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(Lookback)
-    | where RemoteUrl has RepoPath or RemoteUrl has "leravalera2/dtfls/releases/download"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, EvidenceType="NetworkConnection" ),
-  ( DeviceFileEvents
-    | where Timestamp > ago(Lookback)
-    | where FileOriginUrl has RepoPath or (FileName =~ "data.zip" and FileOriginUrl has "github.com")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=FileOriginUrl, RemoteIP=FileOriginIP, EvidenceType="FileDownload", FileName, FolderPath, SHA256 )
+( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (_campaignIps) or RemoteUrl has "leravalera2/dtfls" or RemoteUrl has "159.198.41.140"
+    | project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              Evidence = strcat("NET:", iif(RemoteIP in (_campaignIps), "C2-IP", "GitHubReleasesPull")) ),
+( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where (FileOriginUrl has "leravalera2/dtfls" or FileOriginUrl has "159.198.41.140")
+        or SHA256 in (_campaignHashes)
+    | project Timestamp, DeviceName, DeviceId, FileName, FolderPath, FileOriginUrl, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              Evidence = "FILE:CampaignArtifactDrop" )
 | order by Timestamp desc
 ```
 
-### [LLM] WindowsHelper Python persistence directory bootstrapped in %APPDATA%
+### [LLM] HumanitarianBait persistence: pythonw.exe / VBScript launcher executing from %APPDATA%\WindowsHelper
 
-`UC_1_14` · phase: **install** · confidence: **High**
+`UC_6_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\AppData\\Roaming\\WindowsHelper\\*" OR Filesystem.file_path="*\\AppData\\Local\\WindowsHelper\\*") AND Filesystem.file_name IN ("module.pyw","run.vbs","launch_module.vbs","pythonw.exe","python.exe") by Filesystem.dest Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| where mvcount(files) >= 2
-| append [
-  | tstats summariesonly=true count values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process="*\\AppData\\*\\WindowsHelper\\pythonw.exe*" OR Processes.process="*\\WindowsHelper\\module.pyw*" OR Processes.process="*\\WindowsHelper\\run.vbs*" OR Processes.process="*\\WindowsHelper\\launch_module.vbs*") by Processes.dest Processes.user Processes.process_name
-  | `drop_dm_object_name(Processes)`
-]
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_path="*\\AppData\\*\\WindowsHelper\\*" OR Processes.process="*\\WindowsHelper\\*" OR Processes.process="*module.pyw*") (Processes.process_name IN ("pythonw.exe","python.exe","wscript.exe","cscript.exe","schtasks.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let Lookback = 30d;
-let TargetFiles = dynamic(["module.pyw","run.vbs","launch_module.vbs","pythonw.exe","python.exe"]);
-let FileBootstrap = DeviceFileEvents
-    | where Timestamp > ago(Lookback)
-    | where ActionType in ("FileCreated","FileRenamed","FileModified")
-    | where FolderPath has @"\AppData\" and FolderPath has @"\WindowsHelper\"
-    | where FileName in~ (TargetFiles)
-    | summarize FilesDropped = make_set(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Droppers = make_set(InitiatingProcessFileName), DropperCmds = make_set(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, FolderPath
-    | where array_length(FilesDropped) >= 2;
-let ExecFromHere = DeviceProcessEvents
-    | where Timestamp > ago(Lookback)
-    | where (FolderPath has @"\AppData\" and FolderPath has @"\WindowsHelper\")
-         or ProcessCommandLine has_any (@"\WindowsHelper\module.pyw", @"\WindowsHelper\run.vbs", @"\WindowsHelper\launch_module.vbs")
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
-FileBootstrap
-| join kind=leftouter (ExecFromHere | summarize ExecCount = count(), Cmds = make_set(ProcessCommandLine) by DeviceName) on DeviceName
-| order by FirstSeen desc
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (FolderPath has @"\AppData\" and FolderPath has @"\WindowsHelper\")
+    or ProcessCommandLine has @"\WindowsHelper\"
+    or ProcessCommandLine has "module.pyw"
+    or InitiatingProcessFolderPath has @"\WindowsHelper\"
+| where FileName in~ ("pythonw.exe","python.exe","wscript.exe","cscript.exe","schtasks.exe","powershell.exe")
+| project Timestamp, DeviceName, AccountName,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine, ChildSHA256 = SHA256,
+          ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine,
+          GrandparentFile = InitiatingProcessParentFileName
+| order by Timestamp desc
 ```
 
-### [LLM] HumanitarianBait C2 callback to 159.198.41.140 (incl. survey/lnk_uploads URIs)
+### [LLM] HumanitarianBait LNK staged-payload extraction: PowerShell spawned by explorer reading bytes from the .lnk lure
 
-`UC_1_15` · phase: **c2** · confidence: **High**
+`UC_6_15` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="159.198.41.140" by All_Traffic.src All_Traffic.dest_ip
-| `drop_dm_object_name(All_Traffic)`
-| append [
-  | tstats summariesonly=true count values(Web.url) as urls values(Web.user) as user values(Web.http_user_agent) as ua from datamodel=Web where (Web.url="*159.198.41.140*" OR Web.url="*static/builder/lnk_uploads*" OR Web.url="*test/index.php?r=survey/index*") by Web.src Web.dest
-  | `drop_dm_object_name(Web)`
-]
-| append [
-  | tstats summariesonly=true count values(Processes.process) as cmds values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name IN ("pythonw.exe","python.exe","wscript.exe","cscript.exe") AND (Processes.process="*\\WindowsHelper\\*" OR Processes.process="*module.pyw*") by Processes.dest Processes.user Processes.process_name
-  | `drop_dm_object_name(Processes)`
-]
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.process="*.lnk*" (Processes.process="*Get-Content*" OR Processes.process="*ReadAllBytes*" OR Processes.process="*FileStream*" OR Processes.process="*Substring*" OR Processes.process="*FromBase64String*" OR Processes.process="*IEX*" OR Processes.process="*Invoke-Expression*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let Lookback = 30d;
-let C2IP = "159.198.41.140";
-let UriMarkers = dynamic(["/static/builder/lnk_uploads/","/test/index.php?r=survey/index","sid=936926"]);
-union isfuzzy=true
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(Lookback)
-    | where RemoteIP == C2IP
-         or RemoteUrl has C2IP
-         or RemoteUrl has_any (UriMarkers)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, EvidenceType="NetworkConnection" ),
-  ( DeviceFileEvents
-    | where Timestamp > ago(Lookback)
-    | where FileOriginIP == C2IP or FileOriginUrl has C2IP or FileOriginUrl has_any (UriMarkers)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP=FileOriginIP, RemoteUrl=FileOriginUrl, FileName, FolderPath, EvidenceType="FileOriginatedFromC2" )
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where InitiatingProcessFileName in~ ("explorer.exe","cmd.exe")
+| where ProcessCommandLine has ".lnk"
+| where ProcessCommandLine has_any ("Get-Content","ReadAllBytes","[System.IO.File]","FileStream","Substring","FromBase64String","IEX ","Invoke-Expression","::Read")
+| extend B64Match = extract(@"(?i)FromBase64String\(\s*['""]([A-Za-z0-9+/=]{40,})['""]", 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          B64Match, SHA256
 | order by Timestamp desc
 ```
 

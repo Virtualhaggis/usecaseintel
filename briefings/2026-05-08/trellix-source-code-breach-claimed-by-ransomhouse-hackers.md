@@ -11,12 +11,8 @@ By Bill Toulas
 May 8, 2026
 09:23 AM
 0 
-
-
 The attack on the Trellix source code repository disclosed last week has been claimed by the RansomHouse threat group, which leaked a small set of images as proof of the intrusion.
-
-
-Yesterday, the threat actor published on their data leak site screenshots indicating access to the cybersecurity company's appliance management system. However, BleepingComputer could not confirm the authenticity…
+Yesterday, the threat actor published on their data leak site screenshots indicating access to the cybersecurity company's appliance management system. However, BleepingComputer could not confirm the authenticity of the …
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NWHStealer / Bun Loader C2 domain & file-hash sweep
 
-`UC_10_10` · phase: **c2** · confidence: **High**
+`UC_15_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union isfuzzy=true
 
 ### [LLM] Bun Loader Installer.exe spawns sysreq.js-style WMI/CIM anti-VM probing
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_15_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### [LLM] NWHStealer fallback loader: dw.exe executed from extracted ZIP \DW\ folder
 
-`UC_10_12` · phase: **delivery** · confidence: **High**
+`UC_15_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -449,7 +449,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New NWHStealer Delivery Chain Uses Bun Loader, Anti-VM Checks, and Encrypted C2
 
-`UC_10_9` · phase: **exploit** · confidence: **High**
+`UC_15_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

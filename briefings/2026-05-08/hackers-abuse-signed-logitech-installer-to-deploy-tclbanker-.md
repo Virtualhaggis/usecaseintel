@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse Signed Logitech Installer to Deploy TCLBANKER Banking Trojan 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
 A new banking trojan known as TCLBANKER has been quietly making rounds, and its delivery method is as clever as it is concerning. Attackers are using a trojanized version of a legitimate, digitally signed installer to slip malware onto victims’ machines without raising immediate suspicion. 
-The campaign, tracked as REF3076, bundles a malicious MSI ins…
+The campaign, tracked as REF3076, bundles a malicious MSI installer i…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -51,10 +47,9 @@ The campaign, tracked as REF3076, bundles a malicious MSI ins…
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1218.007** — System Binary Proxy Execution: Msiexec
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090.002** — Proxy: External Proxy
+- **T1102** — Web Service
 - **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
@@ -63,101 +58,71 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TCLBANKER (REF3076) screen_retriever_plugin.dll DLL sideload by Logi AI Prompt Builder
+### [LLM] TCLBANKER DLL sideload via signed Logi AI Prompt Builder (screen_retriever_plugin.dll)
 
-`UC_2_10` · phase: **install** · confidence: **High**
+`UC_7_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_name="screen_retriever_plugin.dll" OR Filesystem.file_hash IN ("701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626","8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059","668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40")) by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,"(?i)\\\\Program Files( \(x86\))?\\\\Logi AI Prompt Builder\\\\") OR file_hash IN ("701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626","8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059","668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.dest) as dest values(Filesystem.user) as user values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="screen_retriever_plugin.dll" OR Filesystem.file_hash IN ("701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626","8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059","668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40")) by Filesystem.dest Filesystem.file_hash Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// TCLBANKER REF3076 — screen_retriever_plugin.dll sideload
-let TCLBankerHashes = dynamic([
-    "701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626",
-    "8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059",
-    "668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40"]);
-union isfuzzy=true
-    ( DeviceImageLoadEvents
-        | where Timestamp > ago(7d)
-        | where FileName =~ "screen_retriever_plugin.dll" or SHA256 in (TCLBankerHashes)
-        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-                  EventKind="ImageLoad",
-                  LoadedDll=FolderPath, LoadedSha256=SHA256,
-                  LoadingProcess=InitiatingProcessFileName,
-                  LoadingProcessPath=InitiatingProcessFolderPath,
-                  LoadingProcessCmd=InitiatingProcessCommandLine,
-                  LoadingProcessSigner=InitiatingProcessVersionInfoCompanyName ),
-    ( DeviceFileEvents
-        | where Timestamp > ago(7d)
-        | where ActionType in ("FileCreated","FileRenamed","FileModified")
-        | where FileName =~ "screen_retriever_plugin.dll" or SHA256 in (TCLBankerHashes)
-        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-                  EventKind="FileWrite",
-                  LoadedDll=FolderPath, LoadedSha256=SHA256,
-                  LoadingProcess=InitiatingProcessFileName,
-                  LoadingProcessPath=InitiatingProcessFolderPath,
-                  LoadingProcessCmd=InitiatingProcessCommandLine,
-                  LoadingProcessSigner=InitiatingProcessVersionInfoCompanyName )
+let TclBankerHashes = dynamic(["701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626","8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059","668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40"]);
+let KnownLoadFileName = "screen_retriever_plugin.dll";
+let ImageLoadHits =
+    DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (TclBankerHashes) or FileName =~ KnownLoadFileName
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              EventKind="ImageLoad", FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256;
+let FileCreateHits =
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where SHA256 in (TclBankerHashes) or FileName =~ KnownLoadFileName
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              EventKind="FileCreate", FileName, FolderPath, SHA256,
+              InitiatingProcessFileName,
+              InitiatingProcessFolderPath=InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256;
+union ImageLoadHits, FileCreateHits
 | order by Timestamp desc
 ```
 
-### [LLM] TCLBANKER REF3076 C2 / phishing infrastructure egress (Cloudflare Workers + mxtestacionamentos)
+### [LLM] TCLBANKER C2 / phishing infrastructure egress (ef971a42.workers.dev + REF3076 domains)
 
-`UC_2_11` · phase: **c2** · confidence: **High**
+`UC_7_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="campanha1-api.ef971a42.workers.dev" OR All_Traffic.dest="documents.ef971a42.workers.dev" OR All_Traffic.dest="mxtestacionamentos.com" OR All_Traffic.dest="arquivos-omie.com" OR All_Traffic.dest="documentos-online.com" OR All_Traffic.dest="afonsoferragista.com" OR All_Traffic.dest="doccompartilhe.com" OR All_Traffic.dest="recebamais.com" OR All_Traffic.url IN ("*ef971a42.workers.dev*","*mxtestacionamentos.com*","*arquivos-omie.com*","*documentos-online.com*","*afonsoferragista.com*","*doccompartilhe.com*","*recebamais.com*")) by All_Traffic.src All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.url) as url values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.url="*ef971a42.workers.dev*" OR All_Traffic.url="*mxtestacionamentos.com*" OR All_Traffic.url="*arquivos-omie.com*" OR All_Traffic.url="*documentos-online.com*" OR All_Traffic.url="*afonsoferragista.com*" OR All_Traffic.url="*doccompartilhe.com*" OR All_Traffic.url="*recebamais.com*" OR All_Traffic.dest="*ef971a42.workers.dev" OR All_Traffic.dest="mxtestacionamentos.com" OR All_Traffic.dest="arquivos-omie.com" OR All_Traffic.dest="documentos-online.com" OR All_Traffic.dest="afonsoferragista.com" OR All_Traffic.dest="doccompartilhe.com" OR All_Traffic.dest="recebamais.com") by All_Traffic.src All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// TCLBANKER REF3076 — egress to known C2 / phishing infrastructure
-let TCLBankerDomains = dynamic([
-    "campanha1-api.ef971a42.workers.dev",
-    "documents.ef971a42.workers.dev",
-    "mxtestacionamentos.com",
-    "arquivos-omie.com",
-    "documentos-online.com",
-    "afonsoferragista.com",
-    "doccompartilhe.com",
-    "recebamais.com"]);
-let TCLBankerSubstrings = dynamic([
-    "ef971a42.workers.dev",
-    "mxtestacionamentos.com",
-    "arquivos-omie.com",
-    "documentos-online.com",
-    "afonsoferragista.com",
-    "doccompartilhe.com",
-    "recebamais.com"]);
-union isfuzzy=true
-    ( DeviceNetworkEvents
-        | where Timestamp > ago(14d)
-        | where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected","ConnectionFound")
-        | where tolower(RemoteUrl) in (TCLBankerDomains)
-            or RemoteUrl has_any (TCLBankerSubstrings)
-        | project Timestamp, DeviceName,
-                  AccountName=InitiatingProcessAccountName,
-                  Process=InitiatingProcessFileName,
-                  ProcessPath=InitiatingProcessFolderPath,
-                  ProcessCmd=InitiatingProcessCommandLine,
-                  ProcessSha256=InitiatingProcessSHA256,
-                  RemoteUrl, RemoteIP, RemotePort, ActionType ),
-    ( DeviceEvents
-        | where Timestamp > ago(14d)
-        | where ActionType == "DnsQueryResponse"
-        | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
-        | where Q in (TCLBankerDomains) or Q has_any (TCLBankerSubstrings)
-        | project Timestamp, DeviceName,
-                  AccountName=InitiatingProcessAccountName,
-                  Process=InitiatingProcessFileName,
-                  ProcessPath=InitiatingProcessFolderPath,
-                  ProcessCmd=InitiatingProcessCommandLine,
-                  ProcessSha256=InitiatingProcessSHA256,
-                  RemoteUrl=Q, RemoteIP="", RemotePort=int(0), ActionType="DnsQuery" )
+let TclBankerDomains = dynamic(["campanha1-api.ef971a42.workers.dev","documents.ef971a42.workers.dev","mxtestacionamentos.com","arquivos-omie.com","documentos-online.com","afonsoferragista.com","doccompartilhe.com","recebamais.com"]);
+let WorkersTenantSuffix = "ef971a42.workers.dev";
+let NetHits =
+    DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where (isnotempty(RemoteUrl) and (RemoteUrl has_any (TclBankerDomains) or RemoteUrl endswith WorkersTenantSuffix))
+    | project Timestamp, Source="Network", DeviceName, AccountName=InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RemoteIP, RemotePort, RemoteUrl;
+let DnsHits =
+    DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where QueryName has_any (TclBankerDomains) or QueryName endswith WorkersTenantSuffix
+    | project Timestamp, Source="DNS", DeviceName, AccountName=InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RemoteIP="", RemotePort=int(null), RemoteUrl=QueryName;
+union NetHits, DnsHits
 | order by Timestamp desc
 ```
 
@@ -431,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse Signed Logitech Installer to Deploy TCLBANKER Banking Trojan
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_7_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,4 +456,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

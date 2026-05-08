@@ -10,12 +10,9 @@ Home Cyber Security News
 DarkMoon AI-Powered Autonomous Penetration Testing Platform With 50+ Tools 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 A new open-source cybersecurity platform called DarkMoon has emerged as a significant advancement in autonomous penetration testing .
-It provides security teams and DevSecOps professionals with a fully AI-powered vulnerability assessment system. DarkMoon integrates over 50 specialized offensive security tools, all managed through a controlled execution interfa…
+It provides security teams and DevSecOps professionals with a fully AI-powered vulnerability assessment system. DarkMoon integrates over 50 specialized offensive security tools, all managed through a controlled execution interface.
+Dark…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -36,12 +33,10 @@ It provides security teams and DevSecOps professionals with a fully AI-powered v
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1588.002** — Obtain Capabilities: Tool
-- **T1105** — Ingress Tool Transfer
-- **T1583.003** — Acquire Infrastructure: Virtual Private Server
+- **T1608.001** — Stage Capabilities: Upload Malware
 - **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1046** — Network Service Discovery
-- **T1190** — Exploit Public-Facing Application
-- **T1610** — Deploy Container
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1106** — Native API
 
 ## Kill chain phases observed
 
@@ -49,89 +44,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DarkMoon AI pentest platform repo clone or download
+### [LLM] DarkMoon autonomous pentest framework — repository acquisition (ASCIT31/Dark-Moon clone or download)
 
-`UC_4_7` · phase: **weapon** · confidence: **High**
+`UC_9_7` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*ASCIT31/Dark-Moon*" OR Processes.process="*ASCIT31\\Dark-Moon*" OR Processes.process="*github.com/ASCIT31*" OR Processes.process="*Dark-Moon.git*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*ASCIT31*" AND Processes.process="*Dark*" AND Processes.process="*Moon*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| where match(process, "(?i)ASCIT31[/\\\\]Dark[-_]Moon")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-union
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has_any ("ASCIT31/Dark-Moon", "ASCIT31\\Dark-Moon", "github.com/ASCIT31")
-    | extend Source = "Process"
-    | project Timestamp, DeviceName, AccountName, Source,
-              FileName, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine ),
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any ("ASCIT31/Dark-Moon", "ASCIT31/dark-moon", "raw.githubusercontent.com/ASCIT31")
-    | extend Source = "Network", AccountName = InitiatingProcessAccountName,
-             FileName = InitiatingProcessFileName,
-             ProcessCommandLine = InitiatingProcessCommandLine,
-             InitiatingProcessFileName = InitiatingProcessParentFileName,
-             InitiatingProcessCommandLine = ""
-    | project Timestamp, DeviceName, AccountName, Source,
-              FileName, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteUrl, RemoteIP )
-| order by Timestamp desc
-```
-
-### [LLM] DarkMoon multi-agent offensive toolchain co-execution on a single host
-
-`UC_4_8` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count values(Processes.process_name) as Tools values(Processes.process) as CmdLines min(_time) as firstTime max(_time) as lastTime dc(Processes.process_name) as DistinctTools from datamodel=Endpoint.Processes where (Processes.process_name IN ("naabu","naabu.exe","masscan","masscan.exe","nuclei","nuclei.exe","subfinder","subfinder.exe","katana","katana.exe","httpx","httpx.exe","ffuf","ffuf.exe","wpscan","wpscan.exe","cmseek","cmseek.py","netexec","nxc","bloodhound-python","bloodhound.py","kubescape","kubeletctl","arjun","wafw00f","waybackurls")) by Processes.dest Processes.parent_process_name _time span=1h | `drop_dm_object_name(Processes)` | where DistinctTools >= 4 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - DistinctTools
-```
-
-**Defender KQL:**
-```kql
-let DarkMoonTools = dynamic(["naabu.exe","naabu","masscan.exe","masscan","nuclei.exe","nuclei","subfinder.exe","subfinder","katana.exe","katana","httpx.exe","httpx","ffuf.exe","ffuf","wpscan","cmseek.py","cmseek","netexec","nxc","bloodhound-python","bloodhound.py","kubescape","kubeletctl","arjun","wafw00f","waybackurls","sqlmap","sqlmap.py"]);
-let WindowMin = 60;
+// DarkMoon repo acquisition — github.com/ASCIT31/Dark-Moon
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| extend ToolHit = tolower(FileName)
-| extend CmdToolHit = case(
-    ProcessCommandLine has "naabu", "naabu",
-    ProcessCommandLine has "masscan", "masscan",
-    ProcessCommandLine has "nuclei ", "nuclei",
-    ProcessCommandLine has "subfinder", "subfinder",
-    ProcessCommandLine has "katana", "katana",
-    ProcessCommandLine has "httpx", "httpx",
-    ProcessCommandLine has "ffuf", "ffuf",
-    ProcessCommandLine has "wpscan", "wpscan",
-    ProcessCommandLine has "cmseek", "cmseek",
-    ProcessCommandLine has "netexec", "netexec",
-    ProcessCommandLine has "bloodhound", "bloodhound",
-    ProcessCommandLine has "kubescape", "kubescape",
-    ProcessCommandLine has "kubeletctl", "kubeletctl",
-    ProcessCommandLine has "sqlmap", "sqlmap",
-    ProcessCommandLine has "arjun ", "arjun",
-    ProcessCommandLine has "wafw00f", "wafw00f",
-    ProcessCommandLine has "waybackurls", "waybackurls",
-    "")
-| where ToolHit in (DarkMoonTools) or isnotempty(CmdToolHit)
-| extend Tool = iif(isnotempty(CmdToolHit), CmdToolHit, ToolHit)
-| summarize
-    DistinctTools = dcount(Tool),
-    Tools = make_set(Tool, 50),
-    SampleParents = make_set(InitiatingProcessFileName, 10),
-    SampleCmds = make_set(ProcessCommandLine, 10),
-    FirstSeen = min(Timestamp),
-    LastSeen = max(Timestamp),
-    Hits = count()
-    by DeviceName, AccountName, bin(Timestamp, WindowMin * 1m)
-| where DistinctTools >= 4
-| order by DistinctTools desc, LastSeen desc
+// `has "Dark-Moon"` cannot work — non-alphanumerics split terms.
+// Use has_all on the three indexed tokens, then narrow with contains.
+| where ProcessCommandLine has_all ("ASCIT31", "Dark", "Moon")
+| where ProcessCommandLine matches regex @"(?i)ASCIT31[/\\]Dark[-_]Moon"
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] DarkMoon scanner CLI invocation (darkmoon.sh with TARGET: directive)
+
+`UC_9_8` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*darkmoon.sh*" OR Processes.process="*darkmoon*TARGET:*" OR Processes.process="*FORMAT=h1*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, "(?i)darkmoon") AND (match(process, "(?i)TARGET\s*:") OR match(process, "(?i)FORMAT\s*=\s*h1"))
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+// DarkMoon CLI launch — ./darkmoon.sh "TARGET: <host>" [FOCUS=...] [FORMAT=h1] ...
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+// `darkmoon.sh` tokenises as ['darkmoon','sh']; match the indexed token
+| where ProcessCommandLine has "darkmoon"
+| where ProcessCommandLine has "TARGET"
+     or ProcessCommandLine has "FORMAT"
+     or ProcessCommandLine has "PROGRAM"
+// require at least one DarkMoon-specific signal beyond the binary name
+| where ProcessCommandLine matches regex @"(?i)(darkmoon\.sh|TARGET\s*:|FORMAT\s*=\s*h1|FOCUS\s*=|SEVERITY\s*=|PROGRAM\s*=)"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          IsRemoteSession = InitiatingProcessTokenElevation
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -372,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DarkMoon AI-Powered Autonomous Penetration Testing Platform With 50+ Tools
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_9_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,4 +397,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

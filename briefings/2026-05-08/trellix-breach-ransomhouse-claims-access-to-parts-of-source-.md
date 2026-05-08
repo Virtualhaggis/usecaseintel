@@ -27,12 +27,102 @@ Trellix reported a data breach involving unauthorized access to a portion of its
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Unix Shell
+- **T1082** — System Information Discovery
+- **T1562.004** — Disable or Modify System Firewall
+- **T1489** — Service Stop
+- **T1490** — Inhibit System Recovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] RansomHouse MrAgent ESXi reconnaissance — esxcli formatter=csv + uname + firewall disable
+
+`UC_10_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*esxcli*--formatter=csv*network*nic*list*" OR Processes.process="*esxcli*network firewall set*--enabled*false*" OR Processes.process="*esxcli*network firewall unload*" OR Processes.process="uname -a" OR Processes.process="*/etc/init.d/firewall*stop*") by Processes.dest Processes.user Processes.process _time span=10m | `drop_dm_object_name(Processes)` | stats dc(process) as UniqueCmds values(process) as Commands min(_time) as firstTime by dest user _time | where UniqueCmds >= 2 | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+// MrAgent ESXi staging — esxcli + uname + firewall disable observed within 10m on same host
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where (ProcessCommandLine has "esxcli" and ProcessCommandLine has "--formatter=csv" and ProcessCommandLine has "network nic list")
+     or (ProcessCommandLine has "esxcli" and ProcessCommandLine has "network firewall" and ProcessCommandLine has "--enabled" and ProcessCommandLine has "false")
+     or (ProcessCommandLine has "esxcli" and ProcessCommandLine has "network firewall unload")
+     or (ProcessCommandLine matches regex @"(?i)\buname\s+-a\b")
+| extend Bucket = bin(Timestamp, 10m)
+| summarize UniqueCmds = dcount(ProcessCommandLine), Commands = make_set(ProcessCommandLine, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+          by DeviceName, AccountName, Bucket
+| where UniqueCmds >= 2
+| order by FirstSeen desc
+```
+
+### [LLM] Mario ESXi mass VM shutdown — burst of esxcli/vim-cmd power-off prior to encryption
+
+`UC_10_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*esxcli vm process kill*" OR Processes.process="*vim-cmd vmsvc/power.off*" OR Processes.process="*vim-cmd vmsvc/power.shutdown*") by Processes.dest Processes.user Processes.process _time span=5m | `drop_dm_object_name(Processes)` | stats count as KillEvents dc(process) as DistinctInvocations values(process) as SampleCmds min(_time) as firstTime max(_time) as lastTime by dest user _time | where KillEvents >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Mass VM kill on ESXi — encryption staging by Mario / MrAgent
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (ProcessCommandLine has "esxcli" and ProcessCommandLine has "vm" and ProcessCommandLine has "process" and ProcessCommandLine has "kill")
+     or (ProcessCommandLine has "vim-cmd" and ProcessCommandLine has "vmsvc/power.off")
+     or (ProcessCommandLine has "vim-cmd" and ProcessCommandLine has "vmsvc/power.shutdown")
+| extend Bucket = bin(Timestamp, 5m)
+| summarize KillEvents = count(), DistinctCmds = dcount(ProcessCommandLine), SampleCmds = make_set(ProcessCommandLine, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+          by DeviceName, AccountName, Bucket
+| where KillEvents >= 5
+| order by KillEvents desc
+```
+
+### [LLM] Known RansomHouse Mario ESXi & MrAgent Windows SHA256 IOC sweep
+
+`UC_10_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.process) as cmdline values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where Processes.process_hash IN ("8189c708706eb7302d7598aeee8cd6bdb048bf1a6dbe29c59e50f0a39fd53973","bfc9b956818efe008c2dbf621244b6dc3de8319e89b9fa83c9e412ce70f82f2c") by Processes.dest Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("8189c708706eb7302d7598aeee8cd6bdb048bf1a6dbe29c59e50f0a39fd53973","bfc9b956818efe008c2dbf621244b6dc3de8319e89b9fa83c9e412ce70f82f2c") by Filesystem.dest Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let MarioHashes = dynamic([
+  "8189c708706eb7302d7598aeee8cd6bdb048bf1a6dbe29c59e50f0a39fd53973",  // Mario ESXi encryptor
+  "bfc9b956818efe008c2dbf621244b6dc3de8319e89b9fa83c9e412ce70f82f2c"   // MrAgent / RansomHouse Windows binary
+]);
+union isfuzzy=true
+  ( DeviceProcessEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (MarioHashes)
+      | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, Source = "DeviceProcessEvents" ),
+  ( DeviceFileEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (MarioHashes)
+      | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FileName, FolderPath, SHA256, ProcessCommandLine = InitiatingProcessCommandLine, Source = "DeviceFileEvents" ),
+  ( DeviceImageLoadEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (MarioHashes)
+      | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FileName, FolderPath, SHA256, ProcessCommandLine = InitiatingProcessCommandLine, Source = "DeviceImageLoadEvents" ),
+  ( AlertEvidence
+      | where Timestamp > ago(30d)
+      | where SHA256 in (MarioHashes)
+      | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, Source = "AlertEvidence" )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -155,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trellix Breach – RansomHouse Claims Access to Parts of Source Code
 
-`UC_5_4` · phase: **exploit** · confidence: **High**
+`UC_10_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,4 +295,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PCPJack worm working directory and Sliver staging on Linux (/var/lib/.spm/, /var/tmp/apt-daily-upgrade)
 
-`UC_8_11` · phase: **install** · confidence: **High**
+`UC_13_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ union isfuzzy=true
 
 ### [LLM] PCPJack credential exfiltration to typosquat cdn.cloudfront-js.com on TCP/7443/8443
 
-`UC_8_12` · phase: **actions** · confidence: **High**
+`UC_13_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### [LLM] PCPJack initial access via CVE-2025-29927 — Next.js x-middleware-subrequest header bypass
 
-`UC_8_13` · phase: **exploit** · confidence: **High**
+`UC_13_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -419,7 +419,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PCPJack Worm Targets Docker, Kubernetes, Redis, and MongoDB for Credential T
 
-`UC_8_10` · phase: **exploit** · confidence: **High**
+`UC_13_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

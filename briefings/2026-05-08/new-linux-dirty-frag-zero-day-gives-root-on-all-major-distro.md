@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Tampering with Dirty Frag kernel module mitigation file (/etc/modprobe.d/dirtyfrag.conf)
 
-`UC_15_1` · phase: **actions** · confidence: **High**
+`UC_20_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceFileEvents
 
 ### [LLM] Manual load of Dirty Frag vulnerable kernel modules (esp4/esp6/rxrpc) outside of init/IPsec/AFS
 
-`UC_15_2` · phase: **exploit** · confidence: **Medium**
+`UC_20_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Linux 'Dirty Frag' zero-day gives root on all major distros
 
-`UC_15_0` · phase: **install** · confidence: **High**
+`UC_20_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
