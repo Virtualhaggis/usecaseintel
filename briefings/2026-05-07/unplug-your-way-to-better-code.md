@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Talos weekly prevalent-malware hash match (Coinminer / Injector / Dropper.Miner)
 
-`UC_5_3` · phase: **install** · confidence: **High**
+`UC_6_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union isfuzzy=true
 
 ### [LLM] Talos dropper filename pattern d4aa3e7010220ad1b458fac17039c274_<N>_Exe.exe
 
-`UC_5_4` · phase: **install** · confidence: **Medium**
+`UC_6_4` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Unplug your way to better code
 
-`UC_5_2` · phase: **exploit** · confidence: **High**
+`UC_6_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_588 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_589 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-05-08
+- [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
 
 ## 2026-05-07
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)

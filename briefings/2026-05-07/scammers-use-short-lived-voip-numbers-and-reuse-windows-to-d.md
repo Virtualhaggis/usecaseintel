@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HEIC attachment in inbound email impersonating PayPal/Geek Squad/McAfee/Norton (TOAD callback lure)
 
-`UC_18_3` · phase: **delivery** · confidence: **Medium**
+`UC_19_3` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ EmailEvents
 
 ### [LLM] Same VoIP callback number recurring across unrelated lures within Talos 14-day cool-down
 
-`UC_18_4` · phase: **delivery** · confidence: **Medium**
+`UC_19_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

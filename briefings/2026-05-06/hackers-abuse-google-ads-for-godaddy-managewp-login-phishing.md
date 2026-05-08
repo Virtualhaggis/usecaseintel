@@ -1,16 +1,19 @@
-# [HIGH] Hackers abuse Google ads for GoDaddy ManageWP login phishing
+# [CRIT] Hackers abuse Google ads for GoDaddy ManageWP login phishing
 
-**Source:** BleepingComputer, Cyber Security News
+**Source:** BleepingComputer
 **Published:** 2026-05-06
 **Article:** https://www.bleepingcomputer.com/news/security/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing/
 
 ## Threat Profile
 
-Home Cyber Security News 
-Hackers Abuse Google Ads to Steal Users GoDaddy ManageWP login Credentials 
-By Tushar Subhra Dutta 
-May 7, 2026 
-Hackers are using fake Google ads to steal login credentials from ManageWP users, GoDaddy’s popular platform for managing WordPress websites from a single dashboard. The campaign, which researchers have dubbed “WrongPress,” plants a fraudulent sponsored search result directly above the real ManageWP listing, trapping users before they even realize something i…
+Hackers abuse Google ads for GoDaddy ManageWP login phishing 
+By Bill Toulas 
+May 6, 2026
+05:36 PM
+0 
+A phishing campaign delivered through Google sponsored search results is targeting credentials for ManageWP, GoDaddy’s platform for managing fleets of WordPress websites.
+The threat actor is using an adversary-in-the-middle (AitM) approach where the fake login page acts as a real-time proxy between the victim and the legitimate ManageWP service.
+ManageWP is a centralized remote administration pl…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -20,9 +23,6 @@ Hackers are using fake Google ads to steal login credentials from ManageWP users
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1005** — Data from Local System
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,9 +30,6 @@ Hackers are using fake Google ads to steal login credentials from ManageWP users
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1566.004** — Phishing: Spearphishing Voice
-- **T1566** — Phishing
-- **T1219** — Remote Access Software
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1583.008** — Acquire Infrastructure: Malvertising
@@ -48,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WrongPress: browser navigation to ManageWP phishing lookalike (manageewpbest.it.com)
 
-`UC_34_10` · phase: **delivery** · confidence: **High**
+`UC_35_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +77,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hunt: first-time-seen ManageWP lookalike host across the org (WrongPress rotation)
 
-`UC_34_11` · phase: **delivery** · confidence: **Medium**
+`UC_35_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,65 +149,6 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
-```
-
-### Crypto-wallet file/keystore access by non-wallet process
-
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -361,59 +299,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
-
-`UC_TEAMS_VISHING` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`o365_management_activity`
-  Workload=MicrosoftTeams Operation=MessageSent
-  ExternalParticipants=*
-| where match(SenderDisplayName, "(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)")
-| stats count, earliest(_time) as firstTime, latest(_time) as lastTime
-    by SenderUpn, SenderDisplayName, RecipientUpn, ChatId
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Microsoft Teams"
-| where ActionType == "MessageSent"
-| where RawEventData has "ExternalParticipants"
-| extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
-| where SenderDisplayName matches regex @"(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)"
-| project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData
-```
-
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
 `UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
@@ -442,56 +327,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Hackers abuse Google ads for GoDaddy ManageWP login phishing
-
-`UC_34_9` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — Hackers abuse Google ads for GoDaddy ManageWP login phishing ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("node.js"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("node.js"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — Hackers abuse Google ads for GoDaddy ManageWP login phishing
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("node.js"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("node.js"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

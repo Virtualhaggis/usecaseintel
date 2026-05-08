@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] InstallFix fake-Claude installer: mshta.exe fetching claude.msixbundle from download-version.1-5-8.com
 
-`UC_17_8` · phase: **delivery** · confidence: **High**
+`UC_18_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] InstallFix Stage-4 C2 callback to oakenfjrod[.]ru victim-unique subdomain or known IOC IPs
 
-`UC_17_9` · phase: **c2** · confidence: **High**
+`UC_18_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ union isfuzzy=true
 
 ### [LLM] InstallFix process tree: mshta.exe spawning SysWOW64 cmd/PowerShell with split-variable powershell reconstruction
 
-`UC_17_10` · phase: **exploit** · confidence: **Medium**
+`UC_18_10` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
