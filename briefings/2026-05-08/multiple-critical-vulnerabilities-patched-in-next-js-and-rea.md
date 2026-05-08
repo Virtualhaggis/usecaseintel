@@ -10,12 +10,9 @@ Home Cyber Security News
 Multiple Critical Vulnerabilities Patched in Next.js and React Server Components 
 By Guru Baran 
 May 8, 2026 
-
-
-
-
 Vercel has released an extensive set of security advisories for Next.js, addressing more than a dozen vulnerabilities, including denial-of-service, middleware bypass, server-side request forgery, and cross-site scripting.
-The flaws affect Next.js versions 13.x through 16.x using the App Router, as well as React Server Components packages for versions 19.…
+The flaws affect Next.js versions 13.x through 16.x using the App Router, as well as React Server Components packages for versions 19.x.
+CVE-2…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,8 +32,9 @@ The flaws affect Next.js versions 13.x through 16.x using the App Router, as wel
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1212** — Exploitation for Credential Access
-- **T1556** — Modify Authentication Process
+- **T1027** — Obfuscated Files or Information
 - **T1552.005** — Cloud Instance Metadata API
+- **T1090** — Proxy
 
 ## Kill chain phases observed
 
@@ -44,48 +42,66 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Next.js Pages Router i18n middleware bypass via locale-less /_next/data JSON (CVE-2026-44573)
+### [LLM] Next.js Pages Router i18n middleware bypass via locale-less /_next/data JSON fetches (CVE-2026-44573)
 
-`UC_0_6` · phase: **exploit** · confidence: **Medium**
+`UC_1_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.http_user_agent) as ua values(Web.status) as status sum(Web.bytes_out) as bytes_out from datamodel=Web where Web.url="*/_next/data/*.json" Web.status=200 by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | rex field=url "^/_next/data/(?<buildId>[^/]+)/(?<page>.+)\.json$" | where isnotnull(buildId) AND NOT match(page,"^(en|en-US|en-GB|fr|de|es|ja|zh|pt|it)/") | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(src) as src_ips dc(src) as src_count values(page) as pages by dest buildId | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web where Web.url="*/_next/data/*.json" Web.http_method="GET" Web.status=200 by Web.src Web.dest Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval first_seg=replace(url, "^.*/_next/data/[^/]+/([^/?]+).*$", "\1")
+| eval is_locale=if(match(first_seg, "^(en|en-US|en-GB|en-AU|fr|fr-FR|fr-CA|de|de-DE|es|es-ES|es-MX|ja|ja-JP|zh|zh-CN|zh-TW|pt|pt-BR|it|ko|nl|ru|pl|tr|ar|cs|sv|da|fi|no|he|hi|th|vi)$"), 1, 0)
+| where is_locale=0
+| stats count dc(url) as unique_pages values(url) as sample_urls min(firstTime) as firstTime max(lastTime) as lastTime by src dest http_user_agent
+| where unique_pages>=3
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
-### [LLM] Next.js App Router .rsc / segment-prefetch middleware bypass attempts (GHSA-267c-6grr-h53f)
+### [LLM] Next.js App Router middleware bypass via .rsc / segment-prefetch transport variants
 
-`UC_0_7` · phase: **exploit** · confidence: **Medium**
+`UC_1_7` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as status values(Web.http_user_agent) as ua sum(Web.bytes_out) as bytes_out from datamodel=Web where (Web.url="*.rsc" OR Web.url="*?*_rsc=*" OR Web.url="*&_rsc=*" OR Web.url="*/_next/static/chunks/*" OR Web.http_user_agent="*Next.js Router*") Web.status=200 by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | regex url="(\.rsc(\?|$)|[?&]_rsc=)" | where NOT match(url,"/_next/static/") | stats count dc(src) as client_count values(src) as src_ips values(url) as urls by dest | where count > 0
+| tstats summariesonly=true count values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*.rsc" OR Web.url="*.rsc?*" OR Web.url="*_rsc=*" OR Web.url="*/_next/data/*") Web.status IN (200,304) by Web.src Web.dest Web.http_method Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| eval has_rsc_suffix=if(match(url, "\.rsc(\?|$)"), 1, 0)
+| eval has_rsc_param=if(match(url, "[?&]_rsc="), 1, 0)
+| eval has_nextdata=if(match(url, "/_next/data/"), 1, 0)
+| stats count dc(url) as unique_uris sum(has_rsc_suffix) as rsc_suffix_hits sum(has_rsc_param) as rsc_param_hits sum(has_nextdata) as nextdata_hits values(url) as sample_uris min(firstTime) as firstTime max(lastTime) as lastTime by src dest http_user_agent
+| where unique_uris>=2 AND (rsc_suffix_hits>0 OR rsc_param_hits>0)
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
-### [LLM] Self-hosted Node.js process accessing cloud metadata IPs — possible CVE-2026-44578 WS Upgrade SSRF
+### [LLM] Self-hosted Next.js Node.js process reaching cloud metadata endpoint (SSRF post-exploit, CVE-2026-44578)
 
-`UC_0_8` · phase: **actions** · confidence: **Medium**
+`UC_1_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.process_name) as proc values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest_ip IN ("169.254.169.254","169.254.170.2","100.100.100.200","169.254.169.123") (All_Traffic.process_name="node.exe" OR All_Traffic.process_name="node" OR All_Traffic.app="node*") by All_Traffic.src All_Traffic.dest_ip All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.process_name="node.exe" OR All_Traffic.process_name="node" OR All_Traffic.app="node*") (All_Traffic.dest="169.254.169.254" OR All_Traffic.dest="100.100.100.200" OR All_Traffic.dest="metadata.google.internal" OR All_Traffic.dest="metadata.azure.com" OR All_Traffic.dest="instance-data.ec2.internal") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let MetadataIPs = dynamic(["169.254.169.254","169.254.170.2","100.100.100.200","169.254.169.123"]);
-let Baseline = DeviceNetworkEvents
-  | where Timestamp between (ago(30d) .. ago(1d))
-  | where InitiatingProcessFileName in~ ("node.exe","node")
-  | where RemoteIP in (MetadataIPs)
-  | summarize by DeviceId, RemoteIP;
+let _metadata_ips = dynamic(["169.254.169.254","100.100.100.200"]);
+let _metadata_hosts = dynamic(["metadata.google.internal","metadata.azure.com","instance-data.ec2.internal","169.254.169.254"]);
 DeviceNetworkEvents
-| where Timestamp > ago(1d)
+| where Timestamp > ago(7d)
 | where InitiatingProcessFileName in~ ("node.exe","node")
-| where RemoteIP in (MetadataIPs)
 | where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
-| join kind=leftanti Baseline on DeviceId, RemoteIP
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, ActionType
+| where RemoteIP in (_metadata_ips)
+   or (isnotempty(RemoteUrl) and RemoteUrl has_any (_metadata_hosts))
+| project Timestamp, DeviceName, DeviceId,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          RemoteIP, RemotePort, RemoteUrl, RemoteIPType, ActionType
 | order by Timestamp desc
 ```
 
@@ -263,7 +279,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Critical Vulnerabilities Patched in Next.js and React Server Components
 
-`UC_0_5` · phase: **exploit** · confidence: **High**
+`UC_1_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,4 +336,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

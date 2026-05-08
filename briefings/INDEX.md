@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-08
+- [dirty frag linux vulnerability let attackers gain root privi](./2026-05-08/dirty-frag-linux-vulnerability-let-attackers-gain-root-privi.md)
 - [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
 
 ## 2026-05-07
@@ -30,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new tclbanker malware self spreads over whatsapp and outlook](./2026-05-07/new-tclbanker-malware-self-spreads-over-whatsapp-and-outlook.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-07/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [palo alto networks firewall zero day exploited for nearly a ](./2026-05-07/palo-alto-networks-firewall-zero-day-exploited-for-nearly-a-.md)
-- [palo alto networks firewall zero day rce vulnerability explo](./2026-05-07/palo-alto-networks-firewall-zero-day-rce-vulnerability-explo.md)
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
