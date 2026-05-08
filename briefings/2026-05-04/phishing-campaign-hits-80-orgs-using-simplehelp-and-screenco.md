@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] VENOMOUS#HELPER dual-RMM coexistence: SimpleHelp + ScreenConnect on same host
 
-`UC_76_12` · phase: **install** · confidence: **High**
+`UC_78_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] Network or DNS contact to VENOMOUS#HELPER SSA-phishing staging infrastructure
 
-`UC_76_13` · phase: **delivery** · confidence: **High**
+`UC_78_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ union NetHits, DnsHits, FileHits
 
 ### [LLM] SimpleHelp / JWrapper service registered for Windows Safe Boot persistence
 
-`UC_76_14` · phase: **install** · confidence: **High**
+`UC_78_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -463,7 +463,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Phishing Campaign Hits 80+ Orgs Using SimpleHelp and ScreenConnect RMM Tools
 
-`UC_76_11` · phase: **exploit** · confidence: **High**
+`UC_78_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

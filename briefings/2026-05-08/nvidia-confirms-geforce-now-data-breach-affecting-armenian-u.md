@@ -11,18 +11,10 @@ By Bill Toulas
 May 8, 2026
 12:18 PM
 0 
-
-
 NVIDIA has confirmed in a statement for BleepingComputer that GeForce NOW user information has been exposed in a data breach.
-
-
 The gaming and hardware giant has clarified that the impact is limited to Armenia, and was caused by a compromise of the infrastructure operated by a regional partner.
-
-
 The company added that its own network was not impacted by the incident.
-
-
-“Our invest…
+“Our investigation found no…
 
 ## Indicators of Compromise (high-fidelity only)
 

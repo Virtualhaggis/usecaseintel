@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-08
+- [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
 - [cisa gives feds four days to patch ivanti flaw exploited as ](./2026-05-08/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-.md)
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
@@ -17,20 +18,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake moustache bypasses age verification system raising onli](./2026-05-08/fake-moustache-bypasses-age-verification-system-raising-onli.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [hackers abuse signed logitech installer to deploy tclbanker ](./2026-05-08/hackers-abuse-signed-logitech-installer-to-deploy-tclbanker-.md)
+- [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
 - [hackers leveraged hugging face and clawhub with 575 maliciou](./2026-05-08/hackers-leveraged-hugging-face-and-clawhub-with-575-maliciou.md)
 - [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
+- [koda security incident exposes customers data from online sh](./2026-05-08/koda-security-incident-exposes-customers-data-from-online-sh.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new infostealer campaign uses github releases for payload ho](./2026-05-08/new-infostealer-campaign-uses-github-releases-for-payload-ho.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
-- [new nwhstealer delivery chain uses bun loader anti vm checks](./2026-05-08/new-nwhstealer-delivery-chain-uses-bun-loader-anti-vm-checks.md)
-- [new pcpjack worm targets docker kubernetes redis and mongodb](./2026-05-08/new-pcpjack-worm-targets-docker-kubernetes-redis-and-mongodb.md)
+- [new pamdoora backdoor attacking linux systems to steal ssh c](./2026-05-08/new-pamdoora-backdoor-attacking-linux-systems-to-steal-ssh-c.md)
 - [new zichatbot malware uses zulip rest apis as command and co](./2026-05-08/new-zichatbot-malware-uses-zulip-rest-apis-as-command-and-co.md)
 - [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
 - [quasar linux rat steals developer credentials for software s](./2026-05-08/quasar-linux-rat-steals-developer-credentials-for-software-s.md)
-- [trellix breach ransomhouse claims access to parts of source ](./2026-05-08/trellix-breach-ransomhouse-claims-access-to-parts-of-source-.md)
+- [tclbanker banking trojan targets financial platforms via wha](./2026-05-08/tclbanker-banking-trojan-targets-financial-platforms-via-wha.md)
 - [trellix source code breach claimed by ransomhouse hackers](./2026-05-08/trellix-source-code-breach-claimed-by-ransomhouse-hackers.md)
 - [why more analysts won t solve your soc s alert problem](./2026-05-08/why-more-analysts-won-t-solve-your-soc-s-alert-problem.md)
 - [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
@@ -126,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [etherrat distribution spoofing administrative tools via gith](./2026-04-30/etherrat-distribution-spoofing-administrative-tools-via-gith.md)
-- [google fixes cvss 10 gemini cli ci rce and cursor flaws enab](./2026-04-30/google-fixes-cvss-10-gemini-cli-ci-rce-and-cursor-flaws-enab.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
 - [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
@@ -137,7 +138,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
 
 ## 2026-04-29
-- [8 best practices for cisos conducting risk reviews](./2026-04-29/8-best-practices-for-cisos-conducting-risk-reviews.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 
 ## 2026-04-28

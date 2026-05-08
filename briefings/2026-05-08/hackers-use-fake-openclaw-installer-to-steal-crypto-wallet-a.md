@@ -10,11 +10,7 @@ Home Cyber Security News
 Hackers Use Fake OpenClaw Installer to Steal Crypto Wallet and Password Manager Credentials 
 By Tushar Subhra Dutta 
 May 8, 2026 
-
-
-
-
-A dangerous new infostealer campaign is targeting some of the most sensitive data people store on their computers. Disguised as a legitimate installer for OpenClaw, a popular open-source personal AI assistant, the malware silently takes over systems and goes after over 250 browser extensions tied to crypto wallets and password manager…
+A dangerous new infostealer campaign is targeting some of the most sensitive data people store on their computers. Disguised as a legitimate installer for OpenClaw, a popular open-source personal AI assistant, the malware silently takes over systems and goes after over 250 browser extensions tied to crypto wallets and password managers. The c…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -55,16 +51,14 @@ A dangerous new infostealer campaign is targeting some of the most sensitive dat
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
-- **T1204.002** — User Execution: Malicious File
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1102.002** — Web Service: Bidirectional Communication
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1571** — Non-Standard Port
+- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
 - **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1547.004** — Boot or Logon Autostart Execution: Winlogon Helper DLL
-- **T1112** — Modify Registry
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -72,73 +66,77 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hologram/Pathfinder fake OpenClaw stage-2 binary execution from Public/AppData
+### [LLM] OpenClaw Hologram/Pathfinder Stealth Packer beacon — C:\Users\Public binary to high-port C2
 
-`UC_0_9` · phase: **install** · confidence: **High**
+`UC_4_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes where (Processes.process_path IN ("*\\Users\\Public\\*","*\\AppData\\Roaming\\Data\\Config\\manager.exe") AND Processes.process_name IN ("OpenClaw_x64.exe","svc_service.exe","virtnetwork.exe","onedrive_sync.exe","audioeq.exe","OneSync.exe","WinHealhCare.exe","manager.exe","vicloud.exe","dbau.exe")) OR Processes.process_hash IN ("4014048f8e60d39f724d5b1ae34210ffeac151e1f2d4813dbb51c719d4ad7c3a","f554b6f34fd2710929d74af550ddb50633d36eaf0533f2d0cbbde75670676486","40fc240febf2441d58a7e2554e4590e172bfefd289a5d9fa6781de38e266b378","4fcfcb83145223cca6db85e7c840876ec8a56d78efba856ab70287b0e5c8a696","605096b9729bd8eedab460dbd4baf702029fb59842020a27fc0f99fd2ef63040","6ae9f9cfa8e638e933ad8b06de7434c395ec68ee9cc4e735069bfb64646bb180","0c4a9d3579485eaf8801e5ac479cd322ee1e7161b54cc24689b891fa82ba0f1e","fd67063ffb0bcde44dca5fea09cc0913150161d7cb13cffc2a001a0894f12690","d5dffba463beae207aee339f88a18cfcd2ea2cd3e36e98d27297d819a1809846","787a28aff72f2ecd2f5e75baf284e61bda9ab8dd3905822c6f620cce809952e8","1478ccc61b69cee462ea98621ba53adf2de0ce28355c5c4eafaed6d779c8acda") BY Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where ((All_Traffic.dest_port>=56001 AND All_Traffic.dest_port<=57002) OR All_Traffic.dest_ip IN ("193.202.84.14","45.55.35.48","185.196.9.98","91.92.242.30","147.45.197.92","94.228.161.88","86.54.42.72","188.114.97.3")) by All_Traffic.src host All_Traffic.user All_Traffic.app | `drop_dm_object_name(All_Traffic)` | join type=inner host [| tstats summariesonly=t values(Processes.process_path) as process_path values(Processes.process_name) as process_name values(Processes.process) as cmdline values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where (Processes.process_path="*\\Users\\Public\\*" OR Processes.process_name IN ("svc_service.exe","virtnetwork.exe","onedrive_sync.exe","audioeq.exe","WinHealhCare.exe","OneSync.exe","vicloud.exe","manager.exe","dbau.exe")) by host Processes.process_name Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where (FolderPath has @"\Users\Public\" or FolderPath has @"\AppData\Roaming\Data\Config\")
-      and FileName in~ ("OpenClaw_x64.exe","svc_service.exe","virtnetwork.exe","onedrive_sync.exe","audioeq.exe","OneSync.exe","WinHealhCare.exe","manager.exe","vicloud.exe","dbau.exe")
-   or SHA256 in~ ("4014048f8e60d39f724d5b1ae34210ffeac151e1f2d4813dbb51c719d4ad7c3a","f554b6f34fd2710929d74af550ddb50633d36eaf0533f2d0cbbde75670676486","40fc240febf2441d58a7e2554e4590e172bfefd289a5d9fa6781de38e266b378","4fcfcb83145223cca6db85e7c840876ec8a56d78efba856ab70287b0e5c8a696","605096b9729bd8eedab460dbd4baf702029fb59842020a27fc0f99fd2ef63040","6ae9f9cfa8e638e933ad8b06de7434c395ec68ee9cc4e735069bfb64646bb180","0c4a9d3579485eaf8801e5ac479cd322ee1e7161b54cc24689b891fa82ba0f1e","fd67063ffb0bcde44dca5fea09cc0913150161d7cb13cffc2a001a0894f12690","d5dffba463beae207aee339f88a18cfcd2ea2cd3e36e98d27297d819a1809846","787a28aff72f2ecd2f5e75baf284e61bda9ab8dd3905822c6f620cce809952e8","1478ccc61b69cee462ea98621ba53adf2de0ce28355c5c4eafaed6d779c8acda")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### [LLM] Hologram C2 to Hookdeck/sagonbretzpr Azure DevOps and Stealth Packer beacon ports 56001-57002
-
-`UC_0_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("45.55.35.48","193.202.84.14","185.196.9.98","91.92.242.30","147.45.197.92","94.228.161.88","86.54.42.72","188.114.97.3") OR All_Traffic.url IN ("*hkdk.events*","*hwd.hidayahnetwork.com*","*zkevopenanu.cfd*","*frr.rubensbruno.adv.br*","*mikolirentryifosttry.info*","*transcloud.cc*","*steamhostserver.cc*","*serverconect.cc*","*jollymccalister.lol*","*openclaw-installer.com*","*dev.azure.com/sagonbretzpr*") OR (All_Traffic.dest_port>=56001 AND All_Traffic.dest_port<=57002)) BY All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _hologram_domains = dynamic(["hkdk.events","hwd.hidayahnetwork.com","zkevopenanu.cfd","frr.rubensbruno.adv.br","mikolirentryifosttry.info","transcloud.cc","steamhostserver.cc","serverconect.cc","jollymccalister.lol","openclaw-installer.com"]);
-let _hologram_ips = dynamic(["45.55.35.48","193.202.84.14","185.196.9.98","91.92.242.30","147.45.197.92","94.228.161.88","86.54.42.72","188.114.97.3"]);
-let _dev_processes = dynamic(["devenv.exe","code.exe","git.exe","msbuild.exe","dotnet.exe","node.exe","npm.exe","vstest.console.exe","AzureDevOpsCLI.exe"]);
+let _bins = dynamic(["svc_service.exe","virtnetwork.exe","onedrive_sync.exe","audioeq.exe","WinHealhCare.exe","OneSync.exe","vicloud.exe","manager.exe","dbau.exe"]);
+let _ips = dynamic(["193.202.84.14","45.55.35.48","185.196.9.98","91.92.242.30","147.45.197.92","94.228.161.88","86.54.42.72","188.114.97.3"]);
+let _hashes = dynamic(["40fc240febf2441d58a7e2554e4590e172bfefd289a5d9fa6781de38e266b378","4fcfcb83145223cca6db85e7c840876ec8a56d78efba856ab70287b0e5c8a696","605096b9729bd8eedab460dbd4baf702029fb59842020a27fc0f99fd2ef63040","6ae9f9cfa8e638e933ad8b06de7434c395ec68ee9cc4e735069bfb64646bb180","0c4a9d3579485eaf8801e5ac479cd322ee1e7161b54cc24689b891fa82ba0f1e","fd67063ffb0bcde44dca5fea09cc0913150161d7cb13cffc2a001a0894f12690","d5dffba463beae207aee339f88a18cfcd2ea2cd3e36e98d27297d819a1809846","787a28aff72f2ecd2f5e75baf284e61bda9ab8dd3905822c6f620cce809952e8","1478ccc61b69cee462ea98621ba53adf2de0ce28355c5c4eafaed6d779c8acda"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where (RemoteUrl has_any (_hologram_domains))
-     or (RemoteUrl has "dev.azure.com" and RemoteUrl has "sagonbretzpr")
-     or RemoteIP in (_hologram_ips)
-     or (RemotePort between (56001 .. 57002) and RemoteIPType == "Public")
-| where InitiatingProcessFileName !in~ (_dev_processes)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where RemoteIPType == "Public"
+| where (RemotePort between (56001 .. 57002)) or RemoteIP in (_ips) or InitiatingProcessSHA256 in (_hashes)
+| where InitiatingProcessFolderPath has @"\Users\Public\" or InitiatingProcessFileName in~ (_bins)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### [LLM] Hologram WinLogon Userinit hijack and Defender-themed Run-key persistence
+### [LLM] OpenClaw Hologram persistence quartet — Userinit hijack + WindowsDefenderHelper/NetworkManager autoruns + OneDriveSync.lnk
 
-`UC_0_11` · phase: **install** · confidence: **High**
+`UC_4_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry where (Registry.registry_path="*\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon*" AND Registry.registry_value_name="Userinit" AND (Registry.registry_value_data IN ("*svc_service*","*\\Users\\Public\\*","*onedrive_sync*"))) OR (Registry.registry_path="*\\CurrentVersion\\Run*" AND Registry.registry_value_name IN ("WindowsDefenderHelper","NetworkManager","{NetworkManager}")) BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as data values(Registry.process_name) as process_name values(Registry.user) as user from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\Userinit" AND NOT Registry.registry_value_data IN ("C:\\Windows\\system32\\userinit.exe,","C:\\Windows\\system32\\userinit.exe")) OR Registry.registry_value_name IN ("WindowsDefenderHelper","NetworkManager","{NetworkManager}") by Registry.dest Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\OneDriveSync.lnk" by Filesystem.dest Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
+let _reg = DeviceRegistryEvents
+| where Timestamp > ago(30d)
 | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where (RegistryKey has @"\Microsoft\Windows NT\CurrentVersion\Winlogon"
-         and RegistryValueName =~ "Userinit"
-         and RegistryValueData has_any ("svc_service",@"\Users\Public\","onedrive_sync"))
-     or (RegistryKey has @"\CurrentVersion\Run"
-         and RegistryValueName in~ ("WindowsDefenderHelper","NetworkManager","{NetworkManager}"))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessCommandLine
+| where (RegistryKey has @"\Microsoft\Windows NT\CurrentVersion\Winlogon" and RegistryValueName =~ "Userinit"
+         and tolower(RegistryValueData) !startswith @"c:\windows\system32\userinit.exe")
+   or (RegistryKey has_any (@"\CurrentVersion\Run", @"\CurrentVersion\RunOnce")
+       and RegistryValueName in~ ("WindowsDefenderHelper","NetworkManager","{NetworkManager}"))
+| project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256;
+let _file = DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"\Start Menu\Programs\Startup" and FileName =~ "OneDriveSync.lnk"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine;
+union _reg, _file
 | order by Timestamp desc
+```
+
+### [LLM] OpenClaw three-service abuse — Hookdeck + Telegram bot API + Azure DevOps 'sagonbretzpr' from C:\Users\Public binary
+
+`UC_4_11` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.dest) as dest values(Web.user) as user from datamodel=Web.Web where (Web.url="*hkdk.events*" OR Web.url="*api.telegram.org*" OR Web.url="*dev.azure.com/sagonbretzpr*" OR Web.url="*pastebin.com/raw/*" OR Web.url="*snippet.host*") by Web.src host Web.process_name Web.process_path Web.url | `drop_dm_object_name(Web)` | eval is_known_browser=if(match(process_name,"(?i)^(msedge|chrome|firefox|brave|iexplore|opera|safari|teams|outlook|onedrive|code|devenv|git|msbuild|az|kubectl|slack|zoom|powershell_ise)\.exe$"),1,0) | eval is_public_drop=if(match(process_path,"(?i)\\\\Users\\\\Public\\\\") OR match(process_name,"(?i)^(svc_service|virtnetwork|onedrive_sync|audioeq|winhealhcare|onesync|vicloud|manager|dbau)\.exe$"),1,0) | where is_known_browser=0 AND (is_public_drop=1 OR urls LIKE "%dev.azure.com/sagonbretzpr%") | stats min(firstTime) as firstTime max(lastTime) as lastTime values(urls) as urls values(process_name) as process_name values(process_path) as process_path dc(host) as host_count by host user | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _bins = dynamic(["svc_service.exe","virtnetwork.exe","onedrive_sync.exe","audioeq.exe","WinHealhCare.exe","OneSync.exe","vicloud.exe","manager.exe","dbau.exe"]);
+let _benign = dynamic(["msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","teams.exe","outlook.exe","onedrive.exe","code.exe","devenv.exe","git.exe","msbuild.exe","az.exe","kubectl.exe","slack.exe","zoom.exe","powershell_ise.exe"]);
+let _services = dynamic(["hkdk.events","api.telegram.org","dev.azure.com","pastebin.com","snippet.host"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (_services) or RemoteUrl has "sagonbretzpr"
+| where (InitiatingProcessFolderPath has @"\Users\Public\") or (InitiatingProcessFileName in~ (_bins)) or ((RemoteUrl has "sagonbretzpr" or RemoteUrl has "hkdk.events") and InitiatingProcessFileName !in~ (_benign))
+| summarize Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), URLs=make_set(RemoteUrl, 25), IPs=make_set(RemoteIP, 25) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256
+| order by LastSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -319,7 +317,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake OpenClaw Installer to Steal Crypto Wallet and Password Manager
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_4_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -398,4 +396,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

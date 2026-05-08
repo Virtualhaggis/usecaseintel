@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HumanitarianBait C2 beacon to 159.198.41.140 / GitHub Releases payload pull from leravalera2/dtfls
 
-`UC_9_13` · phase: **c2** · confidence: **High**
+`UC_14_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ union isfuzzy=true
 
 ### [LLM] HumanitarianBait persistence: pythonw.exe / VBScript launcher executing from %APPDATA%\WindowsHelper
 
-`UC_9_14` · phase: **install** · confidence: **High**
+`UC_14_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### [LLM] HumanitarianBait LNK staged-payload extraction: PowerShell spawned by explorer reading bytes from the .lnk lure
 
-`UC_9_15` · phase: **exploit** · confidence: **Medium**
+`UC_14_15` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

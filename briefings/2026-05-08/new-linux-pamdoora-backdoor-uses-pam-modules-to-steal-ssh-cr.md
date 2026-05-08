@@ -26,10 +26,9 @@ The backdoor is designed as a Pluggable Authentication Module ( PAM )-based post
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
-- **T1543** — Create or Modify System Process
+- **T1554** — Compromise Host Software Binary
 - **T1070.002** — Indicator Removal: Clear Linux or Mac System Logs
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1098** — Account Manipulation
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
 
 ## Kill chain phases observed
 
@@ -37,71 +36,56 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PamDOORa: New PAM shared-object dropped outside package-manager context
+### [LLM] Suspicious PAM module (.so) drop in /lib/security by non-package-manager process
 
-`UC_20_4` · phase: **install** · confidence: **High**
+`UC_22_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/lib/security/*.so" OR Filesystem.file_path="*/lib64/security/*.so" OR Filesystem.file_path="*/usr/lib/security/*.so" OR Filesystem.file_path="*/usr/lib64/security/*.so" OR Filesystem.file_path="*/x86_64-linux-gnu/security/*.so") AND Filesystem.action IN ("created","modified","write") AND NOT Filesystem.process_name IN ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","snapd","unattended-upgrade","authconfig","pam-auth-update") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_exec Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="/lib/security/*" OR Filesystem.file_path="/lib64/security/*" OR Filesystem.file_path="/usr/lib/x86_64-linux-gnu/security/*" OR Filesystem.file_path="/lib/x86_64-linux-gnu/security/*") AND Filesystem.file_name="*.so*" AND NOT Filesystem.process_name IN ("dpkg","rpm","apt","apt-get","yum","dnf","zypper","pacman","tar","cpio","unattended-upgrade") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// PamDOORa PAM module drop on Linux endpoints
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FileName endswith ".so"
-| where FolderPath has_any ("/lib/security/", "/lib64/security/", "/usr/lib/security/", "/usr/lib64/security/", "/x86_64-linux-gnu/security/")
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","snapd","unattended-upgrade","authconfig","pam-auth-update")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType,
+| where FolderPath has_any ("/lib/security/","/lib64/security/","/usr/lib/x86_64-linux-gnu/security/","/lib/x86_64-linux-gnu/security/")
+| where FileName endswith ".so" or FileName matches regex @"\.so\.[0-9]+$"   // covers libselinux.so.8 masquerade
+| where InitiatingProcessFileName !in~ ("dpkg","rpm","apt","apt-get","yum","dnf","zypper","pacman","tar","cpio","unattended-upgrade")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
           InitiatingProcessFileName, InitiatingProcessFolderPath,
           InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### [LLM] PamDOORa: Authentication-log tampering on Linux (auth.log/secure/wtmp/btmp/lastlog)
+### [LLM] Linux authentication log tampering by non-syslog process (PamDOORa anti-forensic)
 
-`UC_20_5` · phase: **actions** · confidence: **High**
+`UC_22_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/var/log/auth.log","/var/log/secure","/var/log/wtmp","/var/log/btmp","/var/log/lastlog","/var/log/messages") AND Filesystem.action IN ("deleted","truncated","modified","write","renamed") AND NOT Filesystem.process_name IN ("rsyslogd","syslog-ng","systemd-journald","logrotate","sshd","login","sudo","systemd","auditd","cron","crond","su") by host Filesystem.file_path Filesystem.action Filesystem.process_name Filesystem.process_exec Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("deleted","modified","renamed","truncated") AND Filesystem.file_path="/var/log/*" AND Filesystem.file_name IN ("auth.log","secure","wtmp","btmp","lastlog") AND NOT Filesystem.process_name IN ("logrotate","rsyslogd","syslog-ng","systemd-journald","auditd","rsyslog","journalctl") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// PamDOORa anti-forensic — auth-log scrubbing on Linux
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has "/var/log"
-| where FileName in~ ("auth.log","secure","wtmp","btmp","lastlog","messages")
 | where ActionType in ("FileDeleted","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("rsyslogd","syslog-ng","systemd-journald","logrotate","sshd","login","sudo","systemd","auditd","cron","crond","su")
-| project Timestamp, DeviceName, FileName, FolderPath, ActionType,
+| where FolderPath startswith "/var/log/"
+| where FileName in~ ("auth.log","secure","wtmp","btmp","lastlog")
+| where InitiatingProcessFileName !in~ ("logrotate","rsyslogd","syslog-ng","systemd-journald","auditd","rsyslog","journalctl")
+| where InitiatingProcessAccountName !endswith "$"
+// Suppress legitimate self-rotation: parent must not be cron/systemd unit driving logrotate
+| where InitiatingProcessParentFileName !in~ ("logrotate","cron","systemd")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName,
           InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] PamDOORa: pam_exec injection / PAM config modification under /etc/pam.d
-
-`UC_20_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/pam.d/*" OR Filesystem.file_path="/etc/pam.conf") AND Filesystem.action IN ("created","modified","write","renamed") AND NOT Filesystem.process_name IN ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","snapd","unattended-upgrade","authconfig","authselect","pam-auth-update","realmd","sssd") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_exec Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where (FolderPath startswith "/etc/pam.d") or (FolderPath =~ "/etc" and FileName =~ "pam.conf") or (FolderPath =~ "/etc/" and FileName =~ "pam.conf")
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","snapd","unattended-upgrade","authconfig","authselect","pam-auth-update","realmd","sssd")
-| project Timestamp, DeviceName, FileName, FolderPath, ActionType, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName,
+          InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -252,4 +236,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

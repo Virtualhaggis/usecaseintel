@@ -1,0 +1,74 @@
+{
+  "name": "Silk Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Silk Typhoon (HAFNIUM) Exchange w3wp.exe spawning OS / China Chopper compiler children \u2014 ProxyLogon post-exploit",
+      "description": "Catches the canonical Silk Typhoon / HAFNIUM intrusion pattern: after exploiting on-prem Exchange (ProxyLogon CVE-2021-26855/26857/26858/27065) they drop .aspx webshells (China Chopper variants) under the OWA/ECP virtual directories, which causes the IIS worker process w3wp.exe \u2014 running under MSExchange* app pools \u2014 to spawn cmd.exe, powershell.exe, csc.exe (the .NET compiler invoked when the webshell first executes), and reconnaissance LOLBins. A normal Exchange server almost never has w3wp.exe spawn an interactive shell or C# compiler.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.001",
+        "T1059.003",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as process_name values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=w3wp.exe (Processes.parent_process=*MSExchangeOWAAppPool* OR Processes.parent_process=*MSExchangeECPAppPool* OR Processes.parent_process=*MSExchangeServicesAppPool* OR Processes.parent_process=*MSExchangeRpcProxyAppPool* OR Processes.parent_process=*MSExchangeAutodiscoverAppPool* OR Processes.parent_process=*MSExchangeMapiFrontEndAppPool*) (Processes.process_name IN (cmd.exe, powershell.exe, pwsh.exe, csc.exe, cvtres.exe, cscript.exe, wscript.exe, net.exe, net1.exe, whoami.exe, ipconfig.exe, systeminfo.exe, tasklist.exe, hostname.exe, query.exe, quser.exe, ping.exe, nltest.exe, certutil.exe, bitsadmin.exe, mshta.exe, rundll32.exe, regsvr32.exe, procdump.exe, procdump64.exe, 7z.exe, makecab.exe)) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where InitiatingProcessCommandLine has_any (\"MSExchangeOWAAppPool\",\"MSExchangeECPAppPool\",\"MSExchangeServicesAppPool\",\"MSExchangeRpcProxyAppPool\",\"MSExchangeAutodiscoverAppPool\",\"MSExchangeMapiFrontEndAppPool\",\"MSExchangePowerShellAppPool\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"csc.exe\",\"cvtres.exe\",\"cscript.exe\",\"wscript.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"hostname.exe\",\"query.exe\",\"quser.exe\",\"ping.exe\",\"nltest.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"rundll32.exe\",\"procdump.exe\",\"procdump64.exe\",\"7z.exe\",\"makecab.exe\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          AppPool = InitiatingProcessCommandLine,\n          ChildImage = FolderPath,\n          ChildCmd = ProcessCommandLine,\n          SHA256, IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\w3wp.exe\"\n| where CommandLine has_any (\"MSExchangeOWAAppPool\",\"MSExchangeECPAppPool\",\"MSExchangeServicesAppPool\",\"MSExchangeRpcProxyAppPool\",\"MSExchangeAutodiscoverAppPool\",\"MSExchangeMapiFrontEndAppPool\",\"MSExchangePowerShellAppPool\")\n   or ParentProcessName has_any (\"MSExchangeOWAAppPool\",\"MSExchangeECPAppPool\",\"MSExchangeServicesAppPool\",\"MSExchangeRpcProxyAppPool\")\n| where NewProcessName has_any (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"csc.exe\",\"cvtres.exe\",\"cscript.exe\",\"wscript.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"ipconfig.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"hostname.exe\",\"nltest.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"rundll32.exe\",\"procdump.exe\",\"7z.exe\",\"makecab.exe\")\n| where Account !endswith \"$\"\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Silk Typhoon Exchange w3wp Child Process\nid: a4f1e62c-7c3a-4d9f-9f12-silktyphoon01\nstatus: experimental\ndescription: Detects IIS worker (w3wp.exe) running under an MSExchange* app pool spawning a shell, .NET compiler, or recon LOLBin \u2014 canonical Silk Typhoon (HAFNIUM) ProxyLogon webshell post-exploitation.\nreferences:\n  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/\n  - https://attack.mitre.org/groups/G0125/\nauthor: Detection Engineering\ndate: 2021/03/02\ntags:\n  - attack.initial_access\n  - attack.t1190\n  - attack.t1505.003\n  - attack.persistence\n  - g0125\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\w3wp.exe'\n  selection_apppool:\n    CommandLine|contains:\n      - 'MSExchangeOWAAppPool'\n      - 'MSExchangeECPAppPool'\n      - 'MSExchangeServicesAppPool'\n      - 'MSExchangeRpcProxyAppPool'\n      - 'MSExchangeAutodiscoverAppPool'\n      - 'MSExchangeMapiFrontEndAppPool'\n      - 'MSExchangePowerShellAppPool'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\csc.exe'\n      - '\\cvtres.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\whoami.exe'\n      - '\\nltest.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\procdump.exe'\n      - '\\procdump64.exe'\n      - '\\7z.exe'\n      - '\\rundll32.exe'\n      - '\\mshta.exe'\n  condition: selection_parent and (selection_apppool or 1 of selection_apppool*) and selection_child\nfalsepositives:\n  - Exchange CU/SU installation scripts run by an Exchange admin (verify by elevation + interactive logon)\n  - Legitimate health-monitoring custom scripts (rare)\nlevel: high",
+      "rationale": "This is the textbook Silk Typhoon / HAFNIUM tradecraft chain that Microsoft, Volexity, and Mandiant all attribute to G0125: exploit on-prem Exchange (ProxyLogon family) \u2192 write China Chopper-style .aspx webshell into an Exchange virtual directory \u2192 IIS worker w3wp.exe (running under an MSExchange*AppPool identity) loads it on first request, which forces csc.exe to JIT-compile the aspx and cmd/powe",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Silk Typhoon LSASS credential theft via Procdump / comsvcs MiniDump on Exchange / IIS host",
+      "description": "Hunts the credential-access step Silk Typhoon repeatedly executes once they have a webshell foothold: dumping LSASS with the signed Sysinternals procdump.exe, or the rundll32 comsvcs.dll,MinDump LOLBin, or PowerShell-based MiniDumpWriteDump \u2014 frequently on Exchange / IIS / SharePoint hosts. Microsoft's HAFNIUM advisories explicitly call out procdump-on-LSASS and 7-Zip staging as the actor's hands-on-keyboard signature.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.001",
+        "T1059.001",
+        "T1218.011"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where ( (Processes.process_name IN (procdump.exe, procdump64.exe) AND Processes.process=*lsass*) OR (Processes.process_name=rundll32.exe AND Processes.process=*comsvcs.dll* AND (Processes.process=*MiniDump* OR Processes.process=*#24*)) OR (Processes.process_name IN (powershell.exe, pwsh.exe) AND Processes.process=*MiniDumpWriteDump*) OR (Processes.process_name=tasklist.exe AND Processes.process=*lsass*) ) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let exchange_or_iis_hosts =\n    DeviceProcessEvents\n    | where Timestamp > ago(7d)\n    | where InitiatingProcessFileName =~ \"w3wp.exe\" or FileName =~ \"w3wp.exe\"\n    | summarize by DeviceId;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (FileName in~ (\"procdump.exe\",\"procdump64.exe\") and ProcessCommandLine has \"lsass\")\n     or (FileName =~ \"rundll32.exe\" and ProcessCommandLine has \"comsvcs.dll\" and (ProcessCommandLine has \"MiniDump\" or ProcessCommandLine has \"#24\"))\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\") and (ProcessCommandLine has \"MiniDumpWriteDump\" or (ProcessCommandLine has \"Out-Minidump\") or (ProcessCommandLine has \"lsass\" and ProcessCommandLine has \"dmp\")))\n     or (InitiatingProcessFileName =~ \"w3wp.exe\" and FileName =~ \"tasklist.exe\" and ProcessCommandLine has \"lsass\")\n| extend ExchangeContext = iff(DeviceId in (exchange_or_iis_hosts), \"yes\", \"no\")\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          ExchangeContext, IsRemote = IsInitiatingProcessRemoteSession, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let exchange_or_iis_hosts =\n    SecurityEvent\n    | where TimeGenerated > ago(7d)\n    | where EventID == 4688\n    | where NewProcessName endswith \"\\\\w3wp.exe\" or ParentProcessName endswith \"\\\\w3wp.exe\"\n    | summarize by Computer;\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where (NewProcessName has_any (\"procdump.exe\",\"procdump64.exe\") and CommandLine has \"lsass\")\n     or (NewProcessName endswith \"\\\\rundll32.exe\" and CommandLine has \"comsvcs.dll\" and (CommandLine has \"MiniDump\" or CommandLine has \"#24\"))\n     or (NewProcessName has_any (\"powershell.exe\",\"pwsh.exe\") and (CommandLine has \"MiniDumpWriteDump\" or CommandLine has \"Out-Minidump\" or (CommandLine has \"lsass\" and CommandLine has \".dmp\")))\n     or (ParentProcessName endswith \"\\\\w3wp.exe\" and NewProcessName endswith \"\\\\tasklist.exe\" and CommandLine has \"lsass\")\n| extend ExchangeContext = iff(Computer in (exchange_or_iis_hosts), \"yes\", \"no\")\n| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName, ExchangeContext\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "rationale": "Procdump-on-LSASS, comsvcs.dll MiniDump, and 7-Zip data staging are the three artefacts every public Silk Typhoon / HAFNIUM IR report (Microsoft DART 2021, Volexity, FireEye) lists under hands-on-keyboard credential access. Pivoting on whether the host has recently run w3wp.exe (i.e. it is an Exchange/IIS server) takes the otherwise generic 'lsass dump' detection and biases it toward Silk Typhoon'",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    }
+  ]
+}
