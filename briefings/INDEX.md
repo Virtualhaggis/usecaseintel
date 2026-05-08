@@ -9,20 +9,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-08
+- [critical spring vulnerabilities expose arbitrary files and g](./2026-05-08/critical-spring-vulnerabilities-expose-arbitrary-files-and-g.md)
+- [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [dirty frag linux vulnerability let attackers gain root privi](./2026-05-08/dirty-frag-linux-vulnerability-let-attackers-gain-root-privi.md)
+- [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
+- [mozilla patches 423 firefox vulnerabilities with claude myth](./2026-05-08/mozilla-patches-423-firefox-vulnerabilities-with-claude-myth.md)
 - [multiple critical vulnerabilities patched in next js and rea](./2026-05-08/multiple-critical-vulnerabilities-patched-in-next-js-and-rea.md)
+- [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 
 ## 2026-05-07
 - [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
 - [australia warns of clickfix attacks pushing vidar stealer ma](./2026-05-07/australia-warns-of-clickfix-attacks-pushing-vidar-stealer-ma.md)
 - [canvas login portals hacked in mass shinyhunters extortion c](./2026-05-07/canvas-login-portals-hacked-in-mass-shinyhunters-extortion-c.md)
 - [cisa warns of palo alto pan os vulnerability exploited to ga](./2026-05-07/cisa-warns-of-palo-alto-pan-os-vulnerability-exploited-to-ga.md)
-- [critical redis vulnerabilities enables remote code execution](./2026-05-07/critical-redis-vulnerabilities-enables-remote-code-execution.md)
 - [crypto gang member gets 6 5 years for role in 230 million he](./2026-05-07/crypto-gang-member-gets-6-5-years-for-role-in-230-million-he.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
+- [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [fake claude ai website delivers new beagle windows malware](./2026-05-07/fake-claude-ai-website-delivers-new-beagle-windows-malware.md)
+- [fixing the password problem is as easy as 123456](./2026-05-07/fixing-the-password-problem-is-as-easy-as-123456.md)
 - [hackers using fake claude ai installer pages to trick users ](./2026-05-07/hackers-using-fake-claude-ai-installer-pages-to-trick-users-.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
@@ -43,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [uat 8302 uses custom malware and open source tools to steal ](./2026-05-07/uat-8302-uses-custom-malware-and-open-source-tools-to-steal-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
-- [watchguard agent vulnerabilities let attackers grant full sy](./2026-05-07/watchguard-agent-vulnerabilities-let-attackers-grant-full-sy.md)
 - [webinar why modern attacks require both security and recover](./2026-05-07/webinar-why-modern-attacks-require-both-security-and-recover.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
 - [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
@@ -52,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [clickfix campaign uses fake macos utilities lures to deliver](./2026-05-06/clickfix-campaign-uses-fake-macos-utilities-lures-to-deliver.md)
 - [critical vm2 sandbox bug lets attackers execute code on host](./2026-05-06/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-host.md)
-- [daemon tools devs confirm breach release malware free versio](./2026-05-06/daemon-tools-devs-confirm-breach-release-malware-free-versio.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [hackers abuse google ads for godaddy managewp login phishing](./2026-05-06/hackers-abuse-google-ads-for-godaddy-managewp-login-phishing.md)
@@ -61,7 +65,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
-- [new cisco dos flaw requires manual reboot to revive devices](./2026-05-06/new-cisco-dos-flaw-requires-manual-reboot-to-revive-devices.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
@@ -204,9 +207,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-10
 - [recovery scammers hit you when you re down here s how to avo](./2026-04-10/recovery-scammers-hit-you-when-you-re-down-here-s-how-to-avo.md)
-
-## 2026-04-09
-- [the long road to your crypto clipbanker and its marathon inf](./2026-04-09/the-long-road-to-your-crypto-clipbanker-and-its-marathon-inf.md)
 
 ## 2026-04-08
 - [cracks in the bedrock agent god mode](./2026-04-08/cracks-in-the-bedrock-agent-god-mode.md)
@@ -613,12 +613,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-09-22
 - [watch out for svg files booby trapped with malware](./2025-09-22/watch-out-for-svg-files-booby-trapped-with-malware.md)
-
-## 2025-09-19
-- [gamaredon x turla collab](./2025-09-19/gamaredon-x-turla-collab.md)
-
-## 2025-09-18
-- [small businesses big targets protecting your business agains](./2025-09-18/small-businesses-big-targets-protecting-your-business-agains.md)
 
 ## 2025-09-11
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-09-11/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)

@@ -1,0 +1,79 @@
+{
+  "name": "Gamaredon",
+  "ucs": [
+    {
+      "title": "[LLM] Gamaredon (Shuckworm/Aqua Blizzard) Office\u2192mshta/wscript chain to dynamic-DNS or telegra.ph C2",
+      "description": "Detects Gamaredon's signature initial-access chain: a weaponised Office document (often via remote-template injection) spawning mshta.exe/wscript.exe/cscript.exe/powershell.exe with a command line that references one of the dynamic-DNS providers Gamaredon repeatedly burns (.ddns.net, .hopto.org, .myftp.org, .sytes.net, .my.to, .myq-see.com), the .ru TLD, or telegra.ph dead-drop resolvers used by GammaLoad/PteroPSLoad/GammaSteel.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1221",
+        "T1204.002",
+        "T1218.005",
+        "T1059.005",
+        "T1102.002",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"powerpnt.exe\") AND Processes.process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\") AND (Processes.process=\"*ddns.net*\" OR Processes.process=\"*hopto.org*\" OR Processes.process=\"*myftp.org*\" OR Processes.process=\"*sytes.net*\" OR Processes.process=\"*serveftp.com*\" OR Processes.process=\"*my.to*\" OR Processes.process=\"*myq-see.com*\" OR Processes.process=\"*telegra.ph*\" OR Processes.process=\"*telegraph.com*\" OR Processes.process=\"*.hta*\" OR Processes.process=\"*.sfx*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "let GamaredonDdns = dynamic([\".ddns.net\",\".hopto.org\",\".myftp.org\",\".sytes.net\",\".serveftp.com\",\".my.to\",\".myq-see.com\",\"telegra.ph\",\"telegraph.com\"]);\nlet OfficeApps = dynamic([\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"powerpnt.exe\"]);\nlet ChildBins = dynamic([\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (OfficeApps)\n| where FileName in~ (ChildBins)\n| extend Cmd = tolower(ProcessCommandLine)\n| extend HasDdns   = Cmd has_any (GamaredonDdns)\n| extend HasRuTld  = Cmd matches regex @\"https?://[a-z0-9\\.\\-]+\\.ru[/\\s\\\"\\']\"\n| extend HasHta    = Cmd has_any (\".hta\", \"mshta\", \".sfx\")\n| where HasDdns or HasRuTld or HasHta\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FileName,\n          ChildCmd    = ProcessCommandLine,\n          HasDdns, HasRuTld, HasHta, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let GamaredonDdns = dynamic([\".ddns.net\",\".hopto.org\",\".myftp.org\",\".sytes.net\",\".serveftp.com\",\".my.to\",\".myq-see.com\",\"telegra.ph\",\"telegraph.com\"]);\nlet OfficeApps = dynamic([\"winword.exe\",\"excel.exe\",\"outlook.exe\",\"powerpnt.exe\"]);\nlet ChildBins = dynamic([\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| extend ParentLeaf = tolower(tostring(split(ParentProcessName, '\\\\')[-1]))\n| extend NewLeaf    = tolower(tostring(split(NewProcessName,    '\\\\')[-1]))\n| where ParentLeaf in (OfficeApps)\n| where NewLeaf    in (ChildBins)\n| extend Cmd = tolower(CommandLine)\n| extend HasDdns  = Cmd has_any (GamaredonDdns)\n| extend HasRuTld = Cmd matches regex @\"https?://[a-z0-9\\.\\-]+\\.ru[/\\s\\\"\\']\"\n| extend HasHta   = Cmd has_any (\".hta\", \"mshta\", \".sfx\")\n| where HasDdns or HasRuTld or HasHta\n| project TimeGenerated, Computer, Account,\n          ParentProcessName, NewProcessName, CommandLine,\n          HasDdns, HasRuTld, HasHta\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Gamaredon Office-Document mshta/wscript Chain to Dynamic-DNS or Telegra.ph C2\nid: 8a3f5e6d-4b1c-4e1a-9c2f-gam0047uc01\nstatus: experimental\ndescription: Detects Gamaredon's signature delivery chain - Office app spawning a Windows scripting LOLBin with a command line referencing dynamic-DNS providers, .ru TLD, or telegra.ph dead-drop resolvers used by GammaLoad/PteroPSLoad.\nreferences:\n  - https://attack.mitre.org/groups/G0047/\nauthor: SOC Detection Engineering\ndate: 2026/05/08\ntags:\n  - attack.execution\n  - attack.t1221\n  - attack.t1204.002\n  - attack.t1218.005\n  - attack.t1059.005\n  - attack.g0047\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\outlook.exe'\n      - '\\powerpnt.exe'\n  selection_child:\n    Image|endswith:\n      - '\\mshta.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\rundll32.exe'\n  selection_indicator:\n    CommandLine|contains:\n      - '.ddns.net'\n      - '.hopto.org'\n      - '.myftp.org'\n      - '.sytes.net'\n      - '.serveftp.com'\n      - '.my.to'\n      - '.myq-see.com'\n      - 'telegra.ph'\n      - '.hta'\n      - '.sfx'\n  condition: selection_parent and selection_child and selection_indicator\nfalsepositives:\n  - Rare legitimate macro that fetches templates from dynamic-DNS - whitelist after triage\nlevel: high",
+      "rationale": "Gamaredon (FSB Center 18, Crimea) is the most prolific Russian APT against Ukraine and burns through dynamic-DNS infrastructure faster than any other state actor - .ddns.net/.hopto.org/.myftp.org/.sytes.net are all repeatedly attributed to them by ESET, CERT-UA, Symantec/Shuckworm and Microsoft/Aqua Blizzard reporting. The combination of Office-app parent + Windows scripting LOLBin child + one of ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HasHta",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`HasHta` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HasHta",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`HasHta` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Gamaredon PteroLNK USB self-propagation - mass .lnk creation in removable-drive root",
+      "description": "Detects Gamaredon's PteroLNK USB worming module: a non-explorer process creating multiple .lnk files in the root of a removable drive (D:-Z:), which is how Gamaredon shadows real folders with malicious shortcuts that re-execute their VBScript loader on every USB transit. Self-propagating USB tradecraft is one of the most distinctive markers of this actor versus other Russian APTs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1091",
+        "T1059.005",
+        "T1564.001",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.file_name) as file_names dc(Filesystem.file_name) as distinct_lnk from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name=\"*.lnk\" AND (Filesystem.file_path=\"D:\\\\*\" OR Filesystem.file_path=\"E:\\\\*\" OR Filesystem.file_path=\"F:\\\\*\" OR Filesystem.file_path=\"G:\\\\*\" OR Filesystem.file_path=\"H:\\\\*\" OR Filesystem.file_path=\"I:\\\\*\" OR Filesystem.file_path=\"J:\\\\*\" OR Filesystem.file_path=\"K:\\\\*\" OR Filesystem.file_path=\"L:\\\\*\" OR Filesystem.file_path=\"M:\\\\*\" OR Filesystem.file_path=\"N:\\\\*\" OR Filesystem.file_path=\"O:\\\\*\" OR Filesystem.file_path=\"P:\\\\*\" OR Filesystem.file_path=\"Q:\\\\*\" OR Filesystem.file_path=\"R:\\\\*\" OR Filesystem.file_path=\"S:\\\\*\" OR Filesystem.file_path=\"T:\\\\*\" OR Filesystem.file_path=\"U:\\\\*\" OR Filesystem.file_path=\"V:\\\\*\" OR Filesystem.file_path=\"W:\\\\*\" OR Filesystem.file_path=\"X:\\\\*\" OR Filesystem.file_path=\"Y:\\\\*\" OR Filesystem.file_path=\"Z:\\\\*\") AND Filesystem.process_name!=\"explorer.exe\" AND Filesystem.process_name!=\"msiexec.exe\" by Filesystem.dest Filesystem.user Filesystem.process_name span=10m | `drop_dm_object_name(Filesystem)` | where distinct_lnk >= 3",
+      "kql": "let SuppressProcs = dynamic([\"explorer.exe\",\"msiexec.exe\",\"setup.exe\",\"installer.exe\",\"wininit.exe\"]);\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where ActionType == \"FileCreated\"\n| where FileName endswith \".lnk\"\n| where FolderPath matches regex @\"(?i)^[D-Z]:\\\\[^\\\\]*\\.lnk$\"\n| where InitiatingProcessFileName !in~ (SuppressProcs)\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize LnkCount = count(),\n            DistinctNames = dcount(FileName),\n            SampleNames = make_set(FileName, 15),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            DriveLetter = any(substring(FolderPath, 0, 2)),\n            ParentProcCmd = any(InitiatingProcessCommandLine)\n            by DeviceName,\n               InitiatingProcessFileName,\n               InitiatingProcessFolderPath,\n               InitiatingProcessAccountName,\n               bin(Timestamp, 10m)\n| where DistinctNames >= 3\n| order by FirstSeen desc",
+      "sentinel_kql": "let SuppressProcs = dynamic([\"explorer.exe\",\"msiexec.exe\",\"setup.exe\",\"installer.exe\",\"wininit.exe\"]);\nImFileEvent\n| where TimeGenerated > ago(7d)\n| where EventType == \"FileCreated\"\n| where TargetFileName endswith \".lnk\"\n| where TargetFilePath matches regex @\"(?i)^[D-Z]:\\\\[^\\\\]*\\.lnk$\"\n| extend ParentLeaf = tolower(tostring(split(ActingProcessName, '\\\\')[-1]))\n| where ParentLeaf !in (SuppressProcs)\n| where ActorUsername !endswith \"$\"\n| summarize LnkCount = count(),\n            DistinctNames = dcount(TargetFileName),\n            SampleNames = make_set(TargetFileName, 15),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            DriveLetter = any(substring(TargetFilePath, 0, 2)),\n            ParentCmd = any(ActingProcessCommandLine)\n            by DvcHostname, ActingProcessName, ActorUsername, bin(TimeGenerated, 10m)\n| where DistinctNames >= 3\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Gamaredon PteroLNK USB Worming - Mass .lnk Drop in Removable-Drive Root\nid: 7c2e9f4a-1d3b-4e7c-b8a1-gam0047uc02\nstatus: experimental\ndescription: Detects Gamaredon's PteroLNK USB self-propagation module dropping multiple .lnk shortcut files in the root of a removable drive (D:-Z:) by a non-Explorer process. The .lnk files are used to shadow real folders and re-launch the VBScript stager whenever the USB is plugged in.\nreferences:\n  - https://attack.mitre.org/groups/G0047/\n  - https://www.welivesecurity.com/2024/01/19/operation-texonto-information-operation-disinformation-targeting-ukraine/\nauthor: SOC Detection Engineering\ndate: 2026/05/08\ntags:\n  - attack.lateral_movement\n  - attack.t1091\n  - attack.g0047\nlogsource:\n  category: file_event\n  product: windows\ndetection:\n  selection_lnk:\n    TargetFilename|re: '(?i)^[D-Z]:\\\\[^\\\\]*\\.lnk$'\n  filter_legit:\n    Image|endswith:\n      - '\\explorer.exe'\n      - '\\msiexec.exe'\n      - '\\setup.exe'\n      - '\\installer.exe'\n      - '\\wininit.exe'\n  condition: selection_lnk and not filter_legit\nfalsepositives:\n  - Backup or sync utilities (rclone, FreeFileSync) writing shortcut farms to removable media\n  - Portable-app launchers that legitimately seed .lnk files\nlevel: high",
+      "rationale": "USB self-propagation via .lnk shadowing is a defining Gamaredon/Shuckworm tradecraft - documented by ESET (PteroLNK), Symantec, Microsoft (Aqua Blizzard) and CERT-UA. Almost no other state-grade APT still relies on USB worming as a primary lateral-movement vector, so a host suddenly producing a fan-out of .lnk files in a USB root - by something other than Explorer/installers - is a near-pathognomo",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

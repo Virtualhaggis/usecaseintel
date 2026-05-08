@@ -1,0 +1,228 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla / Secret Blizzard Outlook MAPI backdoor \u2014 outlook.exe loads or drops a non-Microsoft module from a user-writable path (LightNeuron / S",
+      "description": "Hunts for outlook.exe loading or writing a DLL / scripting payload from AppData, ProgramData, Public or Temp. Turla (FSB Center 16; aliases Snake, Venomous Bear, Secret Blizzard, IRON HUNTER, Waterbug) is essentially the only state actor to weaponise an in-process Outlook MAPI add-in (LightNeuron, ESET 2019; the 'Snake' Outlook backdoor, NSA/CISA/NCSC 2023). The implant runs as a transport-agent DLL inside outlook.exe, parses incoming PDF attachments for commands, and exfiltrates results by emailing them back \u2014 all of which requires an unsigned/non-Microsoft module to be loaded from a non-syst",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1547.001",
+        "T1546.013",
+        "T1071.003",
+        "T1140",
+        "T1027.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.action) as action values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.process_name=\"outlook.exe\" Filesystem.action=\"created\" (Filesystem.file_path=\"*\\\\AppData\\\\*\" OR Filesystem.file_path=\"*\\\\ProgramData\\\\*\" OR Filesystem.file_path=\"*\\\\Users\\\\Public\\\\*\" OR Filesystem.file_path=\"*\\\\Temp\\\\*\") (Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.exe\" OR Filesystem.file_name=\"*.ps1\" OR Filesystem.file_name=\"*.vbs\" OR Filesystem.file_name=\"*.js\" OR Filesystem.file_name=\"*.bat\" OR Filesystem.file_name=\"*.scr\") by host Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | where NOT match(file_path,\"(?i)C:\\\\\\\\Program Files\\\\\\\\Common Files\\\\\\\\microsoft shared\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "// Path 1 \u2014 outlook.exe LOADS a DLL from a user-writable path\nlet OutlookLoads = DeviceImageLoadEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"outlook.exe\"\n    | where FileName endswith \".dll\"\n    | where FolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\")\n    | where not(FolderPath startswith @\"C:\\Program Files\\\")\n    | where not(FolderPath startswith @\"C:\\Program Files (x86)\\\")\n    | where not(FolderPath startswith @\"C:\\Windows\\\")\n    | project Timestamp, DeviceName, User=InitiatingProcessAccountName,\n              Action=\"ImageLoaded\", FileName, FolderPath, SHA256, MD5;\n// Path 2 \u2014 outlook.exe WRITES a DLL/script to a user-writable path (catches LightNeuron deployment + bridges hosts without ImageLoad telemetry)\nlet OutlookDrops = DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"outlook.exe\"\n    | where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n    | where FileName matches regex @\"(?i)\\.(dll|exe|ps1|vbs|js|bat|scr|hta|wsf|cpl|xll)$\"\n    | where FolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\")\n    | project Timestamp, DeviceName, User=InitiatingProcessAccountName,\n              Action=ActionType, FileName, FolderPath, SHA256, MD5;\nunion OutlookLoads, OutlookDrops\n| where User !endswith \"$\"\n| order by Timestamp desc",
+      "sentinel_kql": "// Sysmon EID 7 (image load) \u2014 Turla Outlook MAPI backdoor catches DLL load by outlook.exe from non-system paths\nWindowsEvent\n| where TimeGenerated > ago(30d)\n| where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 7\n| extend Image        = tostring(EventData.Image),\n         ImageLoaded  = tostring(EventData.ImageLoaded),\n         Signed       = tostring(EventData.Signed),\n         Signature    = tostring(EventData.Signature),\n         Hashes       = tostring(EventData.Hashes),\n         User         = tostring(EventData.User)\n| where Image endswith @\"\\outlook.exe\"\n| where ImageLoaded has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Temp\\\")\n| where not(ImageLoaded startswith @\"C:\\Program Files\\\")\n| where not(ImageLoaded startswith @\"C:\\Program Files (x86)\\\")\n| where not(ImageLoaded startswith @\"C:\\Windows\\\")\n| where Signed != \"true\" or Signature !has \"Microsoft\"\n| project TimeGenerated, Computer, User, Image, ImageLoaded, Signed, Signature, Hashes\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Outlook Loads or Drops Module From User-Writable Path (Turla LightNeuron / Snake Outlook Backdoor)\nstatus: experimental\ndescription: |\n  Detects outlook.exe loading or writing a DLL / scripting payload from a user-writable directory\n  (AppData, ProgramData, Public, Temp). This is the on-host fingerprint of Turla / Secret Blizzard's\n  in-process Outlook MAPI backdoors (LightNeuron, Snake Outlook backdoor) which run as a transport\n  agent inside outlook.exe and parse PDF attachments for commands.\nreferences:\n  - https://attack.mitre.org/groups/G0010/\n  - https://www.welivesecurity.com/2019/05/07/turla-lightneuron-email-too-far/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-129a\nauthor: Detection Engineering\ndate: 2024/01/01\ntags:\n  - attack.persistence\n  - attack.t1547.001\n  - attack.t1071.003\n  - attack.g0010\nlogsource:\n  category: image_load\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith: '\\outlook.exe'\n  selection_path:\n    ImageLoaded|contains:\n      - '\\AppData\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\Temp\\'\n  filter_known_good:\n    ImageLoaded|startswith:\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n      - 'C:\\Windows\\'\n  filter_microsoft_signed:\n    Signed: 'true'\n    Signature|contains: 'Microsoft'\n  condition: selection_image and selection_path and not filter_known_good and not filter_microsoft_signed\nfalsepositives:\n  - Per-user Outlook add-ins or third-party mail plug-ins (e.g. Grammarly, Boomerang) \u2014 baseline allow-list\nlevel: high",
+      "rationale": "Turla is the only public-attribution APT to operationalise an in-process Outlook MAPI agent (LightNeuron, ESET 2019; the Snake Outlook backdoor, joint-NSA/CISA/NCSC/FBI 2023 advisory AA23-129A on Operation MEDUSA). Generic 'unsigned DLL load' rules drown in dev-tool / Office-add-in noise; pinning the loader to outlook.exe AND a non-system path AND a non-Microsoft signature isolates the LightNeuron",
+      "_sigma_issues": [
+        "missing required field: id"
+      ]
+    },
+    {
+      "title": "[LLM] Turla 'Galaxy Opportunity' Andromeda/Gamarue USB hijack chain \u2014 rundll32 launches a DLL from removable media, then beacons to public C2 (Kaz",
+      "description": "Hunts the very specific delivery chain that Mandiant attributed to Turla (UNC4210) in 2022-2023 and Microsoft re-confirmed under the Secret Blizzard cluster: Turla re-registered expired Andromeda/Gamarue C2 domains, profiled the still-infected USB hosts, and used the dormant USB worm to side-load Kazuar v3 / QUIETCANYON / TinyTurla-NG. The on-host fingerprint is rundll32.exe spawned by Explorer/cmd against a DLL on a non-system drive letter (D:-Z:), followed by that same rundll32 talking to a public IP within minutes.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "medium",
+      "techs": [
+        "T1091",
+        "T1204.002",
+        "T1218.011",
+        "T1584.001",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_id) as process_id from datamodel=Endpoint.Processes where Processes.process_name=\"rundll32.exe\" (Processes.parent_process_name=\"explorer.exe\" OR Processes.parent_process_name=\"cmd.exe\" OR Processes.parent_process_name=\"userinit.exe\") Processes.process=\"*.dll*\" by host Processes.user Processes.process_id _time | rex field=cmdline \"(?i)\\s(?<drive_letter>[D-Z]):\\\\\\\\\" | search drive_letter=* | join host process_id [| tstats summariesonly=true count values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.dest_category) as dest_category from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name=\"rundll32.exe\" by host All_Traffic.process_id _time | rename All_Traffic.process_id as process_id | search NOT dest_category=internal] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "// 1. rundll32.exe spawned by Explorer/cmd against a DLL on a NON-system drive (D:-Z:)\nlet RemovableRundll = DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName =~ \"rundll32.exe\"\n    | where InitiatingProcessFileName in~ (\"explorer.exe\",\"cmd.exe\",\"userinit.exe\")\n    | where AccountName !endswith \"$\"\n    | where ProcessCommandLine matches regex @\"(?i)\\b[D-Z]:\\\\[^\\s\\\"]+\\.dll\\b\"\n    | extend DriveLetter = extract(@\"(?i)\\b([D-Z]):\\\\\", 1, ProcessCommandLine)\n    | project RunTime=Timestamp, DeviceId, DeviceName, AccountName,\n              ProcessCommandLine, ProcessId, DriveLetter,\n              ParentImage=InitiatingProcessFileName,\n              ParentCmd=InitiatingProcessCommandLine;\n// 2. The SAME rundll32 PID then beacons to a public IP within 10 minutes (Kazuar / QUIETCANYON / TinyTurla-NG fetch)\nRemovableRundll\n| join kind=inner (\n    DeviceNetworkEvents\n    | where Timestamp > ago(30d)\n    | where InitiatingProcessFileName =~ \"rundll32.exe\"\n    | where RemoteIPType == \"Public\"\n    | where not(ipv4_is_private(RemoteIP))\n    | project NetTime=Timestamp, DeviceId, ProcessId=InitiatingProcessId,\n              RemoteIP, RemoteUrl, RemotePort, Protocol\n  ) on DeviceId, ProcessId\n| where NetTime between (RunTime .. RunTime + 10m)\n| project RunTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, RunTime),\n          DeviceName, AccountName, DriveLetter,\n          ProcessCommandLine, ParentImage, ParentCmd,\n          RemoteIP, RemoteUrl, RemotePort\n| order by RunTime desc",
+      "sentinel_kql": "// Sysmon EID 1 + EID 3 correlation: rundll32 from removable drive followed by public egress\nlet RemovableRundll = WindowsEvent\n    | where TimeGenerated > ago(30d)\n    | where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 1\n    | extend Image       = tostring(EventData.Image),\n             ParentImage = tostring(EventData.ParentImage),\n             CommandLine = tostring(EventData.CommandLine),\n             ProcessId   = tostring(EventData.ProcessId),\n             User        = tostring(EventData.User)\n    | where Image endswith @\"\\rundll32.exe\"\n    | where ParentImage endswith_cs @\"\\explorer.exe\"\n         or ParentImage endswith_cs @\"\\cmd.exe\"\n         or ParentImage endswith_cs @\"\\userinit.exe\"\n    | where CommandLine matches regex @\"(?i)\\b[D-Z]:\\\\[^\\s\\\"]+\\.dll\\b\"\n    | where User !endswith \"$\"\n    | project RunTime=TimeGenerated, Computer, User, CommandLine, ParentImage, ProcessId;\nRemovableRundll\n| join kind=inner (\n    WindowsEvent\n    | where TimeGenerated > ago(30d)\n    | where Provider == \"Microsoft-Windows-Sysmon\" and EventID == 3\n    | extend NetImage     = tostring(EventData.Image),\n             ProcessId    = tostring(EventData.ProcessId),\n             DestIp       = tostring(EventData.DestinationIp),\n             DestHostname = tostring(EventData.DestinationHostname),\n             DestPort     = tostring(EventData.DestinationPort)\n    | where NetImage endswith @\"\\rundll32.exe\"\n    | where not(ipv4_is_private(DestIp))\n    | project NetTime=TimeGenerated, Computer, ProcessId, DestIp, DestHostname, DestPort\n  ) on Computer, ProcessId\n| where NetTime between (RunTime .. RunTime + 10m)\n| project RunTime, NetTime, DelaySec = datetime_diff('second', NetTime, RunTime),\n          Computer, User, CommandLine, ParentImage, DestIp, DestHostname, DestPort\n| order by RunTime desc",
+      "sigma_yaml": "title: Rundll32 Execution From Removable Drive Spawned by Explorer or Cmd (Turla Andromeda/Gamarue Hijack to Kazuar)\nstatus: experimental\ndescription: |\n  Detects rundll32.exe being launched by explorer.exe / cmd.exe / userinit.exe against a DLL\n  on a non-system drive letter (D:-Z:) \u2014 the on-host artefact of Turla (UNC4210 / Secret\n  Blizzard) repurposing dormant Andromeda/Gamarue USB worm infections to deliver\n  Kazuar v3 / QUIETCANYON / TinyTurla-NG.\nreferences:\n  - https://www.mandiant.com/resources/blog/turla-galaxy-opportunity\n  - https://attack.mitre.org/groups/G0010/\nauthor: Detection Engineering\ndate: 2024/01/01\ntags:\n  - attack.initial_access\n  - attack.t1091\n  - attack.execution\n  - attack.t1218.011\n  - attack.g0010\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_proc:\n    Image|endswith: '\\rundll32.exe'\n    ParentImage|endswith:\n      - '\\explorer.exe'\n      - '\\cmd.exe'\n      - '\\userinit.exe'\n  selection_cmd:\n    CommandLine|re: '(?i)\\s[D-Z]:\\\\[^\\s\\\"]+\\.dll'\n  filter_machine_acct:\n    User|endswith: '$'\n  filter_known_installers:\n    CommandLine|contains:\n      - 'setup.dll'\n      - 'autorun.dll'\n  condition: selection_proc and selection_cmd and not filter_machine_acct and not filter_known_installers\nfalsepositives:\n  - Legitimate vendor installers shipping on USB media\n  - Field engineers running portable diagnostic tools\nlevel: high",
+      "rationale": "Mandiant's 2022 'Galaxy Opportunity' report (UNC4210) and Microsoft's Secret Blizzard updates document this as a uniquely-Turla pattern: instead of standing up new infrastructure (T1583), Turla compromises infrastructure (T1584.001) by re-registering expired Andromeda/Gamarue sinkhole-able C2 domains, then uses the still-active USB worm population to selectively deploy Kazuar/QUIETCANYON/TinyTurla",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "Protocol",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "SecurityEvent"
+          ],
+          "message": "`Protocol` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RunTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RunTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DriveLetter",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DriveLetter` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentImage",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentImage` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ParentCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ParentCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Microsoft",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`Microsoft` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Windows",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`Windows` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Sysmon",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`Sysmon` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DestIp",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`DestIp` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DestHostname",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`DestHostname` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DestPort",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`DestPort` is not a canonical column of WindowsEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RunTime",
+          "tables_in_scope": [
+            "WindowsEvent"
+          ],
+          "suggestion": null,
+          "message": "`RunTime` is not a canonical column of WindowsEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "missing required field: id"
+      ]
+    }
+  ]
+}
