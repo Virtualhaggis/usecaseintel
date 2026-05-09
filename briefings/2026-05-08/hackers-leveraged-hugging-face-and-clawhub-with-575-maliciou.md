@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClawHub/OpenClaw Cryptominer C2 — velvet-parrot.com / 91.92.242.30
 
-`UC_16_12` · phase: **c2** · confidence: **High**
+`UC_17_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hugging Face dataset / repo payload retrieval via PowerShell, cmd or LOLBin downloader
 
-`UC_16_13` · phase: **delivery** · confidence: **High**
+`UC_17_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### [LLM] svchost.exe Masquerading — Cryptominer Drop From Non-System Path
 
-`UC_16_14` · phase: **install** · confidence: **High**
+`UC_17_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -477,7 +477,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Leveraged Hugging Face and ClawHub With 575+ Malicious Skills to Deploy
 
-`UC_16_11` · phase: **exploit** · confidence: **High**
+`UC_17_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

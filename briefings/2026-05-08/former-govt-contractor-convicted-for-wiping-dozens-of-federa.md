@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mass database/document file deletion burst by single user account
 
-`UC_22_0` · phase: **actions** · confidence: **High**
+`UC_23_0` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### [LLM] Windows event log / USN journal clearing on user endpoint (anti-forensics)
 
-`UC_22_1` · phase: **actions** · confidence: **High**
+`UC_23_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] Pre-return endpoint wipe: cipher /w, sdelete, format, diskpart clean on a user laptop
 
-`UC_22_2` · phase: **actions** · confidence: **High**
+`UC_23_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
