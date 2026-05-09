@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unpatched MOVEit Automation hosts exposed to CVE-2026-4670 / CVE-2026-5174
 
-`UC_79_5` · phase: **exploit** · confidence: **High**
+`UC_80_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

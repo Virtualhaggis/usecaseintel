@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-09
+- [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
 - [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
 - [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
@@ -131,7 +132,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [etherrat distribution spoofing administrative tools via gith](./2026-04-30/etherrat-distribution-spoofing-administrative-tools-via-gith.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
-- [new linux copy fail vulnerability enables root access on maj](./2026-04-30/new-linux-copy-fail-vulnerability-enables-root-access-on-maj.md)
 - [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)

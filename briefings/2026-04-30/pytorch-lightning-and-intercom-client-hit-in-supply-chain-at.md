@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PyTorch Lightning _runtime payload spawns Bun JS runtime (TeamPCP / Mini Shai-Hulud)
 
-`UC_102_11` · phase: **install** · confidence: **High**
+`UC_103_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Trojanized lightning / intercom-client artifacts on disk (router_runtime.js, _runtime/)
 
-`UC_102_12` · phase: **install** · confidence: **High**
+`UC_103_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### [LLM] pip/npm install of trojanized lightning 2.6.2/2.6.3 or intercom-client 7.0.4
 
-`UC_102_13` · phase: **delivery** · confidence: **High**
+`UC_103_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PyTorch Lightning and Intercom-client Hit in Supply Chain Attacks to Steal Crede
 
-`UC_102_10` · phase: **exploit** · confidence: **High**
+`UC_103_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
