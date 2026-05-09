@@ -11,15 +11,9 @@ By Bill Toulas
 May 9, 2026
 10:26 AM
 0 
-
-
 A malicious Hugging Face repository that reached the platform’s trending list impersonated OpenAI’s “Privacy Filter” project to deliver information-stealing malware to Windows users.
-
-
 The repository briefly reached #1 on Hugging Face and accumulated 244,000 downloads before the platform responded to reports and removed it.
-
-
-The Hugging Face platform lets developers and researchers…
+The Hugging Face platform lets developers and researchers share AI mo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -52,92 +46,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hugging Face loader.py — Python spawns hidden PowerShell fetching JSON/batch payload
+### [LLM] Python interpreter spawns hidden-window PowerShell fetching remote JSON payload (loader.py handoff)
 
 `UC_0_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","python3.11.exe","python3.12.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*-w hidden*" OR Processes.process="*-WindowStyle Hidden*" OR Processes.process="*-windowstyle h*" OR Processes.process="*-w h*") AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*start.bat*" OR Processes.parent_process="*loader.py*" OR Processes.parent_process="*privacy-filter*") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="python.exe" Processes.process_name IN ("powershell.exe","pwsh.exe") (Processes.process="*-w*hidden*" OR Processes.process="*WindowStyle*Hidden*" OR Processes.process="*-WindowStyle*1*") (Processes.process="*Invoke-WebRequest*" OR Processes.process="*DownloadString*" OR Processes.process="*WebClient*" OR Processes.process="*Invoke-RestMethod*" OR Processes.process="*.json*") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "python.exe"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)-w(in)?(dow)?s(tyle)?\s+(h(idden)?|1)"
+| where ProcessCommandLine has_any ("Invoke-WebRequest","DownloadString","WebClient","Invoke-RestMethod",".json","FromBase64String")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentImage = InitiatingProcessFolderPath,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Add-MpPreference exclusion for sefirah / start.bat (Hugging Face campaign defense evasion)
+
+`UC_0_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") (Processes.process="*Add-MpPreference*" OR Processes.process="*Set-MpPreference*") (Processes.process="*Exclusion*") (Processes.process="*sefirah*" OR Processes.process="*start.bat*" OR Processes.process="*Open-OSS*" OR Processes.process="*privacy-filter*" OR Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\ProgramData\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","python3.11.exe","python3.12.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)-w(in)?(dow)?style?\s+h(idden)?"
-| where ProcessCommandLine has_any ("iex","Invoke-Expression","DownloadString","Invoke-WebRequest","DownloadFile","start.bat",".bat")
-   or InitiatingProcessCommandLine has_any ("loader.py","privacy-filter","Open-OSS","huggingface")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
+| where ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension")
+| where ProcessCommandLine has_any ("sefirah","start.bat","Open-OSS","privacy-filter")
+   or ProcessCommandLine has_any (@"\AppData\Local\Temp\", @"\ProgramData\", @"\Public\", @"\Users\Public\")
+| where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildCmd = ProcessCommandLine,
+          IntegrityLevel = ProcessIntegrityLevel
 | order by Timestamp desc
 ```
 
-### [LLM] Defender exclusion added for 'sefirah' Rust infostealer payload
-
-`UC_0_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*Add-MpPreference*" OR Processes.process="*Set-MpPreference*") AND (Processes.process="*ExclusionPath*" OR Processes.process="*ExclusionProcess*" OR Processes.process="*ExclusionExtension*" OR Processes.process="*DisableRealtimeMonitoring*") AND Processes.process="*sefirah*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="*sefirah*" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` ] | sort 0 - firstTime
-```
-
-**Defender KQL:**
-```kql
-let ExclusionCmd = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
-    | where ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension","DisableRealtimeMonitoring")
-    | where ProcessCommandLine has "sefirah" or ProcessCommandLine has "recargapopular"
-    | project Timestamp, DeviceName, AccountName, FileName,
-              ProcessCommandLine, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, Source = "DefenderExclusion";
-let SefirahFile = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileCreated","FileRenamed","FileModified")
-    | where FileName has "sefirah"
-    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-              FileName, FolderPath, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              ProcessCommandLine = "", Source = "SefirahFileWrite";
-union ExclusionCmd, SefirahFile
-| order by Timestamp desc
-```
-
-### [LLM] Outbound C2 to recargapopular[.]com — sefirah infostealer exfiltration
+### [LLM] Outbound DNS / network connection to sefirah C2 recargapopular.com
 
 `UC_0_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*recargapopular.com" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [ | tstats `summariesonly` count from datamodel=Web.Web where Web.url="*recargapopular.com*" OR Web.dest="*recargapopular.com*" by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)` ] | append [ | tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*recargapopular.com*" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` ] | sort 0 - firstTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="recargapopular.com" OR DNS.query="*.recargapopular.com") by DNS.src DNS.dest DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*recargapopular.com*" OR Web.dest="recargapopular.com") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)` ] | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="recargapopular.com" OR All_Traffic.dest_host="*.recargapopular.com") by All_Traffic.src All_Traffic.dest_host All_Traffic.app | `drop_dm_object_name(All_Traffic)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["recargapopular.com"]);
-let NetHits = DeviceNetworkEvents
+let c2 = dynamic(["recargapopular.com",".recargapopular.com"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
     | where Timestamp > ago(30d)
-    | where isnotempty(RemoteUrl)
-    | where RemoteUrl has_any (C2Domains)
+    | where RemoteUrl has "recargapopular.com"
     | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteIP, RemotePort, RemoteUrl, Source = "NetworkConnect";
-let DnsHits = DeviceEvents
+              Source = "Network", RemoteUrl, RemoteIP, RemotePort,
+              Process = InitiatingProcessFileName, Cmd = InitiatingProcessCommandLine,
+              SHA256 = InitiatingProcessSHA256 ),
+  ( DeviceEvents
     | where Timestamp > ago(30d)
     | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q has_any (C2Domains)
+    | extend Q = tostring(parse_json(AdditionalFields).query)
+    | where Q has "recargapopular.com"
     | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              RemoteIP = "", RemotePort = int(null), RemoteUrl = Q, Source = "DNS";
-union NetHits, DnsHits
+              Source = "DNS", RemoteUrl = Q, RemoteIP = "", RemotePort = int(null),
+              Process = InitiatingProcessFileName, Cmd = InitiatingProcessCommandLine,
+              SHA256 = InitiatingProcessSHA256 )
 | order by Timestamp desc
 ```
 
