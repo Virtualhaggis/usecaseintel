@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PamDOORa — /etc/pam.d/sshd tamper or drop of malicious pam_linux.so PAM module
 
-`UC_3_4` · phase: **install** · confidence: **High**
+`UC_4_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### [LLM] PamDOORa — sshd-spawned netcat exfil to TCP 1234 (PAM credential drop)
 
-`UC_3_5` · phase: **actions** · confidence: **High**
+`UC_4_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ SshdDescendants
 
 ### [LLM] PamDOORa — Anti-forensic wipe of utmp / wtmp / btmp / lastlog
 
-`UC_3_6` · phase: **actions** · confidence: **High**
+`UC_4_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — New PamDOORa Backdoor Attacking Linux Systems to Steal SSH Credentials
 
-`UC_3_3` · phase: **exploit** · confidence: **High**
+`UC_4_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

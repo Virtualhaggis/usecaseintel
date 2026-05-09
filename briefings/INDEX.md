@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
 - [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
 - [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
+- [tclbanker malware targets users through self propagating wha](./2026-05-09/tclbanker-malware-targets-users-through-self-propagating-wha.md)
 
 ## 2026-05-08
 - [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
@@ -19,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
-- [fake moustache bypasses age verification system raising onli](./2026-05-08/fake-moustache-bypasses-age-verification-system-raising-onli.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
 - [hackers leveraged hugging face and clawhub with 575 maliciou](./2026-05-08/hackers-leveraged-hugging-face-and-clawhub-with-575-maliciou.md)

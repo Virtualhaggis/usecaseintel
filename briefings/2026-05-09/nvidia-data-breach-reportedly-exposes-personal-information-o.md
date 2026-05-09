@@ -10,12 +10,8 @@ Home Cyber Security News
 NVIDIA Data Breach Reportedly Exposes Personal Information of GeForce Users 
 By Dhivya 
 May 9, 2026 
-
-
-
-
 A data breach at GFN.AM, an authorized NVIDIA GeForce NOW cloud gaming service provider operating under “GFN CLOUD INTERNET SERVICES” LLC, has exposed personal information belonging to registered users. 
-The company disclosed the incident on May 5, 2026, revealing that unauthorized access to its database occurred as far back as March 9, 2026, nearly two months be…
+The company disclosed the incident on May 5, 2026, revealing that unauthorized access to its database occurred as far back as March 9, 2026, nearly two months before dis…
 
 ## Indicators of Compromise (high-fidelity only)
 
