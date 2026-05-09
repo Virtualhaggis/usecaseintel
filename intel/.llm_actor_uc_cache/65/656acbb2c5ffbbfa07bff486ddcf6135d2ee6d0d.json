@@ -1,0 +1,84 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 (ScarCruft / Reaper) RokRat & Dolphin C2 over legitimate cloud-storage APIs (pCloud / Yandex Disk / Dropbox)",
+      "description": "Hunts APT37's signature C2 design \u2014 RokRat, Dolphin and Chinotto exfiltrate to and beacon from legitimate cloud-storage REST endpoints (pCloud, Yandex Disk, Dropbox, Google Drive) instead of attacker-owned infra. Flags non-browser / non-sync-client processes touching those APIs, especially LOLBins or processes living in user-writable paths.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.001",
+        "T1102.002",
+        "T1567.002",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.dest_ip) as dest_ip values(Network_Traffic.dest_port) as dest_port values(Network_Traffic.url) as url values(Network_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (Network_Traffic.url IN (\"*api.pcloud.com*\",\"*p-eu1.pcloud.com*\",\"*p-us1.pcloud.com*\",\"*cloud-api.yandex.net*\",\"*disk.yandex*\",\"*content.dropboxapi.com*\",\"*api.dropboxapi.com*\",\"*www.googleapis.com/drive*\",\"*www.googleapis.com/upload/drive*\") OR Network_Traffic.dest IN (\"api.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\")) NOT (Network_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"OneDrive.exe\",\"Dropbox.exe\",\"YandexDisk*.exe\",\"GoogleDriveFS.exe\",\"outlook.exe\",\"Teams.exe\",\"slack.exe\",\"Code.exe\",\"Zoom.exe\")) by Network_Traffic.src Network_Traffic.user Network_Traffic.process_name Network_Traffic.process_path Network_Traffic.dest | `drop_dm_object_name(Network_Traffic)` | where match(process_path, \"(?i)\\\\\\\\(AppData|ProgramData|Users\\\\\\\\Public|Windows\\\\\\\\Temp|Temp)\\\\\\\\\") OR match(process_name, \"(?i)^(powershell|pwsh|mshta|rundll32|regsvr32|wscript|cscript|cmd|msbuild|installutil|certutil)\\\\.exe$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let _allowed_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"onedrive.exe\",\"dropbox.exe\",\"yandexdisk.exe\",\"yandexdisk2.exe\",\"googledrivefs.exe\",\"googledrivesync.exe\",\"outlook.exe\",\"teams.exe\",\"msteams.exe\",\"slack.exe\",\"code.exe\",\"zoom.exe\",\"postman.exe\"]);\nlet _lolbins = dynamic([\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"msbuild.exe\",\"installutil.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet _scarcruft_cloud_hosts = dynamic([\"api.pcloud.com\",\"p-eu1.pcloud.com\",\"p-us1.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"disk.yandex.com\",\"disk.yandex.ru\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"ConnectionSuccess\",\"HttpConnectionInspected\")\n| where RemoteUrl has_any (_scarcruft_cloud_hosts)\n| where not(RemoteUrl has_any (\"googleapis.com/oauth2\",\"googleapis.com/discovery\",\"googleapis.com/gmail\",\"googleapis.com/calendar\"))\n| where InitiatingProcessFileName !in~ (_allowed_clients)\n| where InitiatingProcessFileName in~ (_lolbins)\n   or InitiatingProcessFolderPath has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine, InitiatingProcessSHA256,\n          RemoteUrl, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "let _allowed_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"onedrive.exe\",\"dropbox.exe\",\"yandexdisk.exe\",\"googledrivefs.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\",\"code.exe\",\"zoom.exe\"]);\nlet _lolbins = dynamic([\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"msbuild.exe\",\"installutil.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet _scarcruft_cloud_hosts = dynamic([\"api.pcloud.com\",\"p-eu1.pcloud.com\",\"p-us1.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"disk.yandex.com\",\"disk.yandex.ru\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where Url has_any (_scarcruft_cloud_hosts) or DstHostname has_any (_scarcruft_cloud_hosts)\n| where not(Url has_any (\"googleapis.com/oauth2\",\"googleapis.com/gmail\",\"googleapis.com/calendar\"))\n| extend ActingProcessLeaf = tolower(tostring(split(ActingProcessName, @\"\\\")[-1]))\n| where ActingProcessLeaf !in (_allowed_clients)\n| where ActingProcessLeaf in (_lolbins)\n   or ActingProcessName has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\")\n| project TimeGenerated, DvcHostname, SrcUsername, ActingProcessName, ActingProcessCommandLine, Url, DstIpAddr, DstPortNumber\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 RokRat / Dolphin C2 via Legitimate Cloud-Storage APIs\nid: 4f6c7e0c-9b2a-4f5b-9e2c-37apt37cloudc2\nstatus: experimental\ndescription: Detects APT37 (ScarCruft / Reaper) RokRat & Dolphin malware beaconing to legitimate cloud-storage REST endpoints (pCloud, Yandex Disk, Dropbox, Google Drive) from non-browser / LOLBin / user-writable-path processes\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://www.welivesecurity.com/2022/11/30/whos-swimming-south-korean-waters-meet-scarcrufts-dolphin/\n  - https://blog.talosintelligence.com/rokrat-analysis/\nauthor: detection-engineering\ndate: 2026/05/09\ntags:\n  - attack.command_and_control\n  - attack.t1071.001\n  - attack.t1102.002\n  - attack.g0067\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_host:\n    DestinationHostname|contains:\n      - 'api.pcloud.com'\n      - 'pcloud.com'\n      - 'cloud-api.yandex.net'\n      - 'disk.yandex'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'googleapis.com'\n  selection_lolbin:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\mshta.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\cmd.exe'\n      - '\\msbuild.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n  selection_userpath:\n    Image|contains:\n      - '\\AppData\\Local\\Temp\\'\n      - '\\AppData\\Roaming\\'\n      - '\\ProgramData\\'\n      - '\\Users\\Public\\'\n      - '\\Windows\\Temp\\'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\OneDrive.exe'\n      - '\\Dropbox.exe'\n      - '\\GoogleDriveFS.exe'\n      - '\\YandexDisk.exe'\n  filter_oauth:\n    DestinationHostname|contains:\n      - 'googleapis.com/oauth2'\n      - 'googleapis.com/gmail'\n      - 'googleapis.com/calendar'\n  condition: selection_host and (selection_lolbin or selection_userpath) and not filter_browsers and not filter_oauth\nfalsepositives:\n  - Custom dev tooling using cloud storage SDKs from non-default install paths\n  - Internal automation scripts in PowerShell touching Drive / Dropbox\nlevel: high",
+      "rationale": "RokRat (Talos 2018-onwards), Dolphin (ESET 2022) and Chinotto (Kaspersky 2021) \u2014 APT37's signature implants \u2014 uniquely chain together pCloud + Yandex Disk + Dropbox APIs as bidirectional C2 channels rather than attacker-controlled domains. The combination of (a) those specific cloud APIs, (b) a non-vendor-sync-client requestor, and (c) execution from a LOLBin or user-writable path is the character",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT37 (Group123) weaponised LNK self-extracting PowerShell carve",
+      "description": "Detects APT37's documented LNK delivery technique where the shortcut file (mailed via spear-phish targeting NK defectors / journalists / SK think-tanks) launches PowerShell which reads itself, seeks past the LNK header, decodes the embedded decoy + RokRat/Chinotto shellcode, and writes both. Flags explorer-spawned PowerShell/cmd whose command line references an .lnk file together with byte-read / base64 / substring carving primitives.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.001",
+        "T1027",
+        "T1140",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name=\"explorer.exe\" Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\") (Processes.process=\"*.lnk*\" OR Processes.process=\"*Get-Content*\" OR Processes.process=\"*ReadAllBytes*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*-Encoding Byte*\" OR Processes.process=\"*::Copy*\" OR Processes.process=\"*Substring(*\") NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, \"(?i)\\\\.lnk\") AND match(process, \"(?i)(Get-Content|ReadAllBytes|FromBase64String|-Encoding\\\\s+Byte|Substring|::Copy|copy\\\\s+/b)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// APT37 LNK self-carving chain \u2014 explorer-spawned shell reading an .lnk by byte\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName =~ \"explorer.exe\"\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\")\n| extend Cmd = tolower(ProcessCommandLine)\n| where Cmd has \".lnk\"\n| where Cmd has_any (\n    \"get-content\",\n    \"gc \",\n    \"readallbytes\",\n    \"frombase64string\",\n    \"-encoding byte\",\n    \"-encodedcommand\",\n    \"::copy\",\n    \"copy /b\",\n    \"substring(\",\n    \"[io.file]\",\n    \"createdecryptor\",\n    \"writeallbytes\")\n| project Timestamp, DeviceName, AccountName,\n          FileName, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessParentFileName,\n          InitiatingProcessAccountName, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// APT37 LNK self-carving chain on Sentinel ASIM ProcessCreate\nImProcessCreate\n| where TimeGenerated > ago(30d)\n| where ActorUsername !endswith \"$\"\n| where ParentProcessName has \"explorer.exe\"\n| extend ChildLeaf = tolower(tostring(split(TargetProcessName, @\"\\\")[-1]))\n| where ChildLeaf in (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\")\n| extend Cmd = tolower(TargetProcessCommandLine)\n| where Cmd has \".lnk\"\n| where Cmd has_any (\"get-content\",\"gc \",\"readallbytes\",\"frombase64string\",\"-encoding byte\",\"-encodedcommand\",\"::copy\",\"copy /b\",\"substring(\",\"[io.file]\",\"createdecryptor\",\"writeallbytes\")\n| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, SHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 (ScarCruft / Group123) LNK Self-Extracting PowerShell Carve\nid: 9d2bf3e1-1c4a-46e8-9fa5-37apt37lnkcarve\nstatus: experimental\ndescription: Detects APT37's signature LNK delivery where explorer launches PowerShell/cmd that reads the shortcut by byte and decodes the embedded decoy + RokRat / Chinotto shellcode. Documented in Cisco Talos Group123, ASEC, and Genians reporting on ScarCruft (TEMP.Reaper, InkySquid).\nreferences:\n  - https://blog.talosintelligence.com/who-wasnt-responsible-for-olympic/\n  - https://asec.ahnlab.com/en/category/malware-information/apt-malware/scarcruft/\n  - https://attack.mitre.org/groups/G0067/\nauthor: detection-engineering\ndate: 2026/05/09\ntags:\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1204.002\n  - attack.t1027\n  - attack.g0067\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\explorer.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\mshta.exe'\n  selection_lnk:\n    CommandLine|contains: '.lnk'\n  selection_carve:\n    CommandLine|contains:\n      - 'Get-Content'\n      - 'gc '\n      - 'ReadAllBytes'\n      - 'FromBase64String'\n      - '-Encoding Byte'\n      - '-EncodedCommand'\n      - '::Copy'\n      - 'copy /b'\n      - 'Substring('\n      - '[IO.File]'\n      - 'WriteAllBytes'\n      - 'CreateDecryptor'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection_parent and selection_child and selection_lnk and selection_carve and not filter_machine\nfalsepositives:\n  - Legitimate admin scripts that read LNK targets via PowerShell (rare in user-mode)\n  - Endpoint-management tooling enumerating Recent Items\nlevel: high",
+      "rationale": "The self-reading LNK \u2192 PowerShell byte-carve chain is the documented ScarCruft / Group123 / InkySquid initial-access pattern across Talos (2018), AhnLab ASEC (2021-2024), Genians, and ESET Dolphin (2022). The triple of (explorer parent) + (script-host child) + (.lnk literal in cmdline alongside byte-level read primitives) is highly specific to APT37 LNK staging \u2014 generic PowerShell launches lack t",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

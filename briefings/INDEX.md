@@ -8,16 +8,18 @@ _590 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-09
+- [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
+- [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
+
 ## 2026-05-08
 - [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
 - [cisa gives feds four days to patch ivanti flaw exploited as ](./2026-05-08/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-.md)
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
-- [darkmoon ai powered autonomous penetration testing platform ](./2026-05-08/darkmoon-ai-powered-autonomous-penetration-testing-platform-.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [fake moustache bypasses age verification system raising onli](./2026-05-08/fake-moustache-bypasses-age-verification-system-raising-onli.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
-- [hackers abuse signed logitech installer to deploy tclbanker ](./2026-05-08/hackers-abuse-signed-logitech-installer-to-deploy-tclbanker-.md)
 - [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
 - [hackers leveraged hugging face and clawhub with 575 maliciou](./2026-05-08/hackers-leveraged-hugging-face-and-clawhub-with-575-maliciou.md)
 - [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
