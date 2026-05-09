@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Škoda Security Incident Exposes Customers Data From Online Shop
 
-`UC_9_5` · phase: **exploit** · confidence: **High**
+`UC_10_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

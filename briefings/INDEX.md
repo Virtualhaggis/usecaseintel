@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
 - [fake openai repository on hugging face pushes infostealer ma](./2026-05-09/fake-openai-repository-on-hugging-face-pushes-infostealer-ma.md)
+- [jdownloader site hacked to replace installers with python ra](./2026-05-09/jdownloader-site-hacked-to-replace-installers-with-python-ra.md)
 - [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
 - [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
 - [tclbanker malware targets users through self propagating wha](./2026-05-09/tclbanker-malware-targets-users-through-self-propagating-wha.md)
@@ -42,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
-- [americans sentenced for running laptop farms for north korea](./2026-05-07/americans-sentenced-for-running-laptop-farms-for-north-korea.md)
 - [australia warns of clickfix attacks pushing vidar stealer ma](./2026-05-07/australia-warns-of-clickfix-attacks-pushing-vidar-stealer-ma.md)
 - [canvas login portals hacked in mass shinyhunters extortion c](./2026-05-07/canvas-login-portals-hacked-in-mass-shinyhunters-extortion-c.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
