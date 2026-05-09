@@ -10,12 +10,8 @@ Home Cyber Security
 Let’s Encrypt Halts Certificate Issuance After Cross-Signed Root Certificate Incident 
 By Guru Baran 
 May 9, 2026 
-
-
-
-
 Let’s Encrypt temporarily suspended all certificate issuance on May 8, 2026, after engineers identified a critical issue involving a cross-signed certificate linking the organization’s Generation X root to its upcoming Generation Y root infrastructure .
-The incident triggered a complete shutdown of issuance across both production and staging environments…
+The incident triggered a complete shutdown of issuance across both production and staging environments before …
 
 ## Indicators of Compromise (high-fidelity only)
 

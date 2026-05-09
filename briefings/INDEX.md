@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-09
 - [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
 - [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
+- [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
 
 ## 2026-05-08
 - [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
@@ -25,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
 - [koda security incident exposes customers data from online sh](./2026-05-08/koda-security-incident-exposes-customers-data-from-online-sh.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
-- [new infostealer campaign uses github releases for payload ho](./2026-05-08/new-infostealer-campaign-uses-github-releases-for-payload-ho.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [new pamdoora backdoor attacking linux systems to steal ssh c](./2026-05-08/new-pamdoora-backdoor-attacking-linux-systems-to-steal-ssh-c.md)

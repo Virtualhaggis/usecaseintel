@@ -10,12 +10,8 @@ Home Cyber Security
 Critical Microsoft 365 Copilot Vulnerabilities Expose sensitive Information 
 By Guru Baran 
 May 9, 2026 
-
-
-
-
 Microsoft has disclosed and fully remediated three critical information disclosure vulnerabilities affecting Microsoft 365 Copilot and Copilot Chat in Microsoft Edge, all released on May 7, 2026, requiring no action from end users or administrators.
-Microsoft’s Security Response Center published advisories for CVE-2026-26129, CVE-2026-26164, and CVE-2026-33111 as …
+Microsoft’s Security Response Center published advisories for CVE-2026-26129, CVE-2026-26164, and CVE-2026-33111 as part of …
 
 ## Indicators of Compromise (high-fidelity only)
 
