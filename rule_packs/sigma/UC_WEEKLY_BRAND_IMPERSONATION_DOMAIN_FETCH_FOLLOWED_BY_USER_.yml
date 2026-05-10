@@ -1,0 +1,47 @@
+title: [WEEKLY] Brand-Impersonation Domain Fetch Followed by User-Context Loader Within 10 Minutes
+id: UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_
+status: experimental
+description: Detects the cross-campaign tradecraft where a user-context process (browser, IDE, terminal, installer, package manager) contacts a domain or URL impersonating a trusted AI / developer / mobile brand (Claude, Anthropic, OpenAI, Hugging Face, OpenVSX, OpenClaw, macOS utilities, Google Play companions, etc.) and the same host then spawns a script-interpreter or LOLBin loader (PowerShell, mshta, rundll32, regsvr32, cscript, certutil, bitsadmin, curl/wget, msiexec, node, python, osascript, bash) within a 10-minute window. This fortnight saw an unusual cluster of corroborated brand-impersonation campaigns driving this hook: the Microsoft Security Blog 'ClickFix macOS utilities' write-up, BleepingComputer's 'Fake Claude AI website delivers Beagle' and 'Fake OpenAI repository on Hugging Face' reports, Cyber Security News on the 'Fake OpenClaw installer' and 'InstallFix Fake Claude installer pages', THN/BleepingComputer 'GlassWorm v2 across 73 fake VS Code extensions', THN's 'DPRK AI-inserted npm malware', THN/ESET 'CallPhantom 28 fake call-history apps', THN's 'Fake CAPTCHA / Keitaro ClickFix', and Cyber Security News' 'Fake moustache age-bypass'. Kill-chain coverage spans delivery (impersonation lure) → user execution → install/loader → c2 fetch, so the joint signal survives even as IOCs rotate. Fires only when BOTH legs occur on the same device in order; does NOT fire on the lookalike-domain visit alone (analyst-fatigue trap) and does NOT fire on script-interpreter / LOLBin spawn without the impersonation precursor — those cases are covered by other catalogue rules.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1583_008
+  - attack.t1656
+  - attack.t1566_002
+  - attack.t1204_001
+  - attack.t1204_002
+  - attack.t1204_004
+  - attack.t1195_002
+  - attack.t1059_001
+  - attack.t1218_005
+  - attack.t1105
+  - attack.t1071_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'allowed'
+      - 'internal'
+      - 'powershell.exe'
+      - 'pwsh.exe'
+      - 'mshta.exe'
+      - 'rundll32.exe'
+      - 'regsvr32.exe'
+      - 'cscript.exe'
+      - 'wscript.exe'
+      - 'cmd.exe'
+      - 'bitsadmin.exe'
+      - 'certutil.exe'
+      - 'curl.exe'
+      - 'wget.exe'
+      - 'msiexec.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

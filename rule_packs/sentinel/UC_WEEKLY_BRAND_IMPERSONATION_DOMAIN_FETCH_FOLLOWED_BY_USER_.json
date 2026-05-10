@@ -1,0 +1,48 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Brand-Impersonation Domain Fetch Followed by User-Context Loader Within 10 Minutes",
+        "description": "Detects the cross-campaign tradecraft where a user-context process (browser, IDE, terminal, installer, package manager) contacts a domain or URL impersonating a trusted AI / developer / mobile brand (Claude, Anthropic, OpenAI, Hugging Face, OpenVSX, OpenClaw, macOS utilities, Google Play companions, etc.) and the same host then spawns a script-interpreter or LOLBin loader (PowerShell, mshta, rundll32, regsvr32, cscript, certutil, bitsadmin, curl/wget, msiexec, node, python, osascript, bash) within a 10-minute window. This fortnight saw an unusual cluster of corroborated brand-impersonation campaigns driving this hook: the Microsoft Security Blog 'ClickFix macOS utilities' write-up, BleepingComputer's 'Fake Claude AI website delivers Beagle' and 'Fake OpenAI repository on Hugging Face' reports, Cyber Security News on the 'Fake OpenClaw installer' and 'InstallFix Fake Claude installer pages', THN/BleepingComputer 'GlassWorm v2 across 73 fake VS Code extensions', THN's 'DPRK AI-inserted npm malware', THN/ESET 'CallPhantom 28 fake call-history apps', THN's 'Fake CAPTCHA / Keitaro ClickFix', and Cyber Security News' 'Fake moustache age-bypass'. Kill-chain coverage spans delivery (impersonation lure) \u2192 user execution \u2192 install/loader \u2192 c2 fetch, so the joint signal survives even as IOCs rotate. Fires only when BOTH legs occur on the same device in order; does NOT fire on the lookalike-domain visit alone (analyst-fatigue trap) and does NOT fire on script-interpreter / LOLBin spawn without the impersonation precursor \u2014 those cases are covered by other catalogue rules.\n\nRationale: All twelve articles converge on brand-impersonation as the delivery hook (fake Claude / OpenAI / Hugging Face / OpenVSX / OpenClaw / macOS utility / Keitaro CAPTCHA / Play-Store companion apps), and the post-lure behaviour in every case is a user-context script interpreter or LOLBin staging credential theft or further C2 fetch. Joining a lookalike-brand network leg with a short-window loader spawn on the same host catches that joint chain without leaning on IOCs that the actors are already rotating weekly.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet WindowMin = 10m;\nlet _impersonation_regex = @\"(?i)(claude\\-pro|claudecode|claudecodedoc|anthropic\\-[a-z0-9]|openai\\-[a-z0-9]|huggingface\\-[a-z0-9]|openvsx\\-[a-z0-9]|openclaw|cursor\\-[a-z0-9]|gemini\\-[a-z0-9]|copilot\\-[a-z0-9]|claude\\.msixbundle|download\\-version\\.1\\-5\\-8|macclean|mac\\-storage\\-guide|cleanmymacos|recargapopular|csec\\-c2\\-server|steamhostserver|serverconect|transcloud)\";\nlet _suspicious_children = dynamic([\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cscript.exe\",\"wscript.exe\",\"cmd.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"curl.exe\",\"wget.exe\",\"msiexec.exe\",\"node.exe\",\"python.exe\",\"python3.exe\",\"osascript\",\"bash\",\"sh\"]);\nlet Downloads = ImWebSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where isnotempty(Url)\n    | where Url matches regex _impersonation_regex\n         or DvcDomain matches regex _impersonation_regex\n    | project DlTime = TimeGenerated, DvcHostname,\n              DlUrl = Url, DlDomain = DvcDomain, DlIp = DstIpAddr,\n              DlInitiator = ActingProcessName;\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| where ActorUsername !endswith \"$\"\n| extend ChildLeaf = tolower(tostring(split(TargetProcessName, @\"\\\")[-1]))\n| where ChildLeaf in (_suspicious_children) or tolower(TargetProcessName) has_any (_suspicious_children)\n| project ExecTime = TimeGenerated, DvcHostname, ActorUsername,\n          ChildProc = TargetProcessName, ChildCmd = TargetProcessCommandLine,\n          ParentProc = ParentProcessName\n| join kind=inner Downloads on DvcHostname\n| where ExecTime between (DlTime .. DlTime + WindowMin)\n| extend DelaySec = datetime_diff('second', ExecTime, DlTime)\n| project DlTime, ExecTime, DelaySec, DvcHostname, ActorUsername,\n          DlDomain, DlUrl, DlIp, DlInitiator, ParentProc, ChildProc, ChildCmd\n| order by DlTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1583.008",
+          "T1656",
+          "T1566.002",
+          "T1204.001",
+          "T1204.002",
+          "T1204.004",
+          "T1195.002",
+          "T1059.001",
+          "T1218.005",
+          "T1105",
+          "T1071.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

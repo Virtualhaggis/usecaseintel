@@ -1,0 +1,43 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Vendor / Third-Party OAuth App or SP Sign-in From Unbaselined Egress Followed by Bulk SaaS Object Read",
+        "description": "Chains two events on the same identity within a 30-minute window: (1) a successful OAuth-app, service-principal, or federated SSO sign-in from an (AppId,SrcIP) pair that has never been seen in the prior 30-day baseline; and (2) the same actor performing bulk reads (>=50 files / mail items / repository pulls / customer-record queries) immediately afterwards. This is the joint fingerprint of the ShinyHunters Vimeo (\"Vimeo Data Breach Exposes 119,000 Users\" and \"Vimeo data breach exposes personal information of 119,000 people\", May 2026) and Zara (\"Zara data breach exposed personal information of 197,000 people\", May 2026) intrusions, which abused vendor service principals (e.g. Anodot OAuth app) and named UNC6661/UNC6671 proxy IPs to pivot from federated identity to mass data theft; the RansomHouse Trellix source-code-repository compromise (\"Trellix Confirms Source Code Breach...\", \"Trellix source code breach claimed by RansomHouse hackers\", \"Trellix Breach \u2013 RansomHouse Claims Access...\", \"Trellix discloses data breach...\", May 2026) where attackers logged in to a third-party-managed code SaaS and pulled repo archives; the NVIDIA / GFN.AM regional-partner breach (\"NVIDIA confirms GeForce NOW data breach affecting Armenian users\", \"NVIDIA Data Breach Reportedly Exposes Personal Information of GeForce Users\", May 2026) where a partner-side admin account was used to read the user database; the DAEMON Tools supply-chain breach (\"DAEMON Tools devs confirm breach\", May 2026); and the PhantomCore TrueConf campaign (\"PhantomCore Exploits TrueConf Vulnerabilities...\", April 2026) which pivoted via SaaS valid-account abuse after exploit. Kill-chain stages spanned: initial access via T1199 trusted relationship, defense evasion via T1550.001 application-token reuse, and actions-on-objective via T1530 / T1213 bulk repository / cloud-object read. The rule fires only when BOTH stages are present on the same principal inside the correlation window; it will NOT fire on routine vendor sign-ins from their canonical egress, on ad-hoc downloads under the bulk threshold, or on first-party Microsoft / Google built-in apps (which are excluded from the SP scope).\n\nRationale: The joint signal across all 12 articles is not a CVE or a malware family but a trusted-identity-from-non-canonical-egress pattern that immediately precedes bulk data exfiltration. ShinyHunters (Vimeo, Zara), RansomHouse (Trellix), and the GFN.AM regional partner case all hinge on the same shape: an OAuth-app, service-principal, or federated identity authenticating from infrastructure outside its 30-day baseline, then performing high-volume object reads against the SaaS workload the principal has access to. The two-stage temporal correlation (unbaselined sign-in -> bulk read inside 30 minutes by the same actor) is what raises this above per-IOC hunts and above the generic Datadog SaaS-anomaly defaults, because it pairs the trust-abuse pivot with the impact action in a single alert.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let _Lookback = 14d;\nlet _Baseline = 30d;\nlet _CorrWindow = 30m;\nlet _MinObjects = 50;\nlet _FirstPartyApps = dynamic([\"Office 365\",\"Microsoft Teams\",\"Microsoft Outlook\",\"SharePoint Online\",\"OneDrive\",\"Microsoft 365 Apps\",\"Microsoft Graph PowerShell\",\"Microsoft Edge\",\"Windows Sign In\"]);\n// Stage 1 \u2014 baseline of (AppId, IPAddress) pairs across all sign-in surfaces\nlet _BaselinePairs =\n    union isfuzzy=true\n        (SigninLogs                       | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0),\n        (AADNonInteractiveUserSignInLogs  | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0),\n        (AADServicePrincipalSignInLogs    | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0)\n    | summarize Seen = count() by AppId, IPAddress\n    | where Seen > 2;\n// Stage 1 \u2014 recent successful auths from unbaselined (AppId, IPAddress) pairs\nlet SuspectAuth =\n    union isfuzzy=true\n        (SigninLogs\n            | where TimeGenerated > ago(_Lookback) | where ResultType == 0\n            | extend Principal = UserPrincipalName, PrincipalId = UserId, AppKind = \"User\"),\n        (AADNonInteractiveUserSignInLogs\n            | where TimeGenerated > ago(_Lookback) | where ResultType == 0\n            | extend Principal = UserPrincipalName, PrincipalId = UserId, AppKind = \"NonInteractive\"),\n        (AADServicePrincipalSignInLogs\n            | where TimeGenerated > ago(_Lookback) | where ResultType == 0\n            | extend Principal = ServicePrincipalName, PrincipalId = ServicePrincipalId, AppKind = \"ServicePrincipal\")\n    | where AppDisplayName !in~ (_FirstPartyApps)\n    | project SignInTime = TimeGenerated, Principal, PrincipalId, AppDisplayName, AppId, AuthIP = IPAddress, AppKind\n    | join kind=leftanti _BaselinePairs on AppId, $left.AuthIP == $right.IPAddress;\n// Stage 2 \u2014 bulk SaaS object reads (Exchange / SharePoint / OneDrive) by same principal in the window\nOfficeActivity\n| where TimeGenerated > ago(_Lookback)\n| where Operation in~ (\"FileDownloaded\",\"FileAccessed\",\"FilePreviewed\",\"FileSyncDownloadedFull\",\"MailItemsAccessed\",\"MessageRead\",\"SearchQueryPerformed\",\"FileExported\",\"PageExported\")\n| extend Principal = coalesce(UserId, MailboxOwnerUPN)\n| join kind=inner SuspectAuth on Principal\n| where TimeGenerated between (SignInTime .. SignInTime + _CorrWindow)\n| summarize ObjectsRead = count(),\n            DistinctObjects = dcount(coalesce(OfficeObjectId, SourceFileName, Item)),\n            Operations = make_set(Operation, 12),\n            Workloads = make_set(OfficeWorkload, 6),\n            FirstAction = min(TimeGenerated),\n            LastAction  = max(TimeGenerated)\n            by Principal, AppDisplayName, AuthIP, AppKind, SignInTime\n| where ObjectsRead >= _MinObjects\n| project SignInTime, FirstAction, LastAction, Principal, AppDisplayName, AppKind,\n          AuthIP, ObjectsRead, DistinctObjects, Operations, Workloads\n| order by FirstAction desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1199",
+          "T1078.004",
+          "T1550.001",
+          "T1530",
+          "T1213",
+          "T1195.002"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Cross-Platform ClickFix Paste-to-Pipe Loader (UI-Parent Shell with Decode-and-Execute Payload)",
+        "description": "Detects an interactive UI surface (web browser, file-explorer Run dialog, or terminal emulator) spawning a command interpreter whose command line carries a one-shot decode-and-pipe loader signature \u2014 base64-decode piped to a shell, curl/wget piped to bash/sh/python, PowerShell `-EncodedCommand` / `FromBase64String` / `IEX DownloadString` cradles, or `osascript -e` with encoded payload. This fortnight the technique drives the delivery stage across most of the catalogue: the New Linux PamDOORa Backdoor explicitly distributes via T1204.004 paste-to-shell, Quasar Linux RAT (QLNX) uses the same vector to land on developer hosts, TCLBANKER chains it into a banking-trojan installer, and both the One Click / Patient Zero webinar piece and the 25M Alerts retrospective name ClickFix as the dominant 2026 Patient-Zero technique. The UC spans the delivery and execution kill-chain stages in a single event window because, for ClickFix, the clipboard paste IS the delivery and the spawned pipeline IS the execution. It fires when the parent is an interactive UI process AND the child is a shell/interpreter AND the command line contains a decode-and-execute pattern \u2014 the textbook ClickFix signature. It will NOT fire on scripted automation where the shell's parent is sshd / cron / systemd / a build agent, nor on PowerShell launched from a console host with a static cmdline (no decode primitive), so DevOps scripted pipelines, scheduled installers, and admin SSH sessions are excluded by construction.\n\nRationale: Every article in this fortnight's bundle that maps T1204.004 \u2014 PamDOORa, Quasar Linux RAT, TCLBANKER, the One Click Patient Zero piece and the 25M Alerts retrospective \u2014 converges on the same shape: a UI surface (browser, file-explorer Run dialog, or terminal pasted into by the victim) immediately spawns an interpreter whose command line carries a decode-then-execute primitive. Joining on UI-parent + interpreter-child + decode/cradle-payload in a single event captures the cross-platform ClickFix signature without leaning on any rotating IOC.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let _shell_names = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"bash\",\"sh\",\"zsh\",\"dash\",\"osascript\",\"python\",\"python3\",\"perl\"]);\nlet _ui_parents = dynamic([\"explorer.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"safari\",\"Terminal\",\"Terminal.app\",\"gnome-terminal\",\"gnome-terminal-server\",\"konsole\",\"xterm\",\"iTerm2\",\"WindowsTerminal.exe\",\"wt.exe\"]);\nImProcessCreate\n| where TimeGenerated > ago(7d)\n| where ActorUsername !endswith \"$\"\n| where TargetProcessName has_any (_shell_names)\n| where ParentProcessName has_any (_ui_parents)\n| where TargetProcessCommandLine matches regex @\"(?i)(base64\\s+(-d|--decode)[^|]*\\||echo\\s+[A-Za-z0-9+/=]{20,}[^|]*\\|[^|]*base64[^|]*\\||curl\\s+\\S+\\s*\\|\\s*(sh|bash|zsh|python|perl)|wget\\s+\\S+\\s*\\|\\s*(sh|bash|zsh|python|perl)|-(encodedcommand|enc)\\s+[A-Za-z0-9+/=]{20,}|frombase64string\\s*\\(|downloadstring\\s*\\(|iex\\s*\\(|invoke-expression|iwr\\s+-useb|osascript\\s+-e.*do shell script)\"\n| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine, TargetProcessSHA256\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1204.004",
+          "T1059.001",
+          "T1059.004",
+          "T1140",
+          "T1105"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

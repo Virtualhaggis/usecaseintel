@@ -1,0 +1,41 @@
+title: [WEEKLY] Cross-Platform ClickFix Paste-to-Pipe Loader (UI-Parent Shell with Decode-and-Execute Payload)
+id: UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA
+status: experimental
+description: Detects an interactive UI surface (web browser, file-explorer Run dialog, or terminal emulator) spawning a command interpreter whose command line carries a one-shot decode-and-pipe loader signature — base64-decode piped to a shell, curl/wget piped to bash/sh/python, PowerShell `-EncodedCommand` / `FromBase64String` / `IEX DownloadString` cradles, or `osascript -e` with encoded payload. This fortnight the technique drives the delivery stage across most of the catalogue: the New Linux PamDOORa Backdoor explicitly distributes via T1204.004 paste-to-shell, Quasar Linux RAT (QLNX) uses the same vector to land on developer hosts, TCLBANKER chains it into a banking-trojan installer, and both the One Click / Patient Zero webinar piece and the 25M Alerts retrospective name ClickFix as the dominant 2026 Patient-Zero technique. The UC spans the delivery and execution kill-chain stages in a single event window because, for ClickFix, the clipboard paste IS the delivery and the spawned pipeline IS the execution. It fires when the parent is an interactive UI process AND the child is a shell/interpreter AND the command line contains a decode-and-execute pattern — the textbook ClickFix signature. It will NOT fire on scripted automation where the shell's parent is sshd / cron / systemd / a build agent, nor on PowerShell launched from a console host with a static cmdline (no decode primitive), so DevOps scripted pipelines, scheduled installers, and admin SSH sessions are excluded by construction.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.delivery
+  - attack.t1204_004
+  - attack.t1059_001
+  - attack.t1059_004
+  - attack.t1140
+  - attack.t1105
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'explorer.exe'
+      - 'chrome.exe'
+      - 'msedge.exe'
+      - 'firefox.exe'
+      - 'brave.exe'
+      - 'safari'
+      - 'Safari'
+      - 'Terminal'
+      - 'Terminal.app'
+      - 'gnome-terminal'
+      - 'gnome-terminal-server'
+      - 'konsole'
+      - 'xterm'
+      - 'iTerm2'
+      - 'WindowsTerminal.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

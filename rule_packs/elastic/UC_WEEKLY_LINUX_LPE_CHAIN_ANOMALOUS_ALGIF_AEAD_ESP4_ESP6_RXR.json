@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Linux LPE chain \u2014 anomalous algif_aead/esp4/esp6/rxrpc kernel-module load followed by same-user root transition",
+  "description": "Detects the behavioural pattern shared by CVE-2026-31431 'Copy Fail' (Theori, April 30; CISA KEV May 1; active exploitation by May 4) and its 'Dirty Frag' successor (CVE-2026-43284 esp4/esp6, CVE-2026-43500 rxrpc; PoC May 7-8 per Microsoft Defender, Unit 42 and Cyber Security News): an unprivileged Linux user triggers an autoload or explicit modprobe/insmod of an otherwise-rare networking/crypto kernel module (algif_aead, esp4, esp6, rxrpc, xfrm_user, af_alg) and within 10 minutes a process owned by that same user spawns a root-owned child or transitions to euid=0 on the same host. The chain spans the exploit phase (T1068 privilege escalation via kernel-module abuse / T1547.006) and is the convergence point Microsoft, Unit 42 and CISA all called out this fortnight regardless of how the unprivileged shell was obtained (web RCE per Article 6 PAN-OS, container break-out per Article 11, malicious package per Article 2's supply-chain framing, or AI-agent RCE per Article 9). Fires when stage 1 (kmod load) and stage 2 (root transition by the same actor) both occur within the correlation window; will NOT fire on routine boot-time module loads by systemd-modules-load/udevd, on dpkg/apt/yum/snapd/unattended-upgrade installs, on configuration-management agents (ansible/puppet/chef/salt) bringing modules in, or on root sessions where no anomalous kmod load preceded.\n\nRationale: Every article in scope \u2014 Copy Fail PoC, CISA KEV listing, Dirty Frag esp4/esp6/rxrpc disclosure, Microsoft Defender's active-attack post and Unit 42's deep-dive \u2014 converges on the same observable: an unprivileged actor causes an unusual kernel networking/crypto module to be brought into the running kernel and then immediately gains root on that host. That two-stage shape is structurally rare in production (legitimate module loads come from boot-time systemd-modules-load or the package manager, never from a user-context parent) and resists IOC rotation because the modules themselves are the vulnerable code paths, not the exploit payload.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "exploit",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1068",
+          "name": "Exploitation for Privilege Escalation",
+          "reference": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "id": "T1547.006",
+          "name": "Boot or Logon Autostart Execution: Kernel Modules and Extensions",
+          "reference": "https://attack.mitre.org/techniques/T1547.006/"
+        },
+        {
+          "id": "T1611",
+          "name": "Escape to Host",
+          "reference": "https://attack.mitre.org/techniques/T1611/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "exploit"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet LookbackDays = 7d;\nlet CorrelationWindow = 10m;\nlet _baseline_parents = dynamic([\"systemd\",\"systemd-udevd\",\"udevd\",\"init\",\"kmod\",\"systemd-modules-load\",\"dpkg\",\"apt\",\"apt-get\",\"yum\",\"dnf\",\"zypper\",\"snapd\",\"unattended-upgrade\",\"ansible-playbook\",\"puppet\",\"chef-client\",\"salt-minion\"]);\nlet _root_legit_parents = dynamic([\"systemd\",\"init\",\"cron\",\"crond\",\"sshd\",\"login\",\"getty\",\"agetty\",\"gdm\",\"gdm3\",\"lightdm\",\"systemd-logind\",\"dbus-daemon\",\"rsyslogd\"]);\nlet _suspect_modules = dynamic([\"algif_aead\",\"esp4\",\"esp6\",\"rxrpc\",\"xfrm_user\",\"af_alg\"]);\nlet LinuxHosts =\n    DeviceInfo\n    | where Timestamp > ago(1d)\n    | where OSPlatform == \"Linux\"\n    | summarize arg_max(Timestamp, OSDistribution, IsInternetFacing) by DeviceId, DeviceName;\nlet KmodStage =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where DeviceId in ((LinuxHosts | project DeviceId))\n    | where FileName in~ (\"modprobe\",\"insmod\",\"kmod\")\n    | where ProcessCommandLine has_any (_suspect_modules)\n    | where InitiatingProcessFileName !in~ (_baseline_parents)\n    | where AccountName !in~ (\"root\",\"\")\n    | project StageOneTime = Timestamp, DeviceId, DeviceName,\n              KmodUser = AccountName,\n              KmodCmd = ProcessCommandLine,\n              KmodParent = InitiatingProcessFileName,\n              KmodParentCmd = InitiatingProcessCommandLine;\nlet RootStage =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where DeviceId in ((LinuxHosts | project DeviceId))\n    | where AccountName =~ \"root\"\n    | where InitiatingProcessAccountName !in~ (\"root\",\"\")\n    | where InitiatingProcessFileName !in~ (_root_legit_parents)\n    | project StageTwoTime = Timestamp, DeviceId,\n              RootProc = FileName,\n              RootCmd = ProcessCommandLine,\n              RootParent = InitiatingProcessFileName,\n              RootParentUser = InitiatingProcessAccountName;\nKmodStage\n| join kind=inner RootStage on DeviceId\n| where StageTwoTime between (StageOneTime .. StageOneTime + CorrelationWindow)\n| where RootParentUser =~ KmodUser\n| project StageOneTime, StageTwoTime,\n          DelaySec = datetime_diff('second', StageTwoTime, StageOneTime),\n          DeviceName, KmodUser, KmodParent, KmodParentCmd, KmodCmd,\n          RootParent, RootProc, RootCmd\n| order by StageOneTime desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_WEEKLY_LINUX_LPE_CHAIN_ANOMALOUS_ALGIF_AEAD_ESP4_ESP6_RXR.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
+  }
+}

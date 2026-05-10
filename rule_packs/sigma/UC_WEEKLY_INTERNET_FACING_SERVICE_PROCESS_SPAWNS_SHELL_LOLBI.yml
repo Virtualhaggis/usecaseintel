@@ -1,0 +1,43 @@
+title: [WEEKLY] Internet-facing service process spawns shell/LOLBin within minutes of public inbound connection — post-RCE command execution
+id: UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNS_SHELL_LOLBI
+status: experimental
+description: Detects the post-exploitation behavioural fingerprint shared by every public-facing-app RCE in this fortnight: a long-running server, daemon, or middleware process (httpd/nginx/apache2, java/tomcat, node, w3wp, php-fpm, sshd, xrdp, panos_pkt_srv, mifs, python/dotnet AI-agent hosts) spawning an interactive shell or reconnaissance LOLBin (cmd, powershell, sh/bash, curl/wget/certutil/bitsadmin, whoami/id/uname) within 10 minutes of an inbound connection from a public IP to that host. The driving campaigns are CVE-2026-0300 (PAN-OS User-ID Captive Portal, exploited since April per Palo Alto / Cyber Security News / The Hacker News), CVE-2026-6973 (Ivanti EPMM), CVE-2026-23918 (Apache HTTPD double-free), CVE-2026-3854 (GitHub git-push -o injection), CVE-2026-22679 (Weaver E-cology dubboApi), CVE-2026-27174 (MajorDoMo /admin.php), CVE-2026-3965/4047 (Qinglong scheduler crypto-mining), CVE-2025-68670 (xrdp pre-auth), and CVE-2026-26030 / 25592 / 31431 (Microsoft Semantic Kernel and other AI-agent-framework RCEs). The chain spans exploit (T1190) and the immediately following actions/install stages: although every CVE has different IOCs and entry points, all 12 articles converge on the same post-exploit pivot — the service process drops to shell to stage tooling. WILL fire on httpd spawning /bin/sh shortly after a public-IP HTTPS hit, panos_pkt_srv spawning curl, or python.exe (Semantic Kernel host) launching cmd.exe after an inbound API call. WILL NOT fire on cron/systemd-triggered scripts (no preceding inbound public connection), pre-forked CGI workers spawned at boot, intra-org admin SSH (private-IP source filtered out), or service-account contexts where the parent isn't on the internet-facing service list.
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNS_SHELL_LOLBI.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1059_001
+  - attack.t1059_004
+  - attack.t1505_003
+  - attack.t1071_001
+  - attack.t1133
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'httpd'
+      - 'httpd.exe'
+      - 'nginx'
+      - 'nginx.exe'
+      - 'apache2'
+      - 'apache.exe'
+      - 'java'
+      - 'java.exe'
+      - 'tomcat.exe'
+      - 'node'
+      - 'node.exe'
+      - 'w3wp.exe'
+      - 'php-fpm'
+      - 'php-fpm7'
+      - 'php-fpm8'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

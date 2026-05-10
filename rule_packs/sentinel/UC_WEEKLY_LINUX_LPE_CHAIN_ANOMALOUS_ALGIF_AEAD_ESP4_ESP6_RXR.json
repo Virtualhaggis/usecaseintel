@@ -1,0 +1,41 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_LINUX_LPE_CHAIN_ANOMALOUS_ALGIF_AEAD_ESP4_ESP6_RXR')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Linux LPE chain \u2014 anomalous algif_aead/esp4/esp6/rxrpc kernel-module load followed by same-user root transition",
+        "description": "Detects the behavioural pattern shared by CVE-2026-31431 'Copy Fail' (Theori, April 30; CISA KEV May 1; active exploitation by May 4) and its 'Dirty Frag' successor (CVE-2026-43284 esp4/esp6, CVE-2026-43500 rxrpc; PoC May 7-8 per Microsoft Defender, Unit 42 and Cyber Security News): an unprivileged Linux user triggers an autoload or explicit modprobe/insmod of an otherwise-rare networking/crypto kernel module (algif_aead, esp4, esp6, rxrpc, xfrm_user, af_alg) and within 10 minutes a process owned by that same user spawns a root-owned child or transitions to euid=0 on the same host. The chain spans the exploit phase (T1068 privilege escalation via kernel-module abuse / T1547.006) and is the convergence point Microsoft, Unit 42 and CISA all called out this fortnight regardless of how the unprivileged shell was obtained (web RCE per Article 6 PAN-OS, container break-out per Article 11, malicious package per Article 2's supply-chain framing, or AI-agent RCE per Article 9). Fires when stage 1 (kmod load) and stage 2 (root transition by the same actor) both occur within the correlation window; will NOT fire on routine boot-time module loads by systemd-modules-load/udevd, on dpkg/apt/yum/snapd/unattended-upgrade installs, on configuration-management agents (ansible/puppet/chef/salt) bringing modules in, or on root sessions where no anomalous kmod load preceded.\n\nRationale: Every article in scope \u2014 Copy Fail PoC, CISA KEV listing, Dirty Frag esp4/esp6/rxrpc disclosure, Microsoft Defender's active-attack post and Unit 42's deep-dive \u2014 converges on the same observable: an unprivileged actor causes an unusual kernel networking/crypto module to be brought into the running kernel and then immediately gains root on that host. That two-stage shape is structurally rare in production (legitimate module loads come from boot-time systemd-modules-load or the package manager, never from a user-context parent) and resists IOC rotation because the modules themselves are the vulnerable code paths, not the exploit payload.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet CorrelationWindow = 10m;\nlet _baseline_parents = dynamic([\"systemd\",\"systemd-udevd\",\"udevd\",\"init\",\"kmod\",\"systemd-modules-load\",\"dpkg\",\"apt\",\"apt-get\",\"yum\",\"dnf\",\"zypper\",\"snapd\",\"unattended-upgrade\",\"ansible-playbook\",\"puppet\",\"chef-client\",\"salt-minion\"]);\nlet _root_legit_parents = dynamic([\"systemd\",\"init\",\"cron\",\"crond\",\"sshd\",\"login\",\"getty\",\"agetty\",\"gdm\",\"gdm3\",\"lightdm\",\"systemd-logind\",\"dbus-daemon\",\"rsyslogd\"]);\nlet _suspect_modules = dynamic([\"algif_aead\",\"esp4\",\"esp6\",\"rxrpc\",\"xfrm_user\",\"af_alg\"]);\nlet KmodStage =\n    ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where DvcOs has \"Linux\" or EventProduct in~ (\"auoms\",\"sysmon-linux\",\"Defender for Endpoint\")\n    | where TargetProcessName endswith \"/modprobe\" or TargetProcessName endswith \"/insmod\" or TargetProcessName endswith \"/kmod\"\n    | where TargetProcessCommandLine has_any (_suspect_modules)\n    | where ParentProcessName !in~ (_baseline_parents)\n        and not(ParentProcessName endswith \"/systemd\")\n        and not(ParentProcessName endswith \"/udevd\")\n    | where ActorUsername !in~ (\"root\",\"\") and not(ActorUsername endswith \"$\")\n    | project StageOneTime = TimeGenerated, DvcHostname,\n              KmodUser = ActorUsername,\n              KmodCmd = TargetProcessCommandLine,\n              KmodParent = ParentProcessName;\nlet RootStage =\n    ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where TargetUsername =~ \"root\"\n    | where ActorUsername !in~ (\"root\",\"\")\n    | where ParentProcessName !in~ (_root_legit_parents)\n    | project StageTwoTime = TimeGenerated, DvcHostname,\n              RootProc = TargetProcessName,\n              RootCmd = TargetProcessCommandLine,\n              RootParent = ParentProcessName,\n              RootParentUser = ActorUsername;\nKmodStage\n| join kind=inner RootStage on DvcHostname\n| where StageTwoTime between (StageOneTime .. StageOneTime + CorrelationWindow)\n| where RootParentUser =~ KmodUser\n| project StageOneTime, StageTwoTime,\n          DelaySec = datetime_diff('second', StageTwoTime, StageOneTime),\n          DvcHostname, KmodUser, KmodParent, KmodCmd,\n          RootParent, RootProc, RootCmd\n| order by StageOneTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1068",
+          "T1547.006",
+          "T1611",
+          "T1059.006"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_LINUX_LPE_CHAIN_ANOMALOUS_ALGIF_AEAD_ESP4_ESP6_RXR",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_WEEKLY_LINUX_LPE_CHAIN_ANOMALOUS_ALGIF_AEAD_ESP4_ESP6_RXR.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

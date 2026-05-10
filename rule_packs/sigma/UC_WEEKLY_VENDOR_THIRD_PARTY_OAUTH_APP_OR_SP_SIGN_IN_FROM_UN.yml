@@ -1,0 +1,42 @@
+title: [WEEKLY] Vendor / Third-Party OAuth App or SP Sign-in From Unbaselined Egress Followed by Bulk SaaS Object Read
+id: UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN
+status: experimental
+description: Chains two events on the same identity within a 30-minute window: (1) a successful OAuth-app, service-principal, or federated SSO sign-in from an (AppId,SrcIP) pair that has never been seen in the prior 30-day baseline; and (2) the same actor performing bulk reads (>=50 files / mail items / repository pulls / customer-record queries) immediately afterwards. This is the joint fingerprint of the ShinyHunters Vimeo ("Vimeo Data Breach Exposes 119,000 Users" and "Vimeo data breach exposes personal information of 119,000 people", May 2026) and Zara ("Zara data breach exposed personal information of 197,000 people", May 2026) intrusions, which abused vendor service principals (e.g. Anodot OAuth app) and named UNC6661/UNC6671 proxy IPs to pivot from federated identity to mass data theft; the RansomHouse Trellix source-code-repository compromise ("Trellix Confirms Source Code Breach...", "Trellix source code breach claimed by RansomHouse hackers", "Trellix Breach – RansomHouse Claims Access...", "Trellix discloses data breach...", May 2026) where attackers logged in to a third-party-managed code SaaS and pulled repo archives; the NVIDIA / GFN.AM regional-partner breach ("NVIDIA confirms GeForce NOW data breach affecting Armenian users", "NVIDIA Data Breach Reportedly Exposes Personal Information of GeForce Users", May 2026) where a partner-side admin account was used to read the user database; the DAEMON Tools supply-chain breach ("DAEMON Tools devs confirm breach", May 2026); and the PhantomCore TrueConf campaign ("PhantomCore Exploits TrueConf Vulnerabilities...", April 2026) which pivoted via SaaS valid-account abuse after exploit. Kill-chain stages spanned: initial access via T1199 trusted relationship, defense evasion via T1550.001 application-token reuse, and actions-on-objective via T1530 / T1213 bulk repository / cloud-object read. The rule fires only when BOTH stages are present on the same principal inside the correlation window; it will NOT fire on routine vendor sign-ins from their canonical egress, on ad-hoc downloads under the bulk threshold, or on first-party Microsoft / Google built-in apps (which are excluded from the SP scope).
+references:
+  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1199
+  - attack.t1078_004
+  - attack.t1550_001
+  - attack.t1530
+  - attack.t1213
+  - attack.t1195_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'ServicePrincipalSignIn'
+      - 'NonInteractiveUserSignIn'
+      - 'UserLoggedIn'
+      - 'ConsoleLogin'
+      - 'AssumeRoleWithSAML'
+      - 'federatedSSO'
+      - 'user.session.start'
+      - 'read'
+      - 'downloaded'
+      - 'accessed'
+      - 'exported'
+      - 'cloned'
+      - 'file'
+      - 'email'
+      - 'repository'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

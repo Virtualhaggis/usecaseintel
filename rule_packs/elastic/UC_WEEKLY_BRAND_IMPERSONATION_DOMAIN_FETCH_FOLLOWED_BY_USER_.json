@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Brand-Impersonation Domain Fetch Followed by User-Context Loader Within 10 Minutes",
+  "description": "Detects the cross-campaign tradecraft where a user-context process (browser, IDE, terminal, installer, package manager) contacts a domain or URL impersonating a trusted AI / developer / mobile brand (Claude, Anthropic, OpenAI, Hugging Face, OpenVSX, OpenClaw, macOS utilities, Google Play companions, etc.) and the same host then spawns a script-interpreter or LOLBin loader (PowerShell, mshta, rundll32, regsvr32, cscript, certutil, bitsadmin, curl/wget, msiexec, node, python, osascript, bash) within a 10-minute window. This fortnight saw an unusual cluster of corroborated brand-impersonation campaigns driving this hook: the Microsoft Security Blog 'ClickFix macOS utilities' write-up, BleepingComputer's 'Fake Claude AI website delivers Beagle' and 'Fake OpenAI repository on Hugging Face' reports, Cyber Security News on the 'Fake OpenClaw installer' and 'InstallFix Fake Claude installer pages', THN/BleepingComputer 'GlassWorm v2 across 73 fake VS Code extensions', THN's 'DPRK AI-inserted npm malware', THN/ESET 'CallPhantom 28 fake call-history apps', THN's 'Fake CAPTCHA / Keitaro ClickFix', and Cyber Security News' 'Fake moustache age-bypass'. Kill-chain coverage spans delivery (impersonation lure) \u2192 user execution \u2192 install/loader \u2192 c2 fetch, so the joint signal survives even as IOCs rotate. Fires only when BOTH legs occur on the same device in order; does NOT fire on the lookalike-domain visit alone (analyst-fatigue trap) and does NOT fire on script-interpreter / LOLBin spawn without the impersonation precursor \u2014 those cases are covered by other catalogue rules.\n\nRationale: All twelve articles converge on brand-impersonation as the delivery hook (fake Claude / OpenAI / Hugging Face / OpenVSX / OpenClaw / macOS utility / Keitaro CAPTCHA / Play-Store companion apps), and the post-lure behaviour in every case is a user-context script interpreter or LOLBin staging credential theft or further C2 fetch. Joining a lookalike-brand network leg with a short-window loader spawn on the same host catches that joint chain without leaning on IOCs that the actors are already rotating weekly.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "delivery",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1583.008",
+          "name": "Acquire Infrastructure: Malvertising",
+          "reference": "https://attack.mitre.org/techniques/T1583.008/"
+        },
+        {
+          "id": "T1656",
+          "name": "Impersonation",
+          "reference": "https://attack.mitre.org/techniques/T1656/"
+        },
+        {
+          "id": "T1566.002",
+          "name": "Phishing: Spearphishing Link",
+          "reference": "https://attack.mitre.org/techniques/T1566.002/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "delivery"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet LookbackDays = 7d;\nlet WindowMin = 10m;\nlet _impersonation_regex = @\"(?i)(claude\\-pro|claudecode|claudecodedoc|anthropic\\-[a-z0-9]|openai\\-[a-z0-9]|huggingface\\-[a-z0-9]|openvsx\\-[a-z0-9]|openclaw|cursor\\-[a-z0-9]|gemini\\-[a-z0-9]|copilot\\-[a-z0-9]|claude\\.msixbundle|download\\-version\\.1\\-5\\-8|macclean|mac\\-storage\\-guide|cleanmymacos|recargapopular|csec\\-c2\\-server|steamhostserver|serverconect|transcloud)\";\nlet _suspicious_children = dynamic([\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cscript.exe\",\"wscript.exe\",\"cmd.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"curl.exe\",\"wget.exe\",\"msiexec.exe\",\"node.exe\",\"python.exe\",\"python3.exe\",\"osascript\",\"bash\",\"sh\"]);\nlet _user_facing_parents = dynamic([\"msedge.exe\",\"chrome.exe\",\"firefox.exe\",\"brave.exe\",\"arc.exe\",\"opera.exe\",\"Code.exe\",\"cursor.exe\",\"explorer.exe\",\"RuntimeBroker.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\",\"WindowsTerminal.exe\",\"Terminal\",\"iTerm2\",\"Safari\"]);\nlet Downloads = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"ConnectionSuccess\",\"HttpConnectionInspected\")\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where RemoteUrl matches regex _impersonation_regex\n         or tostring(parse_url(RemoteUrl)[\"Host\"]) matches regex _impersonation_regex\n    | project DlTime = Timestamp, DeviceId, DeviceName,\n              DlUrl = RemoteUrl, DlIp = RemoteIP, DlPort = RemotePort,\n              DlInitiator = InitiatingProcessFileName,\n              DlAccount = InitiatingProcessAccountName;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where tolower(FileName) in (_suspicious_children)\n   and InitiatingProcessFileName in~ (_user_facing_parents)\n| project ExecTime = Timestamp, DeviceId, DeviceName, AccountName,\n          ChildProc = FileName, ChildCmd = ProcessCommandLine,\n          ParentProc = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ChildHash = SHA256\n| join kind=inner Downloads on DeviceId\n| where ExecTime between (DlTime .. DlTime + WindowMin)\n| extend DelaySec = datetime_diff('second', ExecTime, DlTime)\n| project DlTime, ExecTime, DelaySec, DeviceName, AccountName,\n          DlUrl, DlIp, DlInitiator, ParentProc, ChildProc, ChildCmd, ChildHash\n| order by DlTime desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
+  }
+}

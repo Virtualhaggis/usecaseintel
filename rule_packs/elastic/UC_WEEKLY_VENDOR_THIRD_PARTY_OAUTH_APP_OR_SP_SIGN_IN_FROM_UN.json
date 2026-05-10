@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Vendor / Third-Party OAuth App or SP Sign-in From Unbaselined Egress Followed by Bulk SaaS Object Read",
+  "description": "Chains two events on the same identity within a 30-minute window: (1) a successful OAuth-app, service-principal, or federated SSO sign-in from an (AppId,SrcIP) pair that has never been seen in the prior 30-day baseline; and (2) the same actor performing bulk reads (>=50 files / mail items / repository pulls / customer-record queries) immediately afterwards. This is the joint fingerprint of the ShinyHunters Vimeo (\"Vimeo Data Breach Exposes 119,000 Users\" and \"Vimeo data breach exposes personal information of 119,000 people\", May 2026) and Zara (\"Zara data breach exposed personal information of 197,000 people\", May 2026) intrusions, which abused vendor service principals (e.g. Anodot OAuth app) and named UNC6661/UNC6671 proxy IPs to pivot from federated identity to mass data theft; the RansomHouse Trellix source-code-repository compromise (\"Trellix Confirms Source Code Breach...\", \"Trellix source code breach claimed by RansomHouse hackers\", \"Trellix Breach \u2013 RansomHouse Claims Access...\", \"Trellix discloses data breach...\", May 2026) where attackers logged in to a third-party-managed code SaaS and pulled repo archives; the NVIDIA / GFN.AM regional-partner breach (\"NVIDIA confirms GeForce NOW data breach affecting Armenian users\", \"NVIDIA Data Breach Reportedly Exposes Personal Information of GeForce Users\", May 2026) where a partner-side admin account was used to read the user database; the DAEMON Tools supply-chain breach (\"DAEMON Tools devs confirm breach\", May 2026); and the PhantomCore TrueConf campaign (\"PhantomCore Exploits TrueConf Vulnerabilities...\", April 2026) which pivoted via SaaS valid-account abuse after exploit. Kill-chain stages spanned: initial access via T1199 trusted relationship, defense evasion via T1550.001 application-token reuse, and actions-on-objective via T1530 / T1213 bulk repository / cloud-object read. The rule fires only when BOTH stages are present on the same principal inside the correlation window; it will NOT fire on routine vendor sign-ins from their canonical egress, on ad-hoc downloads under the bulk threshold, or on first-party Microsoft / Google built-in apps (which are excluded from the SP scope).\n\nRationale: The joint signal across all 12 articles is not a CVE or a malware family but a trusted-identity-from-non-canonical-egress pattern that immediately precedes bulk data exfiltration. ShinyHunters (Vimeo, Zara), RansomHouse (Trellix), and the GFN.AM regional partner case all hinge on the same shape: an OAuth-app, service-principal, or federated identity authenticating from infrastructure outside its 30-day baseline, then performing high-volume object reads against the SaaS workload the principal has access to. The two-stage temporal correlation (unbaselined sign-in -> bulk read inside 30 minutes by the same actor) is what raises this above per-IOC hunts and above the generic Datadog SaaS-anomaly defaults, because it pairs the trust-abuse pivot with the impact action in a single alert.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "actions",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1199",
+          "name": "Trusted Relationship",
+          "reference": "https://attack.mitre.org/techniques/T1199/"
+        },
+        {
+          "id": "T1078.004",
+          "name": "Valid Accounts: Cloud Accounts",
+          "reference": "https://attack.mitre.org/techniques/T1078.004/"
+        },
+        {
+          "id": "T1550.001",
+          "name": "Use Alternate Authentication Material: Application Access Token",
+          "reference": "https://attack.mitre.org/techniques/T1550.001/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "actions"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet _Lookback = 14d;\nlet _Baseline = 30d;\nlet _CorrWindow = 30m;\nlet _MinObjects = 50;\nlet _MinDistinct = 25;\nlet _FirstPartyApps = dynamic([\"Office 365\",\"Microsoft Teams\",\"Microsoft Outlook\",\"SharePoint Online\",\"OneDrive\",\"Microsoft 365 Apps\",\"Microsoft Graph PowerShell\",\"Microsoft Authentication Broker\",\"Microsoft Edge\",\"Windows Sign In\"]);\n// Stage 1 \u2014 baseline of (AppId, IPAddress) pairs seen in the prior 30d window\nlet _Baseline_Pairs =\n    AADSignInEventsBeta\n    | where Timestamp between (ago(_Baseline) .. ago(_Lookback))\n    | where ErrorCode == 0\n    | summarize Seen = count() by ApplicationId, IPAddress\n    | where Seen > 2;\n// Stage 1 \u2014 recent successful auths from (AppId, IPAddress) pairs NOT in the baseline\nlet SuspectAuth =\n    AADSignInEventsBeta\n    | where Timestamp > ago(_Lookback)\n    | where ErrorCode == 0\n    | where Application !in~ (_FirstPartyApps)\n    | where ClientAppUsed in (\"Other clients\",\"Browser\",\"Mobile Apps and Desktop clients\")\n    | join kind=leftanti _Baseline_Pairs on ApplicationId, IPAddress\n    | project SignInTime = Timestamp, AccountObjectId, AccountUpn,\n              Application, ApplicationId, AuthIPAddress = IPAddress, Country;\n// Stage 2 \u2014 bulk SaaS object reads by the same actor within 30 minutes of the suspicious sign-in\nCloudAppEvents\n| where Timestamp > ago(_Lookback)\n| where ActionType in~ (\"FileDownloaded\",\"FileAccessed\",\"FilePreviewed\",\"FileSyncDownloadedFull\",\"MailItemsAccessed\",\"SearchQueryPerformed\",\"MessageRead\",\"Download\",\"RepoCloned\",\"RepoArchiveDownload\",\"SecretRead\",\"Export\")\n| join kind=inner SuspectAuth on $left.AccountObjectId == $right.AccountObjectId\n| where Timestamp between (SignInTime .. SignInTime + _CorrWindow)\n| summarize ObjectsRead = count(),\n            DistinctObjects = dcount(ObjectName),\n            Actions = make_set(ActionType, 12),\n            SampleObjects = make_set(ObjectName, 10),\n            SaaSApps = make_set(Application, 6),\n            FirstAction = min(Timestamp),\n            LastAction  = max(Timestamp)\n            by AccountObjectId, AccountUpn, Application, ApplicationId, AuthIPAddress, Country, SignInTime\n| where ObjectsRead >= _MinObjects or DistinctObjects >= _MinDistinct\n| project SignInTime, FirstAction, LastAction, AccountUpn, Application,\n          AuthIPAddress, Country, ObjectsRead, DistinctObjects,\n          Actions, SaaSApps, SampleObjects\n| order by FirstAction desc\n```",
+  "references": [
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "medium"
+  }
+}

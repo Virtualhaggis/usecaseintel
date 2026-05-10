@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Internet-Facing Service Process Spawning Unix Shell or Ingress-Tool LOLBin (Edge Zero-Day Post-Exploit)",
+        "description": "Detects the canonical post-exploit transition on internet-facing edge appliances and Linux servers: a service process (PAN-OS sslmgr/useridd/authd, Ivanti EPMM mifs/tomcat/java/catalina, Apache/Nginx, sshd, generic node/python application servers) directly spawns a Unix shell interpreter or an ingress-tool LOLBin (bash/sh/python/perl/curl/wget/nc/socat/busybox) with a non-automation parent. This fortnight three high-severity zero-days dominated the briefings \u2014 CVE-2026-0300 PAN-OS Captive Portal unauthenticated RCE exploited in-the-wild since April (Unit 42 'Threat Brief: Exploitation of PAN-OS Captive Portal Zero-Day', Cyber Security News 'Palo Alto Networks Firewall Zero-Day RCE', BleepingComputer 'Palo Alto Networks firewall zero-day exploited for nearly a month'), CVE-2026-6973 Ivanti EPMM remote-code-execution under CISA four-day emergency directive (BleepingComputer 'CISA gives feds four days to patch Ivanti flaw', 'Ivanti warns of new EPMM flaw'), and the Linux kernel 'Dirty Frag' LPE (BleepingComputer 8 May) \u2014 all set against the 'Patient Zero', 'Day Zero Readiness', and 'After Mythos' essays from The Hacker News framing edge compromise as the new front door, plus the 'Zero-Auth' Schemata API and Android CVE-2026-0073 RCE pieces that share the same exploit\u2192post-exploit shape. The chain spans MITRE exploit (T1190) \u2192 install (T1505.003 webshell or T1059.004 shell) \u2192 C2 staging (T1105 / T1572 reverse-tunnel like the EarthWorm reversesocks5 dropper described by Unit 42); the inbound exploit is invisible at the endpoint, but the resulting service\u2192shell parentage is unmistakable. It fires when sslmgr/useridd/mifs/tomcat/java/sshd/httpd/nginx are the direct parent of bash/sh/python/curl/wget/nc with non-trivial command lines; it does NOT fire on routine sysadmin maintenance (interactive parents like login/sudo), on configuration-management tools (puppet/ansible/chef/salt-minion explicitly excluded), or on health-check style invocations (`status`, `--version`, `health`).\n\nRationale: All twelve articles describe the same exploit\u2192install transition on internet-exposed services (PAN-OS Captive Portal, Ivanti EPMM Tomcat/mifs, Android adbd, Linux kernel LPE, Schemata API, plus the THN 'Patient Zero' essays calling out edge compromise). The exact inbound exploit varies per CVE and is often invisible at the endpoint, but the post-exploit signature \u2014 a long-running service process directly parenting bash/sh/python/curl \u2014 is shared, doesn't rotate with IOCs, and is structurally rare in production because legitimate maintenance flows through interactive shells or configuration-management agents that we explicitly exclude.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// ASIM cross-vendor equivalent \u2014 works against AuditD, Sysmon-for-Linux, MDE-Linux, CrowdStrike\nlet LookbackDays = 7d;\nlet _WebServerProcs = dynamic([\n    \"httpd\",\"nginx\",\"apache2\",\"java\",\"tomcat\",\"sslmgr\",\"useridd\",\n    \"authd\",\"mifs\",\"node\",\"python\",\"python3\",\"sshd\",\"pan_comm_mgr\",\n    \"panlogd\",\"catalina.sh\",\"ws_TomcatService.sh\"]);\nlet _ShellChildren = dynamic([\n    \"bash\",\"sh\",\"csh\",\"zsh\",\"dash\",\"ksh\",\"tcsh\",\"python\",\"python3\",\n    \"perl\",\"ruby\",\"curl\",\"wget\",\"nc\",\"ncat\",\"socat\",\"busybox\",\"gawk\"]);\nlet _AutomationParents = dynamic([\n    \"puppet\",\"ansible-playbook\",\"chef-client\",\"salt-minion\",\"cron\",\"crond\",\"systemd\"]);\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| extend _ParentBase = tostring(split(ParentProcessName, \"/\")[array_length(split(ParentProcessName, \"/\")) - 1])\n| extend _ChildBase  = tostring(split(TargetProcessName, \"/\")[array_length(split(TargetProcessName, \"/\")) - 1])\n| where _ParentBase in~ (_WebServerProcs)\n| where _ChildBase  in~ (_ShellChildren)\n| where _ParentBase !in~ (_AutomationParents)\n| where TargetProcessCommandLine !has \" --version\"\n    and TargetProcessCommandLine !has \" -V\"\n    and not(TargetProcessCommandLine matches regex @\"(?i)\\bstatus\\b\")\n    and TargetProcessCommandLine !has \"healthcheck\"\n| project TimeGenerated, DvcHostname, ActorUsername,\n          ParentProc = _ParentBase, ParentCmd = ParentProcessCommandLine,\n          ChildProc  = _ChildBase,  ChildCmd  = TargetProcessCommandLine,\n          TargetProcessName, TargetProcessSHA256\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1505.003",
+          "T1059.004",
+          "T1105",
+          "T1572"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}
