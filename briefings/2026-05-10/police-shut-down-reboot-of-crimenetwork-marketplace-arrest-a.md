@@ -11,15 +11,9 @@ By Bill Toulas
 May 10, 2026
 10:16 AM
 0 
-
-
 German authorities have shut down a relaunch version of the criminal marketplace 'Crimenetwork' that generated more than 3.6 million euros, and arrested its operator.
-
-
 Crimenetwork was the largest online cybercrime marketplace in Germany, operating since 2012 and with 100,000 registered users. The platform enabled the sale of illegal services, substances, and stolen data.
-
-
-In lat…
+In late 2024, the …
 
 ## Indicators of Compromise (high-fidelity only)
 
