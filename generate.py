@@ -7933,13 +7933,9 @@ function _libRenderCards() {
   // Intel / Actors so the centred sliding-stats CSS picks it up.
   const topLib = document.getElementById('topStatsLibrary');
   if (topLib) {
-    const tactics  = new Set();
-    const sources  = new Set();
-    let critical   = 0;
-    const plats    = {def:0, sent:0, sigma:0, spl:0, datadog:0};
+    let critical = 0;
+    const plats  = {def:0, sent:0, sigma:0, spl:0, datadog:0};
     for (const p of prepared) {
-      (p.tactics || []).forEach(t => t && tactics.add(t));
-      (p.sources || []).forEach(s => s && sources.add(s));
       if (p.sevTag === 'crit') critical++;
       if (p.plats) {
         if (p.plats.def)     plats.def++;
@@ -7952,10 +7948,8 @@ function _libRenderCards() {
     const platformsCovered = Object.values(plats).filter(n => n > 0).length;
     topLib.innerHTML =
       `<div class="stat"><div class="v">${prepared.length.toLocaleString()}</div><div class="l">Use Cases</div></div>` +
-      `<div class="stat"><div class="v">${tactics.size.toLocaleString()}</div><div class="l">Tactics</div></div>` +
       `<div class="stat"><div class="v">${platformsCovered.toLocaleString()}</div><div class="l">Platforms</div></div>` +
-      `<div class="stat"><div class="v">${critical.toLocaleString()}</div><div class="l">Critical</div></div>` +
-      `<div class="stat"><div class="v">${sources.size.toLocaleString()}</div><div class="l">Sources</div></div>`;
+      `<div class="stat"><div class="v">${critical.toLocaleString()}</div><div class="l">Critical</div></div>`;
   }
 
   if (!grid) return;
