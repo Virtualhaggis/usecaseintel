@@ -3812,6 +3812,25 @@ body:not(.view-actors-active)   .stats-actors{
 .lib-pill.platform-z.on{ background:linear-gradient(180deg, rgba(255,170,90,0.30), rgba(255,170,90,0.18)); box-shadow:0 0 0 1px rgba(255,170,90,0.55) inset; }
 .lib-pill.platform-p.on{ background:linear-gradient(180deg, rgba(220,120,200,0.30), rgba(220,120,200,0.18)); box-shadow:0 0 0 1px rgba(220,120,200,0.55) inset; }
 .lib-pill.platform-dd.on{ background:linear-gradient(180deg, rgba(120,90,200,0.32), rgba(120,90,200,0.18)); box-shadow:0 0 0 1px rgba(120,90,200,0.60) inset; }
+/* Target-surface filter pills (windows / linux / aws / azure / ...). */
+.lib-target-pills{flex-wrap:wrap; max-width:100%; gap:4px;}
+.lib-pill.lib-target{padding:5px 9px;}
+.lib-pill.lib-target .cnt{
+  display:inline-block; min-width:18px; padding:0 5px; margin-left:5px;
+  border-radius:99px; background:rgba(255,255,255,0.07);
+  color:var(--muted); font-size:10.5px; font-weight:500;
+}
+.lib-pill.lib-target.on{
+  background:linear-gradient(180deg, rgba(180,200,90,0.30), rgba(180,200,90,0.18));
+  box-shadow:0 0 0 1px rgba(180,200,90,0.55) inset;
+}
+.lib-pill.lib-target.on .cnt{background:rgba(180,200,90,0.25); color:var(--text);}
+/* Per-card target-surface tags — small monochrome chips. */
+.lib-tag.lib-tg{
+  background:rgba(140,160,200,0.12); color:var(--muted);
+  border:1px solid rgba(140,160,200,0.20);
+  font-size:10px; padding:1px 6px;
+}
 .lib-clear-btn{
   background:transparent; border:1px solid var(--border-2); color:var(--muted);
   padding:5px 12px; border-radius:99px;
@@ -4539,6 +4558,12 @@ article.card{
      header and crop the title / severity ribbon. */
   scroll-margin-top:120px;
   transition:border-color 0.15s ease, background-color 0.15s ease;
+  /* Skip layout + paint for offscreen articles. With ~590 cards in the
+     Articles view, naive rendering blocks first paint for ~14s. The browser
+     will re-render each card lazily as it scrolls into view. The
+     contain-intrinsic-size keeps the scrollbar honest before measurement. */
+  content-visibility:auto;
+  contain-intrinsic-size:auto 720px;
 }
 article.card:hover{
   border-color:var(--border-2);
@@ -6071,6 +6096,10 @@ details.uc.uc-platform-hidden{display:none !important;}
           </button>
         </div>
       </div>
+      <div class="ft-group ft-target">
+        <span class="ft-label">Target</span>
+        <div class="ft-chips" id="ftTargetChips"><!-- target chips populated by JS once MATRIX is in scope --></div>
+      </div>
       <div class="ft-group ft-view">
         <span class="ft-label">Layout</span>
         <div class="width-toggle" id="widthToggle" title="Article column width">
@@ -7018,20 +7047,47 @@ const PER_GROUP_LIMIT = 8;
 let SEARCH_INDEX = null;
 
 function _buildIndex() {
-  const idx = { ucs: [], arts: [], techs: [], actors: [] };
+  const idx = { ucs: [], arts: [], techs: [], actors: [], targets: [] };
 
   // Use cases (from MATRIX) — primary searchable surface
   if (window.MATRIX && Array.isArray(MATRIX.ucs)) {
     MATRIX.ucs.forEach(uc => {
       const techs = (uc.techs || []).join(' ');
+      const tgs = (uc.tg || []).join(' ');
       idx.ucs.push({
         kind: 'uc',
         title: uc.t || uc.n || '',
         meta: [uc.src || '', uc.ph || '', uc.tier || '', techs].filter(Boolean).join(' · '),
         techs: techs,
         blob: ((uc.t || '') + ' ' + (uc.n || '') + ' ' + techs + ' ' +
-                (uc.ph || '') + ' ' + (uc.src || '') + ' ' + (uc.tier || '')).toLowerCase(),
+                (uc.ph || '') + ' ' + (uc.src || '') + ' ' + (uc.tier || '') + ' ' +
+                tgs).toLowerCase(),
         ref: uc,
+      });
+    });
+  }
+
+  // Target surfaces — one synthetic entry per OS / cloud / SaaS so
+  // "linux", "aws", "okta" etc surface the static landing page.
+  const _TGT_INDEX = [
+    ['windows','Windows','🪟'], ['linux','Linux','🐧'], ['macos','macOS','🍏'],
+    ['aws','AWS','☁'], ['azure','Azure','⛅'], ['gcp','GCP','☁'],
+    ['kubernetes','Kubernetes','⎈'], ['m365','Microsoft 365','📧'],
+    ['okta','Okta','🔑'], ['vcs','Source control','🐙'],
+    ['identity','Identity','👤'], ['web-app','Web App','🌐'],
+  ];
+  if (window.MATRIX && Array.isArray(MATRIX.ucs)) {
+    const counts = {};
+    MATRIX.ucs.forEach(uc => (uc.tg || []).forEach(t => { counts[t] = (counts[t]||0) + 1; }));
+    _TGT_INDEX.forEach(([tag, label, icon]) => {
+      const cnt = counts[tag] || 0;
+      idx.targets.push({
+        kind: 'target',
+        tag, icon,
+        title: label + ' detections',
+        slug: tag,
+        meta: cnt + (cnt === 1 ? ' use case' : ' use cases'),
+        blob: (label + ' ' + tag + ' detections target surface').toLowerCase(),
       });
     });
   }
@@ -7113,8 +7169,8 @@ function _doSearch(q) {
   q = q.toLowerCase().trim();
   if (!SEARCH_INDEX) SEARCH_INDEX = _buildIndex();
   if (!q) return null;
-  const out = { ucs: [], arts: [], techs: [], actors: [] };
-  ['ucs', 'arts', 'techs', 'actors'].forEach(k => {
+  const out = { ucs: [], arts: [], techs: [], actors: [], targets: [] };
+  ['ucs', 'arts', 'techs', 'actors', 'targets'].forEach(k => {
     SEARCH_INDEX[k].forEach(item => {
       const s = _score(item.blob, q);
       if (s > 0) out[k].push({ item, score: s });
@@ -7220,10 +7276,11 @@ function _renderResults(q) {
   if (!grouped) { _renderEmpty(); return; }
 
   const groups = [
-    ['ucs',    'Use Cases',     'UC'],
-    ['techs',  'Techniques',    'T'],
-    ['arts',   'Articles',      'A'],
-    ['actors', 'Threat Actors', '◈'],
+    ['ucs',     'Use Cases',     'UC'],
+    ['techs',   'Techniques',    'T'],
+    ['targets', 'Target Surfaces','◯'],
+    ['arts',    'Articles',      'A'],
+    ['actors',  'Threat Actors', '◈'],
   ];
 
   let total = 0;
@@ -7300,6 +7357,9 @@ function _navigate(item) {
   } else if (item.kind === 'tech') {
     // Send to the per-technique landing page (static, indexable)
     location.href = 'techniques/' + item.tid + '.html';
+  } else if (item.kind === 'target') {
+    // Per-target landing page — static HTML, indexable
+    location.href = 'targets/' + item.slug + '.html';
   } else if (item.kind === 'actor') {
     _switchToTab('actors');
     setTimeout(() => {
@@ -7330,14 +7390,16 @@ input.addEventListener('input', () => _renderResults(input.value));
 // every active feature filter ("Has UCs" / "LLM UCs only").
 // "All" deselects every other source chip; feature chips are independent.
 function applySourceFilter() {
-  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip)');
+  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip):not(.tgt-chip)');
   const activeSources = Array.from(activeSourceChips).map(c => c.dataset.source).filter(Boolean);
   const activeFeats = Array.from(document.querySelectorAll('#srcFilter .feat-chip.active')).map(c => c.dataset.feat);
   const activePlats = Array.from(document.querySelectorAll('#srcFilter .plat-chip.active')).map(c => c.dataset.platform);
+  const activeTgts = Array.from(document.querySelectorAll('#srcFilter .tgt-chip.active')).map(c => c.dataset.target);
   const cards = document.querySelectorAll('#view-articles article.card');
   cards.forEach(card => {
     const sources = (card.dataset.sources || '').split('|');
     const platforms = (card.dataset.platforms || '').split(',').filter(Boolean);
+    const targets = (card.dataset.targets || '').split(',').filter(Boolean);
     const matchSource = activeSources.length === 0
                         || activeSources.some(s => sources.includes(s));
     const ucCount = parseInt(card.dataset.ucCount || '0', 10);
@@ -7351,7 +7413,10 @@ function applySourceFilter() {
     // and AND with the rest of the filters, mirroring the source-chip pattern.
     const matchPlat = activePlats.length === 0
                       || activePlats.some(p => platforms.includes(p));
-    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat));
+    // Target-surface filter — same OR-within / AND-between semantics.
+    const matchTgt = activeTgts.length === 0
+                     || activeTgts.some(t => targets.includes(t));
+    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat && matchTgt));
 
     // Drill in: when a Platform filter is active, also hide UCs on this
     // card that don't have the selected platform — otherwise users land
@@ -7362,15 +7427,18 @@ function applySourceFilter() {
     let firstVisibleUc = null;
     ucs.forEach(uc => {
       const ucPlats = (uc.dataset.platforms || '').split(',').filter(Boolean);
-      const ucMatch = activePlats.length === 0
-                      || activePlats.some(p => ucPlats.includes(p));
-      uc.classList.toggle('uc-platform-hidden', !ucMatch);
-      if (ucMatch && !firstVisibleUc) firstVisibleUc = uc;
+      const ucTgts = (uc.dataset.targets || '').split(',').filter(Boolean);
+      const ucMatchPlat = activePlats.length === 0
+                          || activePlats.some(p => ucPlats.includes(p));
+      const ucMatchTgt = activeTgts.length === 0
+                         || activeTgts.some(t => ucTgts.includes(t));
+      uc.classList.toggle('uc-platform-hidden', !(ucMatchPlat && ucMatchTgt));
+      if (ucMatchPlat && ucMatchTgt && !firstVisibleUc) firstVisibleUc = uc;
     });
     // Auto-open the first matching UC so analysts immediately see the
     // platform body they filtered for. Only re-open when a platform
     // filter is active, otherwise leave the existing open/closed state.
-    if (activePlats.length && firstVisibleUc) {
+    if ((activePlats.length || activeTgts.length) && firstVisibleUc) {
       ucs.forEach(uc => { if (uc !== firstVisibleUc) uc.open = false; });
       firstVisibleUc.open = true;
       // Switch the active tab to the filtered platform so the right
@@ -7397,7 +7465,7 @@ function applySourceFilter() {
   // AND no platform filter chosen.
   const allChip = document.querySelector('#srcFilter .src-chip.all');
   if (allChip) allChip.classList.toggle('active',
-    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0);
+    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0);
 }
 // Pre-populate the count badges on the feature + platform chips on load.
 (function() {
@@ -7419,6 +7487,34 @@ function applySourceFilter() {
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
+  }
+  // Target-surface chips — built dynamically so we only show targets the
+  // current corpus actually has at least one article for. Mirrors the
+  // platform-chip layout so analysts get the same toggle semantics.
+  const TGT_LABELS = {windows:'Windows', linux:'Linux', macos:'macOS',
+                      aws:'AWS', azure:'Azure', gcp:'GCP', kubernetes:'Kubernetes',
+                      m365:'M365', okta:'Okta', vcs:'VCS', identity:'Identity',
+                      'web-app':'Web App'};
+  const tgtCounts = {};
+  for (const c of cards) {
+    for (const t of (c.dataset.targets || '').split(',').filter(Boolean)) {
+      tgtCounts[t] = (tgtCounts[t] || 0) + 1;
+    }
+  }
+  const wrap = document.getElementById('ftTargetChips');
+  if (wrap) {
+    // Render in TGT_LABELS order, skip ones with zero coverage. The
+    // rendered chips share the .src-chip class so the existing click
+    // handler at the bottom of this block picks them up automatically.
+    const html_ = Object.keys(TGT_LABELS).map(t => {
+      const n = tgtCounts[t] || 0;
+      if (!n) return '';
+      const safeT = t.replace(/[^a-z0-9-]/g,'');
+      return '<button class="src-chip tgt-chip" data-target="' + safeT + '" ' +
+             'title="Show only articles whose UCs target ' + TGT_LABELS[t] + '">' +
+             TGT_LABELS[t] + ' <span class="cnt">' + n + '</span></button>';
+    }).join('');
+    wrap.innerHTML = html_;
   }
 })();
 document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
@@ -7491,8 +7587,30 @@ const LIB_STATE = {
     country: '',
     app: '',
     platforms: new Set(),
+    // Target-surface filter (windows/linux/aws/azure/gcp/kubernetes/m365/
+    // okta/vcs/identity/web-app/macos). Multi-select; UC must have AT
+    // LEAST one of the selected tags to pass — analyst asking for "Linux
+    // OR AWS" should see both, not just intersection.
+    targets: new Set(),
   },
 };
+
+// Display metadata for target-surface filter pills. Mirrors TARGET_DISPLAY
+// in generate.py — keep in sync if you add a new target there.
+const TARGET_PILL_META = [
+  ['windows',    'Windows'],
+  ['linux',      'Linux'],
+  ['macos',      'macOS'],
+  ['aws',        'AWS'],
+  ['azure',      'Azure'],
+  ['gcp',        'GCP'],
+  ['kubernetes', 'Kubernetes'],
+  ['m365',       'M365'],
+  ['okta',       'Okta'],
+  ['vcs',        'Source control'],
+  ['identity',   'Identity'],
+  ['web-app',    'Web App'],
+];
 
 const SEV_ORDER = {crit: 4, critical: 4, high: 3, med: 2, medium: 2, low: 1, info: 0};
 const SEV_NORM = {crit:'crit', critical:'crit', high:'high', med:'med', medium:'med', low:'low', info:'low'};
@@ -7655,9 +7773,14 @@ function _libPrepare() {
     const effort = Math.max(20, Math.min(100, 110 - Math.round(queryLines * 1.6)));
     const score  = Math.round(0.30 * probability + 0.30 * impact + 0.25 * detectability + 0.15 * effort);
 
+    // Target-surface tags from the matrix record. Built once during
+    // pipeline run by `_infer_uc_targets()` against the actual query
+    // bodies — see the `tg` field in build_matrix_data().
+    const targets = Array.isArray(uc.tg) ? uc.tg.slice() : [];
     return {
       uc, ucArts, sevTag, sevRank: maxSev, plats, queries, apps, actors, countries, sources,
       tactics: [...tacticSet],
+      targets,
       score, breakdown: {probability, impact, detectability, effort},
       _idx: uc.i,
       _searchBlob: [
@@ -7666,6 +7789,7 @@ function _libPrepare() {
         countries.join(' '),
         apps.join(' '),
         ucArts.map(a => a.title).join(' '),
+        targets.join(' '),
       ].join(' ').toLowerCase(),
     };
   });
@@ -7710,8 +7834,19 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
     <button class="lib-pill platform-dd" data-pl="datadog">DD · Datadog</button>
   </div>`;
+  // Target-surface pills row. Counts populated from the actual prepared
+  // dataset so the analyst sees how many UCs each tag will return.
+  const tCounts = {};
+  for (const p of prepared) for (const t of (p.targets || [])) tCounts[t] = (tCounts[t] || 0) + 1;
+  const targetPills = `<div class="lib-pill-group lib-target-pills" data-lib-targets>` +
+    TARGET_PILL_META.map(([tag, label]) => {
+      const c = tCounts[tag] || 0;
+      // Hide tags with zero coverage to keep the row tidy.
+      if (!c) return '';
+      return `<button class="lib-pill lib-target" data-target="${escapeHtml(tag)}">${escapeHtml(label)} <span class="cnt">${c}</span></button>`;
+    }).filter(Boolean).join('') + `</div>`;
   const clear = `<button type="button" class="lib-clear-btn" id="libClearFilters">Clear all</button>`;
-  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, clear].join(' ');
+  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, targetPills, clear].join(' ');
 }
 
 function _libCardHtml(p) {
@@ -7726,6 +7861,13 @@ function _libCardHtml(p) {
   }).join('');
   const techPills = (p.uc.techs || []).slice(0, 4).map(t => `<span class="lib-tag">${escapeHtml(t)}</span>`).join('');
   const moreTechs = (p.uc.techs || []).length > 4 ? `<span class="lib-tag" title="${escapeHtml((p.uc.techs||[]).join(', '))}">+${(p.uc.techs||[]).length - 4}</span>` : '';
+  // Compact per-card target-surface tags so the analyst can tell at a
+  // glance whether this is Windows-only, AWS, M365, etc.
+  const _TGT_LABEL = {windows:'Windows', linux:'Linux', macos:'macOS', aws:'AWS', azure:'Azure', gcp:'GCP', kubernetes:'K8s', m365:'M365', okta:'Okta', vcs:'VCS', identity:'Identity', 'web-app':'WebApp'};
+  const tgtTags = (p.targets || []).slice(0, 3).map(t =>
+    `<span class="lib-tag lib-tg lib-tg-${escapeHtml(t)}" title="Target surface: ${escapeHtml(_TGT_LABEL[t] || t)}">${escapeHtml(_TGT_LABEL[t] || t)}</span>`
+  ).join('');
+  const moreTgt = (p.targets || []).length > 3 ? `<span class="lib-tag lib-tg" title="${escapeHtml((p.targets||[]).join(', '))}">+${(p.targets||[]).length - 3}</span>` : '';
   return `<article class="lib-card" role="listitem" data-uc-idx="${p._idx}">
     <div class="lib-card-head">
       <div style="flex:1;">
@@ -7734,7 +7876,7 @@ function _libCardHtml(p) {
       </div>
     </div>
     <div class="lib-card-meta">
-      ${sevTag}${tacticTag}${tierTag}${techPills}${moreTechs}${platTags}
+      ${sevTag}${tacticTag}${tierTag}${techPills}${moreTechs}${tgtTags}${moreTgt}${platTags}
     </div>
     <div class="lib-card-footer">
       <div class="lib-svs" title="SOC Value Score">
@@ -7763,6 +7905,15 @@ function _libApplyFilters(prepared) {
     if (f.app     && !p.apps.includes(f.app)) return false;
     if (f.platforms.size) {
       for (const k of f.platforms) if (!p.plats[k]) return false;
+    }
+    // Targets are OR-combined within the filter (Linux pill OR AWS pill
+    // shows everything tagged with either) but AND-combined with the
+    // other filters above.
+    if (f.targets && f.targets.size) {
+      const tgs = p.targets || [];
+      let any = false;
+      for (const t of f.targets) if (tgs.includes(t)) { any = true; break; }
+      if (!any) return false;
     }
     return true;
   });
@@ -7810,8 +7961,18 @@ function renderLibrary() {
         _libRenderCards();
         return;
       }
+      // Target-surface pill toggle (Windows / Linux / AWS / ...)
+      const tpill = e.target.closest('.lib-pill[data-target]');
+      if (tpill) {
+        const k = tpill.dataset.target;
+        if (LIB_STATE.filters.targets.has(k)) LIB_STATE.filters.targets.delete(k);
+        else LIB_STATE.filters.targets.add(k);
+        tpill.classList.toggle('on');
+        _libRenderCards();
+        return;
+      }
       if (e.target.id === 'libClearFilters') {
-        LIB_STATE.filters = {search:'', phase:'', tactic:'', severity:'', tier:'', src:'', actor:'', country:'', app:'', platforms:new Set()};
+        LIB_STATE.filters = {search:'', phase:'', tactic:'', severity:'', tier:'', src:'', actor:'', country:'', app:'', platforms:new Set(), targets:new Set()};
         filters.querySelectorAll('select[data-lib-filter]').forEach(s => s.value = '');
         filters.querySelectorAll('.lib-pill.on').forEach(p => p.classList.remove('on'));
         const search = document.getElementById('libSearch');
@@ -10066,8 +10227,13 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
             ("datadog" if getattr(uc, "datadog_query", "") else None),
         ] if p
     }))
+    # Target-surface tags (windows/linux/aws/...) — drives the Articles-tab
+    # Target filter chips. Inferred from the actual query bodies so a
+    # CloudTrail / cloudtrail-tagged UC light up the AWS chip even when the
+    # article title is generic.
+    uc_targets_attr = ",".join(_infer_uc_targets(uc))
     return f"""
-<details class="uc" data-uc-slug="{uslug}" data-platforms="{uc_plats}"{ ' open' if idx == 0 else '' }>
+<details class="uc" data-uc-slug="{uslug}" data-platforms="{uc_plats}" data-targets="{uc_targets_attr}"{ ' open' if idx == 0 else '' }>
   <summary>
     <span class="uc-title">{html.escape(uc.title)}</span>
     <span class="uc-phase">{html.escape(phase_name)}</span>
@@ -10157,12 +10323,20 @@ def render_card(idx: int, article: dict, ind: dict,
         if uc.splunk_spl: plats.add("spl")
         if getattr(uc, "datadog_query", ""): plats.add("datadog")
     plats_attr = ",".join(sorted(plats))
+    # Card-level target-surface attribute — union of every UC's targets on
+    # the card. Drives the Articles-tab Target chip group.
+    targets_set: set = set()
+    for uc in use_cases:
+        for tg in _infer_uc_targets(uc):
+            targets_set.add(tg)
+    targets_attr = ",".join(sorted(targets_set))
     return f"""
 <article class="card" id="{aid}" data-art-slug="{html.escape(art_slug)}"
   data-phases="{phases_attr}" data-sev="{severity}"
   data-techs="{html.escape(techs_attr)}"
   data-sources="{html.escape(sources_attr)}"
   data-platforms="{plats_attr}"
+  data-targets="{targets_attr}"
   data-uc-count="{uc_total}" data-llm-uc-count="{uc_llm}"
   data-search="{html.escape(search_blob)}">
   <div class="sev-ribbon {severity}">{SEV_LABEL[severity]}</div>
@@ -10254,6 +10428,124 @@ def _load_attack_data():
         return __import__("json").loads(REGISTRY_PATH_FOR_MATRIX.read_text(encoding="utf-8"))
     except Exception:
         return None
+
+
+# =============================================================================
+# Target-surface inference — what asset / OS / cloud does this UC apply to?
+# =============================================================================
+# This is the OS / cloud / SaaS axis ("Linux", "Windows", "AWS", "Kubernetes")
+# distinct from the SIEM / EDR axis ("Defender", "Sentinel", "Splunk SPL").
+# Both axes are useful: the analyst asking "Linux use cases" wants the second
+# axis. Inferred from the query bodies + the UC's source tag because the
+# same `tstats` shape can target either Windows or Linux endpoint data.
+
+# Ordered list — first match wins (specific before generic). Each entry is
+# (compiled-regex, target-tag). Pattern matched against the union of all
+# query strings on the UC.
+import re as _re_targets
+
+_TARGET_RULES: list[tuple] = [
+    # ---- AWS ----
+    # Match Splunk (source=cloudtrail) and Datadog (source:cloudtrail) and Sentinel (AWSCloudTrail).
+    (_re_targets.compile(r"\b(?:source[:=]cloudtrail|sourcetype[:=]aws:cloudtrail|aws\.cloudtrail|AWSCloudTrail|AWS:CloudTrail|userIdentity\.|requestParameters\.|responseElements\.|@aws\.|IAMUser|AssumeRole|ConsoleLogin)\b", _re_targets.IGNORECASE), "aws"),
+    (_re_targets.compile(r"\b(?:GuardDuty|CloudWatch|SecurityHub|EventBridge|S3Bucket|aws_s3|aws_ec2|aws_lambda|aws_kms|aws_iam|aws_eks|aws_ecs|aws_rds)\b"), "aws"),
+
+    # ---- Azure ----
+    (_re_targets.compile(r"\b(?:source:azure\.|azure\.activeDirectory|azure\.activity_logs|operationName\.value|azure\.applicationGateway|tenantId)\b", _re_targets.IGNORECASE), "azure"),
+    (_re_targets.compile(r"\b(?:SigninLogs|AuditLogs|AzureActivity|AzureDiagnostics|OfficeActivity)\b"), "azure"),
+
+    # ---- GCP ----
+    (_re_targets.compile(r"\b(?:source:gcp\.|protoPayload\.methodName|protoPayload\.serviceName|google\.iam\.admin|google\.cloud)\b", _re_targets.IGNORECASE), "gcp"),
+
+    # ---- Kubernetes ----
+    (_re_targets.compile(r"\b(?:source:kubernetes\.audit|objectRef\.resource|requestObject\.spec|kubectl\b|k8s\b|RoleBinding|ClusterRole)\b", _re_targets.IGNORECASE), "kubernetes"),
+
+    # ---- Microsoft 365 / Office 365 ----
+    (_re_targets.compile(r"\b(?:source:m365|microsoft365|office365|EmailEvents|EmailUrlInfo|EmailAttachmentInfo|sharepoint|exchangeonline|teams\.microsoft|OfficeActivity)\b", _re_targets.IGNORECASE), "m365"),
+
+    # ---- Okta ----
+    (_re_targets.compile(r"\b(?:source:okta|okta\.system|@actor\.alternateId|@authenticationContext\.authenticationProvider)\b", _re_targets.IGNORECASE), "okta"),
+
+    # ---- VCS (GitHub / GitLab / Bitbucket) ----
+    (_re_targets.compile(r"\b(?:source:(?:github|gitlab|bitbucket)|github\.com/|repo\.transfer|branch_protection|personal_access_token)\b", _re_targets.IGNORECASE), "vcs"),
+
+    # ---- macOS ----
+    # Path-based patterns intentionally don't use \b on the leading slash
+    # because \b is a word-boundary and '/' is not a word character.
+    (_re_targets.compile(r"(?:\bosascript\b|/Applications/|\bTerminal\.app\b|\blaunchd\b|\blaunchctl\b|\.plist\b|/Library/LaunchAgents|/Library/LaunchDaemons|\bcom\.apple\.)"), "macos"),
+    (_re_targets.compile(r"\b(?:macOS|MacOS|Mach-O|sip_disabled|csrutil)\b"), "macos"),
+
+    # ---- Linux ----
+    (_re_targets.compile(r"\b(?:source:linux\.|linux\.auditd|auditd\.type:(?:EXECVE|PATH|USER_AUTH)|systemctl|EXECVE|setuid|getuid)\b", _re_targets.IGNORECASE), "linux"),
+    (_re_targets.compile(r"(?:/etc/cron|/etc/passwd|/var/log/|/usr/lib/|/usr/bin/|/proc/|/bin/(?:bash|sh|zsh|ksh|dash))"), "linux"),
+    # Sigma-style YAML logsource declarations (no leading 'source:' prefix)
+    (_re_targets.compile(r"\bproduct:\s*linux\b", _re_targets.IGNORECASE), "linux"),
+    (_re_targets.compile(r"\bservice:\s*(?:auditd|syslog|cron|sshd|sudo|systemd)\b", _re_targets.IGNORECASE), "linux"),
+    (_re_targets.compile(r"\b(?:bash|zsh|ksh|dash)\b\s*-c"), "linux"),
+
+    # ---- Identity / SaaS auth ----
+    (_re_targets.compile(r"\b(?:IdentityLogonEvents|IdentityDirectoryEvents|user\.session\.start|policy\.evaluate_sign_on|@usr\.|@actor\.alternateId)\b"), "identity"),
+
+    # ---- Web application / WAF ----
+    (_re_targets.compile(r"\b(?:source:waf_logs|source:application_logs|source:application-threats|@http\.url_details|@rule\.tags|sqli|xss|ssrf|rce_attempt|api_findings)\b", _re_targets.IGNORECASE), "web-app"),
+
+    # ---- Windows (last; broad endpoint signals) ----
+    (_re_targets.compile(r"\b(?:DeviceProcessEvents|DeviceFileEvents|DeviceNetworkEvents|DeviceRegistryEvents|DeviceImageLoadEvents|DeviceLogonEvents|DeviceEvents)\b"), "windows"),
+    (_re_targets.compile(r"\b(?:source:windows\.(?:security|sysmon|defender|powershell|system|application))\b", _re_targets.IGNORECASE), "windows"),
+    (_re_targets.compile(r"\b(?:SecurityEvent|Sysmon|HKLM|HKCU|powershell\.exe|cmd\.exe|wmic\.exe|rundll32\.exe|Win32_)\b"), "windows"),
+    (_re_targets.compile(r"\b(?:EventID|EventCode)[:=]?\s*(?:4624|4625|4634|4648|4672|4688|4697|4720|4732|4768|4769|4776|7045|5140|5145|13|11|10|3)\b", _re_targets.IGNORECASE), "windows"),
+    (_re_targets.compile(r"\bsourcetype\s*=\s*(?:WinEventLog|XmlWinEventLog|MSAD|Powershell|Sysmon)\b", _re_targets.IGNORECASE), "windows"),
+    (_re_targets.compile(r"\\\\(?:HKLM|HKCU|Software\\Microsoft|Windows\\System32)"), "windows"),
+    # Sigma logsource declarations
+    (_re_targets.compile(r"\bproduct:\s*windows\b", _re_targets.IGNORECASE), "windows"),
+    (_re_targets.compile(r"\bservice:\s*(?:security|sysmon|powershell|system|application|process_creation|file_event|registry_event|network_connection)\b", _re_targets.IGNORECASE), "windows"),
+]
+
+
+def _infer_uc_targets(uc) -> list[str]:
+    """Infer target-surface tags (windows/linux/aws/etc) for a UC.
+
+    Accepts either a UseCase object or a dict with the platform query
+    fields. Returns a sorted list of unique tags. Empty list when nothing
+    matches — the analyst sees "Unclassified" in the filter UI."""
+    bodies: list[str] = []
+    if hasattr(uc, "defender_kql"):
+        for k in ("defender_kql", "sentinel_kql", "sigma_yaml", "splunk_spl", "datadog_query"):
+            v = getattr(uc, k, "") or ""
+            if v:
+                bodies.append(v)
+    elif isinstance(uc, dict):
+        for k in ("defender_kql", "sentinel_kql", "kql", "sigma_yaml", "splunk_spl", "datadog_query", "search"):
+            v = uc.get(k) or ""
+            if v:
+                bodies.append(v)
+    if not bodies:
+        return []
+    blob = "\n".join(bodies)
+    found: set[str] = set()
+    for pat, tag in _TARGET_RULES:
+        if pat.search(blob):
+            found.add(tag)
+    return sorted(found)
+
+
+# Display metadata for the target tags. Order matters — used to render the
+# filter pill row and the per-target landing-page list. Each entry:
+#   (tag, label, icon, blurb-for-landing-page)
+TARGET_DISPLAY: list[tuple] = [
+    ("windows",    "Windows",     "🪟", "Detections targeting Windows endpoints — Sysmon / Security event log / Defender DeviceProcessEvents."),
+    ("linux",      "Linux",       "🐧", "Detections targeting Linux servers and workstations — auditd / Sysmon for Linux / syslog."),
+    ("macos",      "macOS",       "",  "Detections targeting macOS endpoints — osascript / launchd / .plist persistence / Mach-O execution."),
+    ("aws",        "AWS",         "☁️", "Detections targeting AWS infrastructure — CloudTrail, IAM, S3, EC2, Lambda, KMS, GuardDuty."),
+    ("azure",      "Azure",       "⛅", "Detections targeting Microsoft Azure — Activity Logs, Azure AD, Sentinel SecurityEvent / SigninLogs."),
+    ("gcp",        "GCP",         "☁",  "Detections targeting Google Cloud Platform — Cloud Audit Logs, IAM, Compute, GKE."),
+    ("kubernetes", "Kubernetes",  "⎈", "Detections targeting Kubernetes clusters — audit logs, pod creation, RBAC, container escapes."),
+    ("m365",       "Microsoft 365","📧","Detections targeting Microsoft 365 — Exchange / SharePoint / Teams / OfficeActivity."),
+    ("okta",       "Okta",        "🔑", "Detections targeting Okta IDP — system log, MFA factor changes, admin grants."),
+    ("vcs",        "Source control","🐙","Detections targeting GitHub / GitLab / Bitbucket — repo transfers, PAT abuse, branch protections."),
+    ("identity",   "Identity",    "👤", "Identity-platform-agnostic detections — sign-in anomalies, MFA, impossible travel."),
+    ("web-app",    "Web App",     "🌐", "Application-layer detections — WAF telemetry, SQLi/XSS/SSRF/RCE, API findings."),
+]
 
 
 def build_matrix_data(articles_meta):
@@ -10376,6 +10668,7 @@ def build_matrix_data(articles_meta):
             "src": "internal",
             "tier": getattr(uc, "tier", "hunting"),
             "pl": pl,                    # platform coverage d/s/g/p/D
+            "tg": _infer_uc_targets(uc), # target surfaces (windows/linux/aws/...)
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
         })
@@ -10420,6 +10713,9 @@ def build_matrix_data(articles_meta):
             tier = "alerting"
         else:
             tier = "hunting"
+        # Run target inference on the ESCU search body so e.g. cloudtrail
+        # ESCU detections light up the AWS pill instead of staying generic.
+        escu_tg = _infer_uc_targets({"splunk_spl": det.get("search") or ""})
         uc_records.append({
             "i": idx,
             "n": det_id[:36],
@@ -10429,6 +10725,7 @@ def build_matrix_data(articles_meta):
             "src": "escu",
             "tier": tier,
             "pl": "---p-",               # ESCU = Splunk SPL-only (5 positions)
+            "tg": escu_tg,
             "techs": tech_ids,
             "arts": [],
         })
@@ -10481,6 +10778,7 @@ def build_matrix_data(articles_meta):
                 "src": "bespoke",
                 "tier": getattr(uc, "tier", "hunting"),
                 "pl": pl,
+                "tg": _infer_uc_targets(uc),
                 "techs": uc_techs,
                 "arts": [a_idx],
             })
@@ -12411,6 +12709,234 @@ def write_actor_pages(actors_serialisable: list, technique_view: dict,
     return written
 
 
+# =============================================================================
+# Per-target landing pages — one indexable HTML hub per OS / cloud / SaaS
+# (Linux, Windows, AWS, Azure, GCP, Kubernetes, M365, Okta, VCS, Identity,
+# Web App, macOS). Mirrors the technique-page pattern for SEO surface area.
+# =============================================================================
+
+def _render_target_page(tag: str, label: str, icon: str, blurb: str,
+                         matrix_data: dict,
+                         base_url: str = "https://clankerusecase.com") -> str:
+    """Render one HTML page summarising every UC tagged with the given
+    target surface (windows, linux, aws, ...). The matrix carries the
+    `tg` array per UC; this page filters on it and groups by kill-chain."""
+    uc_records = matrix_data.get("ucs") or []
+    art_records = matrix_data.get("arts") or []
+    technique_view = matrix_data.get("techniques") or {}
+
+    # Filter UCs that include this target tag
+    matched_idxs = [u["i"] for u in uc_records if tag in (u.get("tg") or [])]
+    matched = [uc_records[i] for i in matched_idxs if i < len(uc_records)]
+
+    # Group by kill-chain phase. Same buckets the Library uses.
+    PHASE_ORDER = ["recon", "delivery", "exploit", "install", "c2", "actions"]
+    PHASE_LABELS = {
+        "recon": "Reconnaissance", "delivery": "Delivery", "exploit": "Exploitation",
+        "install": "Installation", "c2": "Command & Control", "actions": "Actions on Objectives",
+    }
+    by_phase: dict[str, list] = {p: [] for p in PHASE_ORDER}
+    for u in matched:
+        ph = (u.get("ph") or "actions").lower()
+        if ph not in by_phase:
+            ph = "actions"
+        by_phase[ph].append(u)
+
+    # Article cross-reference — every distinct article that any matched UC cites.
+    art_idxs: set[int] = set()
+    for u in matched:
+        for a_idx in (u.get("arts") or []):
+            art_idxs.add(a_idx)
+    arts_for_target = [art_records[i] for i in sorted(art_idxs) if i < len(art_records)]
+
+    # Top techniques across the matched UCs
+    tech_counts: dict[str, int] = {}
+    for u in matched:
+        for tid in (u.get("techs") or []):
+            tech_counts[tid] = tech_counts.get(tid, 0) + 1
+    top_techs = sorted(tech_counts.items(), key=lambda kv: -kv[1])[:25]
+
+    # Render UC cards grouped by phase
+    phase_blocks: list[str] = []
+    for ph in PHASE_ORDER:
+        bucket = by_phase[ph]
+        if not bucket:
+            continue
+        cards: list[str] = []
+        for u in bucket[:200]:  # cap per-phase for page weight
+            title = u.get("t", "Untitled")
+            src = u.get("src", "internal")
+            pl = u.get("pl", "") or ""
+            badges: list[str] = []
+            for ch in pl:
+                if ch == "-":
+                    continue
+                cls, lbl, full = _PL_BADGE_LABELS.get(ch, ("", ch, ch))
+                if cls:
+                    badges.append(f'<span class="{cls}" title="{html.escape(full)}">{html.escape(lbl)}</span>')
+            platforms_html = '<span class="pl">' + "".join(badges) + '</span>' if badges else ""
+            src_label = {"internal": "Internal", "bespoke": "Bespoke", "escu": "ESCU"}.get(src, src.title())
+            tier = u.get("tier", "")
+            tier_html = f' · {html.escape(tier)}' if tier else ""
+            href = f"{base_url}/#uc-{u.get('i')}"
+            cards.append(
+                f'<a class="uc-card" href="{href}">'
+                f'  <span class="t">{html.escape(title)}</span>'
+                f'  <span class="meta">'
+                f'    <span class="src {src}">{html.escape(src_label)}</span>'
+                f'    {ph}{tier_html}'
+                f'    {platforms_html}'
+                f'  </span>'
+                f'</a>'
+            )
+        phase_blocks.append(
+            f'<div class="section"><h2>{html.escape(PHASE_LABELS[ph])} ({len(bucket)})</h2>{"".join(cards)}</div>'
+        )
+
+    # Top techniques block
+    tech_html = ""
+    if top_techs:
+        rows = "".join(
+            f'<a href="{base_url}/techniques/{html.escape(tid)}.html">'
+            f'<span class="tid-mini">{html.escape(tid)}</span>'
+            f'<span class="tn">{html.escape(technique_view.get(tid, {}).get("name", tid))}</span>'
+            f'<span class="cnt">{cnt}</span></a>'
+            for tid, cnt in top_techs
+        )
+        tech_html = (
+            f'<div class="section"><h2>Top techniques on {html.escape(label)} ({len(top_techs)})</h2>'
+            f'<div class="subs">{rows}</div></div>'
+        )
+
+    # Articles section
+    arts_html = ""
+    if arts_for_target:
+        # cap to prevent oversized pages
+        arts_for_target = arts_for_target[:60]
+        rows = "".join(
+            f'<div class="art-row">'
+            f'  <a class="at" href="{base_url}/#{html.escape(a.get("id",""))}">'
+            f'    <span class="sev {a.get("sev","low")}">{html.escape(a.get("sev","low"))}</span>'
+            f'    {html.escape(a.get("title",""))}'
+            f'  </a>'
+            f'</div>'
+            for a in arts_for_target
+        )
+        arts_html = (
+            f'<div class="section"><h2>Recent articles citing {html.escape(label)}-targeted detections</h2>'
+            f'{rows}</div>'
+        )
+
+    # Stats / lead
+    n_ucs = len(matched)
+    n_arts = len(arts_for_target)
+    n_techs = len(tech_counts)
+    lead = (
+        f"Clankerusecase tracks <strong>{n_ucs}</strong> detection use cases "
+        f"covering the <strong>{html.escape(label)}</strong> attack surface "
+        f"across <strong>{n_techs}</strong> MITRE ATT&CK techniques."
+    )
+    meta_desc = (
+        f"{label} detection use cases — {n_ucs} SOC detections covering "
+        f"{n_techs} MITRE ATT&CK techniques. Defender KQL, Sentinel KQL, "
+        f"Sigma, Splunk SPL, and Datadog Cloud SIEM coverage for {label}."
+    )
+    canonical = f"{base_url}/targets/{tag}.html"
+
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{html.escape(label)} detection use cases — Clankerusecase</title>
+<meta name="description" content="{html.escape(meta_desc)}">
+<link rel="canonical" href="{html.escape(canonical)}">
+<link rel="icon" type="image/png" href="{base_url}/logo.png">
+<meta property="og:type" content="article">
+<meta property="og:title" content="{html.escape(label)} detection use cases — Clankerusecase">
+<meta property="og:description" content="{html.escape(meta_desc)}">
+<meta property="og:url" content="{html.escape(canonical)}">
+<meta property="og:image" content="{base_url}/logo.png">
+<meta property="og:site_name" content="Clankerusecase">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{html.escape(label)} detections">
+<meta name="twitter:description" content="{html.escape(meta_desc)}">
+<script type="application/ld+json">
+{{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "{html.escape(label)} detection use cases",
+  "description": "{html.escape(meta_desc)}",
+  "url": "{canonical}",
+  "publisher": {{ "@type": "Organization", "name": "Clankerusecase",
+                  "url": "{base_url}/" }}
+}}
+</script>
+<style>{_TECH_PAGE_STYLE}</style>
+</head>
+<body>
+<header class="tp">
+  <a href="{base_url}/" class="brand">
+    <img src="{base_url}/logo.png" alt="">
+    <div>Clankerusecase<div class="sub">{html.escape(label)} detection coverage</div></div>
+  </a>
+  <a href="{base_url}/" class="back">← Back to main site</a>
+</header>
+<main>
+  <div class="crumb">
+    <a href="{base_url}/">Home</a><span class="sep">/</span>
+    Targets<span class="sep">/</span>
+    {html.escape(label)}
+  </div>
+  <h1 class="title"><span class="tid">{html.escape(icon or "")}</span>{html.escape(label)} detections</h1>
+  <p class="lead">{lead}</p>
+  <p class="lead" style="opacity:.85">{html.escape(blurb)}</p>
+  <div class="cta">
+    <a class="primary" href="{base_url}/#tab-library?target={html.escape(tag)}">Open Detection Library →</a>
+    <a href="{base_url}/#tab-attack-matrix">View on the matrix</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="n">{n_ucs}</span><span class="l">Use cases</span></div>
+    <div class="stat"><span class="n">{n_techs}</span><span class="l">Techniques</span></div>
+    <div class="stat"><span class="n">{n_arts}</span><span class="l">Articles</span></div>
+    <div class="stat"><span class="n">{len([p for p in by_phase if by_phase[p]])}</span><span class="l">Kill-chain phases</span></div>
+  </div>
+  {tech_html}
+  {"".join(phase_blocks)}
+  {arts_html}
+</main>
+<footer>
+  Auto-generated from the Clankerusecase use-case catalogue. Re-built every 2 hours.
+</footer>
+</body>
+</html>
+"""
+
+
+def write_target_pages(matrix_data: dict,
+                        base_url: str = "https://clankerusecase.com") -> int:
+    """Emit one static HTML page per target surface under targets/.
+    Returns the count written. Wipes the directory first so deletes
+    propagate when targets rotate out of the corpus."""
+    if not matrix_data:
+        return 0
+    out_dir = Path(__file__).parent / "targets"
+    if out_dir.exists():
+        import shutil
+        shutil.rmtree(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+    written = 0
+    for tag, label, icon, blurb in TARGET_DISPLAY:
+        try:
+            page = _render_target_page(tag, label, icon, blurb, matrix_data, base_url)
+            (out_dir / f"{tag}.html").write_text(page, encoding="utf-8")
+            written += 1
+        except (OSError, KeyError) as e:
+            print(f"    [!] target page failed for {tag}: {str(e)[:80]}")
+    print(f"[*] Target landing pages: {written}  ->  targets/")
+    return written
+
+
 def write_briefings(articles_meta, articles_raw_index):
     BRIEFINGS_DIR.mkdir(exist_ok=True)
     written = []
@@ -13405,6 +13931,7 @@ def main():
     # with profile, UCs, articles, IOCs, MITRE link.
     if matrix_data:
         write_actor_pages(actors_serialisable, matrix_data.get("techniques") or {})
+        write_target_pages(matrix_data)
     else:
         write_actor_pages(actors_serialisable, {})
 
@@ -13470,6 +13997,14 @@ def main():
                 sitemap_urls.append(
                     (f"https://clankerusecase.com/actors/{ap.name}",
                      "0.7", "weekly")
+                )
+        # Per-target (OS / cloud / SaaS) landing pages.
+        targets_root = _Path(__file__).with_name("targets")
+        if targets_root.exists():
+            for tp in sorted(targets_root.glob("*.html")):
+                sitemap_urls.append(
+                    (f"https://clankerusecase.com/targets/{tp.name}",
+                     "0.8", "weekly")
                 )
         sitemap_urls = sitemap_urls[:50000]  # protocol cap
         xml_lines = ['<?xml version="1.0" encoding="UTF-8"?>',
