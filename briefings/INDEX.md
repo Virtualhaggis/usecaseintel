@@ -8,6 +8,9 @@ _590 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-10
+- [new cpanel and whm flaws enable code execution dos attacks](./2026-05-10/new-cpanel-and-whm-flaws-enable-code-execution-dos-attacks.md)
+
 ## 2026-05-09
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
@@ -25,7 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
-- [hackers leveraged hugging face and clawhub with 575 maliciou](./2026-05-08/hackers-leveraged-hugging-face-and-clawhub-with-575-maliciou.md)
 - [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
 - [koda security incident exposes customers data from online sh](./2026-05-08/koda-security-incident-exposes-customers-data-from-online-sh.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
