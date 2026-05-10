@@ -3350,14 +3350,16 @@ body{
 body.view-articles-active .stats-articles,
 body.view-matrix-active   .stats-matrix,
 body.view-intel-active    .stats-intel,
-body.view-actors-active   .stats-actors{
+body.view-actors-active   .stats-actors,
+body.view-library-active  .stats-library{
   opacity:1; transform:translate(-50%, -50%); pointer-events:auto;
 }
 /* Subtle entry animation — slide up from below as it fades in */
 body:not(.view-articles-active) .stats-articles,
 body:not(.view-matrix-active)   .stats-matrix,
 body:not(.view-intel-active)    .stats-intel,
-body:not(.view-actors-active)   .stats-actors{
+body:not(.view-actors-active)   .stats-actors,
+body:not(.view-library-active)  .stats-library{
   transform:translate(-50%, calc(-50% + 8px));
 }
 @media(max-width:780px){
@@ -5951,6 +5953,7 @@ details.uc.uc-platform-hidden{display:none !important;}
       <div class="stats stats-matrix" id="topStatsMatrix"></div>
       <div class="stats stats-intel" id="topStatsIntel"></div>
       <div class="stats stats-actors" id="topStatsActors"></div>
+      <div class="stats stats-library" id="topStatsLibrary"></div>
     </div>
     <div class="search-trigger" id="searchTrigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
@@ -7925,6 +7928,36 @@ function _libRenderCards() {
   const grid = document.getElementById('libGrid');
   const count = document.getElementById('libResultCount');
   if (count) count.textContent = `${filtered.length.toLocaleString()} of ${prepared.length.toLocaleString()} use cases`;
+
+  // Top-bar stats — mirrors the .stat shape used by Articles / Matrix /
+  // Intel / Actors so the centred sliding-stats CSS picks it up.
+  const topLib = document.getElementById('topStatsLibrary');
+  if (topLib) {
+    const tactics  = new Set();
+    const sources  = new Set();
+    let critical   = 0;
+    const plats    = {def:0, sent:0, sigma:0, spl:0, datadog:0};
+    for (const p of prepared) {
+      (p.tactics || []).forEach(t => t && tactics.add(t));
+      (p.sources || []).forEach(s => s && sources.add(s));
+      if (p.sevTag === 'crit') critical++;
+      if (p.plats) {
+        if (p.plats.def)     plats.def++;
+        if (p.plats.sent)    plats.sent++;
+        if (p.plats.sigma)   plats.sigma++;
+        if (p.plats.spl)     plats.spl++;
+        if (p.plats.datadog) plats.datadog++;
+      }
+    }
+    const platformsCovered = Object.values(plats).filter(n => n > 0).length;
+    topLib.innerHTML =
+      `<div class="stat"><div class="v">${prepared.length.toLocaleString()}</div><div class="l">Use Cases</div></div>` +
+      `<div class="stat"><div class="v">${tactics.size.toLocaleString()}</div><div class="l">Tactics</div></div>` +
+      `<div class="stat"><div class="v">${platformsCovered.toLocaleString()}</div><div class="l">Platforms</div></div>` +
+      `<div class="stat"><div class="v">${critical.toLocaleString()}</div><div class="l">Critical</div></div>` +
+      `<div class="stat"><div class="v">${sources.size.toLocaleString()}</div><div class="l">Sources</div></div>`;
+  }
+
   if (!grid) return;
   if (!filtered.length) {
     grid.innerHTML = `<div class="lib-empty"><b>No use cases match these filters.</b><br>Try clearing a filter or changing your search.</div>`;
@@ -8305,6 +8338,7 @@ function showView(name) {
   document.body.classList.toggle('view-matrix-active',   name === 'matrix');
   document.body.classList.toggle('view-intel-active',    name === 'intel');
   document.body.classList.toggle('view-actors-active',   name === 'actors');
+  document.body.classList.toggle('view-library-active',  name === 'library');
   if (name === 'matrix' && !window._matrixRendered) {
     renderMatrix();
     window._matrixRendered = true;
