@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-10
+- [hackers abuse google ads claude ai chats to push mac malware](./2026-05-10/hackers-abuse-google-ads-claude-ai-chats-to-push-mac-malware.md)
 - [new cpanel and whm flaws enable code execution dos attacks](./2026-05-10/new-cpanel-and-whm-flaws-enable-code-execution-dos-attacks.md)
 - [ollama out of bounds read vulnerability allows remote proces](./2026-05-10/ollama-out-of-bounds-read-vulnerability-allows-remote-proces.md)
 - [police shut down reboot of crimenetwork marketplace arrest a](./2026-05-10/police-shut-down-reboot-of-crimenetwork-marketplace-arrest-a.md)
@@ -54,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [fixing the password problem is as easy as 123456](./2026-05-07/fixing-the-password-problem-is-as-easy-as-123456.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
-- [ivanti warns of new epmm flaw exploited in zero day attacks](./2026-05-07/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks.md)
 - [new pcpjack worm steals credentials cleans teampcp infection](./2026-05-07/new-pcpjack-worm-steals-credentials-cleans-teampcp-infection.md)
 - [new tclbanker malware self spreads over whatsapp and outlook](./2026-05-07/new-tclbanker-malware-self-spreads-over-whatsapp-and-outlook.md)
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
