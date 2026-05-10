@@ -10,12 +10,8 @@ Home Cyber Security News
 New cPanel and WHM Flaws Enable Code Execution, DoS Attacks 
 By Guru Baran 
 May 10, 2026 
-
-
-
-
 cPanel has disclosed three critical security vulnerabilities tracked as CVE-2026-29201, CVE-2026-29202, and CVE-2026-29203 affecting its widely deployed cPanel & WHM web hosting control panel and WP Squared (WP2) platform.
-The flaws, patched on May 8, 2026, expose servers to arbitrary file reads, Perl code injection, and denial-of-service (DoS) attacks, making immediate pat…
+The flaws, patched on May 8, 2026, expose servers to arbitrary file reads, Perl code injection, and denial-of-service (DoS) attacks, making immediate patching es…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,8 +37,7 @@ The flaws, patched on May 8, 2026, expose servers to arbitrary file reads, Perl 
 - **T1219** — Remote Access Software
 - **T1204.002** — User Execution: Malicious File
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1588.006** — Obtain Capabilities: Vulnerabilities
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
@@ -50,60 +45,70 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Suspicious shell/network child spawned by cPanel cpsrvd/whostmgrd (post-exploit CVE-2026-29201/29202/29203)
+### [LLM] Unpatched cPanel/WHM exposed to CVE-2026-29201/29202/29203 (and Apr CVE-2026-41940)
 
-`UC_0_9` · phase: **exploit** · confidence: **High**
+`UC_0_9` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("perl","perl5","cpsrvd","whostmgrd","cpaneld","queueprocd","tailwatchd") OR Processes.parent_process="*cpsrvd*" OR Processes.parent_process="*whostmgrd*" OR Processes.parent_process="*whostmgr.cgi*" OR Processes.parent_process="*cpaneld*" OR Processes.parent_process_path="/usr/local/cpanel/*") (Processes.process_name IN ("sh","bash","dash","ksh","zsh","perl","python","python3","curl","wget","nc","ncat","socat","chmod","chown","openssl","base64")) by host Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(process,"/usr/local/cpanel/(scripts|3rdparty|bin)/") | sort - lastTime
+| tstats summariesonly=true latest(_time) as lastSeen latest(Vulnerabilities.signature) as signature latest(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-29201","CVE-2026-29202","CVE-2026-29203","CVE-2026-41940") by Vulnerabilities.dest Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval remediation=case(cve=="CVE-2026-29201" OR cve=="CVE-2026-29202" OR cve=="CVE-2026-29203","Upgrade cPanel/WHM to 11.136.0.9 / 11.134.0.25 / 11.132.0.31 / 11.130.0.22 / 11.126.0.58 / 11.124.0.37 / 11.118.0.66 / 11.110.0.116 / 11.110.0.117 / 11.102.0.41 / 11.94.0.30 / 11.86.0.43 (WP2: 11.136.1.10+)", cve=="CVE-2026-41940","Apply April 2026 cPanel security TSR (login bypass)", true(),"")
+| convert ctime(lastSeen)
+| sort 0 - lastSeen
+```
+
+**Defender KQL:**
+```kql
+let _cpanel_cves = dynamic(["CVE-2026-29201","CVE-2026-29202","CVE-2026-29203","CVE-2026-41940"]);
+DeviceTvmSoftwareVulnerabilities
+| where SoftwareVendor has "cpanel" or SoftwareName has_any ("cpanel","whm","wp squared","wp2")
+| where CveId in (_cpanel_cves)
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing, PublicIP, MachineGroup) by DeviceId, DeviceName
+  ) on DeviceId
+| extend RequiredFix = case(
+    CveId in ("CVE-2026-29201","CVE-2026-29202","CVE-2026-29203"), "Upgrade to 11.136.0.9 / 11.134.0.25 / 11.132.0.31 / 11.130.0.22 / 11.126.0.58 / 11.124.0.37 / 11.118.0.66 / 11.110.0.116 / 11.110.0.117 / 11.102.0.41 / 11.94.0.30 / 11.86.0.43 (WP2: 11.136.1.10+)",
+    CveId == "CVE-2026-41940", "Apply April 2026 cPanel TSR (login-bypass fix)",
+    "")
+| project Timestamp, DeviceName, OSPlatform, OSVersion, IsInternetFacing, PublicIP, MachineGroup, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RequiredFix
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc, DeviceName asc
+```
+
+### [LLM] Suspicious child process spawned by cPanel/WHM Perl daemon (cpsrvd / whostmgrd / cpaneld) — post-exploit of CVE-2026-29202 et al.
+
+`UC_0_10` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.user) as users from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("cpsrvd","whostmgrd","cpaneld") OR Processes.parent_process_path IN ("/usr/local/cpanel/cpsrvd","/usr/local/cpanel/whostmgrd","/usr/local/cpanel/cpaneld")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","python","python2","python3","perl","ruby","php","curl","wget","nc","ncat","socat","chmod","chown","setfacl","base64") OR match(Processes.process,"(?i)(/dev/tcp/|base64\s+-d|;\s*sh\b|\|\s*sh\b|wget\s+http|curl\s+http|chmod\s+\+x)") ) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| sort 0 - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessCommandLine has_any ("cpsrvd","whostmgrd","whostmgr.cgi","cpaneld","queueprocd","tailwatchd")
-   or InitiatingProcessFolderPath startswith "/usr/local/cpanel"
-| where FileName in~ ("sh","bash","dash","ksh","zsh","perl","python","python3","curl","wget","nc","ncat","socat","chmod","chown","openssl","base64")
-| where not(ProcessCommandLine has_any ("/usr/local/cpanel/scripts/","/usr/local/cpanel/3rdparty/","/usr/local/cpanel/bin/"))
+| where InitiatingProcessFileName in~ ("cpsrvd","whostmgrd","cpaneld")
+   or InitiatingProcessFolderPath in~ ("/usr/local/cpanel/cpsrvd","/usr/local/cpanel/whostmgrd","/usr/local/cpanel/cpaneld")
+| where FileName in~ ("sh","bash","dash","zsh","ksh","python","python2","python3","perl","ruby","php","curl","wget","nc","ncat","socat","chmod","chown","setfacl","base64")
+   or ProcessCommandLine matches regex @"(?i)(/dev/tcp/|base64\s+-d|;\s*sh\b|\|\s*sh\b|wget\s+http|curl\s+http|chmod\s+\+x)"
+| where AccountName !endswith "$"
+// Suppress cPanel-shipped maintenance scripts that legitimately fork shell/curl
+| where InitiatingProcessCommandLine !has "/scripts/upcp"
+| where InitiatingProcessCommandLine !has "/usr/local/cpanel/scripts/maintenance"
 | project Timestamp, DeviceName, AccountName,
-          ChildBinary = FileName,
-          ChildCmd = ProcessCommandLine,
-          ParentBinary = InitiatingProcessFileName,
+          Parent = InitiatingProcessFileName,
+          ParentPath = InitiatingProcessFolderPath,
           ParentCmd = InitiatingProcessCommandLine,
-          ParentPath = InitiatingProcessFolderPath
+          Child = FileName,
+          ChildPath = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
-```
-
-### [LLM] Unpatched cPanel/WHM exposure to CVE-2026-29201/29202/29203/41940
-
-`UC_0_10` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| inputlookup vulnerability_lookup where cve IN ("CVE-2026-29201","CVE-2026-29202","CVE-2026-29203","CVE-2026-41940") | join type=left dest [| inputlookup asset_lookup | fields dest, owner, environment] | table dest, owner, environment, cve, severity, software_name, software_version, recommended_fix | sort - severity
-```
-
-**Defender KQL:**
-```kql
-let TargetCVEs = dynamic(["CVE-2026-29201","CVE-2026-29202","CVE-2026-29203","CVE-2026-41940"]);
-DeviceTvmSoftwareVulnerabilities
-| where CveId in (TargetCVEs)
-| join kind=leftouter (
-    DeviceTvmSoftwareVulnerabilitiesKB
-    | where CveId in (TargetCVEs)
-    | project CveId, CvssScore, IsExploitAvailable, PublishedDate
-  ) on CveId
-| join kind=leftouter (
-    DeviceInfo
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, MachineGroup) by DeviceId
-  ) on DeviceId
-| project DeviceName, IsInternetFacing, PublicIP, MachineGroup,
-          OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable,
-          RecommendedSecurityUpdate
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -408,4 +413,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
