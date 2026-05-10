@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ShinyHunters (UNC6661/UNC6671) SSO sign-in from named Mandiant proxy IPs
 
-`UC_23_3` · phase: **delivery** · confidence: **High**
+`UC_24_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ AADSignInEventsBeta
 
 ### [LLM] MFA method registered within 60 min of Entra sign-in from ShinyHunters proxy/anonymous IP
 
-`UC_23_4` · phase: **install** · confidence: **High**
+`UC_24_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ IdentityDirectoryEvents
 
 ### [LLM] OAuth consent granted to 'ToogleBox Recall' Gmail/M365 add-on (ShinyHunters MFA-notification hide)
 
-`UC_23_5` · phase: **install** · confidence: **High**
+`UC_24_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

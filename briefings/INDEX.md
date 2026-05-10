@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-10
 - [new cpanel and whm flaws enable code execution dos attacks](./2026-05-10/new-cpanel-and-whm-flaws-enable-code-execution-dos-attacks.md)
 - [ollama out of bounds read vulnerability allows remote proces](./2026-05-10/ollama-out-of-bounds-read-vulnerability-allows-remote-proces.md)
+- [police shut down reboot of crimenetwork marketplace arrest a](./2026-05-10/police-shut-down-reboot-of-crimenetwork-marketplace-arrest-a.md)
 
 ## 2026-05-09
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
@@ -60,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
-- [the browser is breaking your dlp how data slips past modern ](./2026-05-07/the-browser-is-breaking-your-dlp-how-data-slips-past-modern-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
