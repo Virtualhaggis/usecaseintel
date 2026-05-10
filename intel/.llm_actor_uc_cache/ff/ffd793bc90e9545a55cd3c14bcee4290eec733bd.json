@@ -1,0 +1,82 @@
+{
+  "name": "MuddyWater",
+  "ucs": [
+    {
+      "title": "[LLM] MuddyWater (Mango Sandstorm / TA450) RMM-based initial access \u2014 legitimate remote-access tools spawned by Outlook or browser",
+      "description": "Hunts the TA450 / Mango Sandstorm hallmark of phishing recipients into installing legitimate Remote Monitoring & Management (RMM) tooling \u2014 ScreenConnect/ConnectWise Control, Atera, RemoteUtilities, SimpleHelp, AnyDesk, Syncro \u2014 by detecting the RMM client binary executing as a child of a delivery vector (Outlook, browser, Explorer, or a freshly-spawned msiexec). MuddyWater abandoned bespoke implants for off-the-shelf RMM in 2022-2024 campaigns precisely because the binary is signed and bypasses AV; the tell is the parent process and that the host has never run that RMM tool before.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1219.002",
+        "T1566",
+        "T1204.001",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"explorer.exe\",\"msiexec.exe\",\"7zg.exe\",\"winrar.exe\",\"7zfm.exe\") AND Processes.process_name IN (\"ScreenConnect.WindowsClient.exe\",\"ScreenConnect.ClientService.exe\",\"ConnectWiseControl.Client.exe\",\"atera.exe\",\"AteraAgent.exe\",\"AgentPackageSTA.exe\",\"rutserv.exe\",\"rutview.exe\",\"AnyDesk.exe\",\"SimpleHelp.exe\",\"RemoteUtilities.exe\",\"RemoteUtilitiesViewer.exe\",\"syncro.exe\",\"WinAgent.exe\",\"NinjaRMMAgent.exe\",\"Action1_agent.exe\") by host Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | where user!=\"*$\" | convert ctime(firstTime) ctime(lastTime) | rename host as dest",
+      "kql": "let RMMBinaries = dynamic([\"screenconnect.windowsclient.exe\",\"screenconnect.clientservice.exe\",\"connectwisecontrol.client.exe\",\"atera.exe\",\"ateraagent.exe\",\"agentpackagesta.exe\",\"rutserv.exe\",\"rutview.exe\",\"anydesk.exe\",\"simplehelp.exe\",\"remoteutilities.exe\",\"remoteutilitiesviewer.exe\",\"syncro.exe\",\"winagent.exe\",\"ninjarmmagent.exe\",\"action1_agent.exe\"]);\nlet DeliveryParents = dynamic([\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"explorer.exe\",\"msiexec.exe\",\"7zg.exe\",\"winrar.exe\",\"7zfm.exe\"]);\nlet RmmBaseline = DeviceProcessEvents\n    | where Timestamp between (ago(45d) .. ago(2h))\n    | where FileName in~ (RMMBinaries)\n    | summarize by DeviceId, FileName;\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where FileName in~ (RMMBinaries)\n| where InitiatingProcessFileName in~ (DeliveryParents)\n   or InitiatingProcessFolderPath has_any (@\"\\Downloads\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Public\\\")\n| join kind=leftanti RmmBaseline on DeviceId, FileName\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ParentPath = InitiatingProcessFolderPath,\n          Child = FileName,\n          ChildPath = FolderPath,\n          ChildCmd = ProcessCommandLine,\n          SHA256, IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "let RMMBinaries = dynamic([\"screenconnect.windowsclient.exe\",\"screenconnect.clientservice.exe\",\"connectwisecontrol.client.exe\",\"atera.exe\",\"ateraagent.exe\",\"agentpackagesta.exe\",\"rutserv.exe\",\"rutview.exe\",\"anydesk.exe\",\"simplehelp.exe\",\"remoteutilities.exe\",\"remoteutilitiesviewer.exe\",\"syncro.exe\",\"winagent.exe\",\"ninjarmmagent.exe\",\"action1_agent.exe\"]);\nlet DeliveryParents = dynamic([\"outlook.exe\",\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"explorer.exe\",\"msiexec.exe\",\"7zg.exe\",\"winrar.exe\",\"7zfm.exe\"]);\nlet RmmBaseline = SecurityEvent\n    | where TimeGenerated between (ago(45d) .. ago(2h))\n    | where EventID == 4688\n    | extend ChildName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n    | where ChildName in (RMMBinaries)\n    | summarize by Computer, ChildName;\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where AccountType == \"User\" and Account !endswith \"$\"\n| extend ChildName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1])),\n         ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ChildName in (RMMBinaries)\n| where ParentName in (DeliveryParents)\n   or NewProcessName has_any (@\"\\Downloads\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Public\\\")\n| join kind=leftanti RmmBaseline on $left.Computer == $right.Computer, $left.ChildName == $right.ChildName\n| project TimeGenerated, Computer, Account, ParentProcessName, ParentName,\n          NewProcessName, ChildName, CommandLine, TokenElevationType",
+      "sigma_yaml": "title: MuddyWater Mango Sandstorm RMM Tool Spawned by Office Outlook or Browser\nid: 7d9b1c20-9f44-4f0d-9c6c-mw01rmm0001\nstatus: experimental\ndescription: Detects MuddyWater (Mango Sandstorm / TA450 / Static Kitten / Seedworm) initial-access tradecraft where a phishing payload deploys legitimate RMM software (ScreenConnect, Atera, AnyDesk, RemoteUtilities, SimpleHelp, Syncro, etc.) by capturing those signed RMM clients executing as children of mail/browser/archive delivery processes.\nreferences:\n  - https://attack.mitre.org/groups/G0069/\n  - https://www.microsoft.com/en-us/security/blog/2023/04/18/mercury-and-deev-team-cooperate-to-conduct-destructive-attacks/\n  - https://www.proofpoint.com/us/blog/threat-insight/ta450-uses-embedded-links-pdf-attachments-latest-campaign\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-055a\nauthor: SOC Detection Engineering\ndate: 2026-05-10\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  parent_delivery:\n    ParentImage|endswith:\n      - '\\outlook.exe'\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\explorer.exe'\n      - '\\msiexec.exe'\n      - '\\7zg.exe'\n      - '\\winrar.exe'\n      - '\\7zfm.exe'\n  rmm_child:\n    Image|endswith:\n      - '\\ScreenConnect.WindowsClient.exe'\n      - '\\ScreenConnect.ClientService.exe'\n      - '\\ConnectWiseControl.Client.exe'\n      - '\\atera.exe'\n      - '\\AteraAgent.exe'\n      - '\\AgentPackageSTA.exe'\n      - '\\rutserv.exe'\n      - '\\rutview.exe'\n      - '\\AnyDesk.exe'\n      - '\\SimpleHelp.exe'\n      - '\\RemoteUtilities.exe'\n      - '\\RemoteUtilitiesViewer.exe'\n      - '\\syncro.exe'\n      - '\\WinAgent.exe'\n      - '\\NinjaRMMAgent.exe'\n      - '\\Action1_agent.exe'\n  condition: parent_delivery and rmm_child\nfalsepositives:\n  - Sanctioned IT helpdesk RMM rollouts via msiexec from approved package paths \u2014 allow-list by host group / install path.\n  - End-user reinstall of an authorised RMM agent from the vendor portal opened in a browser.\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1219\n  - attack.t1219.002\n  - attack.initial_access\n  - attack.t1566\n  - attack.t1204.001\n  - attack.t1204.002\n  - attack.g0069\n",
+      "rationale": "MuddyWater / Mango Sandstorm / TA450 has been Iran's most prolific RMM-abuse cluster since 2022; Microsoft, Proofpoint, Symantec (Seedworm) and CISA AA22-055A all document the exact tooling list above as their persistent C2 surface. Generic RMM detection alone is noisy, but combining (a) signed RMM client as the child binary, (b) a delivery-vector parent (mail/browser/archive/freshly-spawned msiex",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] MuddyWater POWERSTATS / PowGoop loader \u2014 Office macro spawning PowerShell or LOLBin with encoded/obfuscated command line",
+      "description": "Hunts the canonical MuddyWater (Seedworm / TEMP.Zagros) Office-macro-to-PowerShell loader chain that has shipped POWERSTATS, PowGoop, MuddyC3 / PhonyC2, and Small Sieve since 2017. Detects when winword/excel/powerpnt/outlook spawns powershell, mshta, rundll32, cscript, wscript, or cmd with the obfuscation primitives MuddyWater is documented using (-EncodedCommand, FromBase64String, IEX/Invoke-Expression, hidden window, -nop, certutil/bitsadmin staging).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1027",
+        "T1027.010",
+        "T1137.001",
+        "T1204.002",
+        "T1218.005",
+        "T1218.011",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\") AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | where user!=\"*$\" | where match(process, \"(?i)(-e(nc|ncodedcommand|c)\\s+[A-Za-z0-9+/=]{40,}|FromBase64String|DownloadString|Invoke-Expression|IEX\\s*\\(|-w(in)?(dow)?style?\\s+hidden|-w\\s+hidden|-nop\\s|bitsadmin\\s+/transfer|certutil\\s+-(urlcache|decode|encode|f)|new-object\\s+net\\.webclient|hxxp|wscript\\.shell)\") | convert ctime(firstTime) ctime(lastTime) | rename host as dest",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\")\n| where ProcessCommandLine has_any (\"-EncodedCommand\",\" -enc \",\" -EC \",\"FromBase64String\",\"DownloadString\",\"Invoke-Expression\",\"IEX(\",\"-w hidden\",\"-WindowStyle Hidden\",\"-nop \",\"bitsadmin /transfer\",\"certutil -decode\",\"certutil -urlcache\",\"New-Object Net.WebClient\",\"WScript.Shell\")\n   or ProcessCommandLine matches regex @\"(?i)\\s-e[nc]+\\s+[A-Za-z0-9+/=]{40,}\"\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFileName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ParentPath = InitiatingProcessFolderPath,\n          Child = FileName,\n          ChildCmd = ProcessCommandLine,\n          ChildSHA256 = SHA256,\n          Integrity = ProcessIntegrityLevel,\n          IsRemote = IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where AccountType == \"User\" and Account !endswith \"$\"\n| extend ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n         ChildName  = tolower(tostring(split(NewProcessName,  \"\\\\\")[-1]))\n| where ParentName in (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"eqnedt32.exe\")\n| where ChildName  in (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"rundll32.exe\",\"cscript.exe\",\"wscript.exe\",\"regsvr32.exe\")\n| where CommandLine has_any (\"-EncodedCommand\",\" -enc \",\" -EC \",\"FromBase64String\",\"DownloadString\",\"Invoke-Expression\",\"IEX(\",\"-w hidden\",\"-WindowStyle Hidden\",\"-nop \",\"bitsadmin /transfer\",\"certutil -decode\",\"certutil -urlcache\",\"New-Object Net.WebClient\",\"WScript.Shell\")\n   or CommandLine matches regex @\"(?i)\\s-e[nc]+\\s+[A-Za-z0-9+/=]{40,}\"\n| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine, TokenElevationType",
+      "sigma_yaml": "title: MuddyWater POWERSTATS PowGoop Office Macro Loader Chain\nid: 4f1a93c8-5e2d-4ca6-a1b7-mw02office01\nstatus: experimental\ndescription: Detects MuddyWater (Seedworm / Mango Sandstorm / TEMP.Zagros / Static Kitten / TA450) macro-to-loader execution where Office or Equation Editor spawns PowerShell, mshta, rundll32, cscript, wscript, regsvr32 or cmd carrying obfuscation primitives associated with POWERSTATS, PowGoop, MuddyC3, PhonyC2 and Small Sieve loaders.\nreferences:\n  - https://attack.mitre.org/groups/G0069/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-055a\n  - https://research.checkpoint.com/2022/iranian-apt-muddywater-targets-turkish-users-via-malicious-pdfs-executables/\n  - https://www.deepinstinct.com/blog/powgoop-malware-variants-revealing-recent-muddywater-activity\nauthor: SOC Detection Engineering\ndate: 2026-05-10\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  parent_office:\n    ParentImage|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\eqnedt32.exe'\n  child_interpreter:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n      - '\\mshta.exe'\n      - '\\rundll32.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\regsvr32.exe'\n  obfuscation_primitive:\n    CommandLine|contains:\n      - '-EncodedCommand'\n      - ' -enc '\n      - ' -EC '\n      - 'FromBase64String'\n      - 'DownloadString'\n      - 'Invoke-Expression'\n      - 'IEX('\n      - '-w hidden'\n      - '-WindowStyle Hidden'\n      - '-nop '\n      - 'bitsadmin /transfer'\n      - 'certutil -decode'\n      - 'certutil -urlcache'\n      - 'New-Object Net.WebClient'\n      - 'WScript.Shell'\n  condition: parent_office and child_interpreter and obfuscation_primitive\nfalsepositives:\n  - Internal automation that legitimately invokes PowerShell from Office (rare; document parent macro signer and allow-list).\nlevel: high\ntags:\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1027\n  - attack.t1027.010\n  - attack.t1137.001\n  - attack.t1204.002\n  - attack.t1218.005\n  - attack.t1218.011\n  - attack.t1140\n  - attack.g0069\n",
+      "rationale": "Office-spawned PowerShell with obfuscation has been MuddyWater's signature execution primitive across every major report from 2017 through 2024 \u2014 POWERSTATS (Symantec/Seedworm), PowGoop and Mori (Deep Instinct), MuddyC3, PhonyC2 (Group-IB), Small Sieve (NCSC) all chain MS-Office macro \u2192 encoded/obfuscated PowerShell or LOLBin. CISA AA22-055A and Microsoft's Mango Sandstorm advisories specifically ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unpatched cPanel/WHM exposed to CVE-2026-29201/29202/29203 (and Apr CVE-2026-41940)
 
-`UC_0_9` · phase: **recon** · confidence: **High**
+`UC_1_9` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Suspicious child process spawned by cPanel/WHM Perl daemon (cpsrvd / whostmgrd / cpaneld) — post-exploit of CVE-2026-29202 et al.
 
-`UC_0_10` · phase: **exploit** · confidence: **High**
+`UC_1_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -372,7 +372,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New cPanel and WHM Flaws Enable Code Execution, DoS Attacks
 
-`UC_0_8` · phase: **install** · confidence: **High**
+`UC_1_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

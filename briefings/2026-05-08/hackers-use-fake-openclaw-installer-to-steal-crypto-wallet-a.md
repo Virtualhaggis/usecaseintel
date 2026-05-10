@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OpenClaw Hologram/Pathfinder Stealth Packer beacon — C:\Users\Public binary to high-port C2
 
-`UC_12_9` · phase: **c2** · confidence: **High**
+`UC_13_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### [LLM] OpenClaw Hologram persistence quartet — Userinit hijack + WindowsDefenderHelper/NetworkManager autoruns + OneDriveSync.lnk
 
-`UC_12_10` · phase: **install** · confidence: **High**
+`UC_13_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ union _reg, _file
 
 ### [LLM] OpenClaw three-service abuse — Hookdeck + Telegram bot API + Azure DevOps 'sagonbretzpr' from C:\Users\Public binary
 
-`UC_12_11` · phase: **c2** · confidence: **Medium**
+`UC_13_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -317,7 +317,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake OpenClaw Installer to Steal Crypto Wallet and Password Manager
 
-`UC_12_8` · phase: **exploit** · confidence: **High**
+`UC_13_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

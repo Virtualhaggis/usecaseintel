@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Operation GriefLure C2 callback to whatsappcenter[.]com / 38.54.122.188 (KAOPU-HK)
 
-`UC_9_11` · phase: **c2** · confidence: **High**
+`UC_10_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union isfuzzy=true
 
 ### [LLM] GriefLure runtime payload assembly: cmd.exe `copy /b` of fake .doc chunks in C:\Users\Public
 
-`UC_9_12` · phase: **install** · confidence: **High**
+`UC_10_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### [LLM] GriefLure explorer.exe respawn from Public/Temp staging directories or LOLBin parents
 
-`UC_9_13` · phase: **install** · confidence: **Medium**
+`UC_10_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -460,7 +460,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Deploy Modular RAT With Credential Theft and Screenshot Capture Capabili
 
-`UC_9_10` · phase: **exploit** · confidence: **High**
+`UC_10_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

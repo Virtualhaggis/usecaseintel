@@ -1,0 +1,71 @@
+{
+  "name": "APT34",
+  "ucs": [
+    {
+      "title": "[LLM] APT34 (OilRig) Outlook Home Page persistence \u2014 WebView URL hijack (BONDUPDATER / OopsIE / OverRuled tradecraft)",
+      "description": "Detects modification of the Outlook `WebView\\Inbox\\URL` (or Calendar/Contacts WebView) registry values that point Outlook at an attacker-controlled HTML/JScript page on every Outlook launch. This persistence technique was first publicly documented by FireEye/Mandiant in the 2018 'OverRuled' report covering APT34 / OilRig / COBALT GYPSY and remains an APT34 signature behaviour rarely seen outside this cluster.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1137.004",
+        "T1112"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as URL values(Registry.process_name) as process_name from datamodel=Endpoint.Registry where (Registry.registry_path=\"*\\\\Software\\\\Microsoft\\\\Office\\\\*\\\\Outlook\\\\WebView\\\\*\" OR Registry.registry_key_name=\"*\\\\Software\\\\Microsoft\\\\Office\\\\*\\\\Outlook\\\\WebView\\\\*\") AND Registry.registry_value_name=\"URL\" AND (Registry.registry_value_data=\"http*\" OR Registry.registry_value_data=\"file*\") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime) | where NOT match(registry_value_data, \"^https?:\\/\\/(.*\\.)?(microsoft|office|sharepoint|microsoftonline)\\.com\")",
+      "kql": "// APT34 (OilRig) \u2014 Outlook Home Page persistence (T1137.004)\n// Hunts the WebView\\URL hijack used by BONDUPDATER / OopsIE droppers.\nlet LookbackDays = 30d;\nlet _allowed_homepage_hosts = dynamic([\n    \"outlook.office.com\", \"outlook.office365.com\", \"login.microsoftonline.com\"\n]);\nDeviceRegistryEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"RegistryValueSet\", \"RegistryKeyCreated\")\n| where InitiatingProcessAccountName !endswith \"$\"          // strip machine accounts\n| where RegistryKey matches regex @\"(?i)\\\\Software\\\\Microsoft\\\\Office\\\\\\d+\\.\\d+\\\\Outlook\\\\WebView\\\\(Inbox|Calendar|Contacts|Notes|Tasks|Drafts|Outbox|Sent\\sItems|Deleted\\sItems|Journal)\"\n| where RegistryValueName =~ \"URL\"\n| where isnotempty(RegistryValueData)\n| where RegistryValueData has_any (\"http://\", \"https://\", \"file://\", \"\\\\\\\\\")     // any remote/UNC content\n| extend HomepageHost = tolower(extract(@\"^(?:https?://|file://)([^/]+)\", 1, RegistryValueData))\n| where HomepageHost !in (_allowed_homepage_hosts)\n| project Timestamp, DeviceName,\n          User = InitiatingProcessAccountName,\n          ParentImage = InitiatingProcessParentFileName,\n          WriterImage = InitiatingProcessFileName,\n          WriterCmd   = InitiatingProcessCommandLine,\n          RegistryKey, RegistryValueName, RegistryValueData,\n          HomepageHost\n| order by Timestamp desc",
+      "sentinel_kql": "// APT34 (OilRig) \u2014 Outlook Home Page persistence (T1137.004) \u2014 Sentinel ASIM\nlet LookbackDays = 30d;\nlet _allowed_homepage_hosts = dynamic([\n    \"outlook.office.com\", \"outlook.office365.com\", \"login.microsoftonline.com\"\n]);\nImRegistryEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventType in (\"RegistryValueSet\", \"RegistryKeyCreated\")\n| where ActorUsername !endswith \"$\"\n| where RegistryKey matches regex @\"(?i)\\\\Software\\\\Microsoft\\\\Office\\\\\\d+\\.\\d+\\\\Outlook\\\\WebView\\\\(Inbox|Calendar|Contacts|Notes|Tasks|Drafts|Outbox|Sent\\sItems|Deleted\\sItems|Journal)\"\n| where RegistryValue =~ \"URL\"\n| where isnotempty(RegistryValueData)\n| where RegistryValueData has_any (\"http://\", \"https://\", \"file://\", \"\\\\\\\\\")\n| extend HomepageHost = tolower(extract(@\"^(?:https?://|file://)([^/]+)\", 1, tostring(RegistryValueData)))\n| where HomepageHost !in (_allowed_homepage_hosts)\n| project TimeGenerated, DvcHostname, ActorUsername,\n          ActingProcessName, ActingProcessCommandLine,\n          RegistryKey, RegistryValue, RegistryValueData, HomepageHost\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT34 (OilRig) Outlook Home Page Persistence\nid: 9c4e1a32-7d4a-4b9b-9c0e-apt34-outlook-homepage\nstatus: experimental\ndescription: |\n  Detects writes to the Outlook WebView\\URL registry values that load an attacker-controlled\n  HTML/JScript page on Outlook startup. APT34 / OilRig / COBALT GYPSY abused this technique\n  for persistence as documented in the FireEye/Mandiant OverRuled report (2018) and several\n  follow-on Microsoft / CrowdStrike write-ups. Outside this cluster the technique is rare.\nreferences:\n  - https://attack.mitre.org/techniques/T1137/004/\n  - https://www.mandiant.com/resources/blog/overruled-containing-a-potentially-destructive-adversary\n  - https://attack.mitre.org/groups/G0049/\nauthor: SOC Detection Engineering\ndate: 2026/05/10\ntags:\n  - attack.persistence\n  - attack.t1137.004\n  - attack.g0049\nlogsource:\n  product: windows\n  category: registry_set\ndetection:\n  selection:\n    TargetObject|contains|all:\n      - '\\Software\\Microsoft\\Office\\'\n      - '\\Outlook\\WebView\\'\n    TargetObject|endswith: '\\URL'\n    Details|startswith:\n      - 'http://'\n      - 'https://'\n      - 'file://'\n      - '\\\\'\n  filter_legit_homepage:\n    Details|contains:\n      - 'outlook.office.com'\n      - 'outlook.office365.com'\n      - 'login.microsoftonline.com'\n  condition: selection and not filter_legit_homepage\nfalsepositives:\n  - Legitimate corporate Outlook home page deployed by GPO (rare; should be allow-listed)\nlevel: high",
+      "rationale": "APT34 / OilRig is the threat group that put Outlook Home Page abuse on the public detection map (FireEye OverRuled, Dec 2018) and they have continued to lean on it because (a) it survives Outlook re-launch / reboot without dropping a binary on disk, and (b) most EDRs do not normally surface registry writes under HKCU\\Software\\Microsoft\\Office\\<ver>\\Outlook\\WebView. Modern Outlook builds disable th",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HomepageHost",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`HomepageHost` is not a canonical column of DeviceRegistryEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "HomepageHost",
+          "tables_in_scope": [
+            "ImRegistryEvent"
+          ],
+          "suggestion": null,
+          "message": "`HomepageHost` is not a canonical column of ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT34 (OilRig) DNS-tunnel C2 \u2014 long base16/base32 subdomains (BONDUPDATER / Helminth / DNSpionage / ALMA Communicator)",
+      "description": "Hunts the DNS-as-C2 pattern used by APT34's Helminth, BONDUPDATER, ALMA Communicator and DNSpionage families: a single host emitting many DNS queries to one parent domain where the leftmost label is a long, hex/base32-encoded blob carrying tasking or exfil data. APT34 has shipped DNS-tunnelling implants since at least 2016, and the tradecraft (Cisco Talos DNSpionage 2018, Palo Alto BONDUPDATER 2018, ESET 2024) is one of the few techniques that meaningfully isolates this Iran-nexus cluster from generic e-crime.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1132.001",
+        "T1048.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as sample_queries dc(DNS.query) as unique_subdomains from datamodel=Network_Resolution where DNS.message_type=\"QUERY\" AND DNS.query=\"*.*\" by DNS.src DNS.dest host | `drop_dm_object_name(DNS)` | rex field=query \"^(?<leftmost>[^.]+)\\.(?<parent>[^.]+\\.[^.]+)$\" | where len(leftmost) >= 30 AND match(leftmost, \"^[a-zA-Z0-9]+$\") | search NOT parent IN (\"akadns.net\",\"akamaiedge.net\",\"cloudfront.net\",\"amazonaws.com\",\"office365.com\",\"microsoft.com\",\"microsoftonline.com\",\"windowsupdate.com\",\"trafficmanager.net\",\"azureedge.net\",\"office.com\",\"trendmicro.com\",\"symantec.com\") | stats count as query_count, dc(leftmost) as unique_long_labels, avg(len(leftmost)) as avg_label_len, values(query) as sample_queries by src, parent | where unique_long_labels >= 25 AND query_count >= 50 | sort - unique_long_labels",
+      "kql": "// APT34 (OilRig) \u2014 DNS-tunnel C2: long encoded subdomains beaconing to a single parent\n// Catches BONDUPDATER / Helminth / DNSpionage / ALMA Communicator pattern.\nlet LookbackHours = 24h;\nlet MinSubdomainLen = 30;       // BONDUPDATER subdomains run 35-63 chars\nlet MinUniqueSubdomains = 25;   // distinct labels in the window\nlet MinTotalQueries = 50;\nlet _legit_dns_parents = dynamic([\n    \"akadns.net\",\"akamaiedge.net\",\"cloudfront.net\",\"amazonaws.com\",\n    \"office365.com\",\"office.com\",\"microsoft.com\",\"microsoftonline.com\",\n    \"windowsupdate.com\",\"trafficmanager.net\",\"azureedge.net\",\n    \"trendmicro.com\",\"symantec.com\",\"sophos.com\",\"crowdstrike.com\"\n]);\nDeviceEvents\n| where Timestamp > ago(LookbackHours)\n| where ActionType == \"DnsQueryResponse\"\n| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))\n| where isnotempty(QueryName) and QueryName has \".\"\n| extend Labels = split(QueryName, \".\")\n| extend ParentDomain = strcat(tostring(Labels[array_length(Labels)-2]), \".\", tostring(Labels[array_length(Labels)-1]))\n| where ParentDomain !in (_legit_dns_parents)\n| extend Leftmost = tostring(Labels[0])\n| extend LeftLen = strlen(Leftmost)\n| where LeftLen >= MinSubdomainLen\n| where Leftmost matches regex @\"^[a-z0-9]+$\"     // base16 / base32 alphabet\n| summarize\n    UniqueSubdomains = dcount(Leftmost),\n    QueryCount = count(),\n    AvgLabelLen = round(avg(LeftLen), 1),\n    MaxLabelLen = max(LeftLen),\n    SampleQueries = make_set(QueryName, 5),\n    BeaconingProcs = make_set(InitiatingProcessFileName, 5),\n    FirstSeen = min(Timestamp),\n    LastSeen = max(Timestamp)\n    by DeviceName, ParentDomain\n| where UniqueSubdomains >= MinUniqueSubdomains and QueryCount >= MinTotalQueries\n| order by UniqueSubdomains desc",
+      "sentinel_kql": "// APT34 (OilRig) \u2014 DNS-tunnel C2: long encoded subdomains (Sentinel DnsEvents)\nlet LookbackHours = 24h;\nlet MinSubdomainLen = 30;\nlet MinUniqueSubdomains = 25;\nlet MinTotalQueries = 50;\nlet _legit_dns_parents = dynamic([\n    \"akadns.net\",\"akamaiedge.net\",\"cloudfront.net\",\"amazonaws.com\",\n    \"office365.com\",\"office.com\",\"microsoft.com\",\"microsoftonline.com\",\n    \"windowsupdate.com\",\"trafficmanager.net\",\"azureedge.net\",\n    \"trendmicro.com\",\"symantec.com\",\"sophos.com\",\"crowdstrike.com\"\n]);\nDnsEvents\n| where TimeGenerated > ago(LookbackHours)\n| where isnotempty(Name) and Name has \".\"\n| extend QueryName = tolower(Name)\n| extend Labels = split(QueryName, \".\")\n| extend ParentDomain = strcat(tostring(Labels[array_length(Labels)-2]), \".\", tostring(Labels[array_length(Labels)-1]))\n| where ParentDomain !in (_legit_dns_parents)\n| extend Leftmost = tostring(Labels[0])\n| extend LeftLen = strlen(Leftmost)\n| where LeftLen >= MinSubdomainLen\n| where Leftmost matches regex @\"^[a-z0-9]+$\"\n| summarize\n    UniqueSubdomains = dcount(Leftmost),\n    QueryCount = count(),\n    AvgLabelLen = round(avg(LeftLen), 1),\n    MaxLabelLen = max(LeftLen),\n    Devices = make_set(Computer, 10),\n    SampleQueries = make_set(QueryName, 5),\n    FirstSeen = min(TimeGenerated),\n    LastSeen = max(TimeGenerated)\n    by ClientIP, ParentDomain\n| where UniqueSubdomains >= MinUniqueSubdomains and QueryCount >= MinTotalQueries\n| order by UniqueSubdomains desc",
+      "sigma_yaml": "",
+      "rationale": "APT34 has shipped DNS-tunnel C2 across at least four distinct families (Helminth 2016, ALMA Communicator 2017, BONDUPDATER 2018, DNSpionage 2018, plus the resurfaced 'Saitama' variants) \u2014 DNS C2 with long, hex/base32-encoded leftmost labels under a single attacker-controlled parent is one of the cleanest behavioural signatures for this Iran-nexus cluster. Running the detection as a behavioural agg"
+    }
+  ]
+}
