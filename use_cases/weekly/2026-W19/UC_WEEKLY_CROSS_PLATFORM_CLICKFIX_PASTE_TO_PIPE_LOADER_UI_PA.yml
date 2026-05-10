@@ -1,0 +1,131 @@
+id: UC_WEEKLY_CROSS_PLATFORM_CLICKFIX_PASTE_TO_PIPE_LOADER_UI_PA
+title: "[WEEKLY] Cross-Platform ClickFix Paste-to-Pipe Loader (UI-Parent Shell with Decode-and-Execute Payload)"
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1204.004
+  name: "User Execution: Malicious Copy and Paste"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1140
+  name: Deobfuscate/Decode Files or Information
+- id: T1105
+  name: Ingress Tool Transfer
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects an interactive UI surface (web browser, file-explorer Run dialog, or terminal emulator) spawning a command interpreter whose command line carries a one-shot decode-and-pipe loader signature — base64-decode piped to a shell, curl/wget piped to bash/sh/python, PowerShell `-EncodedCommand` / `FromBase64String` / `IEX DownloadString` cradles, or `osascript -e` with encoded payload. This fortnight the technique drives the delivery stage across most of the catalogue: the New Linux PamDOORa Backdoor explicitly distributes via T1204.004 paste-to-shell, Quasar Linux RAT (QLNX) uses the same vector to land on developer hosts, TCLBANKER chains it into a banking-trojan installer, and both the One Click / Patient Zero webinar piece and the 25M Alerts retrospective name ClickFix as the dominant 2026 Patient-Zero technique. The UC spans the delivery and execution kill-chain stages in a single event window because, for ClickFix, the clipboard paste IS the delivery and the spawned pipeline IS the execution. It fires when the parent is an interactive UI process AND the child is a shell/interpreter AND the command line contains a decode-and-execute pattern — the textbook ClickFix signature. It will NOT fire on scripted automation where the shell's parent is sshd / cron / systemd / a build agent, nor on PowerShell launched from a console host with a static cmdline (no decode primitive), so DevOps scripted pipelines, scheduled installers, and admin SSH sessions are excluded by construction.
+  
+  Rationale: Every article in this fortnight's bundle that maps T1204.004 — PamDOORa, Quasar Linux RAT, TCLBANKER, the One Click Patient Zero piece and the 25M Alerts retrospective — converges on the same shape: a UI surface (browser, file-explorer Run dialog, or terminal pasted into by the victim) immediately spawns an interpreter whose command line carries a decode-then-execute primitive. Joining on UI-parent + interpreter-child + decode/cradle-payload in a single event captures the cross-platform ClickFix signature without leaning on any rotating IOC.
+defender_kql: |-
+  let _shell_names = dynamic(["powershell.exe","pwsh.exe","cmd.exe","bash","sh","zsh","dash","osascript","python","python3","perl"]);
+  let _ui_parents = dynamic(["explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","safari","Terminal","Terminal.app","gnome-terminal","gnome-terminal-server","konsole","xterm","iTerm2","WindowsTerminal.exe","wt.exe"]);
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where AccountName !endswith "$"
+  | where FileName in~ (_shell_names)
+  | where InitiatingProcessFileName in~ (_ui_parents)
+  | where ProcessCommandLine matches regex @"(?i)(base64\s+(-d|--decode)[^|]*\||echo\s+[A-Za-z0-9+/=]{20,}[^|]*\|[^|]*base64[^|]*\||curl\s+\S+\s*\|\s*(sh|bash|zsh|python|perl)|wget\s+\S+\s*\|\s*(sh|bash|zsh|python|perl)|-(encodedcommand|enc)\s+[A-Za-z0-9+/=]{20,}|frombase64string\s*\(|downloadstring\s*\(|iex\s*\(|invoke-expression|iwr\s+-useb|osascript\s+-e.*do shell script)"
+  | project Timestamp, DeviceName, AccountName,
+            Parent = InitiatingProcessFileName,
+            ParentCmd = InitiatingProcessCommandLine,
+            Shell = FileName,
+            ProcessCommandLine,
+            IsRemoteSession = IsInitiatingProcessRemoteSession,
+            SHA256
+  | order by Timestamp desc
+sentinel_kql: |-
+  let _shell_names = dynamic(["powershell.exe","pwsh.exe","cmd.exe","bash","sh","zsh","dash","osascript","python","python3","perl"]);
+  let _ui_parents = dynamic(["explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","safari","Terminal","Terminal.app","gnome-terminal","gnome-terminal-server","konsole","xterm","iTerm2","WindowsTerminal.exe","wt.exe"]);
+  ImProcessCreate
+  | where TimeGenerated > ago(7d)
+  | where ActorUsername !endswith "$"
+  | where TargetProcessName has_any (_shell_names)
+  | where ParentProcessName has_any (_ui_parents)
+  | where TargetProcessCommandLine matches regex @"(?i)(base64\s+(-d|--decode)[^|]*\||echo\s+[A-Za-z0-9+/=]{20,}[^|]*\|[^|]*base64[^|]*\||curl\s+\S+\s*\|\s*(sh|bash|zsh|python|perl)|wget\s+\S+\s*\|\s*(sh|bash|zsh|python|perl)|-(encodedcommand|enc)\s+[A-Za-z0-9+/=]{20,}|frombase64string\s*\(|downloadstring\s*\(|iex\s*\(|invoke-expression|iwr\s+-useb|osascript\s+-e.*do shell script)"
+  | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessName, TargetProcessCommandLine, TargetProcessSHA256
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: ClickFix Paste-to-Pipe Loader - UI-Parent Shell With Decode-and-Execute Cmdline
+  id: a3f6f9d2-9b9f-4f3d-8a8d-1c2f9b6d04ee
+  status: experimental
+  description: |
+    An interactive UI process (browser, explorer/file-manager, terminal emulator)
+    spawns a shell or interpreter whose command line carries a one-shot decode/
+    download-and-execute pipeline. Joint signature of the ClickFix social-engineering
+    technique used to land PamDOORa, Quasar Linux RAT (QLNX) and TCLBANKER this fortnight.
+  logsource:
+    category: process_creation
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '\explorer.exe'
+        - '\chrome.exe'
+        - '\msedge.exe'
+        - '\firefox.exe'
+        - '\brave.exe'
+        - '\WindowsTerminal.exe'
+        - '\wt.exe'
+        - '/Terminal'
+        - '/Terminal.app/Contents/MacOS/Terminal'
+        - '/gnome-terminal'
+        - '/gnome-terminal-server'
+        - '/iTerm2'
+        - '/konsole'
+        - '/xterm'
+        - '/Safari'
+    selection_image:
+      Image|endswith:
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\cmd.exe'
+        - '/bash'
+        - '/sh'
+        - '/zsh'
+        - '/dash'
+        - '/osascript'
+        - '/python'
+        - '/python3'
+        - '/perl'
+    selection_payload:
+      CommandLine|contains:
+        - 'base64 -d'
+        - 'base64 --decode'
+        - 'FromBase64String'
+        - '-EncodedCommand'
+        - ' -enc '
+        - 'DownloadString('
+        - 'Invoke-Expression'
+        - 'IEX('
+        - 'iwr -useb'
+        - 'curl '
+        - 'wget '
+        - 'do shell script'
+    condition: selection_parent and selection_image and selection_payload
+  falsepositives:
+    - IT runbooks where engineers copy install commands from an internal wiki and paste into a terminal
+    - Developer one-liners pasted from Stack Overflow during local troubleshooting
+  level: high
+  tags:
+    - attack.execution
+    - attack.t1204.004
+    - attack.t1059.001
+    - attack.t1059.004
+    - attack.t1140
+    - attack.t1105
+  
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","safari","Safari","Terminal","Terminal.app","gnome-terminal","gnome-terminal-server","konsole","xterm","iTerm2","WindowsTerminal.exe","wt.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","bash","sh","zsh","dash","osascript","python","python3","perl") AND (Processes.process="*base64 -d*|*" OR Processes.process="*base64 --decode*|*" OR Processes.process="*echo *|*base64*|*" OR Processes.process="*curl *|*sh*" OR Processes.process="*curl *|*bash*" OR Processes.process="*curl *|*python*" OR Processes.process="*wget *|*sh*" OR Processes.process="*wget *|*bash*" OR Processes.process="*-EncodedCommand*" OR Processes.process="* -enc *" OR Processes.process="*FromBase64String*" OR Processes.process="*DownloadString(*" OR Processes.process="*IEX(*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*iwr *-useb*" OR Processes.process="*osascript -e*do shell script*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+datadog_query: |-
+  (source:windows.sysmon @EventID:1) AND @ParentImage:(*\\explorer.exe OR *\\Explorer.EXE OR *\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MsEdge.exe OR *\\firefox.exe OR *\\Firefox.exe OR *\\brave.exe OR *\\Brave.exe OR *\\WindowsTerminal.exe OR *\\wt.exe) AND @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\CMD.EXE) AND @CommandLine:(*FromBase64String* OR *frombase64string* OR *-EncodedCommand* OR *-encodedcommand* OR *" -enc "* OR *DownloadString\(* OR *downloadstring\(* OR *"IEX("* OR *"iex("* OR *Invoke-Expression* OR *invoke-expression* OR *"iwr -useb"* OR *"base64 -d"* OR *"base64 --decode"* OR *"curl "*\|*"sh"* OR *"curl "*\|*"bash"* OR *"wget "*\|*"sh"* OR *"wget "*\|*"bash"*)

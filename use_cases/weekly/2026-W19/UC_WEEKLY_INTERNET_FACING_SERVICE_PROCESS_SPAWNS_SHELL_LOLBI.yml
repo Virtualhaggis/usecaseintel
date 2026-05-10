@@ -1,0 +1,204 @@
+id: UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNS_SHELL_LOLBI
+title: "[WEEKLY] Internet-facing service process spawns shell/LOLBin within minutes of public inbound connection — post-RCE command execution"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1133
+  name: External Remote Services
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the post-exploitation behavioural fingerprint shared by every public-facing-app RCE in this fortnight: a long-running server, daemon, or middleware process (httpd/nginx/apache2, java/tomcat, node, w3wp, php-fpm, sshd, xrdp, panos_pkt_srv, mifs, python/dotnet AI-agent hosts) spawning an interactive shell or reconnaissance LOLBin (cmd, powershell, sh/bash, curl/wget/certutil/bitsadmin, whoami/id/uname) within 10 minutes of an inbound connection from a public IP to that host. The driving campaigns are CVE-2026-0300 (PAN-OS User-ID Captive Portal, exploited since April per Palo Alto / Cyber Security News / The Hacker News), CVE-2026-6973 (Ivanti EPMM), CVE-2026-23918 (Apache HTTPD double-free), CVE-2026-3854 (GitHub git-push -o injection), CVE-2026-22679 (Weaver E-cology dubboApi), CVE-2026-27174 (MajorDoMo /admin.php), CVE-2026-3965/4047 (Qinglong scheduler crypto-mining), CVE-2025-68670 (xrdp pre-auth), and CVE-2026-26030 / 25592 / 31431 (Microsoft Semantic Kernel and other AI-agent-framework RCEs). The chain spans exploit (T1190) and the immediately following actions/install stages: although every CVE has different IOCs and entry points, all 12 articles converge on the same post-exploit pivot — the service process drops to shell to stage tooling. WILL fire on httpd spawning /bin/sh shortly after a public-IP HTTPS hit, panos_pkt_srv spawning curl, or python.exe (Semantic Kernel host) launching cmd.exe after an inbound API call. WILL NOT fire on cron/systemd-triggered scripts (no preceding inbound public connection), pre-forked CGI workers spawned at boot, intra-org admin SSH (private-IP source filtered out), or service-account contexts where the parent isn't on the internet-facing service list.
+  
+  Rationale: All 12 articles describe distinct CVEs in distinct internet-facing products (PAN-OS, Ivanti EPMM, Apache HTTPD, GitHub, MajorDoMo, Weaver E-cology, Qinglong, xrdp, Microsoft Semantic Kernel) but the post-exploit step is identical across every one: the long-running service process executes an interactive shell, recon binary, or download utility to stage follow-on tooling. Correlating that child-spawn against an inbound public-IP connection in the preceding 10-minute window cleanly separates exploitation traffic from legitimate CGI/installer behaviour and survives the inevitable IOC rotation that would invalidate per-CVE rules.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let WindowMinutes = 10m;
+  let _server_parents = dynamic(["httpd","httpd.exe","nginx","nginx.exe","apache2","apache.exe","java","java.exe","tomcat.exe","node","node.exe","w3wp.exe","php-fpm","php-fpm7","php-fpm8","sshd","xrdp","mifs","panos_pkt_srv","gunicorn","uwsgi","python","python.exe","python3","pythonw.exe","dotnet.exe","ruby","ruby.exe"]);
+  let _shell_children = dynamic(["cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","whoami.exe","net.exe","systeminfo.exe","sh","bash","dash","zsh","ksh","curl","wget","whoami","id","uname","python","python3","perl"]);
+  let InboundPublic = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType in ("InboundConnectionAccepted","ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+      | where RemoteIPType == "Public"
+      | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, LocalPort;
+  DeviceProcessEvents
+  | where Timestamp > ago(LookbackDays)
+  | where AccountName !endswith "$"
+  | where InitiatingProcessFileName has_any (_server_parents)
+  | where FileName has_any (_shell_children)
+  | join kind=inner InboundPublic on DeviceId
+  | where Timestamp between (NetTime .. NetTime + WindowMinutes)
+  | project Timestamp, DeviceName, AccountName,
+            ParentProcess = InitiatingProcessFileName,
+            ParentCmd     = InitiatingProcessCommandLine,
+            ChildProcess  = FileName,
+            ChildCmd      = ProcessCommandLine,
+            DelaySec      = datetime_diff('second', Timestamp, NetTime),
+            RemoteIP, RemotePort, LocalPort
+  | order by Timestamp desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let WindowMinutes = 10m;
+  let _server_parents = dynamic(["httpd","httpd.exe","nginx","nginx.exe","apache2","apache.exe","java","java.exe","tomcat.exe","node","node.exe","w3wp.exe","php-fpm","php-fpm7","php-fpm8","sshd","xrdp","mifs","panos_pkt_srv","gunicorn","uwsgi","python","python.exe","python3","pythonw.exe","dotnet.exe","ruby","ruby.exe"]);
+  let _shell_children = dynamic(["cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","whoami.exe","net.exe","systeminfo.exe","sh","bash","dash","zsh","ksh","curl","wget","whoami","id","uname","python","python3","perl"]);
+  let InboundPublic = ImNetworkSession
+      | where TimeGenerated > ago(LookbackDays)
+      | where EventResult == "Success" or EventResult == "Allow"
+      | where ipv4_is_private(SrcIpAddr) == false
+          and not(SrcIpAddr startswith "127.")
+          and not(SrcIpAddr startswith "169.254.")
+      | project NetTime = TimeGenerated, DvcHostname, SrcIpAddr, DstPortNumber;
+  ImProcessCreate
+  | where TimeGenerated > ago(LookbackDays)
+  | where ActorUsername !endswith "$"
+  | extend ParentBin = tolower(tostring(split(ParentProcessName, "/")[-1])),
+           ChildBin  = tolower(tostring(split(TargetProcessName, "/")[-1]))
+  | extend ParentBin = tolower(tostring(split(ParentBin, @"\")[-1])),
+           ChildBin  = tolower(tostring(split(ChildBin,  @"\")[-1]))
+  | where ParentBin in (_server_parents) and ChildBin in (_shell_children)
+  | join kind=inner InboundPublic on DvcHostname
+  | where TimeGenerated between (NetTime .. NetTime + WindowMinutes)
+  | project TimeGenerated, DvcHostname, ActorUsername,
+            ParentProcessName, ParentProcessCommandLine,
+            TargetProcessName, TargetProcessCommandLine,
+            DelaySec = datetime_diff('second', TimeGenerated, NetTime),
+            SrcIpAddr, DstPortNumber
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: Internet-Facing Service Process Spawns Shell or LOLBin (Post-RCE Behaviour)
+  id: 8c5b9e1d-3c2f-4d4f-9b3a-2f5e1c8b2e5a
+  status: experimental
+  description: |
+    Detects long-running internet-facing service binaries spawning shells, LOLBins, or recon
+    utilities — the post-RCE behavioural fingerprint shared by CVE-2026-0300 (PAN-OS), CVE-2026-6973
+    (Ivanti EPMM), CVE-2026-23918 (Apache HTTPD), CVE-2026-3854 (GitHub), CVE-2026-22679 (Weaver
+    E-cology), CVE-2026-27174 (MajorDoMo), CVE-2026-3965/4047 (Qinglong), CVE-2025-68670 (xrdp),
+    and CVE-2026-26030/25592/31431 (AI-agent frameworks). Single-event variant of the multi-stage
+    detection (network correlation handled by SIEM rule layer).
+  references:
+    - https://thehackernews.com/2026/05/ivanti-epmm-cve-2026-6973-rce-under.html
+    - https://www.bleepingcomputer.com/news/security/palo-alto-networks-warns-of-actively-exploited-firewall-zero-day/
+    - https://cybersecuritynews.com/palo-alto-firewall-0-day-exploited/
+    - https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/
+    - https://securelist.com/cve-2025-68670/119742/
+    - https://thehackernews.com/2026/05/pan-os-rce-exploit-under-active-use.html
+    - https://www.bleepingcomputer.com/news/security/github-fixes-rce-flaw-that-gave-access-to-millions-of-private-repos/
+    - https://cybersecuritynews.com/majordomo-rce-vulnerability/
+    - https://thehackernews.com/2026/05/critical-apache-http2-flaw-cve-2026.html
+    - https://www.bleepingcomputer.com/news/security/hackers-exploit-rce-flaws-in-qinglong-task-scheduler-for-cryptomining/
+    - https://cybersecuritynews.com/apache-http-server-rce/
+    - https://thehackernews.com/2026/05/weaver-e-cology-rce-flaw-cve-2026-22679.html
+  author: Detection Engineering (fortnightly TI synth)
+  date: 2026/05/10
+  logsource:
+    category: process_creation
+  detection:
+    selection_parent_win:
+      ParentImage|endswith:
+        - '\httpd.exe'
+        - '\nginx.exe'
+        - '\apache.exe'
+        - '\java.exe'
+        - '\tomcat.exe'
+        - '\node.exe'
+        - '\w3wp.exe'
+        - '\php-fpm.exe'
+        - '\sshd.exe'
+        - '\python.exe'
+        - '\pythonw.exe'
+        - '\dotnet.exe'
+    selection_parent_lin:
+      ParentImage|endswith:
+        - '/httpd'
+        - '/nginx'
+        - '/apache2'
+        - '/java'
+        - '/node'
+        - '/sshd'
+        - '/xrdp'
+        - '/php-fpm'
+        - '/php-fpm7'
+        - '/php-fpm8'
+        - '/gunicorn'
+        - '/uwsgi'
+        - '/python'
+        - '/python3'
+        - '/ruby'
+        - '/mifs'
+        - '/panos_pkt_srv'
+    selection_child_win:
+      Image|endswith:
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\mshta.exe'
+        - '\rundll32.exe'
+        - '\regsvr32.exe'
+        - '\wscript.exe'
+        - '\cscript.exe'
+        - '\bitsadmin.exe'
+        - '\certutil.exe'
+        - '\curl.exe'
+        - '\wget.exe'
+        - '\whoami.exe'
+        - '\net.exe'
+        - '\systeminfo.exe'
+    selection_child_lin:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/zsh'
+        - '/dash'
+        - '/ksh'
+        - '/curl'
+        - '/wget'
+        - '/whoami'
+        - '/id'
+        - '/uname'
+        - '/python'
+        - '/python3'
+        - '/perl'
+    filter_user:
+      User|endswith: '$'
+    condition: ((selection_parent_win and selection_child_win) or (selection_parent_lin and selection_child_lin)) and not filter_user
+  falsepositives:
+    - Legitimate CGI / FastCGI / mod_perl execution that shells out to OS utilities
+    - Application deployment or installer scripts triggered through a web admin UI
+    - Health-check probes that spawn whoami/id/curl on a heartbeat
+    - AI-agent frameworks legitimately invoking tool-call subprocesses (allowlist by app)
+  level: high
+  tags:
+    - attack.initial_access
+    - attack.execution
+    - attack.t1190
+    - attack.t1059
+    - attack.t1059.001
+    - attack.t1059.004
+    - attack.t1505.003
+  
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as proc_time values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("httpd","httpd.exe","nginx","nginx.exe","apache2","apache.exe","java","java.exe","tomcat.exe","node","node.exe","w3wp.exe","php-fpm","php-fpm7","php-fpm8","sshd","xrdp","mifs","panos_pkt_srv","gunicorn","uwsgi","python","python.exe","python3","pythonw.exe","dotnet.exe","ruby","ruby.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","whoami.exe","net.exe","systeminfo.exe","sh","bash","dash","zsh","ksh","curl","wget","whoami","id","uname","python","python3","perl") AND NOT Processes.user="*$" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | rename dest as host | join type=inner host [ | tstats `summariesonly` min(_time) as net_time values(All_Traffic.src) as src_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.action!="blocked" AND All_Traffic.action!="deny" AND All_Traffic.action!="drop" AND NOT (cidrmatch("10.0.0.0/8",All_Traffic.src) OR cidrmatch("172.16.0.0/12",All_Traffic.src) OR cidrmatch("192.168.0.0/16",All_Traffic.src) OR cidrmatch("127.0.0.0/8",All_Traffic.src) OR cidrmatch("169.254.0.0/16",All_Traffic.src) OR cidrmatch("100.64.0.0/10",All_Traffic.src)) by All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | rename dest as host ] | eval delay_sec=proc_time-net_time | where delay_sec>=0 AND delay_sec<=600 | table host user parent_process_name process_name cmdline parent_cmdline src_ip dest_port delay_sec net_time proc_time | sort - proc_time
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 @ParentImage:(*\\httpd.exe OR *\\HTTPD.EXE OR *\\nginx.exe OR *\\NGINX.EXE OR *\\apache.exe OR *\\java.exe OR *\\JAVA.EXE OR *\\tomcat.exe OR *\\node.exe OR *\\NODE.EXE OR *\\w3wp.exe OR *\\W3WP.EXE OR *\\php-fpm.exe OR *\\sshd.exe OR *\\python.exe OR *\\pythonw.exe OR *\\dotnet.exe) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\PWSH.EXE OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\bitsadmin.exe OR *\\certutil.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe OR *\\net.exe OR *\\systeminfo.exe) -@User:*$) OR (source:linux.auditd @auditd.type:EXECVE @process.parent.executable.path:(/usr/sbin/httpd OR /usr/sbin/apache2 OR /usr/sbin/nginx OR /usr/bin/java OR /usr/bin/node OR /usr/sbin/sshd OR /usr/sbin/xrdp OR /usr/sbin/php-fpm OR /usr/sbin/php-fpm7 OR /usr/sbin/php-fpm8 OR /usr/bin/gunicorn OR /usr/bin/uwsgi OR /usr/bin/python OR /usr/bin/python3 OR /usr/bin/ruby OR /opt/panos/bin/panos_pkt_srv OR /opt/ivanti/mifs/bin/mifs) @process.executable.path:(/bin/sh OR /bin/bash OR /usr/bin/bash OR /bin/dash OR /bin/zsh OR /usr/bin/curl OR /usr/bin/wget OR /usr/bin/whoami OR /usr/bin/id OR /usr/bin/uname OR /usr/bin/python OR /usr/bin/python3 OR /usr/bin/perl))

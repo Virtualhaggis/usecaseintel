@@ -1,0 +1,141 @@
+id: UC_WEEKLY_BRAND_IMPERSONATION_DOMAIN_FETCH_FOLLOWED_BY_USER_
+title: "[WEEKLY] Brand-Impersonation Domain Fetch Followed by User-Context Loader Within 10 Minutes"
+kill_chain: delivery
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1583.008
+  name: "Acquire Infrastructure: Malvertising"
+- id: T1656
+  name: Impersonation
+- id: T1566.002
+  name: "Phishing: Spearphishing Link"
+- id: T1204.001
+  name: "User Execution: Malicious Link"
+- id: T1204.002
+  name: "User Execution: Malicious File"
+- id: T1204.004
+  name: "User Execution: Malicious Copy and Paste"
+- id: T1195.002
+  name: "Supply Chain Compromise: Compromise Software Supply Chain"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1218.005
+  name: "System Binary Proxy Execution: Mshta"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+data_models:
+  defender:
+  - Network_Traffic.All_Traffic
+  - Web
+  - Endpoint.Processes
+description: |-
+  Detects the cross-campaign tradecraft where a user-context process (browser, IDE, terminal, installer, package manager) contacts a domain or URL impersonating a trusted AI / developer / mobile brand (Claude, Anthropic, OpenAI, Hugging Face, OpenVSX, OpenClaw, macOS utilities, Google Play companions, etc.) and the same host then spawns a script-interpreter or LOLBin loader (PowerShell, mshta, rundll32, regsvr32, cscript, certutil, bitsadmin, curl/wget, msiexec, node, python, osascript, bash) within a 10-minute window. This fortnight saw an unusual cluster of corroborated brand-impersonation campaigns driving this hook: the Microsoft Security Blog 'ClickFix macOS utilities' write-up, BleepingComputer's 'Fake Claude AI website delivers Beagle' and 'Fake OpenAI repository on Hugging Face' reports, Cyber Security News on the 'Fake OpenClaw installer' and 'InstallFix Fake Claude installer pages', THN/BleepingComputer 'GlassWorm v2 across 73 fake VS Code extensions', THN's 'DPRK AI-inserted npm malware', THN/ESET 'CallPhantom 28 fake call-history apps', THN's 'Fake CAPTCHA / Keitaro ClickFix', and Cyber Security News' 'Fake moustache age-bypass'. Kill-chain coverage spans delivery (impersonation lure) → user execution → install/loader → c2 fetch, so the joint signal survives even as IOCs rotate. Fires only when BOTH legs occur on the same device in order; does NOT fire on the lookalike-domain visit alone (analyst-fatigue trap) and does NOT fire on script-interpreter / LOLBin spawn without the impersonation precursor — those cases are covered by other catalogue rules.
+  
+  Rationale: All twelve articles converge on brand-impersonation as the delivery hook (fake Claude / OpenAI / Hugging Face / OpenVSX / OpenClaw / macOS utility / Keitaro CAPTCHA / Play-Store companion apps), and the post-lure behaviour in every case is a user-context script interpreter or LOLBin staging credential theft or further C2 fetch. Joining a lookalike-brand network leg with a short-window loader spawn on the same host catches that joint chain without leaning on IOCs that the actors are already rotating weekly.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let WindowMin = 10m;
+  let _impersonation_regex = @"(?i)(claude\-pro|claudecode|claudecodedoc|anthropic\-[a-z0-9]|openai\-[a-z0-9]|huggingface\-[a-z0-9]|openvsx\-[a-z0-9]|openclaw|cursor\-[a-z0-9]|gemini\-[a-z0-9]|copilot\-[a-z0-9]|claude\.msixbundle|download\-version\.1\-5\-8|macclean|mac\-storage\-guide|cleanmymacos|recargapopular|csec\-c2\-server|steamhostserver|serverconect|transcloud)";
+  let _suspicious_children = dynamic(["powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","cscript.exe","wscript.exe","cmd.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msiexec.exe","node.exe","python.exe","python3.exe","osascript","bash","sh"]);
+  let _user_facing_parents = dynamic(["msedge.exe","chrome.exe","firefox.exe","brave.exe","arc.exe","opera.exe","Code.exe","cursor.exe","explorer.exe","RuntimeBroker.exe","outlook.exe","teams.exe","slack.exe","WindowsTerminal.exe","Terminal","iTerm2","Safari"]);
+  let Downloads = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where RemoteUrl matches regex _impersonation_regex
+           or tostring(parse_url(RemoteUrl)["Host"]) matches regex _impersonation_regex
+      | project DlTime = Timestamp, DeviceId, DeviceName,
+                DlUrl = RemoteUrl, DlIp = RemoteIP, DlPort = RemotePort,
+                DlInitiator = InitiatingProcessFileName,
+                DlAccount = InitiatingProcessAccountName;
+  DeviceProcessEvents
+  | where Timestamp > ago(LookbackDays)
+  | where AccountName !endswith "$"
+  | where tolower(FileName) in (_suspicious_children)
+     and InitiatingProcessFileName in~ (_user_facing_parents)
+  | project ExecTime = Timestamp, DeviceId, DeviceName, AccountName,
+            ChildProc = FileName, ChildCmd = ProcessCommandLine,
+            ParentProc = InitiatingProcessFileName,
+            ParentCmd = InitiatingProcessCommandLine,
+            ChildHash = SHA256
+  | join kind=inner Downloads on DeviceId
+  | where ExecTime between (DlTime .. DlTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', ExecTime, DlTime)
+  | project DlTime, ExecTime, DelaySec, DeviceName, AccountName,
+            DlUrl, DlIp, DlInitiator, ParentProc, ChildProc, ChildCmd, ChildHash
+  | order by DlTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let WindowMin = 10m;
+  let _impersonation_regex = @"(?i)(claude\-pro|claudecode|claudecodedoc|anthropic\-[a-z0-9]|openai\-[a-z0-9]|huggingface\-[a-z0-9]|openvsx\-[a-z0-9]|openclaw|cursor\-[a-z0-9]|gemini\-[a-z0-9]|copilot\-[a-z0-9]|claude\.msixbundle|download\-version\.1\-5\-8|macclean|mac\-storage\-guide|cleanmymacos|recargapopular|csec\-c2\-server|steamhostserver|serverconect|transcloud)";
+  let _suspicious_children = dynamic(["powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","cscript.exe","wscript.exe","cmd.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msiexec.exe","node.exe","python.exe","python3.exe","osascript","bash","sh"]);
+  let Downloads = ImWebSession
+      | where TimeGenerated > ago(LookbackDays)
+      | where isnotempty(Url)
+      | where Url matches regex _impersonation_regex
+           or DvcDomain matches regex _impersonation_regex
+      | project DlTime = TimeGenerated, DvcHostname,
+                DlUrl = Url, DlDomain = DvcDomain, DlIp = DstIpAddr,
+                DlInitiator = ActingProcessName;
+  ImProcessCreate
+  | where TimeGenerated > ago(LookbackDays)
+  | where ActorUsername !endswith "$"
+  | extend ChildLeaf = tolower(tostring(split(TargetProcessName, @"\")[-1]))
+  | where ChildLeaf in (_suspicious_children) or tolower(TargetProcessName) has_any (_suspicious_children)
+  | project ExecTime = TimeGenerated, DvcHostname, ActorUsername,
+            ChildProc = TargetProcessName, ChildCmd = TargetProcessCommandLine,
+            ParentProc = ParentProcessName
+  | join kind=inner Downloads on DvcHostname
+  | where ExecTime between (DlTime .. DlTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', ExecTime, DlTime)
+  | project DlTime, ExecTime, DelaySec, DvcHostname, ActorUsername,
+            DlDomain, DlUrl, DlIp, DlInitiator, ParentProc, ChildProc, ChildCmd
+  | order by DlTime desc
+splunk_spl: |-
+  ``` Brand-impersonation domain contact + user-context loader within 10 min (joint pattern across THN/BleepingComputer/Microsoft/ESET/Cyber Security News briefings) ```
+  | tstats `summariesonly` earliest(_time) AS dl_time
+      values(All_Traffic.dest) AS dl_dest values(All_Traffic.dest_ip) AS dl_ip values(All_Traffic.app) AS dl_app values(All_Traffic.url) AS dl_url
+      from datamodel=Network_Traffic.All_Traffic
+      where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+        AND (
+             All_Traffic.dest="*claude-pro*" OR All_Traffic.dest="*claudecode*"
+          OR All_Traffic.dest="*anthropic-*" OR All_Traffic.dest="*openai-*"
+          OR All_Traffic.dest="*huggingface-*" OR All_Traffic.dest="*openclaw*"
+          OR All_Traffic.dest="*download-version.1-5-8*" OR All_Traffic.dest="*claudecodedoc*"
+          OR All_Traffic.dest="*macclean*" OR All_Traffic.dest="*mac-storage-guide*"
+          OR All_Traffic.dest="*csec-c2-server*" OR All_Traffic.dest="*steamhostserver*"
+          OR All_Traffic.dest="*serverconect*" OR All_Traffic.dest="*transcloud*"
+          OR All_Traffic.dest="*recargapopular*" OR All_Traffic.url="*.msixbundle*"
+          OR All_Traffic.url="*claude-pro*" OR All_Traffic.url="*download-version.1-5-8*"
+          OR All_Traffic.dest IN (<brand_lookalike_domain_list>)
+          OR All_Traffic.dest_ip IN (<c2_ip_list>)
+        )
+      by All_Traffic.src All_Traffic.user
+  | `drop_dm_object_name(All_Traffic)`
+  | rename src AS host
+  | join type=inner host
+      [| tstats `summariesonly` earliest(_time) AS exec_time
+          values(Processes.process_name) AS child_proc values(Processes.process) AS child_cmd
+          values(Processes.parent_process_name) AS parent_proc values(Processes.process_hash) AS child_hash
+          from datamodel=Endpoint.Processes
+          where Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","cscript.exe","wscript.exe","cmd.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msiexec.exe","node.exe","python.exe","python3.exe","osascript","bash","sh")
+            AND Processes.user!="*$"
+          by Processes.dest Processes.user
+       | `drop_dm_object_name(Processes)`
+       | rename dest AS host]
+  | eval delta_sec = exec_time - dl_time
+  | where delta_sec >= 0 AND delta_sec <= 600
+  | table host user dl_time exec_time delta_sec dl_app dl_dest dl_url dl_ip parent_proc child_proc child_cmd child_hash
+  | sort - dl_time
+datadog_query: |-
+  (source:windows.sysmon OR source:linux.auditd OR source:windows.security) ((@EventID:3 AND (@DestinationHostname:(*claude\-pro* OR *claudecode* OR *claudecodedoc* OR *anthropic\-* OR *openai\-* OR *huggingface\-* OR *openclaw* OR *download\-version.1\-5\-8* OR *macclean* OR *mac\-storage\-guide* OR *cleanmymacos* OR *csec\-c2\-server* OR *steamhostserver* OR *serverconect* OR *transcloud* OR *recargapopular*))) OR ((@EventID:1 OR @EventID:4688) AND @CommandLine:(*claude\-pro* OR *claudecode* OR *claudecodedoc* OR *anthropic\-* OR *openai\-* OR *huggingface\-* OR *openclaw* OR *download\-version.1\-5\-8* OR *.msixbundle* OR *macclean* OR *mac\-storage\-guide*) AND @Image:(*\\powershell.exe OR *\\pwsh.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\cscript.exe OR *\\wscript.exe OR *\\cmd.exe OR *\\bitsadmin.exe OR *\\certutil.exe OR *\\curl.exe OR *\\wget.exe OR *\\msiexec.exe OR *\\node.exe OR *\\python.exe))) -@DestinationHostname:(*.anthropic.com OR *.openai.com OR *.huggingface.co OR *.github.com OR *.microsoft.com OR *.apple.com)

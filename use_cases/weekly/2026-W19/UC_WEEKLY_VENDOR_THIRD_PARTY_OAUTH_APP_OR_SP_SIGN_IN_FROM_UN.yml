@@ -1,0 +1,140 @@
+id: UC_WEEKLY_VENDOR_THIRD_PARTY_OAUTH_APP_OR_SP_SIGN_IN_FROM_UN
+title: "[WEEKLY] Vendor / Third-Party OAuth App or SP Sign-in From Unbaselined Egress Followed by Bulk SaaS Object Read"
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1199
+  name: Trusted Relationship
+- id: T1078.004
+  name: "Valid Accounts: Cloud Accounts"
+- id: T1550.001
+  name: "Use Alternate Authentication Material: Application Access Token"
+- id: T1530
+  name: Data from Cloud Storage
+- id: T1213
+  name: Data from Information Repositories
+- id: T1195.002
+  name: Compromise Software Supply Chain
+data_models:
+  defender:
+  - Authentication
+  - Change
+  - Web
+description: |-
+  Chains two events on the same identity within a 30-minute window: (1) a successful OAuth-app, service-principal, or federated SSO sign-in from an (AppId,SrcIP) pair that has never been seen in the prior 30-day baseline; and (2) the same actor performing bulk reads (>=50 files / mail items / repository pulls / customer-record queries) immediately afterwards. This is the joint fingerprint of the ShinyHunters Vimeo ("Vimeo Data Breach Exposes 119,000 Users" and "Vimeo data breach exposes personal information of 119,000 people", May 2026) and Zara ("Zara data breach exposed personal information of 197,000 people", May 2026) intrusions, which abused vendor service principals (e.g. Anodot OAuth app) and named UNC6661/UNC6671 proxy IPs to pivot from federated identity to mass data theft; the RansomHouse Trellix source-code-repository compromise ("Trellix Confirms Source Code Breach...", "Trellix source code breach claimed by RansomHouse hackers", "Trellix Breach – RansomHouse Claims Access...", "Trellix discloses data breach...", May 2026) where attackers logged in to a third-party-managed code SaaS and pulled repo archives; the NVIDIA / GFN.AM regional-partner breach ("NVIDIA confirms GeForce NOW data breach affecting Armenian users", "NVIDIA Data Breach Reportedly Exposes Personal Information of GeForce Users", May 2026) where a partner-side admin account was used to read the user database; the DAEMON Tools supply-chain breach ("DAEMON Tools devs confirm breach", May 2026); and the PhantomCore TrueConf campaign ("PhantomCore Exploits TrueConf Vulnerabilities...", April 2026) which pivoted via SaaS valid-account abuse after exploit. Kill-chain stages spanned: initial access via T1199 trusted relationship, defense evasion via T1550.001 application-token reuse, and actions-on-objective via T1530 / T1213 bulk repository / cloud-object read. The rule fires only when BOTH stages are present on the same principal inside the correlation window; it will NOT fire on routine vendor sign-ins from their canonical egress, on ad-hoc downloads under the bulk threshold, or on first-party Microsoft / Google built-in apps (which are excluded from the SP scope).
+  
+  Rationale: The joint signal across all 12 articles is not a CVE or a malware family but a trusted-identity-from-non-canonical-egress pattern that immediately precedes bulk data exfiltration. ShinyHunters (Vimeo, Zara), RansomHouse (Trellix), and the GFN.AM regional partner case all hinge on the same shape: an OAuth-app, service-principal, or federated identity authenticating from infrastructure outside its 30-day baseline, then performing high-volume object reads against the SaaS workload the principal has access to. The two-stage temporal correlation (unbaselined sign-in -> bulk read inside 30 minutes by the same actor) is what raises this above per-IOC hunts and above the generic Datadog SaaS-anomaly defaults, because it pairs the trust-abuse pivot with the impact action in a single alert.
+defender_kql: |-
+  let _Lookback = 14d;
+  let _Baseline = 30d;
+  let _CorrWindow = 30m;
+  let _MinObjects = 50;
+  let _MinDistinct = 25;
+  let _FirstPartyApps = dynamic(["Office 365","Microsoft Teams","Microsoft Outlook","SharePoint Online","OneDrive","Microsoft 365 Apps","Microsoft Graph PowerShell","Microsoft Authentication Broker","Microsoft Edge","Windows Sign In"]);
+  // Stage 1 — baseline of (AppId, IPAddress) pairs seen in the prior 30d window
+  let _Baseline_Pairs =
+      AADSignInEventsBeta
+      | where Timestamp between (ago(_Baseline) .. ago(_Lookback))
+      | where ErrorCode == 0
+      | summarize Seen = count() by ApplicationId, IPAddress
+      | where Seen > 2;
+  // Stage 1 — recent successful auths from (AppId, IPAddress) pairs NOT in the baseline
+  let SuspectAuth =
+      AADSignInEventsBeta
+      | where Timestamp > ago(_Lookback)
+      | where ErrorCode == 0
+      | where Application !in~ (_FirstPartyApps)
+      | where ClientAppUsed in ("Other clients","Browser","Mobile Apps and Desktop clients")
+      | join kind=leftanti _Baseline_Pairs on ApplicationId, IPAddress
+      | project SignInTime = Timestamp, AccountObjectId, AccountUpn,
+                Application, ApplicationId, AuthIPAddress = IPAddress, Country;
+  // Stage 2 — bulk SaaS object reads by the same actor within 30 minutes of the suspicious sign-in
+  CloudAppEvents
+  | where Timestamp > ago(_Lookback)
+  | where ActionType in~ ("FileDownloaded","FileAccessed","FilePreviewed","FileSyncDownloadedFull","MailItemsAccessed","SearchQueryPerformed","MessageRead","Download","RepoCloned","RepoArchiveDownload","SecretRead","Export")
+  | join kind=inner SuspectAuth on $left.AccountObjectId == $right.AccountObjectId
+  | where Timestamp between (SignInTime .. SignInTime + _CorrWindow)
+  | summarize ObjectsRead = count(),
+              DistinctObjects = dcount(ObjectName),
+              Actions = make_set(ActionType, 12),
+              SampleObjects = make_set(ObjectName, 10),
+              SaaSApps = make_set(Application, 6),
+              FirstAction = min(Timestamp),
+              LastAction  = max(Timestamp)
+              by AccountObjectId, AccountUpn, Application, ApplicationId, AuthIPAddress, Country, SignInTime
+  | where ObjectsRead >= _MinObjects or DistinctObjects >= _MinDistinct
+  | project SignInTime, FirstAction, LastAction, AccountUpn, Application,
+            AuthIPAddress, Country, ObjectsRead, DistinctObjects,
+            Actions, SaaSApps, SampleObjects
+  | order by FirstAction desc
+sentinel_kql: |-
+  let _Lookback = 14d;
+  let _Baseline = 30d;
+  let _CorrWindow = 30m;
+  let _MinObjects = 50;
+  let _FirstPartyApps = dynamic(["Office 365","Microsoft Teams","Microsoft Outlook","SharePoint Online","OneDrive","Microsoft 365 Apps","Microsoft Graph PowerShell","Microsoft Edge","Windows Sign In"]);
+  // Stage 1 — baseline of (AppId, IPAddress) pairs across all sign-in surfaces
+  let _BaselinePairs =
+      union isfuzzy=true
+          (SigninLogs                       | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0),
+          (AADNonInteractiveUserSignInLogs  | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0),
+          (AADServicePrincipalSignInLogs    | where TimeGenerated between (ago(_Baseline) .. ago(_Lookback)) | where ResultType == 0)
+      | summarize Seen = count() by AppId, IPAddress
+      | where Seen > 2;
+  // Stage 1 — recent successful auths from unbaselined (AppId, IPAddress) pairs
+  let SuspectAuth =
+      union isfuzzy=true
+          (SigninLogs
+              | where TimeGenerated > ago(_Lookback) | where ResultType == 0
+              | extend Principal = UserPrincipalName, PrincipalId = UserId, AppKind = "User"),
+          (AADNonInteractiveUserSignInLogs
+              | where TimeGenerated > ago(_Lookback) | where ResultType == 0
+              | extend Principal = UserPrincipalName, PrincipalId = UserId, AppKind = "NonInteractive"),
+          (AADServicePrincipalSignInLogs
+              | where TimeGenerated > ago(_Lookback) | where ResultType == 0
+              | extend Principal = ServicePrincipalName, PrincipalId = ServicePrincipalId, AppKind = "ServicePrincipal")
+      | where AppDisplayName !in~ (_FirstPartyApps)
+      | project SignInTime = TimeGenerated, Principal, PrincipalId, AppDisplayName, AppId, AuthIP = IPAddress, AppKind
+      | join kind=leftanti _BaselinePairs on AppId, $left.AuthIP == $right.IPAddress;
+  // Stage 2 — bulk SaaS object reads (Exchange / SharePoint / OneDrive) by same principal in the window
+  OfficeActivity
+  | where TimeGenerated > ago(_Lookback)
+  | where Operation in~ ("FileDownloaded","FileAccessed","FilePreviewed","FileSyncDownloadedFull","MailItemsAccessed","MessageRead","SearchQueryPerformed","FileExported","PageExported")
+  | extend Principal = coalesce(UserId, MailboxOwnerUPN)
+  | join kind=inner SuspectAuth on Principal
+  | where TimeGenerated between (SignInTime .. SignInTime + _CorrWindow)
+  | summarize ObjectsRead = count(),
+              DistinctObjects = dcount(coalesce(OfficeObjectId, SourceFileName, Item)),
+              Operations = make_set(Operation, 12),
+              Workloads = make_set(OfficeWorkload, 6),
+              FirstAction = min(TimeGenerated),
+              LastAction  = max(TimeGenerated)
+              by Principal, AppDisplayName, AuthIP, AppKind, SignInTime
+  | where ObjectsRead >= _MinObjects
+  | project SignInTime, FirstAction, LastAction, Principal, AppDisplayName, AppKind,
+            AuthIP, ObjectsRead, DistinctObjects, Operations, Workloads
+  | order by FirstAction desc
+splunk_spl: |-
+  ``` Stage 1 — successful SP / OAuth / federated sign-ins (last 14d) with their (app,src) pair ```
+  | tstats `summariesonly` earliest(_time) as auth_time, values(Authentication.src) as auth_src, values(Authentication.app) as auth_app, values(Authentication.signature_id) as auth_sig from datamodel=Authentication where Authentication.action=success AND Authentication.signature_id IN ("ServicePrincipalSignIn","NonInteractiveUserSignIn","UserLoggedIn","ConsoleLogin","AssumeRoleWithSAML","federatedSSO","user.session.start") AND earliest=-14d@d by Authentication.user span=1m
+  | `drop_dm_object_name(Authentication)`
+  | rename user as actor
+  ``` Anti-baseline: keep only (app,src) pairs never (or barely) seen in the prior 30d window ```
+  | join type=left auth_app, auth_src [ tstats `summariesonly` count as baseline_count from datamodel=Authentication where Authentication.action=success AND earliest=-30d@d latest=-14d@d by Authentication.app, Authentication.src | `drop_dm_object_name(Authentication)` | rename app as auth_app, src as auth_src ]
+  | fillnull baseline_count value=0
+  | where baseline_count <= 2
+  ``` Stage 2 — bulk SaaS object reads by the same actor within 30 minutes ```
+  | join type=inner actor max=0 [ tstats `summariesonly` count from datamodel=Change where All_Changes.action IN ("read","downloaded","accessed","exported","cloned") AND All_Changes.object_category IN ("file","email","repository","record","blob","secret","mailbox") by _time, All_Changes.user, All_Changes.object, All_Changes.app, All_Changes.object_category | `drop_dm_object_name(All_Changes)` | rename user as actor, _time as access_time, object as object_id, app as access_app, object_category as object_kind ]
+  | where access_time >= auth_time AND access_time <= auth_time + 1800
+  | stats count as ObjectsRead, dc(object_id) as DistinctObjects, values(object_kind) as ObjectKinds, values(access_app) as AccessApps, min(access_time) as FirstAccess, max(access_time) as LastAccess by actor, auth_app, auth_src, auth_time
+  | where ObjectsRead >= 50 OR DistinctObjects >= 25
+  | convert ctime(auth_time) ctime(FirstAccess) ctime(LastAccess)
+datadog_query: |-
+  (source:azure.activeDirectory @evt.name:"Sign-in activity" @properties.status.errorCode:0 @properties.appDisplayName:* -@properties.appDisplayName:("Office 365" OR "Microsoft Teams" OR "Microsoft Outlook" OR "SharePoint Online" OR "OneDrive" OR "Microsoft 365 Apps" OR "Microsoft Graph PowerShell" OR "Microsoft Edge" OR "Windows Sign In")) OR (source:okta @evt.name:(user.session.start OR app.oauth2.as.token.grant OR app.oauth2.as.consent.grant) @outcome.result:SUCCESS) OR (source:cloudtrail @evt.name:(ConsoleLogin OR AssumeRoleWithSAML OR GetFederationToken OR GetSessionToken) @evt.outcome:success @userIdentity.type:(AssumedRole OR FederatedUser OR SAMLUser)) OR (source:github.audit @action:(repo.download_zip OR repo.clone OR repo.archive_download OR oauth_authorization.create) @actor_location.country_code:*)

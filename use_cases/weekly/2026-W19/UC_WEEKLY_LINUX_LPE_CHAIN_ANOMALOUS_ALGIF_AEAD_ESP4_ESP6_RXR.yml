@@ -1,0 +1,117 @@
+id: UC_WEEKLY_LINUX_LPE_CHAIN_ANOMALOUS_ALGIF_AEAD_ESP4_ESP6_RXR
+title: "[WEEKLY] Linux LPE chain — anomalous algif_aead/esp4/esp6/rxrpc kernel-module load followed by same-user root transition"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1068
+  name: Exploitation for Privilege Escalation
+- id: T1547.006
+  name: "Boot or Logon Autostart Execution: Kernel Modules and Extensions"
+- id: T1611
+  name: Escape to Host
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+description: |-
+  Detects the behavioural pattern shared by CVE-2026-31431 'Copy Fail' (Theori, April 30; CISA KEV May 1; active exploitation by May 4) and its 'Dirty Frag' successor (CVE-2026-43284 esp4/esp6, CVE-2026-43500 rxrpc; PoC May 7-8 per Microsoft Defender, Unit 42 and Cyber Security News): an unprivileged Linux user triggers an autoload or explicit modprobe/insmod of an otherwise-rare networking/crypto kernel module (algif_aead, esp4, esp6, rxrpc, xfrm_user, af_alg) and within 10 minutes a process owned by that same user spawns a root-owned child or transitions to euid=0 on the same host. The chain spans the exploit phase (T1068 privilege escalation via kernel-module abuse / T1547.006) and is the convergence point Microsoft, Unit 42 and CISA all called out this fortnight regardless of how the unprivileged shell was obtained (web RCE per Article 6 PAN-OS, container break-out per Article 11, malicious package per Article 2's supply-chain framing, or AI-agent RCE per Article 9). Fires when stage 1 (kmod load) and stage 2 (root transition by the same actor) both occur within the correlation window; will NOT fire on routine boot-time module loads by systemd-modules-load/udevd, on dpkg/apt/yum/snapd/unattended-upgrade installs, on configuration-management agents (ansible/puppet/chef/salt) bringing modules in, or on root sessions where no anomalous kmod load preceded.
+  
+  Rationale: Every article in scope — Copy Fail PoC, CISA KEV listing, Dirty Frag esp4/esp6/rxrpc disclosure, Microsoft Defender's active-attack post and Unit 42's deep-dive — converges on the same observable: an unprivileged actor causes an unusual kernel networking/crypto module to be brought into the running kernel and then immediately gains root on that host. That two-stage shape is structurally rare in production (legitimate module loads come from boot-time systemd-modules-load or the package manager, never from a user-context parent) and resists IOC rotation because the modules themselves are the vulnerable code paths, not the exploit payload.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindow = 10m;
+  let _baseline_parents = dynamic(["systemd","systemd-udevd","udevd","init","kmod","systemd-modules-load","dpkg","apt","apt-get","yum","dnf","zypper","snapd","unattended-upgrade","ansible-playbook","puppet","chef-client","salt-minion"]);
+  let _root_legit_parents = dynamic(["systemd","init","cron","crond","sshd","login","getty","agetty","gdm","gdm3","lightdm","systemd-logind","dbus-daemon","rsyslogd"]);
+  let _suspect_modules = dynamic(["algif_aead","esp4","esp6","rxrpc","xfrm_user","af_alg"]);
+  let LinuxHosts =
+      DeviceInfo
+      | where Timestamp > ago(1d)
+      | where OSPlatform == "Linux"
+      | summarize arg_max(Timestamp, OSDistribution, IsInternetFacing) by DeviceId, DeviceName;
+  let KmodStage =
+      DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where DeviceId in ((LinuxHosts | project DeviceId))
+      | where FileName in~ ("modprobe","insmod","kmod")
+      | where ProcessCommandLine has_any (_suspect_modules)
+      | where InitiatingProcessFileName !in~ (_baseline_parents)
+      | where AccountName !in~ ("root","")
+      | project StageOneTime = Timestamp, DeviceId, DeviceName,
+                KmodUser = AccountName,
+                KmodCmd = ProcessCommandLine,
+                KmodParent = InitiatingProcessFileName,
+                KmodParentCmd = InitiatingProcessCommandLine;
+  let RootStage =
+      DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where DeviceId in ((LinuxHosts | project DeviceId))
+      | where AccountName =~ "root"
+      | where InitiatingProcessAccountName !in~ ("root","")
+      | where InitiatingProcessFileName !in~ (_root_legit_parents)
+      | project StageTwoTime = Timestamp, DeviceId,
+                RootProc = FileName,
+                RootCmd = ProcessCommandLine,
+                RootParent = InitiatingProcessFileName,
+                RootParentUser = InitiatingProcessAccountName;
+  KmodStage
+  | join kind=inner RootStage on DeviceId
+  | where StageTwoTime between (StageOneTime .. StageOneTime + CorrelationWindow)
+  | where RootParentUser =~ KmodUser
+  | project StageOneTime, StageTwoTime,
+            DelaySec = datetime_diff('second', StageTwoTime, StageOneTime),
+            DeviceName, KmodUser, KmodParent, KmodParentCmd, KmodCmd,
+            RootParent, RootProc, RootCmd
+  | order by StageOneTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindow = 10m;
+  let _baseline_parents = dynamic(["systemd","systemd-udevd","udevd","init","kmod","systemd-modules-load","dpkg","apt","apt-get","yum","dnf","zypper","snapd","unattended-upgrade","ansible-playbook","puppet","chef-client","salt-minion"]);
+  let _root_legit_parents = dynamic(["systemd","init","cron","crond","sshd","login","getty","agetty","gdm","gdm3","lightdm","systemd-logind","dbus-daemon","rsyslogd"]);
+  let _suspect_modules = dynamic(["algif_aead","esp4","esp6","rxrpc","xfrm_user","af_alg"]);
+  let KmodStage =
+      ImProcessCreate
+      | where TimeGenerated > ago(LookbackDays)
+      | where DvcOs has "Linux" or EventProduct in~ ("auoms","sysmon-linux","Defender for Endpoint")
+      | where TargetProcessName endswith "/modprobe" or TargetProcessName endswith "/insmod" or TargetProcessName endswith "/kmod"
+      | where TargetProcessCommandLine has_any (_suspect_modules)
+      | where ParentProcessName !in~ (_baseline_parents)
+          and not(ParentProcessName endswith "/systemd")
+          and not(ParentProcessName endswith "/udevd")
+      | where ActorUsername !in~ ("root","") and not(ActorUsername endswith "$")
+      | project StageOneTime = TimeGenerated, DvcHostname,
+                KmodUser = ActorUsername,
+                KmodCmd = TargetProcessCommandLine,
+                KmodParent = ParentProcessName;
+  let RootStage =
+      ImProcessCreate
+      | where TimeGenerated > ago(LookbackDays)
+      | where TargetUsername =~ "root"
+      | where ActorUsername !in~ ("root","")
+      | where ParentProcessName !in~ (_root_legit_parents)
+      | project StageTwoTime = TimeGenerated, DvcHostname,
+                RootProc = TargetProcessName,
+                RootCmd = TargetProcessCommandLine,
+                RootParent = ParentProcessName,
+                RootParentUser = ActorUsername;
+  KmodStage
+  | join kind=inner RootStage on DvcHostname
+  | where StageTwoTime between (StageOneTime .. StageOneTime + CorrelationWindow)
+  | where RootParentUser =~ KmodUser
+  | project StageOneTime, StageTwoTime,
+            DelaySec = datetime_diff('second', StageTwoTime, StageOneTime),
+            DvcHostname, KmodUser, KmodParent, KmodCmd,
+            RootParent, RootProc, RootCmd
+  | order by StageOneTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) AS stage1_time values(Processes.process) AS kmod_cmd values(Processes.parent_process_name) AS kmod_parent FROM datamodel=Endpoint.Processes WHERE Processes.os=Linux Processes.process_name IN ("modprobe","insmod","kmod") (Processes.process="*algif_aead*" OR Processes.process="*esp4*" OR Processes.process="*esp6*" OR Processes.process="*rxrpc*" OR Processes.process="*xfrm_user*" OR Processes.process="*af_alg*") BY host Processes.user | `drop_dm_object_name(Processes)` | where NOT match(kmod_parent,"(?i)^(systemd|systemd-udevd|udevd|init|kmod|systemd-modules-load|dpkg|apt|apt-get|yum|dnf|zypper|snapd|unattended-upgrade|ansible-playbook|puppet|chef-client|salt-minion)$") | where user!="root" AND NOT match(user,"\\$$") | rename user AS stage1_user | join host [| tstats summariesonly=true count min(_time) AS stage2_time values(Processes.process) AS root_cmd values(Processes.process_name) AS root_proc values(Processes.parent_process_name) AS root_parent FROM datamodel=Endpoint.Processes WHERE Processes.os=Linux Processes.user="root" AND Processes.parent_process_name NOT IN ("systemd","init","cron","crond","sshd","login","getty","agetty","gdm","gdm3","lightdm","systemd-logind","dbus-daemon","rsyslogd") BY host] | where stage2_time>=stage1_time AND stage2_time<=relative_time(stage1_time,"+10m") | eval delay_sec=stage2_time-stage1_time | table host stage1_user stage1_time kmod_cmd kmod_parent stage2_time delay_sec root_proc root_cmd root_parent | sort - stage1_time
+datadog_query: |-
+  source:(linux.auditd OR linux.syslog) @auditd.type:EXECVE (@process.executable.path:*/modprobe OR @process.executable.path:*/insmod OR @process.executable.path:*/kmod) (@process.command_line:*algif_aead* OR @process.command_line:*esp4* OR @process.command_line:*esp6* OR @process.command_line:*rxrpc* OR @process.command_line:*xfrm_user* OR @process.command_line:*af_alg*) -@user.name:root -@process.parent.name:(systemd OR systemd-udevd OR udevd OR init OR kmod OR systemd-modules-load OR dpkg OR apt OR apt-get OR yum OR dnf OR zypper OR snapd OR unattended-upgrade OR ansible-playbook OR puppet OR chef-client OR salt-minion)

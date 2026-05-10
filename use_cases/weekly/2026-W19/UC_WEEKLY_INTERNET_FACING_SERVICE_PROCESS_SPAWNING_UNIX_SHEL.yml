@@ -1,0 +1,203 @@
+id: UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL
+title: "[WEEKLY] Internet-Facing Service Process Spawning Unix Shell or Ingress-Tool LOLBin (Edge Zero-Day Post-Exploit)"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1572
+  name: Protocol Tunneling
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+description: |-
+  Detects the canonical post-exploit transition on internet-facing edge appliances and Linux servers: a service process (PAN-OS sslmgr/useridd/authd, Ivanti EPMM mifs/tomcat/java/catalina, Apache/Nginx, sshd, generic node/python application servers) directly spawns a Unix shell interpreter or an ingress-tool LOLBin (bash/sh/python/perl/curl/wget/nc/socat/busybox) with a non-automation parent. This fortnight three high-severity zero-days dominated the briefings — CVE-2026-0300 PAN-OS Captive Portal unauthenticated RCE exploited in-the-wild since April (Unit 42 'Threat Brief: Exploitation of PAN-OS Captive Portal Zero-Day', Cyber Security News 'Palo Alto Networks Firewall Zero-Day RCE', BleepingComputer 'Palo Alto Networks firewall zero-day exploited for nearly a month'), CVE-2026-6973 Ivanti EPMM remote-code-execution under CISA four-day emergency directive (BleepingComputer 'CISA gives feds four days to patch Ivanti flaw', 'Ivanti warns of new EPMM flaw'), and the Linux kernel 'Dirty Frag' LPE (BleepingComputer 8 May) — all set against the 'Patient Zero', 'Day Zero Readiness', and 'After Mythos' essays from The Hacker News framing edge compromise as the new front door, plus the 'Zero-Auth' Schemata API and Android CVE-2026-0073 RCE pieces that share the same exploit→post-exploit shape. The chain spans MITRE exploit (T1190) → install (T1505.003 webshell or T1059.004 shell) → C2 staging (T1105 / T1572 reverse-tunnel like the EarthWorm reversesocks5 dropper described by Unit 42); the inbound exploit is invisible at the endpoint, but the resulting service→shell parentage is unmistakable. It fires when sslmgr/useridd/mifs/tomcat/java/sshd/httpd/nginx are the direct parent of bash/sh/python/curl/wget/nc with non-trivial command lines; it does NOT fire on routine sysadmin maintenance (interactive parents like login/sudo), on configuration-management tools (puppet/ansible/chef/salt-minion explicitly excluded), or on health-check style invocations (`status`, `--version`, `health`).
+  
+  Rationale: All twelve articles describe the same exploit→install transition on internet-exposed services (PAN-OS Captive Portal, Ivanti EPMM Tomcat/mifs, Android adbd, Linux kernel LPE, Schemata API, plus the THN 'Patient Zero' essays calling out edge compromise). The exact inbound exploit varies per CVE and is often invisible at the endpoint, but the post-exploit signature — a long-running service process directly parenting bash/sh/python/curl — is shared, doesn't rotate with IOCs, and is structurally rare in production because legitimate maintenance flows through interactive shells or configuration-management agents that we explicitly exclude.
+defender_kql: |-
+  // Edge zero-day post-exploit — service process spawning shell/ingress LOLBin on Linux/macOS
+  let LookbackDays = 7d;
+  let _WebServerProcs = dynamic([
+      "httpd","nginx","apache2","java","tomcat","sslmgr","useridd",
+      "authd","mifs","node","python","python3","sshd","pan_comm_mgr",
+      "panlogd","catalina.sh","ws_TomcatService.sh"]);
+  let _ShellChildren = dynamic([
+      "bash","sh","csh","zsh","dash","ksh","tcsh","python","python3",
+      "perl","ruby","curl","wget","nc","ncat","socat","busybox","gawk"]);
+  let _AutomationParents = dynamic([
+      "puppet","ansible-playbook","chef-client","salt-minion","cron","crond","systemd"]);
+  let ShellSpawns = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where OSPlatform in ("Linux","macOS")
+      | where InitiatingProcessFileName in~ (_WebServerProcs)
+      | where FileName in~ (_ShellChildren)
+      | where InitiatingProcessParentFileName !in~ (_AutomationParents)
+      | where ProcessCommandLine !has " --version"
+          and ProcessCommandLine !has " -V"
+          and not(ProcessCommandLine matches regex @"(?i)\bstatus\b")
+          and ProcessCommandLine !has "healthcheck"
+      | project Timestamp, DeviceId, DeviceName, AccountName,
+                ParentProc = InitiatingProcessFileName,
+                ParentCmd  = InitiatingProcessCommandLine,
+                ChildProc  = FileName,
+                ChildCmd   = ProcessCommandLine,
+                FolderPath, SHA256;
+  // Corroborating signal — webshell/script drop into a web root by the same kind of service process
+  let WebshellDrops = DeviceFileEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType == "FileCreated"
+      | where FolderPath has_any (
+          @"/mi/tomcat/webapps/", @"/var/www/", @"/usr/share/nginx/html/",
+          @"/opt/pan/", @"/var/panlogs/", @"/opt/tomcat/webapps/",
+          @"/srv/www/", @"/htdocs/")
+      | where FileName endswith ".jsp" or FileName endswith ".jspx"
+           or FileName endswith ".php" or FileName endswith ".aspx"
+           or FileName endswith ".sh"  or FileName endswith ".py"
+      | where InitiatingProcessFileName in~ (_WebServerProcs)
+      | project DropTime = Timestamp, DeviceId, DroppedFile = FileName, DropPath = FolderPath, DroppedBy = InitiatingProcessFileName;
+  ShellSpawns
+  | join kind=leftouter WebshellDrops on DeviceId
+  | extend CorroboratingDropMin = iff(isnotempty(DropTime), datetime_diff('minute', Timestamp, DropTime), int(null))
+  | where isnull(CorroboratingDropMin) or abs(CorroboratingDropMin) <= 10
+  | project Timestamp, DeviceName, AccountName, ParentProc, ParentCmd, ChildProc, ChildCmd, FolderPath, SHA256, CorroboratingDropMin, DroppedFile, DropPath, DroppedBy
+  | order by Timestamp desc
+sentinel_kql: |-
+  // ASIM cross-vendor equivalent — works against AuditD, Sysmon-for-Linux, MDE-Linux, CrowdStrike
+  let LookbackDays = 7d;
+  let _WebServerProcs = dynamic([
+      "httpd","nginx","apache2","java","tomcat","sslmgr","useridd",
+      "authd","mifs","node","python","python3","sshd","pan_comm_mgr",
+      "panlogd","catalina.sh","ws_TomcatService.sh"]);
+  let _ShellChildren = dynamic([
+      "bash","sh","csh","zsh","dash","ksh","tcsh","python","python3",
+      "perl","ruby","curl","wget","nc","ncat","socat","busybox","gawk"]);
+  let _AutomationParents = dynamic([
+      "puppet","ansible-playbook","chef-client","salt-minion","cron","crond","systemd"]);
+  ImProcessCreate
+  | where TimeGenerated > ago(LookbackDays)
+  | extend _ParentBase = tostring(split(ParentProcessName, "/")[array_length(split(ParentProcessName, "/")) - 1])
+  | extend _ChildBase  = tostring(split(TargetProcessName, "/")[array_length(split(TargetProcessName, "/")) - 1])
+  | where _ParentBase in~ (_WebServerProcs)
+  | where _ChildBase  in~ (_ShellChildren)
+  | where _ParentBase !in~ (_AutomationParents)
+  | where TargetProcessCommandLine !has " --version"
+      and TargetProcessCommandLine !has " -V"
+      and not(TargetProcessCommandLine matches regex @"(?i)\bstatus\b")
+      and TargetProcessCommandLine !has "healthcheck"
+  | project TimeGenerated, DvcHostname, ActorUsername,
+            ParentProc = _ParentBase, ParentCmd = ParentProcessCommandLine,
+            ChildProc  = _ChildBase,  ChildCmd  = TargetProcessCommandLine,
+            TargetProcessName, TargetProcessSHA256
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: Internet-Facing Service Spawning Unix Shell or Ingress Tool (Edge Zero-Day Post-Exploit)
+  id: 8a5f3b2c-9e1d-4a7c-b6f8-e2d4a8c1b3e7
+  status: experimental
+  description: |
+    Detects post-exploit behavior on internet-facing edge appliances and Linux
+    servers where a service process (PAN-OS user-id daemons, Ivanti EPMM mifs/tomcat,
+    Apache, Nginx, sshd, generic application servers) directly spawns a Unix shell
+    interpreter or an ingress-tool LOLBin. Drives off the CVE-2026-0300 (PAN-OS),
+    CVE-2026-6973 (Ivanti EPMM), and Linux 'Dirty Frag' zero-day cluster of
+    May 2026.
+  references:
+    - https://unit42.paloaltonetworks.com/captive-portal-zero-day/
+    - https://www.bleepingcomputer.com/news/security/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-zero-day/
+    - https://www.bleepingcomputer.com/news/security/ivanti-warns-of-new-epmm-flaw-exploited-in-zero-day-attacks/
+    - https://cybersecuritynews.com/palo-alto-firewall-0-day-exploited/
+  author: Detection Engineering (fortnightly synthesis)
+  date: 2026/05/10
+  logsource:
+    product: linux
+    category: process_creation
+  detection:
+    selection_parent:
+      ParentImage|endswith:
+        - '/httpd'
+        - '/nginx'
+        - '/apache2'
+        - '/java'
+        - '/tomcat'
+        - '/sslmgr'
+        - '/useridd'
+        - '/authd'
+        - '/mifs'
+        - '/node'
+        - '/sshd'
+        - '/pan_comm_mgr'
+        - '/panlogd'
+        - '/catalina.sh'
+    selection_child:
+      Image|endswith:
+        - '/bash'
+        - '/sh'
+        - '/dash'
+        - '/zsh'
+        - '/csh'
+        - '/ksh'
+        - '/python'
+        - '/python3'
+        - '/perl'
+        - '/ruby'
+        - '/curl'
+        - '/wget'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+        - '/busybox'
+        - '/gawk'
+    filter_automation_parent:
+      ParentImage|contains:
+        - '/puppet/'
+        - '/ansible'
+        - '/chef-client'
+        - '/salt-minion'
+        - '/cron'
+        - '/systemd'
+    filter_routine:
+      CommandLine|contains:
+        - ' --version'
+        - ' -V '
+        - 'healthcheck'
+        - ' status'
+    condition: selection_parent and selection_child and not 1 of filter_*
+  fields:
+    - ParentImage
+    - ParentCommandLine
+    - Image
+    - CommandLine
+    - User
+    - LogonId
+  falsepositives:
+    - Legitimate web-application code paths that intentionally shell-out (must be allow-listed per-environment)
+    - Bespoke deployment scripts run outside the standard configuration-management chain
+  level: high
+  tags:
+    - attack.initial_access
+    - attack.t1190
+    - attack.execution
+    - attack.t1059.004
+    - attack.persistence
+    - attack.t1505.003
+    - attack.command_and_control
+    - attack.t1105
+  
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) AS firstTime max(_time) AS lastTime values(Processes.process) AS cmdlines values(Processes.process_path) AS exec_paths values(Processes.parent_process) AS parent_cmds from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("httpd","nginx","apache2","java","tomcat","sslmgr","useridd","authd","mifs","node","python","python3","sshd","pan_comm_mgr","panlogd","catalina.sh","ws_TomcatService.sh") AND Processes.process_name IN ("bash","sh","csh","zsh","dash","ksh","tcsh","python","python3","perl","ruby","curl","wget","nc","ncat","socat","busybox","gawk") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(parent_process,"(?i)(puppet|ansible|chef-client|salt-minion|systemd|/cron[/ ]|crond)") AND NOT match(process,"(?i)(\s--version|\sstatus(\s|$)|\shealthcheck|\s-V(\s|$))") | join type=inner dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND (Filesystem.file_path="*/webapps/*" OR Filesystem.file_path="*/htdocs/*" OR Filesystem.file_path="*/www/*" OR Filesystem.file_path="*/mi/tomcat/*") AND (Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.jspx" OR Filesystem.file_name="*.php" OR Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.sh") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | rename dest AS dest] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+datadog_query: |-
+  source:(linux.auditd OR linux.syslog) @auditd.type:EXECVE @process.parent.name:(httpd OR nginx OR apache2 OR java OR tomcat OR sslmgr OR useridd OR authd OR mifs OR node OR sshd OR pan_comm_mgr OR panlogd OR catalina.sh OR ws_TomcatService.sh) @process.name:(bash OR sh OR csh OR zsh OR dash OR ksh OR tcsh OR python OR python3 OR perl OR ruby OR curl OR wget OR nc OR ncat OR socat OR busybox OR gawk) -@process.parent.command_line:(*puppet* OR *ansible* OR *chef-client* OR *salt-minion* OR *systemd*) -@process.command_line:(*"--version"* OR *healthcheck* OR *" status"*)
