@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use Fake DeepSeek TUI GitHub Repositories to Deliver Malware 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
 Hackers are once again targeting developers and AI enthusiasts by impersonating popular open-source tools on GitHub. This time, the target is DeepSeek TUI, a legitimate terminal-based intelligent agent that allows users to interact with DeepSeek large language models directly from the command line. 
-With the recent release of DeepSeek v4 and a widely share…
+With the recent release of DeepSeek v4 and a widely shared post b…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -83,15 +79,14 @@ With the recent release of DeepSeek v4 and a widely share…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1562.001** — Disable or Modify Tools
-- **T1562.004** — Disable or Modify System Firewall
-- **T1140** — Deobfuscate/Decode Files or Information
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1608.001** — Stage Capabilities: Upload Malware
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102.002** — Web Service: Bidirectional Communication
-- **T1102.001** — Web Service: Dead Drop Resolver
 - **T1105** — Ingress Tool Transfer
-- **T1036.005** — Match Legitimate Name or Location
-- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
@@ -99,128 +94,70 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ClawCode Defender disable + inbound firewall ports 57001/57002/56001 (fake DeepSeek TUI)
+### [LLM] ClawCode AI-themed fake installer execution — known-malicious MD5 hashes
 
-`UC_1_16` · phase: **install** · confidence: **High**
+`UC_5_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="netsh.exe" Processes.process="*advfirewall*" (Processes.process="*57001*" OR Processes.process="*57002*" OR Processes.process="*56001*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.process="*New-NetFirewallRule*" (Processes.process="*57001*" OR Processes.process="*57002*" OR Processes.process="*56001*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.process="*Set-MpPreference*" (Processes.process="*DisableBehaviorMonitoring*" OR Processes.process="*MAPSReporting*" OR Processes.process="*SubmitSamplesConsent*" OR Processes.process="*DisableRealtimeMonitoring*")) OR (Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.process="*Add-MpPreference*" Processes.process="*ExclusionPath*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where firstTime > relative_time(now(), "-7d@d")
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("b96c0d609c1b7e74f8cb1442bf0b5418","7de2896e373342e0f3b765c855bf7396","78c11c45c00a9c22f537c59a472beca1","df36a31148d2c6414bdafeab771ea728","14920c9751d20452a1006d20b8e73234","f6d328422e7ca22e70a6aa71315450f3","86c7f2a3c307928daaca7c1df3ea5d72","dbaa133fd3d1a834460206d83b480f80","22c0c7d441fd22432cfe7854b59ba82b","a224f44bdac16250d8093df68e05b512","6861fa47889e0340ab7efaab448c56b6","437e4bdb12d7fa8d1c9a9e9db84b8726","fbfe7513685913e6f878647eec429d45","562d48524313d414b5a419fed6ca10aa","df8a2e7aa46af996bdf67d79601671c3","f101a346502a324320f952d39e217064","5d14461718b74b86fdd68c6aee801dc4","556b35236eeb111b0606d88a7aa3fd87","ff371b43786cbb87dab325ce17cf8b7c","1bd1df4f228ecd29a9b6fab48beaa366","975bd8eb56716adbcadb5216592a17c7","347980085c8926d5a1ff8e15a31fd812","46917d8326d77e4e3c39cb843dbfc675","b6f77b48223f57c67f00ccd8ab3d047e","8dde7a417130ae78a3f2aeed1f5b8f58","4c7abc81b308fc874ec0de4f026db260","48dd212fae0086822d4ae7696cc61693","faa5f780fb0e0786dd1a2bd19af290ca","6721f30d84f58532d877f2b31bfc9162","a9d492ab22400257f756f0308e06f04c","d0a92b090279894f4628bc3d627fbde0","397405106d895815a9bef8d84445af5a","b7a76b82c2a5e16a3c346cc6aa145556","f01e96a80f92c414dd824aef5a1ac1e7","ecb3e753b60cc0f3d7de50fe7f133e49","68ba5a1bafae7db35e2eee7ea3f11882","e102797eb4225a93eaeeaa6b9979716a") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ClawCodeMD5 = dynamic(["b96c0d609c1b7e74f8cb1442bf0b5418","7de2896e373342e0f3b765c855bf7396","78c11c45c00a9c22f537c59a472beca1","df36a31148d2c6414bdafeab771ea728","14920c9751d20452a1006d20b8e73234","f6d328422e7ca22e70a6aa71315450f3","86c7f2a3c307928daaca7c1df3ea5d72","dbaa133fd3d1a834460206d83b480f80","22c0c7d441fd22432cfe7854b59ba82b","a224f44bdac16250d8093df68e05b512","6861fa47889e0340ab7efaab448c56b6","437e4bdb12d7fa8d1c9a9e9db84b8726","fbfe7513685913e6f878647eec429d45","562d48524313d414b5a419fed6ca10aa","df8a2e7aa46af996bdf67d79601671c3","f101a346502a324320f952d39e217064","5d14461718b74b86fdd68c6aee801dc4","556b35236eeb111b0606d88a7aa3fd87","ff371b43786cbb87dab325ce17cf8b7c","1bd1df4f228ecd29a9b6fab48beaa366","975bd8eb56716adbcadb5216592a17c7","347980085c8926d5a1ff8e15a31fd812","46917d8326d77e4e3c39cb843dbfc675","b6f77b48223f57c67f00ccd8ab3d047e","8dde7a417130ae78a3f2aeed1f5b8f58","4c7abc81b308fc874ec0de4f026db260","48dd212fae0086822d4ae7696cc61693","faa5f780fb0e0786dd1a2bd19af290ca","6721f30d84f58532d877f2b31bfc9162","a9d492ab22400257f756f0308e06f04c","d0a92b090279894f4628bc3d627fbde0","397405106d895815a9bef8d84445af5a","b7a76b82c2a5e16a3c346cc6aa145556","f01e96a80f92c414dd824aef5a1ac1e7","ecb3e753b60cc0f3d7de50fe7f133e49","68ba5a1bafae7db35e2eee7ea3f11882","e102797eb4225a93eaeeaa6b9979716a"]);
+union isfuzzy=true
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where MD5 in (ClawCodeMD5) or InitiatingProcessMD5 in (ClawCodeMD5) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, MD5, InitiatingProcessFileName, ProcessCommandLine, Source="DeviceProcessEvents"),
+  (DeviceFileEvents | where Timestamp > ago(30d) | where MD5 in (ClawCodeMD5) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, MD5, InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, Source="DeviceFileEvents"),
+  (DeviceImageLoadEvents | where Timestamp > ago(30d) | where MD5 in (ClawCodeMD5) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, MD5, InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, Source="DeviceImageLoadEvents")
+| order by Timestamp desc
+```
+
+### [LLM] ClawCode C2 / Pastebin & snippet.host payload-staging URL contact
+
+`UC_5_17` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.user) as user values(All_Traffic.app) as app values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("mikolirentryifosttry.info","zkevopenanu.cfd") OR All_Traffic.url IN ("https://pastebin.com/raw/w6BVFFWQ","https://pastebin.com/raw/5tmHDYrf","https://pastebin.com/raw/M6KthA5Z","https://snippet.host/beuskq/raw","https://snippet.host/uikosx/raw","https://hkdk.events/djbk1i9hp0sqoh") OR (All_Traffic.url="*pastebin.com/raw/w6BVFFWQ*" OR All_Traffic.url="*pastebin.com/raw/5tmHDYrf*" OR All_Traffic.url="*pastebin.com/raw/M6KthA5Z*" OR All_Traffic.url="*snippet.host/beuskq/raw*" OR All_Traffic.url="*snippet.host/uikosx/raw*" OR All_Traffic.url="*hkdk.events/djbk1i9hp0sqoh*")) by All_Traffic.dest All_Traffic.url All_Traffic.dest_ip All_Traffic.src All_Traffic.user All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ClawCodeC2 = dynamic(["mikolirentryifosttry.info","zkevopenanu.cfd"]);
+let StagingUrls = dynamic(["pastebin.com/raw/w6BVFFWQ","pastebin.com/raw/5tmHDYrf","pastebin.com/raw/M6KthA5Z","snippet.host/beuskq/raw","snippet.host/uikosx/raw","hkdk.events/djbk1i9hp0sqoh"]);
+union isfuzzy=true
+  (DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has_any (ClawCodeC2) or RemoteUrl has_any (StagingUrls) | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Source="DeviceNetworkEvents"),
+  (DeviceEvents | where Timestamp > ago(30d) | where ActionType == "DnsQueryResponse" | extend Q = tostring(parse_json(AdditionalFields).QueryName) | where Q in~ (ClawCodeC2) | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl=Q, RemoteIP="", RemotePort=int(53), Source="DnsQueryResponse")
+| order by Timestamp desc
+```
+
+### [LLM] ClawCode firewall tampering — inbound rules for ports 57001/57002/56001 + Defender disable
+
+`UC_5_18` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where (Processes.process_name IN ("netsh.exe","powershell.exe","pwsh.exe","cmd.exe")) AND ((Processes.process="*57001*" AND Processes.process="*57002*") OR (Processes.process="*57001*" AND Processes.process="*56001*") OR (Processes.process="*57002*" AND Processes.process="*56001*") OR (Processes.process="*Add-MpPreference*" AND Processes.process="*ExclusionPath*") OR (Processes.process="*Set-MpPreference*" AND (Processes.process="*DisableBehaviorMonitoring*" OR Processes.process="*MAPSReporting*0*" OR Processes.process="*DisableRealtimeMonitoring*")) OR Processes.process="*xnasff3wcedj*" OR Processes.process="*ClawCode.pdb*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where (FileName =~ "netsh.exe" and ProcessCommandLine has "advfirewall" and ProcessCommandLine has_any ("57001","57002","56001"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("New-NetFirewallRule","NetFirewallRule") and ProcessCommandLine has_any ("57001","57002","56001"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Set-MpPreference" and ProcessCommandLine has_any ("DisableBehaviorMonitoring","MAPSReporting","SubmitSamplesConsent","DisableRealtimeMonitoring","DisableIOAVProtection"))
-    or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Add-MpPreference" and ProcessCommandLine has "ExclusionPath")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          ParentImage = InitiatingProcessFileName,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ParentSha256 = InitiatingProcessSHA256,
-          ParentFolder = InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### [LLM] ClawCode C2 + Pastebin/snippet.host payload staging beacon
-
-`UC_1_17` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*mikolirentryifosttry.info*" OR Web.url="*zkevopenanu.cfd*" OR Web.url="*hkdk.events/djbk1i9hp0sqoh*" OR Web.url="*pastebin.com/raw/w6BVFFWQ*" OR Web.url="*pastebin.com/raw/5tmHDYrf*" OR Web.url="*pastebin.com/raw/M6KthA5Z*" OR Web.url="*snippet.host/beuskq/raw*" OR Web.url="*snippet.host/uikosx/raw*") by Web.src Web.dest Web.url Web.user Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | append [ | tstats `summariesonly` count from datamodel=Network_Resolution where (DNS.query="*mikolirentryifosttry.info" OR DNS.query="*zkevopenanu.cfd" OR DNS.query="*hkdk.events") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | where firstTime > relative_time(now(), "-30d@d")
-```
-
-**Defender KQL:**
-```kql
-let ClawIndicators = dynamic([
-  "mikolirentryifosttry.info","zkevopenanu.cfd",
-  "hkdk.events/djbk1i9hp0sqoh",
-  "pastebin.com/raw/w6BVFFWQ","pastebin.com/raw/5tmHDYrf","pastebin.com/raw/M6KthA5Z",
-  "snippet.host/beuskq","snippet.host/uikosx"
-]);
-let ClawC2Hosts = dynamic(["mikolirentryifosttry.info","zkevopenanu.cfd","hkdk.events"]);
-union isfuzzy=true
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where isnotempty(RemoteUrl)
-      | where RemoteUrl has_any (ClawIndicators)
-      | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-                InitiatingProcessFileName, InitiatingProcessFolderPath,
-                InitiatingProcessCommandLine, InitiatingProcessSHA256,
-                Src="DeviceNetworkEvents"),
-  ( DeviceEvents
-      | where Timestamp > ago(30d)
-      | where ActionType == "DnsQueryResponse"
-      | extend QName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-      | where QName has_any (ClawC2Hosts)
-      | project Timestamp, DeviceName, RemoteUrl=QName,
-                InitiatingProcessFileName, InitiatingProcessCommandLine,
-                InitiatingProcessSHA256, Src="DnsQueryResponse")
-| order by Timestamp desc
-```
-
-### [LLM] ClawCode spoofed AI-tool installer hash match (DeepSeek/Claude/Grok/WormGPT/KawaiiGPT)
-
-`UC_1_18` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("b96c0d609c1b7e74f8cb1442bf0b5418","7de2896e373342e0f3b765c855bf7396","78c11c45c00a9c22f537c59a472beca1","df36a31148d2c6414bdafeab771ea728","14920c9751d20452a1006d20b8e73234","f6d328422e7ca22e70a6aa71315450f3","86c7f2a3c307928daaca7c1df3ea5d72","dbaa133fd3d1a834460206d83b480f80","22c0c7d441fd22432cfe7854b59ba82b","a224f44bdac16250d8093df68e05b512","6861fa47889e0340ab7efaab448c56b6","437e4bdb12d7fa8d1c9a9e9db84b8726","fbfe7513685913e6f878647eec429d45","562d48524313d414b5a419fed6ca10aa","df8a2e7aa46af996bdf67d79601671c3","f101a346502a324320f952d39e217064","5d14461718b74b86fdd68c6aee801dc4","556b35236eeb111b0606d88a7aa3fd87","ff371b43786cbb87dab325ce17cf8b7c","1bd1df4f228ecd29a9b6fab48beaa366","975bd8eb56716adbcadb5216592a17c7","347980085c8926d5a1ff8e15a31fd812","46917d8326d77e4e3c39cb843dbfc675","b6f77b48223f57c67f00ccd8ab3d047e","8dde7a417130ae78a3f2aeed1f5b8f58","4c7abc81b308fc874ec0de4f026db260","48dd212fae0086822d4ae7696cc61693","faa5f780fb0e0786dd1a2bd19af290ca","6721f30d84f58532d877f2b31bfc9162","a9d492ab22400257f756f0308e06f04c","d0a92b090279894f4628bc3d627fbde0","397405106d895815a9bef8d84445af5a","b7a76b82c2a5e16a3c346cc6aa145556","f01e96a80f92c414dd824aef5a1ac1e7","ecb3e753b60cc0f3d7de50fe7f133e49","68ba5a1bafae7db35e2eee7ea3f11882","e102797eb4225a93eaeeaa6b9979716a") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where firstTime > relative_time(now(), "-30d@d")
-```
-
-**Defender KQL:**
-```kql
-let ClawHashes = dynamic([
-  "b96c0d609c1b7e74f8cb1442bf0b5418","7de2896e373342e0f3b765c855bf7396",
-  "78c11c45c00a9c22f537c59a472beca1","df36a31148d2c6414bdafeab771ea728",
-  "14920c9751d20452a1006d20b8e73234","f6d328422e7ca22e70a6aa71315450f3",
-  "86c7f2a3c307928daaca7c1df3ea5d72","dbaa133fd3d1a834460206d83b480f80",
-  "22c0c7d441fd22432cfe7854b59ba82b","a224f44bdac16250d8093df68e05b512",
-  "6861fa47889e0340ab7efaab448c56b6","437e4bdb12d7fa8d1c9a9e9db84b8726",
-  "fbfe7513685913e6f878647eec429d45","562d48524313d414b5a419fed6ca10aa",
-  "df8a2e7aa46af996bdf67d79601671c3","f101a346502a324320f952d39e217064",
-  "5d14461718b74b86fdd68c6aee801dc4","556b35236eeb111b0606d88a7aa3fd87",
-  "ff371b43786cbb87dab325ce17cf8b7c","1bd1df4f228ecd29a9b6fab48beaa366",
-  "975bd8eb56716adbcadb5216592a17c7","347980085c8926d5a1ff8e15a31fd812",
-  "46917d8326d77e4e3c39cb843dbfc675","b6f77b48223f57c67f00ccd8ab3d047e",
-  "8dde7a417130ae78a3f2aeed1f5b8f58","4c7abc81b308fc874ec0de4f026db260",
-  "48dd212fae0086822d4ae7696cc61693","faa5f780fb0e0786dd1a2bd19af290ca",
-  "6721f30d84f58532d877f2b31bfc9162","a9d492ab22400257f756f0308e06f04c",
-  "d0a92b090279894f4628bc3d627fbde0","397405106d895815a9bef8d84445af5a",
-  "b7a76b82c2a5e16a3c346cc6aa145556","f01e96a80f92c414dd824aef5a1ac1e7",
-  "ecb3e753b60cc0f3d7de50fe7f133e49","68ba5a1bafae7db35e2eee7ea3f11882",
-  "e102797eb4225a93eaeeaa6b9979716a"]);
-union isfuzzy=true
-  ( DeviceProcessEvents
-      | where Timestamp > ago(30d)
-      | where MD5 in (ClawHashes) or InitiatingProcessMD5 in (ClawHashes)
-      | project Timestamp, DeviceName, AccountName, FileName, FolderPath, MD5, SHA256,
-                ProcessCommandLine,
-                ParentImage = InitiatingProcessFileName,
-                ParentCmd   = InitiatingProcessCommandLine,
-                Src="DeviceProcessEvents"),
-  ( DeviceFileEvents
-      | where Timestamp > ago(30d)
-      | where MD5 in (ClawHashes) or InitiatingProcessMD5 in (ClawHashes)
-      | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-                FileName, FolderPath, MD5, SHA256,
-                ProcessCommandLine = InitiatingProcessCommandLine,
-                ParentImage = InitiatingProcessFileName,
-                ParentCmd   = InitiatingProcessCommandLine,
-                Src="DeviceFileEvents"),
-  ( DeviceImageLoadEvents
-      | where Timestamp > ago(30d)
-      | where MD5 in (ClawHashes) or InitiatingProcessMD5 in (ClawHashes)
-      | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-                FileName, FolderPath, MD5, SHA256,
-                ProcessCommandLine = InitiatingProcessCommandLine,
-                ParentImage = InitiatingProcessFileName,
-                ParentCmd   = InitiatingProcessCommandLine,
-                Src="DeviceImageLoadEvents")
+| where FileName in~ ("netsh.exe","powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe")
+| extend Cmd = tolower(ProcessCommandLine)
+| where
+    (Cmd has "57001" and Cmd has "57002") or
+    (Cmd has "57001" and Cmd has "56001") or
+    (Cmd has "57002" and Cmd has "56001") or
+    (Cmd has "add-mppreference" and Cmd has "exclusionpath") or
+    (Cmd has "set-mppreference" and (Cmd has "disablebehaviormonitoring" or Cmd has "mapsreporting" or Cmd has "disablerealtimemonitoring" or Cmd has "submitsamplesconsent")) or
+    Cmd has "xnasff3wcedj" or
+    Cmd has "clawcode.pdb" or
+    (FileName =~ "netsh.exe" and Cmd has "advfirewall" and Cmd has "add rule" and Cmd has "dir=in" and (Cmd has "57001" or Cmd has "57002" or Cmd has "56001"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName, MD5, SHA256
 | order by Timestamp desc
 ```
 
@@ -688,7 +625,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake DeepSeek TUI GitHub Repositories to Deliver Malware
 
-`UC_1_15` · phase: **exploit** · confidence: **High**
+`UC_5_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -745,4 +682,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 19 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 19 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

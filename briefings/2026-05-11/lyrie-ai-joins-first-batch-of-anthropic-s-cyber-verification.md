@@ -10,13 +10,9 @@ Home Press Release
 Lyrie.ai Joins First Batch of Anthropic’s Cyber Verification Program 
 By Cybernewswire 
 May 11, 2026 
-
-
-
-
 Dubai, UAE, May 11th, 2026, CyberNewswire 
 Dubai-founded OTT Cybersecurity LLC also unveils the Agent Trust Protocol (ATP), the first open cryptographic standard for AI agent identity, scope, and action verification — slated for IETF submission.
-OTT Cybersecurity LLC, the company behind Lyrie.ai, today announced two milestones that together position the company as fou…
+OTT Cybersecurity LLC, the company behind Lyrie.ai, today announced two milestones that together position the company as foundationa…
 
 ## Indicators of Compromise (high-fidelity only)
 

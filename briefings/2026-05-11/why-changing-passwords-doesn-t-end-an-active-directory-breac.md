@@ -11,12 +11,8 @@ Sponsored by Specops Software
 May 11, 2026
 09:53 AM
 0 
-
-
 Password resets are often the first response to a suspected compromise. It makes sense; resetting credentials is a quick way to cut off an attacker’s most obvious path back in.
-
-
-However, that doesn’t always completely solve the issue. In both Active Directory (AD) and hybrid Entra ID environments, password changes do not immediately invalidate the old credential across ev…
+However, that doesn’t always completely solve the issue. In both Active Directory (AD) and hybrid Entra ID environments, password changes do not immediately invalidate the old credential across every auth…
 
 ## Indicators of Compromise (high-fidelity only)
 

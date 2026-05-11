@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound network connection to ShinyHunters Canvas-breach extortion host 91.215.85.103
 
-`UC_3_13` · phase: **c2** · confidence: **Medium**
+`UC_7_13` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound spear-phishing impersonating Instructure/Canvas after the May 2026 breach
 
-`UC_3_14` · phase: **delivery** · confidence: **Medium**
+`UC_7_14` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ EmailEvents
 
 ### [LLM] Access to ShinyHunters Canvas LMS data-leak site (shinyp0g4...onion)
 
-`UC_3_15` · phase: **actions** · confidence: **High**
+`UC_7_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

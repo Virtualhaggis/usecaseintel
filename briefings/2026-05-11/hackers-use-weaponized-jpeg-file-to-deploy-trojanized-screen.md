@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ms-settings Shell hijack via uds.exe → ComputerDefaults.exe UAC bypass (Operation SilentCanvas)
 
-`UC_11_12` · phase: **exploit** · confidence: **High**
+`UC_15_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell-driven csc.exe compiling uds.exe to C:\Systems staging directory (Operation SilentCanvas)
 
-`UC_11_13` · phase: **install** · confidence: **High**
+`UC_15_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ union CscChain, FileDrop
 
 ### [LLM] Trojanized ScreenConnect C2 to legitserver.theworkpc.com:5443 / 45.138.16.64 + OneDriveServer persistence (Operation SilentCanvas)
 
-`UC_11_14` · phase: **c2** · confidence: **High**
+`UC_15_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -484,7 +484,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Weaponized JPEG File to Deploy Trojanized ScreenConnect Malware
 
-`UC_11_11` · phase: **exploit** · confidence: **High**
+`UC_15_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

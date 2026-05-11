@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] vm2 Node.js Library Vulnerable Versions Exposed (CVE-2026-24118 et al.)
 
-`UC_53_3` · phase: **recon** · confidence: **High**
+`UC_54_3` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Node.js spawning OS shell — vm2 sandbox-escape RCE post-exploitation
 
-`UC_53_4` · phase: **exploit** · confidence: **Medium**
+`UC_54_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — vm2 Node.js Library Vulnerabilities Enable Sandbox Escape and Arbitrary Code Exe
 
-`UC_53_2` · phase: **exploit** · confidence: **High**
+`UC_54_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
