@@ -10,18 +10,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-11
 - [10 best full disk encryption tools in 2026](./2026-05-11/10-best-full-disk-encryption-tools-in-2026.md)
+- [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
+- [ghostlock attack leverages windows file sharing to lock file](./2026-05-11/ghostlock-attack-leverages-windows-file-sharing-to-lock-file.md)
+- [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
 - [google recaptcha update blocks privacy focused android users](./2026-05-11/google-recaptcha-update-blocks-privacy-focused-android-users.md)
+- [hackers use weaponized jpeg file to deploy trojanized screen](./2026-05-11/hackers-use-weaponized-jpeg-file-to-deploy-trojanized-screen.md)
 - [jdownloader downloader hacked to infect users with new pytho](./2026-05-11/jdownloader-downloader-hacked-to-infect-users-with-new-pytho.md)
 - [macos malware leverages google ads and legitimate claude ai ](./2026-05-11/macos-malware-leverages-google-ads-and-legitimate-claude-ai-.md)
-- [odini malware uses cpu magnetic emissions to breach faraday ](./2026-05-11/odini-malware-uses-cpu-magnetic-emissions-to-breach-faraday-.md)
-- [top 10 best interactive malware analysis tools in 2026](./2026-05-11/top-10-best-interactive-malware-analysis-tools-in-2026.md)
+- [shinyhunters breaches instructure canvas lms through free fo](./2026-05-11/shinyhunters-breaches-instructure-canvas-lms-through-free-fo.md)
+- [trending hugging face repo with 200k downloads executes malw](./2026-05-11/trending-hugging-face-repo-with-200k-downloads-executes-malw.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
 - [vidar malware targets browser credentials cookies crypto wal](./2026-05-11/vidar-malware-targets-browser-credentials-cookies-crypto-wal.md)
+- [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
+- [your purple team isn t purple it s just red and blue in the ](./2026-05-11/your-purple-team-isn-t-purple-it-s-just-red-and-blue-in-the-.md)
 
 ## 2026-05-10
 - [hackers abuse google ads claude ai chats to push mac malware](./2026-05-10/hackers-abuse-google-ads-claude-ai-chats-to-push-mac-malware.md)
-- [new cpanel and whm flaws enable code execution dos attacks](./2026-05-10/new-cpanel-and-whm-flaws-enable-code-execution-dos-attacks.md)
 - [ollama out of bounds read vulnerability allows remote proces](./2026-05-10/ollama-out-of-bounds-read-vulnerability-allows-remote-proces.md)
 - [police shut down reboot of crimenetwork marketplace arrest a](./2026-05-10/police-shut-down-reboot-of-crimenetwork-marketplace-arrest-a.md)
 
@@ -29,8 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [fake openai repository on hugging face pushes infostealer ma](./2026-05-09/fake-openai-repository-on-hugging-face-pushes-infostealer-ma.md)
 - [jdownloader site hacked to replace installers with python ra](./2026-05-09/jdownloader-site-hacked-to-replace-installers-with-python-ra.md)
-- [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
-- [tclbanker malware targets users through self propagating wha](./2026-05-09/tclbanker-malware-targets-users-through-self-propagating-wha.md)
 
 ## 2026-05-08
 - [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
@@ -58,8 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [fixing the password problem is as easy as 123456](./2026-05-07/fixing-the-password-problem-is-as-easy-as-123456.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
-- [new pcpjack worm steals credentials cleans teampcp infection](./2026-05-07/new-pcpjack-worm-steals-credentials-cleans-teampcp-infection.md)
-- [new tclbanker malware self spreads over whatsapp and outlook](./2026-05-07/new-tclbanker-malware-self-spreads-over-whatsapp-and-outlook.md)
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
@@ -140,7 +141,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
-- [threatsday bulletin sms blaster busts openemr flaws 600k rob](./2026-04-30/threatsday-bulletin-sms-blaster-busts-openemr-flaws-600k-rob.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
 
 ## 2026-04-29

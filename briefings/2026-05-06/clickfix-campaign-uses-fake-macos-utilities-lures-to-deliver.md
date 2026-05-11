@@ -204,7 +204,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClickFix macOS curl-piped osascript in-memory AppleScript execution with Telegram fallback C2
 
-`UC_55_13` · phase: **c2** · confidence: **High**
+`UC_56_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -232,7 +232,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Stealer /tmp staging, GoogleUpdate keystone masquerade and trojanized wallet drop
 
-`UC_55_14` · phase: **install** · confidence: **High**
+`UC_56_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -263,7 +263,7 @@ DeviceFileEvents
 
 ### [LLM] AMOS helper-install /tmp/helper or /tmp/update Mach-O execution beaconing to 45.94.47.0/24
 
-`UC_55_15` · phase: **c2** · confidence: **High**
+`UC_56_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -622,7 +622,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ClickFix campaign uses fake macOS utilities lures to deliver infostealers
 
-`UC_55_12` · phase: **exploit** · confidence: **High**
+`UC_56_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

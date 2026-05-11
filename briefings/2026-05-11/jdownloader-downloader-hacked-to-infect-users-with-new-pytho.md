@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JDownloader supply-chain — malicious installer SHA256 execution/write
 
-`UC_5_8` · phase: **delivery** · confidence: **High**
+`UC_13_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union
 
 ### [LLM] JDownloader Python RAT C2 callout to parkspringshotel.com / auraguest.lk
 
-`UC_5_9` · phase: **c2** · confidence: **High**
+`UC_13_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ union
 
 ### [LLM] JDownloader Python RAT loader — HKCU\SOFTWARE\Python write by non-Python parent then pythonw.exe spawn
 
-`UC_5_10` · phase: **install** · confidence: **Medium**
+`UC_13_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -333,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JDownloader Downloader Hacked to Infect Users With New Python RAT
 
-`UC_5_7` · phase: **exploit** · confidence: **High**
+`UC_13_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
