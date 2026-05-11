@@ -3322,6 +3322,55 @@ body{
   .first-visit-banner .banner-cta{margin-left:0; flex:1; justify-content:center;}
 }
 
+/* "What's new this week" banner. One-time per user; dismissal is
+   persisted to localStorage under a versioned key so bumping the version
+   re-triggers the banner for everyone. Sits below the first-visit row. */
+.whatsnew-banner{
+  position:relative;
+  margin:0 auto 14px;
+  padding:14px 44px 14px 18px;
+  border:1px solid rgba(120,180,220,0.35);
+  background:linear-gradient(180deg, rgba(60,100,150,0.20), rgba(40,60,100,0.10));
+  border-radius:12px;
+  color:var(--text);
+  font-size:13px; line-height:1.55;
+}
+.whatsnew-banner .wn-head{
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:10px;
+}
+.whatsnew-banner .wn-tag{
+  font-size:10.5px; font-weight:700; letter-spacing:0.08em;
+  text-transform:uppercase;
+  padding:2px 8px; border-radius:99px;
+  background:rgba(235,130,200,0.20); color:#f0a4cf;
+  border:1px solid rgba(235,130,200,0.42);
+}
+.whatsnew-banner .wn-title{font-weight:600; color:var(--text);}
+.whatsnew-banner .wn-close{
+  position:absolute; top:8px; right:10px;
+  background:transparent; border:none; color:var(--muted);
+  font-size:20px; line-height:1; cursor:pointer; padding:4px 8px;
+  border-radius:6px;
+}
+.whatsnew-banner .wn-close:hover{background:rgba(255,255,255,0.06); color:var(--text);}
+.whatsnew-banner .wn-body{
+  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+}
+.whatsnew-banner .wn-col-head{
+  font-size:11px; font-weight:600; letter-spacing:0.05em;
+  text-transform:uppercase; color:var(--muted-2);
+  margin-bottom:6px;
+}
+.whatsnew-banner .wn-list{
+  margin:0; padding-left:18px;
+}
+.whatsnew-banner .wn-list li{margin-bottom:3px;}
+.whatsnew-banner .wn-list b{color:var(--accent-2); font-weight:600;}
+@media (max-width:780px){
+  .whatsnew-banner .wn-body{grid-template-columns:1fr;}
+}
+
 /* All three stats bars share ONE centred slot — they overlap via
    absolute positioning inside .stats-wrap so the visible one always
    sits dead-centre regardless of which tab is active. Without this
@@ -3827,6 +3876,29 @@ body:not(.view-library-active)  .stats-library{
   box-shadow:0 0 0 1px rgba(180,200,90,0.55) inset;
 }
 .lib-pill.lib-target.on .cnt{background:rgba(180,200,90,0.25); color:var(--text);}
+/* Kind filter pills — Normal / LLM / WKC. Each gets a distinct accent so
+   the analyst can spot at a glance which bucket they're filtering on.
+   Hover-title (set inline in build) explains what's in each bucket. */
+.lib-kind-pills{gap:4px;}
+.lib-pill.lib-kind{padding:5px 10px; cursor:help;}
+.lib-pill.lib-kind .cnt{
+  display:inline-block; min-width:18px; padding:0 5px; margin-left:5px;
+  border-radius:99px; background:rgba(255,255,255,0.07);
+  color:var(--muted); font-size:10.5px; font-weight:500;
+}
+.lib-pill.lib-kind-normal.on{
+  background:linear-gradient(180deg, rgba(120,180,220,0.30), rgba(120,180,220,0.18));
+  box-shadow:0 0 0 1px rgba(120,180,220,0.55) inset;
+}
+.lib-pill.lib-kind-llm.on{
+  background:linear-gradient(180deg, rgba(255,205,120,0.32), rgba(255,205,120,0.18));
+  box-shadow:0 0 0 1px rgba(255,205,120,0.60) inset;
+}
+.lib-pill.lib-kind-wkc.on{
+  background:linear-gradient(180deg, rgba(235,130,200,0.30), rgba(235,130,200,0.18));
+  box-shadow:0 0 0 1px rgba(235,130,200,0.55) inset;
+}
+.lib-pill.lib-kind.on .cnt{background:rgba(255,255,255,0.18); color:var(--text);}
 /* Per-card target-surface tags — small monochrome chips. */
 .lib-tag.lib-tg{
   background:rgba(140,160,200,0.12); color:var(--muted);
@@ -5991,6 +6063,36 @@ details.uc.uc-platform-hidden{display:none !important;}
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
 </div>
 
+<!-- One-time "what's new this week" banner. Dismissal persists per user
+     under a versioned localStorage key; bump WHATSNEW_VERSION below to
+     re-trigger for everyone after the next round of updates. -->
+<div class="whatsnew-banner" id="whatsnewBanner" role="region" aria-label="What's new this week" hidden>
+  <div class="wn-head">
+    <span class="wn-tag">This week</span>
+    <span class="wn-title">Shipped &amp; coming soon</span>
+    <button type="button" class="wn-close" id="whatsnewClose" aria-label="Dismiss" title="Dismiss — won't show again">×</button>
+  </div>
+  <div class="wn-body">
+    <div class="wn-col">
+      <div class="wn-col-head">Shipped this week</div>
+      <ul class="wn-list">
+        <li><b>CrowdStrike</b> detection coverage added</li>
+        <li><b>Kibana</b> detection coverage added</li>
+        <li><b>20+ Weekly Kill-Chain use cases</b> generated from this week's threat landscape — filter by <b>WKC</b> in Detection Library</li>
+      </ul>
+    </div>
+    <div class="wn-col">
+      <div class="wn-col-head">Coming next week</div>
+      <ul class="wn-list">
+        <li>Per-UC <b>feedback</b> — flag logic issues so we can improve the AI</li>
+        <li>More <b>community recommendations</b></li>
+        <li><b>User accounts</b> so we can reply directly</li>
+        <li><b>Comments on articles</b></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
 <!-- =================================================================
      Guided tour — overlay + card. Inert until startTour() is called.
      ================================================================= -->
@@ -7595,6 +7697,10 @@ const LIB_STATE = {
     // LEAST one of the selected tags to pass — analyst asking for "Linux
     // OR AWS" should see both, not just intersection.
     targets: new Set(),
+    // Use-case kind: 'normal' (hand-built catalog + ESCU), 'llm' (per-article
+    // LLM-generated, title starts [LLM]), 'wkc' (Weekly Kill Chain — biweekly
+    // cross-article synthesis, title starts [WEEKLY]). Multi-select, OR-combined.
+    kinds: new Set(),
   },
 };
 
@@ -7780,10 +7886,20 @@ function _libPrepare() {
     // pipeline run by `_infer_uc_targets()` against the actual query
     // bodies — see the `tg` field in build_matrix_data().
     const targets = Array.isArray(uc.tg) ? uc.tg.slice() : [];
+    // Use-case kind. WKC = Weekly Kill Chain (biweekly cross-article
+    // synthesis), LLM = per-article LLM-generated, Normal = everything else
+    // (hand-built catalog + ESCU). Title prefix is the canonical marker,
+    // with id prefix + src as fallbacks.
+    const _t = uc.t || '';
+    const _n = uc.n || '';
+    let kind = 'normal';
+    if (_t.startsWith('[WEEKLY]') || _n.startsWith('UC_WEEKLY_')) kind = 'wkc';
+    else if (_t.startsWith('[LLM]') || uc.src === 'bespoke' || uc.src === 'llm') kind = 'llm';
     return {
       uc, ucArts, sevTag, sevRank: maxSev, plats, queries, apps, actors, countries, sources,
       tactics: [...tacticSet],
       targets,
+      kind,
       score, breakdown: {probability, impact, detectability, effort},
       _idx: uc.i,
       _searchBlob: [
@@ -7837,6 +7953,20 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
     <button class="lib-pill platform-dd" data-pl="datadog">DD · Datadog</button>
   </div>`;
+  // Kind pills — Normal / LLM / WKC. Counts come from the prepared set so
+  // the analyst sees how many UCs are in each bucket. Hover-title explains
+  // what each bucket actually contains.
+  const kCounts = {normal:0, llm:0, wkc:0};
+  for (const p of prepared) kCounts[p.kind] = (kCounts[p.kind] || 0) + 1;
+  const KIND_META = [
+    ['normal', 'Normal', 'Hand-built catalogue use cases + synced Splunk ESCU detections — reviewed and stable.'],
+    ['llm',    'LLM',    'Per-article LLM-generated use cases (titles prefixed [LLM]) — auto-synthesised from each new article in the daily pipeline.'],
+    ['wkc',    'WKC',    'Weekly Kill-Chain use cases (titles prefixed [WEEKLY]) — biweekly cross-article LLM synthesis covering recurring themes and trending CVEs.'],
+  ];
+  const kindPills = `<div class="lib-pill-group lib-kind-pills" data-lib-kinds>` +
+    KIND_META.map(([k, label, tip]) =>
+      `<button class="lib-pill lib-kind lib-kind-${k}" data-kind="${k}" title="${escapeHtml(tip)}">${escapeHtml(label)} <span class="cnt">${kCounts[k]||0}</span></button>`
+    ).join('') + `</div>`;
   // Target-surface pills row. Counts populated from the actual prepared
   // dataset so the analyst sees how many UCs each tag will return.
   const tCounts = {};
@@ -7849,7 +7979,7 @@ function _libBuildFilters(prepared) {
       return `<button class="lib-pill lib-target" data-target="${escapeHtml(tag)}">${escapeHtml(label)} <span class="cnt">${c}</span></button>`;
     }).filter(Boolean).join('') + `</div>`;
   const clear = `<button type="button" class="lib-clear-btn" id="libClearFilters">Clear all</button>`;
-  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, platformPills, targetPills, clear].join(' ');
+  return [sevSel, phaseSel, tacticSel, tierSel, srcSel, appSel, actorSel, countrySel, kindPills, platformPills, targetPills, clear].join(' ');
 }
 
 function _libCardHtml(p) {
@@ -7906,6 +8036,9 @@ function _libApplyFilters(prepared) {
     if (f.actor   && !p.actors.some(a => a.n === f.actor)) return false;
     if (f.country && !p.countries.includes(f.country)) return false;
     if (f.app     && !p.apps.includes(f.app)) return false;
+    if (f.kinds && f.kinds.size) {
+      if (!f.kinds.has(p.kind)) return false;
+    }
     if (f.platforms.size) {
       for (const k of f.platforms) if (!p.plats[k]) return false;
     }
@@ -7998,8 +8131,18 @@ function renderLibrary() {
         _libRenderCards();
         return;
       }
+      // Kind pill toggle (Normal / LLM / WKC)
+      const kpill = e.target.closest('.lib-pill[data-kind]');
+      if (kpill) {
+        const k = kpill.dataset.kind;
+        if (LIB_STATE.filters.kinds.has(k)) LIB_STATE.filters.kinds.delete(k);
+        else LIB_STATE.filters.kinds.add(k);
+        kpill.classList.toggle('on');
+        _libRenderCards();
+        return;
+      }
       if (e.target.id === 'libClearFilters') {
-        LIB_STATE.filters = {search:'', phase:'', tactic:'', severity:'', tier:'', src:'', actor:'', country:'', app:'', platforms:new Set(), targets:new Set()};
+        LIB_STATE.filters = {search:'', phase:'', tactic:'', severity:'', tier:'', src:'', actor:'', country:'', app:'', platforms:new Set(), targets:new Set(), kinds:new Set()};
         filters.querySelectorAll('select[data-lib-filter]').forEach(s => s.value = '');
         filters.querySelectorAll('.lib-pill.on').forEach(p => p.classList.remove('on'));
         const search = document.getElementById('libSearch');
@@ -8363,6 +8506,22 @@ document.getElementById('firstVisitTour')?.addEventListener('click', e => {
   e.preventDefault();
   startTour();
 });
+
+// "What's new this week" banner — one-time per user. Bump the version
+// string when there are new updates to re-trigger for everyone.
+(function whatsNewBanner() {
+  const KEY = 'clankerWhatsNew_v2026-W19';
+  const el = document.getElementById('whatsnewBanner');
+  if (!el) return;
+  let dismissed = false;
+  try { dismissed = localStorage.getItem(KEY) === '1'; } catch (_) {}
+  if (dismissed) return;
+  el.hidden = false;
+  document.getElementById('whatsnewClose')?.addEventListener('click', () => {
+    el.hidden = true;
+    try { localStorage.setItem(KEY, '1'); } catch (_) {}
+  });
+})();
 
 // =================================================================
 // Guided tour — switches views, spotlights elements, narrates each.
