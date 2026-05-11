@@ -11,12 +11,8 @@ By BleepingComputer
 May 11, 2026
 08:30 AM
 0 
-
-
 Modern cyberattacks are no longer limited to malware or isolated phishing emails. Today’s threat actors combine AI-generated phishing, business email compromise, ransomware, and SaaS abuse to gain access to business environments and disrupt operations.
-
-
-On Thursday, May 14, 2026 at 2:00 PM ET, BleepingComputer will host a live webinar titled " From phishing to fallout: W…
+On Thursday, May 14, 2026 at 2:00 PM ET, BleepingComputer will host a live webinar titled " From phishing to fallout: Why MSPs …
 
 ## Indicators of Compromise (high-fidelity only)
 

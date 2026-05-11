@@ -10,13 +10,9 @@ Home Cyber Security News
 GhostLock Attack Leverages Windows file-sharing to Lock Files Access Like Ransomware 
 By Guru Baran 
 May 11, 2026 
-
-
-
-
 Traditional ransomware disrupts organizations by encrypting data and demanding payment for decryption keys.
 However, a newly disclosed technique called GhostLock demonstrates a fundamentally different availability attack that achieves the same business disruption without writing a single encrypted byte to disk.
-Discovered by Kim Dvash, an Offensive …
+Discovered by Kim Dvash, an Offensive Security…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,9 +35,13 @@ Discovered by Kim Dvash, an Offensive …
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1499** — Endpoint Denial of Service
+- **T1588.002** — Obtain Capabilities: Tool
+- **T1105** — Ingress Tool Transfer
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 - **T1485** — Data Destruction
+- **T1083** — File and Directory Discovery
 - **T1059.006** — Command and Scripting Interpreter: Python
+- **T1021.002** — Remote Services: SMB/Windows Admin Shares
 
 ## Kill chain phases observed
 
@@ -49,63 +49,108 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GhostLock - Mass SMB file-handle opens by single session with no writes (Event 5145)
+### [LLM] GhostLock availability-attack tooling — public site / GitHub / cmdline reference
 
-`UC_5_8` · phase: **actions** · confidence: **High**
+`UC_10_8` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t allow_old_summaries=t count as file_opens dc(Filesystem.file_path) as unique_files sum(eval(if(match(Filesystem.action,"(?i)write|append|create|modify|delete"),1,0))) as write_actions from datamodel=Endpoint.Filesystem where (Filesystem.action=read OR Filesystem.action=access OR Filesystem.action=open) Filesystem.file_path="\\\\*" by Filesystem.user Filesystem.src Filesystem.dest _time span=5m | `drop_dm_object_name(Filesystem)` | eval write_ratio=round(write_actions/file_opens,3) | where unique_files>500 AND write_ratio<0.02 | sort - unique_files | table _time user src dest unique_files file_opens write_actions write_ratio
+| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where (DNS.query="ghostlock.io" OR DNS.query="*.ghostlock.io") by _time, DNS.src, DNS.query, DNS.dest | `drop_dm_object_name(DNS)` | append [ | tstats summariesonly=t count from datamodel=Web.Web where (Web.url="*ghostlock.io*" OR Web.url="*github.com/kimd155/ghostlock*" OR Web.url="*raw.githubusercontent.com/kimd155/ghostlock*") by _time, Web.src, Web.user, Web.url, Web.dest | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where Endpoint.Processes.process="*ghostlock*" by _time, Endpoint.Processes.dest, Endpoint.Processes.user, Endpoint.Processes.process, Endpoint.Processes.process_name | `drop_dm_object_name(Processes)` ] | sort 0 - _time
 ```
 
 **Defender KQL:**
 ```kql
-// NOTE: DeviceFileEvents does not fire on read-only opens, so the canonical 5145-based signal must live in Sentinel/SecurityEvent. This is a CLIENT-side network proxy: an internal host bursting SMB sessions to file servers — pair with the Sentinel/Splunk query for confirmation.
+let _start = ago(7d);
+let _dns = DeviceEvents
+    | where Timestamp > _start
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where QueryName endswith "ghostlock.io"
+    | project Timestamp, DeviceName, Account=InitiatingProcessAccountName,
+              Signal="DNS", IOC=QueryName,
+              Image=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine;
+let _net = DeviceNetworkEvents
+    | where Timestamp > _start
+    | where (RemoteUrl has "ghostlock.io")
+        or (RemoteUrl has "kimd155/ghostlock")
+    | project Timestamp, DeviceName, Account=InitiatingProcessAccountName,
+              Signal="HTTP", IOC=RemoteUrl,
+              Image=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine;
+let _proc = DeviceProcessEvents
+    | where Timestamp > _start
+    | where AccountName !endswith "$"
+    | where ProcessCommandLine has "ghostlock"
+        or InitiatingProcessCommandLine has "ghostlock"
+        or FolderPath has "ghostlock"
+    | project Timestamp, DeviceName, Account=AccountName,
+              Signal="ProcessCmd", IOC=ProcessCommandLine,
+              Image=FileName, Cmd=ProcessCommandLine;
+union _dns, _net, _proc
+| order by Timestamp desc
+```
+
+### [LLM] Mass SMB exclusive-handle accumulation on a file server (single client/user)
+
+`UC_10_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count as InboundConns, dc(All_Traffic.src) as DistinctClients, min(_time) as FirstConn, max(_time) as LastConn, values(All_Traffic.src) as Clients from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=445 AND All_Traffic.action="allowed" by All_Traffic.dest, All_Traffic.src, _time span=10m | `drop_dm_object_name(All_Traffic)` | where InboundConns > 500 | eval DurationSec = LastConn - FirstConn | sort 0 - InboundConns
+```
+
+**Defender KQL:**
+```kql
+// Defender XDR does not log per-file remote SMB access events the way
+// Windows Security 5145 does. Closest server-side proxy: inbound SMB
+// connection storm against a host whose 445 port is internet/network-facing.
 DeviceNetworkEvents
 | where Timestamp > ago(1h)
-| where RemotePort == 445 and Protocol =~ "Tcp"
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize Connections = count(),
-            DistinctFileServers = dcount(RemoteIP),
-            FileServers = make_set(RemoteIP, 10),
-            Processes = make_set(InitiatingProcessFileName, 5),
-            SampleCmd = any(InitiatingProcessCommandLine),
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort == 445
+| summarize InboundConns = count(),
             FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-            by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 5m)
-| where Connections > 200    // single client bursting >200 SMB sessions in 5m — GhostLock uses ~10 parallel sessions
-| order by Connections desc
+            LastSeen = max(Timestamp),
+            SampleProcesses = make_set(InitiatingProcessFileName, 5)
+            by FileServer=DeviceName, ClientIP=RemoteIP, bin_at(Timestamp, 10m, ago(1h))
+| where InboundConns > 500
+| extend DurationSec = datetime_diff('second', LastSeen, FirstSeen)
+| order by InboundConns desc
 ```
 
-### [LLM] GhostLock - Python interpreter initiating outbound SMB (TCP/445) connections to file servers
+### [LLM] Python (or LOLBin) interpreter sustaining SMB connection burst to file servers
 
-`UC_5_9` · phase: **actions** · confidence: **Medium**
+`UC_10_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t allow_old_summaries=t count as sessions dc(All_Traffic.dest) as unique_targets values(All_Traffic.dest) as targets latest(All_Traffic.process) as process latest(All_Traffic.process_exec) as process_exec from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=445 (All_Traffic.app IN ("python.exe","pythonw.exe","python3.exe","py.exe") OR All_Traffic.process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe")) by All_Traffic.src All_Traffic.user _time span=10m | `drop_dm_object_name(All_Traffic)` | where sessions>20 OR unique_targets>=3 | sort - sessions
+| tstats summariesonly=t count as SmbConns, dc(All_Traffic.dest) as DistinctServers, min(_time) as FirstConn, max(_time) as LastConn from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=445 AND All_Traffic.action="allowed" AND (All_Traffic.app="python.exe" OR All_Traffic.app="pythonw.exe" OR All_Traffic.app="python3.exe" OR All_Traffic.app="py.exe" OR All_Traffic.app="powershell.exe" OR All_Traffic.app="pwsh.exe") AND NOT All_Traffic.user="*$" by All_Traffic.src, All_Traffic.user, All_Traffic.app, _time span=10m | `drop_dm_object_name(All_Traffic)` | where SmbConns > 200 | eval DurationSec = LastConn - FirstConn | sort 0 - SmbConns
 ```
 
 **Defender KQL:**
 ```kql
+// GhostLock PoC is delivered as a Python ctypes wrapper. Catch interpreters
+// generating a sustained burst of internal SMB sessions from one user context.
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
-| where RemotePort == 445 and Protocol =~ "Tcp"
-| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","py.exe")
+| where Timestamp > ago(1h)
+| where RemotePort == 445
+| where RemoteIPType == "Private"
 | where InitiatingProcessAccountName !endswith "$"
-| summarize Sessions       = count(),
-            DistinctTargets = dcount(RemoteIP),
-            Targets         = make_set(RemoteIP, 20),
-            SampleCmd       = any(InitiatingProcessCommandLine),
-            ScriptPaths     = make_set(InitiatingProcessCommandLine, 10),
-            FirstSeen       = min(Timestamp),
-            LastSeen        = max(Timestamp)
-            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath
-| extend BurstSec = datetime_diff('second', LastSeen, FirstSeen)
-| where Sessions >= 10 or DistinctTargets >= 3   // many file-share targets or a session burst
-| order by Sessions desc
+| where InitiatingProcessFileName in~ (
+    "python.exe","pythonw.exe","python3.exe","py.exe",
+    "powershell.exe","pwsh.exe"
+  )
+| summarize SmbConns = count(),
+            DistinctServers = dcount(RemoteIP),
+            FirstConn = min(Timestamp),
+            LastConn = max(Timestamp),
+            Servers = make_set(RemoteIP, 25),
+            SampleCmd = any(InitiatingProcessCommandLine)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+               InitiatingProcessId, bin_at(Timestamp, 10m, ago(1h))
+| where SmbConns > 200
+| extend DurationSec = datetime_diff('second', LastConn, FirstConn),
+         ConnsPerSec = todouble(SmbConns) / todouble(max_of(DurationSec, 1))
+| order by SmbConns desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -402,4 +447,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

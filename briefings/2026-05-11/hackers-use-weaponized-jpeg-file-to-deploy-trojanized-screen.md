@@ -10,11 +10,7 @@ Home Cyber Security News
 Hackers Use Weaponized JPEG File to Deploy Trojanized ScreenConnect Malware 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
-A sophisticated new cyberattack campaign is targeting Windows systems using a fake image file to sneak dangerous malware past security defenses. The operation, named Operation SilentCanvas, tricks victims into running a malicious PowerShell script disguised as a harmless JPEG photo, ultimately handing attackers full and silent control of the infecte…
+A sophisticated new cyberattack campaign is targeting Windows systems using a fake image file to sneak dangerous malware past security defenses. The operation, named Operation SilentCanvas, tricks victims into running a malicious PowerShell script disguised as a harmless JPEG photo, ultimately handing attackers full and silent control of the infected machin…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -50,8 +46,9 @@ A sophisticated new cyberattack campaign is targeting Windows systems using a fa
 - **T1112** — Modify Registry
 - **T1027.004** — Obfuscated Files or Information: Compile After Delivery
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1074.001** — Data Staged: Local Data Staging
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1573** — Encrypted Channel
+- **T1543.003** — Create or Modify System Process: Windows Service
 
 ## Kill chain phases observed
 
@@ -59,79 +56,103 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Operation SilentCanvas ms-settings UAC Bypass Pointing to uds.exe / C:\Systems
+### [LLM] ms-settings Shell hijack via uds.exe → ComputerDefaults.exe UAC bypass (Operation SilentCanvas)
 
-`UC_6_12` · phase: **exploit** · confidence: **High**
+`UC_11_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE Registry.registry_path="*\\Software\\Classes\\ms-settings\\shell\\open\\command*" AND (Registry.registry_value_data="*uds.exe*" OR Registry.registry_value_data="*C:\\Systems\\*" OR Registry.registry_value_data="*OneDriveServer*" OR Registry.registry_value_data="*ProgramData\\OneDriveServer*") BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path IN ("*\\Software\\Classes\\ms-settings\\Shell\\Open\\command*","*\\software\\classes\\ms-settings\\shell\\open\\command*") AND (Registry.registry_value_data IN ("*uds.exe*","*C:\\Systems\\*","*\\Systems\\uds*") OR Registry.registry_value_name="DelegateExecute") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | join type=inner dest [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name="ComputerDefaults.exe" by Processes.dest Processes.process_name Processes.parent_process_name Processes.process_integrity_level | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\Software\Classes\ms-settings\shell\open\command"
-| where RegistryValueData has_any ("uds.exe", @"C:\Systems\", "OneDriveServer", @"ProgramData\OneDriveServer")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RegistryKey, RegistryValueName, RegistryValueData
-| order by Timestamp desc
+let WindowMin = 5m;
+let Hijack = DeviceRegistryEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has @"\Software\Classes\ms-settings\Shell\Open\command"
+    | where (RegistryValueData has_any ("uds.exe", @"C:\Systems\", @"\Systems\uds"))
+         or (RegistryValueName =~ "DelegateExecute" and isempty(RegistryValueData))
+    | project HijackTime = Timestamp, DeviceId, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "ComputerDefaults.exe"
+| where ProcessIntegrityLevel in~ ("High","System")
+| join kind=inner Hijack on DeviceId
+| where Timestamp between (HijackTime .. HijackTime + WindowMin)
+| project HijackTime, ElevTime = Timestamp, DeviceName, InitiatingProcessAccountName,
+          RegistryKey, RegistryValueData,
+          ElevParent = InitiatingProcessFileName, ElevCmd = ProcessCommandLine, ProcessIntegrityLevel
+| order by HijackTime desc
 ```
 
-### [LLM] Operation SilentCanvas On-Host csc.exe Compilation of uds.exe Launcher
+### [LLM] PowerShell-driven csc.exe compiling uds.exe to C:\Systems staging directory (Operation SilentCanvas)
 
-`UC_6_13` · phase: **install** · confidence: **High**
+`UC_11_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE (Processes.parent_process_name="csc.exe" AND Processes.process_name="cvtres.exe") OR Processes.process_name="uds.exe" OR Processes.process_hash IN ("a635f0c94c98b658ae799978994f0d0a292567cd97b8a19068a8423d1297652a","7dd05336097e5a833f03a63d3221494f","7adffc1c0b3fdcba46e8d0a81203c955976d4ef39893c98d0b2dbfbb8d6a8ec3","ecd5ed16975d556d1d17bc980f248f8a5262bed11df9d9cf999efd9c273c11df","ee3d776cdaf82335e4293e19ee313cc35eee49cde9963b96766a8f9c89d44a79","4d8ac85c5b98c69ba44146df61183e9bf613edd796aa516c3ae73611b7d77c06") BY Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND Filesystem.file_name="uds.exe" AND (Filesystem.file_path="C:\\Systems\\*" OR Filesystem.file_path="*\\Systems\\uds.exe") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | eval ioc_hash_match=if(file_hash IN ("7DD05336097E5A833F03A63D3221494F","A635F0C94C98B658AE799978994F0D0A292567CD97B8A19068A8423D1297652A"),1,0) | append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.parent_process_name="powershell.exe" AND Processes.process_name="csc.exe" AND (Processes.process="*C:\\Systems*" OR Processes.process="*uds*" OR Processes.process="*\\AppData\\Local\\Temp\\*.cs*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let _CscParent = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where InitiatingProcessFileName =~ "csc.exe"
-    | where FileName =~ "cvtres.exe" or FolderPath has @"C:\Systems\" or FolderPath has @"\AppData\Local\Temp\"
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256, MD5;
-let _NamedLauncher = DeviceProcessEvents
-    | where Timestamp > ago(30d)
+let CscChain = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+    | where FileName =~ "csc.exe"
+    | where ProcessCommandLine has_any (@"C:\Systems", "uds", @"\AppData\Local\Temp\")
+    | project Timestamp, DeviceId, DeviceName, AccountName,
+              CscCmd = ProcessCommandLine, PsCmd = InitiatingProcessCommandLine;
+let FileDrop = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "FileCreated"
     | where FileName =~ "uds.exe"
-        or SHA256 in~ ("a635f0c94c98b658ae799978994f0d0a292567cd97b8a19068a8423d1297652a","7adffc1c0b3fdcba46e8d0a81203c955976d4ef39893c98d0b2dbfbb8d6a8ec3","ecd5ed16975d556d1d17bc980f248f8a5262bed11df9d9cf999efd9c273c11df","ee3d776cdaf82335e4293e19ee313cc35eee49cde9963b96766a8f9c89d44a79","4d8ac85c5b98c69ba44146df61183e9bf613edd796aa516c3ae73611b7d77c06")
-        or MD5 =~ "7dd05336097e5a833f03a63d3221494f"
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256, MD5;
-union _CscParent, _NamedLauncher
+         or (InitiatingProcessFileName in~ ("csc.exe","cvtres.exe")
+              and FolderPath has_any (@"C:\Systems\", @"\AppData\Local\Temp\"))
+    | project Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA256, MD5,
+              InitiatingProcessFileName, InitiatingProcessCommandLine
+    | extend KnownDropper = iff(MD5 =~ "7DD05336097E5A833F03A63D3221494F"
+                              or SHA256 =~ "A635F0C94C98B658AE799978994F0D0A292567CD97B8A19068A8423D1297652A", "YES","");
+union CscChain, FileDrop
 | order by Timestamp desc
 ```
 
-### [LLM] Operation SilentCanvas C2 Beacon to legitserver.theworkpc.com / 45.138.16.64:5443
+### [LLM] Trojanized ScreenConnect C2 to legitserver.theworkpc.com:5443 / 45.138.16.64 + OneDriveServer persistence (Operation SilentCanvas)
 
-`UC_6_14` · phase: **c2** · confidence: **High**
+`UC_11_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Network_Traffic.All_Traffic WHERE All_Traffic.dest_ip="45.138.16.64" OR All_Traffic.dest="legitserver.theworkpc.com" OR All_Traffic.dest="*.theworkpc.com" OR (All_Traffic.dest_port=5443 AND (All_Traffic.dest="legitserver.theworkpc.com" OR All_Traffic.dest_ip="45.138.16.64")) BY All_Traffic.src All_Traffic.src_ip All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_host) as dest_hosts from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="45.138.16.64" OR All_Traffic.dest_host="legitserver.theworkpc.com" OR All_Traffic.dest_host="*.theworkpc.com") AND All_Traffic.dest_port=5443 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("C:\\ProgramData\\OneDriveServer\\*","*\\OneDriveServer\\*") AND Filesystem.action="created" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | append [| tstats `summariesonly` count from datamodel=Endpoint.Registry where Registry.registry_path="*\\Services\\OneDriveServers*" by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let _BadIPs = dynamic(["45.138.16.64"]);
-let _BadHosts = dynamic(["legitserver.theworkpc.com","theworkpc.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (_BadIPs)
-    or RemoteUrl has_any (_BadHosts)
-    or (RemotePort == 5443 and (RemoteIP in (_BadIPs) or RemoteUrl has_any (_BadHosts)))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
-| union (
-    DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-    | where QueryName has_any (_BadHosts)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl=QueryName
-)
+let C2_Net = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where (RemoteIP == "45.138.16.64"
+          or RemoteUrl has "theworkpc.com"
+          or RemoteUrl =~ "legitserver.theworkpc.com")
+    | where RemotePort == 5443 or RemoteIP == "45.138.16.64"
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort;
+let C2_File = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath has_any (@"C:\ProgramData\OneDriveServer\", @"\OneDriveServer\")
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              FileName, FolderPath, SHA256, InitiatingProcessFileName,
+              InitiatingProcessCommandLine;
+let C2_Svc = DeviceRegistryEvents
+    | where Timestamp > ago(7d)
+    | where RegistryKey has @"\Services\OneDriveServers"
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              RegistryKey, RegistryValueName, RegistryValueData,
+              InitiatingProcessFileName, InitiatingProcessCommandLine;
+union C2_Net, C2_File, C2_Svc
 | order by Timestamp desc
 ```
 
@@ -463,7 +484,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Weaponized JPEG File to Deploy Trojanized ScreenConnect Malware
 
-`UC_6_11` · phase: **exploit** · confidence: **High**
+`UC_11_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -523,4 +544,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -10,12 +10,8 @@ Home Cyber Security News
 Crimenetwork Takedown Exposes 22,000 Users and Over 100 Illegal Sellers 
 By Abinaya 
 May 11, 2026 
-
-
-
-
 In a massive, internationally coordinated operation, the Frankfurt am Main Public Prosecutor’s Office – Central Office for Combating Internet Crime (ZIT) and the Federal Criminal Police Office (BKA) have successfully dismantled the relaunched “Crimenetwork” platform.
-Law enforcement officers arrested the suspected operator, a 35-year-old German citizen, at his resi…
+Law enforcement officers arrested the suspected operator, a 35-year-old German citizen, at his residence in…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -9,20 +9,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-11
-- [10 best full disk encryption tools in 2026](./2026-05-11/10-best-full-disk-encryption-tools-in-2026.md)
 - [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [ghostlock attack leverages windows file sharing to lock file](./2026-05-11/ghostlock-attack-leverages-windows-file-sharing-to-lock-file.md)
 - [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
 - [google recaptcha update blocks privacy focused android users](./2026-05-11/google-recaptcha-update-blocks-privacy-focused-android-users.md)
+- [hackers use fake deepseek tui github repositories to deliver](./2026-05-11/hackers-use-fake-deepseek-tui-github-repositories-to-deliver.md)
 - [hackers use weaponized jpeg file to deploy trojanized screen](./2026-05-11/hackers-use-weaponized-jpeg-file-to-deploy-trojanized-screen.md)
-- [jdownloader downloader hacked to infect users with new pytho](./2026-05-11/jdownloader-downloader-hacked-to-infect-users-with-new-pytho.md)
+- [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)
+- [lyrie ai joins first batch of anthropic s cyber verification](./2026-05-11/lyrie-ai-joins-first-batch-of-anthropic-s-cyber-verification.md)
 - [macos malware leverages google ads and legitimate claude ai ](./2026-05-11/macos-malware-leverages-google-ads-and-legitimate-claude-ai-.md)
 - [shinyhunters breaches instructure canvas lms through free fo](./2026-05-11/shinyhunters-breaches-instructure-canvas-lms-through-free-fo.md)
 - [trending hugging face repo with 200k downloads executes malw](./2026-05-11/trending-hugging-face-repo-with-200k-downloads-executes-malw.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
 - [vidar malware targets browser credentials cookies crypto wal](./2026-05-11/vidar-malware-targets-browser-credentials-cookies-crypto-wal.md)
 - [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
+- [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
+- [why changing passwords doesn t end an active directory breac](./2026-05-11/why-changing-passwords-doesn-t-end-an-active-directory-breac.md)
 - [your purple team isn t purple it s just red and blue in the ](./2026-05-11/your-purple-team-isn-t-purple-it-s-just-red-and-blue-in-the-.md)
 
 ## 2026-05-10
@@ -43,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
-- [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
@@ -55,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
-- [canvas login portals hacked in mass shinyhunters extortion c](./2026-05-07/canvas-login-portals-hacked-in-mass-shinyhunters-extortion-c.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
@@ -138,7 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
-- [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)

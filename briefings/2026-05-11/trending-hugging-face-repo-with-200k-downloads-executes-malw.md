@@ -10,13 +10,9 @@ Home Cyber Security News
 Trending Hugging Face Repo With 200k Downloads Executes Malware on Windows Machines 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
 A popular artificial intelligence repository on Hugging Face was recently found hiding dangerous malware that targeted Windows users. 
 The repository, named “Open-OSS/privacy-filter,” had racked up over 200,000 downloads before the platform’s team stepped in and removed it. 
-The malicious package disguised itself as a legitimate privacy filt…
+The malicious package disguised itself as a legitimate privacy filtering to…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,13 +37,12 @@ The malicious package disguised itself as a legitimate privacy filt…
 - **T1053.005** — Persistence (article-specific)
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1102** — Web Service
+- **T1567** — Exfiltration Over Web Service
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
 - **T1140** — Deobfuscate/Decode Files or Information
 
 ## Kill chain phases observed
@@ -56,97 +51,101 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Network egress to Open-OSS/privacy-filter campaign C2 domains (recargapopular[.]com, api.eth-fastscan[.]org)
+### [LLM] Outbound connection to Open-OSS/privacy-filter Hugging Face C2 / staging domains
 
-`UC_3_9` · phase: **c2** · confidence: **High**
+`UC_7_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="recargapopular.com" OR All_Traffic.dest="*.recargapopular.com" OR All_Traffic.dest="api.eth-fastscan.org" OR All_Traffic.dest="*.eth-fastscan.org" OR All_Traffic.dest="welovechinatown.info" OR All_Traffic.dest="*.welovechinatown.info") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("api.eth-fastscan.org","*.eth-fastscan.org","recargapopular.com","*.recargapopular.com","welovechinatown.info","*.welovechinatown.info") OR All_Traffic.url IN ("*jsonkeeper.com/b/AVNNE*","*api.eth-fastscan.org/update.bat*")) by All_Traffic.src All_Traffic.dest All_Traffic.user host All_Traffic.process | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let _campaign_domains = dynamic(["recargapopular.com","api.eth-fastscan.org","welovechinatown.info"]);
-let _campaign_urls = dynamic(["https://api.eth-fastscan.org/update.bat"]);
-union isfuzzy=true
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (_campaign_domains)
-        or RemoteUrl in~ (_campaign_urls)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-              RemoteUrl, RemoteIP, RemotePort,
-              ProcName=InitiatingProcessFileName,
-              ProcCmd=InitiatingProcessCommandLine, ActionType ),
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
-    | where Query has_any (_campaign_domains)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-              RemoteUrl=Query, RemoteIP="", RemotePort=0,
-              ProcName=InitiatingProcessFileName,
-              ProcCmd=InitiatingProcessCommandLine, ActionType )
+let HFCampaignDomains = dynamic(["api.eth-fastscan.org","recargapopular.com","welovechinatown.info"]);
+let HFCampaignUrls = dynamic(["jsonkeeper.com/b/avnne","api.eth-fastscan.org/update.bat"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIPType == "Public"
+| where RemoteUrl has_any (HFCampaignDomains)
+   or tolower(RemoteUrl) has_any (HFCampaignUrls)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Protocol
 | order by Timestamp desc
 ```
 
-### [LLM] Hugging Face privacy-filter persistence: 'MicrosoftEdgeUpdateTaskCore' scheduled task + Defender exclusion for %TEMP%
+### [LLM] Scheduled task 'MicrosoftEdgeUpdateTaskCore' created outside the genuine MicrosoftEdgeUpdate.exe path
 
-`UC_3_10` · phase: **install** · confidence: **High**
+`UC_7_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("schtasks.exe","powershell.exe","pwsh.exe","cmd.exe") AND (Processes.process="*MicrosoftEdgeUpdateTaskCore*" OR (Processes.process="*Add-MpPreference*" AND (Processes.process="*ExclusionPath*" OR Processes.process="*ExclusionProcess*") AND (Processes.process="*\\Temp\\*" OR Processes.process="*runners1*" OR Processes.process="*runnerps1*" OR Processes.process="*update.bat*")) OR (Processes.process="*schtasks*" AND Processes.process="*/create*" AND Processes.process="*MicrosoftEdgeUpdate*")) by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*MicrosoftEdgeUpdateTaskCore*" (Processes.process="*/Create*" OR Processes.process="*-Create*") Processes.parent_process_name!="MicrosoftEdgeUpdate.exe" Processes.parent_process_name!="setup.exe" by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName in~ ("schtasks.exe","powershell.exe","pwsh.exe","cmd.exe")
-| where (ProcessCommandLine has "MicrosoftEdgeUpdateTaskCore")
-    or (ProcessCommandLine has "Add-MpPreference"
-        and ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension")
-        and ProcessCommandLine has_any (@"\Temp\","runners1","runnerps1","update.bat"))
-    or (ProcessCommandLine has "schtasks" and ProcessCommandLine has "/create"
-        and ProcessCommandLine has "MicrosoftEdgeUpdate")
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "MicrosoftEdgeUpdateTaskCore"
+| where ProcessCommandLine has_any ("/Create","-Create","/CREATE")
+| where InitiatingProcessFileName !in~ ("MicrosoftEdgeUpdate.exe","setup.exe","msiexec.exe")
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files (x86)\Microsoft\"
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files\Microsoft\"
 | project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          Child = FileName,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### [LLM] python.exe spawns powershell.exe with -ExecutionPolicy Bypass — Hugging Face loaderpy/startbat chain
-
-`UC_3_11` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe","cmd.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*-ExecutionPolicy*Bypass*" OR Processes.process="*-ep*bypass*" OR Processes.process="*-exec*bypass*") AND (Processes.process="*-W*Hidden*" OR Processes.process="*-WindowStyle*Hidden*" OR Processes.process="*jsonkeeper.com*" OR Processes.process="*eth-fastscan.org*" OR Processes.process="*update.bat*") by host Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","py.exe","cmd.exe")
-| where ProcessCommandLine has_any ("-ExecutionPolicy","-ep ","-exec ")
-    and ProcessCommandLine has "ypass"
-| where ProcessCommandLine has_any ("Hidden","jsonkeeper.com","eth-fastscan.org","update.bat","verifychecksumintegrity")
-    or (InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","py.exe")
-        and InitiatingProcessCommandLine has_any ("loader.py","loaderpy","verifychecksumintegrity","jsonkeeper"))
-| project Timestamp, DeviceName, AccountName,
+          ProcessCommandLine,
           ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
+          ParentFile  = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          GrandparentFile = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] python.exe spawns PowerShell with ExecutionPolicy Bypass that fetches jsonkeeper.com or eth-fastscan staging
+
+`UC_7_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.process_id) as pid values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","py.exe") Processes.process_name IN ("powershell.exe","pwsh.exe") (Processes.process="*ExecutionPolicy*Bypass*" OR Processes.process="*-EP*Bypass*" OR Processes.process="*-ep*bypass*") (Processes.process="*jsonkeeper.com*" OR Processes.process="*eth-fastscan*" OR Processes.process="*update.bat*" OR Processes.process="*WindowStyle*Hidden*" OR Processes.process="*-w*h*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*") by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 14d;
+let PythonParents = dynamic(["python.exe","python3.exe","pythonw.exe","py.exe"]);
+let CampaignStrings = dynamic(["jsonkeeper.com","eth-fastscan","update.bat","recargapopular","welovechinatown"]);
+let PowerShellChild = DeviceProcessEvents
+    | where Timestamp > ago(LookbackDays)
+    | where InitiatingProcessFileName in~ (PythonParents)
+    | where FileName in~ ("powershell.exe","pwsh.exe")
+    | where ProcessCommandLine has_any ("ExecutionPolicy","-EP","-ep")
+        and ProcessCommandLine has "Bypass"
+    | project Timestamp, DeviceName, DeviceId, AccountName, AccountDomain,
+              ParentFile = InitiatingProcessFileName,
+              ParentCmd  = InitiatingProcessCommandLine,
+              ParentFolder = InitiatingProcessFolderPath,
+              ChildFile = FileName,
+              ChildCmd  = ProcessCommandLine,
+              ChildPid  = ProcessId;
+let HighFidelity = PowerShellChild
+    | where ChildCmd has_any (CampaignStrings);
+let TempWriteFollowup = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "FileCreated"
+    | where tolower(FolderPath) has @"\temp\"
+        and FileName =~ "update.bat"
+    | where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+    | project FileTimestamp = Timestamp, DeviceId, DropPath = FolderPath, DropName = FileName,
+              DropperPid = InitiatingProcessId, DropperCmd = InitiatingProcessCommandLine;
+let ChainedWithDrop = PowerShellChild
+    | join kind=inner TempWriteFollowup on DeviceId
+    | where FileTimestamp between (Timestamp .. Timestamp + 5m)
+    | project Timestamp, DeviceName, AccountName, ParentFile, ChildFile, ChildCmd,
+              FileTimestamp, DropPath, DropName, DropperCmd;
+union isfuzzy=true HighFidelity, ChainedWithDrop
 | order by Timestamp desc
 ```
 
@@ -354,7 +353,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trending Hugging Face Repo With 200k Downloads Executes Malware on Windows Machi
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -411,4 +410,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

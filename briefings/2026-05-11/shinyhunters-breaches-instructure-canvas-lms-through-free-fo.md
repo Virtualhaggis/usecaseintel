@@ -10,12 +10,8 @@ Home Cyber Security News
 ShinyHunters Breaches Instructure Canvas LMS Through Free-For-Teacher Account Program 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
 The infamous hacking group ShinyHunters has struck again, this time targeting Instructure, the company behind Canvas Learning Management System (LMS). In early May 2026, Instructure confirmed unauthorized activity on its Canvas platform after detecting suspicious access on April 29, 2026. 
-The breach exposed user names, email addresses, st…
+The breach exposed user names, email addresses, student ID…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,7 +44,10 @@ The breach exposed user names, email addresses, st…
 - **T1569.002** — Service Execution
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1567** — Exfiltration Over Web Service
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1598.003** — Phishing for Information: Spearphishing Link
 - **T1090.003** — Proxy: Multi-hop Proxy
+- **T1567.002** — Exfiltration to Cloud Storage
 
 ## Kill chain phases observed
 
@@ -56,13 +55,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ShinyHunters Canvas Breach - Outbound Connection to Leak-Listing Host 91.215.85.103
+### [LLM] Outbound network connection to ShinyHunters Canvas-breach extortion host 91.215.85.103
 
-`UC_0_13` · phase: **actions** · confidence: **High**
+`UC_3_13` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.action) as action values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="91.215.85.103" by All_Traffic.src All_Traffic.user All_Traffic.dest host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="91.215.85.103" by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -70,51 +69,62 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "91.215.85.103"
-| project Timestamp, DeviceName, DeviceId,
-          ActorAccount = InitiatingProcessAccountName,
-          ActorUpn = InitiatingProcessAccountUpn,
-          RemoteIP, RemotePort, RemoteUrl, ActionType,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessSHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
 | order by Timestamp desc
 ```
 
-### [LLM] ShinyHunters Canvas Leak Site - DNS/HTTP Reference to Tor Onion v3 Hostname
+### [LLM] Inbound spear-phishing impersonating Instructure/Canvas after the May 2026 breach
 
-`UC_0_14` · phase: **actions** · confidence: **High**
+`UC_3_14` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.record_type) as record_type values(DNS.query) as queries from datamodel=Network_Resolution.DNS where DNS.query="*shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr*" by host DNS.src
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| append
-  [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.user) as user values(Web.url) as urls from datamodel=Web.Web where Web.url="*shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr*" by host Web.src
-  | `drop_dm_object_name(Web)`
-  | `security_content_ctime(firstTime)`
-  | `security_content_ctime(lastTime)`]
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.url) as urls from datamodel=Email.All_Email where All_Email.action="delivered" AND (All_Email.subject="*Canvas*" OR All_Email.subject="*Instructure*" OR All_Email.subject="*course access*" OR All_Email.subject="*student ID*" OR All_Email.subject="*LMS*password*" OR All_Email.subject="*verify*your*Canvas*") AND NOT (All_Email.src_user="*@instructure.com" OR All_Email.src_user="*@e.instructure.com" OR All_Email.src_user="*@inst-fs*.instructuremedia.com") by All_Email.src_user All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let _legit_instructure_domains = dynamic(["instructure.com","e.instructure.com","instructuremedia.com","canvaslms.com"]);
+let _canvas_lures = dynamic(["canvas","instructure","course access","student id","lms password","canvas login","verify your canvas","canvas security alert","unusual canvas activity","reset your canvas"]);
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection == "Inbound"
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+| where SenderFromDomain !in~ (_legit_instructure_domains) and SenderMailFromDomain !in~ (_legit_instructure_domains)
+| where Subject has_any (_canvas_lures) or SenderDisplayName has_any ("Canvas","Instructure","Canvas LMS")
+| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where isempty(UrlDomain) or (UrlDomain !endswith "instructure.com" and UrlDomain !endswith "canvaslms.com")
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, SenderFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### [LLM] Access to ShinyHunters Canvas LMS data-leak site (shinyp0g4...onion)
+
+`UC_3_15` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process="*shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr*" by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=t count from datamodel=Web.Web where Web.url="*shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr*" by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.query="*shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr*" by DNS.src DNS.query | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _onion = "shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr";
 union isfuzzy=true
-  ( DeviceEvents
-      | where Timestamp > ago(30d)
-      | where ActionType == "DnsQueryResponse"
-      | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-      | where QueryName has "shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr"
-      | project Timestamp, DeviceName, DeviceId, Signal = "DNS",
-                Value = QueryName,
-                InitiatingProcessFileName, InitiatingProcessFolderPath,
-                InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where RemoteUrl has "shinyp0g4jjniry5qi824btzn0p6mxhrdtxe2k6pdy4g3vdzqvr"
-      | project Timestamp, DeviceName, DeviceId, Signal = "NetworkUrl",
-                Value = RemoteUrl,
-                InitiatingProcessFileName, InitiatingProcessFolderPath,
-                InitiatingProcessCommandLine, InitiatingProcessAccountName )
+( DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where ProcessCommandLine has _onion or InitiatingProcessCommandLine has _onion
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, Source = "Process" ),
+( DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has _onion
+  | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FileName = InitiatingProcessFileName, ProcessCommandLine = InitiatingProcessCommandLine, InitiatingProcessFileName, RemoteUrl, RemoteIP, Source = "Network" ),
+( DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+  | where QueryName has _onion
+  | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FileName = InitiatingProcessFileName, ProcessCommandLine = InitiatingProcessCommandLine, InitiatingProcessFileName, QueryName, Source = "DNS" )
 | order by Timestamp desc
 ```
 
@@ -535,4 +545,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 16 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
