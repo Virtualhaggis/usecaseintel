@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-11
 - [10 best full disk encryption tools in 2026](./2026-05-11/10-best-full-disk-encryption-tools-in-2026.md)
+- [jdownloader downloader hacked to infect users with new pytho](./2026-05-11/jdownloader-downloader-hacked-to-infect-users-with-new-pytho.md)
 - [odini malware uses cpu magnetic emissions to breach faraday ](./2026-05-11/odini-malware-uses-cpu-magnetic-emissions-to-breach-faraday-.md)
 - [top 10 best interactive malware analysis tools in 2026](./2026-05-11/top-10-best-interactive-malware-analysis-tools-in-2026.md)
 
@@ -35,7 +36,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
-- [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
