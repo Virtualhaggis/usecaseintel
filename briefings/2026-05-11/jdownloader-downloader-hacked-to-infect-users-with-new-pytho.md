@@ -10,11 +10,8 @@ Home Cyber Security News
 JDownloader Downloader Hacked to Infect Users With New Python RAT 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
-JDownloader, the popular open-source download manager trusted by millions of users worldwide, was at the center of a serious supply chain attack in early May 2026. Attackers quietly compromised the official jdownloader.org website and replaced legitimate installer download links with malicious files carrying a fully functional Python-based remote access troja…
+JDownloader, the popular open-source download manager trusted by millions of users worldwide, was at the center of a serious supply chain attack in early May 2026. Attackers quietly compromised the official jdownloader.org website and replaced legitimate installer download links with malicious files carrying a fully functional Python-based remote access trojan. 
+Anyo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,10 +38,16 @@ JDownloader, the popular open-source download manager trusted by millions of use
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1573** — Encrypted Channel
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1112** — Modify Registry
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
+- **T1564.003** — Hide Artifacts: Hidden Window
 
 ## Kill chain phases observed
 
@@ -52,18 +55,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] JDownloader supply-chain: known malicious installer hash execution
+### [LLM] JDownloader supply-chain — malicious installer SHA256 execution/write
 
-`UC_0_8` · phase: **delivery** · confidence: **High**
+`UC_4_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("6d975c05ef7a164707fa359284a31bfe0b1681fe0319819cb9e2c4eec2a1a8af","fb1e3fe4d18927ff82cffb3f82a0b4ffb7280c85db5a8a8b6f6a1ac30a7e7ed9","04cb9f0bca6e0e4ed30bc92726590724bf60938440b3825252657d1b3af45495","5a6636ce490789d7f26aaa86e50bd65c7330f8e6a7c32418740c1d009fb12ef3","32891c0080442bf0a0c5658ada2c3845435b4e09b114599a516248723aad7805","de8b2bdfc61d63585329b8cfca2a012476b46387435410b995aeae5b502bd95e","e4a20f746b7dd19b8d9601b884e67c8166ea9676b917adea6833b695ba13de16","4ff7eec9e69b6008b77de1b6e5c0d18aa717f625458d80da610cb170c784e97c") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("6d975c05ef7a164707fa359284a31bfe0b1681fe0319819cb9e2c4eec2a1a8af","fb1e3fe4d18927ff82cffb3f82a0b4ffb7280c85db5a8a8b6f6a1ac30a7e7ed9","04cb9f0bca6e0e4ed30bc92726590724bf60938440b3825252657d1b3af45495","5a6636ce490789d7f26aaa86e50bd65c7330f8e6a7c32418740c1d009fb12ef3","32891c0080442bf0a0c5658ada2c3845435b4e09b114599a516248723aad7805","de8b2bdfc61d63585329b8cfca2a012476b46387435410b995aeae5b502bd95e","e4a20f746b7dd19b8d9601b884e67c8166ea9676b917adea6833b695ba13de16","4ff7eec9e69b6008b77de1b6e5c0d18aa717f625458d80da610cb170c784e97c") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("6d975c05ef7a164707fa359284a31bfe0b1681fe0319819cb9e2c4eec2a1a8af","fb1e3fe4d18927ff82cffb3f82a0b4ffb7280c85db5a8a8b6f6a1ac30a7e7ed9","04cb9f0bca6e0e4ed30bc92726590724bf60938440b3825252657d1b3af45495","5a6636ce490789d7f26aaa86e50bd65c7330f8e6a7c32418740c1d009fb12ef3","32891c0080442bf0a0c5658ada2c3845435b4e09b114599a516248723aad7805","de8b2bdfc61d63585329b8cfca2a012476b46387435410b995aeae5b502bd95e","e4a20f746b7dd19b8d9601b884e67c8166ea9676b917adea6833b695ba13de16","4ff7eec9e69b6008b77de1b6e5c0d18aa717f625458d80da610cb170c784e97c") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let JDownloaderRATHashes = dynamic([
+let JDownloaderMaliciousHashes = dynamic([
   "6d975c05ef7a164707fa359284a31bfe0b1681fe0319819cb9e2c4eec2a1a8af",
   "fb1e3fe4d18927ff82cffb3f82a0b4ffb7280c85db5a8a8b6f6a1ac30a7e7ed9",
   "04cb9f0bca6e0e4ed30bc92726590724bf60938440b3825252657d1b3af45495",
@@ -73,80 +76,112 @@ let JDownloaderRATHashes = dynamic([
   "e4a20f746b7dd19b8d9601b884e67c8166ea9676b917adea6833b695ba13de16",
   "4ff7eec9e69b6008b77de1b6e5c0d18aa717f625458d80da610cb170c784e97c"
 ]);
-union isfuzzy=true
-  (
+union
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (JDownloaderMaliciousHashes)
+    | project Timestamp, DeviceName, AccountName,
+              FileName, FolderPath, SHA256, ProcessCommandLine,
+              Parent = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine,
+              EventSource = "ProcessCreate" ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (JDownloaderMaliciousHashes)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              FileName, FolderPath, SHA256,
+              ProcessCommandLine = InitiatingProcessCommandLine,
+              Parent = InitiatingProcessFileName,
+              ParentCmd = InitiatingProcessCommandLine,
+              EventSource = "FileWrite" )
+| order by Timestamp desc
+```
+
+### [LLM] JDownloader Python RAT C2 callout to parkspringshotel.com / auraguest.lk
+
+`UC_4_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents from datamodel=Web.Web where (Web.url="*parkspringshotel.com/m/Lu6aeloo.php*" OR Web.url="*auraguest.lk/m/douV2quu.php*" OR Web.dest="parkspringshotel.com" OR Web.dest="auraguest.lk") by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries from datamodel=Network_Resolution.DNS where (DNS.query="parkspringshotel.com" OR DNS.query="auraguest.lk" OR DNS.query="*.parkspringshotel.com" OR DNS.query="*.auraguest.lk") by DNS.src DNS.dest | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let C2Hosts   = dynamic(["parkspringshotel.com","auraguest.lk"]);
+let C2UrlFragments = dynamic(["parkspringshotel.com/m/Lu6aeloo.php","auraguest.lk/m/douV2quu.php"]);
+union
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (C2Hosts) or RemoteUrl has_any (C2UrlFragments)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              Process = InitiatingProcessFileName,
+              ProcessCmd = InitiatingProcessCommandLine,
+              RemoteIP, RemotePort, RemoteUrl,
+              EventSource = "NetworkConnect" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
+    | where Query has_any (C2Hosts)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              Process = InitiatingProcessFileName,
+              ProcessCmd = InitiatingProcessCommandLine,
+              RemoteIP = "", RemotePort = int(null), RemoteUrl = Query,
+              EventSource = "DNSQuery" )
+| order by Timestamp desc
+```
+
+### [LLM] JDownloader Python RAT loader — HKCU\SOFTWARE\Python write by non-Python parent then pythonw.exe spawn
+
+`UC_4_10` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as reg_time max(_time) as last_reg_time values(Registry.registry_value_name) as reg_values values(Registry.process_path) as loader_paths from datamodel=Endpoint.Registry where (Registry.registry_path="*\\SOFTWARE\\Python\\*" OR Registry.registry_key_name="*\\SOFTWARE\\Python\\*") AND Registry.action IN ("modified","created") AND NOT (Registry.process_name IN ("python.exe","pythonw.exe","py.exe","pyw.exe","msiexec.exe","setup.exe","conda.exe","pip.exe")) AND NOT (Registry.process_path="*\\Python\\*" OR Registry.process_path="*\\Python3*\\*" OR Registry.process_path="*\\Anaconda*\\*") by Registry.dest Registry.user Registry.process_name Registry.process_path Registry.registry_path | `drop_dm_object_name(Registry)` | join type=inner dest [ | tstats summariesonly=t count min(_time) as proc_time max(_time) as last_proc_time values(Processes.process) as pythonw_cmds values(Processes.parent_process_name) as pythonw_parents from datamodel=Endpoint.Processes where Processes.process_name="pythonw.exe" by Processes.dest | `drop_dm_object_name(Processes)` ] | where proc_time >= reg_time AND proc_time <= reg_time + 3600 | convert ctime(reg_time) ctime(proc_time) | sort - reg_time
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 30d;
+let WindowSec = 3600;
+let LegitPythonParents = dynamic(["python.exe","pythonw.exe","py.exe","pyw.exe","msiexec.exe","setup.exe","conda.exe","pip.exe","installer.exe"]);
+let LoaderRegWrites =
+    DeviceRegistryEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has @"\SOFTWARE\Python"
+    | where InitiatingProcessFileName !in~ (LegitPythonParents)
+    | where not(InitiatingProcessFolderPath has @"\Python\")
+    | where not(InitiatingProcessFolderPath has @"\Anaconda")
+    | where InitiatingProcessAccountName !endswith "$"
+    | project RegTime = Timestamp, DeviceId, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              LoaderImage = InitiatingProcessFileName,
+              LoaderPath  = InitiatingProcessFolderPath,
+              LoaderCmd   = InitiatingProcessCommandLine,
+              LoaderSha256 = InitiatingProcessSHA256,
+              RegistryKey, RegistryValueName, RegistryValueData;
+LoaderRegWrites
+| join kind=inner (
     DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (JDownloaderRATHashes)
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-              FileOrigin = "ProcessExecution"
-  ),
-  (
-    DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (JDownloaderRATHashes)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256,
-              InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-              FileOriginUrl, FileOrigin = "FileDropped"
-  )
-| order by Timestamp desc
-```
-
-### [LLM] JDownloader Python RAT C2 callback to parkspringshotel.com or auraguest.lk
-
-`UC_0_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.src) as src from datamodel=Web.Web where (Web.url="*parkspringshotel.com/m/Lu6aeloo.php*" OR Web.url="*auraguest.lk/m/douV2quu.php*" OR Web.dest="parkspringshotel.com" OR Web.dest="auraguest.lk") by Web.dest Web.user | `drop_dm_object_name(Web)` | append [ | tstats summariesonly=t count from datamodel=Network_Resolution.DNS where (DNS.query="parkspringshotel.com" OR DNS.query="auraguest.lk" OR DNS.query="*.parkspringshotel.com" OR DNS.query="*.auraguest.lk") by DNS.src DNS.query | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let JDRATHosts = dynamic(["parkspringshotel.com","auraguest.lk"]);
-let JDRATFullUrls = dynamic([
-  "parkspringshotel.com/m/Lu6aeloo.php",
-  "auraguest.lk/m/douV2quu.php"
-]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (RemoteUrl has_any (JDRATHosts))
-    or (RemoteUrl has_any (JDRATFullUrls))
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### [LLM] pythonw.exe egress to Telegraph/Rentry/Codeberg dead-drop resolvers
-
-`UC_0_10` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dests values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name="pythonw.exe" AND (All_Traffic.dest="telegra.ph" OR All_Traffic.dest="*.telegra.ph" OR All_Traffic.dest="rentry.co" OR All_Traffic.dest="*.rentry.co" OR All_Traffic.dest="rentry.org" OR All_Traffic.dest="*.rentry.org" OR All_Traffic.dest="codeberg.org" OR All_Traffic.dest="*.codeberg.org" OR All_Traffic.dest="*.onion") by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let DeadDropHosts = dynamic(["telegra.ph","rentry.co","rentry.org","codeberg.org"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "pythonw.exe"
-| where (RemoteUrl has_any (DeadDropHosts))
-    or (RemoteUrl endswith ".telegra.ph")
-    or (RemoteUrl endswith ".rentry.co")
-    or (RemoteUrl endswith ".rentry.org")
-    or (RemoteUrl endswith ".codeberg.org")
-    or (RemoteUrl endswith ".onion")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          InitiatingProcessParentFileName,
-          RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
+    | where Timestamp > ago(LookbackDays)
+    | where FileName =~ "pythonw.exe"
+    | project ProcTime = Timestamp, DeviceId,
+              PythonwPath = FolderPath,
+              PythonwCmd  = ProcessCommandLine,
+              PythonwParent = InitiatingProcessFileName,
+              PythonwSha256 = SHA256
+  ) on DeviceId
+| where ProcTime between (RegTime .. RegTime + WindowSec * 1s)
+| project RegTime, ProcTime,
+          DelaySec = datetime_diff('second', ProcTime, RegTime),
+          DeviceName, AccountName,
+          LoaderImage, LoaderPath, LoaderCmd, LoaderSha256,
+          RegistryKey, RegistryValueName,
+          PythonwPath, PythonwCmd, PythonwParent, PythonwSha256
+| order by RegTime desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -298,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JDownloader Downloader Hacked to Infect Users With New Python RAT
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_4_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -358,4 +393,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

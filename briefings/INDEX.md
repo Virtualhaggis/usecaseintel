@@ -10,9 +10,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-11
 - [10 best full disk encryption tools in 2026](./2026-05-11/10-best-full-disk-encryption-tools-in-2026.md)
+- [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
+- [google recaptcha update blocks privacy focused android users](./2026-05-11/google-recaptcha-update-blocks-privacy-focused-android-users.md)
 - [jdownloader downloader hacked to infect users with new pytho](./2026-05-11/jdownloader-downloader-hacked-to-infect-users-with-new-pytho.md)
 - [odini malware uses cpu magnetic emissions to breach faraday ](./2026-05-11/odini-malware-uses-cpu-magnetic-emissions-to-breach-faraday-.md)
 - [top 10 best interactive malware analysis tools in 2026](./2026-05-11/top-10-best-interactive-malware-analysis-tools-in-2026.md)
+- [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
+- [vidar malware targets browser credentials cookies crypto wal](./2026-05-11/vidar-malware-targets-browser-credentials-cookies-crypto-wal.md)
 
 ## 2026-05-10
 - [hackers abuse google ads claude ai chats to push mac malware](./2026-05-10/hackers-abuse-google-ads-claude-ai-chats-to-push-mac-malware.md)
@@ -22,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-09
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
-- [critical microsoft 365 copilot vulnerabilities expose sensit](./2026-05-09/critical-microsoft-365-copilot-vulnerabilities-expose-sensit.md)
 - [fake openai repository on hugging face pushes infostealer ma](./2026-05-09/fake-openai-repository-on-hugging-face-pushes-infostealer-ma.md)
 - [jdownloader site hacked to replace installers with python ra](./2026-05-09/jdownloader-site-hacked-to-replace-installers-with-python-ra.md)
 - [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
@@ -39,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
-- [new pamdoora backdoor attacking linux systems to steal ssh c](./2026-05-08/new-pamdoora-backdoor-attacking-linux-systems-to-steal-ssh-c.md)
 - [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
@@ -50,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
-- [australia warns of clickfix attacks pushing vidar stealer ma](./2026-05-07/australia-warns-of-clickfix-attacks-pushing-vidar-stealer-ma.md)
 - [canvas login portals hacked in mass shinyhunters extortion c](./2026-05-07/canvas-login-portals-hacked-in-mass-shinyhunters-extortion-c.md)
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [exploits and vulnerabilities in q1 2026](./2026-05-07/exploits-and-vulnerabilities-in-q1-2026.md)
@@ -136,7 +137,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
-- [new python backdoor uses tunneling service to steal browser ](./2026-04-30/new-python-backdoor-uses-tunneling-service-to-steal-browser-.md)
 - [pytorch lightning and intercom client hit in supply chain at](./2026-04-30/pytorch-lightning-and-intercom-client-hit-in-supply-chain-at.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)

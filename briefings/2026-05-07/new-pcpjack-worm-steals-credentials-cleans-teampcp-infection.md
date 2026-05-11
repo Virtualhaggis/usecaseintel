@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PCPJack Linux orchestrator: bootstrap.sh launching python monitor.py
 
-`UC_36_6` · phase: **install** · confidence: **High**
+`UC_38_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] PCPJack credential exfiltration to api.telegram.org from Linux server workload
 
-`UC_36_7` · phase: **actions** · confidence: **High**
+`UC_38_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ union isfuzzy=true
 
 ### [LLM] Redis-server writing to crontab paths (PCPJack Redis cron-rewrite persistence)
 
-`UC_36_8` · phase: **install** · confidence: **High**
+`UC_38_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -257,7 +257,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PCPJack worm steals credentials, cleans TeamPCP infections
 
-`UC_36_5` · phase: **exploit** · confidence: **High**
+`UC_38_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
