@@ -10,13 +10,9 @@ Home Cyber Security
 Google reCAPTCHA Update Blocks Privacy-Focused Android Users From Sites 
 By Guru Baran 
 May 11, 2026 
-
-
-
-
 Google has rolled out a significant update to its reCAPTCHA verification system that fundamentally alters how websites verify human traffic.
 Announced on April 22 at the Google Cloud Next 2026 conference , the new mechanism operates through Google’s Cloud Fraud Defense tool and introduces a mandatory QR code challenge for suspicious traffic.
-While designed to combat …
+While designed to combat sophisti…
 
 ## Indicators of Compromise (high-fidelity only)
 

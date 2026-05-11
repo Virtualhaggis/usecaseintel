@@ -13,6 +13,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [google recaptcha update blocks privacy focused android users](./2026-05-11/google-recaptcha-update-blocks-privacy-focused-android-users.md)
 - [jdownloader downloader hacked to infect users with new pytho](./2026-05-11/jdownloader-downloader-hacked-to-infect-users-with-new-pytho.md)
+- [macos malware leverages google ads and legitimate claude ai ](./2026-05-11/macos-malware-leverages-google-ads-and-legitimate-claude-ai-.md)
 - [odini malware uses cpu magnetic emissions to breach faraday ](./2026-05-11/odini-malware-uses-cpu-magnetic-emissions-to-breach-faraday-.md)
 - [top 10 best interactive malware analysis tools in 2026](./2026-05-11/top-10-best-interactive-malware-analysis-tools-in-2026.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
@@ -28,7 +29,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [fake openai repository on hugging face pushes infostealer ma](./2026-05-09/fake-openai-repository-on-hugging-face-pushes-infostealer-ma.md)
 - [jdownloader site hacked to replace installers with python ra](./2026-05-09/jdownloader-site-hacked-to-replace-installers-with-python-ra.md)
-- [let s encrypt halts certificate issuance after cross signed ](./2026-05-09/let-s-encrypt-halts-certificate-issuance-after-cross-signed-.md)
 - [nvidia data breach reportedly exposes personal information o](./2026-05-09/nvidia-data-breach-reportedly-exposes-personal-information-o.md)
 - [tclbanker malware targets users through self propagating wha](./2026-05-09/tclbanker-malware-targets-users-through-self-propagating-wha.md)
 

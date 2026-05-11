@@ -11,15 +11,9 @@ By Bill Toulas
 May 11, 2026
 05:03 AM
 0 
-
-
 A new variant of the TrickMo Android banking malware, delivered in campaigns targeting users across Europe, introduces new commands and uses The Open Network (TON) for stealthy command-and-control communications.
-
-
 The TrickMo banker was first spotted in September 2019  and has remained in active development, constantly receiving updates since then.
-
-
-In October 2024, Zimperium analyze…
+In October 2024, Zimperium analyzed  40 varian…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -36,12 +30,66 @@ In October 2024, Zimperium analyze…
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1090.003** — Multi-hop Proxy
+- **T1071** — Application Layer Protocol
+- **T1573.002** — Asymmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] TrickMo.C TON-blockchain C2 bootstrap from managed endpoint
+
+`UC_1_4` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(DNS.answer) as resolved_ips from datamodel=Network_Resolution.DNS where (DNS.query IN ("ton.org","*.ton.org","toncenter.com","*.toncenter.com","tonapi.io","*.tonapi.io","ton-rpc.dev","*.ton-blockchain.github.io")) by DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_category!=internal [| inputlookup ton_dht_seeds.csv | rename ip as All_Traffic.dest | fields All_Traffic.dest] by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` ]
+```
+
+**Defender KQL:**
+```kql
+// Pull live TON mainnet DHT seed nodes from ton.org/global-config.json.
+// IPs in the config are stored as signed int32 — we normalise to dotted-quad.
+let TonConfig = externaldata (Raw:string)
+    [@"https://ton.org/global-config.json"]
+    with (format="txt", ignoreFirstRecord=false);
+let TonSeedIps = TonConfig
+    | summarize Joined = strcat_array(make_list(Raw), "")
+    | extend cfg = parse_json(Joined)
+    | mv-expand node = cfg.dht.static_nodes.nodes
+    | mv-expand addr = node.addr_list.addrs
+    | extend IpInt = tolong(addr.ip)
+    | extend IpUnsigned = iif(IpInt < 0, IpInt + 4294967296L, IpInt)
+    | extend SeedIp = strcat(
+        tostring(IpUnsigned / 16777216 % 256), ".",
+        tostring(IpUnsigned / 65536   % 256), ".",
+        tostring(IpUnsigned / 256     % 256), ".",
+        tostring(IpUnsigned           % 256))
+    | distinct SeedIp;
+let TonBootstrapDomains = dynamic(["ton.org","toncenter.com","tonapi.io","ton-rpc.dev"]);
+// (a) Direct UDP/ADNL contact with a TON DHT seed
+let AdnlHits = DeviceNetworkEvents
+    | where Timestamp > ago(24h)
+    | where Protocol == "Udp"
+    | where RemoteIPType == "Public"
+    | where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+    | where RemoteIP in (TonSeedIps)
+    | extend Signal = "ton_dht_adnl";
+// (b) Bootstrap config download or TON RPC API resolution via DNS/HTTPS
+let ConfigHits = DeviceNetworkEvents
+    | where Timestamp > ago(24h)
+    | where isnotempty(RemoteUrl)
+    | where RemoteUrl has_any (TonBootstrapDomains)
+    | extend Signal = "ton_bootstrap_domain";
+union AdnlHits, ConfigHits
+| project Timestamp, Signal, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -229,4 +277,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
