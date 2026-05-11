@@ -1,0 +1,85 @@
+{
+  "name": "Berserk Bear",
+  "ucs": [
+    {
+      "title": "[LLM] Berserk Bear / Dragonfly forced-authentication SMB beacon from Office or LNK to public IP (template-injection NTLM theft)",
+      "description": "Hunts the signature Dragonfly / Energetic Bear technique of weaponizing Office documents (template injection / docx settings.xml.rels), Outlook rules, or LNK files whose icon path points to an attacker-controlled SMB / WebDAV server \u2014 when the host opens the file, Windows transparently authenticates and ships the NetNTLMv2 hash to the attacker. Specifically catches the CISA TA17-293A / TA18-074A / AA20-296A pattern where winword.exe, excel.exe, outlook.exe, or explorer.exe initiate outbound TCP/445 or TCP/139 to a non-RFC1918 destination.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1566.001",
+        "T1221",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.src) as src values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (139,445) AND All_Traffic.app IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"mshta.exe\") AND NOT (All_Traffic.dest_ip IN (\"10.0.0.0/8\",\"172.16.0.0/12\",\"192.168.0.0/16\",\"169.254.0.0/16\",\"127.0.0.0/8\")) by host All_Traffic.app All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.user | `drop_dm_object_name(All_Traffic)` | rename app as initiating_process | eval threat_actor=\"Berserk Bear / Dragonfly / DYMALLOY\", technique=\"T1187 Forced Authentication\" | where count > 0",
+      "kql": "// Berserk Bear forced-authentication (template-injection NTLM hash capture)\n// Office or shell process opens an outbound SMB/WebDAV channel to the public internet\nlet OfficeAndShellProcs = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"mshta.exe\",\"hh.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\")\n| where RemotePort in (445, 139)             // SMB / NetBIOS\n| where RemoteIPType == \"Public\"             // exclude internal SMB\n| where InitiatingProcessFileName in~ (OfficeAndShellProcs)\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl,\n          ReportId\n| order by Timestamp desc",
+      "sentinel_kql": "// Berserk Bear forced-authentication (template-injection NTLM hash capture) \u2014 Sentinel ASIM\nlet OfficeAndShellProcs = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"mshta.exe\",\"hh.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstPortNumber in (445, 139)\n| where isnotempty(DstIpAddr)\n| where not(ipv4_is_private(DstIpAddr))\n| where not(DstIpAddr startswith \"127.\") and not(DstIpAddr startswith \"169.254.\")\n| extend ProcLower = tolower(tostring(split(ActingProcessName, @\"\\\")[-1]))\n| where ProcLower in (OfficeAndShellProcs)\n| where isnotempty(SrcUsername) and SrcUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, SrcUsername, ActingProcessName,\n          ActingProcessCommandLine, DstIpAddr, DstPortNumber, NetworkProtocol,\n          DvcAction\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Berserk Bear / Dragonfly Forced Authentication via Office or LNK to Public SMB\nid: 7c2f4b1a-2a3d-4ed6-9d4e-2f6f5b9a1d22\nstatus: experimental\ndescription: Detects Office/shell processes initiating SMB or NetBIOS sessions to public IPs \u2014 the hallmark Dragonfly/Energetic Bear NTLM-hash-capture technique (template injection, LNK icon, Outlook rule abuse).\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/ta18-074a\n  - https://attack.mitre.org/groups/G0035/\nauthor: SOC detection engineering\ndate: 2026/05/11\ntags:\n  - attack.credential_access\n  - attack.t1187\n  - attack.t1221\n  - attack.t1566.001\n  - g0035\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Image|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\explorer.exe'\n      - '\\mshta.exe'\n      - '\\hh.exe'\n    DestinationPort:\n      - 445\n      - 139\n  filter_private:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '127.0.0.0/8'\n      - '169.254.0.0/16'\n  condition: selection and not filter_private\nfalsepositives:\n  - Legitimate cloud-hosted SMB shares (Azure Files, AWS FSx) \u2014 explicitly allowlist by destination IP\nlevel: high\n",
+      "rationale": "Forced authentication via Office template injection / weaponized LNK is the single most distinctive Dragonfly TTP \u2014 explicitly called out in CISA TA17-293A, TA18-074A, and AA20-296A as their preferred credential-acquisition vector. Symantec, FireEye/Mandiant (TEMP.Isotope), and CrowdStrike (DYMALLOY) all corroborate it. The detection is tight because no benign Office workflow opens raw TCP/445 to ",
+      "_sentinel_field_issues_autofix": [
+        "ActorUsername -> SrcUsername"
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma tag must start with namespace separated with dot from remaining tag."
+      ]
+    },
+    {
+      "title": "[LLM] Berserk Bear LSASS credential dump via comsvcs.dll MiniDump (rundll32 squiggle)",
+      "description": "Catches the explicit credential-theft procedure CISA AA20-296A attributes to Berserk Bear: invoking the built-in `comsvcs.dll!MiniDump` export through rundll32.exe to write an LSASS process minidump to disk without dropping mimikatz. The exact command form (`rundll32 ... comsvcs.dll MiniDump <pid> <path> full`) was observed against US state/local government and aviation networks in late 2020 and remains a Berserk Bear signature.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.001",
+        "T1218.011",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_name values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=\"rundll32.exe\" OR Processes.process_name=\"powershell.exe\" OR Processes.process_name=\"pwsh.exe\" OR Processes.process_name=\"cmd.exe\") AND Processes.process=\"*comsvcs.dll*\" AND Processes.process=\"*MiniDump*\" by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval threat_actor=\"Berserk Bear / Dragonfly / DYMALLOY\", technique=\"T1003.001 LSASS Memory Dump via comsvcs.dll\" | where count > 0",
+      "kql": "// Berserk Bear LSASS dump via comsvcs.dll MiniDump \u2014 CISA AA20-296A signature\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessAccountName !endswith \"$\"\n| where (FileName =~ \"rundll32.exe\"\n         and ProcessCommandLine has \"comsvcs.dll\"\n         and ProcessCommandLine has \"MiniDump\")\n     or (FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\")\n         and ProcessCommandLine has \"comsvcs\"\n         and ProcessCommandLine has \"MiniDump\")\n     or ProcessCommandLine matches regex @\"(?i)\\bcomsvcs\\.dll\\s*[, ]\\s*#?24\\b\"   // ordinal #24 = MiniDump\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          ProcessCommandLine, InitiatingProcessFileName,\n          InitiatingProcessCommandLine, InitiatingProcessFolderPath,\n          InitiatingProcessParentFileName, InitiatingProcessIntegrityLevel,\n          SHA256, ReportId\n| order by Timestamp desc",
+      "sentinel_kql": "// Berserk Bear LSASS dump via comsvcs.dll MiniDump \u2014 Sentinel SecurityEvent (4688) + ASIM\nlet ComsvcsDump = (cl: string) {\n    cl has \"comsvcs.dll\" and cl has \"MiniDump\"\n    or cl matches regex @\"(?i)\\bcomsvcs\\.dll\\s*[, ]\\s*#?24\\b\"\n};\nunion isfuzzy=true\n  ( SecurityEvent\n    | where TimeGenerated > ago(30d)\n    | where EventID == 4688\n    | where AccountType == \"User\" and Account !endswith \"$\"\n    | where (NewProcessName endswith \"\\\\rundll32.exe\"\n             or NewProcessName endswith \"\\\\powershell.exe\"\n             or NewProcessName endswith \"\\\\pwsh.exe\"\n             or NewProcessName endswith \"\\\\cmd.exe\")\n    | where ComsvcsDump(CommandLine)\n    | project TimeGenerated, Computer, Account, NewProcessName,\n              CommandLine, ParentProcessName, TokenElevationType ),\n  ( ImProcessCreate\n    | where TimeGenerated > ago(30d)\n    | where ActorUsername !endswith \"$\"\n    | where TargetProcessName endswith \"rundll32.exe\"\n         or TargetProcessName endswith \"powershell.exe\"\n         or TargetProcessName endswith \"pwsh.exe\"\n         or TargetProcessName endswith \"cmd.exe\"\n    | where ComsvcsDump(TargetProcessCommandLine)\n    | project TimeGenerated, Computer = DvcHostname, Account = ActorUsername,\n              NewProcessName = TargetProcessName,\n              CommandLine = TargetProcessCommandLine,\n              ParentProcessName, TokenElevationType = ActingProcessIntegrityLevel )\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Berserk Bear LSASS Memory Dump via comsvcs.dll MiniDump\nid: f3c1d72e-9b41-4d2f-8e51-91f0c5d8a1b3\nstatus: experimental\ndescription: Detects the comsvcs.dll!MiniDump LOLBAS technique that CISA AA20-296A attributes to Berserk Bear / DYMALLOY for credential theft from LSASS without dropping mimikatz.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a\n  - https://lolbas-project.github.io/lolbas/Libraries/Comsvcs/\n  - https://attack.mitre.org/groups/G0035/\nauthor: SOC detection engineering\ndate: 2026/05/11\ntags:\n  - attack.credential_access\n  - attack.t1003.001\n  - attack.defense_evasion\n  - attack.t1218.011\n  - g0035\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_rundll:\n    Image|endswith: '\\rundll32.exe'\n    CommandLine|contains|all:\n      - 'comsvcs.dll'\n      - 'MiniDump'\n  selection_ordinal:\n    CommandLine|re|i: '\\bcomsvcs\\.dll\\s*[, ]\\s*#?24\\b'\n  selection_shell_wrapper:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\cmd.exe'\n    CommandLine|contains|all:\n      - 'comsvcs'\n      - 'MiniDump'\n  condition: 1 of selection_*\nfalsepositives:\n  - Authorized red-team / IR forensic capture using comsvcs.dll \u2014 track via change ticket\nlevel: critical\n",
+      "rationale": "CISA AA20-296A explicitly documents Berserk Bear running `rundll32.exe C:\\Windows\\system32\\comsvcs.dll MiniDump <lsass-pid> C:\\Windows\\Temp\\<file>.bin full` against US government and aviation targets \u2014 this is one of the few public detections traceable to a specific transcribed attacker command. The technique is preferred by Berserk Bear over mimikatz precisely because comsvcs.dll is a Microsoft-s",
+      "_sigma_issues": [
+        "sigma parse error: Sigma tag must start with namespace separated with dot from remaining tag."
+      ]
+    }
+  ]
+}

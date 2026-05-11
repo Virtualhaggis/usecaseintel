@@ -8,6 +8,11 @@ _590 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-11
+- [10 best full disk encryption tools in 2026](./2026-05-11/10-best-full-disk-encryption-tools-in-2026.md)
+- [odini malware uses cpu magnetic emissions to breach faraday ](./2026-05-11/odini-malware-uses-cpu-magnetic-emissions-to-breach-faraday-.md)
+- [top 10 best interactive malware analysis tools in 2026](./2026-05-11/top-10-best-interactive-malware-analysis-tools-in-2026.md)
+
 ## 2026-05-10
 - [hackers abuse google ads claude ai chats to push mac malware](./2026-05-10/hackers-abuse-google-ads-claude-ai-chats-to-push-mac-malware.md)
 - [new cpanel and whm flaws enable code execution dos attacks](./2026-05-10/new-cpanel-and-whm-flaws-enable-code-execution-dos-attacks.md)
@@ -31,13 +36,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [hackers deploy modular rat with credential theft and screens](./2026-05-08/hackers-deploy-modular-rat-with-credential-theft-and-screens.md)
-- [hackers use fake openclaw installer to steal crypto wallet a](./2026-05-08/hackers-use-fake-openclaw-installer-to-steal-crypto-wallet-a.md)
-- [koda security incident exposes customers data from online sh](./2026-05-08/koda-security-incident-exposes-customers-data-from-online-sh.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux dirty frag zero day gives root on all major distro](./2026-05-08/new-linux-dirty-frag-zero-day-gives-root-on-all-major-distro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [new pamdoora backdoor attacking linux systems to steal ssh c](./2026-05-08/new-pamdoora-backdoor-attacking-linux-systems-to-steal-ssh-c.md)
-- [new zichatbot malware uses zulip rest apis as command and co](./2026-05-08/new-zichatbot-malware-uses-zulip-rest-apis-as-command-and-co.md)
 - [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
