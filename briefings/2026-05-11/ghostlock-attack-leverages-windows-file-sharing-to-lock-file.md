@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GhostLock availability-attack tooling — public site / GitHub / cmdline reference
 
-`UC_16_8` · phase: **weapon** · confidence: **High**
+`UC_20_8` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ union _dns, _net, _proc
 
 ### [LLM] Mass SMB exclusive-handle accumulation on a file server (single client/user)
 
-`UC_16_9` · phase: **actions** · confidence: **Medium**
+`UC_20_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Python (or LOLBin) interpreter sustaining SMB connection burst to file servers
 
-`UC_16_10` · phase: **actions** · confidence: **Medium**
+`UC_20_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

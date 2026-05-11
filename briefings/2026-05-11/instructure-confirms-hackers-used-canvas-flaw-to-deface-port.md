@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Canvas LMS access during ShinyHunters XSS defacement window (May 7–9 2026)
 
-`UC_6_0` · phase: **delivery** · confidence: **Medium**
+`UC_10_0` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### [LLM] Tox / qTox messenger presence — ShinyHunters Canvas extortion contact channel
 
-`UC_6_1` · phase: **actions** · confidence: **Medium**
+`UC_10_1` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

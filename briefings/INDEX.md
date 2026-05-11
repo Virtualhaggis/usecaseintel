@@ -13,14 +13,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [ghostlock attack leverages windows file sharing to lock file](./2026-05-11/ghostlock-attack-leverages-windows-file-sharing-to-lock-file.md)
+- [gm agrees to 12 75m california settlement over sale of drive](./2026-05-11/gm-agrees-to-12-75m-california-settlement-over-sale-of-drive.md)
 - [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
 - [google warns of hackers using ai to create working zero day ](./2026-05-11/google-warns-of-hackers-using-ai-to-create-working-zero-day-.md)
 - [hackers use fake deepseek tui github repositories to deliver](./2026-05-11/hackers-use-fake-deepseek-tui-github-repositories-to-deliver.md)
 - [hackers use plugx like dll sideloading chain in fake claude ](./2026-05-11/hackers-use-plugx-like-dll-sideloading-chain-in-fake-claude-.md)
 - [hackers use weaponized jpeg file to deploy trojanized screen](./2026-05-11/hackers-use-weaponized-jpeg-file-to-deploy-trojanized-screen.md)
 - [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
+- [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)
 - [lyrie ai joins first batch of anthropic s cyber verification](./2026-05-11/lyrie-ai-joins-first-batch-of-anthropic-s-cyber-verification.md)
+- [new ghostlock tool abuses windows api to block file access](./2026-05-11/new-ghostlock-tool-abuses-windows-api-to-block-file-access.md)
+- [official checkmarx jenkins package compromised with infostea](./2026-05-11/official-checkmarx-jenkins-package-compromised-with-infostea.md)
 - [popular go library fsnotify raises supply chain alarms after](./2026-05-11/popular-go-library-fsnotify-raises-supply-chain-alarms-after.md)
 - [shinyhunters breaches instructure canvas lms through free fo](./2026-05-11/shinyhunters-breaches-instructure-canvas-lms-through-free-fo.md)
 - [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
@@ -43,11 +47,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-08
 - [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
-- [cisa gives feds four days to patch ivanti flaw exploited as ](./2026-05-08/cisa-gives-feds-four-days-to-patch-ivanti-flaw-exploited-as-.md)
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
-- [former govt contractor convicted for wiping dozens of federa](./2026-05-08/former-govt-contractor-convicted-for-wiping-dozens-of-federa.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [nvidia confirms geforce now data breach affecting armenian u](./2026-05-08/nvidia-confirms-geforce-now-data-breach-affecting-armenian-u.md)
@@ -57,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tclbanker banking trojan targets financial platforms via wha](./2026-05-08/tclbanker-banking-trojan-targets-financial-platforms-via-wha.md)
 - [trellix source code breach claimed by ransomhouse hackers](./2026-05-08/trellix-source-code-breach-claimed-by-ransomhouse-hackers.md)
 - [why more analysts won t solve your soc s alert problem](./2026-05-08/why-more-analysts-won-t-solve-your-soc-s-alert-problem.md)
-- [zara data breach exposed personal information of 197 000 peo](./2026-05-08/zara-data-breach-exposed-personal-information-of-197-000-peo.md)
 
 ## 2026-05-07
 - [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
@@ -225,7 +226,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-06
 - [cisa kev cve 2026 35616 fortinet forticlient ems improper ac](./2026-04-06/cisa-kev-cve-2026-35616-fortinet-forticlient-ems-improper-ac.md)
-- [understanding current threats to kubernetes environments](./2026-04-06/understanding-current-threats-to-kubernetes-environments.md)
 
 ## 2026-04-01
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)

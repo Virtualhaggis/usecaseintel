@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP Cloud Stealer C2 beacon to checkmarx[.]zone / 83.142.209.11
 
-`UC_0_5` · phase: **c2** · confidence: **High**
+`UC_4_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ union _net, _dns
 
 ### [LLM] Known-bad Checkmarx Jenkins AST plugin 2026.5.09 / TeamPCP .vsix written to disk
 
-`UC_0_6` · phase: **delivery** · confidence: **High**
+`UC_4_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP Cloud Stealer credential-bundle archive (tpcp.tar.gz) created on host
 
-`UC_0_7` · phase: **actions** · confidence: **High**
+`UC_4_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

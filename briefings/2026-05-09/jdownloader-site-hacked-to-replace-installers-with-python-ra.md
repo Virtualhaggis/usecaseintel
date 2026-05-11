@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JDownloader Supply-Chain RAT C2 Callback (parkspringshotel/auraguest/checkinnhotels)
 
-`UC_24_5` · phase: **c2** · confidence: **High**
+`UC_28_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union
 
 ### [LLM] Trojanized JDownloader Installer — Attacker PE Company Strings ('Zipline LLC' / 'The Water Team')
 
-`UC_24_6` · phase: **install** · confidence: **High**
+`UC_28_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] JDownloader Trojanized Linux Installer — Persistence Footprint and upowerd Masquerade
 
-`UC_24_7` · phase: **install** · confidence: **High**
+`UC_28_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JDownloader site hacked to replace installers with Python RAT malware
 
-`UC_24_4` · phase: **install** · confidence: **High**
+`UC_28_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
