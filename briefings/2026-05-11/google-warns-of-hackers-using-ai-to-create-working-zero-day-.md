@@ -10,12 +10,8 @@ Home Cyber Security
 Google Warns of Hackers Using AI to Create Working Zero-Day Exploit 
 By Guru Baran 
 May 11, 2026 
-
-
-
-
 Google Threat Intelligence Group recently published an alarming report detailing the rapid industrialization of generative artificial intelligence in adversarial workflows.
-The most significant finding reveals that a cybercriminal syndicate successfully developed a working zero-day exploit entirely through artificial intelligence assistance. The Python-based exploit was …
+The most significant finding reveals that a cybercriminal syndicate successfully developed a working zero-day exploit entirely through artificial intelligence assistance. The Python-based exploit was designed…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -42,12 +38,12 @@ The most significant finding reveals that a cybercriminal syndicate successfully
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1552.001** — Credentials In Files
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1552.004** — Private Keys
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102** — Web Service
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
 - **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1588.002** — Obtain Capabilities: Tool
+- **T1090.002** — Proxy: External Proxy
 
 ## Kill chain phases observed
 
@@ -55,93 +51,53 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Install of compromised LiteLLM PyPI versions 1.82.7/1.82.8 (TeamPCP / SANDCLOCK)
+### [LLM] Script-host process egress to Gemini API (HONESTCUE-style runtime LLM C2)
 
-`UC_1_11` · phase: **install** · confidence: **High**
+`UC_3_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe","python.exe","python","python3","python3.exe") OR Processes.process_name="*pip*") AND (Processes.process="*litellm==1.82.7*" OR Processes.process="*litellm==1.82.8*" OR Processes.process="*litellm-1.82.7*" OR Processes.process="*litellm-1.82.8*" OR Processes.process="*litellm/1.82.7*" OR Processes.process="*litellm/1.82.8*") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name("Processes")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*generativelanguage.googleapis.com*" AND All_Traffic.app IN ("cscript.exe","wscript.exe","mshta.exe","powershell.exe","pwsh.exe","hh.exe","regsvr32.exe") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Compromised LiteLLM PyPI versions 1.82.7 / 1.82.8 (TeamPCP / SANDCLOCK, ~5h window 2026-03-24)
-let _bad_versions = dynamic(["litellm==1.82.7","litellm==1.82.8","litellm-1.82.7","litellm-1.82.8","litellm/1.82.7","litellm/1.82.8"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","uv.exe","poetry.exe","pipx.exe")
-   or InitiatingProcessFileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","uv.exe","poetry.exe","pipx.exe")
-| where ProcessCommandLine has_any (_bad_versions)
-   or InitiatingProcessCommandLine has_any (_bad_versions)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessParentFileName
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "generativelanguage.googleapis.com"
+| where InitiatingProcessFileName in~ ("cscript.exe","wscript.exe","mshta.exe","powershell.exe","pwsh.exe","hh.exe","regsvr32.exe","rundll32.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, ActionType
 | order by Timestamp desc
 ```
 
-### [LLM] SANDCLOCK credential exfiltration: cloud/SSH/GitHub secret access inside Trivy or LiteLLM process tree
+### [LLM] UNC5673 LLM account-pooling middleware execution (Claude-Relay-Service / CLI-Proxy-API)
 
-`UC_1_12` · phase: **actions** · confidence: **Medium**
+`UC_3_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs values(Filesystem.process) as cmdlines from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("trivy","trivy.exe","python","python3","python.exe","python3.exe","litellm","litellm.exe","uvicorn","gunicorn") OR Filesystem.parent_process_name IN ("trivy","trivy.exe","python","python3","litellm")) AND (Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.ssh/id_rsa*" OR Filesystem.file_path="*/.ssh/id_ed25519*" OR Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*/.git-credentials*" OR Filesystem.file_path="*/.docker/config.json*" OR Filesystem.file_path="*/.netrc*" OR Filesystem.file_path="/var/run/secrets/*" OR Filesystem.file_path="*/github_token*" OR Filesystem.file_path="*\\AWS\\credentials*") by host Filesystem.user Filesystem.process_name Filesystem.parent_process_name | `drop_dm_object_name("Filesystem")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*claude-relay-service*" OR Processes.process="*Claude-Relay-Service*" OR Processes.process="*cli-proxy-api*" OR Processes.process="*CLI-Proxy-API*" OR Processes.process="*cli_proxy_api*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// SANDCLOCK exfil — Trivy / LiteLLM-descended process reading cloud or SSH credentials
-let _cred_paths = dynamic([@"\.aws\credentials", @"/.aws/credentials",
-                            @"\.ssh\id_rsa", @"/.ssh/id_rsa",
-                            @"\.ssh\id_ed25519", @"/.ssh/id_ed25519",
-                            @"\.npmrc", @"/.npmrc",
-                            @"\.git-credentials", @"/.git-credentials",
-                            @"\.docker\config.json", @"/.docker/config.json",
-                            @"\.netrc", @"/.netrc",
-                            @"/var/run/secrets/",
-                            @"GITHUB_TOKEN", @"github_token"]);
-let _suspect_procs = dynamic(["trivy","trivy.exe","python.exe","python3.exe","python","python3","litellm","litellm.exe","uvicorn","gunicorn","node.exe","node"]);
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ (_suspect_procs)
-   or InitiatingProcessParentFileName in~ (_suspect_procs)
-   or InitiatingProcessCommandLine has_any ("trivy","litellm")
-| where FolderPath has_any (_cred_paths) or FileName has_any (_cred_paths)
-| where InitiatingProcessAccountName !endswith "$"
-| summarize FileCount=dcount(strcat(FolderPath, FileName)),
-            Paths=make_set(strcat(FolderPath, FileName), 50),
-            FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
-            ProcCmd=any(InitiatingProcessCommandLine)
-            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName
-| order by LastSeen desc
-```
-
-### [LLM] Runtime LLM C2: outbound to generativelanguage.googleapis.com from script interpreters (HONESTCUE / LONGSTREAM / CANFAIL)
-
-`UC_1_13` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.url) as url values(All_Traffic.process_name) as proc values(All_Traffic.process) as cmd from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="generativelanguage.googleapis.com" OR All_Traffic.dest="*.generativelanguage.googleapis.com" OR All_Traffic.dest="aiplatform.googleapis.com" OR All_Traffic.url="*generativelanguage.googleapis.com*" OR All_Traffic.url="*gemini-2.5-flash-lite*" OR All_Traffic.url="*gemini-pro*") AND All_Traffic.process_name IN ("wscript.exe","cscript.exe","mshta.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","hh.exe","cmd.exe") by host All_Traffic.user All_Traffic.process_name | `drop_dm_object_name("All_Traffic")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// Outbound to Gemini API from script-host / LOLBins — HONESTCUE / LONGSTREAM / CANFAIL runtime LLM C2
-let _gemini_hosts = dynamic(["generativelanguage.googleapis.com","aiplatform.googleapis.com"]);
-let _gemini_models = dynamic(["gemini-2.5-flash-lite","gemini-2.5-flash","gemini-2.5-pro","gemini-pro","gemini-1.5"]);
-let _suspect_loaders = dynamic(["wscript.exe","cscript.exe","mshta.exe","hh.exe","rundll32.exe","regsvr32.exe","powershell.exe","pwsh.exe","cmd.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ (_suspect_loaders)
-| where RemoteUrl has_any (_gemini_hosts) or RemoteUrl has_any (_gemini_models)
-| where InitiatingProcessAccountName !endswith "$"
-// strip dev-tool launches whose parent is a known IDE/CLI
-| where InitiatingProcessParentFileName !in~ ("code.exe","devenv.exe","pycharm64.exe","idea64.exe","rstudio.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+let _proc =
+    DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where AccountName !endswith "$"
+    | where ProcessCommandLine has_any ("claude-relay-service","Claude-Relay-Service","cli-proxy-api","CLI-Proxy-API","cli_proxy_api")
+         or FolderPath has_any (@"\claude-relay-service\", @"\cli-proxy-api\", @"\cli_proxy_api\")
+         or InitiatingProcessCommandLine has_any ("claude-relay-service","cli-proxy-api","cli_proxy_api")
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+let _file =
+    DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where ActionType in ("FileCreated","FileModified")
+    | where FolderPath has_any (@"\claude-relay-service\", @"\cli-proxy-api\", @"\cli_proxy_api\")
+         or FileName has_any ("claude-relay-service","cli-proxy-api","cli_proxy_api")
+    | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256;
+union _proc, _file
 | order by Timestamp desc
 ```
 
@@ -523,4 +479,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

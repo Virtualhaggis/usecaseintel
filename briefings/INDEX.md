@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-11
+- [cpanel cve 2026 41940 under active exploitation to deploy fi](./2026-05-11/cpanel-cve-2026-41940-under-active-exploitation-to-deploy-fi.md)
 - [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [ghostlock attack leverages windows file sharing to lock file](./2026-05-11/ghostlock-attack-leverages-windows-file-sharing-to-lock-file.md)
@@ -22,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [lyrie ai joins first batch of anthropic s cyber verification](./2026-05-11/lyrie-ai-joins-first-batch-of-anthropic-s-cyber-verification.md)
 - [popular go library fsnotify raises supply chain alarms after](./2026-05-11/popular-go-library-fsnotify-raises-supply-chain-alarms-after.md)
 - [shinyhunters breaches instructure canvas lms through free fo](./2026-05-11/shinyhunters-breaches-instructure-canvas-lms-through-free-fo.md)
+- [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
 - [trending hugging face repo with 200k downloads executes malw](./2026-05-11/trending-hugging-face-repo-with-200k-downloads-executes-malw.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
 - [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
@@ -132,8 +134,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
 - [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
-- [top five sales challenges costing msps cybersecurity revenue](./2026-05-01/top-five-sales-challenges-costing-msps-cybersecurity-revenue.md)
-- [two cybersecurity professionals get 4 year sentences in blac](./2026-05-01/two-cybersecurity-professionals-get-4-year-sentences-in-blac.md)
 
 ## 2026-04-30
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)

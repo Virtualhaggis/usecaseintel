@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TCLBANKER side-load: screen_retriever_plugin.dll loaded by LogiAiPromptBuilder.exe outside Program Files
 
-`UC_25_10` · phase: **install** · confidence: **High**
+`UC_27_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Logi AI Prompt Builder spawned from user-writable path by msiexec.exe (TCLBANKER ZIP-MSI delivery)
 
-`UC_25_11` · phase: **delivery** · confidence: **High**
+`UC_27_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### [LLM] TCLBANKER developer-named loader binary tclloader.exe execution
 
-`UC_25_12` · phase: **install** · confidence: **High**
+`UC_27_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -421,7 +421,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TCLBANKER Banking Trojan Targets Financial Platforms via WhatsApp and Outlook Wo
 
-`UC_25_9` · phase: **exploit** · confidence: **High**
+`UC_27_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

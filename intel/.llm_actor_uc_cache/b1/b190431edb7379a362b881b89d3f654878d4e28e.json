@@ -1,0 +1,83 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 ROKRAT C2 via legitimate cloud-storage APIs (pCloud / Yandex / Dropbox) from non-browser processes",
+      "description": "Hunts ScarCruft/Reaper's flagship ROKRAT (and CHINOTTO) C2 channel \u2014 abuse of legitimate cloud-storage REST APIs (api.pcloud.com, cloud-api.yandex.net, *.dropboxapi.com) as bi-directional C2. The malware fetches OAuth-bearer commands and exfils to these endpoints. Surfaces hits only when the process is NOT a known browser or vendor sync client \u2014 exactly the shape ROKRAT presents.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.001",
+        "T1102.002",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (\"api.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\") NOT All_Traffic.app IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"Dropbox.exe\",\"YandexDisk.exe\",\"pcloud.exe\",\"OneDrive.exe\",\"slack.exe\",\"Teams.exe\") NOT All_Traffic.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | rename app as process_name, dest as remote_host | sort - lastTime",
+      "kql": "// APT37 / ScarCruft \u2014 ROKRAT cloud-API C2 from non-browser processes\nlet _cloud_c2_hosts = dynamic([\"api.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"oauth2.pcloud.com\"]);\nlet _benign_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"safari.exe\",\"Dropbox.exe\",\"YandexDisk.exe\",\"pcloud.exe\",\"OneDrive.exe\",\"OneDriveStandaloneUpdater.exe\",\"msteams.exe\",\"Teams.exe\",\"slack.exe\",\"Outlook.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where isnotempty(RemoteUrl)\n| where RemoteUrl has_any (_cloud_c2_hosts)\n| where InitiatingProcessFileName !in~ (_benign_clients)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where not(InitiatingProcessFolderPath startswith @\"C:\\Program Files\\\")\n   or InitiatingProcessFolderPath has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\")\n| summarize HitCount = count(),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            Urls      = make_set(RemoteUrl, 25),\n            Ports     = make_set(RemotePort, 10),\n            SampleCmd = any(InitiatingProcessCommandLine)\n            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,\n               InitiatingProcessFolderPath, InitiatingProcessSHA256\n| order by FirstSeen desc",
+      "sentinel_kql": "// APT37 / ScarCruft \u2014 ROKRAT cloud-API C2 (ASIM port)\nlet _cloud_c2_hosts = dynamic([\"api.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"oauth2.pcloud.com\"]);\nlet _benign_clients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"Dropbox.exe\",\"YandexDisk.exe\",\"pcloud.exe\",\"OneDrive.exe\",\"msteams.exe\",\"Teams.exe\",\"slack.exe\",\"Outlook.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where (DstHostname has_any (_cloud_c2_hosts)) or (Url has_any (_cloud_c2_hosts))\n| where ActingProcessName !in~ (_benign_clients)\n| where SrcUsername !endswith \"$\"\n| summarize HitCount = count(),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            Hosts     = make_set(DstHostname, 25),\n            Ports     = make_set(DstPortNumber, 10),\n            SampleCmd = any(ActingProcessCommandLine)\n            by DvcHostname, SrcUsername, ActingProcessName\n| order by FirstSeen desc",
+      "sigma_yaml": "title: APT37 ScarCruft ROKRAT C2 via Cloud Storage APIs\nid: 7a9c4f12-b2e1-4d8b-9a13-rokrat-cloud-c2\nstatus: experimental\ndescription: |\n  Detects ROKRAT/CHINOTTO command-and-control traffic from APT37 (ScarCruft) \u2014 non-browser, non-sync-client processes\n  connecting to legitimate cloud-storage REST endpoints (pCloud, Yandex Cloud, Dropbox) used as bidirectional C2.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://blog.talosintelligence.com/rokrat-analysis\n  - https://www.genians.co.kr/en/blog/threat_intelligence_report_apt37\nauthor: SOC Detection Engineering\ndate: 2026/05/11\ntags:\n  - attack.command_and_control\n  - attack.t1071.001\n  - attack.t1102.002\n  - attack.t1567.002\n  - attack.g0067\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dest:\n    DestinationHostname:\n      - 'api.pcloud.com'\n      - 'cloud-api.yandex.net'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'oauth2.pcloud.com'\n  exclusion_clients:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\opera.exe'\n      - '\\iexplore.exe'\n      - '\\Dropbox.exe'\n      - '\\YandexDisk.exe'\n      - '\\pcloud.exe'\n      - '\\OneDrive.exe'\n      - '\\msteams.exe'\n      - '\\Teams.exe'\n      - '\\slack.exe'\n      - '\\Outlook.exe'\n  condition: selection_dest and not exclusion_clients\nfields:\n  - Image\n  - User\n  - DestinationHostname\n  - DestinationPort\nfalsepositives:\n  - Custom-named or repackaged sync clients\n  - Developer tooling integrating directly with the pCloud/Yandex/Dropbox API\nlevel: high",
+      "rationale": "Cloud-storage REST APIs as C2 are the single most distinctive ROKRAT/CHINOTTO TTP \u2014 documented across Cisco Talos, Genians, AhnLab, Kaspersky and Volexity write-ups since 2017 and still observed in 2024-26 campaigns. Other actors use Dropbox occasionally, but APT37 is the only crew that has institutionalised pCloud + Yandex Cloud + Dropbox simultaneously as their primary command channel. Combined ",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT37 ScarCruft LNK lure payload extraction via findstr against parent LNK file",
+      "description": "Hunts the signature ScarCruft weaponised-LNK execution chain: explorer.exe opens a spearphish LNK, which spawns cmd.exe/powershell.exe that calls findstr.exe against its own .lnk path to carve out an embedded payload + decoy HWP/PDF. This findstr-on-.lnk invocation is essentially never seen in benign Windows usage and has been the loader pattern across multiple 2022-26 ScarCruft campaigns (RoKRAT, CHINOTTO, M2RAT).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.001",
+        "T1059.003",
+        "T1027",
+        "T1140"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as commandline values(Processes.parent_process) as parent_commandline from datamodel=Endpoint.Processes where (Processes.process_name=findstr.exe OR Processes.process_name=find.exe) Processes.parent_process_name IN (cmd.exe,powershell.exe,pwsh.exe) Processes.process=\"*.lnk*\" NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.parent_process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "// APT37 / ScarCruft \u2014 findstr against a .lnk file = ROKRAT/M2RAT/CHINOTTO loader carving its own payload\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where AccountName !endswith \"$\"\n| where FileName in~ (\"findstr.exe\",\"find.exe\")\n| where ProcessCommandLine has \".lnk\"\n| where InitiatingProcessFileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\")\n// Optional pivot \u2014 co-occurring decoy/payload drop near the same DeviceId within 60s\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType == \"FileCreated\"\n    | where FolderPath has_any (@\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\", @\"\\Users\\Public\\\")\n    | where FileName endswith \".hwp\" or FileName endswith \".pdf\"\n       or FileName endswith \".dat\" or FileName endswith \".exe\"\n       or FileName endswith \".dll\" or FileName endswith \".bat\"\n    | project DropTime = Timestamp, DeviceId, DroppedFile = FileName, DroppedPath = FolderPath\n  ) on DeviceId\n| where isnull(DropTime) or DropTime between (Timestamp - 60s .. Timestamp + 60s)\n| project Timestamp, DeviceName, AccountName,\n          ParentProcess = InitiatingProcessFileName,\n          ParentCmd     = InitiatingProcessCommandLine,\n          Carver        = FileName,\n          CarverCmd     = ProcessCommandLine,\n          DropTime, DroppedFile, DroppedPath,\n          InitiatingProcessSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// APT37 / ScarCruft \u2014 findstr against a .lnk file (SecurityEvent 4688)\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where Account !endswith \"$\"\n| where NewProcessName endswith \"\\\\findstr.exe\" or NewProcessName endswith \"\\\\find.exe\"\n| where CommandLine has \".lnk\"\n| where ParentProcessName endswith \"\\\\cmd.exe\"\n   or ParentProcessName endswith \"\\\\powershell.exe\"\n   or ParentProcessName endswith \"\\\\pwsh.exe\"\n| project TimeGenerated, Computer, Account,\n          ParentProcess = ParentProcessName,\n          NewProcess    = NewProcessName,\n          CommandLine,\n          SubjectUserName, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ScarCruft LNK Payload Extraction via FindStr on Parent LNK\nid: 4f1e8d22-c731-49a2-b8f0-apt37-lnk-findstr\nstatus: experimental\ndescription: |\n  APT37 (ScarCruft / Reaper / Group123) weaponised LNK lures invoke findstr.exe against the parent .lnk file\n  to carve out an embedded payload + decoy document. This findstr-on-LNK pattern is the canonical ROKRAT,\n  M2RAT and CHINOTTO loader pattern documented across Talos, Genians, AhnLab and Kaspersky reporting.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://blog.talosintelligence.com/rokrat-analysis\n  - https://www.genians.co.kr/en/blog/threat_intelligence_report_apt37\n  - https://asec.ahnlab.com/en/m2rat-scarcruft\nauthor: SOC Detection Engineering\ndate: 2026/05/11\ntags:\n  - attack.execution\n  - attack.t1204.002\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.t1027\n  - attack.t1140\n  - attack.g0067\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection:\n    Image|endswith:\n      - '\\findstr.exe'\n      - '\\find.exe'\n    ParentImage|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n    CommandLine|contains: '.lnk'\n  condition: selection\nfields:\n  - Image\n  - ParentImage\n  - CommandLine\n  - User\nfalsepositives:\n  - IT admins / power users manually grep'ing into a shortcut file (very rare in practice)\nlevel: high",
+      "rationale": "APT37's weaponised LNK loader has used `cmd.exe /c findstr.exe \"<marker>\" \"<full lnk path>\" > <temp>` (and PowerShell equivalents reading the parent LNK) as its first-stage payload-carve mechanism since at least 2022, observed in RoKRAT, M2RAT and CHINOTTO campaigns targeting South Korean policy, defector and journalist communities (per Cisco Talos, Genians, AhnLab ASEC, ESET). The findstr-against",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

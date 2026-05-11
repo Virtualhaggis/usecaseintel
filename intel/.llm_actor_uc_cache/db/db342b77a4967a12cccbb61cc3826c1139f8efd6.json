@@ -1,0 +1,106 @@
+{
+  "name": "Silk Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Silk Typhoon / HAFNIUM \u2014 IIS w3wp.exe spawns shell/recon LOLBin on Exchange (China Chopper / ProxyLogon web-shell execution)",
+      "description": "Detects the canonical Silk Typhoon (HAFNIUM / Operation Exchange Marauder) post-exploitation pattern: the IIS worker process w3wp.exe spawning cmd.exe, PowerShell, or hands-on-keyboard recon/credential LOLBins. This is the smoking-gun signal that a China Chopper or ProxyLogon-class web shell dropped into an Exchange virtual directory is being interactively driven by the operator.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.003",
+        "T1059.003",
+        "T1059.001",
+        "T1036.005",
+        "T1190"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=w3wp.exe Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,mshta.exe,cscript.exe,wscript.exe,net.exe,net1.exe,nltest.exe,whoami.exe,systeminfo.exe,tasklist.exe,ipconfig.exe,quser.exe,reg.exe,certutil.exe,bitsadmin.exe,procdump.exe,procdump64.exe,rundll32.exe,regsvr32.exe,sc.exe,wmic.exe,dsquery.exe,ldifde.exe,curl.exe,7z.exe,7za.exe,makecab.exe) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_id Processes.process Processes.process_name Processes.process_path Processes.process_id\n| `drop_dm_object_name(Processes)`\n| `security_content_ctime(firstTime)`\n| `security_content_ctime(lastTime)`\n| search parent_process=\"*MSExchange*\" OR process=\"*procdump*\" OR process=\"*-ma*lsass*\" OR process=\"*ntds*\" OR process=\"*nltest*\" OR process=\"*whoami*\" OR process=\"*net*group*Domain*Admins*\" OR process=\"*ekrn*\" OR process=\"*Microsoft.Exchange.SystemMailbox*\"\n| eval risk_object=dest, risk_object_type=\"system\"\n| table firstTime lastTime dest user parent_process process_name process",
+      "kql": "// Silk Typhoon / HAFNIUM \u2014 w3wp.exe child process indicative of web-shell driven post-ex on Exchange\nlet _exchange_ctx = dynamic([\"MSExchange\",\"OWA\",\"ECP\",\"EWS\",\"ActiveSync\",\"OAB\",\"RPC\",\"Mapi\",\"MailboxReplicationProxyAppPool\"]);\nlet _exec_lolbins = dynamic([\n    \"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\n    \"net.exe\",\"net1.exe\",\"nltest.exe\",\"whoami.exe\",\"systeminfo.exe\",\"tasklist.exe\",\n    \"ipconfig.exe\",\"quser.exe\",\"reg.exe\",\"certutil.exe\",\"bitsadmin.exe\",\n    \"procdump.exe\",\"procdump64.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"sc.exe\",\n    \"wmic.exe\",\"dsquery.exe\",\"ldifde.exe\",\"curl.exe\",\"7z.exe\",\"7za.exe\",\"makecab.exe\",\n    \"esentutl.exe\",\"vssadmin.exe\",\"ntdsutil.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"w3wp.exe\"\n| where FileName in~ (_exec_lolbins)\n| where AccountName !endswith \"$\"            // skip pure machine-account context\n     or FileName in~ (\"procdump.exe\",\"procdump64.exe\",\"ntdsutil.exe\",\"vssadmin.exe\")  // keep if cred-theft tooling\n| extend ExchangeContext = iff(\n    InitiatingProcessCommandLine has_any (_exchange_ctx)\n      or InitiatingProcessFolderPath has @\"\\Exchange Server\\\"\n      or InitiatingProcessFolderPath has @\"\\inetsrv\\\",\n    true, false)\n| extend SilkTyphoonRecon = iff(\n    ProcessCommandLine has_any (\n      \"whoami /all\",\"net group \\\"Domain Admins\\\"\",\"net group \\\"Exchange\",\n      \"nltest /dclist\",\"nltest /domain_trusts\",\n      \"Get-MailboxExportRequest\",\"New-MailboxExportRequest\",\n      \"-ma lsass\",\"--ma lsass\",\"procdump\",\n      \"esentutl /y /vss\",\"vssadmin create shadow\",\n      \"ntdsutil\",\"ifm create full\",\n      \"\\\\system_web\\\\\",\"aspnet_client\\\\system_web\"),\n    true, false)\n| where ExchangeContext or SilkTyphoonRecon                          // narrow to actor-relevant context\n| project Timestamp, DeviceName, AccountName, AccountDomain,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildName   = FileName,\n          ChildCmd    = ProcessCommandLine,\n          SHA256, ExchangeContext, SilkTyphoonRecon, ReportId\n| order by Timestamp desc",
+      "sentinel_kql": "// Silk Typhoon / HAFNIUM \u2014 w3wp.exe \u2192 shell / recon / cred-theft LOLBin on Exchange (Sentinel SecurityEvent 4688)\nlet _exec_lolbins = dynamic([\n    \"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\n    \"net.exe\",\"net1.exe\",\"nltest.exe\",\"whoami.exe\",\"systeminfo.exe\",\"tasklist.exe\",\n    \"ipconfig.exe\",\"quser.exe\",\"reg.exe\",\"certutil.exe\",\"bitsadmin.exe\",\n    \"procdump.exe\",\"procdump64.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"sc.exe\",\n    \"wmic.exe\",\"dsquery.exe\",\"ldifde.exe\",\"curl.exe\",\"7z.exe\",\"7za.exe\",\n    \"esentutl.exe\",\"vssadmin.exe\",\"ntdsutil.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\w3wp.exe\"\n| extend ChildName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ChildName in (_exec_lolbins)\n| where Account !endswith \"$\"\n     or ChildName in (\"procdump.exe\",\"procdump64.exe\",\"ntdsutil.exe\",\"vssadmin.exe\")\n| extend SilkTyphoonRecon = iff(\n    CommandLine has_any (\n      \"whoami /all\",'net group \"Domain Admins\"','net group \"Exchange',\n      \"nltest /dclist\",\"nltest /domain_trusts\",\n      \"Get-MailboxExportRequest\",\"New-MailboxExportRequest\",\n      \"-ma lsass\",\"procdump\",\n      \"esentutl /y /vss\",\"vssadmin create shadow\",\n      \"ntdsutil\",\"ifm create full\",\n      \"\\\\aspnet_client\\\\system_web\"),\n    true, false)\n| project TimeGenerated, Computer, Account, NewProcessName, ChildName,\n          CommandLine, ParentProcessName, TokenElevationType, SilkTyphoonRecon\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Silk Typhoon / HAFNIUM - w3wp.exe Spawns Shell or LOLBin (Exchange Web-Shell Post-Exploitation)\nid: 7c9b1f4a-2a3d-4e1f-9b6f-1f5a4d3e9c10\nstatus: experimental\ndescription: Detects IIS worker process w3wp.exe spawning interactive shells or recon/credential-theft LOLBins, the signature post-exploitation pattern of Silk Typhoon (HAFNIUM, Operation Exchange Marauder) after dropping a China Chopper or ProxyLogon-class web shell into an Exchange virtual directory.\nreferences:\n  - https://attack.mitre.org/groups/G0125/\n  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/\n  - https://www.microsoft.com/en-us/security/blog/2025/03/05/silk-typhoon-targeting-it-supply-chain/\nauthor: detection-eng\ndate: 2026/05/11\ntags:\n  - attack.t1505.003\n  - attack.t1059.001\n  - attack.t1059.003\n  - attack.g0125\n  - attack.initial_access\n  - attack.execution\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\w3wp.exe'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\mshta.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\nltest.exe'\n      - '\\whoami.exe'\n      - '\\reg.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\procdump.exe'\n      - '\\procdump64.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\wmic.exe'\n      - '\\dsquery.exe'\n      - '\\ldifde.exe'\n      - '\\7z.exe'\n      - '\\7za.exe'\n      - '\\esentutl.exe'\n      - '\\vssadmin.exe'\n      - '\\ntdsutil.exe'\n  filter_legit:\n    User|endswith: '$'\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\net.exe'\n  condition: selection_parent and selection_child and not filter_legit\nfalsepositives:\n  - Legitimate IIS application calling out to LOLBins (rare; investigate every hit)\n  - SCOM / vendor management packs that exec inside the IIS worker (allowlist by parent commandline app-pool)\nlevel: high",
+      "rationale": "w3wp.exe (the IIS application pool worker) almost never spawns interactive shells, recon LOLBins, or credential-theft tooling under normal application traffic \u2014 when it does it is invariably a web-shell operator running commands via an .aspx implant. This was THE signature observation of the original ProxyLogon (CVE-2021-26855/26857/26858/27065) compromise that Microsoft attributed to HAFNIUM / Si",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Domain",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "AccountDomain",
+          "message": "`Domain` is not a canonical column of DeviceProcessEvents. Did you mean `AccountDomain`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Admins",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Admins` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Exchange",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Exchange` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Get",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Get` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MailboxExportRequest",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MailboxExportRequest` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "New",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`New` is not a canonical column of DeviceProcessEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Silk Typhoon / HAFNIUM \u2014 ASP.NET web shell file drop in Exchange / IIS virtual directories",
+      "description": "Catches the file-write half of the Silk Typhoon kill chain: an .aspx/.ashx/.asmx/.asp web shell being created or renamed into an Exchange or IIS virtual directory (aspnet_client\\system_web, FrontEnd\\HttpProxy, ClientAccess\\Owa\\Auth, etc.) by an IIS-context, Exchange-context, or interactive-shell process. The exact path family Microsoft documented for HAFNIUM's ProxyLogon web shells and that Silk Typhoon has continued to use against Exchange and other internet-facing servers.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.003",
+        "T1190",
+        "T1036.005",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.aspx\" OR Filesystem.file_name=\"*.ashx\" OR Filesystem.file_name=\"*.asmx\" OR Filesystem.file_name=\"*.asp\") (Filesystem.file_path=\"*\\\\inetpub\\\\wwwroot\\\\aspnet_client\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\FrontEnd\\\\HttpProxy\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\ClientAccess\\\\Owa\\\\Auth\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\ClientAccess\\\\ecp\\\\Auth\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V14\\\\ClientAccess\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\FrontEnd\\\\HttpProxy\\\\owa\\\\auth\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\FrontEnd\\\\HttpProxy\\\\ecp\\\\auth\\\\*\") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user Filesystem.action\n| `drop_dm_object_name(Filesystem)`\n| `security_content_ctime(firstTime)`\n| `security_content_ctime(lastTime)`\n| search action IN (\"created\",\"modified\",\"renamed\") OR action=\"write\"\n| eval risk_object=dest, risk_object_type=\"system\"",
+      "kql": "// Silk Typhoon / HAFNIUM \u2014 web-shell .aspx/.ashx drop into Exchange / IIS virtual directories\nlet _shell_exts = dynamic([\".aspx\",\".ashx\",\".asmx\",\".asp\"]);\nlet _exchange_paths = dynamic([\n    @\"\\inetpub\\wwwroot\\aspnet_client\\\",\n    @\"\\inetpub\\wwwroot\\aspnet_client\\system_web\\\",\n    @\"\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\\",\n    @\"\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\owa\\auth\\\",\n    @\"\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\ecp\\auth\\\",\n    @\"\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\ews\\\",\n    @\"\\Exchange Server\\V15\\ClientAccess\\Owa\\Auth\\\",\n    @\"\\Exchange Server\\V15\\ClientAccess\\ecp\\Auth\\\",\n    @\"\\Exchange Server\\V14\\ClientAccess\\Owa\\auth\\\",\n    @\"\\Exchange Server\\V14\\ClientAccess\\ecp\\auth\\\"]);\nlet _hafnium_filename_hints = dynamic([\n    \"supp0rt\",\"OutlookEN\",\"errorEE\",\"errorEEE\",\"errorEW\",\"errorFF\",\n    \"shell\",\"healthcheck\",\"web.aspx\",\"aspnet_\",\"discover\",\n    \"RedirSuiteServerProxy\",\"xx.aspx\",\"one.aspx\",\"help.aspx\",\n    \"logon.aspx\",\"default.aspx\",\"current.aspx\",\"HttpProxy\",\"App_Web_\"]);\nDeviceFileEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| extend lFile = tolower(FileName), lPath = tolower(FolderPath)\n| where _shell_exts has_any (lFile)                         // .aspx-family extension\n     or FileName endswith \".aspx\" or FileName endswith \".ashx\"\n     or FileName endswith \".asmx\" or FileName endswith \".asp\"\n| where lPath has_any (_exchange_paths)\n| extend KnownHafniumName = iff(lFile has_any (_hafnium_filename_hints), true, false)\n| extend WrittenByExchangeProc = iff(\n    InitiatingProcessFileName in~ (\"w3wp.exe\",\"umworkerprocess.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"rundll32.exe\")\n      or InitiatingProcessFolderPath has @\"\\Exchange Server\\\"\n      or InitiatingProcessFolderPath has @\"\\inetsrv\\\",\n    true, false)\n| where WrittenByExchangeProc or KnownHafniumName             // suppress legitimate Exchange/CU installer writes via msiexec\n| where InitiatingProcessFileName !in~ (\"msiexec.exe\",\"setup.exe\",\"updatecas.exe\",\"servicing.exe\",\"trustedinstaller.exe\")\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          InitiatingProcessCommandLine,\n          InitiatingProcessAccountName, InitiatingProcessAccountDomain,\n          KnownHafniumName, WrittenByExchangeProc, ReportId\n| order by Timestamp desc",
+      "sentinel_kql": "// Silk Typhoon / HAFNIUM \u2014 web-shell .aspx drop into Exchange / IIS paths (ASIM ImFileEvent)\nlet _shell_exts = dynamic([\".aspx\",\".ashx\",\".asmx\",\".asp\"]);\nlet _exchange_paths = dynamic([\n    @\"\\inetpub\\wwwroot\\aspnet_client\\\",\n    @\"\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\\",\n    @\"\\Exchange Server\\V15\\ClientAccess\\Owa\\Auth\\\",\n    @\"\\Exchange Server\\V15\\ClientAccess\\ecp\\Auth\\\",\n    @\"\\Exchange Server\\V14\\ClientAccess\\\"]);\nlet _hafnium_filename_hints = dynamic([\n    \"supp0rt\",\"OutlookEN\",\"errorEE\",\"errorEEE\",\"errorEW\",\"errorFF\",\n    \"RedirSuiteServerProxy\",\"shell\",\"healthcheck\",\"web.aspx\",\n    \"one.aspx\",\"xx.aspx\",\"current.aspx\",\"help.aspx\",\"discover\"]);\nImFileEvent\n| where TimeGenerated > ago(30d)\n| where EventType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n| extend lFile = tolower(TargetFileName), lPath = tolower(TargetFilePath)\n| where TargetFileName endswith \".aspx\" or TargetFileName endswith \".ashx\"\n     or TargetFileName endswith \".asmx\" or TargetFileName endswith \".asp\"\n| where lPath has_any (_exchange_paths)\n| extend KnownHafniumName = iff(lFile has_any (_hafnium_filename_hints), true, false)\n| extend WrittenByExchangeProc = iff(\n    ActingProcessName has_any (\"w3wp.exe\",\"umworkerprocess.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"rundll32.exe\")\n      or ActingProcessName has @\"\\Exchange Server\\\",\n    true, false)\n| where WrittenByExchangeProc or KnownHafniumName\n| where ActingProcessName !has_any (\"msiexec.exe\",\"setup.exe\",\"updatecas.exe\",\"servicing.exe\",\"trustedinstaller.exe\")\n| project TimeGenerated, DvcHostname, EventType, TargetFileName, TargetFilePath,\n          TargetFileSHA256, ActingProcessName, ActingProcessCommandLine,\n          ActorUsername, KnownHafniumName, WrittenByExchangeProc\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Silk Typhoon / HAFNIUM - ASPX Web Shell File Drop in Exchange / IIS Virtual Directory\nid: 9d1e4a72-8b03-4f6e-8a5c-2e1b6c0a7d11\nstatus: experimental\ndescription: Detects creation of an .aspx/.ashx/.asmx/.asp file inside an Exchange or IIS virtual directory used by HAFNIUM / Silk Typhoon for web-shell deployment during ProxyLogon (CVE-2021-26855/26857/26858/27065) and successor campaigns.\nreferences:\n  - https://attack.mitre.org/groups/G0125/\n  - https://www.microsoft.com/security/blog/2021/03/02/hafnium-targeting-exchange-servers/\n  - https://www.volexity.com/blog/2021/03/02/active-exploitation-of-microsoft-exchange-zero-day-vulnerabilities/\n  - https://www.microsoft.com/en-us/security/blog/2025/03/05/silk-typhoon-targeting-it-supply-chain/\nauthor: detection-eng\ndate: 2026/05/11\ntags:\n  - attack.t1505.003\n  - attack.t1190\n  - attack.t1036.005\n  - attack.g0125\n  - attack.persistence\nlogsource:\n  category: file_event\n  product: windows\ndetection:\n  selection_ext:\n    TargetFilename|endswith:\n      - '.aspx'\n      - '.ashx'\n      - '.asmx'\n      - '.asp'\n  selection_path:\n    TargetFilename|contains:\n      - '\\inetpub\\wwwroot\\aspnet_client\\'\n      - '\\Exchange Server\\V15\\FrontEnd\\HttpProxy\\'\n      - '\\Exchange Server\\V15\\ClientAccess\\Owa\\Auth\\'\n      - '\\Exchange Server\\V15\\ClientAccess\\ecp\\Auth\\'\n      - '\\Exchange Server\\V14\\ClientAccess\\'\n  filter_installer:\n    Image|endswith:\n      - '\\msiexec.exe'\n      - '\\TrustedInstaller.exe'\n      - '\\setup.exe'\n      - '\\UpdateCas.exe'\n      - '\\Servicing.exe'\n  condition: selection_ext and selection_path and not filter_installer\nfields:\n  - Image\n  - TargetFilename\n  - User\n  - Hashes\nfalsepositives:\n  - Exchange Cumulative Update / Security Update installation (filtered by Image)\n  - Legitimate vendor add-on installations into Exchange path (rare; review every write)\nlevel: high",
+      "rationale": "The Exchange / IIS virtual-directory file paths in this detection are the exact families Microsoft, Volexity, and FireEye/Mandiant published in March 2021 as HAFNIUM ProxyLogon web-shell drop locations \u2014 specifically `inetpub\\wwwroot\\aspnet_client\\system_web\\`, `Exchange Server\\V15\\FrontEnd\\HttpProxy\\owa\\auth\\`, and the ECP auth subdirectory. Legitimate Exchange administration never writes new .as"
+    }
+  ]
+}

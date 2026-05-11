@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use PlugX-Like DLL Sideloading Chain in Fake Claude Malware Campaign 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
 Cybercriminals are getting creative with how they lure victims into downloading malware, and a new campaign involving a fake version of Anthropic’s Claude AI assistant is raising serious concerns. 
-Attackers set up a convincing lookalike website to distribute a dangerous installer that quietly plants a backdoor on infected systems. The campaign use…
+Attackers set up a convincing lookalike website to distribute a dangerous installer that quietly plants a backdoor on infected systems. The campaign uses a chai…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,11 +42,13 @@ Attackers set up a convincing lookalike website to distribute a dangerous instal
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1547.001** — Persistence (article-specific)
-- **T1547.001** — Registry Run Keys / Startup Folder
 - **T1574.002** — DLL Side-Loading
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1027.009** — Embedded Payloads
 - **T1036.005** — Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.002** — Application Layer Protocol: File Transfer Protocols
+- **T1095** — Non-Application Layer Protocol
+- **T1568.002** — Domain Generation Algorithms / Lookalike Domains
 - **T1583.001** — Acquire Infrastructure: Domains
 
 ## Kill chain phases observed
@@ -59,79 +57,73 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Beagle backdoor / DonutLoader files written to Startup folder (fake Claude installer)
+### [LLM] Beagle/DonutLoader installer triad dropped to user Startup folder (Fake Claude campaign)
 
-`UC_2_10` · phase: **install** · confidence: **High**
+`UC_4_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="NOVupdate.exe" OR Filesystem.file_name="NOVupdate.exe.dat" OR Filesystem.file_name="avk.dll" OR Filesystem.file_name="MpClient.dll") AND (Filesystem.file_path="*\\Startup\\*" OR Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_id Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.process_name) as creating_process from datamodel=Endpoint.Filesystem where (Filesystem.file_name="NOVupdate.exe" OR Filesystem.file_name="NOVupdate.exe.dat" OR Filesystem.file_name="avk.dll" OR Filesystem.file_name="MpCopyAccelerator.exe" OR Filesystem.file_name="MpClient.dll") AND (Filesystem.file_path="*\\Startup\\*" OR Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*") by Filesystem.dest Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | stats values(file_name) as dropped_files dc(file_name) as distinct_files values(file_paths) as paths values(creating_process) as creating_process min(firstTime) as firstTime max(lastTime) as lastTime by dest user | where distinct_files>=2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// Beagle/DonutLoader installer dropping NOVupdate.exe + NOVupdate.exe.dat + avk.dll (or MpCopyAccelerator.exe + MpClient.dll) into the per-user Startup folder
 DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ ("NOVupdate.exe","NOVupdate.exe.dat","avk.dll","MpClient.dll")
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated", "FileRenamed")
+| where FileName in~ ("NOVupdate.exe", "NOVupdate.exe.dat", "avk.dll", "MpCopyAccelerator.exe", "MpClient.dll")
 | where FolderPath has_any (@"\Startup\", @"\Start Menu\Programs\Startup\")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), DroppedFiles=make_set(FileName), DistinctFileCount=dcount(FileName), SampleSHA256=make_set(SHA256), Droppers=make_set(InitiatingProcessFileName), DropperCmd=make_set(InitiatingProcessCommandLine) by DeviceName, FolderPath, InitiatingProcessAccountName
+| where DistinctFileCount >= 2   // triad signal — single-file drop is noisier
+| order by FirstSeen desc
 ```
 
-### [LLM] Signed G DATA / Defender binary executing from non-vendor folder (PlugX-style sideload)
+### [LLM] Signed G DATA / Microsoft Defender updater executing from non-vendor path (Beagle sideload host)
 
-`UC_2_11` · phase: **exploit** · confidence: **High**
+`UC_4_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="NOVupdate.exe" OR Processes.process_name="MpCopyAccelerator.exe") AND NOT (Processes.process_path="*\\G DATA\\*" OR Processes.process_path="*\\Windows Defender\\*" OR Processes.process_path="*\\Microsoft\\Windows Defender\\*" OR Processes.process_path="*\\WindowsApps\\Microsoft.Defender*" OR Processes.process_path="*\\Program Files\\G Data*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.process_name="NOVupdate.exe" OR Processes.process_name="MpCopyAccelerator.exe") by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | where NOT (process_name="NOVupdate.exe" AND match(process_path, "(?i)\\\\Program Files\\\\G DATA\\\\")) AND NOT (process_name="MpCopyAccelerator.exe" AND match(process_path, "(?i)\\\\(Program Files\\\\Windows Defender|ProgramData\\\\Microsoft\\\\Windows Defender)\\\\")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+// Sophos-named Beagle sideload host binaries — signed updater running from a non-vendor path is the campaign tell
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("NOVupdate.exe","MpCopyAccelerator.exe")
-| where not(FolderPath has_any (@"\G DATA\", @"\G Data\", @"\Windows Defender\", @"\Microsoft\Windows Defender\", @"\WindowsApps\Microsoft.Defender"))
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName
+| where Timestamp > ago(14d)
+| where FileName in~ ("NOVupdate.exe", "MpCopyAccelerator.exe")
+| where (FileName =~ "NOVupdate.exe" and not(FolderPath has @"\G DATA\"))
+    or (FileName =~ "MpCopyAccelerator.exe" and not(FolderPath has_any (@"\Windows Defender\", @"\Microsoft\Windows Defender\")))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### [LLM] Network egress to fake Claude / Beagle C2 infrastructure (claude-pro, Vertextrust, gouvvbo, update-* lures)
+### [LLM] Beagle backdoor C2 egress — Fake Claude campaign infrastructure (license.claude-pro.com / 8.217.190.58)
 
-`UC_2_12` · phase: **c2** · confidence: **High**
+`UC_4_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="8.217.190.58" OR All_Traffic.dest="209.189.190.206" OR All_Traffic.dest="178.128.108.89" OR All_Traffic.dest="192.252.186.62" OR All_Traffic.dest_host="*claude-pro.com" OR All_Traffic.dest_host="*vertextrust-advisors.com" OR All_Traffic.dest_host="*gouvvbo.top" OR All_Traffic.dest_host="*update-treix.com" OR All_Traffic.dest_host="*update-crowdstrike.com" OR All_Traffic.dest_host="*update-sentinelone.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.transport All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as apps values(All_Traffic.transport) as transports values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="8.217.190.58" OR All_Traffic.dest_ip="209.189.190.206" OR All_Traffic.dest_ip="178.128.108.89" OR All_Traffic.dest_ip="192.252.186.62" OR All_Traffic.dest="license.claude-pro.com" OR All_Traffic.dest="claude-pro.com" OR All_Traffic.dest="*.claude-pro.com" OR All_Traffic.dest="vertextrust-advisors.com" OR All_Traffic.dest="gouvvbo.top" OR All_Traffic.dest="update-treix.com" OR All_Traffic.dest="update-crowdstrike.com" OR All_Traffic.dest="update-sentinelone.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let _c2_domains = dynamic(["claude-pro.com","license.claude-pro.com","vertextrust-advisors.com","gouvvbo.top","update-treix.com","update-crowdstrike.com","update-sentinelone.com"]);
-let _c2_ips = dynamic(["8.217.190.58","209.189.190.206","178.128.108.89","192.252.186.62"]);
+// Beagle C2 egress — Sophos-documented Fake Claude infrastructure plus shared-infra cluster
+let beagle_ips = dynamic(["8.217.190.58", "209.189.190.206", "178.128.108.89", "192.252.186.62"]);
+let beagle_domains = dynamic(["license.claude-pro.com", "claude-pro.com", "vertextrust-advisors.com", "gouvvbo.top", "update-treix.com", "update-crowdstrike.com", "update-sentinelone.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where (isnotempty(RemoteUrl) and RemoteUrl has_any (_c2_domains))
-   or RemoteIP in (_c2_ips)
-| project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort, Protocol,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
+| where RemoteIP in (beagle_ips)
+   or RemoteUrl has_any (beagle_domains)
+| extend BeagleSignal = case(
+      RemoteIP == "8.217.190.58" and Protocol == "Udp" and RemotePort == 8080, "UDP/8080 → license.claude-pro.com (Beagle hybrid transport)",
+      RemoteIP == "8.217.190.58" and RemotePort == 443, "TCP/443 → license.claude-pro.com (Beagle primary C2)",
+      RemoteIP == "192.252.186.62", "Shared-infra 192.252.186.62 (update-treix/crowdstrike/sentinelone)",
+      "Beagle/Fake-Claude infra hit")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, RemoteUrl, BeagleSignal, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -432,7 +424,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use PlugX-Like DLL Sideloading Chain in Fake Claude Malware Campaign
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_4_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -489,4 +481,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

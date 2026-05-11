@@ -10,12 +10,8 @@ Home Cyber Security News
 Popular Go Library fsnotify Raises Supply Chain Alarms After Maintainer Access Changes 
 By Tushar Subhra Dutta 
 May 11, 2026 
-
-
-
-
 A widely used Go library called fsnotify has found itself at the center of a supply chain security scare after a sudden change in maintainer access triggered alarm across the open source community. 
-The project provides cross-platform filesystem notifications for applications running on Windows, Linux, macOS, BSD, and illumos. Contributor…
+The project provides cross-platform filesystem notifications for applications running on Windows, Linux, macOS, BSD, and illumos. Contributors were r…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -28,8 +24,7 @@ The project provides cross-platform filesystem notifications for applications ru
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1199** — Trusted Relationship
+- **T1593.003** — Code Repositories
 
 ## Kill chain phases observed
 
@@ -37,55 +32,38 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Go dependency resolution pulling from disputed gofsnotify/fsnotify fork
+### [LLM] Go build pulls fsnotify from dispute-era fork repo gofsnotify/fsnotify
 
-`UC_0_3` · phase: **delivery** · confidence: **High**
+`UC_2_3` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*gofsnotify/fsnotify*" OR Processes.process="*github.com/gofsnotify*") AND (Processes.process_name IN ("go.exe","go","git.exe","git","dependabot","renovate") OR Processes.process="*go get*" OR Processes.process="*go mod*" OR Processes.process="*go install*" OR Processes.process="*git clone*" OR Processes.process="*git fetch*" OR Processes.process="*git remote*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="go.exe" OR Processes.process_name="go" OR Processes.process_name="git.exe" OR Processes.process_name="git") (Processes.process="*gofsnotify/fsnotify*" OR Processes.process="*gofsnotify%2Ffsnotify*" OR Processes.process="*github.com/gofsnotify*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where ProcessCommandLine has "gofsnotify"
-| where ProcessCommandLine has_any ("gofsnotify/fsnotify", "github.com/gofsnotify")
-| where FileName in~ ("go.exe","git.exe","dependabot.exe","renovate.exe","pwsh.exe","powershell.exe","bash.exe","sh.exe","cmd.exe")
-   or InitiatingProcessFileName in~ ("go.exe","git.exe","code.exe","goland64.exe","node.exe","dependabot.exe")
-| project Timestamp, DeviceName, AccountName,
-          FileName, ProcessCommandLine, FolderPath,
-          ParentImage = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          IsInitiatingProcessRemoteSession
-| order by Timestamp desc
-```
-
-### [LLM] Build host network egress to github.com/gofsnotify/* fork repository
-
-`UC_0_4` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*gofsnotify*" OR Web.dest="*gofsnotify*" OR Web.url="*proxy.golang.org/github.com/gofsnotify*") by Web.src Web.user Web.url Web.dest Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has "gofsnotify"
-   or RemoteUrl matches regex @"(?i)github\.com/gofsnotify/"
-   or RemoteUrl matches regex @"(?i)proxy\.golang\.org/github\.com/gofsnotify/"
-| project Timestamp, DeviceName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          RemoteIP, RemotePort, RemoteUrl,
-          LocalIP
+// Article-specific: pulls of the dispute-era fork gofsnotify/fsnotify
+let _go_or_git = dynamic(["go.exe","git.exe","go","git"]);
+union isfuzzy=true
+  ( DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where AccountName !endswith "$"
+    | where FileName in~ (_go_or_git) or InitiatingProcessFileName in~ (_go_or_git)
+    | where ProcessCommandLine has_any ("gofsnotify/fsnotify","gofsnotify%2Ffsnotify","github.com/gofsnotify")
+    | project Timestamp, DeviceName, AccountName, EvidenceType="ProcessCmdLine",
+              Tool=FileName, Cmd=ProcessCommandLine,
+              Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessAccountName !endswith "$"
+    | where FileName in~ ("go.sum","go.mod")
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | extend Cmd = InitiatingProcessCommandLine
+    | where Cmd has_any ("gofsnotify","github.com/gofsnotify") or FolderPath has "gofsnotify"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EvidenceType="GoSumWrite",
+              Tool=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine,
+              Parent=InitiatingProcessParentFileName, ParentCmd="" )
 | order by Timestamp desc
 ```
 
@@ -229,4 +207,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
