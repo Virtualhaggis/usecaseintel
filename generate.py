@@ -82,6 +82,14 @@ SOURCES = [
     # Authoritative exploited-vuln feed.
     {"name": "CISA KEV",                "kind": "kev",
      "url":  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"},
+    # GitHub Security Advisories — authoritative, reviewed entries for the
+    # entire open-source ecosystem (npm / PyPI / Maven / RubyGems / Go /
+    # Cargo / NuGet / Composer). REST API only — the github.com/advisories
+    # atom endpoint server-side rejects non-pjax requests with 406. Caught
+    # the TanStack / Mini Shai-Hulud advisory (CVE-2026-45321) within
+    # minutes of publication, hours before vendor blogs picked it up.
+    {"name": "GitHub Security Advisories", "kind": "ghsa",
+     "url":  "https://api.github.com/advisories?type=reviewed&per_page=100&sort=published"},
 ]
 
 # Legacy (kept for callers using the old API)
@@ -396,7 +404,7 @@ _IOC_DOMAIN_ALLOWLIST = {
     "facebook.com", "fb.com", "instagram.com", "whatsapp.com", "twitter.com",
     "x.com", "linkedin.com", "reddit.com", "pinterest.com", "tiktok.com",
     # Dev / package ecosystems
-    "github.com", "raw.githubusercontent.com", "githubusercontent.com",
+    "github.com", "api.github.com", "raw.githubusercontent.com", "githubusercontent.com",
     "gist.github.com", "objects.githubusercontent.com",
     "gitlab.com", "bitbucket.org", "atlassian.net", "atlassian.com",
     "npmjs.org", "registry.npmjs.org", "yarnpkg.com", "pnpm.io",
@@ -7836,6 +7844,7 @@ function _libSourceFromArtId(art) {
   if (/\\bsnyk\\b/.test(t)) return 'Snyk';
   if (/aikido/.test(t)) return 'Aikido';
   if (/stepsecurity|step-security/.test(t)) return 'StepSecurity';
+  if (/\\[ghsa|github security advisor/.test(t)) return 'GHSA';
   return 'Other';
 }
 
@@ -13474,6 +13483,78 @@ def _fetch_rss(source, since):
     return out
 
 
+def _fetch_ghsa(source, since):
+    """Pull reviewed advisories from the GitHub Security Advisories REST API
+    and shape them like RSS articles so the rest of the pipeline can treat
+    them uniformly. The atom endpoint (github.com/advisories.atom) is gated
+    server-side and returns 406 to non-pjax requests; api.github.com/advisories
+    is the supported public path.
+
+    Each advisory becomes one article with a body composed of the advisory
+    summary + description + affected-package list. Package coordinates like
+    "@tanstack/react-router @ < 1.95.4" land in raw_body so downstream IOC
+    extraction can pick them up alongside any embedded hashes / CVEs.
+    """
+    import urllib.request as _ur
+    req = _ur.Request(source["url"],
+                      headers={"User-Agent": "Mozilla/5.0 (compatible; thn-usecases/1.0)",
+                               "Accept": "application/vnd.github+json",
+                               "X-GitHub-Api-Version": "2022-11-28"})
+    try:
+        with _ur.urlopen(req, timeout=30) as r:
+            advisories = __import__("json").loads(r.read())
+    except Exception as e:
+        print(f"    [!] GHSA fetch failed: {e}")
+        return []
+    out = []
+    for a in advisories or []:
+        pub_iso = a.get("published_at") or a.get("updated_at") or ""
+        try:
+            pub = dt.datetime.fromisoformat(pub_iso.replace("Z", "+00:00"))
+        except Exception:
+            pub = None
+        if since and pub and pub < since:
+            continue
+        if len(out) >= MAX_PER_SOURCE:
+            break
+        ghsa_id  = a.get("ghsa_id") or ""
+        cve_id   = a.get("cve_id") or ""
+        severity = (a.get("severity") or "unknown").lower()
+        summary  = (a.get("summary") or "").strip()
+        # Package coordinates list — primary content for supply-chain UCs.
+        pkg_bits = []
+        for v in (a.get("vulnerabilities") or []):
+            pkg  = v.get("package") or {}
+            eco  = pkg.get("ecosystem") or ""
+            name = pkg.get("name") or ""
+            rng  = v.get("vulnerable_version_range") or ""
+            pf   = v.get("patched_versions") or ""
+            if name:
+                seg = f"{eco}:{name}" if eco else name
+                if rng: seg += f" (vuln {rng})"
+                if pf:  seg += f" — patched {pf}"
+                pkg_bits.append(seg)
+        body_parts = [summary, a.get("description") or ""]
+        if pkg_bits:
+            body_parts.append("Affected packages: " + "; ".join(pkg_bits[:40]) + ".")
+        if cve_id:
+            body_parts.append(f"Tracked as {cve_id}.")
+        body = "\n\n".join(p for p in body_parts if p).strip()
+        title_id = cve_id or ghsa_id
+        title = f"[GHSA / {severity.upper()}] {title_id}: {summary[:160]}" if summary else f"[GHSA / {severity.upper()}] {title_id}"
+        out.append({
+            "source":       "GitHub Security Advisories",
+            "title":        title,
+            "link":         a.get("html_url") or f"https://github.com/advisories/{ghsa_id}",
+            "published":    pub_iso,
+            "published_dt": pub,
+            "summary":      summary,
+            "raw_body":     body,
+            "image_urls":   [],
+        })
+    return out
+
+
 def _fetch_kev(source, since):
     import urllib.request as _ur
     req = _ur.Request(source["url"],
@@ -13562,6 +13643,8 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
                 items = _fetch_rss(src, since)
             elif src["kind"] == "kev":
                 items = _fetch_kev(src, since)
+            elif src["kind"] == "ghsa":
+                items = _fetch_ghsa(src, since)
             else:
                 items = []
         except Exception as e:
