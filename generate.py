@@ -7844,7 +7844,7 @@ function _libSourceFromArtId(art) {
   if (/\\bsnyk\\b/.test(t)) return 'Snyk';
   if (/aikido/.test(t)) return 'Aikido';
   if (/stepsecurity|step-security/.test(t)) return 'StepSecurity';
-  if (/\\[ghsa|github security advisor/.test(t)) return 'GHSA';
+  if (/\\bghsa\\b|github security advisor/.test(t)) return 'GHSA';
   return 'Other';
 }
 
