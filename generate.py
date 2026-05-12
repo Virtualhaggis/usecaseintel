@@ -13616,6 +13616,48 @@ def _title_tokens(title: str):
             if t not in _DEDUPE_STOPWORDS and len(t) > 1}
 
 
+# High-precision tags that identify a specific incident regardless of phrasing.
+# When two articles share any of these in their title+body, they're the same
+# story even if the title-token Jaccard is well below the 0.55 threshold —
+# different vendors describe the same incident with wildly different titles
+# (e.g. "84 TanStack npm Packages Hacked..." vs "Mini Shai-Hulud Is Back...").
+# Keep this list short, high-signal, and only add when a campaign starts
+# generating cross-vendor coverage that the token-overlap rule misses.
+_NAMED_INCIDENT_TAGS = (
+    "shai-hulud", "mini shai-hulud", "shai hulud",
+    "teampcp", "team-pcp",
+    "lazarus", "bluenoroff",
+    "scattered spider", "scattered-spider", "muddled libra",
+    "lumma stealer", "redline stealer", "stealc",
+    "clickfix",
+)
+_CVE_RE  = re.compile(r"\b(cve-\d{4}-\d{4,7})\b", re.IGNORECASE)
+_GHSA_RE = re.compile(r"\b(ghsa-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4})\b", re.IGNORECASE)
+_PKG_RE  = re.compile(r"(@[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9_-]*)", re.IGNORECASE)
+
+def _canonical_ids(article: dict) -> set:
+    """Pull high-precision identifiers from title + summary + body. Used by
+    the same-story dedupe pass alongside title-token Jaccard.
+
+    Returns a set of normalised lowercase tags. Empty set means "no anchor
+    identifiers found" — fall back to Jaccard only."""
+    text = " ".join([
+        (article.get("title") or ""),
+        (article.get("summary") or ""),
+        (article.get("raw_body") or "")[:4000],  # body cap — first 4 KB is plenty
+    ]).lower()
+    ids = set()
+    ids.update(m.group(1).lower() for m in _CVE_RE.finditer(text))
+    ids.update(m.group(1).lower() for m in _GHSA_RE.finditer(text))
+    ids.update(m.group(1).lower() for m in _PKG_RE.finditer(text))
+    for tag in _NAMED_INCIDENT_TAGS:
+        if tag in text:
+            # Normalise spaces vs hyphens so "Mini Shai-Hulud" and
+            # "Mini Shai Hulud" collapse together.
+            ids.add(tag.replace(" ", "-"))
+    return ids
+
+
 def _looks_same_story(a, b, threshold=0.55):
     """Jaccard similarity of significant title tokens."""
     if not a or not b:
@@ -13704,16 +13746,33 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
         raw.extend(items)
 
     # Pre-tokenize titles for word-set Jaccard dedupe across sources.
+    # Also extract canonical incident IDs (CVE / GHSA / @scope/pkg / named
+    # campaign) — these are high-precision and let us merge cross-vendor
+    # coverage that token-Jaccard would miss because the titles barely
+    # overlap (e.g. "84 TanStack npm Packages Hacked..." vs "Mini Shai-Hulud
+    # Is Back: npm Worm Hits over 160 Packages..." share only "tanstack" /
+    # "npm" / "packages" but both carry the "shai-hulud" tag in the body).
     for a in raw:
         a["_tokens"] = _title_tokens(a["title"])
+        a["_ids"]    = _canonical_ids(a)
 
     deduped = []
+    same_story_merges = 0
+    canonical_merges  = 0
     for a in raw:
         a["sources"] = [a["source"]]
         match = None
         for existing in deduped:
+            # Existing rule: title-token Jaccard >= 0.55
             if _looks_same_story(a["_tokens"], existing["_tokens"]):
-                match = existing
+                match = existing; same_story_merges += 1
+                break
+            # New rule: any shared high-precision identifier counts as the
+            # same incident regardless of how differently the two vendors
+            # phrased the headline.
+            shared_ids = a["_ids"] & existing["_ids"]
+            if shared_ids:
+                match = existing; canonical_merges += 1
                 break
         if match:
             for s in a["sources"]:
@@ -13729,14 +13788,24 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
             if len(a.get("raw_body","")) > len(match.get("raw_body","")):
                 match["summary"] = a["summary"]
                 match["raw_body"] = a["raw_body"]
+            # Carry forward canonical IDs from each merged article — every
+            # subsequent comparison gets the full set, so a third article
+            # sharing any one of them folds in too.
+            match["_ids"] = match["_ids"] | a["_ids"]
+            match["_tokens"] = match["_tokens"] | a["_tokens"]
         else:
             deduped.append(a)
+
+    if canonical_merges:
+        print(f"[*] Same-incident dedupe: merged {same_story_merges} by title-Jaccard, "
+              f"{canonical_merges} by canonical-ID overlap (CVE / GHSA / package / named campaign)")
 
     # Normalise `published` for every survivor to ISO YYYY-MM-DD (UTC). Mixed
     # RFC-2822 vs ISO is exactly the kind of inconsistency that ends up in
     # downstream CSV/JSON exports and confuses analysts.
     for a in deduped:
         a.pop("_tokens", None)
+        a.pop("_ids", None)
         if a.get("published_dt"):
             try:
                 a["published"] = a["published_dt"].astimezone(dt.timezone.utc).strftime("%Y-%m-%d")
