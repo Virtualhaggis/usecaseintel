@@ -13206,6 +13206,34 @@ def write_briefings(articles_meta, articles_raw_index):
         path.write_text(md, encoding="utf-8")
         written.append(path)
 
+    # Stale-briefing cleanup. The pipeline only WRITES briefings for the
+    # current article set — anything left behind from a previous run (e.g.
+    # the four 2026-05-12 TanStack briefings that survived from before the
+    # canonical-ID dedupe shipped) becomes an orphan. Walk the directory
+    # and delete .md files we didn't write this run, but skip the special
+    # roots (INDEX.md, _TEMPLATES.md) and any CURATED_MARKER-tagged files.
+    kept = {p.resolve() for p in written}
+    stale_removed = 0
+    SPECIAL_NAMES = {"INDEX.md", "_TEMPLATES.md"}
+    for existing_path in BRIEFINGS_DIR.rglob("*.md"):
+        if existing_path.name in SPECIAL_NAMES:
+            continue
+        if existing_path.resolve() in kept:
+            continue
+        try:
+            head = existing_path.read_text(encoding="utf-8")[:500]
+            if CURATED_MARKER in head:
+                continue
+        except Exception:
+            pass
+        try:
+            existing_path.unlink()
+            stale_removed += 1
+        except OSError:
+            pass
+    if stale_removed:
+        print(f"    [*] Removed {stale_removed} stale briefing(s) from prior runs")
+
     idx_lines = [
         "# Briefings — full archive\n",
         f"_{len(written)} per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._\n",
@@ -13507,6 +13535,11 @@ def _fetch_ghsa(source, since):
         print(f"    [!] GHSA fetch failed: {e}")
         return []
     out = []
+    # Medium/Low advisories get bundled into a single "Daily GHSA digest"
+    # entry per publish-day instead of generating one card each — 78 GHSA
+    # entries on a Tuesday is too noisy for the Articles view. Critical /
+    # High still get individual cards (those are usually actively-exploited).
+    digest_by_day = {}  # date_str -> list of summary bits
     for a in advisories or []:
         pub_iso = a.get("published_at") or a.get("updated_at") or ""
         try:
@@ -13534,6 +13567,19 @@ def _fetch_ghsa(source, since):
                 if rng: seg += f" (vuln {rng})"
                 if pf:  seg += f" — patched {pf}"
                 pkg_bits.append(seg)
+        # Medium / Low / unknown — fold into the per-day digest.
+        if severity in ("medium", "low", "unknown"):
+            day_key = (pub or dt.datetime.now(dt.timezone.utc)).strftime("%Y-%m-%d")
+            line_id = cve_id or ghsa_id
+            packages = (pkg_bits[0] if pkg_bits else "")
+            digest_by_day.setdefault(day_key, []).append({
+                "severity": severity,
+                "id":       line_id,
+                "summary":  summary,
+                "packages": packages,
+                "url":      a.get("html_url") or f"https://github.com/advisories/{ghsa_id}",
+            })
+            continue
         body_parts = [summary, a.get("description") or ""]
         if pkg_bits:
             body_parts.append("Affected packages: " + "; ".join(pkg_bits[:40]) + ".")
@@ -13549,6 +13595,41 @@ def _fetch_ghsa(source, since):
             "published":    pub_iso,
             "published_dt": pub,
             "summary":      summary,
+            "raw_body":     body,
+            "image_urls":   [],
+        })
+    # Emit one digest article per day with all bundled Medium/Low entries.
+    for day_key, entries in digest_by_day.items():
+        if len(out) >= MAX_PER_SOURCE:
+            break
+        try:
+            pub = dt.datetime.strptime(day_key, "%Y-%m-%d").replace(tzinfo=dt.timezone.utc)
+        except Exception:
+            pub = dt.datetime.now(dt.timezone.utc)
+        # Sort: high-then-medium-then-low, then by ID for stability.
+        sev_order = {"medium": 0, "low": 1, "unknown": 2}
+        entries.sort(key=lambda e: (sev_order.get(e["severity"], 9), e["id"]))
+        title = f"[GHSA / DIGEST] {len(entries)} medium/low advisories published {day_key}"
+        body_lines = [
+            f"Daily roundup of {len(entries)} medium- and low-severity "
+            f"GitHub Security Advisories reviewed on {day_key}. Individual "
+            f"high-severity advisories still get their own cards.",
+            "",
+        ]
+        for e in entries:
+            sev_tag = f"[{e['severity'].upper():>6}]"
+            line = f"- {sev_tag} {e['id']}: {e['summary'][:200]}"
+            if e["packages"]:
+                line += f"  (affects: {e['packages']})"
+            body_lines.append(line)
+        body = "\n".join(body_lines)
+        out.append({
+            "source":       "GitHub Security Advisories",
+            "title":        title,
+            "link":         f"https://github.com/advisories?published={day_key}&severity=medium,low&type=reviewed",
+            "published":    day_key,
+            "published_dt": pub,
+            "summary":      body_lines[0],
             "raw_body":     body,
             "image_urls":   [],
         })
@@ -13634,6 +13715,25 @@ _NAMED_INCIDENT_TAGS = (
 _CVE_RE  = re.compile(r"\b(cve-\d{4}-\d{4,7})\b", re.IGNORECASE)
 _GHSA_RE = re.compile(r"\b(ghsa-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4})\b", re.IGNORECASE)
 _PKG_RE  = re.compile(r"(@[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9_-]*)", re.IGNORECASE)
+# Bare project-name detector: catches phrases like "TanStack npm packages"
+# or "Mistral PyPI package" or "lodash crate". These are typically the
+# compromised project's name, mentioned without the @scope/name form.
+# Five vendors covering the same compromised npm project will all have
+# this pattern in their title — so they collapse correctly. Restricted
+# to ecosystem keywords (npm/pypi/gem/...) so it doesn't grab random
+# capitalised words.
+_BARE_PROJ_RE = re.compile(
+    r"\b([a-z][a-z0-9._-]{2,40})\s+(?:npm|pypi|composer|gem|crate|nuget|rubygem)s?\b",
+    re.IGNORECASE,
+)
+_BARE_PROJ_BLOCKLIST = {
+    # Ecosystem keywords / generic words that shouldn't become project tags.
+    "the", "a", "an", "this", "that", "these", "those", "all", "some",
+    "multiple", "many", "several", "various", "new", "fake", "malicious",
+    "trojanized", "trojanised", "compromised", "vulnerable", "affected",
+    "popular", "official", "open-source", "open", "source", "private",
+    "public", "any", "every", "another",
+}
 
 def _canonical_ids(article: dict) -> set:
     """Pull high-precision identifiers from title + summary + body. Used by
@@ -13649,12 +13749,31 @@ def _canonical_ids(article: dict) -> set:
     ids = set()
     ids.update(m.group(1).lower() for m in _CVE_RE.finditer(text))
     ids.update(m.group(1).lower() for m in _GHSA_RE.finditer(text))
-    ids.update(m.group(1).lower() for m in _PKG_RE.finditer(text))
+    for m in _PKG_RE.finditer(text):
+        coord = m.group(1).lower()
+        ids.add(coord)
+        # Bridge: also emit a proj:<scope> tag so an article that only
+        # mentioned "@tanstack/react-router" merges with one that says
+        # "TanStack npm packages" (which yields proj:tanstack via the
+        # bare-project regex below). Without this bridge the CSN article
+        # was orphaned from the rest of the TanStack / Shai-Hulud cluster.
+        scope = coord.split("/", 1)[0].lstrip("@")
+        if scope and len(scope) >= 3:
+            ids.add(f"proj:{scope}")
     for tag in _NAMED_INCIDENT_TAGS:
         if tag in text:
             # Normalise spaces vs hyphens so "Mini Shai-Hulud" and
             # "Mini Shai Hulud" collapse together.
             ids.add(tag.replace(" ", "-"))
+    # Bare project-name extraction — only from the title (high precision).
+    # Five vendors all saying "TanStack npm packages" / "Mistral PyPI" all
+    # land the same proj:tanstack / proj:mistral tag. Body usage is too
+    # noisy (every "use npm install" mention would match).
+    title = (article.get("title") or "").lower()
+    for m in _BARE_PROJ_RE.finditer(title):
+        proj = m.group(1).lower().strip("._-")
+        if proj and proj not in _BARE_PROJ_BLOCKLIST and len(proj) >= 3:
+            ids.add(f"proj:{proj}")
     return ids
 
 
@@ -13747,14 +13866,24 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
 
     # Pre-tokenize titles for word-set Jaccard dedupe across sources.
     # Also extract canonical incident IDs (CVE / GHSA / @scope/pkg / named
-    # campaign) — these are high-precision and let us merge cross-vendor
-    # coverage that token-Jaccard would miss because the titles barely
-    # overlap (e.g. "84 TanStack npm Packages Hacked..." vs "Mini Shai-Hulud
-    # Is Back: npm Worm Hits over 160 Packages..." share only "tanstack" /
-    # "npm" / "packages" but both carry the "shai-hulud" tag in the body).
+    # campaign / bare project name) — these are high-precision and let us
+    # merge cross-vendor coverage that token-Jaccard would miss because
+    # the titles barely overlap.
     for a in raw:
         a["_tokens"] = _title_tokens(a["title"])
         a["_ids"]    = _canonical_ids(a)
+
+    # Merges only fire when articles are within this window of each other.
+    # Stops cross-year campaign bleeds (e.g. original Shai-Hulud 2025-09
+    # absorbing today's Mini Shai-Hulud coverage and backdating the card
+    # to last September). 4h is tight on purpose — covers a normal news
+    # cycle, not multi-wave campaigns.
+    MERGE_WINDOW = dt.timedelta(hours=4)
+    def _within_window(a_, b_):
+        da, db = a_.get("published_dt"), b_.get("published_dt")
+        if not da or not db:
+            return True  # if either is undated, can't enforce — allow
+        return abs(da - db) <= MERGE_WINDOW
 
     deduped = []
     same_story_merges = 0
@@ -13763,6 +13892,8 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
         a["sources"] = [a["source"]]
         match = None
         for existing in deduped:
+            if not _within_window(a, existing):
+                continue
             # Existing rule: title-token Jaccard >= 0.55
             if _looks_same_story(a["_tokens"], existing["_tokens"]):
                 match = existing; same_story_merges += 1
@@ -13778,10 +13909,12 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
             for s in a["sources"]:
                 if s not in match["sources"]:
                     match["sources"].append(s)
-            # Prefer the earliest publication time
+            # Prefer the LATEST publication time — when 5 vendors cover the
+            # same incident across a few hours, the analyst should see
+            # "today" on the card, not the earliest source's timestamp.
             if (a.get("published_dt")
                 and (not match.get("published_dt")
-                     or a["published_dt"] < match["published_dt"])):
+                     or a["published_dt"] > match["published_dt"])):
                 match["published_dt"] = a["published_dt"]
                 match["published"] = a["published"]
             # Prefer the longest summary
