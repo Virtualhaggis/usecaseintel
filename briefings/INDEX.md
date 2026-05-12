@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_590 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_786 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,10 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [84 tanstack npm packages hacked in ongoing supply chain atta](./2026-05-12/84-tanstack-npm-packages-hacked-in-ongoing-supply-chain-atta.md)
+- [critical php soap extension vulnerabilities enables remote c](./2026-05-12/critical-php-soap-extension-vulnerabilities-enables-remote-c.md)
 - [hackers abuse cve 2026 41940 to take over cpanel and whm ser](./2026-05-12/hackers-abuse-cve-2026-41940-to-take-over-cpanel-and-whm-ser.md)
+- [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
 - [ios 26 5 brings default end to end encrypted rcs messaging b](./2026-05-12/ios-26-5-brings-default-end-to-end-encrypted-rcs-messaging-b.md)
+- [magecart hackers abuse google tag manager to inject credit c](./2026-05-12/magecart-hackers-abuse-google-tag-manager-to-inject-credit-c.md)
 - [new bitunlocker downgrade attack on windows 11 allows access](./2026-05-12/new-bitunlocker-downgrade-attack-on-windows-11-allows-access.md)
-- [openai daybreak automates detects and fix vulnerabilities au](./2026-05-12/openai-daybreak-automates-detects-and-fix-vulnerabilities-au.md)
+- [openai daybreak automates vulnerability detection and fixing](./2026-05-12/openai-daybreak-automates-vulnerability-detection-and-fixing.md)
+- [openai launches daybreak for ai powered vulnerability detect](./2026-05-12/openai-launches-daybreak-for-ai-powered-vulnerability-detect.md)
 - [poc exploit released for android zero click vulnerability th](./2026-05-12/poc-exploit-released-for-android-zero-click-vulnerability-th.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [trickmo android banking malware targets banking wallet and a](./2026-05-12/trickmo-android-banking-malware-targets-banking-wallet-and-a.md)
@@ -24,16 +28,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [gm agrees to 12 75m california settlement over sale of drive](./2026-05-11/gm-agrees-to-12-75m-california-settlement-over-sale-of-drive.md)
 - [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
-- [google warns of hackers using ai to create working zero day ](./2026-05-11/google-warns-of-hackers-using-ai-to-create-working-zero-day-.md)
-- [hackers use fake deepseek tui github repositories to deliver](./2026-05-11/hackers-use-fake-deepseek-tui-github-repositories-to-deliver.md)
-- [hackers use plugx like dll sideloading chain in fake claude ](./2026-05-11/hackers-use-plugx-like-dll-sideloading-chain-in-fake-claude-.md)
 - [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)
+- [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-11/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [new ghostlock tool abuses windows api to block file access](./2026-05-11/new-ghostlock-tool-abuses-windows-api-to-block-file-access.md)
 - [official checkmarx jenkins package compromised with infostea](./2026-05-11/official-checkmarx-jenkins-package-compromised-with-infostea.md)
 - [popular go library fsnotify raises supply chain alarms after](./2026-05-11/popular-go-library-fsnotify-raises-supply-chain-alarms-after.md)
+- [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 - [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
+- [the complete github actions security checklist](./2026-05-11/the-complete-github-actions-security-checklist.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
 - [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
 - [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
@@ -77,6 +81,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
+- [top owasp scanners in 2026 for web application security](./2026-05-07/top-owasp-scanners-in-2026-for-web-application-security.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
@@ -94,6 +99,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
+- [rolling out developer security in a 5 000 engineer organizat](./2026-05-06/rolling-out-developer-security-in-a-5-000-engineer-organizat.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [websites with an undefined trust level avoiding the trap](./2026-05-06/websites-with-an-undefined-trust-level-avoiding-the-trap.md)
 - [windows phone link exploited by cloudz rat to steal credenti](./2026-05-06/windows-phone-link-exploited-by-cloudz-rat-to-steal-credenti.md)
@@ -109,6 +115,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [microsoft details phishing campaign targeting 35 000 users a](./2026-05-05/microsoft-details-phishing-campaign-targeting-35-000-users-a.md)
 - [scarcruft hacks gaming platform to deploy birdcall malware o](./2026-05-05/scarcruft-hacks-gaming-platform-to-deploy-birdcall-malware-o.md)
+- [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 - [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
 - [we scanned 1 million exposed ai services here s how bad the ](./2026-05-05/we-scanned-1-million-exposed-ai-services-here-s-how-bad-the-.md)
@@ -116,13 +123,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-04
 - [2026 the year of ai assisted attacks](./2026-05-04/2026-the-year-of-ai-assisted-attacks.md)
+- [a mini shai hulud has appeared obfuscated bun runtime payloa](./2026-05-04/a-mini-shai-hulud-has-appeared-obfuscated-bun-runtime-payloa.md)
+- [announcing dependabot configuration enhancements cooldown an](./2026-05-04/announcing-dependabot-configuration-enhancements-cooldown-an.md)
+- [bitwarden cli hijacked on npm bun staged credential stealer ](./2026-05-04/bitwarden-cli-hijacked-on-npm-bun-staged-credential-stealer-.md)
 - [breaking the code multi stage code of conduct phishing campa](./2026-05-04/breaking-the-code-multi-stage-code-of-conduct-phishing-campa.md)
+- [canistersprawl pgserve compromised on npm malicious versions](./2026-05-04/canistersprawl-pgserve-compromised-on-npm-malicious-versions.md)
 - [critical cpanel vulnerability weaponized to target governmen](./2026-05-04/critical-cpanel-vulnerability-weaponized-to-target-governmen.md)
+- [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
 - [global crackdown arrests 276 shuts 9 crypto scam centers sei](./2026-05-04/global-crackdown-arrests-276-shuts-9-crypto-scam-centers-sei.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
+- [lightning obfuscated javascript credential stealer bundled i](./2026-05-04/lightning-obfuscated-javascript-credential-stealer-bundled-i.md)
 - [phishing campaign hits 80 orgs using simplehelp and screenco](./2026-05-04/phishing-campaign-hits-80-orgs-using-simplehelp-and-screenco.md)
 - [progress patches critical moveit automation bug enabling aut](./2026-05-04/progress-patches-critical-moveit-automation-bug-enabling-aut.md)
+- [shai hulud worm pivots to multi cloud intercom client 7 0 4 ](./2026-05-04/shai-hulud-worm-pivots-to-multi-cloud-intercom-client-7-0-4-.md)
 - [silver fox deploys abcdoor malware via tax themed phishing i](./2026-05-04/silver-fox-deploys-abcdoor-malware-via-tax-themed-phishing-i.md)
+- [teampcp injects two stage credential stealer into xinference](./2026-05-04/teampcp-injects-two-stage-credential-stealer-into-xinference.md)
 - [weekly recap ai powered phishing android spying tool linux e](./2026-05-04/weekly-recap-ai-powered-phishing-android-spying-tool-linux-e.md)
 
 ## 2026-05-03
@@ -134,22 +149,31 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [trellix confirms source code breach with unauthorized reposi](./2026-05-02/trellix-confirms-source-code-breach-with-unauthorized-reposi.md)
 
 ## 2026-05-01
-- [30 000 facebook accounts hacked via google appsheet phishing](./2026-05-01/30-000-facebook-accounts-hacked-via-google-appsheet-phishing.md)
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
-- [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
 - [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
+- [why browser extensions are a major security risk and what yo](./2026-05-01/why-browser-extensions-are-a-major-security-risk-and-what-yo.md)
 
 ## 2026-04-30
+- [a practical cto security checklist to be mythos ready](./2026-04-30/a-practical-cto-security-checklist-to-be-mythos-ready.md)
+- [aikido integrates with aws kiro catching in review doesn t s](./2026-04-30/aikido-integrates-with-aws-kiro-catching-in-review-doesn-t-s.md)
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [email threat landscape q1 2026 trends and insights](./2026-04-30/email-threat-landscape-q1-2026-trends-and-insights.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
+- [lightning pypi compromise a bun based credential stealer in ](./2026-04-30/lightning-pypi-compromise-a-bun-based-credential-stealer-in-.md)
+- [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
+- [top cve scanners in 2026 to identify known vulnerabilities](./2026-04-30/top-cve-scanners-in-2026-to-identify-known-vulnerabilities.md)
 - [what s new updated or recently released in microsoft securit](./2026-04-30/what-s-new-updated-or-recently-released-in-microsoft-securit.md)
 
 ## 2026-04-29
+- [a mini shai hulud has appeared bun based stealer hits sap ca](./2026-04-29/a-mini-shai-hulud-has-appeared-bun-based-stealer-hits-sap-ca.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
+- [bridging the gap to autonomous fixes snyk and atlassian unve](./2026-04-29/bridging-the-gap-to-autonomous-fixes-snyk-and-atlassian-unve.md)
+- [don t panic the thymeleaf template injection that only hurts](./2026-04-29/don-t-panic-the-thymeleaf-template-injection-that-only-hurts.md)
+- [mini shai hulud targets sap npm packages with a bun based se](./2026-04-29/mini-shai-hulud-targets-sap-npm-packages-with-a-bun-based-se.md)
+- [someone published four versions of a fake tanstack package i](./2026-04-29/someone-published-four-versions-of-a-fake-tanstack-package-i.md)
 
 ## 2026-04-28
 - [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
@@ -167,11 +191,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fast16 mystery shadow brokers reference reveals high precisi](./2026-04-23/fast16-mystery-shadow-brokers-reference-reveals-high-precisi.md)
 - [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
+- [is shai hulud back compromised bitwarden cli contains a self](./2026-04-23/is-shai-hulud-back-compromised-bitwarden-cli-contains-a-self.md)
 - [it pays to be a forever student](./2026-04-23/it-pays-to-be-a-forever-student.md)
 - [uat 4356 s targeting of cisco firepower devices](./2026-04-23/uat-4356-s-targeting-of-cisco-firepower-devices.md)
 
 ## 2026-04-22
 - [cisa kev cve 2026 33825 microsoft defender insufficient gran](./2026-04-22/cisa-kev-cve-2026-33825-microsoft-defender-insufficient-gran.md)
+- [gpt proxy backdoor in npm and pypi turns servers into chines](./2026-04-22/gpt-proxy-backdoor-in-npm-and-pypi-turns-servers-into-chines.md)
 - [ir trends q1 2026 phishing reemerges as top initial access v](./2026-04-22/ir-trends-q1-2026-phishing-reemerges-as-top-initial-access-v.md)
 - [labscon25 replay are your chinese cameras spying for you or ](./2026-04-22/labscon25-replay-are-your-chinese-cameras-spying-for-you-or-.md)
 - [when wi fi encryption fails protecting your enterprise from ](./2026-04-22/when-wi-fi-encryption-fails-protecting-your-enterprise-from-.md)
@@ -191,9 +217,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20133 cisco catalyst sd wan manager exposu](./2026-04-20/cisa-kev-cve-2026-20133-cisco-catalyst-sd-wan-manager-exposu.md)
 - [fakewallet crypto stealer spreading through ios apps in the ](./2026-04-20/fakewallet-crypto-stealer-spreading-through-ios-apps-in-the-.md)
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
+- [introducing endpoint protection security for developer devic](./2026-04-20/introducing-endpoint-protection-security-for-developer-devic.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
 
 ## 2026-04-17
+- [multiple cross site scripting xss vulnerabilities in mailcow](./2026-04-17/multiple-cross-site-scripting-xss-vulnerabilities-in-mailcow.md)
 - [that data breach alert might be a trap](./2026-04-17/that-data-breach-alert-might-be-a-trap.md)
 - [threat brief escalation of cyber risk related to iran update](./2026-04-17/threat-brief-escalation-of-cyber-risk-related-to-iran-update.md)
 
@@ -201,6 +229,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
 - [foxit libraw vulnerabilities](./2026-04-16/foxit-libraw-vulnerabilities.md)
+- [reliable cve sources in the age of nist nvd cutbacks](./2026-04-16/reliable-cve-sources-in-the-age-of-nist-nvd-cutbacks.md)
 - [supply chain dependencies have you checked your blind spot](./2026-04-16/supply-chain-dependencies-have-you-checked-your-blind-spot.md)
 - [the q1 vulnerability pulse](./2026-04-16/the-q1-vulnerability-pulse.md)
 
@@ -208,20 +237,40 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [threat landscape for industrial automation systems in q4 202](./2026-04-15/threat-landscape-for-industrial-automation-systems-in-q4-202.md)
 
 ## 2026-04-14
+- [axios cve 2026 40175 a critical bug that s not exploitable](./2026-04-14/axios-cve-2026-40175-a-critical-bug-that-s-not-exploitable.md)
 - [cisa kev cve 2026 32201 microsoft sharepoint server improper](./2026-04-14/cisa-kev-cve-2026-32201-microsoft-sharepoint-server-improper.md)
 
 ## 2026-04-13
+- [bug bounty isn t dead but the old model is breaking](./2026-04-13/bug-bounty-isn-t-dead-but-the-old-model-is-breaking.md)
 - [cisa kev cve 2012 1854 microsoft visual basic for applicatio](./2026-04-13/cisa-kev-cve-2012-1854-microsoft-visual-basic-for-applicatio.md)
 - [cisa kev cve 2020 9715 adobe acrobat use after free vulnerab](./2026-04-13/cisa-kev-cve-2020-9715-adobe-acrobat-use-after-free-vulnerab.md)
 - [cisa kev cve 2023 21529 microsoft exchange server deserializ](./2026-04-13/cisa-kev-cve-2023-21529-microsoft-exchange-server-deserializ.md)
 - [cisa kev cve 2026 21643 fortinet forticlient ems sql injecti](./2026-04-13/cisa-kev-cve-2026-21643-fortinet-forticlient-ems-sql-injecti.md)
 - [cisa kev cve 2026 34621 adobe acrobat and reader prototype p](./2026-04-13/cisa-kev-cve-2026-34621-adobe-acrobat-and-reader-prototype-p.md)
 
+## 2026-04-12
+- [introducing stepsecurity dev machine guard protecting develo](./2026-04-12/introducing-stepsecurity-dev-machine-guard-protecting-develo.md)
+- [securing vibe coding and ai coding agents an end to end appr](./2026-04-12/securing-vibe-coding-and-ai-coding-agents-an-end-to-end-appr.md)
+- [top 2024 predictions for ci cd security](./2026-04-12/top-2024-predictions-for-ci-cd-security.md)
+
 ## 2026-04-10
 - [recovery scammers hit you when you re down here s how to avo](./2026-04-10/recovery-scammers-hit-you-when-you-re-down-here-s-how-to-avo.md)
 
+## 2026-04-09
+- [10 layers deep how stepsecurity stops teampcp s trivy supply](./2026-04-09/10-layers-deep-how-stepsecurity-stops-teampcp-s-trivy-supply.md)
+- [axios compromised on npm malicious versions drop remote acce](./2026-04-09/axios-compromised-on-npm-malicious-versions-drop-remote-acce.md)
+- [behind the scenes how stepsecurity detected and helped remed](./2026-04-09/behind-the-scenes-how-stepsecurity-detected-and-helped-remed.md)
+- [cline supply chain attack detected cline 2 3 0 silently inst](./2026-04-09/cline-supply-chain-attack-detected-cline-2-3-0-silently-inst.md)
+- [datadog s devsecops 2026 report validates what we ve been bu](./2026-04-09/datadog-s-devsecops-2026-report-validates-what-we-ve-been-bu.md)
+- [dev machine guard is now open source see what s really runni](./2026-04-09/dev-machine-guard-is-now-open-source-see-what-s-really-runni.md)
+- [hackerbot claw an ai powered bot actively exploiting github ](./2026-04-09/hackerbot-claw-an-ai-powered-bot-actively-exploiting-github-.md)
+- [stepsecurity s unified protection across the sdlc infrastruc](./2026-04-09/stepsecurity-s-unified-protection-across-the-sdlc-infrastruc.md)
+- [velora dex sdk compromised on npm malicious version drops ma](./2026-04-09/velora-dex-sdk-compromised-on-npm-malicious-version-drops-ma.md)
+
 ## 2026-04-08
+- [aikido attack finds multiple 0 days in hoppscotch](./2026-04-08/aikido-attack-finds-multiple-0-days-in-hoppscotch.md)
 - [cracks in the bedrock agent god mode](./2026-04-08/cracks-in-the-bedrock-agent-god-mode.md)
+- [glassworm goes native new zig dropper infects every ide on y](./2026-04-08/glassworm-goes-native-new-zig-dropper-infects-every-ide-on-y.md)
 
 ## 2026-04-07
 - [as breakout time accelerates prevention first cybersecurity ](./2026-04-07/as-breakout-time-accelerates-prevention-first-cybersecurity-.md)
@@ -229,51 +278,87 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-06
 - [cisa kev cve 2026 35616 fortinet forticlient ems improper ac](./2026-04-06/cisa-kev-cve-2026-35616-fortinet-forticlient-ems-improper-ac.md)
+- [the cybersecurity doomerism around mythos doesn t match what](./2026-04-06/the-cybersecurity-doomerism-around-mythos-doesn-t-match-what.md)
+
+## 2026-04-02
+- [malicious iolitelabs vscode extensions target solidity devel](./2026-04-02/malicious-iolitelabs-vscode-extensions-target-solidity-devel.md)
+- [teampcp plants wav steganography credential stealer in telny](./2026-04-02/teampcp-plants-wav-steganography-credential-stealer-in-telny.md)
 
 ## 2026-04-01
 - [digital assets after death managing risks to your loved one ](./2026-04-01/digital-assets-after-death-managing-risks-to-your-loved-one-.md)
 
+## 2026-03-30
+- [axios compromised on npm maintainer account hijacked rat dep](./2026-03-30/axios-compromised-on-npm-maintainer-account-hijacked-rat-dep.md)
+
+## 2026-03-28
+- [litellm credential stealer hidden in pypi wheel](./2026-03-28/litellm-credential-stealer-hidden-in-pypi-wheel.md)
+
 ## 2026-03-27
 - [a cunning predator how silver fox preys on japanese firms th](./2026-03-27/a-cunning-predator-how-silver-fox-preys-on-japanese-firms-th.md)
 - [cisa kev cve 2025 53521 f5 big ip stack based buffer overflo](./2026-03-27/cisa-kev-cve-2025-53521-f5-big-ip-stack-based-buffer-overflo.md)
+- [popular telnyx package compromised on pypi by teampcp](./2026-03-27/popular-telnyx-package-compromised-on-pypi-by-teampcp.md)
 - [rsac 2026 wrap up week in security with tony anscombe](./2026-03-27/rsac-2026-wrap-up-week-in-security-with-tony-anscombe.md)
 
 ## 2026-03-26
+- [bittensor wallet 4 0 2 compromised on pypi backdoor exfiltra](./2026-03-26/bittensor-wallet-4-0-2-compromised-on-pypi-backdoor-exfiltra.md)
+- [canisterworm how a self propagating npm worm is spreading ba](./2026-03-26/canisterworm-how-a-self-propagating-npm-worm-is-spreading-ba.md)
+- [checkmarx kics github action compromised malware injected in](./2026-03-26/checkmarx-kics-github-action-compromised-malware-injected-in.md)
 - [cisa kev cve 2026 33634 aquasecurity trivy embedded maliciou](./2026-03-26/cisa-kev-cve-2026-33634-aquasecurity-trivy-embedded-maliciou.md)
+- [forcememo hundreds of github python repos compromised via ac](./2026-03-26/forcememo-hundreds-of-github-python-repos-compromised-via-ac.md)
+- [malicious npm releases found in popular react native package](./2026-03-26/malicious-npm-releases-found-in-popular-react-native-package.md)
+- [malicious polymarket bot hides in hijacked dev protocol gith](./2026-03-26/malicious-polymarket-bot-hides-in-hijacked-dev-protocol-gith.md)
+- [trivy compromised a second time malicious v0 69 4 release aq](./2026-03-26/trivy-compromised-a-second-time-malicious-v0-69-4-release-aq.md)
+- [xygeni action compromised c2 reverse shell backdoor injected](./2026-03-26/xygeni-action-compromised-c2-reverse-shell-backdoor-injected.md)
 
 ## 2026-03-25
 - [cisa kev cve 2026 33017 langflow code injection vulnerabilit](./2026-03-25/cisa-kev-cve-2026-33017-langflow-code-injection-vulnerabilit.md)
 - [virtual machines virtually everywhere and with real security](./2026-03-25/virtual-machines-virtually-everywhere-and-with-real-security.md)
 
 ## 2026-03-24
+- [aikido lovable vibe fix ship](./2026-03-24/aikido-lovable-vibe-fix-ship.md)
 - [cloud workload security mind the gaps](./2026-03-24/cloud-workload-security-mind-the-gaps.md)
+
+## 2026-03-22
+- [canisterworm gets teeth teampcp s kubernetes wiper targets i](./2026-03-22/canisterworm-gets-teeth-teampcp-s-kubernetes-wiper-targets-i.md)
 
 ## 2026-03-20
 - [cisa kev cve 2025 54068 laravel livewire code injection vuln](./2026-03-20/cisa-kev-cve-2025-54068-laravel-livewire-code-injection-vuln.md)
 - [move fast and save things a quick guide to recovering a hack](./2026-03-20/move-fast-and-save-things-a-quick-guide-to-recovering-a-hack.md)
+- [teampcp deploys canisterworm on npm following trivy compromi](./2026-03-20/teampcp-deploys-canisterworm-on-npm-following-trivy-compromi.md)
 
 ## 2026-03-19
+- [aikido recognized by frost sullivan with the 2026 customer v](./2026-03-19/aikido-recognized-by-frost-sullivan-with-the-2026-customer-v.md)
 - [building an adversarial consensus engine multi agent llms fo](./2026-03-19/building-an-adversarial-consensus-engine-multi-agent-llms-fo.md)
 - [cisa kev cve 2026 20131 cisco secure firewall management cen](./2026-03-19/cisa-kev-cve-2026-20131-cisco-secure-firewall-management-cen.md)
 - [edr killers explained beyond the drivers](./2026-03-19/edr-killers-explained-beyond-the-drivers.md)
+- [security testing is validating software that no longer exist](./2026-03-19/security-testing-is-validating-software-that-no-longer-exist.md)
+
+## 2026-03-18
+- [fast draft open vsx extension compromised by bloktrooper](./2026-03-18/fast-draft-open-vsx-extension-compromised-by-bloktrooper.md)
+- [glassworm hides a rat inside a malicious chrome extension](./2026-03-18/glassworm-hides-a-rat-inside-a-malicious-chrome-extension.md)
 
 ## 2026-03-17
 - [labscon25 replay your apps may be gone but the hackers made ](./2026-03-17/labscon25-replay-your-apps-may-be-gone-but-the-hackers-made-.md)
 
 ## 2026-03-16
 - [cisa kev cve 2025 47813 wing ftp server information disclosu](./2026-03-16/cisa-kev-cve-2025-47813-wing-ftp-server-information-disclosu.md)
+- [glassworm strikes popular react native phone number packages](./2026-03-16/glassworm-strikes-popular-react-native-phone-number-packages.md)
 
 ## 2026-03-13
 - [cisa kev cve 2026 3909 google skia out of bounds write vulne](./2026-03-13/cisa-kev-cve-2026-3909-google-skia-out-of-bounds-write-vulne.md)
 - [cisa kev cve 2026 3910 google chromium v8 improper restricti](./2026-03-13/cisa-kev-cve-2026-3910-google-chromium-v8-improper-restricti.md)
 - [drillapp new backdoor targeting ukrainian entities with poss](./2026-03-13/drillapp-new-backdoor-targeting-ukrainian-entities-with-poss.md)
 - [face value what it takes to fool facial recognition](./2026-03-13/face-value-what-it-takes-to-fool-facial-recognition.md)
+- [glassworm is back a new wave of invisible unicode attacks hi](./2026-03-13/glassworm-is-back-a-new-wave-of-invisible-unicode-attacks-hi.md)
 
 ## 2026-03-12
 - [cyber fallout from the iran war what to have on your radar](./2026-03-12/cyber-fallout-from-the-iran-war-what-to-have-on-your-radar.md)
+- [how security teams fight back against ai powered hackers](./2026-03-12/how-security-teams-fight-back-against-ai-powered-hackers.md)
+- [introducing betterleaks an open source secrets scanner by th](./2026-03-12/introducing-betterleaks-an-open-source-secrets-scanner-by-th.md)
 
 ## 2026-03-11
 - [cisa kev cve 2025 68613 n8n improper control of dynamically ](./2026-03-11/cisa-kev-cve-2025-68613-n8n-improper-control-of-dynamically-.md)
+- [kubernetes el compromised how a pwn request exploited a popu](./2026-03-11/kubernetes-el-compromised-how-a-pwn-request-exploited-a-popu.md)
 
 ## 2026-03-10
 - [sednit reloaded back in the trenches](./2026-03-10/sednit-reloaded-back-in-the-trenches.md)
@@ -281,6 +366,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-09
 - [cisa kev cve 2021 22054 omnissa workspace one server side re](./2026-03-09/cisa-kev-cve-2021-22054-omnissa-workspace-one-server-side-re.md)
 - [from narrative to knowledge graph llm driven information ext](./2026-03-09/from-narrative-to-knowledge-graph-llm-driven-information-ext.md)
+- [how does ai pentesting work with compliance](./2026-03-09/how-does-ai-pentesting-work-with-compliance.md)
+- [trump s 2026 cybersecurity strategy from compliance to conse](./2026-03-09/trump-s-2026-cybersecurity-strategy-from-compliance-to-conse.md)
 
 ## 2026-03-06
 - [what cybersecurity actually does for your business](./2026-03-06/what-cybersecurity-actually-does-for-your-business.md)
@@ -297,11 +384,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-03-03
 - [cisa kev cve 2026 21385 qualcomm multiple chipsets memory co](./2026-03-03/cisa-kev-cve-2026-21385-qualcomm-multiple-chipsets-memory-co.md)
 - [cisa kev cve 2026 22719 broadcom vmware aria operations comm](./2026-03-03/cisa-kev-cve-2026-22719-broadcom-vmware-aria-operations-comm.md)
+- [persistent xss rce using websockets in storybook s dev serve](./2026-03-03/persistent-xss-rce-using-websockets-in-storybook-s-dev-serve.md)
+- [rare not random using token efficiency for secrets scanning](./2026-03-03/rare-not-random-using-token-efficiency-for-secrets-scanning.md)
+- [why determinism is still a necessity in security](./2026-03-03/why-determinism-is-still-a-necessity-in-security.md)
+
+## 2026-03-01
+- [harden runner now supports windows and macos github actions ](./2026-03-01/harden-runner-now-supports-windows-and-macos-github-actions-.md)
+- [how stepsecurity caught a release storm in microsoft s types](./2026-03-01/how-stepsecurity-caught-a-release-storm-in-microsoft-s-types.md)
+- [waf vs rasp vs adr](./2026-03-01/waf-vs-rasp-vs-adr.md)
 
 ## 2026-02-27
 - [mobile app permissions still matter more than you may think](./2026-02-27/mobile-app-permissions-still-matter-more-than-you-may-think.md)
 
 ## 2026-02-26
+- [introducing aikido infinite a new model of self securing sof](./2026-02-26/introducing-aikido-infinite-a-new-model-of-self-securing-sof.md)
 - [plugx meeting invitation via msbuild and gdata](./2026-02-26/plugx-meeting-invitation-via-msbuild-and-gdata.md)
 
 ## 2026-02-25
@@ -310,24 +406,46 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-02-24
 - [cisa kev cve 2026 25108 soliton systems k k filezen os comma](./2026-02-24/cisa-kev-cve-2026-25108-soliton-systems-k-k-filezen-os-comma.md)
+- [how aikido secures ai pentesting agents by design](./2026-02-24/how-aikido-secures-ai-pentesting-agents-by-design.md)
 
 ## 2026-02-23
+- [astro full read ssrf via host header injection](./2026-02-23/astro-full-read-ssrf-via-host-header-injection.md)
 - [faking it on the phone how to tell if a voice call is ai or ](./2026-02-23/faking-it-on-the-phone-how-to-tell-if-a-voice-call-is-ai-or-.md)
+- [how to get your board to care about security before a breach](./2026-02-23/how-to-get-your-board-to-care-about-security-before-a-breach.md)
+
+## 2026-02-20
+- [what is slopsquatting the ai package hallucination attack al](./2026-02-20/what-is-slopsquatting-the-ai-package-hallucination-attack-al.md)
 
 ## 2026-02-19
 - [is poshmark safe how to buy and sell without getting scammed](./2026-02-19/is-poshmark-safe-how-to-buy-and-sell-without-getting-scammed.md)
 - [promptspy ushers in the era of android threats using genai](./2026-02-19/promptspy-ushers-in-the-era-of-android-threats-using-genai.md)
+- [sveltespill a cache deception bug in sveltekit vercel](./2026-02-19/sveltespill-a-cache-deception-bug-in-sveltekit-vercel.md)
 
 ## 2026-02-18
 - [cisa kev cve 2026 22769 dell recoverpoint for virtual machin](./2026-02-18/cisa-kev-cve-2026-22769-dell-recoverpoint-for-virtual-machin.md)
 
 ## 2026-02-17
+- [aikido recognized as platform leader in latio tech s 2026 ap](./2026-02-17/aikido-recognized-as-platform-leader-in-latio-tech-s-2026-ap.md)
 - [cisa kev cve 2024 7694 teamt5 threatsonar anti ransomware un](./2026-02-17/cisa-kev-cve-2024-7694-teamt5-threatsonar-anti-ransomware-un.md)
 - [cisa kev cve 2026 5281 google dawn use after free vulnerabil](./2026-02-17/cisa-kev-cve-2026-5281-google-dawn-use-after-free-vulnerabil.md)
 - [is it ok to let your children post selfies online](./2026-02-17/is-it-ok-to-let-your-children-post-selfies-online.md)
+- [top 6 wiz code alternatives](./2026-02-17/top-6-wiz-code-alternatives.md)
+
+## 2026-02-16
+- [from detection to prevention how zen stops idor vulnerabilit](./2026-02-16/from-detection-to-prevention-how-zen-stops-idor-vulnerabilit.md)
+- [npm backdoor lets hackers hijack gambling outcomes](./2026-02-16/npm-backdoor-lets-hackers-hijack-gambling-outcomes.md)
+
+## 2026-02-15
+- [10 000 open source projects now secured by harden runner com](./2026-02-15/10-000-open-source-projects-now-secured-by-harden-runner-com.md)
+- [20 popular npm packages compromised chalk debug strip ansi c](./2026-02-15/20-popular-npm-packages-compromised-chalk-debug-strip-ansi-c.md)
+- [2024 in review the evolution of ci cd security what s next](./2026-02-15/2024-in-review-the-evolution-of-ci-cd-security-what-s-next.md)
+- [celebrating 1000 repositories secured with harden runner a j](./2026-02-15/celebrating-1000-repositories-secured-with-harden-runner-a-j.md)
+- [how to use docker in actions runner controller arc runners s](./2026-02-15/how-to-use-docker-in-actions-runner-controller-arc-runners-s.md)
 
 ## 2026-02-13
+- [introducing upgrade impact analysis when breaking changes ac](./2026-02-13/introducing-upgrade-impact-analysis-when-breaking-changes-ac.md)
 - [operation macromaze new apt28 campaign using basic tooling a](./2026-02-13/operation-macromaze-new-apt28-campaign-using-basic-tooling-a.md)
+- [why trying to secure openclaw is ridiculous](./2026-02-13/why-trying-to-secure-openclaw-is-ridiculous.md)
 
 ## 2026-02-12
 - [cisa kev cve 2024 43468 microsoft configuration manager sql ](./2026-02-12/cisa-kev-cve-2024-43468-microsoft-configuration-manager-sql-.md)
@@ -335,9 +453,29 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 3502 trueconf client download of code with](./2026-02-12/cisa-kev-cve-2026-3502-trueconf-client-download-of-code-with.md)
 - [naming and shaming how ransomware groups tighten the screws ](./2026-02-12/naming-and-shaming-how-ransomware-groups-tighten-the-screws-.md)
 
+## 2026-02-11
+- [analysis of backdoored xz utils build process with harden ru](./2026-02-11/analysis-of-backdoored-xz-utils-build-process-with-harden-ru.md)
+- [announcing anomalous outbound call detection using machine l](./2026-02-11/announcing-anomalous-outbound-call-detection-using-machine-l.md)
+- [announcing general availability of harden runner](./2026-02-11/announcing-general-availability-of-harden-runner.md)
+- [announcing github actions advisor and stepsecurity maintaine](./2026-02-11/announcing-github-actions-advisor-and-stepsecurity-maintaine.md)
+- [another npm supply chain attack the is package compromise](./2026-02-11/another-npm-supply-chain-attack-the-is-package-compromise.md)
+- [anthropics claude code action security how to secure claude ](./2026-02-11/anthropics-claude-code-action-security-how-to-secure-claude-.md)
+- [claude opus 4 6 found 500 vulnerabilities what does this cha](./2026-02-11/claude-opus-4-6-found-500-vulnerabilities-what-does-this-cha.md)
+- [harden runner detection tj actions changed files action is c](./2026-02-11/harden-runner-detection-tj-actions-changed-files-action-is-c.md)
+- [milestone achieved 2500 public repositories secured with har](./2026-02-11/milestone-achieved-2500-public-repositories-secured-with-har.md)
+- [orchestrating security stepsecurity s impact on 400 reposito](./2026-02-11/orchestrating-security-stepsecurity-s-impact-on-400-reposito.md)
+- [stepsecurity detects early supply chain risk signals in kilo](./2026-02-11/stepsecurity-detects-early-supply-chain-risk-signals-in-kilo.md)
+- [stepsecurity s catalog of fixes](./2026-02-11/stepsecurity-s-catalog-of-fixes.md)
+
 ## 2026-02-10
+- [build secretless ci cd pipelines using wait for secrets](./2026-02-10/build-secretless-ci-cd-pipelines-using-wait-for-secrets.md)
 - [cisa kev cve 2026 21514 microsoft office word reliance on un](./2026-02-10/cisa-kev-cve-2026-21514-microsoft-office-word-reliance-on-un.md)
+- [introducing aikido expansion packs safer defaults inside the](./2026-02-10/introducing-aikido-expansion-packs-safer-defaults-inside-the.md)
 - [taxing times top irs scams to look out for in 2026](./2026-02-10/taxing-times-top-irs-scams-to-look-out-for-in-2026.md)
+
+## 2026-02-09
+- [international ai safety report 2026 what it means for autono](./2026-02-09/international-ai-safety-report-2026-what-it-means-for-autono.md)
+- [self securing software what it is why it matters and how it ](./2026-02-09/self-securing-software-what-it-is-why-it-matters-and-how-it-.md)
 
 ## 2026-02-08
 - [the gru illegals](./2026-02-08/the-gru-illegals.md)
@@ -347,19 +485,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 24423 smartertools smartermail missing aut](./2026-02-05/cisa-kev-cve-2026-24423-smartertools-smartermail-missing-aut.md)
 
 ## 2026-02-04
+- [npx confusion packages that forgot to claim their own name](./2026-02-04/npx-confusion-packages-that-forgot-to-claim-their-own-name.md)
 - [offerup scammers are out in force here s what you should kno](./2026-02-04/offerup-scammers-are-out-in-force-here-s-what-you-should-kno.md)
+- [what continuous pentesting actually requires](./2026-02-04/what-continuous-pentesting-actually-requires.md)
 
 ## 2026-02-03
+- [ai pentesting minimum safety requirements for security testi](./2026-02-03/ai-pentesting-minimum-safety-requirements-for-security-testi.md)
 - [cisa kev cve 2019 19006 sangoma freepbx improper authenticat](./2026-02-03/cisa-kev-cve-2019-19006-sangoma-freepbx-improper-authenticat.md)
+- [introducing aikido package health a better way to trust your](./2026-02-03/introducing-aikido-package-health-a-better-way-to-trust-your.md)
 
 ## 2026-02-02
 - [a slippery slope beware of winter olympics scams and other c](./2026-02-02/a-slippery-slope-beware-of-winter-olympics-scams-and-other-c.md)
+- [secure sdlc for engineering teams checklist](./2026-02-02/secure-sdlc-for-engineering-teams-checklist.md)
 
 ## 2026-01-30
 - [dynowiper update technical analysis and attribution](./2026-01-30/dynowiper-update-technical-analysis-and-attribution.md)
 
 ## 2026-01-29
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-01-29/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
+- [cve 2026 22709 critical sandbox escape vulnerability in vm2](./2026-01-29/cve-2026-22709-critical-sandbox-escape-vulnerability-in-vm2.md)
+- [introducing apps pats centralized visibility for github apps](./2026-01-29/introducing-apps-pats-centralized-visibility-for-github-apps.md)
 - [silent brothers ollama hosts form anonymous ai network beyon](./2026-01-29/silent-brothers-ollama-hosts-form-anonymous-ai-network-beyon.md)
 
 ## 2026-01-28
@@ -368,6 +513,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-27
 - [drowning in spam or scam emails here s probably why](./2026-01-27/drowning-in-spam-or-scam-emails-here-s-probably-why.md)
+- [fake clawdbot vs code extension installs screenconnect rat](./2026-01-27/fake-clawdbot-vs-code-extension-installs-screenconnect-rat.md)
 
 ## 2026-01-26
 - [cisa kev cve 2018 14634 linux kernel integer overflow vulner](./2026-01-26/cisa-kev-cve-2018-14634-linux-kernel-integer-overflow-vulner.md)
@@ -379,14 +525,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-01-23
 - [cisa kev cve 2024 37079 broadcom vmware vcenter server out o](./2026-01-23/cisa-kev-cve-2024-37079-broadcom-vmware-vcenter-server-out-o.md)
 - [eset research sandworm behind cyberattack on poland s power ](./2026-01-23/eset-research-sandworm-behind-cyberattack-on-poland-s-power-.md)
+- [g wagon npm package deploys python stealer targeting 100 cry](./2026-01-23/g-wagon-npm-package-deploys-python-stealer-targeting-100-cry.md)
+- [gone phishin npm packages serving custom credential harvesti](./2026-01-23/gone-phishin-npm-packages-serving-custom-credential-harvesti.md)
 
 ## 2026-01-22
 - [cisa kev cve 2025 34026 versa concerto improper authenticati](./2026-01-22/cisa-kev-cve-2025-34026-versa-concerto-improper-authenticati.md)
 - [cisa kev cve 2025 54313 prettier eslint config prettier embe](./2026-01-22/cisa-kev-cve-2025-54313-prettier-eslint-config-prettier-embe.md)
 - [cisa kev cve 2025 68645 synacor zimbra collaboration suite z](./2026-01-22/cisa-kev-cve-2025-68645-synacor-zimbra-collaboration-suite-z.md)
 - [common apple pay scams and how to stay safe](./2026-01-22/common-apple-pay-scams-and-how-to-stay-safe.md)
+- [malicious pypi packages spellcheckpy and spellcheckerpy deli](./2026-01-22/malicious-pypi-packages-spellcheckpy-and-spellcheckerpy-deli.md)
+- [stepsecurity now supports dark mode](./2026-01-22/stepsecurity-now-supports-dark-mode.md)
 
 ## 2026-01-21
+- [agent skills are spreading hallucinated npx commands](./2026-01-21/agent-skills-are-spreading-hallucinated-npx-commands.md)
 - [cisa kev cve 2026 20045 cisco unified communications product](./2026-01-21/cisa-kev-cve-2026-20045-cisco-unified-communications-product.md)
 - [labscon25 replay how to bug hotel rooms v2 0](./2026-01-21/labscon25-replay-how-to-bug-hotel-rooms-v2-0.md)
 
@@ -394,10 +545,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [llms in the soc part 1 why benchmarks fail security operatio](./2026-01-20/llms-in-the-soc-part-1-why-benchmarks-fail-security-operatio.md)
 - [old habits die hard 2025 s most common passwords were as pre](./2026-01-20/old-habits-die-hard-2025-s-most-common-passwords-were-as-pre.md)
 
+## 2026-01-19
+- [understanding open source license risk in modern software](./2026-01-19/understanding-open-source-license-risk-in-modern-software.md)
+
 ## 2026-01-16
+- [the ciso vibe coding checklist for security](./2026-01-16/the-ciso-vibe-coding-checklist-for-security.md)
+- [top 6 graphite alternatives for ai code review in 2026](./2026-01-16/top-6-graphite-alternatives-for-ai-code-review-in-2026.md)
 - [why linkedin is a hunting ground for threat actors and how t](./2026-01-16/why-linkedin-is-a-hunting-ground-for-threat-actors-and-how-t.md)
 
 ## 2026-01-14
+- [from no bullsh t security to 1b we just raised our 60m serie](./2026-01-14/from-no-bullsh-t-security-to-1b-we-just-raised-our-60m-serie.md)
 - [is it time for internet services to adopt identity verificat](./2026-01-14/is-it-time-for-internet-services-to-adopt-identity-verificat.md)
 
 ## 2026-01-13
@@ -408,13 +565,37 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-08
 - [credential stuffing what it is and how to protect yourself](./2026-01-08/credential-stuffing-what-it-is-and-how-to-protect-yourself.md)
+- [critical n8n vulnerability allows unauthenticated remote cod](./2026-01-08/critical-n8n-vulnerability-allows-unauthenticated-remote-cod.md)
 
 ## 2026-01-07
+- [ai driven pentesting of coolify seven cves identified](./2026-01-07/ai-driven-pentesting-of-coolify-seven-cves-identified.md)
 - [cisa kev cve 2009 0556 microsoft office powerpoint code inje](./2026-01-07/cisa-kev-cve-2009-0556-microsoft-office-powerpoint-code-inje.md)
 - [cisa kev cve 2025 37164 hewlett packard enterprise hpe onevi](./2026-01-07/cisa-kev-cve-2025-37164-hewlett-packard-enterprise-hpe-onevi.md)
+- [top 14 vs code extensions for 2026](./2026-01-07/top-14-vs-code-extensions-for-2026.md)
+
+## 2026-01-06
+- [2025 in review the evolution of supply chain security what s](./2026-01-06/2025-in-review-the-evolution-of-supply-chain-security-what-s.md)
+- [sast vs sca securing the code you write and the code you dep](./2026-01-06/sast-vs-sca-securing-the-code-you-write-and-the-code-you-dep.md)
+- [top 6 continuous pentesting tools in 2026](./2026-01-06/top-6-continuous-pentesting-tools-in-2026.md)
+
+## 2026-01-05
+- [how engineering and security teams can meet dora s technical](./2026-01-05/how-engineering-and-security-teams-can-meet-dora-s-technical.md)
+- [javascript msbuild and the blockchain anatomy of the neoshad](./2026-01-05/javascript-msbuild-and-the-blockchain-anatomy-of-the-neoshad.md)
+
+## 2026-01-02
+- [idor vulnerabilities explained why they persist in modern ap](./2026-01-02/idor-vulnerabilities-explained-why-they-persist-in-modern-ap.md)
 
 ## 2025-12-29
 - [cisa kev cve 2025 14847 mongodb and mongodb server improper ](./2025-12-29/cisa-kev-cve-2025-14847-mongodb-and-mongodb-server-improper-.md)
+
+## 2025-12-28
+- [shai hulud strikes again the golden path](./2025-12-28/shai-hulud-strikes-again-the-golden-path.md)
+
+## 2025-12-26
+- [mongobleed mongodb zlib vulnerability cve 2025 14847 and how](./2025-12-26/mongobleed-mongodb-zlib-vulnerability-cve-2025-14847-and-how.md)
+
+## 2025-12-25
+- [first sophisticated malware discovered on maven central via ](./2025-12-25/first-sophisticated-malware-discovered-on-maven-central-via-.md)
 
 ## 2025-12-23
 - [a brush with online fraud what are brushing scams and how do](./2025-12-23/a-brush-with-online-fraud-what-are-brushing-scams-and-how-do.md)
@@ -430,13 +611,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 20393 cisco multiple products improper inp](./2025-12-17/cisa-kev-cve-2025-20393-cisco-multiple-products-improper-inp.md)
 - [cisa kev cve 2025 40602 sonicwall sma1000 missing authorizat](./2025-12-17/cisa-kev-cve-2025-40602-sonicwall-sma1000-missing-authorizat.md)
 - [cisa kev cve 2025 59374 asus live update embedded malicious ](./2025-12-17/cisa-kev-cve-2025-59374-asus-live-update-embedded-malicious-.md)
+- [the fork awakens why github s invisible networks break packa](./2025-12-17/the-fork-awakens-why-github-s-invisible-networks-break-packa.md)
 
 ## 2025-12-16
+- [bake harden runner into github s custom runner images for or](./2025-12-16/bake-harden-runner-into-github-s-custom-runner-images-for-or.md)
 - [cisa kev cve 2025 59718 fortinet multiple products improper ](./2025-12-16/cisa-kev-cve-2025-59718-fortinet-multiple-products-improper-.md)
 - [eset threat report h2 2025](./2025-12-16/eset-threat-report-h2-2025.md)
+- [top 10 ai security tools for 2026](./2025-12-16/top-10-ai-security-tools-for-2026.md)
 
 ## 2025-12-15
+- [ai pentesting in action a tl dv recap of our live demo](./2025-12-15/ai-pentesting-in-action-a-tl-dv-recap-of-our-live-demo.md)
 - [cisa kev cve 2023 43000 apple multiple products use after fr](./2025-12-15/cisa-kev-cve-2023-43000-apple-multiple-products-use-after-fr.md)
+- [critical remote code execution vulnerabilities discovered in](./2025-12-15/critical-remote-code-execution-vulnerabilities-discovered-in.md)
+- [how harden runner detected the sha1 hulud supply chain attac](./2025-12-15/how-harden-runner-detected-the-sha1-hulud-supply-chain-attac.md)
+- [sast in the ide is now free moving sast to where development](./2025-12-15/sast-in-the-ide-is-now-free-moving-sast-to-where-development.md)
+- [sha1 hulud the second coming zapier ens domains and other pr](./2025-12-15/sha1-hulud-the-second-coming-zapier-ens-domains-and-other-pr.md)
+- [the top 7 threat intelligence tools in 2026](./2025-12-15/the-top-7-threat-intelligence-tools-in-2026.md)
 
 ## 2025-12-12
 - [black hat europe 2025 was that device designed to be on the ](./2025-12-12/black-hat-europe-2025-was-that-device-designed-to-be-on-the-.md)
@@ -448,9 +638,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [locks socs and a cat in a box what schr dinger can teach us ](./2025-12-11/locks-socs-and-a-cat-in-a-box-what-schr-dinger-can-teach-us-.md)
 
 ## 2025-12-10
+- [owasp top 10 for agentic applications 2026 what developers a](./2025-12-10/owasp-top-10-for-agentic-applications-2026-what-developers-a.md)
 - [seeking symmetry during att ck season how to harness today s](./2025-12-10/seeking-symmetry-during-att-ck-season-how-to-harness-today-s.md)
 
 ## 2025-12-09
+- [dast vs pentesting v ai pentesting why dast cannot replace m](./2025-12-09/dast-vs-pentesting-v-ai-pentesting-why-dast-cannot-replace-m.md)
 - [the big catch how whaling attacks target top executives](./2025-12-09/the-big-catch-how-whaling-attacks-target-top-executives.md)
 
 ## 2025-12-08
@@ -462,28 +654,39 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-04
 - [phishing privileges and passwords why identity is critical t](./2025-12-04/phishing-privileges-and-passwords-why-identity-is-critical-t.md)
+- [promptpwnd prompt injection vulnerabilities in github action](./2025-12-04/promptpwnd-prompt-injection-vulnerabilities-in-github-action.md)
+- [top 7 cloud security vulnerabilities](./2025-12-04/top-7-cloud-security-vulnerabilities.md)
 
 ## 2025-12-03
 - [cisa kev cve 2021 26828 openplc scadabr unrestricted upload ](./2025-12-03/cisa-kev-cve-2021-26828-openplc-scadabr-unrestricted-upload-.md)
+- [how to comply with the uk cybersecurity resilience bill a pr](./2025-12-03/how-to-comply-with-the-uk-cybersecurity-resilience-bill-a-pr.md)
+- [react next js dos vulnerability cve 2025 55184 what you need](./2025-12-03/react-next-js-dos-vulnerability-cve-2025-55184-what-you-need.md)
 
 ## 2025-12-02
 - [cisa kev cve 2025 48633 android framework information disclo](./2025-12-02/cisa-kev-cve-2025-48633-android-framework-information-disclo.md)
 - [muddywater snakes by the riverbank](./2025-12-02/muddywater-snakes-by-the-riverbank.md)
+- [shai hulud 2 0 what the unknown wonderer tells us about the ](./2025-12-02/shai-hulud-2-0-what-the-unknown-wonderer-tells-us-about-the-.md)
 
 ## 2025-12-01
 - [oversharing is not caring what s at stake if your employees ](./2025-12-01/oversharing-is-not-caring-what-s-at-stake-if-your-employees-.md)
 
 ## 2025-11-28
 - [cisa kev cve 2021 26829 openplc scadabr cross site scripting](./2025-11-28/cisa-kev-cve-2021-26829-openplc-scadabr-cross-site-scripting.md)
+- [safe chain now enforces a minimum package age before install](./2025-11-28/safe-chain-now-enforces-a-minimum-package-age-before-install.md)
+- [sca everywhere scan and fix open source dependencies in your](./2025-11-28/sca-everywhere-scan-and-fix-open-source-dependencies-in-your.md)
 
 ## 2025-11-27
 - [children and chatbots what parents should know](./2025-11-27/children-and-chatbots-what-parents-should-know.md)
 
 ## 2025-11-25
 - [influencers in the crosshairs how cybercriminals are targeti](./2025-11-25/influencers-in-the-crosshairs-how-cybercriminals-are-targeti.md)
+- [shai hulud attacks persist through github actions vulnerabil](./2025-11-25/shai-hulud-attacks-persist-through-github-actions-vulnerabil.md)
 
 ## 2025-11-24
 - [mdr is the answer now what s the question](./2025-11-24/mdr-is-the-answer-now-what-s-the-question.md)
+
+## 2025-11-23
+- [shai hulud self replicating worm compromises 500 npm package](./2025-11-23/shai-hulud-self-replicating-worm-compromises-500-npm-package.md)
 
 ## 2025-11-21
 - [cisa kev cve 2025 61757 oracle fusion middleware missing aut](./2025-11-21/cisa-kev-cve-2025-61757-oracle-fusion-middleware-missing-aut.md)
@@ -498,6 +701,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 64328 sangoma freepbx os command injection](./2025-11-18/cisa-kev-cve-2025-64328-sangoma-freepbx-os-command-injection.md)
 
 ## 2025-11-17
+- [introducing npm package search find where any package was in](./2025-11-17/introducing-npm-package-search-find-where-any-package-was-in.md)
 - [what if your romantic ai chatbot can t keep a secret](./2025-11-17/what-if-your-romantic-ai-chatbot-can-t-keep-a-secret.md)
 
 ## 2025-11-14
@@ -581,6 +785,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-08
 - [cybersecurity awareness month 2025 passwords alone are not e](./2025-10-08/cybersecurity-awareness-month-2025-passwords-alone-are-not-e.md)
+- [stepsecurity is sponsoring github universe 2025](./2025-10-08/stepsecurity-is-sponsoring-github-universe-2025.md)
 
 ## 2025-10-07
 - [the case for cybersecurity why successful businesses are bui](./2025-10-07/the-case-for-cybersecurity-why-successful-businesses-are-bui.md)
@@ -622,13 +827,27 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 20362 cisco secure firewall adaptive secur](./2025-09-25/cisa-kev-cve-2025-20362-cisco-secure-firewall-adaptive-secur.md)
 - [deceptivedevelopment from primitive crypto theft to sophisti](./2025-09-25/deceptivedevelopment-from-primitive-crypto-theft-to-sophisti.md)
 
+## 2025-09-23
+- [s1ngularity popular nx build system package compromised with](./2025-09-23/s1ngularity-popular-nx-build-system-package-compromised-with.md)
+
+## 2025-09-19
+- [8 000 strong harden runner s growing impact on ci cd securit](./2025-09-19/8-000-strong-harden-runner-s-growing-impact-on-ci-cd-securit.md)
+- [ghostaction campaign over 3 000 secrets stolen through malic](./2025-09-19/ghostaction-campaign-over-3-000-secrets-stolen-through-malic.md)
+- [introducing stepsecurity threat intelligence real time suppl](./2025-09-19/introducing-stepsecurity-threat-intelligence-real-time-suppl.md)
+
 ## 2025-09-11
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-09-11/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)
+
+## 2025-09-08
+- [calculate your ci cd security roi with stepsecurity s new ro](./2025-09-08/calculate-your-ci-cd-security-roi-with-stepsecurity-s-new-ro.md)
+- [introducing the npm package cooldown check](./2025-09-08/introducing-the-npm-package-cooldown-check.md)
+- [securing google gemini in github actions with harden runner](./2025-09-08/securing-google-gemini-in-github-actions-with-harden-runner.md)
 
 ## 2025-09-04
 - [cisa kev cve 2025 38352 linux kernel time of check time of u](./2025-09-04/cisa-kev-cve-2025-38352-linux-kernel-time-of-check-time-of-u.md)
 - [cisa kev cve 2025 48543 android runtime use after free vulne](./2025-09-04/cisa-kev-cve-2025-48543-android-runtime-use-after-free-vulne.md)
 - [cisa kev cve 2025 53690 sitecore multiple products deseriali](./2025-09-04/cisa-kev-cve-2025-53690-sitecore-multiple-products-deseriali.md)
+- [how stepsecurity harden runner detected unexpected microsoft](./2025-09-04/how-stepsecurity-harden-runner-detected-unexpected-microsoft.md)
 
 ## 2025-09-03
 - [cisa kev cve 2023 50224 tp link tl wr841n authentication byp](./2025-09-03/cisa-kev-cve-2023-50224-tp-link-tl-wr841n-authentication-byp.md)
@@ -637,6 +856,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-09-02
 - [cisa kev cve 2020 24363 tp link tl wa855re missing authentic](./2025-09-02/cisa-kev-cve-2020-24363-tp-link-tl-wa855re-missing-authentic.md)
 - [cisa kev cve 2025 55177 meta platforms whatsapp incorrect au](./2025-09-02/cisa-kev-cve-2025-55177-meta-platforms-whatsapp-incorrect-au.md)
+
+## 2025-08-27
+- [stepsecurity harden runner detect source code tampering duri](./2025-08-27/stepsecurity-harden-runner-detect-source-code-tampering-duri.md)
 
 ## 2025-08-25
 - [cisa kev cve 2024 8068 citrix session recording improper pri](./2025-08-25/cisa-kev-cve-2024-8068-citrix-session-recording-improper-pri.md)
@@ -648,6 +870,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-08-18
 - [cisa kev cve 2025 54948 trend micro apex one os command inje](./2025-08-18/cisa-kev-cve-2025-54948-trend-micro-apex-one-os-command-inje.md)
 
+## 2025-08-15
+- [suspicious tag movement in aws s github action what happened](./2025-08-15/suspicious-tag-movement-in-aws-s-github-action-what-happened.md)
+- [when changed files changed everything our black hat 2025 pre](./2025-08-15/when-changed-files-changed-everything-our-black-hat-2025-pre.md)
+
 ## 2025-08-13
 - [cisa kev cve 2025 8875 n able n central insecure deserializa](./2025-08-13/cisa-kev-cve-2025-8875-n-able-n-central-insecure-deserializa.md)
 - [cisa kev cve 2025 8876 n able n central command injection vu](./2025-08-13/cisa-kev-cve-2025-8876-n-able-n-central-command-injection-vu.md)
@@ -656,6 +882,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2009 0238 microsoft office remote code executio](./2025-08-12/cisa-kev-cve-2009-0238-microsoft-office-remote-code-executio.md)
 - [cisa kev cve 2013 3893 microsoft internet explorer resource ](./2025-08-12/cisa-kev-cve-2013-3893-microsoft-internet-explorer-resource-.md)
 - [cisa kev cve 2025 6218 rarlab winrar path traversal vulnerab](./2025-08-12/cisa-kev-cve-2025-6218-rarlab-winrar-path-traversal-vulnerab.md)
+
+## 2025-08-09
+- [8 github actions secrets management best practices to follow](./2025-08-09/8-github-actions-secrets-management-best-practices-to-follow.md)
+- [lessons from aws codebuild s memory dump incident cve 2025 8](./2025-08-09/lessons-from-aws-codebuild-s-memory-dump-incident-cve-2025-8.md)
+- [supply chain security alert eslint config prettier package s](./2025-08-09/supply-chain-security-alert-eslint-config-prettier-package-s.md)
+- [the github warning everyone ignores this commit does not bel](./2025-08-09/the-github-warning-everyone-ignores-this-commit-does-not-bel.md)
+- [when ai meets ci cd coding agents in github actions pose hid](./2025-08-09/when-ai-meets-ci-cd-coding-agents-in-github-actions-pose-hid.md)
 
 ## 2025-08-05
 - [cisa kev cve 2020 25078 d link dcs 2530l and dcs 2670l devic](./2025-08-05/cisa-kev-cve-2020-25078-d-link-dcs-2530l-and-dcs-2670l-devic.md)
@@ -682,6 +915,25 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-10
 - [cisa kev cve 2026 3055 citrix netscaler out of bounds read v](./2025-07-10/cisa-kev-cve-2026-3055-citrix-netscaler-out-of-bounds-read-v.md)
+
+## 2025-07-08
+- [9 000 open source projects now secured by harden runner](./2025-07-08/9-000-open-source-projects-now-secured-by-harden-runner.md)
+- [announcing policy driven automated pull requests for ci cd m](./2025-07-08/announcing-policy-driven-automated-pull-requests-for-ci-cd-m.md)
+- [announcing stepsecurity s integration with runson secure and](./2025-07-08/announcing-stepsecurity-s-integration-with-runson-secure-and.md)
+- [evolving harden runner s disable sudo policy for improved ru](./2025-07-08/evolving-harden-runner-s-disable-sudo-policy-for-improved-ru.md)
+- [export harden runner security insights and detections to ama](./2025-07-08/export-harden-runner-security-insights-and-detections-to-ama.md)
+- [github actions pwn request vulnerability](./2025-07-08/github-actions-pwn-request-vulnerability.md)
+- [grafana github actions security incident](./2025-07-08/grafana-github-actions-security-incident.md)
+- [harden runner detects new traffic to release assets githubus](./2025-07-08/harden-runner-detects-new-traffic-to-release-assets-githubus.md)
+- [harden runner flags anomalous outbound call leading to docke](./2025-07-08/harden-runner-flags-anomalous-outbound-call-leading-to-docke.md)
+- [introducing stepsecurity artifact monitor detect unauthorize](./2025-07-08/introducing-stepsecurity-artifact-monitor-detect-unauthorize.md)
+- [introducing workflow run policies guardrails for blocking no](./2025-07-08/introducing-workflow-run-policies-guardrails-for-blocking-no.md)
+- [replace third party actions with stepsecurity maintained act](./2025-07-08/replace-third-party-actions-with-stepsecurity-maintained-act.md)
+- [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
+- [secure repo just got better new features for github actions ](./2025-07-08/secure-repo-just-got-better-new-features-for-github-actions-.md)
+- [stepsecurity harden runner now secures github actions workfl](./2025-07-08/stepsecurity-harden-runner-now-secures-github-actions-workfl.md)
+- [stepsecurity is now available on azure marketplace](./2025-07-08/stepsecurity-is-now-available-on-azure-marketplace.md)
+- [why compliance auditors are looking at your ci cd runners an](./2025-07-08/why-compliance-auditors-are-looking-at-your-ci-cd-runners-an.md)
 
 ## 2025-07-07
 - [cisa kev cve 2014 3931 multi router looking glass mrlg buffe](./2025-07-07/cisa-kev-cve-2014-3931-multi-router-looking-glass-mrlg-buffe.md)

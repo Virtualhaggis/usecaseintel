@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Python interpreter spawns hidden-window PowerShell fetching remote JSON payload (loader.py handoff)
 
-`UC_32_6` · phase: **install** · confidence: **High**
+`UC_36_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### [LLM] Add-MpPreference exclusion for sefirah / start.bat (Hugging Face campaign defense evasion)
 
-`UC_32_7` · phase: **install** · confidence: **High**
+`UC_36_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound DNS / network connection to sefirah C2 recargapopular.com
 
-`UC_32_8` · phase: **c2** · confidence: **High**
+`UC_36_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -252,7 +252,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake OpenAI repository on Hugging Face pushes infostealer malware
 
-`UC_32_5` · phase: **exploit** · confidence: **High**
+`UC_36_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -26,12 +26,104 @@ This technique, created by Kim Dvash of Israel Aerospace Industries, abuses the 
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
+- **T1499.001** — Endpoint Denial of Service: OS Exhaustion Flood
+- **T1531** — Account Access Removal
+- **T1135** — Network Share Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GhostLock SMB deny-share tool execution (Python script + distinctive CLI flags)
+
+`UC_15_4` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","py.exe") OR Processes.parent_process_name IN ("python.exe","pythonw.exe","py.exe")) AND (Processes.process="*ghostlock.py*" OR Processes.process="*--hold-indefinite*" OR Processes.process="*--confirm-existing-lock*" OR Processes.process="*--existing-folder*" OR Processes.process="*--targets-file*" OR Processes.process="*ghostlock_cache.json*") AND NOT Processes.user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName in~ ("python.exe","pythonw.exe","py.exe")
+     or InitiatingProcessFileName in~ ("python.exe","pythonw.exe","py.exe"))
+| where ProcessCommandLine has_any ("ghostlock.py","--hold-indefinite","--confirm-existing-lock","--existing-folder","--targets-file","ghostlock_cache.json",".ghostlock_authorized")
+   or InitiatingProcessCommandLine has_any ("ghostlock.py","--hold-indefinite","--confirm-existing-lock","--existing-folder","--targets-file")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Single-user SMB share file-open fan-out indicating GhostLock-style mass deny-share
+
+`UC_15_5` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`wineventlog_security` EventCode=5145
+| rex field=_raw "Account Name:\s+(?<sub_account>[^\r\n]+)"
+| rex field=_raw "Source Address:\s+(?<src_ip>[^\r\n]+)"
+| rex field=_raw "Share Name:\s+(?<share_name>[^\r\n]+)"
+| rex field=_raw "Relative Target Name:\s+(?<rel_target>[^\r\n]+)"
+| eval account=coalesce(Account_Name, sub_account)
+| where NOT match(account,"\$$") AND account!="ANONYMOUS LOGON" AND account!="SYSTEM"
+| bin _time span=5m
+| stats dc(rel_target) as FilesAccessed values(share_name) as shares values(src_ip) as src_ips min(_time) as firstTime max(_time) as lastTime by host account _time
+| eval duration_sec=lastTime-firstTime, opens_per_sec=round(FilesAccessed/coalesce(duration_sec,1),2)
+| where FilesAccessed > 500 AND opens_per_sec > 3
+| sort - FilesAccessed
+```
+
+**Defender KQL:**
+```kql
+// Best-effort: Defender XDR cannot see pure read-only CreateFileW handles, but file servers with MDE may emit DeviceFileEvents for any incidental SMB activity. Primary detection lives in Sentinel via Event 5145.
+let WindowMin = 5m;
+let FileThreshold = 500;
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where isnotempty(ShareName)
+| where isnotempty(RequestAccountName)
+| where RequestAccountName !endswith "$" and RequestAccountName !in~ ("SYSTEM","ANONYMOUS LOGON","LOCAL SERVICE","NETWORK SERVICE")
+| summarize FilesTouched = dcount(strcat(FolderPath, "\\", FileName)),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            SrcIPs = make_set(RequestSourceIP, 5),
+            Shares = make_set(ShareName, 5),
+            SampleFiles = make_set(FileName, 10)
+            by DeviceName, RequestAccountName, RequestAccountDomain, bin(Timestamp, WindowMin)
+| where FilesTouched > FileThreshold
+| extend DurationSec = datetime_diff('second', LastSeen, FirstSeen)
+| extend AccessPerSec = todouble(FilesTouched) / iif(DurationSec > 0, todouble(DurationSec), 1.0)
+| where AccessPerSec > 3
+| order by FilesTouched desc
+```
+
+### [LLM] GhostLock impact-report and authorisation-sentinel artifacts written to disk
+
+`UC_15_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("lock_impact_result.json","lock_impact_result.md","ghostlock_cache.json",".ghostlock_authorized","ghostlock.py") OR Filesystem.file_path="*\\ghostlock\\*" OR Filesystem.file_path="*/ghostlock/*") AND NOT Filesystem.user IN ("*$","SYSTEM") by Filesystem.dest Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FileName in~ ("lock_impact_result.json","lock_impact_result.md","ghostlock_cache.json",".ghostlock_authorized","ghostlock.py")
+   or FolderPath contains "ghostlock"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountDomain, SHA256
+| order by Timestamp desc
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -147,4 +239,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

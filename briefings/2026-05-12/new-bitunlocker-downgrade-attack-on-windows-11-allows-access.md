@@ -24,12 +24,74 @@ The attack is rooted in CVE-2025-48804, one of four critical…
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1542.003** — Pre-OS Boot: Bootkit
+- **T1600** — Weaken Encryption
+- **T1195.003** — Supply Chain Compromise: Compromise Hardware Supply Chain
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1112** — Modify Registry
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Windows boot manager vulnerable to BitUnlocker / CVE-2025-48804 (PCA 2011 signed)
+
+`UC_9_4` · phase: **weapon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Vulnerabilities.Vulnerabilities WHERE Vulnerabilities.cve="CVE-2025-48804" BY Vulnerabilities.dest Vulnerabilities.user Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve Vulnerabilities.cvss Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval mitigation="Deploy KB5025885 + migrate boot manager signing to Windows UEFI CA 2023; enable TPM+PIN pre-boot auth"
+```
+
+**Defender KQL:**
+```kql
+// Hunts devices reporting CVE-2025-48804 (BitUnlocker / WinRE SDI boot-manager downgrade)
+DeviceTvmSoftwareVulnerabilities
+| where CveId =~ "CVE-2025-48804"
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, OSBuild, JoinType, IsAzureADJoined, IsInternetFacing, MachineGroup, LoggedOnUsers) by DeviceId
+  ) on DeviceId
+| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, OSBuild,
+          SoftwareVendor, SoftwareName, SoftwareVersion,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId,
+          IsAzureADJoined, IsInternetFacing, MachineGroup, JoinType
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+```
+
+### [LLM] BitLocker startup PIN policy disabled (TPM-only) — BitUnlocker precondition
+
+`UC_9_5` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Registry WHERE (Registry.registry_path="*\\SOFTWARE\\Policies\\Microsoft\\FVE\\*") AND (Registry.registry_value_name IN ("UseAdvancedStartup","UseTPMPIN","UseTPMKeyPIN")) AND (Registry.registry_value_data IN ("0","0x0","0x00000000","DWORD (0x00000000)")) BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process_guid | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval impact="BitLocker drops to TPM-only — vulnerable to BitUnlocker CVE-2025-48804 physical-access decryption"
+```
+
+**Defender KQL:**
+```kql
+// BitLocker FVE policy downgraded to TPM-only (BitUnlocker / CVE-2025-48804 precondition)
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\SOFTWARE\Policies\Microsoft\FVE"
+| where RegistryValueName in~ ("UseAdvancedStartup","UseTPMPIN","UseTPMKeyPIN")
+| where RegistryValueData in ("0","0x0","0x00000000")
+| extend Downgrade = case(
+    RegistryValueName =~ "UseAdvancedStartup" and RegistryValueData in ("0","0x0","0x00000000"), "Pre-boot auth not required (TPM-only path enabled)",
+    RegistryValueName has_any ("UseTPMPIN","UseTPMKeyPIN") and RegistryValueData in ("0","0x0","0x00000000"), "Startup PIN blocked — TPM-only enforced",
+    "Other FVE policy weakening")
+| project Timestamp, DeviceName, DeviceId,
+          RegistryKey, RegistryValueName, RegistryValueData, PreviousRegistryValueData,
+          Downgrade,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountDomain,
+          InitiatingProcessFolderPath, InitiatingProcessIntegrityLevel,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -124,4 +186,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

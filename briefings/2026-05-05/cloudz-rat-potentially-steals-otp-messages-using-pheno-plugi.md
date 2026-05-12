@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CloudZ persistence: regasm.exe executing dropped .txt loader (update.txt/msupdate.txt)
 
-`UC_85_6` · phase: **install** · confidence: **High**
+`UC_92_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### [LLM] Pheno plugin recon artefacts: phonelink-<HOST>.txt in Microsoft\feedback\cm staging
 
-`UC_85_7` · phase: **actions** · confidence: **High**
+`UC_92_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ union pheno_files, phonelink_db_access
 
 ### [LLM] CloudZ C2/staging beacon: hellohiall.workers.dev or 185.196.10.136:8089
 
-`UC_85_8` · phase: **c2** · confidence: **High**
+`UC_92_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CloudZ RAT potentially steals OTP messages using Pheno plugin
 
-`UC_85_5` · phase: **exploit** · confidence: **High**
+`UC_92_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HEIC/image attachment in inbound email impersonating PayPal/Norton/McAfee/Geek Squad (TOAD callback fraud)
 
-`UC_71_4` · phase: **delivery** · confidence: **Medium**
+`UC_77_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ EmailAttachmentInfo
 
 ### [LLM] Inbound TOAD lure: brand-impersonation subject paired with callback business-context phrasing
 
-`UC_71_5` · phase: **delivery** · confidence: **Medium**
+`UC_77_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

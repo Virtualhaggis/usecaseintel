@@ -57,12 +57,119 @@ Active Dir…
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1098** — Account Manipulation
+- **T1556** — Modify Authentication Process
+- **T1649** — Steal or Forge Authentication Certificates
+- **T1087.002** — Account Discovery: Domain Account
+- **T1018** — Remote System Discovery
+- **T1078.002** — Valid Accounts: Domain Accounts
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Shadow Credentials — Write to msDS-KeyCredentialLink (Whisker / pyWhisker persistence)
+
+`UC_16_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as object values(All_Changes.user) as actor values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.change_type="AD Object Changed" (All_Changes.object_attrs="*msDS-KeyCredentialLink*" OR All_Changes.result="*msDS-KeyCredentialLink*") by All_Changes.dest All_Changes.user All_Changes.object All_Changes.object_attrs | `drop_dm_object_name(All_Changes)` | where NOT match(user, "(?i)^(MSOL_|AAD_|ADFS|krbtgt).*") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// MDI identity directory event — msDS-KeyCredentialLink write
+IdentityDirectoryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Account modified", "User Account modified", "Computer Account modified")
+| where AdditionalFields has "msDS-KeyCredentialLink"
+   or AdditionalFields has "KeyCredentialLink"
+| where AccountName !endswith "$"                         // exclude machine-account self-writes
+| where AccountName !startswith "MSOL_"                   // Azure AD Connect sync acct
+| where AccountName !in~ ("AAD_", "ADFS", "krbtgt")
+| extend KeyCredAttr = tostring(parse_json(AdditionalFields)["ATTRIBUTE"])
+| project Timestamp, ActionType, Actor = AccountName, ActorDomain = AccountDomain,
+          Target = TargetAccountUpn, TargetDisplay = TargetAccountDisplayName,
+          SourceHost = DeviceName, SourceIP = IPAddress, AdditionalFields
+| order by Timestamp desc
+```
+
+### [LLM] Certipy / Certify AD CS reconnaissance — LDAP enumeration of pKICertificateTemplate
+
+`UC_16_15` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(All_Changes.object_path) as objects values(All_Changes.user) as actor min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.change_type="AD Object Accessed" (All_Changes.object_path="*CN=Certificate Templates,CN=Public Key Services,CN=Services,CN=Configuration*" OR All_Changes.object_path="*CN=Enrollment Services,CN=Public Key Services*" OR All_Changes.result="*pKICertificateTemplate*" OR All_Changes.result="*pKIEnrollmentService*" OR All_Changes.result="*certificationAuthority*") by All_Changes.dest All_Changes.user All_Changes.src | `drop_dm_object_name(All_Changes)` | where NOT match(user, "(?i)^(MSOL_|krbtgt|.*\$)$") | where count > 5
+```
+
+**Defender KQL:**
+```kql
+// MDI LDAP query telemetry — Certipy/Certify cert-template enumeration
+IdentityQueryEvents
+| where Timestamp > ago(7d)
+| where ActionType == "LDAP query" or Protocol == "Ldap"
+| where Query has_any (
+    "pKICertificateTemplate",
+    "pKIEnrollmentService",
+    "certificationAuthority",
+    "CN=Certificate Templates,CN=Public Key Services",
+    "CN=Enrollment Services,CN=Public Key Services",
+    "msPKI-Certificate-Name-Flag",
+    "msPKI-Enrollment-Flag")
+| where AccountName !endswith "$"                                  // exclude machine accounts
+| where AccountName !in~ ("MSOL_", "AAD_", "krbtgt")
+| summarize QueryCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            Queries   = make_set(Query, 10),
+            Targets   = make_set(QueryTarget, 5)
+            by AccountName, AccountDomain, DeviceName, IPAddress
+| where QueryCount >= 2                                            // single query = noise; recon = burst
+| order by QueryCount desc
+```
+
+### [LLM] PKINIT TGT (Event 4768) with certificate info for privileged target — ESC1 / CVE-2022-26923 abuse
+
+`UC_16_16` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.src_ip) as src_ip values(Authentication.signature_id) as eventcode from datamodel=Authentication.Authentication where Authentication.signature_id=4768 Authentication.authentication_method="Kerberos" (Authentication.action="success" OR Authentication.action="failure") Authentication.app="PKINIT" by Authentication.user Authentication.dest Authentication.src | `drop_dm_object_name(Authentication)` | rex field=_raw "CertIssuerName=(?<cert_issuer>[^\s]+)" | rex field=_raw "CertSerialNumber=(?<cert_serial>[^\s]+)" | rex field=_raw "CertThumbprint=(?<cert_thumbprint>[^\s]+)" | where isnotnull(cert_serial) AND (match(user, "(?i)(admin|svc-|krbtgt|backup|domain)") OR NOT match(src, "(?i).*\$$"))
+```
+
+**Defender KQL:**
+```kql
+// Defender doesn't surface 4768 directly; pivot via IdentityLogonEvents where Protocol == Kerberos
+// and AdditionalFields carries the certificate context populated when PKINIT is used.
+IdentityLogonEvents
+| where Timestamp > ago(7d)
+| where Protocol == "Kerberos"
+| where ActionType == "LogonSuccess"
+| where AdditionalFields has_any ("CertIssuerName", "CertSerialNumber", "CertThumbprint", "PKINIT")
+| extend CertSerial = tostring(parse_json(AdditionalFields).CertSerialNumber),
+         CertIssuer = tostring(parse_json(AdditionalFields).CertIssuerName),
+         CertThumb  = tostring(parse_json(AdditionalFields).CertThumbprint)
+| where isnotempty(CertSerial)
+// privileged-target heuristic — adjust to your org's tier-0 list
+| where AccountUpn has_any ("admin", "-da", "svc-", "backup", "_a")
+   or AccountName in~ ("administrator", "krbtgt")
+   or AccountSid endswith "-500"                                     // built-in Administrator RID
+| join kind=leftouter (
+    IdentityInfo
+    | summarize arg_max(Timestamp, *) by AccountUpn
+    | project AccountUpn, JobTitle, Department, AssignedRoles
+  ) on AccountUpn
+| project Timestamp, AccountUpn, AccountName, AccountSid,
+          SourceDevice = DeviceName, SourceIP = IPAddress,
+          CertIssuer, CertSerial, CertThumb,
+          JobTitle, Department, AssignedRoles
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -460,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside AD CS Escalation: Unpacking Advanced Misuse Techniques and Tools
 
-`UC_11_13` · phase: **exploit** · confidence: **High**
+`UC_16_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -517,4 +624,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

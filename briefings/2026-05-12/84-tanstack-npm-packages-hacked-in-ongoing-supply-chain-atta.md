@@ -25,12 +25,94 @@ According to Socket , the compromise spans 42 TanStack packages — two…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] TanStack Mini Shai-Hulud prepare hook executes tanstack_runner.js via bun/node
+
+`UC_11_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("bun.exe","bun","node.exe","node")) AND Processes.process="*tanstack_runner.js*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName in~ ("bun.exe","bun","node.exe","node")
+| where ProcessCommandLine has "tanstack_runner.js"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] TanStack supply-chain payload router_init.js dropped inside @tanstack/* node_modules
+
+`UC_11_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="router_init.js" AND (Filesystem.file_path="*@tanstack*" OR Filesystem.file_path="*node_modules*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "router_init.js"
+| where FolderPath has "@tanstack" or FolderPath has "node_modules"
+| where InitiatingProcessFileName in~ ("npm.exe","npm-cli.js","pnpm.exe","yarn.exe","yarn","pnpm","bun.exe","bun","node.exe","node")
+    or InitiatingProcessCommandLine has_any ("npm install","pnpm install","yarn install","bun install")
+    or FolderPath has "@tanstack"
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] npm install or git fetch references TanStack orphan commit 79ac49eedf774dd4b0cfa308722bc463cfe5885c
+
+`UC_11_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*79ac49eedf774dd4b0cfa308722bc463cfe5885c*" OR Processes.process="*tanstack/router#79ac49ee*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*79ac49eedf774dd4b0cfa308722bc463cfe5885c*" OR (Web.dest="codeload.github.com" AND Web.url="*tanstack/router*79ac49ee*") by Web.src Web.user Web.dest Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` ]
+```
+
+**Defender KQL:**
+```kql
+let MaliciousCommit = "79ac49eedf774dd4b0cfa308722bc463cfe5885c";
+union isfuzzy=true
+( DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where ProcessCommandLine has MaliciousCommit
+         or ProcessCommandLine has "tanstack/router#79ac49ee"
+    | project Timestamp, DeviceName, AccountName, Source = "Process",
+              Detail = ProcessCommandLine, ProcImage = FolderPath,
+              ParentImage = InitiatingProcessFileName ),
+( DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteUrl has MaliciousCommit
+         or (RemoteUrl has "codeload.github.com" and RemoteUrl has "79ac49ee")
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              Source = "Network", Detail = RemoteUrl,
+              ProcImage = InitiatingProcessFolderPath,
+              ParentImage = InitiatingProcessParentFileName )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -93,7 +175,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 84 TanStack npm Packages Hacked in Ongoing Supply-Chain Attack Targeting CI Cred
 
-`UC_7_3` · phase: **exploit** · confidence: **High**
+`UC_11_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,4 +232,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

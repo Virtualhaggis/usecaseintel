@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — AI-powered honeypots: Turning the tables on malicious AI agents
 
-`UC_114_1` · phase: **install** · confidence: **High**
+`UC_134_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
