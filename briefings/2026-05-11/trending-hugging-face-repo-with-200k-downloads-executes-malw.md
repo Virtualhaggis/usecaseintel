@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection to Open-OSS/privacy-filter Hugging Face C2 / staging domains
 
-`UC_17_9` · phase: **c2** · confidence: **High**
+`UC_18_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### [LLM] Scheduled task 'MicrosoftEdgeUpdateTaskCore' created outside the genuine MicrosoftEdgeUpdate.exe path
 
-`UC_17_10` · phase: **install** · confidence: **High**
+`UC_18_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] python.exe spawns PowerShell with ExecutionPolicy Bypass that fetches jsonkeeper.com or eth-fastscan staging
 
-`UC_17_11` · phase: **delivery** · confidence: **High**
+`UC_18_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -353,7 +353,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trending Hugging Face Repo With 200k Downloads Executes Malware on Windows Machi
 
-`UC_17_8` · phase: **exploit** · confidence: **High**
+`UC_18_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

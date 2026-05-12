@@ -8,6 +8,9 @@ _590 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-12
+- [84 tanstack npm packages hacked in ongoing supply chain atta](./2026-05-12/84-tanstack-npm-packages-hacked-in-ongoing-supply-chain-atta.md)
+
 ## 2026-05-11
 - [cpanel cve 2026 41940 under active exploitation to deploy fi](./2026-05-11/cpanel-cve-2026-41940-under-active-exploitation-to-deploy-fi.md)
 - [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
@@ -18,7 +21,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google warns of hackers using ai to create working zero day ](./2026-05-11/google-warns-of-hackers-using-ai-to-create-working-zero-day-.md)
 - [hackers use fake deepseek tui github repositories to deliver](./2026-05-11/hackers-use-fake-deepseek-tui-github-repositories-to-deliver.md)
 - [hackers use plugx like dll sideloading chain in fake claude ](./2026-05-11/hackers-use-plugx-like-dll-sideloading-chain-in-fake-claude-.md)
-- [hackers use weaponized jpeg file to deploy trojanized screen](./2026-05-11/hackers-use-weaponized-jpeg-file-to-deploy-trojanized-screen.md)
 - [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)

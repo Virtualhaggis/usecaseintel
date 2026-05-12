@@ -96,7 +96,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClawCode AI-themed fake installer execution — known-malicious MD5 hashes
 
-`UC_11_16` · phase: **install** · confidence: **High**
+`UC_12_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union isfuzzy=true
 
 ### [LLM] ClawCode C2 / Pastebin & snippet.host payload-staging URL contact
 
-`UC_11_17` · phase: **c2** · confidence: **High**
+`UC_12_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ union isfuzzy=true
 
 ### [LLM] ClawCode firewall tampering — inbound rules for ports 57001/57002/56001 + Defender disable
 
-`UC_11_18` · phase: **install** · confidence: **High**
+`UC_12_18` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -625,7 +625,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake DeepSeek TUI GitHub Repositories to Deliver Malware
 
-`UC_11_15` · phase: **exploit** · confidence: **High**
+`UC_12_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
