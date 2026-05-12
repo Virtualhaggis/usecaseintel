@@ -11,12 +11,8 @@ By Bill Toulas
 May 11, 2026
 06:40 PM
 0 
-
-
 California Attorney General Rob Bonta announced a $12.75 million settlement agreement with General Motors (GM) over allegations that the company violated the California Consumer Privacy Act (CCPA).
-
-
-The violations arise from allegations that the car maker illegally collected and sold Californians’ driving and location data to data brokers Verisk Analytics and LexisNexis Risk Sol…
+The violations arise from allegations that the car maker illegally collected and sold Californians’ driving and location data to data brokers Verisk Analytics and LexisNexis Risk Solutions ,…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -11,12 +11,8 @@ By Lawrence Abrams
 May 11, 2026
 06:02 PM
 0 
-
-
 A security researcher has released a proof-of-concept tool named GhostLock that demonstrates how a legitimate Windows file API can be abused in attacks to block access to files stored locally or on SMB network shares.
-
-
-This technique, created by Kim Dvash of Israel Aerospace Industries, abuses the Windows ' CreateFileW ' API and file-sharing modes to prevent other users and application…
+This technique, created by Kim Dvash of Israel Aerospace Industries, abuses the Windows ' CreateFileW ' API and file-sharing modes to prevent other users and applications from o…
 
 ## Indicators of Compromise (high-fidelity only)
 

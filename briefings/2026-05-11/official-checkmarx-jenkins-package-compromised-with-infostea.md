@@ -11,12 +11,8 @@ By Bill Toulas
 May 11, 2026
 06:03 PM
 0 
-
-
 Checkmarx warned over the weekend that a rogue version of its Jenkins Application Security Testing (AST) plugin had been published on the Jenkins Marketplace.
-
-
-The compromise was claimed by the TeamPCP hacker group, which initiated a spree of supply-chain attacks that included the Shai-Hulud campaigns on npm and the Trivy vulnerability scanner breach, resulting in the delivery of cred…
+The compromise was claimed by the TeamPCP hacker group, which initiated a spree of supply-chain attacks that included the Shai-Hulud campaigns on npm and the Trivy vulnerability scanner breach, resulting in the delivery of credential-s…
 
 ## Indicators of Compromise (high-fidelity only)
 
