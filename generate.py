@@ -13627,6 +13627,47 @@ def _looks_same_story(a, b, threshold=0.55):
     return (len(inter) / len(union)) >= threshold
 
 
+_MARKETING_TITLE_STARTS = (
+    "introducing ", "announcing ", "we've launched", "we have launched",
+    "we're excited", "we are excited", "we're thrilled", "we are thrilled",
+    "we're pleased to", "now in beta", "now in ga", "now available",
+    "now generally available", "today we're", "today we are",
+    "new from ", "from the team at ",
+)
+_MARKETING_TITLE_CONTAINS = (
+    " now integrates with ", " integrates with ", " partners with ",
+    " bridging the gap ",
+    # Webinar / event noise — extends the existing LLM-gate stopwords to the
+    # accept-article gate so they never even appear on the site.
+    "webinar:", "webinar -", "podcast:", " podcast ",
+    "join us at ", "join us for ", "live demo:",
+)
+# Strong-signal threat content words. If any of these are present the article
+# is allowed through even when a marketing pattern matches — e.g. "Introducing
+# StepSecurity's TeamPCP findings" should NOT be blocked.
+_OVERRIDE_KEYWORDS = (
+    "cve-", "0-day", "zero-day", "exploit", "malware", "ransomware",
+    "trojan", "stealer", "backdoor", "intrusion", "compromise",
+    "supply chain", "supply-chain", "campaign", "actor", "shai-hulud",
+    "in the wild", "actively exploited", "active exploit",
+)
+def _is_marketing_post(article: dict) -> bool:
+    """Reject obvious vendor product-marketing / event-announcement posts at
+    the fetch boundary so they never bloat the site. We err on the side of
+    keeping content when in doubt — the override-keyword check above protects
+    titles that LOOK promotional but actually carry threat intel."""
+    title = (article.get("title") or "").lower()
+    if not title:
+        return False
+    if any(kw in title for kw in _OVERRIDE_KEYWORDS):
+        return False
+    if any(title.startswith(p) for p in _MARKETING_TITLE_STARTS):
+        return True
+    if any(p in title for p in _MARKETING_TITLE_CONTAINS):
+        return True
+    return False
+
+
 def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     """
     Pull articles from every configured source, filter to a rolling window
@@ -13651,6 +13692,14 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
             safe_err = str(e).encode('ascii','replace').decode('ascii')
             print(f"    [!] failed: {safe_err}")
             items = []
+        # Drop vendor product-marketing posts at the fetch boundary so they
+        # never get cached, rendered, or LLM-processed. Logged so noisy
+        # feeds become visible.
+        before = len(items)
+        items = [a for a in items if not _is_marketing_post(a)]
+        dropped = before - len(items)
+        if dropped:
+            print(f"    -> dropped {dropped} marketing post(s)")
         print(f"    -> {len(items)} articles in window")
         raw.extend(items)
 
