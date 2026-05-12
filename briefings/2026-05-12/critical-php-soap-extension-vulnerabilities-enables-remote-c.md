@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable PHP SOAP / mbstring runtime on managed host (CVE-2026-6722, -7261, -7262, -7258, -6104)
 
-`UC_8_5` · phase: **exploit** · confidence: **High**
+`UC_26_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] PHP / php-fpm worker segfault cluster on Linux web tier — possible CVE-2026-6722 / 7258 / 7262 exploit attempt
 
-`UC_8_6` · phase: **exploit** · confidence: **Medium**
+`UC_26_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

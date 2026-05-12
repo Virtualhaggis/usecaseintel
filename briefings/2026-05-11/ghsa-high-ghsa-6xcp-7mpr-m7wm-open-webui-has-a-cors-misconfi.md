@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / HIGH] GHSA-6xcp-7mpr-m7wm: Open WebUI has a CORS misconfiguration and se
 
-`UC_89_1` · phase: **install** · confidence: **High**
+`UC_106_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 2024 in Review: The Evolution of CI/CD Security & What's Next
 
-`UC_331_2` · phase: **install** · confidence: **High**
+`UC_332_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

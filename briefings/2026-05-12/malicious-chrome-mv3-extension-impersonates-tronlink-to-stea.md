@@ -10,11 +10,8 @@ Home Cyber Security News
 Malicious Chrome MV3 Extension Impersonates TronLink to Steal Crypto Wallet Credentials 
 By Tushar Subhra Dutta 
 May 12, 2026 
-
-
-
-
-A fake Chrome browser extension pretending to be the popular TronLink crypto wallet has been caught stealing sensitive wallet credentials from unsuspecting users. The malicious extension operates silently in the background, harvesting mnemonic phrases, private keys, and passwords before forwarding them straight to attackers in real time.…
+A fake Chrome browser extension pretending to be the popular TronLink crypto wallet has been caught stealing sensitive wallet credentials from unsuspecting users. The malicious extension operates silently in the background, harvesting mnemonic phrases, private keys, and passwords before forwarding them straight to attackers in real time. 
+This c…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -47,117 +44,12 @@ A fake Chrome browser extension pretending to be the popular TronLink crypto wal
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Network/DNS connections to fake TronLink Chrome extension C2 (tronfindexplorer.com / trx-scan-explorer.org)
-
-`UC_1_13` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answers values(DNS.src) as src from datamodel=Network_Resolution where (DNS.query="*tronfindexplorer.com" OR DNS.query="*.tronfindexplorer.com" OR DNS.query="tronfind-api.tronfindexplorer.com" OR DNS.query="trx-scan-explorer.org" OR DNS.query="*.trx-scan-explorer.org") by host DNS.src DNS.query
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web where (Web.url="*tronfindexplorer.com*" OR Web.url="*trx-scan-explorer.org*" OR Web.dest="tronfind-api.tronfindexplorer.com") by host Web.src Web.user Web.dest | `drop_dm_object_name(Web)` ]
-```
-
-**Defender KQL:**
-```kql
-let _phish_domains = dynamic(["tronfindexplorer.com","trx-scan-explorer.org"]);
-union isfuzzy=true
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (_phish_domains)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort,
-              Source = "DeviceNetworkEvents" ),
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q has_any (_phish_domains)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, RemoteIP = "", RemoteUrl = Q, RemotePort = int(null),
-              Source = "DeviceEvents-DnsQueryResponse" )
-| order by Timestamp desc
-```
-
-### [LLM] Installation of malicious TronLink Chrome extension ID ekjidonhjmneoompmjbjofpjmhklpjdd
-
-`UC_1_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_name) as files values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Extensions\\ekjidonhjmneoompmjbjofpjmhklpjdd\\*" OR Filesystem.file_path="*/Extensions/ekjidonhjmneoompmjbjofpjmhklpjdd/*" OR Filesystem.file_path="*ekjidonhjmneoompmjbjofpjmhklpjdd*") by host Filesystem.dest Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _bad_ext_id = "ekjidonhjmneoompmjbjofpjmhklpjdd";
-union isfuzzy=true
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has _bad_ext_id or FileName has _bad_ext_id
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256,
-              Source = "DeviceFileEvents" ),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has _bad_ext_id or FolderPath has _bad_ext_id
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
-              Source = "DeviceProcessEvents" )
-| order by Timestamp desc
-```
-
-### [LLM] Known fake-TronLink extension file-hash sighting (SHA256 / SHA1 / MD5)
-
-`UC_1_15` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("6b4a4b64e6f969017cb3a9a71dd3038ddf32b989e5342dbbe36650d5802f2ee4","b84b89f0a1b7f00431274ac676104acaaa73d440e5731161d1077e733014cc29","0cbf4f21cf157227d2c3fba80b64e1f4c3f9d2cc0bf926e024252c35e93edd5a","94d651b42355f2b0765a7435e5a5927623807225","ce612d027e631d6633582227eb29002f") by host Filesystem.dest Filesystem.user Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _sha256 = dynamic([
-  "6b4a4b64e6f969017cb3a9a71dd3038ddf32b989e5342dbbe36650d5802f2ee4",
-  "b84b89f0a1b7f00431274ac676104acaaa73d440e5731161d1077e733014cc29",
-  "0cbf4f21cf157227d2c3fba80b64e1f4c3f9d2cc0bf926e024252c35e93edd5a"]);
-let _sha1  = "94d651b42355f2b0765a7435e5a5927623807225";
-let _md5   = "ce612d027e631d6633582227eb29002f";
-union isfuzzy=true
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_sha256) or SHA1 =~ _sha1 or MD5 =~ _md5
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              FileName, FolderPath, SHA256, SHA1, MD5, Source = "DeviceFileEvents" ),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_sha256) or SHA1 =~ _sha1 or MD5 =~ _md5
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-              SHA256, SHA1, MD5, Source = "DeviceProcessEvents" ),
-  ( DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_sha256) or SHA1 =~ _sha1 or MD5 =~ _md5
-    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-              FileName, FolderPath, ProcessCommandLine = InitiatingProcessCommandLine,
-              SHA256, SHA1, MD5, Source = "DeviceImageLoadEvents" )
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -505,7 +397,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Chrome MV3 Extension Impersonates TronLink to Steal Crypto Wallet Cred
 
-`UC_1_12` · phase: **exploit** · confidence: **High**
+`UC_18_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -565,4 +457,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

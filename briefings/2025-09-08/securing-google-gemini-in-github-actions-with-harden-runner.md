@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Securing Google Gemini in GitHub Actions with Harden-Runner
 
-`UC_506_1` · phase: **exploit** · confidence: **High**
+`UC_507_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Code-of-Conduct AiTM phishing — inbound email from named sender addresses/domains
 
-`UC_166_10` · phase: **delivery** · confidence: **High**
+`UC_168_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ EmailEvents
 
 ### [LLM] Code-of-Conduct campaign PDF attachment by SHA256 / filename pattern
 
-`UC_166_11` · phase: **delivery** · confidence: **High**
+`UC_168_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ union isfuzzy=true
 
 ### [LLM] AiTM landing domain access followed by Microsoft sign-in within 10 min
 
-`UC_166_12` · phase: **c2** · confidence: **High**
+`UC_168_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hunt SAP Commerce Cloud & S/4HANA hosts vulnerable to CVE-2026-34263 / CVE-2026-34260
 
-`UC_2_5` · phase: **recon** · confidence: **High**
+`UC_19_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,18 +12,35 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [claude s chrome extension vulnerability allows malicious ext](./2026-05-12/claude-s-chrome-extension-vulnerability-allows-malicious-ext.md)
 - [critical cline ai agent vulnerability enables rce attacks](./2026-05-12/critical-cline-ai-agent-vulnerability-enables-rce-attacks.md)
 - [critical php soap extension vulnerabilities enables remote c](./2026-05-12/critical-php-soap-extension-vulnerabilities-enables-remote-c.md)
+- [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
+- [ghsa critical cve 2026 45091 sealed env totp secret embedded](./2026-05-12/ghsa-critical-cve-2026-45091-sealed-env-totp-secret-embedded.md)
+- [ghsa high cve 2026 42290 protobuf js is vulnerable to os com](./2026-05-12/ghsa-high-cve-2026-42290-protobuf-js-is-vulnerable-to-os-com.md)
+- [ghsa high cve 2026 44289 protobuf js denial of service throu](./2026-05-12/ghsa-high-cve-2026-44289-protobuf-js-denial-of-service-throu.md)
+- [ghsa high cve 2026 44290 protobuf js process wide denial of ](./2026-05-12/ghsa-high-cve-2026-44290-protobuf-js-process-wide-denial-of-.md)
+- [ghsa high cve 2026 44291 protobuf js code generation gadget ](./2026-05-12/ghsa-high-cve-2026-44291-protobuf-js-code-generation-gadget-.md)
+- [ghsa high cve 2026 44293 protobuf js code injection through ](./2026-05-12/ghsa-high-cve-2026-44293-protobuf-js-code-injection-through-.md)
+- [ghsa high cve 2026 44295 protobuf js code injection in pbjs ](./2026-05-12/ghsa-high-cve-2026-44295-protobuf-js-code-injection-in-pbjs-.md)
+- [ghsa high cve 2026 45088 dalfox server mode has an unauthent](./2026-05-12/ghsa-high-cve-2026-45088-dalfox-server-mode-has-an-unauthent.md)
+- [ghsa high cve 2026 45089 dalfox server mode has an unauthent](./2026-05-12/ghsa-high-cve-2026-45089-dalfox-server-mode-has-an-unauthent.md)
+- [ghsa high cve 2026 45090 dalfox has an unauthenticated remot](./2026-05-12/ghsa-high-cve-2026-45090-dalfox-has-an-unauthenticated-remot.md)
+- [ghsa medium cve 2026 32686 decimal unbounded exponent in dec](./2026-05-12/ghsa-medium-cve-2026-32686-decimal-unbounded-exponent-in-dec.md)
+- [ghsa medium cve 2026 44288 protobufjs has overlong utf 8 dec](./2026-05-12/ghsa-medium-cve-2026-44288-protobufjs-has-overlong-utf-8-dec.md)
+- [ghsa medium cve 2026 44292 protobuf js prototype injection i](./2026-05-12/ghsa-medium-cve-2026-44292-protobuf-js-prototype-injection-i.md)
+- [ghsa medium cve 2026 44294 protobuf js denial of service fro](./2026-05-12/ghsa-medium-cve-2026-44294-protobuf-js-denial-of-service-fro.md)
+- [hackers hijack microsoft teams accounts to deliver modelorat](./2026-05-12/hackers-hijack-microsoft-teams-accounts-to-deliver-modelorat.md)
 - [instructure reaches agreement with shinyhunters to stop data](./2026-05-12/instructure-reaches-agreement-with-shinyhunters-to-stop-data.md)
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
 - [magecart hackers abuse google tag manager to inject credit c](./2026-05-12/magecart-hackers-abuse-google-tag-manager-to-inject-credit-c.md)
 - [malicious chrome mv3 extension impersonates tronlink to stea](./2026-05-12/malicious-chrome-mv3-extension-impersonates-tronlink-to-stea.md)
 - [mistralai pypi package compromised to inject malicious code ](./2026-05-12/mistralai-pypi-package-compromised-to-inject-malicious-code-.md)
-- [openai daybreak automates vulnerability detection and fixing](./2026-05-12/openai-daybreak-automates-vulnerability-detection-and-fixing.md)
+- [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
+- [one year of opengrep what we built and what s next](./2026-05-12/one-year-of-opengrep-what-we-built-and-what-s-next.md)
 - [openai launches daybreak for ai powered vulnerability detect](./2026-05-12/openai-launches-daybreak-for-ai-powered-vulnerability-detect.md)
-- [poc exploit released for android zero click vulnerability th](./2026-05-12/poc-exploit-released-for-android-zero-click-vulnerability-th.md)
+- [poc exploit released for android 0 click vulnerability that ](./2026-05-12/poc-exploit-released-for-android-0-click-vulnerability-that-.md)
 - [sap fixes critical vulnerabilities in commerce cloud and s 4](./2026-05-12/sap-fixes-critical-vulnerabilities-in-commerce-cloud-and-s-4.md)
+- [shadow ai is a fear response and banning it makes it worse](./2026-05-12/shadow-ai-is-a-fear-response-and-banning-it-makes-it-worse.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
-- [trickmo android banking malware targets banking wallet and a](./2026-05-12/trickmo-android-banking-malware-targets-banking-wallet-and-a.md)
 - [why agentic ai is security s next blind spot](./2026-05-12/why-agentic-ai-is-security-s-next-blind-spot.md)
 
 ## 2026-05-11
@@ -123,28 +140,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-09
 - [fake openai repository on hugging face pushes infostealer ma](./2026-05-09/fake-openai-repository-on-hugging-face-pushes-infostealer-ma.md)
-- [ghsa critical ghsa v6wj c83f v46x profullstack mcp server vu](./2026-05-09/ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu.md)
-- [ghsa high cve 2026 44895 yoda digital gitlab mcp server s ss](./2026-05-09/ghsa-high-cve-2026-44895-yoda-digital-gitlab-mcp-server-s-ss.md)
-- [ghsa high cve 2026 44966 velocity js has a prototype polluti](./2026-05-09/ghsa-high-cve-2026-44966-velocity-js-has-a-prototype-polluti.md)
-- [ghsa high cve 2026 44983 smallbitvec integer overflow in saf](./2026-05-09/ghsa-high-cve-2026-44983-smallbitvec-integer-overflow-in-saf.md)
-- [ghsa low cve 2026 44459 hono has improper validation of nume](./2026-05-09/ghsa-low-cve-2026-44459-hono-has-improper-validation-of-nume.md)
-- [ghsa medium cve 2026 44457 hono s cache middleware ignores v](./2026-05-09/ghsa-medium-cve-2026-44457-hono-s-cache-middleware-ignores-v.md)
 - [ghsa medium cve 2026 44458 hono has css declaration injectio](./2026-05-09/ghsa-medium-cve-2026-44458-hono-has-css-declaration-injectio.md)
-- [ghsa medium cve 2026 44897 mistune heading id attribute has ](./2026-05-09/ghsa-medium-cve-2026-44897-mistune-heading-id-attribute-has-.md)
-- [ghsa medium cve 2026 6860 vert x has a dos via unbounded ser](./2026-05-09/ghsa-medium-cve-2026-6860-vert-x-has-a-dos-via-unbounded-ser.md)
 - [jdownloader site hacked to replace installers with python ra](./2026-05-09/jdownloader-site-hacked-to-replace-installers-with-python-ra.md)
 
 ## 2026-05-08
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
-- [ghsa high cve 2026 44900 epa4all client has a vau signature ](./2026-05-08/ghsa-high-cve-2026-44900-epa4all-client-has-a-vau-signature-.md)
-- [ghsa medium cve 2026 44708 mistune math plugin has an xss es](./2026-05-08/ghsa-medium-cve-2026-44708-mistune-math-plugin-has-an-xss-es.md)
-- [ghsa medium cve 2026 44788 sharpcompress has directory trave](./2026-05-08/ghsa-medium-cve-2026-44788-sharpcompress-has-directory-trave.md)
-- [ghsa medium cve 2026 44833 snipe it has an open redirect vul](./2026-05-08/ghsa-medium-cve-2026-44833-snipe-it-has-an-open-redirect-vul.md)
-- [ghsa medium cve 2026 44836 view component preview route can ](./2026-05-08/ghsa-medium-cve-2026-44836-view-component-preview-route-can-.md)
-- [ghsa medium cve 2026 44837 view component system test entry ](./2026-05-08/ghsa-medium-cve-2026-44837-view-component-system-test-entry-.md)
-- [ghsa medium cve 2026 44896 mistune has xss via unescaped fig](./2026-05-08/ghsa-medium-cve-2026-44896-mistune-has-xss-via-unescaped-fig.md)
 - [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
@@ -192,7 +194,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [breaking the code multi stage code of conduct phishing campa](./2026-05-04/breaking-the-code-multi-stage-code-of-conduct-phishing-campa.md)
 - [canistersprawl pgserve compromised on npm malicious versions](./2026-05-04/canistersprawl-pgserve-compromised-on-npm-malicious-versions.md)
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
-- [global crackdown arrests 276 shuts 9 crypto scam centers sei](./2026-05-04/global-crackdown-arrests-276-shuts-9-crypto-scam-centers-sei.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
 - [phishing campaign hits 80 orgs using simplehelp and screenco](./2026-05-04/phishing-campaign-hits-80-orgs-using-simplehelp-and-screenco.md)
 - [silver fox deploys abcdoor malware via tax themed phishing i](./2026-05-04/silver-fox-deploys-abcdoor-malware-via-tax-themed-phishing-i.md)

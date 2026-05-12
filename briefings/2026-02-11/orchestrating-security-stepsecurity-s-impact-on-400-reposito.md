@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Orchestrating Security: StepSecurity's Impact on 400+ Repositories and Future Pl
 
-`UC_335_0` · phase: **exploit** · confidence: **High**
+`UC_336_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

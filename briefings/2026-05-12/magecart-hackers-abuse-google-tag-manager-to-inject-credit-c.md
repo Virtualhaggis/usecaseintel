@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ATMZOW Magecart Skimmer Payload-Delivery Domain Egress (Nov-2023 Hostinger Batch)
 
-`UC_9_3` · phase: **c2** · confidence: **High**
+`UC_27_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ union isfuzzy=true
 
 ### [LLM] Known-Malicious GTM Container ID Loaded From Web Proxy / IIS Logs (ATMZOW)
 
-`UC_9_4` · phase: **delivery** · confidence: **High**
+`UC_27_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # [CRIT] ClickFix campaign uses fake macOS utilities lures to deliver infostealers
 
-**Source:** Microsoft Security Blog, ESET WeLiveSecurity
+**Source:** Microsoft Security Blog, ESET WeLiveSecurity, Cyber Security News
 **Published:** 2025-09-25
 **Article:** https://www.microsoft.com/en-us/security/blog/2026/05/06/clickfix-campaign-uses-fake-macos-utilities-lures-deliver-infostealers/
 
@@ -204,7 +204,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClickFix macOS curl-piped osascript in-memory AppleScript execution with Telegram fallback C2
 
-`UC_499_13` · phase: **c2** · confidence: **High**
+`UC_500_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -232,7 +232,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Stealer /tmp staging, GoogleUpdate keystone masquerade and trojanized wallet drop
 
-`UC_499_14` · phase: **install** · confidence: **High**
+`UC_500_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -263,7 +263,7 @@ DeviceFileEvents
 
 ### [LLM] AMOS helper-install /tmp/helper or /tmp/update Mach-O execution beaconing to 45.94.47.0/24
 
-`UC_499_15` · phase: **c2** · confidence: **High**
+`UC_500_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -622,7 +622,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ClickFix campaign uses fake macOS utilities lures to deliver infostealers
 
-`UC_499_12` · phase: **exploit** · confidence: **High**
+`UC_500_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

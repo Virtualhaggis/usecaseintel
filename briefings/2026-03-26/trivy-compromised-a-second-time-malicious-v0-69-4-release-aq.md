@@ -262,7 +262,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Trivy Compromised a Second Time - Malicious v0.69.4 Release, aquasecurity/setup-
 
-`UC_250_7` · phase: **exploit** · confidence: **High**
+`UC_251_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

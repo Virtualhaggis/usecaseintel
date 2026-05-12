@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MistralAI 2.4.6 Backdoor: Egress to Hardcoded C2 IP 83.142.209.194
 
-`UC_3_5` · phase: **c2** · confidence: **High**
+`UC_20_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### [LLM] MistralAI Backdoor: transformers.pyz Dropped to /tmp on Linux
 
-`UC_3_6` · phase: **delivery** · confidence: **High**
+`UC_20_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### [LLM] MistralAI Backdoor: pgsql-monitor.service / pgmonitor.py Systemd Persistence
 
-`UC_3_7` · phase: **install** · confidence: **High**
+`UC_20_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -209,7 +209,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MistralAI PyPI Package Compromised to Inject Malicious Code – Microsoft Warns
 
-`UC_3_4` · phase: **exploit** · confidence: **High**
+`UC_20_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
