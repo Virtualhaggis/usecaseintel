@@ -11,11 +11,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-12
 - [84 tanstack npm packages hacked in ongoing supply chain atta](./2026-05-12/84-tanstack-npm-packages-hacked-in-ongoing-supply-chain-atta.md)
 - [hackers abuse cve 2026 41940 to take over cpanel and whm ser](./2026-05-12/hackers-abuse-cve-2026-41940-to-take-over-cpanel-and-whm-ser.md)
+- [ios 26 5 brings default end to end encrypted rcs messaging b](./2026-05-12/ios-26-5-brings-default-end-to-end-encrypted-rcs-messaging-b.md)
 - [new bitunlocker downgrade attack on windows 11 allows access](./2026-05-12/new-bitunlocker-downgrade-attack-on-windows-11-allows-access.md)
+- [openai daybreak automates detects and fix vulnerabilities au](./2026-05-12/openai-daybreak-automates-detects-and-fix-vulnerabilities-au.md)
+- [poc exploit released for android zero click vulnerability th](./2026-05-12/poc-exploit-released-for-android-zero-click-vulnerability-th.md)
+- [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
+- [trickmo android banking malware targets banking wallet and a](./2026-05-12/trickmo-android-banking-malware-targets-banking-wallet-and-a.md)
 
 ## 2026-05-11
 - [cpanel cve 2026 41940 under active exploitation to deploy fi](./2026-05-11/cpanel-cve-2026-41940-under-active-exploitation-to-deploy-fi.md)
-- [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
 - [eyes wide open how to mitigate the security and privacy risk](./2026-05-11/eyes-wide-open-how-to-mitigate-the-security-and-privacy-risk.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [gm agrees to 12 75m california settlement over sale of drive](./2026-05-11/gm-agrees-to-12-75m-california-settlement-over-sale-of-drive.md)
@@ -29,9 +33,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new ghostlock tool abuses windows api to block file access](./2026-05-11/new-ghostlock-tool-abuses-windows-api-to-block-file-access.md)
 - [official checkmarx jenkins package compromised with infostea](./2026-05-11/official-checkmarx-jenkins-package-compromised-with-infostea.md)
 - [popular go library fsnotify raises supply chain alarms after](./2026-05-11/popular-go-library-fsnotify-raises-supply-chain-alarms-after.md)
-- [shinyhunters breaches instructure canvas lms through free fo](./2026-05-11/shinyhunters-breaches-instructure-canvas-lms-through-free-fo.md)
 - [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
-- [trending hugging face repo with 200k downloads executes malw](./2026-05-11/trending-hugging-face-repo-with-200k-downloads-executes-malw.md)
 - [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
 - [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
 - [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
@@ -133,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-01
 - [30 000 facebook accounts hacked via google appsheet phishing](./2026-05-01/30-000-facebook-accounts-hacked-via-google-appsheet-phishing.md)
-- [china linked hackers target asian governments nato state jou](./2026-05-01/china-linked-hackers-target-asian-governments-nato-state-jou.md)
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
 - [cybercrime groups using vishing and sso abuse in rapid saas ](./2026-05-01/cybercrime-groups-using-vishing-and-sso-abuse-in-rapid-saas-.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
@@ -215,7 +216,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2023 21529 microsoft exchange server deserializ](./2026-04-13/cisa-kev-cve-2023-21529-microsoft-exchange-server-deserializ.md)
 - [cisa kev cve 2026 21643 fortinet forticlient ems sql injecti](./2026-04-13/cisa-kev-cve-2026-21643-fortinet-forticlient-ems-sql-injecti.md)
 - [cisa kev cve 2026 34621 adobe acrobat and reader prototype p](./2026-04-13/cisa-kev-cve-2026-34621-adobe-acrobat-and-reader-prototype-p.md)
-- [janelarat a financial threat targeting users in latin americ](./2026-04-13/janelarat-a-financial-threat-targeting-users-in-latin-americ.md)
 
 ## 2026-04-10
 - [recovery scammers hit you when you re down here s how to avo](./2026-04-10/recovery-scammers-hit-you-when-you-re-down-here-s-how-to-avo.md)

@@ -10,12 +10,8 @@ Home Cyber Security
 New BitUnlocker Downgrade Attack on Windows 11 Allows Access to Encrypted Disks in 5 Minutes 
 By Guru Baran 
 May 12, 2026 
-
-
-
-
 A new tool, BitUnlocker, reveals a practical downgrade attack against Microsoft’s BitLocker encryption, allowing attackers with physical access to decrypt protected volumes on patched Windows 11 machines in under 5 minutes by exploiting a crucial gap between patching and certificate revocation.
-The attack is rooted in CVE-2025-48804, one of four …
+The attack is rooted in CVE-2025-48804, one of four critical…
 
 ## Indicators of Compromise (high-fidelity only)
 

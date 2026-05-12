@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Go build pulls fsnotify from dispute-era fork repo gofsnotify/fsnotify
 
-`UC_9_3` · phase: **weapon** · confidence: **Medium**
+`UC_14_3` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

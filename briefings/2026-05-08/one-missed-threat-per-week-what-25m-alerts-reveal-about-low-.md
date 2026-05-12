@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PayPal-Authentic Inbound Mail with Non-ASCII Subject or Embedded Callback Number (TOAD)
 
-`UC_40_10` · phase: **delivery** · confidence: **Medium**
+`UC_42_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ EmailEvents
 
 ### [LLM] Inbound SVG Email Attachment — Base64 Payload Smuggling Vector
 
-`UC_40_11` · phase: **delivery** · confidence: **High**
+`UC_42_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

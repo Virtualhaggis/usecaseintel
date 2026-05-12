@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 84 TanStack npm Packages Hacked in Ongoing Supply-Chain Attack Targeting CI Cred
 
-`UC_2_3` · phase: **exploit** · confidence: **High**
+`UC_7_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
