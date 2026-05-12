@@ -10,13 +10,9 @@ Home Cyber Security News
 Critical PHP SOAP Extension Vulnerabilities Enables Remote Code Execution Attacks 
 By Abinaya 
 May 12, 2026 
-
-
-
-
 A serious cluster of vulnerabilities has been uncovered in PHP’s core string processing and ext-soap components, putting numerous web servers at immediate risk of total takeover.
 While the SOAP extension has a notorious history of memory corruption flaws, this latest discovery crosses the red line into unauthenticated Remote Code Execution (RCE).
-GitHub s…
+GitHub security …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,70 +31,12 @@ GitHub s…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] PHP servers vulnerable to CVE-2026-6722 SOAP UAF + companion ext-soap/mbstring/urldecode CVEs
-
-`UC_0_5` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-6722","CVE-2026-7261","CVE-2026-7262","CVE-2026-7258","CVE-2026-6104") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.cvss 
-| `drop_dm_object_name(Vulnerabilities)`
-| eval recommended_fix=case(cve=="CVE-2026-6722","Upgrade to PHP 8.2.31 / 8.3.31 / 8.4.21 / 8.5.6", cve=="CVE-2026-7261","Upgrade to PHP 8.2.31 / 8.3.31 / 8.4.21 / 8.5.6", cve=="CVE-2026-7262","Upgrade to PHP 8.2.31 / 8.3.31 / 8.4.21 / 8.5.6", cve=="CVE-2026-7258","Upgrade to PHP 8.2.31 / 8.3.31 / 8.4.21 / 8.5.6", cve=="CVE-2026-6104","Upgrade to PHP 8.4.21 / 8.5.6 (mbstring; older branches unaffected)")
-| sort 0 - severity dest
-```
-
-**Defender KQL:**
-```kql
-// CVE-2026-6722 + 4 companion ext-soap / urldecode / mbstring CVEs patched in PHP 8.2.31/8.3.31/8.4.21/8.5.6
-let _php_cves = dynamic(["CVE-2026-6722","CVE-2026-7261","CVE-2026-7262","CVE-2026-7258","CVE-2026-6104"]);
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in (_php_cves)
-| where SoftwareVendor =~ "php" or SoftwareName has "php" or SoftwareName has "php-fpm" or SoftwareName has "php-cgi" or SoftwareName has "php-soap" or SoftwareName has "php-mbstring"
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform, OSVersion, MachineGroup) by DeviceId) on DeviceId
-| project DeviceName, IsInternetFacing, OSPlatform=OSPlatform1, OSVersion=OSVersion1, MachineGroup, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, CveId asc, DeviceName asc
-```
-
-### [LLM] PHP web worker (php-fpm / php-cgi / mod_php / w3wp) spawns shell or networking LOLBin — post-CVE-2026-6722 RCE
-
-`UC_0_6` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("php-fpm","php-cgi","php","php8.2","php8.3","php8.4","php8.5","php-fpm8.2","php-fpm8.3","php-fpm8.4","php-fpm8.5","httpd","apache2","nginx","w3wp.exe")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ash","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","wget.exe","nc","nc.exe","ncat","ncat.exe","socat","python","python3","perl","ruby","whoami","whoami.exe","id","uname","hostname")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name 
-| `drop_dm_object_name(Processes)` 
-| where NOT match(parent_cmd, "(?i)(image[-_]?magick|imagick|convert|gs |ghostscript|phpunit|composer|artisan|wp[- ]cli|drush|cron)") 
-| sort 0 - firstSeen
-```
-
-**Defender KQL:**
-```kql
-// PHP runtime worker spawning shell / scripting / netutil — typical post-RCE tail of CVE-2026-6722 ext-soap UAF
-let _php_parents = dynamic(["php-fpm","php-cgi","php","php8.2","php8.3","php8.4","php8.5","php-fpm8.2","php-fpm8.3","php-fpm8.4","php-fpm8.5","php.exe","php-cgi.exe","httpd","httpd.exe","apache2","nginx","nginx.exe","w3wp.exe"]);
-let _suspicious_children = dynamic(["sh","bash","dash","zsh","ash","cmd.exe","powershell.exe","pwsh.exe","curl","curl.exe","wget","wget.exe","nc","nc.exe","ncat","ncat.exe","socat","python","python3","python.exe","perl","perl.exe","ruby","whoami","whoami.exe","id","uname","hostname"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ (_php_parents)
-| where FileName in~ (_suspicious_children)
-| where AccountName !endswith "$"
-// Drop the most common legit PHP shell-outs; tune per app as needed
-| where not(ProcessCommandLine has_any ("ImageMagick","imagick","convert -","gs -","ghostscript","phpunit","composer","artisan","wp-cli","wp-cron","drush"))
-| project Timestamp, DeviceName, AccountName, IsInitiatingProcessRemoteSession,
-          Parent = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine,
-          Child = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -218,4 +156,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

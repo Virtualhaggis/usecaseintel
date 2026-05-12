@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Windows boot manager vulnerable to BitUnlocker / CVE-2025-48804 (PCA 2011 signed)
 
-`UC_9_4` · phase: **weapon** · confidence: **High**
+`UC_16_4` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] BitLocker startup PIN policy disabled (TPM-only) — BitUnlocker precondition
 
-`UC_9_5` · phase: **install** · confidence: **Medium**
+`UC_16_5` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -269,7 +269,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Injects Two-Stage Credential Stealer into xinference PyPI Package
 
-`UC_103_7` · phase: **exploit** · confidence: **High**
+`UC_200_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

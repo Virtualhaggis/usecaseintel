@@ -1,6 +1,6 @@
 # [CRIT] Instructure Reaches Ransom Agreement with ShinyHunters to Stop 3.65TB Canvas Leak
 
-**Source:** The Hacker News
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-05-12
 **Article:** https://thehackernews.com/2026/05/instructure-reaches-ransom-agreement.html
 

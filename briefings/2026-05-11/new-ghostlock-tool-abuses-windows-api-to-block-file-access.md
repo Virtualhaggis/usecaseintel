@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GhostLock SMB deny-share tool execution (Python script + distinctive CLI flags)
 
-`UC_15_4` · phase: **actions** · confidence: **High**
+`UC_22_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### [LLM] Single-user SMB share file-open fan-out indicating GhostLock-style mass deny-share
 
-`UC_15_5` · phase: **actions** · confidence: **Medium**
+`UC_22_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceFileEvents
 
 ### [LLM] GhostLock impact-report and authorisation-sentinel artifacts written to disk
 
-`UC_15_6` · phase: **actions** · confidence: **High**
+`UC_22_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

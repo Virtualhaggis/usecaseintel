@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — lightning: Obfuscated JavaScript Credential Stealer Bundled in PyPI Wheel
 
-`UC_99_2` · phase: **exploit** · confidence: **High**
+`UC_196_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

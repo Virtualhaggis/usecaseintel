@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Introducing Aikido Infinite: A new model of self-securing software
 
-`UC_276_4` · phase: **exploit** · confidence: **High**
+`UC_370_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

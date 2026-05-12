@@ -176,7 +176,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm goes native: New Zig dropper infects every IDE on your machine
 
-`UC_204_6` · phase: **exploit** · confidence: **High**
+`UC_298_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

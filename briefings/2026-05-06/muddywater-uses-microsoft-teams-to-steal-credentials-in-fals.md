@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Stagecomp/Darkcomp staging artifacts (ms_upd.exe, game.exe, visualwincomp.txt) on disk
 
-`UC_72_11` · phase: **install** · confidence: **High**
+`UC_169_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] Microsoft Teams spawning DWAgent / AnyDesk / Quick Assist installer (MuddyWater Chaos vishing chain)
 
-`UC_72_12` · phase: **delivery** · confidence: **High**
+`UC_169_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### [LLM] Curl/LOLBin retrieval of Stagecomp loader from MuddyWater C2 172.86.126.208
 
-`UC_72_13` · phase: **delivery** · confidence: **High**
+`UC_169_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -384,7 +384,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MuddyWater Uses Microsoft Teams to Steal Credentials in False Flag Ransomware At
 
-`UC_72_10` · phase: **exploit** · confidence: **High**
+`UC_169_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

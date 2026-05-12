@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dev Machine Guard Is Now Open Source: See What's Really Running on Your Develope
 
-`UC_198_1` · phase: **exploit** · confidence: **High**
+`UC_292_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

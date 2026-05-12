@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Analysis of Backdoored XZ Utils Build Process with Harden-Runner
 
-`UC_318_2` · phase: **install** · confidence: **High**
+`UC_412_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

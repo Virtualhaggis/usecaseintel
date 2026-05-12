@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Backdoor.MSIL.XWorm 'Curriculum Vitae-Catalina' resume-themed phishing attachment
 
-`UC_181_8` · phase: **delivery** · confidence: **High**
+`UC_275_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ EmailAttachmentInfo
 
 ### [LLM] Execution or filesystem write of 'Curriculum Vitae-Catalina.exe' XWorm dropper
 
-`UC_181_9` · phase: **install** · confidence: **High**
+`UC_275_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -385,7 +385,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Threat landscape for industrial automation systems in Q4 2025
 
-`UC_181_7` · phase: **exploit** · confidence: **High**
+`UC_275_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

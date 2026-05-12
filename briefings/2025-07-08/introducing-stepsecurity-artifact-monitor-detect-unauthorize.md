@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Introducing StepSecurity Artifact Monitor: Detect Unauthorized Software Releases
 
-`UC_558_3` · phase: **exploit** · confidence: **High**
+`UC_652_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

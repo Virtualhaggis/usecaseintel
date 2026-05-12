@@ -51,7 +51,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Bug bounty isn’t dead, but the old model is breaking
 
-`UC_184_1` · phase: **exploit** · confidence: **High**
+`UC_278_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

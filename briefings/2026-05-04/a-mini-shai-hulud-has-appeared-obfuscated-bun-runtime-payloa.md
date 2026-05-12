@@ -304,7 +304,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A Mini Shai-Hulud Has Appeared: Obfuscated Bun Runtime Payloads Hit SAP-Related
 
-`UC_100_8` · phase: **exploit** · confidence: **High**
+`UC_197_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

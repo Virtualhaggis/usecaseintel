@@ -263,7 +263,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Bitwarden CLI Hijacked on npm: Bun-Staged Credential Stealer Targets Developers,
 
-`UC_102_7` · phase: **exploit** · confidence: **High**
+`UC_199_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

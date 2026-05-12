@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_242_6` · phase: **install** · confidence: **High**
+`UC_336_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

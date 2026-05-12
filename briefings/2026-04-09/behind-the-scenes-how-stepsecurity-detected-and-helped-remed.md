@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Behind the Scenes: How StepSecurity Detected and Helped Remediate the Largest np
 
-`UC_195_4` · phase: **exploit** · confidence: **High**
+`UC_289_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
