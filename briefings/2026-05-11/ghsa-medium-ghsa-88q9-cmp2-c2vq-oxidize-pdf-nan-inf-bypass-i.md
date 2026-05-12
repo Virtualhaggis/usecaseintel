@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / MEDIUM] GHSA-88q9-cmp2-c2vq: oxidize-pdf: NaN/inf bypass in colour conte
 
-`UC_79_0` · phase: **exploit** · confidence: **High**
+`UC_72_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

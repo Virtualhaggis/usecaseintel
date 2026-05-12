@@ -329,7 +329,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_230_10` · phase: **exploit** · confidence: **High**
+`UC_182_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

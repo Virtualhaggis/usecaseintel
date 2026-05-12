@@ -1,6 +1,6 @@
 # [CRIT] Supply Chain Security Alert: eslint-config-prettier Package Shows Signs of Compromise
 
-**Source:** StepSecurity
+**Source:** StepSecurity, CISA KEV
 **Published:** 2025-08-09
 **Article:** https://www.stepsecurity.io/blog/supply-chain-security-alert-eslint-config-prettier-package-shows-signs-of-compromise
 
@@ -236,7 +236,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Supply Chain Security Alert: eslint-config-prettier Package Shows Signs of Compr
 
-`UC_631_7` · phase: **exploit** · confidence: **High**
+`UC_527_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

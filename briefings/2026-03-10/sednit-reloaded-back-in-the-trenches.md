@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] APT28/Sednit BeardShell & Covenant C2 to Icedrive/Filen/Koofr cloud APIs from non-browser process
 
-`UC_350_9` · phase: **c2** · confidence: **High**
+`UC_282_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceNetworkEvents
 
 ### [LLM] APT28/Sednit COM hijack persistence via Shell.Explorer CLSID InProcServer32
 
-`UC_350_10` · phase: **install** · confidence: **High**
+`UC_282_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceRegistryEvents
 
 ### [LLM] Sednit on-disk artifacts: prnfldr.dll in ProgramData, windows.png stego carrier, SlimAgent screenshot files
 
-`UC_350_11` · phase: **install** · confidence: **High**
+`UC_282_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_350_8` · phase: **exploit** · confidence: **High**
+`UC_282_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

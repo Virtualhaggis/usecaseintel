@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS
 
-`UC_124_3` · phase: **exploit** · confidence: **High**
+`UC_111_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

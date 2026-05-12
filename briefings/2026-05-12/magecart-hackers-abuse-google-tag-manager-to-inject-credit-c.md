@@ -71,12 +71,65 @@ Google Tag …
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1056.001** — Input Capture: Keylogging
+- **T1102** — Web Service
+- **T1189** — Drive-by Compromise
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ATMZOW Magecart Skimmer Payload-Delivery Domain Egress (Nov-2023 Hostinger Batch)
+
+`UC_9_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dest from datamodel=Network_Resolution where DNS.query IN ("cdn.sketchinsightswatch.com","cdn.colorpalettemetrics.com","cdn.artisticpatterndata.com","cdn.visualartexplorer.com","cdn.picturedataminer.com","cdn.paintedworldstats.com","cdn.drawinginfopro.com","cdn.artistictrendsmap.com","cdn.sketchanalyticsvault.com","cdn.colorschemeobserver.com","cdn.artdataharvest.com","cdn.gallerytrendstracker.com","cdn.picturetrendsmonitor.com","cdn.brushstrokemetrics.com","cdn.imagepatternprofiler.com","cdn.artisticexpressiondb.com","cdn.sketchdataanalytics.com","cdn.canvastrendstracker.com","cdn.visualartinsights.com","cdn.strokepatternanalysis.com","cdn.artstattracker.com","cdn.drawdatahub.com","cdn.sketchmetrics.com","cdn.paintinfoanalyzer.com","cdn.imageinsightvault.com","cdn.visualdatacollector.com","cdn.artworkanalytics.com","cdn.sketchtrendsmonitor.com","cdn.picinfometrics.com","cdn.drawnstatsgather.com","cdn.artistictrendsprobe.com","cdn.gallerydatainsight.com","cdn.strokeanalysislab.com","cdn.imagestatistician.com","cdn.artprofilingtool.com","cdn.sketchdataharbor.com","cdn.picturetrendsdb.com","cdn.drawninfoinspector.com","cdn.arttrendtrackers.com","cdn.paintedvisionsstats.com","gtm-statistlc.com","goqle-analytics.com","webstatlstics.com","lgstd.io") by DNS.query, DNS.src, DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src from datamodel=Network_Traffic where All_Traffic.dest IN ("31.220.21.211","31.220.21.240","62.72.7.89","62.72.7.90") by All_Traffic.dest, All_Traffic.src | `drop_dm_object_name(All_Traffic)` ] | sort - count
+```
+
+**Defender KQL:**
+```kql
+let _atmzow_domains = dynamic(["cdn.sketchinsightswatch.com","cdn.colorpalettemetrics.com","cdn.artisticpatterndata.com","cdn.visualartexplorer.com","cdn.picturedataminer.com","cdn.paintedworldstats.com","cdn.drawinginfopro.com","cdn.artistictrendsmap.com","cdn.sketchanalyticsvault.com","cdn.colorschemeobserver.com","cdn.artdataharvest.com","cdn.gallerytrendstracker.com","cdn.picturetrendsmonitor.com","cdn.brushstrokemetrics.com","cdn.imagepatternprofiler.com","cdn.artisticexpressiondb.com","cdn.sketchdataanalytics.com","cdn.canvastrendstracker.com","cdn.visualartinsights.com","cdn.strokepatternanalysis.com","cdn.artstattracker.com","cdn.drawdatahub.com","cdn.sketchmetrics.com","cdn.paintinfoanalyzer.com","cdn.imageinsightvault.com","cdn.visualdatacollector.com","cdn.artworkanalytics.com","cdn.sketchtrendsmonitor.com","cdn.picinfometrics.com","cdn.drawnstatsgather.com","cdn.artistictrendsprobe.com","cdn.gallerydatainsight.com","cdn.strokeanalysislab.com","cdn.imagestatistician.com","cdn.artprofilingtool.com","cdn.sketchdataharbor.com","cdn.picturetrendsdb.com","cdn.drawninfoinspector.com","cdn.arttrendtrackers.com","cdn.paintedvisionsstats.com","gtm-statistlc.com","goqle-analytics.com","webstatlstics.com","lgstd.io"]);
+let _atmzow_ips = dynamic(["31.220.21.211","31.220.21.240","62.72.7.89","62.72.7.90"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (_atmzow_domains) or RemoteIP in (_atmzow_ips)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType, Source="DeviceNetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName has_any (_atmzow_domains)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=QueryName, RemoteIP=tostring(parse_json(AdditionalFields).IPAddresses), RemotePort=int(null), ActionType, Source="DeviceEvents-DNS" )
+| order by Timestamp desc
+```
+
+### [LLM] Known-Malicious GTM Container ID Loaded From Web Proxy / IIS Logs (ATMZOW)
+
+`UC_9_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.src) as src values(Web.url) as url values(Web.http_referrer) as referrer from datamodel=Web where Web.dest="*googletagmanager.com*" AND (Web.url="*GTM-WJV6J6*" OR Web.url="*GTM-TVKQ79ZS*" OR Web.url="*GTM-NTV2JTB4*" OR Web.url="*GTM-MX7L8F2M*") by Web.src, Web.dest, Web.url | `drop_dm_object_name(Web)` | rex field=url "(?<gtm_container_id>GTM-[A-Z0-9]+)" | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+let _bad_gtm = dynamic(["GTM-WJV6J6","GTM-TVKQ79ZS","GTM-NTV2JTB4","GTM-MX7L8F2M"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "googletagmanager.com"
+| where RemoteUrl has_any (_bad_gtm)
+| extend BadContainer = extract(@"(GTM-[A-Z0-9]+)", 1, RemoteUrl)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, BadContainer
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -120,4 +173,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

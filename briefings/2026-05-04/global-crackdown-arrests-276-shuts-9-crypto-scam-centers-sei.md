@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vault Viper / Vigorish Viper Android lure-domain access from corporate endpoint
 
-`UC_210_5` · phase: **delivery** · confidence: **High**
+`UC_170_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ union isfuzzy=true NetHits, ClickHits
 
 ### [LLM] Vault Viper Android banking trojan C2 beacon (IP / domain IOC sweep)
 
-`UC_210_6` · phase: **c2** · confidence: **High**
+`UC_170_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound email carrying APK or Vault Viper lure URL impersonating bank/government
 
-`UC_210_7` · phase: **delivery** · confidence: **High**
+`UC_170_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

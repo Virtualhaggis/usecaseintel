@@ -183,7 +183,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious IoliteLabs VSCode Extensions Target Solidity Developers on Windows, ma
 
-`UC_304_6` · phase: **exploit** · confidence: **High**
+`UC_243_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

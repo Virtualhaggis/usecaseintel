@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OceanLotus ZiChatBot persistence: 'pkt-update' Run key → vcpacket\vcpktsvr.exe
 
-`UC_167_8` · phase: **install** · confidence: **High**
+`UC_143_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceRegistryEvents
 
 ### [LLM] ZiChatBot C2 to helper.zulipchat.com via Zulip REST API
 
-`UC_167_9` · phase: **c2** · confidence: **High**
+`UC_143_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ let zulip_auth_b64 = "TW9yaWFuLWJvdEBoZWxwZXIuenVsaXBjaGF0LmNvbTpVOFJFWGxJNktmOH
 
 ### [LLM] Malicious PyPI wheel (colorinal/uuid32-utils/termncolor) drops terminate.dll loaded by python.exe
 
-`UC_167_10` · phase: **delivery** · confidence: **High**
+`UC_143_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,7 +420,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus suspected of using PyPI to deliver ZiChatBot malware
 
-`UC_167_7` · phase: **exploit** · confidence: **High**
+`UC_143_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -243,7 +243,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Glassworm Strikes Popular React Native Phone Number Packages
 
-`UC_338_9` · phase: **exploit** · confidence: **High**
+`UC_271_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

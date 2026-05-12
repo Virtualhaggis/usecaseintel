@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Suspicious PAM module (.so) drop in /lib/security by non-package-manager process
 
-`UC_144_4` · phase: **install** · confidence: **High**
+`UC_129_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceFileEvents
 
 ### [LLM] Linux authentication log tampering by non-syslog process (PamDOORa anti-forensic)
 
-`UC_144_5` · phase: **actions** · confidence: **Medium**
+`UC_129_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

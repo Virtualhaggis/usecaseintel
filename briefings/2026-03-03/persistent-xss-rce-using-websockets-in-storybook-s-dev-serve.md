@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server
 
-`UC_362_4` · phase: **exploit** · confidence: **High**
+`UC_294_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

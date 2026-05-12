@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
 
-`UC_380_4` · phase: **exploit** · confidence: **High**
+`UC_310_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

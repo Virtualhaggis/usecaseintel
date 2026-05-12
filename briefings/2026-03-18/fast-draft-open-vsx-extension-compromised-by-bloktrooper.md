@@ -25,12 +25,98 @@ Blog Vulnerabilities & Threats fast-draft Open VSX Extension Compromised by Blok
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1132** — Data Encoding
+- **T1115** — Clipboard Data
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] BlokTrooper Stage-1 downloader: VS Code-family child fetches raw.githubusercontent.com/BlokTrooper/extension
+
+`UC_269_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*BlokTrooper/extension*", "*raw.githubusercontent.com/BlokTrooper*", "*scripts/linux.sh*", "*scripts/mac.sh*", "*scripts/windows.cmd*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | eval is_pipe_to_shell=if(match(process, "\\|\\s*(sh|bash|cmd|powershell)"), 1, 0) | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "BlokTrooper/extension"
+    or ProcessCommandLine has "raw.githubusercontent.com/BlokTrooper"
+    or InitiatingProcessCommandLine has "BlokTrooper/extension"
+| extend EditorParent = iff(InitiatingProcessParentFileName in~ ("Code.exe","Code - Insiders.exe","cursor.exe","windsurf.exe","trae.exe","vscodium.exe","pearai.exe"), true, false)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessParentFileName, EditorParent, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] BlokTrooper C2 callback to 195.201.104.53 on Socket.IO RAT / upload / clipboard ports (6931/6936/6939)
+
+`UC_269_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="195.201.104.53" AND All_Traffic.dest_port IN ("6931","6936","6939")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | eval c2_role=case(dest_port="6931","Socket.IO RAT",dest_port="6936","browser/wallet upload",dest_port="6939","clipboard exfil") | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "195.201.104.53"
+| where RemotePort in (6931, 6936, 6939)
+| extend C2Role = case(RemotePort == 6931, "Socket.IO RAT (mouse/kb/screenshot)",
+                       RemotePort == 6936, "Browser+wallet upload (/upload, /cldbs)",
+                       RemotePort == 6939, "Clipboard exfil (/api/service/makelog)",
+                       "unknown")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, C2Role, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] BlokTrooper clipboard surveillance: node.exe spawning powershell -NoProfile -NonInteractive Get-Clipboard
+
+`UC_269_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.parent_process_name="node.exe" AND Processes.process="*Get-Clipboard*" AND Processes.process="*-NoProfile*" AND Processes.process="*-NonInteractive*") by Processes.dest Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(cmdline) as samples by dest user parent_process | where count >= 3 | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has "Get-Clipboard"
+| where ProcessCommandLine has "-NoProfile"
+| where ProcessCommandLine has "-NonInteractive"
+| where InitiatingProcessFileName =~ "node.exe"
+    or InitiatingProcessFolderPath has @"\.npm\"
+    or InitiatingProcessFolderPath has @"\npm-cache\__tmp__\"
+    or InitiatingProcessCommandLine has "-e "   // detached node -e wrapper
+| summarize Count=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            SampleCmd=any(ProcessCommandLine), Parents=make_set(InitiatingProcessFolderPath, 10)
+  by DeviceName, AccountName, InitiatingProcessFileName
+| where Count >= 3   // article: polled every ~2s — sustained pattern
+| order by LastSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -181,7 +267,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_336_6` · phase: **install** · confidence: **High**
+`UC_269_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,4 +308,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

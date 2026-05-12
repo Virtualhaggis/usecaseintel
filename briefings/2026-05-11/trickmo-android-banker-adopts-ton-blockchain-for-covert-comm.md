@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TrickMo.C TON-blockchain C2 bootstrap from managed endpoint
 
-`UC_111_4` · phase: **c2** · confidence: **Medium**
+`UC_100_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

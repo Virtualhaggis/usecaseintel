@@ -31,12 +31,82 @@ GitHub security …
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1203** — Exploitation for Client Execution
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vulnerable PHP SOAP / mbstring runtime on managed host (CVE-2026-6722, -7261, -7262, -7258, -6104)
+
+`UC_8_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-6722","CVE-2026-7261","CVE-2026-7262","CVE-2026-7258","CVE-2026-6104") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval is_internet_facing=if(match(dest,"(?i)(web|www|api|dmz|edge|public)"),"yes","unknown")
+| convert ctime(firstTime), ctime(lastTime)
+| sort - severity, dest
+```
+
+**Defender KQL:**
+```kql
+// CVE-driven inventory hunt — PHP <8.2.31 / <8.3.31 / <8.4.21 / <8.5.6
+let PhpSoapCves = dynamic(["CVE-2026-6722","CVE-2026-7261","CVE-2026-7262","CVE-2026-7258","CVE-2026-6104"]);
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in (PhpSoapCves)
+| where SoftwareVendor has "php" or SoftwareName has "php"
+| extend MajorMinor = extract(@"^(\d+\.\d+)", 1, SoftwareVersion)
+| extend PatchedFloor = case(
+    MajorMinor == "8.2", "8.2.31",
+    MajorMinor == "8.3", "8.3.31",
+    MajorMinor == "8.4", "8.4.21",
+    MajorMinor == "8.5", "8.5.6",
+    "unsupported-branch")
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, PatchedFloor, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel desc, IsInternetFacing desc, DeviceName asc
+```
+
+### [LLM] PHP / php-fpm worker segfault cluster on Linux web tier — possible CVE-2026-6722 / 7258 / 7262 exploit attempt
+
+`UC_8_6` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`linux_syslog`
+| where match(_raw, "(?i)(php-?fpm|php-cgi|php\d|libphp)")
+   AND match(_raw, "(?i)(segfault|sigsegv|sigabrt|core dumped|general protection)")
+| rex field=_raw "(?i)(?<phpProc>php[-\w\.]+)"
+| rex field=_raw "(?i)error\s+(?<err>\d+)\s+in\s+(?<faultModule>[^\s]+)"
+| stats count as crash_count, min(_time) as firstSeen, max(_time) as lastSeen, values(phpProc) as phpProcs, values(faultModule) as faultModules, values(_raw) as sample by host
+| where crash_count >= 3
+| convert ctime(firstSeen), ctime(lastSeen)
+| sort - crash_count
+```
+
+**Defender KQL:**
+```kql
+// MDE for Linux — surface clustered php-fpm crashes (DeviceEvents ProcessTerminated / Defender for Linux unexpected exits)
+DeviceEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("php","php-fpm","php-cgi","php7","php8")
+| where ActionType has_any ("ProcessCrash","ProcessAbnormalExit","ProcessTerminated")
+   or (isnotempty(AdditionalFields) and tostring(AdditionalFields) has_any ("SIGSEGV","SIGABRT","segfault","core dumped"))
+| summarize CrashCount = count(),
+            FirstSeen  = min(Timestamp),
+            LastSeen   = max(Timestamp),
+            SampleAdditional = any(tostring(AdditionalFields)),
+            SampleCmd  = any(InitiatingProcessCommandLine)
+            by DeviceName, InitiatingProcessFileName
+| where CrashCount >= 3
+| order by CrashCount desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -156,4 +226,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

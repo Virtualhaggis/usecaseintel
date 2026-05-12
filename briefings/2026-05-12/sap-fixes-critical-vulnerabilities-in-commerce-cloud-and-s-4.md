@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 12, 2026
 07:04 AM
 0 
-
-
 SAP has released the May 2026 security updates addressing 15 vulnerabilities across multiple products, including two critical flaws in Commerce Cloud and S/4HANA.
-
-
-Commerce Cloud is an enterprise-grade e-commerce platform used by online stores owned by large retailers and global brands, while S/4HANA is a cloud-based Enterprise Resource Planning (ERP) suite that will replace the co…
+Commerce Cloud is an enterprise-grade e-commerce platform used by online stores owned by large retailers and global brands, while S/4HANA is a cloud-based Enterprise Resource Planning (ERP) suite that will replace the company's …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -32,12 +28,48 @@ Commerce Cloud is an enterprise-grade e-commerce platform used by online stores 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059** — Command and Scripting Interpreter
+- **T1190.001** — SQL Injection (via T1190)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Hunt SAP Commerce Cloud & S/4HANA hosts vulnerable to CVE-2026-34263 / CVE-2026-34260
+
+`UC_2_5` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve="CVE-2026-34263" OR Vulnerabilities.cve="CVE-2026-34260") by Vulnerabilities.dest Vulnerabilities.dest_category Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product Vulnerabilities.cvss | `drop_dm_object_name(Vulnerabilities)` | eval product_hint=case(match(vendor_product,"(?i)commerce|hybris"),"SAP Commerce Cloud (Hybris)",match(vendor_product,"(?i)s.?4.?hana|netweaver|abap"),"SAP S/4HANA",1==1,vendor_product) | convert ctime(firstTime) ctime(lastTime) | sort - cvss, dest
+```
+
+**Defender KQL:**
+```kql
+// CVE-2026-34263 (SAP Commerce Cloud RCE) + CVE-2026-34260 (SAP S/4HANA SQLi)
+let SapCves = dynamic(["CVE-2026-34263","CVE-2026-34260"]);
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId in (SapCves)
+| where SoftwareVendor =~ "sap"
+   or SoftwareName has_any ("commerce","hybris","s/4hana","s4hana","netweaver","abap")
+| join kind=leftouter (
+    DeviceTvmSoftwareVulnerabilitiesKB
+    | project CveId, CvssScore, IsExploitAvailable, PublishedDate, VulnerabilityDescription
+  ) on CveId
+| join kind=leftouter (
+    DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform, MachineGroup) by DeviceId, DeviceName
+  ) on DeviceId
+| project Timestamp, DeviceName, DeviceId, OSPlatform, IsInternetFacing, PublicIP, MachineGroup,
+          CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable,
+          SoftwareVendor, SoftwareName, SoftwareVersion,
+          RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| order by IsInternetFacing desc, CvssScore desc, DeviceName asc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -157,4 +189,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

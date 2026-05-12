@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GPT-Proxy Backdoor in npm and PyPI turns Servers into Chinese LLM Relays
 
-`UC_251_7` · phase: **exploit** · confidence: **High**
+`UC_200_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

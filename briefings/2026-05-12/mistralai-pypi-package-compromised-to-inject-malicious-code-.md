@@ -10,11 +10,7 @@ Home Cyber Security News
 MistralAI PyPI Package Compromised to Inject Malicious Code – Microsoft Warns 
 By Tushar Subhra Dutta 
 May 12, 2026 
-
-
-
-
-A popular AI development library has been turned into a weapon. The mistralai PyPI package, version 2.4.6, was found to contain malicious code secretly injected by attackers, putting developers and organizations worldwide at serious risk. The compromise affects anyone who installed or updated the package, which is widely used for building applicat…
+A popular AI development library has been turned into a weapon. The mistralai PyPI package, version 2.4.6, was found to contain malicious code secretly injected by attackers, putting developers and organizations worldwide at serious risk. The compromise affects anyone who installed or updated the package, which is widely used for building applications pow…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -29,12 +25,94 @@ A popular AI development library has been turned into a weapon. The mistralai Py
 - **T1543.003** — Windows Service
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] MistralAI 2.4.6 Backdoor: Egress to Hardcoded C2 IP 83.142.209.194
+
+`UC_3_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.dest_port) as dest_port values(All_Traffic.user) as user from datamodel=Network_Traffic where All_Traffic.dest_ip="83.142.209.194" by All_Traffic.src All_Traffic.dest All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval signature="mistralai_2.4.6_c2_egress"
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.194"
+   or (RemoteUrl has "83.142.209.194" and RemoteUrl has "transformers.pyz")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] MistralAI Backdoor: transformers.pyz Dropped to /tmp on Linux
+
+`UC_3_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/tmp/transformers.pyz" OR (Filesystem.file_name="transformers.pyz" AND Filesystem.file_path="/tmp/*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval signature="mistralai_transformers_pyz_drop"
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath startswith "/tmp/" and FileName =~ "transformers.pyz"
+| project Timestamp, DeviceName, DeviceId, FolderPath, FileName, SHA256, MD5,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] MistralAI Backdoor: pgsql-monitor.service / pgmonitor.py Systemd Persistence
+
+`UC_3_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name="pgsql-monitor.service" OR Filesystem.file_name="pgmonitor.py" OR Filesystem.file_path="/etc/systemd/system/pgsql-monitor.service" OR Filesystem.file_path="/etc/systemd/user/pgsql-monitor.service" OR Filesystem.file_path="*/.config/systemd/user/pgsql-monitor.service") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval signature="mistralai_pgsql_monitor_persistence" | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="systemctl" AND (Processes.process="*pgsql-monitor*" OR Processes.process="*pgmonitor*") by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval signature="mistralai_pgsql_monitor_systemctl" ]
+```
+
+**Defender KQL:**
+```kql
+let _files =
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where FileName in~ ("pgsql-monitor.service","pgmonitor.py")
+       or FolderPath has "/etc/systemd/system/pgsql-monitor"
+       or FolderPath has "/etc/systemd/user/pgsql-monitor"
+       or FolderPath has "/.config/systemd/user/pgsql-monitor"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              FolderPath, FileName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256,
+              Signal="file_drop";
+let _procs =
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "systemctl"
+       and ProcessCommandLine has_any ("pgsql-monitor","pgmonitor")
+    | project Timestamp, DeviceName, AccountName,
+              FolderPath, FileName,
+              InitiatingProcessFileName=InitiatingProcessFileName,
+              InitiatingProcessCommandLine=ProcessCommandLine, SHA256,
+              Signal="systemctl_invocation";
+union _files, _procs
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -131,7 +209,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MistralAI PyPI Package Compromised to Inject Malicious Code – Microsoft Warns
 
-`UC_2_4` · phase: **exploit** · confidence: **High**
+`UC_3_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,4 +266,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

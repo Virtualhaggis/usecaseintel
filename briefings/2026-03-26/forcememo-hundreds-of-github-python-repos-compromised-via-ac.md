@@ -205,7 +205,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ForceMemo: Hundreds of GitHub Python Repos Compromised via Account Takeover and
 
-`UC_319_6` · phase: **exploit** · confidence: **High**
+`UC_254_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
