@@ -69,6 +69,16 @@ SOURCES = [
     # style sources with extra coverage on emerging CVEs and POCs.
     {"name": "Cyber Security News",     "kind": "rss",
      "url":  "https://cybersecuritynews.com/feed/"},
+    # Supply-chain / open-source ecosystem researchers — fill the gap left
+    # by news outlets when a campaign breaks across npm / PyPI / GitHub
+    # Actions (Snyk + Aikido covered TanStack / Mini Shai-Hulud first;
+    # StepSecurity routinely publishes named-actor attribution).
+    {"name": "Snyk",                    "kind": "rss",
+     "url":  "https://snyk.io/blog/feed/"},
+    {"name": "Aikido",                  "kind": "rss",
+     "url":  "https://www.aikido.dev/blog/rss.xml"},
+    {"name": "StepSecurity",            "kind": "rss",
+     "url":  "https://www.stepsecurity.io/blog/rss.xml"},
     # Authoritative exploited-vuln feed.
     {"name": "CISA KEV",                "kind": "kev",
      "url":  "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json"},
@@ -404,7 +414,7 @@ _IOC_DOMAIN_ALLOWLIST = {
     "talosintelligence.com", "blog.talosintelligence.com",
     "securelist.com", "sentinelone.com", "unit42.paloaltonetworks.com",
     "welivesecurity.com", "lab52.io", "cybersecuritynews.com",
-    "checkmarx.com", "snyk.io", "socket.dev",
+    "checkmarx.com", "snyk.io", "socket.dev", "aikido.dev", "stepsecurity.io",
     "virustotal.com", "abuse.ch", "urlhaus.abuse.ch", "threatfox.abuse.ch",
     # Common legit dispensers (ARTICLE-CONTEXT only — these CAN be abused as
     # dead-drops by malware. We drop them from the IOC feed because alerting
@@ -7804,6 +7814,10 @@ function _libSourceFromArtId(art) {
   if (/securelist|kaspersky/.test(t)) return 'Securelist';
   if (/microsoft/.test(t)) return 'Microsoft';
   if (/lab\\s*52/.test(t)) return 'Lab52';
+  if (/cybersecuritynews/.test(t)) return 'Cyber Security News';
+  if (/\\bsnyk\\b/.test(t)) return 'Snyk';
+  if (/aikido/.test(t)) return 'Aikido';
+  if (/stepsecurity|step-security/.test(t)) return 'StepSecurity';
   return 'Other';
 }
 
