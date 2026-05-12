@@ -1077,12 +1077,30 @@ def _llm_should_process(article: dict, ind: dict) -> bool:
     )
     if any(p in title_lower for p in NON_ATTACK_TITLES):
         return False
-    # Want at least one attack-content keyword
+    # Want at least one attack-content keyword. Substring-match against
+    # title + first 2000 chars of body. Keep this list aligned with the
+    # vocabulary modern threat reporting actually uses — see the May 2026
+    # TanStack / Mini Shai-Hulud miss for what happens when supply-chain
+    # / open-source ecosystem terms are absent here.
     ATTACK_KEYWORDS = (
-        "malware", "ransomware", "trojan", "stealer", "backdoor",
-        "exploit", "vulnerab", "campaign", "actor", "apt", "cve-",
+        # Classic malware vocabulary
+        "malware", "malicious", "ransomware", "trojan", "stealer", "steal",
+        "backdoor", "exploit", "vulnerab", "campaign", "actor", "apt", "cve-",
         "rce", "0-day", "zero-day", "phishing", "lateral", "dropper",
         "loader", "wiper", "rootkit", "implant", "botnet", "intrusion",
+        "hacked", "hack", "compromise", "breach",
+        # Supply-chain / open-source ecosystem (the gap that hid Mini Shai-Hulud)
+        "supply chain", "supply-chain", "npm", "pypi", "rubygems", "packagist",
+        "postinstall", "post-install", "package compromise", "malicious package",
+        "trojanized", "trojanised", "typosquat", "typo-squat", "brand squat",
+        "brandsquat", "brand-squat", "dependency confusion", "worm",
+        "self-spreading", "self-replicating",
+        # CI/CD + cloud identity attack surface
+        "github actions", "ci/cd", "ci credentials", "ci secrets",
+        "oidc", "secrets exfil", "token theft", "credential theft",
+        "pull_request_target", "pwn request", "cache poisoning",
+        # Named-incident shorthand we know about (regex-cheap & high-precision)
+        "shai-hulud", "shai hulud",
     )
     if not any(kw in title_lower or kw in body_lower[:2000] for kw in ATTACK_KEYWORDS):
         return False
