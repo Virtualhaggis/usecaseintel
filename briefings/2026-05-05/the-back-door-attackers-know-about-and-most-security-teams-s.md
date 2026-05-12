@@ -29,12 +29,108 @@ Every AI tool, workflow automation, and productivity app your employees connecte
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1199** — Trusted Relationship
+- **T1567** — Exfiltration Over Web Service
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1213.002** — Data from Information Repositories: Sharepoint / SaaS
+- **T1119** — Automated Collection
+- **T1090.003** — Proxy: Multi-hop Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] UNC6395 user-agent strings on Salesforce / OAuth-integrated SaaS API access
+
+`UC_154_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.dest) as dest values(Web.user) as user values(Web.url) as url from datamodel=Web where (Web.http_user_agent="Salesforce-Multi-Org-Fetcher/1.0" OR Web.http_user_agent="python-requests/2.32.4" OR Web.http_user_agent="Python/3.11 aiohttp/3.12.15") by Web.http_user_agent Web.src Web.user | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// UNC6395 / Salesloft Drift OAuth abuse — known custom user-agent strings
+// Reference: Unit 42, Google TIG (Aug 2025)
+let _unc6395_uas = dynamic(["Salesforce-Multi-Org-Fetcher/1.0","python-requests/2.32.4","Python/3.11 aiohttp/3.12.15"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application has_any ("Salesforce","Drift","Salesloft")
+   or ApplicationId in ("11114")        // 11114 = Salesforce in MDA app catalog
+| where UserAgent in~ (_unc6395_uas)
+| project Timestamp, Application, AccountDisplayName, AccountObjectId,
+          IPAddress, CountryCode, ISP, IsAnonymousProxy, UserAgent,
+          ActionType, ActivityType, ObjectName, ObjectType
+| order by Timestamp desc
+```
+
+### [LLM] SOQL queries scanning Salesforce data for AWS / Snowflake / password credential strings
+
+`UC_154_7` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`salesforce_eventlog` (EVENT_TYPE=UniqueQuery OR EVENT_TYPE=BulkApi OR EVENT_TYPE=BulkApi2 OR EVENT_TYPE=ReportExport)
+| eval QueryLC=lower(QUERY)
+| search QueryLC IN ("*akia*","*snowflakecomputing*","*aws_access_key*","*aws_secret*","*password*","*client_secret*","*api_key*","*xoxb-*","*xoxp-*")
+| stats count min(_time) as firstTime max(_time) as lastTime values(QUERY) as queries values(USER_ID) as user values(CLIENT_IP) as src values(USER_AGENT) as ua by USER_ID CLIENT_NAME
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Hunts SOQL / Bulk API queries against Salesforce that look for embedded credentials.
+// CloudAppEvents.RawEventData carries the SOQL text for Defender for Cloud Apps
+// when Salesforce Shield Event Monitoring is connected to MDA.
+let _cred_keywords = dynamic(["AKIA","aws_access_key","aws_secret","snowflakecomputing","snowflake.com","password","client_secret","api_key","xoxb-","xoxp-","ghp_"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application =~ "Salesforce"
+| where ActionType has_any ("UniqueQuery","BulkApi","BulkApi2","ReportExport","RestApi","ApiAnomaly")
+| extend QueryText = tostring(parse_json(tostring(RawEventData)).QUERY)
+| extend QueryLower = tolower(QueryText)
+| where isnotempty(QueryText)
+| where QueryLower has_any (_cred_keywords)
+   or QueryLower matches regex @"\bakia[0-9a-z]{16}\b"
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode,
+          UserAgent, ActionType, QueryText, ObjectName, ObjectType, RawEventData
+| order by Timestamp desc
+```
+
+### [LLM] OAuth-integrated SaaS API access from Tor exit node / anonymous proxy
+
+`UC_154_8` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.app) as app values(Authentication.src) as src from datamodel=Authentication where Authentication.action=success Authentication.app IN ("salesforce","google_workspace","office365","slack","github") by Authentication.src Authentication.user Authentication.app
+| `drop_dm_object_name(Authentication)`
+| lookup tor_exit_nodes ip AS src OUTPUT is_tor
+| where is_tor="true"
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// OAuth-mediated SaaS access from anonymous proxy / Tor — direct replay of stolen refresh token
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application has_any ("Salesforce","Google Workspace","Microsoft 365","Slack","GitHub","Drift","Salesloft")
+| where IsAnonymousProxy == true
+   or IPTags has_any ("Tor","Anonymous proxy","Hosting provider")
+| summarize EventCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            Activities = make_set(ActivityType, 50),
+            Objects = make_set(ObjectName, 50),
+            SampleUA = any(UserAgent)
+            by AccountDisplayName, AccountObjectId, Application, IPAddress, CountryCode, ISP
+| order by FirstSeen desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -245,4 +341,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

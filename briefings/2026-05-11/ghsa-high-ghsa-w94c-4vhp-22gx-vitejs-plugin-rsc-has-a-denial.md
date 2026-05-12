@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable react-server-dom-* RSC package in software inventory (CVE-2026-23870)
 
-`UC_92_1` · phase: **recon** · confidence: **High**
+`UC_79_1` · phase: **recon** · confidence: **High**
 
 **Defender KQL:**
 ```kql

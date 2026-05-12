@@ -10,11 +10,7 @@ Home Cyber Security News
 Hackers Hijack Microsoft Teams Accounts to Deliver ModeloRAT 
 By Tushar Subhra Dutta 
 May 12, 2026 
-
-
-
-
-A new wave of cyberattacks is putting Microsoft Teams users on high alert across organizations worldwide. Hackers have been found hijacking Teams accounts to impersonate IT support staff and push a dangerous piece of malware called ModeloRAT directly into corporate environments, catching many organizations completely off guard and exposing serious gaps in how work…
+A new wave of cyberattacks is putting Microsoft Teams users on high alert across organizations worldwide. Hackers have been found hijacking Teams accounts to impersonate IT support staff and push a dangerous piece of malware called ModeloRAT directly into corporate environments, catching many organizations completely off guard and exposing serious gaps in how workplace co…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,12 +33,92 @@ A new wave of cyberattacks is putting Microsoft Teams users on high alert across
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ModeloRAT portable WinPython (pythonw.exe) execution from %APPDATA%\WPy64-31401
+
+`UC_27_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="pythonw.exe" AND (Processes.process_path="*\\AppData\\*\\WPy64-31401\\*" OR Processes.process="*\\AppData\\*\\WPy64-31401\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "pythonw.exe"
+| where FolderPath has @"\AppData\" and FolderPath has "WPy64-31401"
+| project Timestamp, DeviceName, AccountName,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          ChildSHA256 = SHA256,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandparentImage = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] ModeloRAT C2 egress to known KongTuke infrastructure IPs
+
+`UC_27_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps values(All_Traffic.user) as users from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("45.61.136.94","64.95.10.14","64.95.12.238","64.95.13.76","162.33.179.149") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ModeloRAT_C2 = dynamic(["45.61.136.94","64.95.10.14","64.95.12.238","64.95.13.76","162.33.179.149"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (ModeloRAT_C2)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] ModeloRAT Run-key persistence pointing at WPy64-31401 / pythonw.exe in AppData
+
+`UC_27_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run\\*" OR Registry.registry_path="*\\CurrentVersion\\RunOnce\\*") AND (Registry.registry_value_data="*WPy64-31401*" OR (Registry.registry_value_data="*\\AppData\\*" AND Registry.registry_value_data="*pythonw.exe*")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process_path | `drop_dm_object_name(Registry)` | convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has_any (@"\CurrentVersion\Run", @"\CurrentVersion\RunOnce")
+| where RegistryValueData has "WPy64-31401"
+    or (RegistryValueData has @"\AppData\" and RegistryValueData has "pythonw.exe")
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          RegistryKey, RegistryValueName, RegistryValueData,
+          ActorImage = InitiatingProcessFolderPath,
+          ActorCmd   = InitiatingProcessCommandLine,
+          ActorSHA256 = InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -299,7 +375,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Hijack Microsoft Teams Accounts to Deliver ModeloRAT
 
-`UC_15_9` · phase: **exploit** · confidence: **High**
+`UC_27_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -349,4 +425,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

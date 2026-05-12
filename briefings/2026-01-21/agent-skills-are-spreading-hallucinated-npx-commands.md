@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Agent Skills Are Spreading Hallucinated npx Commands
 
-`UC_375_3` · phase: **exploit** · confidence: **High**
+`UC_444_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

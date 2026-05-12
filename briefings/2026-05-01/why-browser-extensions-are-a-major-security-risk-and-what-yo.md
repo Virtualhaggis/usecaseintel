@@ -27,12 +27,114 @@ Blog Guides & Best Practices Why browser extensions are a major security risk an
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1547** — Boot or Logon Autostart Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Cyberhaven-cluster malicious Chrome extension C2 beacon to cyberhavenext[.]pro / Vultr IPs
+
+`UC_174_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.app) as app values(Network_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (Network_Traffic.dest_ip IN ("149.28.124.84","45.76.225.148") OR Network_Traffic.dest="cyberhavenext.pro" OR Network_Traffic.dest="*.cyberhavenext.pro" OR Network_Traffic.url="*cyberhavenext.pro*") by Network_Traffic.src Network_Traffic.user Network_Traffic.dest Network_Traffic.dest_ip
+| `drop_dm_object_name(Network_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let _bad_ips = dynamic(["149.28.124.84","45.76.225.148"]);
+let _bad_domains = dynamic(["cyberhavenext.pro"]);
+let _browsers = dynamic(["chrome.exe","msedge.exe","brave.exe","opera.exe","arc.exe","vivaldi.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (_bad_ips)
+   or RemoteUrl has_any (_bad_domains)
+| where InitiatingProcessFileName in~ (_browsers)
+   or InitiatingProcessParentFileName in~ (_browsers)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          RemoteIP, RemoteUrl, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm — VS Code / Cursor process polling Solana mainnet RPC for C2
+
+`UC_174_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.dest_ip) as dest_ips dc(_time) as distinctSeconds from datamodel=Network_Traffic.All_Traffic where Network_Traffic.dest IN ("api.mainnet-beta.solana.com","solana-rpc.publicnode.com","rpc.helius.xyz","solana-api.projectserum.com","*.mainnet-beta.solana.com") AND Network_Traffic.app IN ("Code.exe","code.exe","Cursor.exe","cursor.exe","Windsurf.exe","Code - Insiders.exe") by Network_Traffic.src Network_Traffic.user Network_Traffic.app Network_Traffic.dest
+| `drop_dm_object_name(Network_Traffic)`
+| where count >= 20 AND distinctSeconds >= 5
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+let _solana_hosts = dynamic(["mainnet-beta.solana.com","solana-rpc.publicnode.com","rpc.helius.xyz","solana-api.projectserum.com","api.devnet.solana.com"]);
+let _ides = dynamic(["code.exe","cursor.exe","windsurf.exe","code - insiders.exe","code-insiders.exe","vscodium.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (_ides)
+| where RemoteUrl has_any (_solana_hosts)
+| summarize ConnectionCount = count(),
+            DistinctMinutes  = dcount(bin(Timestamp, 1m)),
+            FirstSeen        = min(Timestamp),
+            LastSeen         = max(Timestamp),
+            SampleRemoteIPs  = make_set(RemoteIP, 5),
+            SampleCmd        = any(InitiatingProcessCommandLine)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl
+| where DistinctMinutes >= 5    // sustained polling, not a one-off lookup
+| order by ConnectionCount desc
+```
+
+### [LLM] Non-browser process writing manifest.json / background.js into Chrome / Edge extension folder
+
+`UC_174_9` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_hash) as hashes from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Extensions\\*" OR Filesystem.file_path="*\\Microsoft\\Edge\\User Data\\*\\Extensions\\*" OR Filesystem.file_path="*\\BraveSoftware\\Brave-Browser\\User Data\\*\\Extensions\\*") AND Filesystem.file_name IN ("manifest.json","background.js","service-worker.js","content.js") AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","opera.exe","arc.exe","vivaldi.exe","msiexec.exe","setup.exe","GoogleUpdate.exe","MicrosoftEdgeUpdate.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let _ext_paths = dynamic([
+    @"\Google\Chrome\User Data\Default\Extensions\",
+    @"\Google\Chrome\User Data\Default\Local Extension Settings\",
+    @"\Microsoft\Edge\User Data\Default\Extensions\",
+    @"\Microsoft\Edge\User Data\Default\Local Extension Settings\",
+    @"\BraveSoftware\Brave-Browser\User Data\Default\Extensions\"]);
+let _legit_writers = dynamic(["chrome.exe","msedge.exe","brave.exe","opera.exe","arc.exe","vivaldi.exe","msiexec.exe","setup.exe","googleupdate.exe","microsoftedgeupdate.exe","installer.exe"]);
+let _ext_files = dynamic(["manifest.json","background.js","service-worker.js","content.js","contentscript.js"]);
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath has_any (_ext_paths)
+| where FileName in~ (_ext_files)
+| where InitiatingProcessFileName !in~ (_legit_writers)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -290,4 +392,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -28,8 +28,6 @@ Commerce Cloud is an enterprise-grade e-commerce platform used by online stores 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1190.001** — SQL Injection (via T1190)
 
 ## Kill chain phases observed
 
@@ -37,38 +35,30 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hunt SAP Commerce Cloud & S/4HANA hosts vulnerable to CVE-2026-34263 / CVE-2026-34260
+### [LLM] SAP May 2026 Patch Tuesday CVE exposure hunt (Commerce Cloud / S/4HANA criticals)
 
-`UC_19_5` · phase: **recon** · confidence: **High**
+`UC_30_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve="CVE-2026-34263" OR Vulnerabilities.cve="CVE-2026-34260") by Vulnerabilities.dest Vulnerabilities.dest_category Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.vendor_product Vulnerabilities.cvss | `drop_dm_object_name(Vulnerabilities)` | eval product_hint=case(match(vendor_product,"(?i)commerce|hybris"),"SAP Commerce Cloud (Hybris)",match(vendor_product,"(?i)s.?4.?hana|netweaver|abap"),"SAP S/4HANA",1==1,vendor_product) | convert ctime(firstTime) ctime(lastTime) | sort - cvss, dest
+| tstats `summariesonly` count min(_time) as firstFound max(_time) as lastFound values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.vendor_product) as vendor_product from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve IN ("CVE-2026-34263","CVE-2026-34260")) by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | eval priority=case(cve="CVE-2026-34263","P1 - unauth RCE (Commerce Cloud, Spring Security)", cve="CVE-2026-34260","P2 - authenticated SQLi (S/4HANA)", 1=1,"P3") | convert ctime(firstFound) ctime(lastFound) | sort 0 priority dest
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-34263 (SAP Commerce Cloud RCE) + CVE-2026-34260 (SAP S/4HANA SQLi)
-let SapCves = dynamic(["CVE-2026-34263","CVE-2026-34260"]);
+// SAP May 2026 Patch Tuesday — devices still vulnerable to either critical CVE
+let SapMay2026Criticals = dynamic(["CVE-2026-34263","CVE-2026-34260"]);
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(7d)
-| where CveId in (SapCves)
-| where SoftwareVendor =~ "sap"
-   or SoftwareName has_any ("commerce","hybris","s/4hana","s4hana","netweaver","abap")
-| join kind=leftouter (
-    DeviceTvmSoftwareVulnerabilitiesKB
-    | project CveId, CvssScore, IsExploitAvailable, PublishedDate, VulnerabilityDescription
-  ) on CveId
-| join kind=leftouter (
-    DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform, MachineGroup) by DeviceId, DeviceName
-  ) on DeviceId
-| project Timestamp, DeviceName, DeviceId, OSPlatform, IsInternetFacing, PublicIP, MachineGroup,
-          CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable,
-          SoftwareVendor, SoftwareName, SoftwareVersion,
-          RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by IsInternetFacing desc, CvssScore desc, DeviceName asc
+| where Timestamp > ago(1d)            // TVM snapshot — daily refresh is enough
+| where CveId in (SapMay2026Criticals)
+| where SoftwareVendor has "sap"        // belt-and-braces — confirms this is the SAP CVE, not a collision
+| extend Priority = case(
+    CveId == "CVE-2026-34263", "P1 - unauth RCE (Commerce Cloud, Spring Security misconfig)",
+    CveId == "CVE-2026-34260", "P2 - authenticated SQLi (S/4HANA)",
+    "P3")
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, Priority, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| order by Priority asc, DeviceName asc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -189,4 +179,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

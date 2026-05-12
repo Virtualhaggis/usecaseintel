@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — WAF vs. RASP vs. ADR
 
-`UC_299_3` · phase: **exploit** · confidence: **High**
+`UC_341_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

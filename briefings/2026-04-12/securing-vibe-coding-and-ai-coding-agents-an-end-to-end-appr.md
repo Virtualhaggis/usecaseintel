@@ -1,4 +1,4 @@
-# [CRIT] Securing Vibe Coding and AI Coding Agents: An End-to-End Approach with StepSecurity
+# [HIGH] Securing Vibe Coding and AI Coding Agents: An End-to-End Approach with StepSecurity
 
 **Source:** StepSecurity
 **Published:** 2026-04-12
@@ -6,10 +6,10 @@
 
 ## Threat Profile
 
-Back to Blog Product Securing Vibe Coding and AI Coding Agents: An End-to-End Approach with StepSecurity AI coding agents install packages, create pull requests, push commits, and run autonomously in CI/CD pipelines. Here's how to secure every stage of that workflow Ashish Kurmi View LinkedIn February 23, 2026
+Back to Blog Product Introducing StepSecurity Dev Machine Guard: Protecting Developer Machines from Supply Chain Attacks Modern supply chain attacks target developer machines and AI coding agents. Learn how StepSecurity Dev Machine Guard stops credential theft early Ashish Kurmi View LinkedIn January 13, 2026
 Share on X Share on X Share on LinkedIn Share on Facebook Follow our RSS feed 
 Table of Contents Loading nav... 
-AI coding agents like Claude Code, Cursor, Codex, Gemini, and GitHub Copilo…
+Developer machines hold your most sensitive credentials such as GitHub crede…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -20,8 +20,9 @@ AI coding agents like Claude Code, Cursor, Codex, Gemini, and GitHub Copilo…
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
@@ -84,31 +85,56 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### OAuth consent / suspicious app grant
+### Remote service execution — PsExec / SMB lateral movement
 
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -138,4 +164,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
