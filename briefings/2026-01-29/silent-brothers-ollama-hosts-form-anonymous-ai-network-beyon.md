@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Local Ollama service bound to non-loopback interface (joining exposed AI network on TCP/11434)
 
-`UC_221_3` · phase: **install** · confidence: **High**
+`UC_222_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ union OllamaListeners, OllamaPublicServe
 
 ### [LLM] Endpoint outbound to public TCP/11434 — using or proxying through exposed Ollama nodes
 
-`UC_221_4` · phase: **c2** · confidence: **Medium**
+`UC_222_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

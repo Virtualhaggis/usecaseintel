@@ -10,12 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [84 tanstack npm packages hacked in ongoing supply chain atta](./2026-05-12/84-tanstack-npm-packages-hacked-in-ongoing-supply-chain-atta.md)
+- [hackers abuse cve 2026 41940 to take over cpanel and whm ser](./2026-05-12/hackers-abuse-cve-2026-41940-to-take-over-cpanel-and-whm-ser.md)
+- [new bitunlocker downgrade attack on windows 11 allows access](./2026-05-12/new-bitunlocker-downgrade-attack-on-windows-11-allows-access.md)
 
 ## 2026-05-11
 - [cpanel cve 2026 41940 under active exploitation to deploy fi](./2026-05-11/cpanel-cve-2026-41940-under-active-exploitation-to-deploy-fi.md)
 - [crimenetwork takedown exposes 22 000 users and over 100 ille](./2026-05-11/crimenetwork-takedown-exposes-22-000-users-and-over-100-ille.md)
+- [eyes wide open how to mitigate the security and privacy risk](./2026-05-11/eyes-wide-open-how-to-mitigate-the-security-and-privacy-risk.md)
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
-- [ghostlock attack leverages windows file sharing to lock file](./2026-05-11/ghostlock-attack-leverages-windows-file-sharing-to-lock-file.md)
 - [gm agrees to 12 75m california settlement over sale of drive](./2026-05-11/gm-agrees-to-12-75m-california-settlement-over-sale-of-drive.md)
 - [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
 - [google warns of hackers using ai to create working zero day ](./2026-05-11/google-warns-of-hackers-using-ai-to-create-working-zero-day-.md)
@@ -24,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)
-- [lyrie ai joins first batch of anthropic s cyber verification](./2026-05-11/lyrie-ai-joins-first-batch-of-anthropic-s-cyber-verification.md)
 - [new ghostlock tool abuses windows api to block file access](./2026-05-11/new-ghostlock-tool-abuses-windows-api-to-block-file-access.md)
 - [official checkmarx jenkins package compromised with infostea](./2026-05-11/official-checkmarx-jenkins-package-compromised-with-infostea.md)
 - [popular go library fsnotify raises supply chain alarms after](./2026-05-11/popular-go-library-fsnotify-raises-supply-chain-alarms-after.md)
@@ -620,9 +621,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-09-25
 - [cisa kev cve 2025 20362 cisco secure firewall adaptive secur](./2025-09-25/cisa-kev-cve-2025-20362-cisco-secure-firewall-adaptive-secur.md)
 - [deceptivedevelopment from primitive crypto theft to sophisti](./2025-09-25/deceptivedevelopment-from-primitive-crypto-theft-to-sophisti.md)
-
-## 2025-09-22
-- [watch out for svg files booby trapped with malware](./2025-09-22/watch-out-for-svg-files-booby-trapped-with-malware.md)
 
 ## 2025-09-11
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-09-11/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)

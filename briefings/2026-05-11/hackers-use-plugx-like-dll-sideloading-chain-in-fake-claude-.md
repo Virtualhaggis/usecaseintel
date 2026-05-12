@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Beagle/DonutLoader installer triad dropped to user Startup folder (Fake Claude campaign)
 
-`UC_9_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### [LLM] Signed G DATA / Microsoft Defender updater executing from non-vendor path (Beagle sideload host)
 
-`UC_9_11` · phase: **exploit** · confidence: **High**
+`UC_11_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Beagle backdoor C2 egress — Fake Claude campaign infrastructure (license.claude-pro.com / 8.217.190.58)
 
-`UC_9_12` · phase: **c2** · confidence: **High**
+`UC_11_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -424,7 +424,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use PlugX-Like DLL Sideloading Chain in Fake Claude Malware Campaign
 
-`UC_9_9` · phase: **exploit** · confidence: **High**
+`UC_11_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

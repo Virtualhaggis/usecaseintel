@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Script-host process egress to Gemini API (HONESTCUE-style runtime LLM C2)
 
-`UC_8_11` · phase: **c2** · confidence: **High**
+`UC_10_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] UNC5673 LLM account-pooling middleware execution (Claude-Relay-Service / CLI-Proxy-API)
 
-`UC_8_12` · phase: **c2** · confidence: **Medium**
+`UC_10_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

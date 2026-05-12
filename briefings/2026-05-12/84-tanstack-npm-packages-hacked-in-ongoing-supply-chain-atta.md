@@ -10,13 +10,9 @@ Home Cyber Security
 84 TanStack npm Packages Hacked in Ongoing Supply-Chain Attack Targeting CI Credentials 
 By Guru Baran 
 May 12, 2026 
-
-
-
-
 A significant supply-chain compromise affecting 84 npm package artifacts across the TanStack namespace.
 The malicious versions, published to the npm registry at approximately 19:20 and 19:26 UTC, contain a suspected credential-stealing payload targeting CI systems, including GitHub Actions.
-According to Socket , the compromise spans 42 TanStack packag…
+According to Socket , the compromise spans 42 TanStack packages — two…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -97,7 +93,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 84 TanStack npm Packages Hacked in Ongoing Supply-Chain Attack Targeting CI Cred
 
-`UC_0_3` · phase: **exploit** · confidence: **High**
+`UC_2_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
