@@ -172,7 +172,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_490_5` · phase: **exploit** · confidence: **High**
+`UC_487_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

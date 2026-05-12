@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — xygeni-action Compromised: C2 Reverse Shell Backdoor Injected via Tag Poisoning
 
-`UC_287_5` · phase: **install** · confidence: **High**
+`UC_284_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

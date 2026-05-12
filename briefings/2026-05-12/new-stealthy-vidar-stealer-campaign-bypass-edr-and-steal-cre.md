@@ -467,7 +467,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Stealthy Vidar Stealer Campaign Bypass EDR and Steal Credentials
 
-`UC_13_13` · phase: **exploit** · confidence: **High**
+`UC_17_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

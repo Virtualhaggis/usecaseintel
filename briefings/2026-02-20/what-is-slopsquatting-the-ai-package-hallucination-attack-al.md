@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is Slopsquatting? The AI Package Hallucination Attack Already Happening
 
-`UC_354_3` · phase: **exploit** · confidence: **High**
+`UC_351_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios compromised on npm: maintainer account hijacked, RAT deployed
 
-`UC_273_6` · phase: **exploit** · confidence: **High**
+`UC_270_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

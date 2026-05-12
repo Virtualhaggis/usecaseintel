@@ -1,6 +1,6 @@
 # [HIGH] Microsoft May 2026 Patch Tuesday fixes 120 flaws, no zero-days
 
-**Source:** BleepingComputer
+**Source:** BleepingComputer, Cisco Talos
 **Published:** 2026-05-12
 **Article:** https://www.bleepingcomputer.com/news/microsoft/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-days/
 
@@ -11,17 +11,11 @@ By Lawrence Abrams
 May 12, 2026
 02:08 PM
 0 
-
 Today is Microsoft's May 2026 Patch Tuesday, with security updates for 120 flaws and no zero-days disclosed.
-
-
 This Patch Tuesday addresses 17 "Critical" vulnerabilities, 14 of which are remote code execution, 2 are elevation of privilege, and 1 is an information disclosure flaw.
-
-
 The number of bugs in each vulnerability category is listed below:
-
-
-61 Elevation of Privilege Vulne…
+61 Elevation of Privilege Vulnerabilities
+6 S…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -153,36 +147,12 @@ The number of bugs in each vulnerability category is listed below:
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1204.002** — User Execution: Malicious File
-- **T1203** — Exploitation for Client Execution
-- **T1210** — Exploitation of Remote Services
-- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Asset exposure: May 2026 Patch Tuesday critical RCEs (CVE-2026-41096 DNS, -35421 GDI/EMF, -40365 SharePoint, -41089 Netlogon, -32161 WiFi, -
-
-`UC_1_4` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.dest) as dest from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-41096","CVE-2026-35421","CVE-2026-40365","CVE-2026-41089","CVE-2026-32161","CVE-2026-40402","CVE-2026-40361","CVE-2026-40367","CVE-2026-40366","CVE-2026-40364","CVE-2026-42831","CVE-2026-40363","CVE-2026-40358","CVE-2026-42898","CVE-2026-26164","CVE-2026-41103") by Vulnerabilities.cve Vulnerabilities.dest_category Vulnerabilities.dest Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(first_seen) ctime(last_seen) | sort - severity, cve, dest
-```
-
-**Defender KQL:**
-```kql
-let MayPT2026CriticalCVEs = dynamic(["CVE-2026-41096","CVE-2026-35421","CVE-2026-40365","CVE-2026-41089","CVE-2026-32161","CVE-2026-40402","CVE-2026-40361","CVE-2026-40367","CVE-2026-40366","CVE-2026-40364","CVE-2026-42831","CVE-2026-40363","CVE-2026-40358","CVE-2026-42898","CVE-2026-26164","CVE-2026-41103"]);
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in (MayPT2026CriticalCVEs)
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable, PublishedDate) by CveId) on CveId
-| join kind=leftouter (DeviceInfo | where Timestamp > ago(7d) | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing, MachineGroup) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, OSVersion, IsInternetFacing, MachineGroup, CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by IsInternetFacing desc, CvssScore desc, CveId asc
-```
 
 ### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 
@@ -296,4 +266,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

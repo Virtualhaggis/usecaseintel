@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / DIGEST] 31 medium/low advisories published 2026-05-11
 
-`UC_103_1` · phase: **exploit** · confidence: **High**
+`UC_101_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

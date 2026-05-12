@@ -270,7 +270,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JavaScript, MSBuild, and the Blockchain: Anatomy of the NeoShadow npm Supply-Cha
 
-`UC_466_10` · phase: **exploit** · confidence: **High**
+`UC_463_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

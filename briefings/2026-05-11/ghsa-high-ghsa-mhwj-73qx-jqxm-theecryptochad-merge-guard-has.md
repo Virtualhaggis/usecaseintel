@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / HIGH] GHSA-mhwj-73qx-jqxm: @theecryptochad/merge-guard has Prototype Pol
 
-`UC_66_0` · phase: **exploit** · confidence: **High**
+`UC_69_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -209,7 +209,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios Compromised on npm - Malicious Versions Drop Remote Access Trojan
 
-`UC_255_7` · phase: **exploit** · confidence: **High**
+`UC_252_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

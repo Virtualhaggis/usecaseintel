@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email containing vercel.app link impersonating major-brand careers/login
 
-`UC_11_11` · phase: **delivery** · confidence: **High**
+`UC_15_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ EmailEvents
 
 ### [LLM] Browser process exfiltrating to api.telegram.org bot endpoint (Vercel v0 phishing C2)
 
-`UC_11_12` · phase: **c2** · confidence: **High**
+`UC_15_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceNetworkEvents
 
 ### [LLM] Safe Links click on *.vercel.app from inbound email (Cofense Vercel phish wave)
 
-`UC_11_13` · phase: **delivery** · confidence: **High**
+`UC_15_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

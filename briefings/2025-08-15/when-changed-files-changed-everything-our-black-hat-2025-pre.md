@@ -51,7 +51,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the
 
-`UC_637_1` · phase: **exploit** · confidence: **High**
+`UC_634_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

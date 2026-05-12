@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Canvas LMS browser sessions during ShinyHunters breach window (Apr 30 – May 7 2026)
 
-`UC_34_0` · phase: **actions** · confidence: **Medium**
+`UC_37_0` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### [LLM] Successful Entra ID / Okta sign-ins to Canvas LMS during breach window
 
-`UC_34_1` · phase: **actions** · confidence: **Medium**
+`UC_37_1` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

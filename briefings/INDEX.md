@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_936 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_933 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-12
 - [android 17 to expand banking scam call and privacy protectio](./2026-05-12/android-17-to-expand-banking-scam-call-and-privacy-protectio.md)
 - [defending consumer web properties against modern ddos attack](./2026-05-12/defending-consumer-web-properties-against-modern-ddos-attack.md)
-- [fortinet patches five vulnerabilities across fortiap fortios](./2026-05-12/fortinet-patches-five-vulnerabilities-across-fortiap-fortios.md)
+- [fortinet warns of critical rce flaws in fortisandbox and for](./2026-05-12/fortinet-warns-of-critical-rce-flaws-in-fortisandbox-and-for.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [ghsa critical cve 2026 45091 sealed env totp secret embedded](./2026-05-12/ghsa-critical-cve-2026-45091-sealed-env-totp-secret-embedded.md)
@@ -25,12 +25,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa high cve 2026 45088 dalfox server mode has an unauthent](./2026-05-12/ghsa-high-cve-2026-45088-dalfox-server-mode-has-an-unauthent.md)
 - [ghsa high cve 2026 45089 dalfox server mode has an unauthent](./2026-05-12/ghsa-high-cve-2026-45089-dalfox-server-mode-has-an-unauthent.md)
 - [ghsa high cve 2026 45090 dalfox has an unauthenticated remot](./2026-05-12/ghsa-high-cve-2026-45090-dalfox-has-an-unauthenticated-remot.md)
-- [hackers hijack microsoft teams accounts to deliver modelorat](./2026-05-12/hackers-hijack-microsoft-teams-accounts-to-deliver-modelorat.md)
 - [instructure reaches agreement with shinyhunters to stop data](./2026-05-12/instructure-reaches-agreement-with-shinyhunters-to-stop-data.md)
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
 - [ivanti patches multiple vulnerabilities in secure access xtr](./2026-05-12/ivanti-patches-multiple-vulnerabilities-in-secure-access-xtr.md)
 - [koda warns of customer data breach after online shop hack](./2026-05-12/koda-warns-of-customer-data-breach-after-online-shop-hack.md)
 - [microsoft may 2026 patch tuesday fixes 120 flaws no zero day](./2026-05-12/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-day.md)
+- [microsoft patch tuesday may 2026 120 vulnerabilities fixed i](./2026-05-12/microsoft-patch-tuesday-may-2026-120-vulnerabilities-fixed-i.md)
+- [microsoft releases windows 10 kb5087544 extended security up](./2026-05-12/microsoft-releases-windows-10-kb5087544-extended-security-up.md)
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [new stealthy vidar stealer campaign bypass edr and steal cre](./2026-05-12/new-stealthy-vidar-stealer-campaign-bypass-edr-and-steal-cre.md)
@@ -42,10 +43,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [sap fixes critical vulnerabilities in commerce cloud and s 4](./2026-05-12/sap-fixes-critical-vulnerabilities-in-commerce-cloud-and-s-4.md)
 - [sap patches critical sql injection vulnerability in sap s 4h](./2026-05-12/sap-patches-critical-sql-injection-vulnerability-in-sap-s-4h.md)
 - [shadow ai is a fear response and banning it makes it worse](./2026-05-12/shadow-ai-is-a-fear-response-and-banning-it-makes-it-worse.md)
+- [signal adds security warnings for social engineering phishin](./2026-05-12/signal-adds-security-warnings-for-social-engineering-phishin.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-12/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
 - [threat actors leverage vercel s ai tools to mass produce rea](./2026-05-12/threat-actors-leverage-vercel-s-ai-tools-to-mass-produce-rea.md)
+- [uk fines water supplier 1 3m for exposing data of 664k custo](./2026-05-12/uk-fines-water-supplier-1-3m-for-exposing-data-of-664k-custo.md)
 - [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
 - [why agentic ai is security s next blind spot](./2026-05-12/why-agentic-ai-is-security-s-next-blind-spot.md)
 - [windows 11 kb5089549 kb5087420 cumulative updates released](./2026-05-12/windows-11-kb5089549-kb5087420-cumulative-updates-released.md)
@@ -103,17 +106,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa high ghsa mhwj 73qx jqxm theecryptochad merge guard has](./2026-05-11/ghsa-high-ghsa-mhwj-73qx-jqxm-theecryptochad-merge-guard-has.md)
 - [ghsa high ghsa w94c 4vhp 22gx vitejs plugin rsc has a denial](./2026-05-11/ghsa-high-ghsa-w94c-4vhp-22gx-vitejs-plugin-rsc-has-a-denial.md)
 - [gm agrees to 12 75m california settlement over sale of drive](./2026-05-11/gm-agrees-to-12-75m-california-settlement-over-sale-of-drive.md)
-- [google hackers used ai to develop zero day exploit for web a](./2026-05-11/google-hackers-used-ai-to-develop-zero-day-exploit-for-web-a.md)
 - [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
-- [instructure confirms hackers used canvas flaw to deface port](./2026-05-11/instructure-confirms-hackers-used-canvas-flaw-to-deface-port.md)
 - [new ghostlock tool abuses windows api to block file access](./2026-05-11/new-ghostlock-tool-abuses-windows-api-to-block-file-access.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 - [the complete github actions security checklist](./2026-05-11/the-complete-github-actions-security-checklist.md)
-- [trickmo android banker adopts ton blockchain for covert comm](./2026-05-11/trickmo-android-banker-adopts-ton-blockchain-for-covert-comm.md)
-- [webinar this week prevention alone is not enough against mod](./2026-05-11/webinar-this-week-prevention-alone-is-not-enough-against-mod.md)
 - [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
-- [why changing passwords doesn t end an active directory breac](./2026-05-11/why-changing-passwords-doesn-t-end-an-active-directory-breac.md)
 - [your purple team isn t purple it s just red and blue in the ](./2026-05-11/your-purple-team-isn-t-purple-it-s-just-red-and-blue-in-the-.md)
 
 ## 2026-05-10
@@ -284,7 +282,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-16
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
-- [foxit libraw vulnerabilities](./2026-04-16/foxit-libraw-vulnerabilities.md)
 - [reliable cve sources in the age of nist nvd cutbacks](./2026-04-16/reliable-cve-sources-in-the-age-of-nist-nvd-cutbacks.md)
 - [supply chain dependencies have you checked your blind spot](./2026-04-16/supply-chain-dependencies-have-you-checked-your-blind-spot.md)
 

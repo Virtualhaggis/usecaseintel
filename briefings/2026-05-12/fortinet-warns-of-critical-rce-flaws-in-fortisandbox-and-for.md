@@ -1,25 +1,30 @@
-# [HIGH] Webinar this week: Prevention alone is not enough against modern attacks
+# [CRIT] Fortinet warns of critical RCE flaws in FortiSandbox and FortiAuthenticator
 
-**Source:** BleepingComputer
-**Published:** 2026-05-11
-**Article:** https://www.bleepingcomputer.com/news/security/webinar-this-week-prevention-alone-is-not-enough-against-modern-attacks/
+**Source:** BleepingComputer, Cyber Security News
+**Published:** 2026-05-12
+**Article:** https://www.bleepingcomputer.com/news/security/fortinet-warns-of-critical-rce-flaws-in-fortisandbox-and-fortiauthenticator/
 
 ## Threat Profile
 
-Webinar this week: Prevention alone is not enough against modern attacks 
-By BleepingComputer 
-May 11, 2026
-08:30 AM
-0 
-Modern cyberattacks are no longer limited to malware or isolated phishing emails. Today’s threat actors combine AI-generated phishing, business email compromise, ransomware, and SaaS abuse to gain access to business environments and disrupt operations.
-On Thursday, May 14, 2026 at 2:00 PM ET, BleepingComputer will host a live webinar titled " From phishing to fallout: Why MSPs …
+Home Cyber Security 
+Fortinet Patches Five Vulnerabilities Across FortiAP, FortiOS, and Enterprise Products 
+By Guru Baran 
+May 12, 2026 
+Fortinet released security advisories on May 12, 2026, addressing five vulnerabilities spanning its wireless access point controllers, network operating system, and enterprise management platforms, including a critical unauthenticated authorization bypass in FortiSandbox.
+Critical Flaw in FortiSandbox 
+The most severe vulnerability disclosed is CVE-2026-26083 …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-26083`
+- **CVE:** `CVE-2025-53680`
+- **CVE:** `CVE-2025-53870`
+- **CVE:** `CVE-2025-67604`
+- **CVE:** `CVE-2025-53844`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -27,13 +32,11 @@ On Thursday, May 14, 2026 at 2:00 PM ET, BleepingComputer will host a live webin
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1219** — Remote Access Software
 
 ## Kill chain phases observed
 
@@ -189,34 +192,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -301,34 +276,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
+### IOC-driven hunts (use shared templates)
 
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-26083`, `CVE-2025-53680`, `CVE-2025-53870`, `CVE-2025-67604`, `CVE-2025-53844`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

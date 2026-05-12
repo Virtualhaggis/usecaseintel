@@ -62,7 +62,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / DIGEST] 5 medium/low advisories published 2026-05-12
 
-`UC_40_2` · phase: **exploit** · confidence: **High**
+`UC_43_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

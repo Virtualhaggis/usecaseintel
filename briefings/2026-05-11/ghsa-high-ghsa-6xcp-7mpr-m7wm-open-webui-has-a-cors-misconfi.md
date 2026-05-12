@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable Open WebUI (< 0.3.33) inventory — GHSA-6xcp-7mpr-m7wm CORS+session RCE chain
 
-`UC_88_2` · phase: **recon** · confidence: **High**
+`UC_90_2` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceTvmSoftwareInventory
 
 ### [LLM] Open WebUI CORS RCE chain — POST /api/v1/functions/create followed by /toggle from same client
 
-`UC_88_3` · phase: **exploit** · confidence: **High**
+`UC_90_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### [LLM] Open WebUI python worker spawning shell/recon commands — post-exploitation of GHSA-6xcp-7mpr-m7wm filter RCE
 
-`UC_88_4` · phase: **install** · confidence: **High**
+`UC_90_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / HIGH] GHSA-6xcp-7mpr-m7wm: Open WebUI has a CORS misconfiguration and se
 
-`UC_88_1` · phase: **install** · confidence: **High**
+`UC_90_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

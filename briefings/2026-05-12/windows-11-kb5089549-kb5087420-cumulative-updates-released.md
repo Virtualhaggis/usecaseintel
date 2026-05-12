@@ -11,15 +11,9 @@ By Mayank Parmar
 May 12, 2026
 02:09 PM
 0 
-
-
 Microsoft has released Windows 11 KB5089549 and KB5087420 cumulative updates for versions 25H2/24H2 and 23H2 to fix security vulnerabilities, bugs, and add new features.
-
-
 Today's updates are mandatory as they contain the  May 2026 Patch Tuesday security patches for 120 vulnerabilities discovered in previous months.
-
-
-You can install today's update by going to  Start  >  Settings  >  …
+You can install today's update by going to  Start  >  Settings  >  Windows Upda…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Windows 11 KB5089549 & KB5087420 cumulative updates released
 
-`UC_0_0` · phase: **exploit** · confidence: **High**
+`UC_6_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

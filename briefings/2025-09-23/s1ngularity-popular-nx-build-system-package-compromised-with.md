@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malw
 
-`UC_611_4` · phase: **exploit** · confidence: **High**
+`UC_608_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

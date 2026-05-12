@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_284_3` · phase: **exploit** · confidence: **High**
+`UC_281_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

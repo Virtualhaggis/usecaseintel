@@ -346,7 +346,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gone Phishin': npm Packages Serving Custom Credential Harvesting Pages
 
-`UC_432_10` · phase: **exploit** · confidence: **High**
+`UC_429_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

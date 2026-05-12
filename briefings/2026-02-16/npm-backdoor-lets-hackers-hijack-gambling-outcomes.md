@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm backdoor lets hackers hijack gambling outcomes
 
-`UC_370_4` · phase: **exploit** · confidence: **High**
+`UC_367_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

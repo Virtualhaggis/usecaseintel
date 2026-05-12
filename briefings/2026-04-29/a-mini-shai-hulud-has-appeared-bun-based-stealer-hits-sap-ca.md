@@ -186,7 +186,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — "A Mini Shai-Hulud Has Appeared": Bun-Based Stealer Hits SAP @cap-js and mbt npm
 
-`UC_191_7` · phase: **exploit** · confidence: **High**
+`UC_189_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
