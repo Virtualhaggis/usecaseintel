@@ -677,8 +677,15 @@ def extract_mechanics(title: str, body: str) -> dict:
 # (e.g. for a one-off comprehensive corpus run on Haiku).
 LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
 LLM_ACTOR_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_actor_uc_cache"
+LLM_RELEVANCE_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_relevance_cache"
 LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
+# Lighter model for the binary relevance gate — Haiku is plenty for "is this
+# article SOC-actionable y/n". Falls back to LLM_UC_MODEL if Haiku is missing.
+LLM_RELEVANCE_MODEL = os.environ.get("USECASEINTEL_RELEVANCE_MODEL", "claude-haiku-4-5-20251001")
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
+# Bump this when the relevance prompt or rule set changes — folded into the
+# cache key so old decisions don't stick around.
+CLASSIFIER_VERSION = "v1"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -13849,6 +13856,281 @@ def _is_marketing_post(article: dict) -> bool:
     return False
 
 
+# =============================================================================
+# Relevance classifier — three-tier gate that decides whether each article
+# becomes a card on the Articles tab. Output is binary (alert | drop) but the
+# internal tiers are observable so we can audit why something was dropped.
+#
+#   Tier 0: strong-keep override (active threat signal OR security-estate)
+#   Tier 1: strong-drop regex (listicle / opinion / OS feature launch / etc.)
+#   Tier 2: cached LLM call on Haiku for ambiguous middle-ground items
+#
+# Tier 0 wins; Tier 2 is only reached if neither 0 nor 1 fired. Failure of any
+# tier defaults to ALERT — we never silently drop on infrastructure errors.
+# =============================================================================
+
+# Security products the SOC / security-engineering team operates. An article
+# that mentions one of these in its title or lead paragraph is operationally
+# relevant even if it reads like a product launch ("CrowdStrike Falcon 7.21
+# Released" still matters — the team running Falcon needs to know).
+_SECURITY_ESTATE_KEYWORDS = (
+    # EDR / antivirus
+    "defender", "microsoft defender", "windows defender", "defender for endpoint",
+    "defender for cloud", "defender atp", "sentinelone", "singularity",
+    "crowdstrike", "falcon", "cortex xdr", "carbon black", "vmware carbon black",
+    "trellix", "fireeye", "symantec", "kaspersky", "eset", "bitdefender",
+    "sophos", "trend micro", "elastic security", "elastic edr", "tanium",
+    # SIEM / detection platforms
+    "splunk", "microsoft sentinel", "azure sentinel", "qradar", "logrhythm",
+    "exabeam", "sumologic", "sumo logic", "datadog cloud siem", "chronicle",
+    "google secops", "google security operations", "panther",
+    # Firewall / network security
+    "palo alto", "fortinet", "fortigate", "fortianalyzer", "check point",
+    "cisco firepower", "cisco asa", "cisco secure", "juniper srx", "panos",
+    "zscaler", "netskope",
+    # Identity / IAM
+    "okta", "duo security", "ping identity", "azure ad", "entra id",
+    "active directory", "cyberark", "beyondtrust",
+    # Cloud security / supply chain tooling
+    "wiz", "lacework", "prisma cloud", "aqua security", "snyk", "veracode",
+    "kibana", "elastalert", "graylog",
+    # MITRE / detection tooling
+    "atomic red team", "caldera", "sigma rules",
+)
+
+# Hard-drop regex patterns applied to titles. Each row drops a class of
+# content analysts have asked us NOT to render. Tier-0 override fires before
+# this so KEV / IOCs / actors / security-estate articles slip past unharmed.
+_RELEVANCE_DROP_PATTERNS = (
+    re.compile(r"^\s*(\d+\s+(best|top|worst)\b|top\s+\d+\b)", re.I),
+    re.compile(r"^(state of |year in |one year of |looking back|"
+               r"what we (built|learned)|what['’]s next)", re.I),
+    # Opinion lead-ins. Allow up to 5 words after "Why" so it catches multi-
+    # word subjects like "Why Agentic AI Is Security's Next Blind Spot".
+    re.compile(r"^why\s+\S+(?:\s+\S+){0,5}\s+(is|are|will|won['’]?t|isn['’]?t)\b", re.I),
+    re.compile(r"^(is\s+\w+\s+the\s+next|the\s+case\s+for)\b", re.I),
+    re.compile(r"\bis\s+(dead|back|broken|over|a\s+fear\s+response)\b", re.I),
+    re.compile(r"\b(next\s+blind\s+spot|fear\s+response|hot\s+take)\b", re.I),
+    re.compile(r"^(how to|a beginner|step.by.step|getting started|what is)", re.I),
+    # Generic consumer / OS feature-launch with no attack vocab. Allows up
+    # to 3 words between the verb and the feature noun ("iOS 26.5 Brings
+    # Default End-to-End Encrypted RCS Messaging…"). Tier-0 override list
+    # already excludes actively-exploited language.
+    re.compile(r"\b(brings|launches|introduces|unveils|adds|enhances|"
+               r"rolls\s+out)\b(?:\s+\S+){0,3}\s+"
+               r"(end-to-end|encryption|messaging|protections?|privacy|"
+               r"banking\s+scam|consent|onboarding|rcs)", re.I),
+)
+
+# Analyst escape hatch — title-substring matches here ALWAYS keep, even if
+# a Tier-1 pattern would otherwise drop. Append to this if the classifier
+# false-positively drops something real. No cache clear needed; this runs
+# before the Tier-2 cache lookup.
+_RELEVANCE_OVERRIDE_TITLES = (
+    # Add lowercase substrings here, e.g. "specific incident name"
+)
+
+# Active-threat keywords that move an article straight into ALERT when
+# paired with a CVE in the body — these are the words vendors use when
+# something is being exploited rather than just patched.
+_EXPLOITATION_KEYWORDS = (
+    "actively exploited", "active exploitation", "exploited in the wild",
+    "in the wild", "0-day", "zero-day", "zero day", "weaponized",
+    "weaponised", "exploit chain", "under active attack", "exploitation observed",
+)
+
+
+def _strong_keep_signal(article: dict, ind: dict) -> str | None:
+    """Tier 0. Return a short reason string if the article must be kept,
+    else None. Checked before any drop logic."""
+    title = (article.get("title") or "").lower()
+    body  = (article.get("raw_body") or "").lower()
+    head  = title + " " + body[:500]
+
+    # Analyst-supplied override
+    for sub in _RELEVANCE_OVERRIDE_TITLES:
+        if sub.lower() in title:
+            return "override-allowlist"
+
+    sources = article.get("sources") or [article.get("source", "")]
+    if "CISA KEV" in sources:
+        return "kev-cited"
+
+    # CVEs present AND exploitation language
+    if ind and ind.get("cves"):
+        if any(kw in head for kw in _EXPLOITATION_KEYWORDS):
+            return "cve+exploitation"
+
+    # Hard IOCs extracted from the article body
+    if ind and (ind.get("hashes") or ind.get("sha256") or ind.get("sha1")
+                or ind.get("md5") or ind.get("ips") or ind.get("domains")):
+        return "iocs-present"
+
+    # Named threat actor detected by the existing actor matcher
+    if article.get("_actors"):
+        return "named-actor"
+
+    # Canonical-ID set (built during dedupe) contains a named campaign or
+    # @scope/pkg coordinate.
+    ids = article.get("_ids") or set()
+    for tag in ids:
+        if isinstance(tag, str) and (tag.startswith("@") or tag.startswith("proj:")
+                                     or tag in _NAMED_INCIDENT_TAGS
+                                     or tag.replace(" ", "-") in _NAMED_INCIDENT_TAGS):
+            return "campaign-or-package"
+
+    # Security-estate impact — analyst must react when their tooling changes
+    for kw in _SECURITY_ESTATE_KEYWORDS:
+        if kw in head:
+            return f"security-estate:{kw[:24]}"
+
+    return None
+
+
+def _relevance_drop_pattern(article: dict) -> str | None:
+    """Tier 1. Return the matching regex source if the title fires a hard-
+    drop pattern, else None."""
+    title = (article.get("title") or "")
+    if not title:
+        return None
+    for rx in _RELEVANCE_DROP_PATTERNS:
+        if rx.search(title):
+            return rx.pattern[:60]
+    return None
+
+
+_RELEVANCE_PROMPT = (
+    "Title: <<TITLE>>\n"
+    "Body excerpt (first 1500 chars): <<BODY>>\n\n"
+    "You are a SOC analyst / security engineer triaging a threat-intel feed.\n"
+    "ALERT if the article describes any of:\n"
+    "  - an active campaign, breach, IOC release, named threat actor,\n"
+    "    detectable attack technique\n"
+    "  - a CVE that is actively exploited in the wild\n"
+    "  - a patch / regression / bypass / feature change to a security product\n"
+    "    (EDR, SIEM, firewall, IAM) that the operations team must react to\n"
+    "DROP if it is a listicle, generic product launch, opinion piece, year-in-\n"
+    "review, vendor retrospective, generic tutorial, or general tech news\n"
+    "with no attack content and no impact on the security estate.\n\n"
+    "Reply ONLY with one line of JSON, no prose, no code fences:\n"
+    '{"class":"alert"|"drop","reason":"<=10 words"}'
+)
+
+
+def _llm_relevance_call(prompt: str) -> dict | None:
+    """Cheap binary classifier — Haiku, max_tokens=120, no web search.
+    Returns parsed dict or None on any failure (caller defaults to ALERT)."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    raw = None
+    if use_oauth:
+        try:
+            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
+            import asyncio
+            async def _run():
+                chunks = []
+                opts = ClaudeAgentOptions(model=LLM_RELEVANCE_MODEL, max_turns=1, allowed_tools=[])
+                async for msg in query(prompt=prompt, options=opts):
+                    if isinstance(msg, AssistantMessage):
+                        for block in msg.content:
+                            if isinstance(block, TextBlock):
+                                chunks.append(block.text)
+                return "".join(chunks)
+            raw = asyncio.run(_run())
+        except Exception:
+            raw = None
+    if raw is None and api_key:
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key)
+            msg = client.messages.create(
+                model=LLM_RELEVANCE_MODEL,
+                max_tokens=120,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
+        except Exception:
+            raw = None
+    if not raw:
+        return None
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```\s*$", "", raw)
+    # Find first {..} object in the response.
+    m = re.search(r"\{[^{}]*\}", raw, re.DOTALL)
+    if not m:
+        return None
+    import json as _json
+    try:
+        d = _json.loads(m.group(0))
+    except Exception:
+        return None
+    cls = (d.get("class") or "").strip().lower()
+    if cls not in ("alert", "drop"):
+        return None
+    return {"class": cls, "reason": (d.get("reason") or "")[:120]}
+
+
+def classify_relevance(article: dict, ind: dict, sev: str) -> tuple[str, str, str]:
+    """Return (class, reason, tier) where class is 'alert' or 'drop'.
+
+    Tier names: 'keep-0' (strong-keep override), 'drop-1' (regex hard drop),
+    'llm-2-alert' / 'llm-2-drop' (LLM classifier), 'default-keep' (fallback).
+    On LLM auth missing or any infra failure the function defaults to ALERT —
+    we never silently drop on errors.
+    """
+    # Tier 0
+    keep_reason = _strong_keep_signal(article, ind)
+    if keep_reason:
+        return ("alert", keep_reason, "keep-0")
+
+    # Tier 1
+    drop_pat = _relevance_drop_pattern(article)
+    if drop_pat:
+        return ("drop", f"matched: {drop_pat}", "drop-1")
+
+    # Tier 2 — cached LLM
+    url = article.get("link", "") or ""
+    if not url:
+        return ("alert", "no url, default keep", "default-keep")
+    try:
+        LLM_RELEVANCE_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        key_input = f"{CLASSIFIER_VERSION}|{url}".encode("utf-8", "replace")
+        cache_key = hashlib.sha1(key_input).hexdigest()
+        cache_path = LLM_RELEVANCE_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        if cache_path.exists():
+            try:
+                cached = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+                if cached.get("class") in ("alert", "drop"):
+                    return (cached["class"], cached.get("reason", "cached"),
+                            f"llm-2-{cached['class']}")
+            except Exception:
+                pass
+    except Exception:
+        return ("alert", "cache init failed", "default-keep")
+
+    body = (article.get("raw_body") or "")[:1500]
+    prompt = (_RELEVANCE_PROMPT
+              .replace("<<TITLE>>", (article.get("title") or "")[:300])
+              .replace("<<BODY>>",  body))
+    result = _llm_relevance_call(prompt)
+    if not result:
+        return ("alert", "llm unavailable", "default-keep")
+    # Persist cache
+    try:
+        cache_path.write_text(__import__("json").dumps({
+            "class":  result["class"],
+            "reason": result["reason"],
+            "version": CLASSIFIER_VERSION,
+            "ts":     dt.datetime.now(dt.timezone.utc).isoformat(),
+        }), encoding="utf-8")
+    except Exception:
+        pass
+    return (result["class"], result["reason"], f"llm-2-{result['class']}")
+
+
 def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     """
     Pull articles from every configured source, filter to a rolling window
@@ -13958,7 +14240,8 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     # downstream CSV/JSON exports and confuses analysts.
     for a in deduped:
         a.pop("_tokens", None)
-        a.pop("_ids", None)
+        # Keep `_ids` on the article — the relevance classifier (Tier 0)
+        # reads it to detect named-campaign / @scope-package coverage.
         if a.get("published_dt"):
             try:
                 a["published"] = a["published_dt"].astimezone(dt.timezone.utc).strftime("%Y-%m-%d")
@@ -13997,6 +14280,10 @@ def main():
     total_techs = set()
     total_cves = set()
     sev_counts = {"crit":0,"high":0,"med":0,"low":0}
+    # Relevance gate accounting
+    relevance_tier_counts = {"keep-0": 0, "drop-1": 0, "llm-2-alert": 0,
+                             "llm-2-drop": 0, "default-keep": 0}
+    relevance_drop_log = []  # list of dicts -> intel/relevance_drops.jsonl
 
     # Need a stable mapping from UseCase object -> python variable name (so
     # the matrix can dedupe across articles that share the same UC instance).
@@ -14051,6 +14338,25 @@ def main():
             inferred |= INFER_FROM_PHASE.get(ph, set())
         inferred -= hit
         sev = compute_severity(text, ind, ucs, techniques)
+        # Relevance gate — decides whether this article gets a card on the
+        # Articles tab. See `classify_relevance` for the three-tier rules.
+        rel_class, rel_reason, rel_tier = classify_relevance(a, ind, sev)
+        relevance_tier_counts[rel_tier] = relevance_tier_counts.get(rel_tier, 0) + 1
+        if rel_class == "drop":
+            relevance_drop_log.append({
+                "id":     f"art-{i:02d}",
+                "source": (a.get("sources") or [a.get("source", "?")])[0],
+                "title":  a.get("title", ""),
+                "tier":   rel_tier,
+                "reason": rel_reason,
+                "published": a.get("published", ""),
+                "link":   a.get("link", ""),
+            })
+            # Drop quietly — article still contributed to IOC enrichment and
+            # canonical-ID dedupe earlier in the pipeline.
+            continue
+        a["_relevance"] = rel_class
+        a["_relevance_reason"] = rel_reason
         sev_counts[sev] += 1
         total_ucs += len(ucs)
         for tid, _ in techniques: total_techs.add(tid)
@@ -14157,6 +14463,41 @@ def main():
     write_catalog_files(generated_iso)
     print(f"[*] IOCs aggregated: {len(iocs)} unique  ->  intel/")
     print(f"[*] Catalog exported: {len(_LOADED_UCS or {})} use cases  ->  catalog/")
+
+    # Relevance gate end-of-run summary + audit log. The classifier sits in
+    # the main article loop and decides which articles render a card; this
+    # block reports what it kept / dropped and writes the per-drop reasons
+    # to intel/relevance_drops.jsonl for analyst review.
+    rel_kept   = (relevance_tier_counts.get("keep-0", 0)
+                  + relevance_tier_counts.get("llm-2-alert", 0)
+                  + relevance_tier_counts.get("default-keep", 0))
+    rel_dropped = (relevance_tier_counts.get("drop-1", 0)
+                   + relevance_tier_counts.get("llm-2-drop", 0))
+    if rel_kept or rel_dropped:
+        top_sources = {}
+        for d in relevance_drop_log:
+            s = d.get("source") or "?"
+            top_sources[s] = top_sources.get(s, 0) + 1
+        top_str = ", ".join(f"{s}:{n}" for s, n in
+                            sorted(top_sources.items(), key=lambda x:-x[1])[:5])
+        print(
+            f"[*] Relevance: kept {rel_kept} alert, dropped {rel_dropped} "
+            f"(tier-0 override: {relevance_tier_counts.get('keep-0',0)}, "
+            f"tier-1 regex: {relevance_tier_counts.get('drop-1',0)}, "
+            f"tier-2 LLM: {relevance_tier_counts.get('llm-2-alert',0)} alert / "
+            f"{relevance_tier_counts.get('llm-2-drop',0)} drop, "
+            f"default-keep: {relevance_tier_counts.get('default-keep',0)})"
+        )
+        if top_str:
+            print(f"    Top dropped sources: {top_str}")
+    try:
+        drops_path = Path(__file__).parent / "intel" / "relevance_drops.jsonl"
+        drops_path.parent.mkdir(parents=True, exist_ok=True)
+        with drops_path.open("w", encoding="utf-8") as fh:
+            for d in relevance_drop_log:
+                fh.write(__import__("json").dumps(d, ensure_ascii=False) + "\n")
+    except Exception as _e:
+        print(f"    [!] relevance_drops.jsonl write failed: {_e}")
 
     # Per-article briefings — committed to the repo so anyone pulling sees
     # operational content, not just aggregate exports
