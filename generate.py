@@ -10737,9 +10737,16 @@ def render_card(idx: int, article: dict, ind: dict,
 
 
 def render_nav(articles_meta):
+    """Build the left-sidebar TOC. The data-jump MUST be the article's
+    actual rendered id (m["id"]) — the relevance filter can skip
+    articles from the original deduped list which leaves gaps in the
+    rendered art-NN ids (art-00, art-03, art-04, art-05, art-08, ...).
+    Earlier this used a sequential `art-{i-1:02d}` which pointed to
+    non-existent article ids when any drops happened, breaking every
+    TOC click that landed on a dropped index."""
     items = []
     for i, m in enumerate(articles_meta, start=1):
-        aid = f"art-{i-1:02d}"
+        aid = m["id"]
         title = html.escape(m["title"])
         sev = m["sev"]
         items.append(
