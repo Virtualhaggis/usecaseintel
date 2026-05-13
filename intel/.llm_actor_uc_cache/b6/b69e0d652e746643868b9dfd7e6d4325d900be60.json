@@ -1,0 +1,75 @@
+{
+  "name": "APT28",
+  "ucs": [
+    {
+      "title": "[LLM] APT28 (Forest Blizzard / Fancy Bear) CVE-2023-23397 \u2014 Outlook outbound SMB/445 to public IP leaking Net-NTLMv2",
+      "description": "Hunts the network-side signature of CVE-2023-23397 exploitation: Microsoft Outlook initiating SMB (TCP/445) sessions to internet-routable destinations. APT28 weaponised this 0-day in-the-wild from at least April 2022, sending appointment items whose PidLidReminderFileParameter pointed at attacker-controlled UNC paths to coerce victim hosts into authenticating to GRU 26165 infrastructure, harvesting Net-NTLMv2 hashes that were relayed onward (the same TTP CERT-EU and the Polish CERT documented in MASEPIE/HEADLACE campaigns).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1003",
+        "T1557"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=\"outlook.exe\" OR All_Traffic.process_name=\"outlook.exe\") AND All_Traffic.dest_port=445 AND NOT (All_Traffic.dest_ip=\"10.0.0.0/8\" OR All_Traffic.dest_ip=\"172.16.0.0/12\" OR All_Traffic.dest_ip=\"192.168.0.0/16\" OR All_Traffic.dest_ip=\"127.0.0.0/8\" OR All_Traffic.dest_ip=\"169.254.0.0/16\" OR All_Traffic.dest_ip=\"100.64.0.0/10\") by host All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | rename host as Host, src as SourceHost",
+      "kql": "let LookbackDays = 30d;\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"outlook.exe\",\"outlook.com.exe\")\n| where RemotePort == 445\n| where RemoteIPType == \"Public\"\n| where not(RemoteIP startswith \"127.\") and not(RemoteIP startswith \"169.254.\")\n| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256,\n          RemoteIP, RemotePort, RemoteUrl, ActionType\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nImNetworkSession\n| where TimeGenerated > ago(LookbackDays)\n| where isnotempty(ActingProcessName)\n| where tolower(ActingProcessName) endswith \"outlook.exe\"\n| where DstPortNumber == 445\n| where not(ipv4_is_private(DstIpAddr))\n| where not(DstIpAddr startswith \"127.\") and not(DstIpAddr startswith \"169.254.\")\n| project TimeGenerated, DvcHostname, SrcUsername, ActingProcessName,\n          ActingProcessCommandLine, SrcIpAddr, DstIpAddr, DstPortNumber, Url, DvcAction\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT28 CVE-2023-23397 - Outlook outbound SMB to public IP (Net-NTLMv2 leak)\nid: 2c1f5db9-1b3e-4a4f-9d8e-7af0c39a23d4\nstatus: experimental\ndescription: Detects Outlook.exe initiating SMB (TCP/445) traffic to a public IPv4 - the network-side signature of CVE-2023-23397 exploitation linked to APT28 (Forest Blizzard / GRU Unit 26165). Outlook does not natively make outbound SMB to internet hosts.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2023/03/14/guidance-for-investigating-attacks-using-cve-2023-23397/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-074a\n  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzards-custom-post-compromise-tool-for-exploiting-cve-2022-38028/\nauthor: Detection Engineering\ndate: 2026/05/13\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Image|endswith:\n      - '\\outlook.exe'\n      - '\\OUTLOOK.EXE'\n    DestinationPort: 445\n  filter_rfc1918:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '127.0.0.0/8'\n      - '169.254.0.0/16'\n      - '100.64.0.0/10'\n  condition: selection and not filter_rfc1918\nfields:\n  - Image\n  - User\n  - DestinationIp\n  - DestinationPort\nfalsepositives:\n  - Misconfigured corporate file shares published over the internet (rare; investigate regardless)\nlevel: high\ntags:\n  - attack.credential_access\n  - attack.t1187\n  - attack.t1003\n  - attack.t1557\n  - cve.2023.23397\n  - detection.forest_blizzard",
+      "rationale": "Outlook generating outbound SMB to a public IP is not a normal-user or normal-corp pattern - the only documented mechanism for it is CVE-2023-23397 (PidLidReminderFileParameter / PidLidReminderOverride UNC redirection). Microsoft Threat Intelligence and CERT-EU explicitly attribute the in-the-wild exploitation of this CVE from April 2022 onwards to APT28 / Forest Blizzard (GRU Unit 26165, military",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] APT28 GooseEgg post-exploitation \u2014 Print Spooler (CVE-2022-38028) child processes + wayzgoose DLL drop",
+      "description": "Hunts the two host-side fingerprints of GooseEgg, Forest Blizzard's bespoke CVE-2022-38028 exploit utility documented by Microsoft Threat Intelligence in April 2024: (1) creation of `wayzgoose*.dll` or APT28's batch droppers `execute.bat` / `doit.bat` / `servtask.bat` inside C:\\ProgramData\\, and (2) spoolsv.exe (PrintSpooler service, NT AUTHORITY\\SYSTEM) spawning cmd / powershell / whoami / net / rundll32 children - the LPE primitive APT28 chains after MASEPIE/HeadLace beacon foothold to escalate to SYSTEM on victim domain hosts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1068",
+        "T1547.012",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=\"spoolsv.exe\" AND (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"wmic.exe\",\"rundll32.exe\",\"reg.exe\") OR Processes.process IN (\"*\\\\ProgramData\\\\*execute.bat*\",\"*\\\\ProgramData\\\\*doit.bat*\",\"*\\\\ProgramData\\\\*servtask.bat*\",\"*wayzgoose*\"))) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\ProgramData\\\\*\" AND (Filesystem.file_name IN (\"execute.bat\",\"doit.bat\",\"servtask.bat\") OR Filesystem.file_name=\"wayzgoose*.dll\")) by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`]",
+      "kql": "let LookbackDays = 30d;\nlet GooseEggArtefacts = DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\")\n    | where (FileName matches regex @\"(?i)wayzgoose[0-9]*\\.dll\")\n         or (FolderPath has @\"\\ProgramData\\\" and FileName in~ (\"execute.bat\",\"doit.bat\",\"servtask.bat\"))\n    | project Timestamp, DeviceName, FileName, FolderPath, SHA256,\n              InitiatingProcessFileName, InitiatingProcessCommandLine,\n              InitiatingProcessAccountName, Signal=\"GooseEgg_File\";\nlet SpoolerChildren = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName =~ \"spoolsv.exe\"\n    | where InitiatingProcessIntegrityLevel == \"System\"\n    | where AccountName !endswith \"$\"\n         or FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"whoami.exe\",\"net.exe\",\"net1.exe\",\"wmic.exe\",\"rundll32.exe\",\"reg.exe\")\n         or ProcessCommandLine has_any (@\"\\ProgramData\\\",\"wayzgoose\",\"servtask.bat\",\"execute.bat\",\"doit.bat\",\"PrintConfig\",\"mscms.dll\")\n    | where FileName !in~ (\"splwow64.exe\",\"printfilterpipelinesvc.exe\",\"prntcacx64.exe\")\n    | project Timestamp, DeviceName, AccountName, FileName, FolderPath,\n              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,\n              InitiatingProcessIntegrityLevel, Signal=\"Spoolsv_Child\";\nunion GooseEggArtefacts, SpoolerChildren\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nlet SpoolerChildren = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where ParentProcessName endswith \"spoolsv.exe\"\n    | where SubjectUserSid == \"S-1-5-18\"          // spoolsv runs as SYSTEM\n    | where (NewProcessName endswith \"cmd.exe\"\n          or NewProcessName endswith \"powershell.exe\"\n          or NewProcessName endswith \"pwsh.exe\"\n          or NewProcessName endswith \"whoami.exe\"\n          or NewProcessName endswith \"net.exe\"\n          or NewProcessName endswith \"net1.exe\"\n          or NewProcessName endswith \"rundll32.exe\"\n          or NewProcessName endswith \"wmic.exe\"\n          or NewProcessName endswith \"reg.exe\")\n        or CommandLine has_any (@\"\\ProgramData\\\",\"wayzgoose\",\"servtask.bat\",\"execute.bat\",\"doit.bat\")\n    | where NewProcessName !endswith \"splwow64.exe\"\n    | project TimeGenerated, Computer, Account, SubjectUserName, NewProcessName,\n              CommandLine, ParentProcessName, TokenElevationType, Signal=\"Spoolsv_Child\";\nlet FileArtefacts = ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType in (\"FileCreated\",\"FileRenamed\")\n    | where (TargetFileName matches regex @\"(?i)wayzgoose[0-9]*\\.dll\")\n         or (TargetFilePath has @\"\\ProgramData\\\" and TargetFileName in~ (\"execute.bat\",\"doit.bat\",\"servtask.bat\"))\n    | project TimeGenerated, Computer=DvcHostname, Account=ActorUsername,\n              NewProcessName=TargetFileName, CommandLine=ActingProcessCommandLine,\n              ParentProcessName=ActingProcessName, TokenElevationType=\"\", SubjectUserName=ActorUsername, Signal=\"GooseEgg_File\";\nunion SpoolerChildren, FileArtefacts\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT28 GooseEgg - Print Spooler service spawning interactive children (CVE-2022-38028)\nid: 9af7c2b1-3a16-4b8e-b22e-58c1a4e9f1d3\nstatus: experimental\ndescription: Detects spoolsv.exe (Print Spooler, running as SYSTEM) spawning interactive shells, recon binaries, or process commandlines referencing GooseEgg artefacts (wayzgoose*.dll, execute.bat/doit.bat/servtask.bat in C:\\ProgramData). This is APT28 / Forest Blizzard's CVE-2022-38028 post-exploitation pattern documented by Microsoft Threat Intelligence in April 2024.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2024/04/22/analyzing-forest-blizzards-custom-post-compromise-tool-for-exploiting-cve-2022-38028/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-114a\nauthor: Detection Engineering\ndate: 2026/05/13\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_spooler_parent:\n    ParentImage|endswith: '\\spoolsv.exe'\n  selection_child:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\whoami.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\rundll32.exe'\n      - '\\wmic.exe'\n      - '\\reg.exe'\n  selection_gooseegg_cmd:\n    CommandLine|contains:\n      - '\\ProgramData\\'\n      - 'wayzgoose'\n      - 'servtask.bat'\n      - 'execute.bat'\n      - 'doit.bat'\n  filter_benign:\n    Image|endswith:\n      - '\\splwow64.exe'\n      - '\\PrintFilterPipelineSvc.exe'\n  condition: selection_spooler_parent and (selection_child or selection_gooseegg_cmd) and not filter_benign\nfields:\n  - ParentImage\n  - Image\n  - CommandLine\n  - User\nfalsepositives:\n  - Vendor printer-management utilities invoked by spoolsv (rare; vet by signer)\nlevel: critical\ntags:\n  - attack.privilege_escalation\n  - attack.t1068\n  - attack.t1547.012\n  - attack.t1059.003\n  - cve.2022.38028\n  - detection.forest_blizzard",
+      "rationale": "GooseEgg is the only publicly-documented adversary toolkit built around CVE-2022-38028 (Print Spooler driver JavaScript Constraints), and Microsoft Threat Intelligence attributes its use exclusively to Forest Blizzard / APT28 / GRU Unit 26165 in their 22 April 2024 disclosure. The two indicators - (a) wayzgoose*.dll or the actor's specific batch names `execute.bat` / `doit.bat` / `servtask.bat` in"
+    }
+  ]
+}

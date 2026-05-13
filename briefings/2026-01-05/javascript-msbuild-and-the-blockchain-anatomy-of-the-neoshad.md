@@ -30,12 +30,92 @@ Blog Vulnerabilities & Threats JavaScript, MSBuild, and the Blockchain: Anatomy 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1127.001** — Trusted Developer Utilities Proxy Execution: MSBuild
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.005** — Command and Scripting Interpreter: JavaScript
+- **T1547** — Boot or Logon Autostart Execution
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] NeoShadow npm loader: node.exe spawning MSBuild with a .proj from %TEMP%
+
+`UC_462_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" Processes.process_name="MSBuild.exe" Processes.process="*\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe*" Processes.process="*.proj*" (Processes.process="*\\Temp\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*") Processes.process="*/nologo*" Processes.process="*/noconsolelogger*" by host Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where FileName =~ "MSBuild.exe"
+| where FolderPath has @"\Microsoft.NET\Framework64\v4.0.30319\"
+| where ProcessCommandLine has ".proj"
+| where ProcessCommandLine has_any (@"\Temp\", @"\AppData\Local\Temp\")
+| where ProcessCommandLine has "/nologo" and ProcessCommandLine has "/noconsolelogger"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] NeoShadow persistence: config.proj written to %APPDATA%\Microsoft\CLR
+
+`UC_462_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\AppData\\Roaming\\Microsoft\\CLR\\config.proj" OR Filesystem.file_name="config.proj" Filesystem.file_path="*\\Microsoft\\CLR\\*") by host Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where FolderPath has @"\AppData\Roaming\Microsoft\CLR\"
+| where FileName =~ "config.proj"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FileOriginUrl, FileOriginIP
+```
+
+### [LLM] NeoShadow C2 / Etherscan blockchain C2-resolution traffic
+
+`UC_462_13` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="80.78.22.206" OR All_Traffic.dest_host="metrics-flow.com" OR All_Traffic.dest_host="*.metrics-flow.com" OR All_Traffic.url="*0x13660FD7Edc862377e799b0Caf68f99a2939B5cC*" OR All_Traffic.url="*api.etherscan.io*0xd6bd8727*" OR All_Traffic.url="*metrics-flow.com/assets/js/analytics.min.js*" OR All_Traffic.url="*metrics-flow.com/_next/data/config.json*") by host All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.url All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP == "80.78.22.206"
+        or RemoteUrl has "metrics-flow.com"
+        or RemoteUrl has "0x13660FD7Edc862377e799b0Caf68f99a2939B5cC"
+        or RemoteUrl has "0xd6bd8727"
+        or RemoteUrl has "/_next/data/config.json"
+        or RemoteUrl has "/assets/js/analytics.min.js"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Source="Network"),
+  (DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName endswith "metrics-flow.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, RemoteUrl=QueryName, Source="DNS")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -330,4 +410,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

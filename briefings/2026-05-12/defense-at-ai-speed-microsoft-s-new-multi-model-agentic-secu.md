@@ -31,12 +31,49 @@ Today Microsoft announced a major step forward in AI-powered cyber defense: our 
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1210** — Exploitation of Remote Services
+- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Windows hosts exposed to MDASH-discovered May 2026 Patch Tuesday networking-stack CVEs
+
+`UC_12_2` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-33827","CVE-2026-40413","CVE-2026-40405","CVE-2026-33824","CVE-2026-40406","CVE-2026-35422","CVE-2026-32209","CVE-2026-35424","CVE-2026-35423","CVE-2026-40414","CVE-2026-40401","CVE-2026-40415","CVE-2026-33096","CVE-2026-40399","CVE-2026-41089","CVE-2026-41096") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | stats values(cve) as exposed_cves dc(cve) as cve_count values(severity) as severities by dest | eval mdash_critical_rce=if(match(mvjoin(exposed_cves,","),"CVE-2026-33827|CVE-2026-33824|CVE-2026-41089|CVE-2026-41096"),"yes","no") | sort - mdash_critical_rce cve_count
+```
+
+**Defender KQL:**
+```kql
+let mdash_cves = dynamic(["CVE-2026-33827","CVE-2026-40413","CVE-2026-40405","CVE-2026-33824","CVE-2026-40406","CVE-2026-35422","CVE-2026-32209","CVE-2026-35424","CVE-2026-35423","CVE-2026-40414","CVE-2026-40401","CVE-2026-40415","CVE-2026-33096","CVE-2026-40399","CVE-2026-41089","CVE-2026-41096"]);
+let mdash_critical_rce = dynamic(["CVE-2026-33827","CVE-2026-33824","CVE-2026-41089","CVE-2026-41096"]);
+let device_ctx = DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, OSBuild, IsInternetFacing, MachineGroup, PublicIP) by DeviceId, DeviceName;
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in (mdash_cves)
+| where SoftwareName has_any ("windows", "tcpip", "netlogon", "ikeext", "dnsapi", "http.sys", "telnet")
+| join kind=leftouter device_ctx on DeviceId
+| summarize ExposedCves = make_set(CveId),
+            CveCount = dcount(CveId),
+            HasCriticalRCE = countif(CveId in (mdash_critical_rce)) > 0,
+            RecommendedKB = make_set(RecommendedSecurityUpdate),
+            MaxSeverity = max(VulnerabilitySeverityLevel),
+            arg_max(Timestamp, OSVersion, OSBuild, IsInternetFacing, MachineGroup, PublicIP)
+            by DeviceId, DeviceName
+| extend Priority = case(HasCriticalRCE and IsInternetFacing == true, "P1-InternetFacing+CriticalRCE",
+                          HasCriticalRCE, "P2-CriticalRCE",
+                          IsInternetFacing == true, "P3-InternetFacing",
+                          "P4-Standard")
+| order by Priority asc, CveCount desc
+```
 
 ### Article-specific behavioural hunt — Defense at AI speed: Microsoft’s new multi-model agentic security system tops le
 
@@ -97,4 +134,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

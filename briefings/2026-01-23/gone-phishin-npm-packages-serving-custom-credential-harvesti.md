@@ -43,12 +43,129 @@ Blog Vulnerabilities & Threats Gone Phishin': npm Packages Serving Custom Creden
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1608.001** — Stage Capabilities: Upload Malware
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1056.003** — Input Capture: Web Portal Capture
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Inbound email or click on jsDelivr URL to flockiali/opresc/prndn/oprnm/operni npm phishing kit
+
+`UC_428_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*cdn.jsdelivr.net/npm/flockiali*" OR Web.url="*cdn.jsdelivr.net/npm/opresc*" OR Web.url="*cdn.jsdelivr.net/npm/prndn*" OR Web.url="*cdn.jsdelivr.net/npm/oprnm*" OR Web.url="*cdn.jsdelivr.net/npm/operni*") by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.http_referrer
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let MaliciousJsDelivrPaths = dynamic([
+    "cdn.jsdelivr.net/npm/flockiali",
+    "cdn.jsdelivr.net/npm/opresc",
+    "cdn.jsdelivr.net/npm/prndn",
+    "cdn.jsdelivr.net/npm/oprnm",
+    "cdn.jsdelivr.net/npm/operni"
+]);
+let EmailHits = EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | where Url has_any (MaliciousJsDelivrPaths)
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(30d)
+        | where EmailDirection == "Inbound"
+      ) on NetworkMessageId
+    | project Timestamp, Source="EmailUrlInfo", AccountUpn=RecipientEmailAddress, Url, SenderFromAddress, Subject, NetworkMessageId, DeliveryAction;
+let ClickHits = UrlClickEvents
+    | where Timestamp > ago(30d)
+    | where Url has_any (MaliciousJsDelivrPaths)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | project Timestamp, Source="UrlClickEvents", AccountUpn, Url, ActionType, IPAddress, NetworkMessageId, SenderFromAddress="", Subject="", DeliveryAction="";
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (MaliciousJsDelivrPaths)
+    | project Timestamp, Source="DeviceNetworkEvents", AccountUpn=InitiatingProcessAccountUpn, Url=RemoteUrl, SenderFromAddress="", Subject="", NetworkMessageId="", DeliveryAction="";
+union EmailHits, ClickHits, NetHits
+| order by Timestamp desc
+```
+
+### [LLM] Egress to Siemens Energy typosquat C2 (login.siemens-energy.icu / oprsys.deno.dev / 163.123.236.118)
+
+`UC_428_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest IN ("163.123.236.118", "34.120.54.55") OR All_Traffic.dest_host="*siemens-energy.icu" OR All_Traffic.dest_host="*siemensergy.icu" OR All_Traffic.dest_host="*oprsys.deno.dev") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.user All_Traffic.app All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (Network_Resolution.DNS.query="*siemens-energy.icu" OR Network_Resolution.DNS.query="*siemensergy.icu" OR Network_Resolution.DNS.query="*oprsys.deno.dev") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ]
+```
+
+**Defender KQL:**
+```kql
+let C2Hosts = dynamic([
+    "login.siemens-energy.icu", "siemens-energy.icu",
+    "login.siemensergy.icu", "siemensergy.icu",
+    "oprsys.deno.dev"
+]);
+let C2IPs = dynamic(["163.123.236.118", "34.120.54.55"]);
+let PhishingURIPath = "/DIVzTaSF";
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (C2IPs)
+        or RemoteUrl has_any (C2Hosts)
+    | project Timestamp, Source="DeviceNetworkEvents", DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort;
+let DnsHits = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
+    | where Query has_any (C2Hosts)
+    | project Timestamp, Source="DnsQueryResponse", DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine="", RemoteIP="", RemoteUrl=Query, RemotePort=int(null);
+union NetHits, DnsHits
+| extend HitFullPhishURL = RemoteUrl has PhishingURIPath
+| order by Timestamp desc
+```
+
+### [LLM] npm phishing payload SHA256 observed on disk (flockiali/opresc/prndn/oprnm/operni)
+
+`UC_428_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("3ceb182fb32a8fb0f0fcf056d6ab8de1cf6e789053f1aadc98ba315ae9a96f0c", "fdb6c79a8d01b528698c53ebd5030f875242e6af93f6ae799dee7f66b452bf3e", "4631584783d84758ae58bc717b08ac67d99dee30985db18b9d2b08df8721348e", "211f88a55e8fe9254f75c358c42bb7e78e014b862de7ea6e8b80ed1f78d13add", "7d7f795ac1fcb5623731a50999f518877fd423a5a98219d0f495c488564a1554") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let MaliciousHashes = dynamic([
+    "3ceb182fb32a8fb0f0fcf056d6ab8de1cf6e789053f1aadc98ba315ae9a96f0c", // flockiali 1.2.6 — Ingeteam target
+    "fdb6c79a8d01b528698c53ebd5030f875242e6af93f6ae799dee7f66b452bf3e", // flockiali 1.2.5 — CQFD Composites target
+    "4631584783d84758ae58bc717b08ac67d99dee30985db18b9d2b08df8721348e", // opresc — Emagine UAE
+    "211f88a55e8fe9254f75c358c42bb7e78e014b862de7ea6e8b80ed1f78d13add", // prndn/oprnm — Amixon
+    "7d7f795ac1fcb5623731a50999f518877fd423a5a98219d0f495c488564a1554"  // operni 1.2.7 — CMC America
+]);
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (MaliciousHashes)
+    | project Timestamp, Source="DeviceFileEvents", DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName, FileOriginUrl, FileOriginReferrerUrl;
+let ImgHits = DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (MaliciousHashes)
+    | project Timestamp, Source="DeviceImageLoadEvents", DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName=InitiatingProcessAccountName, FileOriginUrl="", FileOriginReferrerUrl="";
+union FileHits, ImgHits
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -406,4 +523,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

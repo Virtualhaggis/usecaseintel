@@ -18,12 +18,76 @@ Table of Contents Loading nav..…
 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1003** — OS Credential Dumping
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] tj-actions/changed-files supply chain: memdump.py fetched from attacker gist on CI runner (CVE-2025-30066)
+
+`UC_633_2` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process values(Processes.user) as user values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where (Processes.process="*gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965*" OR Processes.process="*nikitastupin/30e525b776c409e03c2d6f328f254965*" OR Processes.process="*/raw/memdump.py*" OR Processes.process="*memdump.py*") by Processes.dest Processes.user Processes.process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// CVE-2025-30066 — tj-actions/changed-files memdump.py credential dump
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where ProcessCommandLine has_any (
+    "gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965",
+    "nikitastupin/30e525b776c409e03c2d6f328f254965",
+    "30e525b776c409e03c2d6f328f254965")
+   or ProcessCommandLine has "memdump.py"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, SHA256,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] CI/CD runner outbound to attacker gist (gist.githubusercontent.com/nikitastupin/30e525b776...)
+
+`UC_633_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest values(Web.http_user_agent) as ua values(Web.http_method) as method from datamodel=Web.Web where (Web.url="*gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965*" OR Web.url="*nikitastupin/30e525b776c409e03c2d6f328f254965/raw*" OR Web.url="*memdump.py*") by Web.src Web.user Web.dest
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// CVE-2025-30066 — outbound to attacker-controlled gist hosting memdump.py
+DeviceNetworkEvents
+| where Timestamp > ago(60d)
+| where RemoteUrl has "gist.githubusercontent.com"
+   or InitiatingProcessCommandLine has "gist.githubusercontent.com"
+| where RemoteUrl has_any ("nikitastupin","30e525b776c409e03c2d6f328f254965","memdump.py")
+     or InitiatingProcessCommandLine has_any ("nikitastupin/30e525b776c409e03c2d6f328f254965","memdump.py","30e525b776c409e03c2d6f328f254965")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -101,4 +165,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

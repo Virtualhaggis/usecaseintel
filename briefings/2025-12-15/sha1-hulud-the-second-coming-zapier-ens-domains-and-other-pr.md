@@ -26,12 +26,106 @@ The JavaScript ecosystem i…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1543** — Create or Modify System Process
+- **T1053** — Scheduled Task/Job
+- **T1554** — Compromise Host Software Binary
+- **T1485** — Data Destruction
+- **T1070.004** — Indicator Removal: File Deletion
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Sha1-Hulud: npm preinstall hook spawns bun.sh installer via curl/PowerShell
+
+`UC_486_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node","npm.exe","npm","npm-cli.js","yarn","yarn.exe","pnpm","pnpm.exe") OR Processes.parent_process IN ("*setup_bun.js*","*preinstall*")) AND (Processes.process IN ("*bun.sh/install*","*bun.sh\\install.ps1*","*irm bun.sh*","*iwr bun.sh*","*curl*-fsSL*bun.sh*")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","bash","sh","cmd.exe","powershell.exe")
+     or InitiatingProcessCommandLine has_any ("setup_bun.js","preinstall")
+| where ProcessCommandLine has_any ("bun.sh/install", @"bun.sh\install.ps1", "irm bun.sh", "iwr bun.sh", "curl -fsSL https://bun.sh")
+| project Timestamp, DeviceName, AccountName,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ChildFile  = FileName,
+          ChildCmd   = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Sha1-Hulud: self-hosted GitHub Actions runner registered with name "SHA1HULUD"
+
+`UC_486_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*--name*SHA1HULUD*" OR Processes.process="*actions-runner-linux-x64-2.330.0*" OR Processes.process="*RUNNER_ALLOW_RUNASROOT=1*config.sh*" OR Processes.process="*.dev-env*config.sh*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Process side
+let runner_proc = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where ProcessCommandLine has_any ("--name \"SHA1HULUD\"", "--name SHA1HULUD", "actions-runner-linux-x64-2.330.0", "RUNNER_ALLOW_RUNASROOT=1")
+         or (ProcessCommandLine has "config.sh" and ProcessCommandLine has @".dev-env")
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              Signal="process";
+// File side — runner tarball lands in $HOME/.dev-env
+let runner_file = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where FolderPath has ".dev-env"
+         and (FileName =~ "actions-runner-linux-x64-2.330.0.tar.gz"
+           or FileName in~ ("config.sh","run.sh","runsvc.sh",".runner",".credentials"))
+    | project Timestamp, DeviceName, FileName, FolderPath,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              AccountName = InitiatingProcessAccountName,
+              Signal="file";
+union runner_proc, runner_file
+| order by Timestamp desc
+```
+
+### [LLM] Sha1-Hulud Stage-5 destructive home-directory shred via find | xargs shred -uvz
+
+`UC_486_8` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*shred*-uvz*" OR Processes.process="*shred -u*-n 1*" OR (Processes.process="*find*$HOME*" AND Processes.process="*-writable*" AND Processes.process="*shred*") OR Processes.process="*xargs*-0*-r*shred*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where DeviceName !endswith "$"
+| where ProcessCommandLine has "shred"
+     and (ProcessCommandLine has "-uvz"
+       or ProcessCommandLine has_all ("shred","-u","-n 1"))
+| where ProcessCommandLine has_any (@"$HOME", "/home/", "/root", "id -un", "-writable")
+     or InitiatingProcessCommandLine has_any (@"$HOME", "-writable", "id -un")
+| project Timestamp, DeviceName, AccountName,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ChildFile  = FileName,
+          ChildCmd   = ProcessCommandLine
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -222,4 +316,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -20,12 +20,65 @@ I wasn't the author. I'd never written a line of code for it. The package had ne
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] LLM-Hallucinated 'react-codeshift' npm Package Executed via npx/bunx/pnpm dlx/yarn dlx
+
+`UC_440_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as proc values(Processes.parent_process_name) as parent values(Processes.user) as user values(Processes.dest) as dest from datamodel=Endpoint.Processes where (Processes.process="*react-codeshift*") AND (Processes.process_name IN ("npx","npx.cmd","npx.exe","bunx","bunx.exe","pnpm","pnpm.cmd","pnpm.exe","yarn","yarn.cmd","yarn.exe","node","node.exe","bun","bun.exe") OR Processes.parent_process_name IN ("npx.exe","npx.cmd","npm.exe","npm.cmd","bunx.exe","pnpm.exe","pnpm.cmd","yarn.exe","yarn.cmd","bun.exe","node.exe")) by host Processes.dest
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "react-codeshift"
+| where ProcessCommandLine has_any ("npx ","bunx ","pnpm dlx","yarn dlx","pnpx ","npx.cmd","bunx.exe")
+    or InitiatingProcessFileName in~ ("npx.cmd","npx.exe","npm.cmd","npm.exe","bunx.exe","pnpm.cmd","pnpm.exe","yarn.cmd","yarn.exe","bun.exe","node.exe")
+    or FileName in~ ("npx.exe","bunx.exe","pnpm.exe","yarn.exe","node.exe","bun.exe")
+| extend TransformPath = extract(@"react-codeshift/transforms/([A-Za-z0-9_\-\.]+\.js)", 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, TransformPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Hallucinated 'react-codeshift' Package Files Materialised in node_modules / npx Cache
+
+`UC_440_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\react-codeshift\\*" OR Filesystem.file_path="*\\_npx\\*react-codeshift*" OR Filesystem.file_path="*/node_modules/react-codeshift/*" OR Filesystem.file_path="*/_npx/*react-codeshift*" OR Filesystem.file_name="react-codeshift*.tgz") by host Filesystem.dest
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has @"\node_modules\react-codeshift\"
+    or FolderPath has @"/node_modules/react-codeshift/"
+    or (FolderPath has @"\_npx\" and FolderPath has "react-codeshift")
+    or (FolderPath has @"/_npx/" and FolderPath has "react-codeshift")
+    or FileName matches regex @"(?i)^react-codeshift-\d+\.\d+\.\d+\.tgz$"
+    or (FileOriginUrl has "registry.npmjs.org" and FileOriginUrl has "react-codeshift")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, FileOriginUrl, FileOriginIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -162,4 +215,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
