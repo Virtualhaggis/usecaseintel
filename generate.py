@@ -5920,6 +5920,37 @@ ul.intel-types-doc code{
 .drawer-section{margin-bottom:18px;}
 .drawer-section h4{font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em;
   color:var(--muted); margin:0 0 8px 0; font-weight:700;}
+/* Collapsible drawer sections — analyst can hide bulky parts (linked
+   UCs / IOCs / articles) so the section they care about stays in view
+   without scrolling past hundreds of UC rows. Open by default; click
+   summary to collapse. */
+details.drawer-section{margin-bottom:18px;}
+details.drawer-section > summary{
+  list-style:none; cursor:pointer;
+  display:flex; align-items:center; gap:8px;
+  font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em;
+  color:var(--muted); font-weight:700;
+  padding:6px 8px; margin:0 -8px 8px;
+  border-radius:6px;
+  transition:background 0.12s, color 0.12s;
+  user-select:none;
+}
+details.drawer-section > summary::-webkit-details-marker{display:none;}
+details.drawer-section > summary::before{
+  content:"▾"; font-size:11px; color:var(--muted-2);
+  transition:transform 0.18s; display:inline-block;
+  width:10px;
+}
+details.drawer-section:not([open]) > summary::before{transform:rotate(-90deg);}
+details.drawer-section > summary:hover{
+  background:rgba(255,255,255,0.03); color:var(--text);
+}
+details.drawer-section > summary:hover::before{color:var(--accent-2);}
+details.drawer-section[open] > summary{color:var(--text);}
+details.drawer-section .acc-count{
+  color:var(--muted-2); font-weight:500;
+  text-transform:none; letter-spacing:0;
+}
 .drawer-list{display:flex; flex-direction:column; gap:6px;}
 .drawer-list a{
   display:block; padding:8px 10px; background:var(--panel); border:1px solid var(--border);
@@ -9730,26 +9761,26 @@ function renderActorView(name) {
       <h4>Severity distribution (${a.articles.length} articles)</h4>
       ${sevBar}
     </div>
-    <div class="drawer-section">
-      <h4>Linked use cases (${a.ucs.length}${a.uc_count > a.ucs.length ? ' shown / ' + a.uc_count + ' total' : ''})</h4>
+    <details class="drawer-section" open>
+      <summary>Linked use cases <span class="acc-count">(${a.ucs.length}${a.uc_count > a.ucs.length ? ' shown / ' + a.uc_count + ' total' : ''})</span></summary>
       ${ucList}
-    </div>
-    <div class="drawer-section">
-      <h4>ATT&amp;CK techniques observed (${a.techs.length}) — click to pivot to Matrix</h4>
+    </details>
+    <details class="drawer-section" open>
+      <summary>ATT&amp;CK techniques observed <span class="acc-count">(${a.techs.length}) — click to pivot to Matrix</span></summary>
       <div style="display:flex; flex-wrap:wrap; gap:6px;">${techPills || '<div class="drawer-empty">None inferred yet.</div>'}</div>
-    </div>
-    <div class="drawer-section">
-      <h4>Aliases</h4>
+    </details>
+    <details class="drawer-section" open>
+      <summary>Aliases <span class="acc-count">(${a.aliases.length})</span></summary>
       <div style="font-family:var(--mono); color:var(--muted); font-size:12px; line-height:1.7;">
         ${a.aliases.map(x=>'<span class="ind" style="margin-right:4px;">'+escapeHtml(x)+'</span>').join('')}
       </div>
-    </div>
-    <div class="drawer-section">
-      <h4>Articles citing this actor (${a.articles.length})</h4>
+    </details>
+    <details class="drawer-section" open>
+      <summary>Articles citing this actor <span class="acc-count">(${a.articles.length})</span></summary>
       <div class="drawer-list">${articleLinks || '<div class="drawer-empty">No articles linked yet.</div>'}</div>
-    </div>
-    <div class="drawer-section">
-      <h4>IOCs from linked articles</h4>
+    </details>
+    <details class="drawer-section" open>
+      <summary>IOCs from linked articles <span class="acc-count">(${a.iocs.cves.length + a.iocs.hashes.length + a.iocs.domains.length + a.iocs.ips.length})</span></summary>
       <div style="font-size:12.5px; color:var(--muted); line-height:1.7;">
         <strong style="color:var(--text);">${a.iocs.cves.length}</strong> CVEs ·
         <strong style="color:var(--text);">${a.iocs.hashes.length}</strong> hashes ·
@@ -9757,7 +9788,7 @@ function renderActorView(name) {
         <strong style="color:var(--text);">${a.iocs.ips.length}</strong> IPs
       </div>
       ${a.iocs.cves.length ? '<div style="margin-top:8px; font-family:var(--mono); font-size:11.5px; color:var(--warn);">'+a.iocs.cves.slice(0,30).map(escapeHtml).join(' · ')+'</div>' : ''}
-    </div>
+    </details>
   `;
   // Wire article-jump links — render the article inline inside the
   // drawer (preserves Threat Actors tab focus).
