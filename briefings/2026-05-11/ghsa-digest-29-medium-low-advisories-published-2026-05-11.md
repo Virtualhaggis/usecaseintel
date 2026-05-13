@@ -1,4 +1,4 @@
-# [MED] [GHSA / DIGEST] 30 medium/low advisories published 2026-05-11
+# [MED] [GHSA / DIGEST] 29 medium/low advisories published 2026-05-11
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-11
@@ -6,7 +6,7 @@
 
 ## Threat Profile
 
-Daily roundup of 30 medium- and low-severity GitHub Security Advisories reviewed on 2026-05-11. Individual high-severity advisories still get their own cards.
+Daily roundup of 29 medium- and low-severity GitHub Security Advisories reviewed on 2026-05-11. Individual high-severity advisories still get their own cards.
 
 - [MEDIUM] CVE-2026-33052: MantisBT Has Authorization Bypass in Global Profile Creation  (affects: composer:mantisbt/mantisbt (vuln >= 2.28.0, < 2.28.2))
 - [MEDIUM] CVE-2026-34390: MantisBT Vulnerable to Privilege Escalation from Manager to Administrator  (affects: composer:mantisbt/mantisbt (vuln <= 2.28.1))
@@ -31,7 +31,6 @@ Daily roundup of 30 medium- and low-severity GitHub Security Advisories reviewed
 - **CVE:** `CVE-2026-43979`
 - **CVE:** `CVE-2026-44353`
 - **CVE:** `CVE-2026-44475`
-- **CVE:** `CVE-2026-44571`
 - **CVE:** `CVE-2026-44576`
 - **CVE:** `CVE-2026-44577`
 - **CVE:** `CVE-2026-44580`
@@ -54,13 +53,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Article-specific behavioural hunt — [GHSA / DIGEST] 30 medium/low advisories published 2026-05-11
+### Article-specific behavioural hunt — [GHSA / DIGEST] 29 medium/low advisories published 2026-05-11
 
-`UC_100_1` · phase: **exploit** · confidence: **High**
+`UC_102_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — [GHSA / DIGEST] 30 medium/low advisories published 2026-05-11 ```
+``` Article-specific bespoke detection — [GHSA / DIGEST] 29 medium/low advisories published 2026-05-11 ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("pdf_service.py","next.js"))
@@ -81,7 +80,7 @@ _(none detected from narrative keywords)_
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — [GHSA / DIGEST] 30 medium/low advisories published 2026-05-11
+// Article-specific bespoke detection — [GHSA / DIGEST] 29 medium/low advisories published 2026-05-11
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -108,7 +107,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33052`, `CVE-2026-34390`, `CVE-2026-34579`, `CVE-2026-34744`, `CVE-2026-34754`, `CVE-2026-34970`, `CVE-2026-39960`, `CVE-2026-40598` _(+20 more)_
+  - CVE(s): `CVE-2026-33052`, `CVE-2026-34390`, `CVE-2026-34579`, `CVE-2026-34744`, `CVE-2026-34754`, `CVE-2026-34970`, `CVE-2026-39960`, `CVE-2026-40598` _(+19 more)_
 
 
 ## Why this matters

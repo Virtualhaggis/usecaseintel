@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SAP May 2026 Patch Tuesday CVE exposure hunt (Commerce Cloud / S/4HANA criticals)
 
-`UC_40_5` · phase: **recon** · confidence: **High**
+`UC_45_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

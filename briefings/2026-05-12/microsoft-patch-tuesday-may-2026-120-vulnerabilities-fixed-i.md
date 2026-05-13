@@ -159,7 +159,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] May 2026 Patch Tuesday — Defender TVM exposure to this month's Critical/RCE CVEs
 
-`UC_11_6` · phase: **recon** · confidence: **High**
+`UC_17_6` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

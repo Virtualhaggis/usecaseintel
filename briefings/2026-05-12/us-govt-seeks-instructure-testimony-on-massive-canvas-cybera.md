@@ -11,12 +11,8 @@ By Lawrence Abrams
 May 12, 2026
 07:09 PM
 0 
-
-
 The U.S. House Committee on Homeland Security is calling on Instructure executives to testify about two cyberattacks by the ShinyHunters extortion group that targeted the company’s Canvas platform, allowing threat actors to steal student data and disrupt schools during final exams.
-
-
-In a letter sent Monday afternoon to Instructure CEO Steve Daly, Homeland Security Committee Chai…
+In a letter sent Monday afternoon to Instructure CEO Steve Daly, Homeland Security Committee Chairman And…
 
 ## Indicators of Compromise (high-fidelity only)
 

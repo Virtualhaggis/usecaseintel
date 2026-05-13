@@ -157,7 +157,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Devices missing May 2026 Patch Tuesday Critical RCE fixes (TVM posture hunt)
 
-`UC_8_4` · phase: **recon** · confidence: **High**
+`UC_14_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Microsoft Paint opening EMF attachment (CVE-2026-35421 pre-exploitation hunt)
 
-`UC_8_5` · phase: **exploit** · confidence: **Medium**
+`UC_14_5` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -282,7 +282,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft May 2026 Patch Tuesday fixes 120 flaws, no zero-days
 
-`UC_8_3` · phase: **exploit** · confidence: **High**
+`UC_14_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

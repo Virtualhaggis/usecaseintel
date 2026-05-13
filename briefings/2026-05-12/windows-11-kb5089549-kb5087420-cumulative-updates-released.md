@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Windows 11 KB5089549 / KB5087420 May 2026 Patch Tuesday deployment gap
 
-`UC_13_1` · phase: **recon** · confidence: **High**
+`UC_19_1` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Tampering with new LockBatchFilesWhenInUse Command Processor hardening registry value
 
-`UC_13_2` · phase: **install** · confidence: **Medium**
+`UC_19_2` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceRegistryEvents
 
 ### Article-specific behavioural hunt — Windows 11 KB5089549 & KB5087420 cumulative updates released
 
-`UC_13_0` · phase: **exploit** · confidence: **High**
+`UC_19_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

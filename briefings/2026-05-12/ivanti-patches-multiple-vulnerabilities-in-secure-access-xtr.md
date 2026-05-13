@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Ivanti May 2026 Patch Tuesday CVE exposure hunt (Secure Access, Xtraction, vTM, EPM)
 
-`UC_15_11` · phase: **exploit** · confidence: **High**
+`UC_21_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

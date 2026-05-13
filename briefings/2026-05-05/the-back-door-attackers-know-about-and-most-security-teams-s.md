@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] UNC6395 user-agent strings on Salesforce / OAuth-integrated SaaS API access
 
-`UC_151_6` · phase: **actions** · confidence: **High**
+`UC_153_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ CloudAppEvents
 
 ### [LLM] SOQL queries scanning Salesforce data for AWS / Snowflake / password credential strings
 
-`UC_151_7` · phase: **actions** · confidence: **Medium**
+`UC_153_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ CloudAppEvents
 
 ### [LLM] OAuth-integrated SaaS API access from Tor exit node / anonymous proxy
 
-`UC_151_8` · phase: **c2** · confidence: **Medium**
+`UC_153_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

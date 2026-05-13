@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vidar/Chinotto persistence: scheduled task 'MicrosoftMusicLibrariesPackageTaskMachine' running every minute
 
-`UC_24_14` · phase: **install** · confidence: **High**
+`UC_30_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ union isfuzzy=true
 
 ### [LLM] Renamed pythonw.exe ('codeflush.exe') executing .cat-disguised Python bytecode (Vidar/Chinotto)
 
-`UC_24_15` · phase: **exploit** · confidence: **High**
+`UC_30_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### [LLM] Vidar/Chinotto C2 egress via curl.exe or renamed-pythonw to Korean police-impersonation infrastructure
 
-`UC_24_16` · phase: **c2** · confidence: **Medium**
+`UC_30_16` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -581,7 +581,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Stealthy Vidar Stealer Campaign Bypass EDR and Steal Credentials
 
-`UC_24_13` · phase: **exploit** · confidence: **High**
+`UC_30_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

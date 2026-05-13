@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Zoom Rooms / Workplace VDI Plugin installer spawning interpreter or child from user-writable path (CVE-2026-30906 / CVE-2026-30905)
 
-`UC_23_6` · phase: **exploit** · confidence: **Medium**
+`UC_29_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

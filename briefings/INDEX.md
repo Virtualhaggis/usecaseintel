@@ -8,9 +8,17 @@ _932 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-13
+- [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
+- [ghsa digest 3 medium low advisories published 2026 05 13](./2026-05-13/ghsa-digest-3-medium-low-advisories-published-2026-05-13.md)
+- [ghsa high cve 2026 44697 klever go multidatainterceptor has ](./2026-05-13/ghsa-high-cve-2026-44697-klever-go-multidatainterceptor-has-.md)
+- [microsoft teams vulnerability allows hackers to perform spoo](./2026-05-13/microsoft-teams-vulnerability-allows-hackers-to-perform-spoo.md)
+
 ## 2026-05-12
+- [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
 - [android 17 to expand banking scam call and privacy protectio](./2026-05-12/android-17-to-expand-banking-scam-call-and-privacy-protectio.md)
 - [defending consumer web properties against modern ddos attack](./2026-05-12/defending-consumer-web-properties-against-modern-ddos-attack.md)
+- [defense at ai speed microsoft s new multi model agentic secu](./2026-05-12/defense-at-ai-speed-microsoft-s-new-multi-model-agentic-secu.md)
 - [fortinet warns of critical rce flaws in fortisandbox and for](./2026-05-12/fortinet-warns-of-critical-rce-flaws-in-fortisandbox-and-for.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
@@ -47,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [open webui vulnerability via file upload leads to 1 click rc](./2026-05-12/open-webui-vulnerability-via-file-upload-leads-to-1-click-rc.md)
 - [openai launches daybreak for ai powered vulnerability detect](./2026-05-12/openai-launches-daybreak-for-ai-powered-vulnerability-detect.md)
 - [sap fixes critical vulnerabilities in commerce cloud and s 4](./2026-05-12/sap-fixes-critical-vulnerabilities-in-commerce-cloud-and-s-4.md)
-- [sap patches critical sql injection vulnerability in sap s 4h](./2026-05-12/sap-patches-critical-sql-injection-vulnerability-in-sap-s-4h.md)
 - [shadow ai is a fear response and banning it makes it worse](./2026-05-12/shadow-ai-is-a-fear-response-and-banning-it-makes-it-worse.md)
 - [signal adds security warnings for social engineering phishin](./2026-05-12/signal-adds-security-warnings-for-social-engineering-phishin.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
@@ -70,7 +77,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44477 cloudnativepg s metrics exporte](./2026-05-11/ghsa-critical-cve-2026-44477-cloudnativepg-s-metrics-exporte.md)
 - [ghsa critical cve 2026 44643 angular expressions remote code](./2026-05-11/ghsa-critical-cve-2026-44643-angular-expressions-remote-code.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
-- [ghsa digest 30 medium low advisories published 2026 05 11](./2026-05-11/ghsa-digest-30-medium-low-advisories-published-2026-05-11.md)
+- [ghsa digest 29 medium low advisories published 2026 05 11](./2026-05-11/ghsa-digest-29-medium-low-advisories-published-2026-05-11.md)
 - [ghsa high cve 2026 34463 mantisbt is vulnerable to stored ht](./2026-05-11/ghsa-high-cve-2026-34463-mantisbt-is-vulnerable-to-stored-ht.md)
 - [ghsa high cve 2026 39850 yii 2 local file inclusion via view](./2026-05-11/ghsa-high-cve-2026-39850-yii-2-local-file-inclusion-via-view.md)
 - [ghsa high cve 2026 40217 litellm has a sandbox escape in cus](./2026-05-11/ghsa-high-cve-2026-40217-litellm-has-a-sandbox-escape-in-cus.md)
@@ -78,7 +85,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa high cve 2026 40597 mantisbt has a content security pol](./2026-05-11/ghsa-high-cve-2026-40597-mantisbt-has-a-content-security-pol.md)
 - [ghsa high cve 2026 40607 mantisbt is vulnerable to stored xs](./2026-05-11/ghsa-high-cve-2026-40607-mantisbt-is-vulnerable-to-stored-xs.md)
 - [ghsa high cve 2026 42071 mantisbt has a private bugnote atta](./2026-05-11/ghsa-high-cve-2026-42071-mantisbt-has-a-private-bugnote-atta.md)
-- [ghsa high cve 2026 44346 dockerfile command injection via en](./2026-05-11/ghsa-high-cve-2026-44346-dockerfile-command-injection-via-en.md)
 - [ghsa high cve 2026 44431 urllib3 sensitive headers forwarded](./2026-05-11/ghsa-high-cve-2026-44431-urllib3-sensitive-headers-forwarded.md)
 - [ghsa high cve 2026 44432 urllib3 decompression bomb safeguar](./2026-05-11/ghsa-high-cve-2026-44432-urllib3-decompression-bomb-safeguar.md)
 - [ghsa high cve 2026 44473 ella core vulnerable to ue downlink](./2026-05-11/ghsa-high-cve-2026-44473-ella-core-vulnerable-to-ue-downlink.md)
@@ -86,7 +92,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa high cve 2026 44516 valtimo has sensitive data exposure](./2026-05-11/ghsa-high-cve-2026-44516-valtimo-has-sensitive-data-exposure.md)
 - [ghsa high cve 2026 44521 elfinder mysql has a sql injection ](./2026-05-11/ghsa-high-cve-2026-44521-elfinder-mysql-has-a-sql-injection-.md)
 - [ghsa high cve 2026 44543 local path provisioner vulnerable t](./2026-05-11/ghsa-high-cve-2026-44543-local-path-provisioner-vulnerable-t.md)
-- [ghsa high cve 2026 44570 open webui has inconsistent authori](./2026-05-11/ghsa-high-cve-2026-44570-open-webui-has-inconsistent-authori.md)
 - [ghsa high cve 2026 44573 next js has a middleware proxy bypa](./2026-05-11/ghsa-high-cve-2026-44573-next-js-has-a-middleware-proxy-bypa.md)
 - [ghsa high cve 2026 44574 next js has a middleware proxy bypa](./2026-05-11/ghsa-high-cve-2026-44574-next-js-has-a-middleware-proxy-bypa.md)
 - [ghsa high cve 2026 44578 next js vulnerable to server side r](./2026-05-11/ghsa-high-cve-2026-44578-next-js-vulnerable-to-server-side-r.md)
@@ -96,7 +101,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa high cve 2026 44657 mantisbt vulnerable to stored xss i](./2026-05-11/ghsa-high-cve-2026-44657-mantisbt-vulnerable-to-stored-xss-i.md)
 - [ghsa high cve 2026 44902 prometheus exporter process crash v](./2026-05-11/ghsa-high-cve-2026-44902-prometheus-exporter-process-crash-v.md)
 - [ghsa high cve 2026 44971 guarddog has a blind github url rew](./2026-05-11/ghsa-high-cve-2026-44971-guarddog-has-a-blind-github-url-rew.md)
-- [ghsa high cve 2026 44985 dozzle s cross site websocket hijac](./2026-05-11/ghsa-high-cve-2026-44985-dozzle-s-cross-site-websocket-hijac.md)
 - [ghsa high cve 2026 45017 python liquid absolute paths escape](./2026-05-11/ghsa-high-cve-2026-45017-python-liquid-absolute-paths-escape.md)
 - [ghsa high cve 2026 45022 go git s improper parsing of specia](./2026-05-11/ghsa-high-cve-2026-45022-go-git-s-improper-parsing-of-specia.md)
 - [ghsa high cve 2026 45033 github copilot cli nested bare repo](./2026-05-11/ghsa-high-cve-2026-45033-github-copilot-cli-nested-bare-repo.md)
@@ -195,13 +199,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [weekly recap ai powered phishing android spying tool linux e](./2026-05-04/weekly-recap-ai-powered-phishing-android-spying-tool-linux-e.md)
 
 ## 2026-05-02
-- [cve 2026 31431 copy fail vulnerability enables linux root pr](./2026-05-02/cve-2026-31431-copy-fail-vulnerability-enables-linux-root-pr.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-05-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 
 ## 2026-05-01
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
 - [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
-- [microsoft agent 365 now generally available expands capabili](./2026-05-01/microsoft-agent-365-now-generally-available-expands-capabili.md)
 - [why browser extensions are a major security risk and what yo](./2026-05-01/why-browser-extensions-are-a-major-security-risk-and-what-yo.md)
 
 ## 2026-04-30
