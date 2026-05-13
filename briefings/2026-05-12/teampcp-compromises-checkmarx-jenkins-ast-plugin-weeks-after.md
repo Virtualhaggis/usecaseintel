@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm Worm — Bun executes tanstack_runner.js / router_init.js via npm lifecycle hook
 
-`UC_54_8` · phase: **install** · confidence: **High**
+`UC_42_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud worm payload file written to disk (router_init.js / tanstack_runner.js by SHA-256 or name)
 
-`UC_54_9` · phase: **delivery** · confidence: **High**
+`UC_42_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud — Bun-spawned process touches AWS IMDS / K8s Vault / getsession.org during npm install
 
-`UC_54_10` · phase: **actions** · confidence: **Medium**
+`UC_42_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -264,7 +264,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Compromises Checkmarx Jenkins AST Plugin Weeks After KICS Supply Chain A
 
-`UC_54_7` · phase: **exploit** · confidence: **High**
+`UC_42_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

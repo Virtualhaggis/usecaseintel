@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Phishing lure impersonating NPM 2FA support from typosquat domain npmjs.help
 
-`UC_368_7` · phase: **delivery** · confidence: **High**
+`UC_394_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ EmailEvents
 
 ### [LLM] Egress to Qix npm-compromise attacker infrastructure (npmjs.help / b-cdn.net staging / publicvm.com WS)
 
-`UC_368_8` · phase: **c2** · confidence: **High**
+`UC_394_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union isfuzzy=true NetHits, DnsHits
 
 ### [LLM] Install / lockfile reference to one of the 18 compromised Qix NPM package@version strings
 
-`UC_368_9` · phase: **install** · confidence: **High**
+`UC_394_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

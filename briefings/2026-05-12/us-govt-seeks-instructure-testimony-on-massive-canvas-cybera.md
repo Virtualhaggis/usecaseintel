@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ShinyHunters Instructure Canvas breach — egress to actor extortion infrastructure (91.215.85.103 / pay_or_leak URI / v3 onion)
 
-`UC_4_0` · phase: **c2** · confidence: **High**
+`UC_9_0` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

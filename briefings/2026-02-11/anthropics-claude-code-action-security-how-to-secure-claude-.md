@@ -25,7 +25,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — anthropics/claude-code-action Security: How to Secure Claude Code in GitHub Acti
 
-`UC_383_0` · phase: **exploit** · confidence: **High**
+`UC_409_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

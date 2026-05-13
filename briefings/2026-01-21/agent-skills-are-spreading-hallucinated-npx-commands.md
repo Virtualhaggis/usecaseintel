@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LLM-Hallucinated 'react-codeshift' npm Package Executed via npx/bunx/pnpm dlx/yarn dlx
 
-`UC_440_4` · phase: **delivery** · confidence: **High**
+`UC_466_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### [LLM] Hallucinated 'react-codeshift' Package Files Materialised in node_modules / npx Cache
 
-`UC_440_5` · phase: **install** · confidence: **High**
+`UC_466_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Agent Skills Are Spreading Hallucinated npx Commands
 
-`UC_440_3` · phase: **exploit** · confidence: **High**
+`UC_466_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

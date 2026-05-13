@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SvelteKit Vercel Adapter Cache Deception via __pathname Override (CVE-2026-27118)
 
-`UC_353_5` · phase: **exploit** · confidence: **High**
+`UC_379_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ UrlClickEvents
 
 ### [LLM] Cache Deception Retrieval: Same /_app/immutable/ __pathname URL Hit by Multiple Distinct Clients
 
-`UC_353_6` · phase: **actions** · confidence: **Medium**
+`UC_379_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
 
-`UC_353_4` · phase: **exploit** · confidence: **High**
+`UC_379_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Installation of confirmed slopsquatted packages (unused-imports, react-codeshift, huggingface-cli)
 
-`UC_350_4` · phase: **install** · confidence: **High**
+`UC_376_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### [LLM] AI coding agent process triggers npm/npx/pip install (slopsquatting exposure surface)
 
-`UC_350_5` · phase: **delivery** · confidence: **Medium**
+`UC_376_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] PhantomRaven RDD: npm install fetching dependency from non-registry HTTP(S) host
 
-`UC_350_6` · phase: **c2** · confidence: **Medium**
+`UC_376_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What is Slopsquatting? The AI Package Hallucination Attack Already Happening
 
-`UC_350_3` · phase: **exploit** · confidence: **High**
+`UC_376_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

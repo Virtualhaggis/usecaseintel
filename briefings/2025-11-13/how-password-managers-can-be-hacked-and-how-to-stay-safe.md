@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Typosquat domains impersonating 1Password / Bitwarden (the1password.com, app1password.com, appbitwarden.com)
 
-`UC_535_6` · phase: **delivery** · confidence: **High**
+`UC_561_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ union isfuzzy=true
 
 ### [LLM] InvisibleFerret 'ssh_zcp' module reads 1Password / Dashlane extension storage
 
-`UC_535_7` · phase: **actions** · confidence: **High**
+`UC_561_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### [LLM] Python interpreter egress to api.telegram.org / DeceptiveDevelopment C2 IPs
 
-`UC_535_8` · phase: **c2** · confidence: **Medium**
+`UC_561_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

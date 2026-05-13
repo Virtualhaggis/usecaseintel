@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mailcow Autodiscover unauthenticated XSS attempt (GHSA-f9xf-vc72-rcgm)
 
-`UC_228_4` · phase: **exploit** · confidence: **High**
+`UC_254_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mailcow login X-Real-IP header XSS injection (GHSA-jprq-w83q-q62h)
 
-`UC_228_5` · phase: **exploit** · confidence: **High**
+`UC_254_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Cross-Site Scripting (XSS) Vulnerabilities in Mailcow
 
-`UC_228_3` · phase: **exploit** · confidence: **High**
+`UC_254_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

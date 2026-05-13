@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious tanstack npm package (2.0.4–2.0.7) hashes written to node_modules
 
-`UC_185_11` · phase: **delivery** · confidence: **High**
+`UC_211_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound exfiltration to attacker Svix Ingest source ID from Node/npm initiator
 
-`UC_185_12` · phase: **c2** · confidence: **High**
+`UC_211_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### [LLM] npm/pnpm/yarn install of malicious unscoped tanstack@2.0.4-2.0.7
 
-`UC_185_13` · phase: **install** · confidence: **High**
+`UC_211_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -416,7 +416,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_185_10` · phase: **exploit** · confidence: **High**
+`UC_211_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

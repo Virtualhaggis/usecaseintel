@@ -262,7 +262,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
 
-`UC_527_7` · phase: **exploit** · confidence: **High**
+`UC_553_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
