@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_936 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_919 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,12 +19,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fragnesia linux vulnerability let attackers gain root privil](./2026-05-13/fragnesia-linux-vulnerability-let-attackers-gain-root-privil.md)
 - [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [google enhances android mobile security with new ai powered ](./2026-05-13/google-enhances-android-mobile-security-with-new-ai-powered-.md)
+- [microsoft fixes windows autopatch bug installing restricted ](./2026-05-13/microsoft-fixes-windows-autopatch-bug-installing-restricted-.md)
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
 - [microsoft releases cumulative update for windows 11 version ](./2026-05-13/microsoft-releases-cumulative-update-for-windows-11-version-.md)
-- [microsoft teams vulnerability allows hackers to perform spoo](./2026-05-13/microsoft-teams-vulnerability-allows-hackers-to-perform-spoo.md)
 - [most remediation programs never confirm the fix actually wor](./2026-05-13/most-remediation-programs-never-confirm-the-fix-actually-wor.md)
 - [new exim bdat gnutls vulnerability enables code execution at](./2026-05-13/new-exim-bdat-gnutls-vulnerability-enables-code-execution-at.md)
-- [webinar why your appsec tools miss the lethal path and how t](./2026-05-13/webinar-why-your-appsec-tools-miss-the-lethal-path-and-how-t.md)
+- [webinar how modern attack paths cross code pipelines and clo](./2026-05-13/webinar-how-modern-attack-paths-cross-code-pipelines-and-clo.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
@@ -41,14 +41,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
 - [koda warns of customer data breach after online shop hack](./2026-05-12/koda-warns-of-customer-data-breach-after-online-shop-hack.md)
 - [microsoft may 2026 patch tuesday fixes 120 flaws no zero day](./2026-05-12/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-day.md)
-- [microsoft patch tuesday may 2026 120 vulnerabilities fixed i](./2026-05-12/microsoft-patch-tuesday-may-2026-120-vulnerabilities-fixed-i.md)
 - [microsoft releases windows 10 kb5087544 extended security up](./2026-05-12/microsoft-releases-windows-10-kb5087544-extended-security-up.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
 - [openai launches daybreak for ai powered vulnerability detect](./2026-05-12/openai-launches-daybreak-for-ai-powered-vulnerability-detect.md)
-- [sap fixes critical vulnerabilities in commerce cloud and s 4](./2026-05-12/sap-fixes-critical-vulnerabilities-in-commerce-cloud-and-s-4.md)
 - [signal adds security warnings for social engineering phishin](./2026-05-12/signal-adds-security-warnings-for-social-engineering-phishin.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
@@ -950,14 +948,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [8 000 strong harden runner s growing impact on ci cd securit](./2025-09-19/8-000-strong-harden-runner-s-growing-impact-on-ci-cd-securit.md)
 - [ghostaction campaign over 3 000 secrets stolen through malic](./2025-09-19/ghostaction-campaign-over-3-000-secrets-stolen-through-malic.md)
 - [introducing stepsecurity threat intelligence real time suppl](./2025-09-19/introducing-stepsecurity-threat-intelligence-real-time-suppl.md)
-- [securing google gemini in github actions with harden runner](./2025-09-19/securing-google-gemini-in-github-actions-with-harden-runner.md)
 
 ## 2025-09-11
 - [cisa kev cve 2025 5086 dassault syst mes delmia apriso deser](./2025-09-11/cisa-kev-cve-2025-5086-dassault-syst-mes-delmia-apriso-deser.md)
-
-## 2025-09-08
-- [calculate your ci cd security roi with stepsecurity s new ro](./2025-09-08/calculate-your-ci-cd-security-roi-with-stepsecurity-s-new-ro.md)
-- [securing github copilot in github actions with harden runner](./2025-09-08/securing-github-copilot-in-github-actions-with-harden-runner.md)
 
 ## 2025-09-04
 - [cisa kev cve 2025 38352 linux kernel time of check time of u](./2025-09-04/cisa-kev-cve-2025-38352-linux-kernel-time-of-check-time-of-u.md)
@@ -976,9 +969,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-08-29
 - [cisa kev cve 2025 57819 sangoma freepbx authentication bypas](./2025-08-29/cisa-kev-cve-2025-57819-sangoma-freepbx-authentication-bypas.md)
 
-## 2025-08-27
-- [stepsecurity harden runner detect source code tampering duri](./2025-08-27/stepsecurity-harden-runner-detect-source-code-tampering-duri.md)
-
 ## 2025-08-26
 - [cisa kev cve 2025 7775 citrix netscaler memory overflow vuln](./2025-08-26/cisa-kev-cve-2025-7775-citrix-netscaler-memory-overflow-vuln.md)
 
@@ -994,7 +984,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 54948 trend micro apex one os command inje](./2025-08-18/cisa-kev-cve-2025-54948-trend-micro-apex-one-os-command-inje.md)
 
 ## 2025-08-15
-- [suspicious tag movement in aws s github action what happened](./2025-08-15/suspicious-tag-movement-in-aws-s-github-action-what-happened.md)
 - [when changed files changed everything our black hat 2025 pre](./2025-08-15/when-changed-files-changed-everything-our-black-hat-2025-pre.md)
 
 ## 2025-08-13
@@ -1007,11 +996,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 8088 rarlab winrar path traversal vulnerab](./2025-08-12/cisa-kev-cve-2025-8088-rarlab-winrar-path-traversal-vulnerab.md)
 
 ## 2025-08-09
-- [8 github actions secrets management best practices to follow](./2025-08-09/8-github-actions-secrets-management-best-practices-to-follow.md)
 - [lessons from aws codebuild s memory dump incident cve 2025 8](./2025-08-09/lessons-from-aws-codebuild-s-memory-dump-incident-cve-2025-8.md)
 - [supply chain security alert num2words pypi package shows sig](./2025-08-09/supply-chain-security-alert-num2words-pypi-package-shows-sig.md)
 - [the github warning everyone ignores this commit does not bel](./2025-08-09/the-github-warning-everyone-ignores-this-commit-does-not-bel.md)
-- [when ai meets ci cd coding agents in github actions pose hid](./2025-08-09/when-ai-meets-ci-cd-coding-agents-in-github-actions-pose-hid.md)
 
 ## 2025-08-05
 - [cisa kev cve 2020 25078 d link dcs 2530l and dcs 2670l devic](./2025-08-05/cisa-kev-cve-2020-25078-d-link-dcs-2530l-and-dcs-2670l-devic.md)
@@ -1040,18 +1027,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 5777 citrix netscaler adc and gateway out ](./2025-07-10/cisa-kev-cve-2025-5777-citrix-netscaler-adc-and-gateway-out-.md)
 
 ## 2025-07-08
-- [7 000 open source projects now secured by harden runner](./2025-07-08/7-000-open-source-projects-now-secured-by-harden-runner.md)
 - [evolving harden runner s disable sudo policy for improved ru](./2025-07-08/evolving-harden-runner-s-disable-sudo-policy-for-improved-ru.md)
-- [export harden runner security insights and detections to ama](./2025-07-08/export-harden-runner-security-insights-and-detections-to-ama.md)
-- [github actions pwn request vulnerability](./2025-07-08/github-actions-pwn-request-vulnerability.md)
 - [grafana github actions security incident](./2025-07-08/grafana-github-actions-security-incident.md)
-- [harden runner detects new traffic to release assets githubus](./2025-07-08/harden-runner-detects-new-traffic-to-release-assets-githubus.md)
 - [harden runner flags anomalous outbound call leading to docke](./2025-07-08/harden-runner-flags-anomalous-outbound-call-leading-to-docke.md)
-- [replace third party actions with stepsecurity maintained act](./2025-07-08/replace-third-party-actions-with-stepsecurity-maintained-act.md)
 - [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
-- [secure repo just got better new features for github actions ](./2025-07-08/secure-repo-just-got-better-new-features-for-github-actions-.md)
-- [stepsecurity harden runner now secures github actions workfl](./2025-07-08/stepsecurity-harden-runner-now-secures-github-actions-workfl.md)
-- [stepsecurity is now available on aws marketplace](./2025-07-08/stepsecurity-is-now-available-on-aws-marketplace.md)
 
 ## 2025-07-07
 - [cisa kev cve 2014 3931 multi router looking glass mrlg buffe](./2025-07-07/cisa-kev-cve-2014-3931-multi-router-looking-glass-mrlg-buffe.md)

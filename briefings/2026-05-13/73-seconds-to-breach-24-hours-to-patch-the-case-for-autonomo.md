@@ -11,15 +11,9 @@ Sponsored by Picus Security
 May 13, 2026
 08:30 AM
 0 
-
-
 By Sila Ozeren Hacioglu , Security Research Engineer at Picus Security. 
-
-
 In April 2026, Anthropic released its newest frontier model, codename Mythos , to twelve partners under a gated preview. Not general availability; the company explicitly held it back as it was (correctly) deemed too dangerous for open release.
-
-
-In its first 14 days inside that sandbox…
+In its first 14 days inside that sandbox, it wrote 1…
 
 ## Indicators of Compromise (high-fidelity only)
 

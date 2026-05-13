@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email or click on jsDelivr URL to flockiali/opresc/prndn/oprnm/operni npm phishing kit
 
-`UC_457_11` · phase: **delivery** · confidence: **High**
+`UC_456_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union EmailHits, ClickHits, NetHits
 
 ### [LLM] Egress to Siemens Energy typosquat C2 (login.siemens-energy.icu / oprsys.deno.dev / 163.123.236.118)
 
-`UC_457_12` · phase: **c2** · confidence: **High**
+`UC_456_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ union NetHits, DnsHits
 
 ### [LLM] npm phishing payload SHA256 observed on disk (flockiali/opresc/prndn/oprnm/operni)
 
-`UC_457_13` · phase: **install** · confidence: **High**
+`UC_456_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -463,7 +463,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gone Phishin': npm Packages Serving Custom Credential Harvesting Pages
 
-`UC_457_10` · phase: **exploit** · confidence: **High**
+`UC_456_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

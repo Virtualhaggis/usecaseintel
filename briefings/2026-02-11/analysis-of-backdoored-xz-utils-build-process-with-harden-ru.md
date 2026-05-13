@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] XZ Utils backdoor: liblzma object file written by shell during build (CVE-2024-3094)
 
-`UC_416_3` · phase: **weapon** · confidence: **High**
+`UC_415_3` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceFileEvents
 
 ### [LLM] XZ Utils backdoor: bad-3-corrupt_lzma2.xz test file referenced or decoded during build (CVE-2024-3094)
 
-`UC_416_4` · phase: **exploit** · confidence: **High**
+`UC_415_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] XZ Utils backdoor: GCC reads C source from stdin via -x c - while linking liblzma backdoor object (CVE-2024-3094)
 
-`UC_416_5` · phase: **weapon** · confidence: **High**
+`UC_415_5` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Analysis of Backdoored XZ Utils Build Process with Harden-Runner
 
-`UC_416_2` · phase: **install** · confidence: **High**
+`UC_415_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

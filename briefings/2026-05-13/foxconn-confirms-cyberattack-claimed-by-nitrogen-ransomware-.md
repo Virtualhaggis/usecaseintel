@@ -1,22 +1,21 @@
-# [HIGH] Foxconn confirms cyberattack claimed by Nitrogen ransomware gang
+# [CRIT] Foxconn confirms cyberattack claimed by Nitrogen ransomware gang
 
-**Source:** BleepingComputer
+**Source:** BleepingComputer, Cyber Security News
 **Published:** 2026-05-13
 **Article:** https://www.bleepingcomputer.com/news/security/electronics-giant-foxconn-confirms-cyberattack-on-north-american-factories/
 
 ## Threat Profile
 
-Foxconn confirms cyberattack claimed by Nitrogen ransomware gang 
-By Sergiu Gatlan 
-May 13, 2026
-08:49 AM
-0 
+Home Cyber Security 
+Foxconn Confirms Cyberattack After Nitrogen Ransomware Gang Claim 
+By Guru Baran 
+May 13, 2026 
 
 
-Foxconn, the world's largest electronics manufacturer, says some of its North American factories are now working to resume normal operations after a cyberattack.
 
 
-The electronics giant has over 900,000 employees across over 240 campuses in 24 countries and reported revenues of over $260 billion in 2025. The company is ranked 28th in Fortune Global 500 and manufactures a wide range …
+Foxconn has officially confirmed a cyberattack targeting its North American operations after the Nitrogen ransomware gang publicly listed the company on its data leak site, claiming to have stolen a staggering 8 terabytes of sensitive data.
+The Nitrogen ransomware group made its move on Monday, posting Foxconn on its breach and extortion portal and asserting it had exfiltr…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -24,20 +23,18 @@ The electronics giant has over 900,000 employees across over 240 campuses in 24 
 
 ## MITRE ATT&CK Techniques
 
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1566.002** — Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
+- **T1059.001** — PowerShell
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1574.002** — DLL Side-Loading
-- **T1608.001** — Upload Malware
-- **T1189** — Drive-by Compromise
-- **T1068** — Exploitation for Privilege Escalation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1014** — Rootkit
-- **T1490** — Inhibit System Recovery
-- **T1070.001** — Indicator Removal: Clear Windows Event Logs
-- **T1562.009** — Impair Defenses: Safe Mode Boot
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -45,115 +42,146 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Nitrogen malvertising loader: trojanized IT-utility installer side-loading python312.dll
+### Infostealer — non-browser process accessing browser cookie/login DBs
 
-`UC_3_3` · phase: **delivery** · confidence: **High**
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Processes.process) as parent_cmd from datamodel=Endpoint.Filesystem where Filesystem.file_name="python312.dll" (Filesystem.file_path="*\\Users\\*\\Downloads\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search process_name IN ("WinSCP*.exe","AnyDesk*.exe","advanced_ip_scanner*.exe","anyconnect*.exe","putty*.exe","treesize*.exe","slack*.exe","Setup.exe","install.exe") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-// Nitrogen Stage-1 — python312.dll dropped/loaded by a trojanized utility installer in user-writable path
-let TrojanizedSetups = dynamic(["winscp","anydesk","advanced_ip_scanner","advanced-ip-scanner","anyconnect","putty","treesize","slack","setup.exe","install.exe","installer.exe"]);
-let KnownBadHashes = dynamic(["fa3eca4d53a1b7c4cfcd14f642ed5f8a8a864f56a8a47acbf5cf11a6c5d2afa2"]);
-let FileDrops =
-    DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType == "FileCreated"
-    | where FileName =~ "python312.dll"
-    | where FolderPath has_any (@"\Users\", @"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Downloads\", @"\Public\")
-    | where not(FolderPath startswith @"C:\Program Files\" or FolderPath startswith @"C:\Program Files (x86)\" or FolderPath startswith @"C:\Windows\")
-    | where InitiatingProcessFileName has_any (TrojanizedSetups) or SHA256 in~ (KnownBadHashes)
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, SHA256,
-              DroppingProcess = InitiatingProcessFileName,
-              DroppingCmd = InitiatingProcessCommandLine;
-let LibLoads =
-    DeviceImageLoadEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "python312.dll"
-    | where InitiatingProcessFileName has_any (TrojanizedSetups)
-    | where not(FolderPath startswith @"C:\Program Files\" or FolderPath startswith @"C:\Program Files (x86)\" or FolderPath startswith @"C:\Python")
-    | project Timestamp, DeviceName, FolderPath, SHA256,
-              LoadingProcess = InitiatingProcessFileName,
-              LoadingCmd = InitiatingProcessCommandLine;
-union FileDrops, LibLoads
-| order by Timestamp desc
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### [LLM] Nitrogen BYOVD - truesight.sys (Adlice RogueKiller) driver load for EDR/AV termination
+### Phishing-link click correlated to endpoint execution
 
-`UC_3_4` · phase: **install** · confidence: **High**
+`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.process_name) as droppers from datamodel=Endpoint.Filesystem where Filesystem.file_name="truesight.sys" (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\*" OR Filesystem.file_path="*\\AppData\\*") by Filesystem.dest Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | where NOT match(droppers, "(?i)RogueKiller|Adlice") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
 ```
 
 **Defender KQL:**
 ```kql
-// Nitrogen BYOVD — truesight.sys (Adlice) dropped or loaded outside legitimate Adlice/RogueKiller install path
-let DropEvents =
-    DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where FileName =~ "truesight.sys"
-    | where ActionType in ("FileCreated","FileRenamed","FileModified")
-    | where not(FolderPath has_any (@"\Adlice\", @"\RogueKiller\", @"\Program Files\Adlice\", @"\Program Files (x86)\Adlice\"))
-    | where InitiatingProcessFileName !in~ ("rogkill.exe","RogueKiller.exe","RogueKillerCMD.exe","adlice.exe","msiexec.exe")
-    | project EventTime = Timestamp, DeviceName, ActionType, FolderPath, SHA256,
-              DroppingProcess = InitiatingProcessFileName,
-              DroppingCmd = InitiatingProcessCommandLine, EvidenceType = "FileDrop";
-let LoadEvents =
-    DeviceImageLoadEvents
-    | where Timestamp > ago(14d)
-    | where FileName =~ "truesight.sys"
-    | where not(FolderPath has_any (@"\Adlice\", @"\RogueKiller\"))
-    | project EventTime = Timestamp, DeviceName, ActionType, FolderPath, SHA256,
-              DroppingProcess = InitiatingProcessFileName,
-              DroppingCmd = InitiatingProcessCommandLine, EvidenceType = "DriverLoad";
-union DropEvents, LoadEvents
-| order by EventTime desc
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
 ```
 
-### [LLM] Nitrogen pre-encryption sequence: bcdedit safe-boot tamper + Windows event log clear within 1 hour
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
-`UC_3_5` · phase: **actions** · confidence: **High**
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true min(_time) as bcdedit_time values(Processes.process) as bcdedit_cmd from datamodel=Endpoint.Processes where Processes.process_name="bcdedit.exe" (Processes.process="*safeboot*" OR Processes.process="*recoveryenabled*no*" OR Processes.process="*bootstatuspolicy*ignoreallfailures*") by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true min(_time) as clear_time values(Processes.process) as clear_cmd from datamodel=Endpoint.Processes where (Processes.process_name="wevtutil.exe" AND Processes.process="*cl*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Clear-EventLog*" OR Processes.process="*ClearEventLog*")) by Processes.dest Processes.user | `drop_dm_object_name(Processes)`] | eval delta_sec=abs(clear_time-bcdedit_time) | where delta_sec<=3600 | table bcdedit_time clear_time delta_sec dest user bcdedit_cmd clear_cmd
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-// Nitrogen pre-encryption combo — bcdedit safeboot/recovery tamper + Security event-log clear on same host within 1h
-let WindowMin = 60m;
-let BcdEdit =
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "bcdedit.exe"
-    | where ProcessCommandLine has_any ("safeboot", "recoveryenabled no", "bootstatuspolicy ignoreallfailures", "recoveryenabled No")
-    | project BcdTime = Timestamp, DeviceId, DeviceName, AccountName,
-              BcdCmd = ProcessCommandLine,
-              BcdParent = InitiatingProcessFileName;
-let LogClear =
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where (FileName =~ "wevtutil.exe" and ProcessCommandLine has_any (" cl ", " cl-l ", " clear-log "))
-         or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Clear-EventLog", "ClearEventLog(", "Win32_NTEventlogFile"))
-         or (FileName =~ "wmic.exe" and ProcessCommandLine has "nteventlog" and ProcessCommandLine has "cleareventlog")
-    | project ClearTime = Timestamp, DeviceId,
-              ClearCmd = ProcessCommandLine,
-              ClearBinary = FileName;
-BcdEdit
-| join kind=inner LogClear on DeviceId
-| where abs(datetime_diff('second', BcdTime, ClearTime)) <= 3600
-| project DeviceName, AccountName, BcdTime, ClearTime,
-          DeltaSec = datetime_diff('second', ClearTime, BcdTime),
-          BcdCmd, ClearBinary, ClearCmd, BcdParent
-| order by BcdTime desc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -240,7 +268,31 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

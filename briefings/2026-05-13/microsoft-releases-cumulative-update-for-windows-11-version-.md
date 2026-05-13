@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Windows 11 24H2/25H2 devices missing May 2026 cumulative update KB5089549
 
-`UC_15_2` · phase: **recon** · confidence: **High**
+`UC_17_2` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

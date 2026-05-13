@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Windows hosts exposed to MDASH-discovered May 2026 Patch Tuesday networking-stack CVEs
 
-`UC_25_2` · phase: **exploit** · confidence: **High**
+`UC_26_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — Defense at AI speed: Microsoft’s new multi-model agentic security system tops le
 
-`UC_25_1` · phase: **exploit** · confidence: **High**
+`UC_26_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
