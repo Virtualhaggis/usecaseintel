@@ -333,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack
 
-`UC_99_11` · phase: **exploit** · confidence: **High**
+`UC_98_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

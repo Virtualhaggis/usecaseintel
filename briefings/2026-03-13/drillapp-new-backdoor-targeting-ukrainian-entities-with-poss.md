@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Edge/Chromium launched with DRILLAPP headless media-capture & sandbox-disable flag combo
 
-`UC_311_4` · phase: **install** · confidence: **High**
+`UC_310_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] Edge/Chromium fetch of pastefy.app/raw or DRILLAPP C2 IPs (dead-drop WebSocket resolver)
 
-`UC_311_5` · phase: **c2** · confidence: **High**
+`UC_310_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceNetworkEvents
 
 ### [LLM] DRILLAPP variant 1 persistence: bulk .lnk drop into user Startup folder
 
-`UC_311_6` · phase: **install** · confidence: **Medium**
+`UC_310_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_311_3` · phase: **install** · confidence: **High**
+`UC_310_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

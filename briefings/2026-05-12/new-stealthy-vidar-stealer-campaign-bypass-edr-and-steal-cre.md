@@ -54,12 +54,126 @@ The campaign has drawn significant attention from the cybersecurity community be
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1036.004** — Masquerading: Masquerade Task or Service
+- **T1036.003** — Masquerading: Rename System Utilities
+- **T1027.011** — Obfuscated Files or Information: Fileless Storage
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vidar/Chinotto persistence: scheduled task 'MicrosoftMusicLibrariesPackageTaskMachine' running every minute
+
+`UC_24_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) Processes.process="*MicrosoftMusicLibrariesPackageTaskMachine*" by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | eval one_minute_interval=if(match(cmdline,"(?i)/sc\s+minute\s+/mo\s+1") OR match(cmdline,"(?i)RepetitionInterval.*PT1M"),1,0) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Vidar/Chinotto persistence — uniquely named scheduled task at 1-min cadence
+let TaskName = "MicrosoftMusicLibrariesPackageTaskMachine";
+union isfuzzy=true
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("schtasks.exe","powershell.exe","pwsh.exe","wmic.exe")
+    | where ProcessCommandLine has TaskName
+    | extend OneMinuteCadence = ProcessCommandLine matches regex @"(?i)/sc\s+minute\s+/mo\s+1|RepetitionInterval\s*=?\s*[`""']?PT1M"
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, OneMinuteCadence, Source="ProcessCreate" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("ScheduledTaskCreated","ScheduledTaskUpdated")
+    | where AdditionalFields has TaskName or FileName has TaskName
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              FileName, ProcessCommandLine, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, OneMinuteCadence=bool(null), Source="TaskEvent" )
+| order by Timestamp desc
+```
+
+### [LLM] Renamed pythonw.exe ('codeflush.exe') executing .cat-disguised Python bytecode (Vidar/Chinotto)
+
+`UC_24_15` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.process_name!="pythonw.exe" (Processes.original_file_name="pythonw.exe" OR Processes.process_name="codeflush.exe" OR Processes.process="*settingenv.cat*" OR Processes.process="*\\settingenv.cat*") by Processes.dest Processes.user Processes.process_name Processes.original_file_name | `drop_dm_object_name(Processes)` | eval cat_arg=if(match(cmdline,"(?i)\.cat(\s|$|\")"),1,0) | where cat_arg=1 OR process_name="codeflush.exe" OR original_file_name="pythonw.exe" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Vidar/Chinotto execution host — renamed pythonw OR python interpreter running .cat payload
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where
+    // (a) renamed pythonw — VersionInfo says pythonw but FileName doesn't
+    ( ProcessVersionInfoOriginalFileName =~ "pythonw.exe"
+      and FileName !~ "pythonw.exe" )
+    // (b) the specific alias used in this campaign
+    or FileName =~ "codeflush.exe"
+    // (c) any python interpreter executing a .cat file (.cat is for signed catalogs, not python bytecode)
+    or ( (FileName in~ ("python.exe","pythonw.exe","codeflush.exe")
+          or ProcessVersionInfoOriginalFileName =~ "pythonw.exe")
+         and ProcessCommandLine matches regex @"(?i)\.cat(\s|$|""|')" )
+    // (d) explicit campaign filename
+    or ProcessCommandLine has "settingenv.cat"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath,
+          OriginalName = ProcessVersionInfoOriginalFileName,
+          InternalName = ProcessVersionInfoInternalFileName,
+          Company = ProcessVersionInfoCompanyName,
+          ProcessCommandLine,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Vidar/Chinotto C2 egress via curl.exe or renamed-pythonw to Korean police-impersonation infrastructure
+
+`UC_24_16` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app values(All_Traffic.process_name) as proc from datamodel=Network_Traffic.All_Traffic where ( All_Traffic.dest IN ("kmot.co.kr","haeundaejugong.com","kumdo.org","nls5950.cafe24.com","hanainternational.net","mlgpf.ir114.net","luminix.kr","sunlin.org","ezvm.kr","intobiz.kr","choisy.fr","printory.kr","udcontest.com","ableinfo.co.kr") OR All_Traffic.dest_ip="114.207.246.156" ) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Vidar/Chinotto May-2026 C2 list — LOLBin / renamed-python initiated egress
+let C2_Domains = dynamic([
+    "kmot.co.kr","haeundaejugong.com","kumdo.org","nls5950.cafe24.com",
+    "hanainternational.net","mlgpf.ir114.net","luminix.kr","sunlin.org",
+    "ezvm.kr","intobiz.kr","choisy.fr","printory.kr",
+    "udcontest.com","ableinfo.co.kr"
+]);
+let C2_IPs = dynamic(["114.207.246.156"]);
+let SuspectInitiators = dynamic([
+    "curl.exe","codeflush.exe","pythonw.exe","python.exe",
+    "cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe"
+]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any (C2_Domains) or RemoteIP in (C2_IPs))
+| where InitiatingProcessFileName in~ (SuspectInitiators)
+   or InitiatingProcessVersionInfoProductName =~ "pythonw.exe"
+| project Timestamp, DeviceName,
+          AccountName=InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          OriginalName=InitiatingProcessVersionInfoProductName,
+          InitiatingProcessCommandLine,
+          RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -467,7 +581,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Stealthy Vidar Stealer Campaign Bypass EDR and Steal Credentials
 
-`UC_17_13` · phase: **exploit** · confidence: **High**
+`UC_24_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -524,4 +638,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

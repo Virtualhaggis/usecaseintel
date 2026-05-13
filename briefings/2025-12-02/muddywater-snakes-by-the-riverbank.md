@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater Fooder/MuddyViper persistence — ManageOnDriveUpdater task or PPBCompatCache\ManagerCache install
 
-`UC_517_0` · phase: **install** · confidence: **High**
+`UC_516_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ union isfuzzy=true
 
 ### [LLM] MuddyViper C2 — IOC infrastructure, WinHTTP-sample User-Agent and short-token URIs
 
-`UC_517_1` · phase: **c2** · confidence: **High**
+`UC_516_1` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### [LLM] MuddyWater CE-Notes / LP-Notes credential dump artefacts in C:\Users\Public\Downloads
 
-`UC_517_2` · phase: **actions** · confidence: **High**
+`UC_516_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai Hulud strikes again - The golden path
 
-`UC_468_4` · phase: **exploit** · confidence: **High**
+`UC_467_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

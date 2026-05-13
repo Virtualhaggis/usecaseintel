@@ -427,7 +427,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Clawdbot VS Code Extension Installs ScreenConnect RAT
 
-`UC_419_13` · phase: **exploit** · confidence: **High**
+`UC_418_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

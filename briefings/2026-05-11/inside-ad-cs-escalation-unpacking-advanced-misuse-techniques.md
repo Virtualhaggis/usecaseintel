@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shadow Credentials — Write to msDS-KeyCredentialLink (Whisker / pyWhisker persistence)
 
-`UC_46_14` · phase: **install** · confidence: **High**
+`UC_52_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Certipy / Certify AD CS reconnaissance — LDAP enumeration of pKICertificateTemplate
 
-`UC_46_15` · phase: **recon** · confidence: **Medium**
+`UC_52_15` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ IdentityQueryEvents
 
 ### [LLM] PKINIT TGT (Event 4768) with certificate info for privileged target — ESC1 / CVE-2022-26923 abuse
 
-`UC_46_16` · phase: **exploit** · confidence: **Medium**
+`UC_52_16` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -567,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside AD CS Escalation: Unpacking Advanced Misuse Techniques and Tools
 
-`UC_46_13` · phase: **exploit** · confidence: **High**
+`UC_52_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

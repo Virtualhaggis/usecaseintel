@@ -24,12 +24,89 @@ Back to Blog Threat Intel ForceMemo: Hundreds of GitHub Python Repos Compromised
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ForceMemo: Node.js v22.9.0 spawned by Python from user home directory
+
+`UC_282_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as process_path values(Processes.process) as process values(Processes.process_command_line) as process_command_line values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3") AND Processes.process_name IN ("node","node.exe") AND (Processes.process_path="*node-v22.9.0-*\\bin\\node*" OR Processes.process_path="*node-v22.9.0-*/bin/node*" OR Processes.process_path="*\\Users\\*\\node-v22.9.0-*" OR Processes.process_path="*/home/*/node-v22.9.0-*" OR Processes.process_path="*/Users/*/node-v22.9.0-*" OR Processes.process_path="*/root/node-v22.9.0-*") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3")
+| where FileName in~ ("node","node.exe")
+| where FolderPath has "node-v22.9.0"
+| where FolderPath matches regex @"(?i)(\\Users\\[^\\]+\\node-v22\.9\.0-|/home/[^/]+/node-v22\.9\.0-|/Users/[^/]+/node-v22\.9\.0-|/root/node-v22\.9\.0-)"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] ForceMemo: Python process queries Solana mainnet RPC endpoint (blockchain dead-drop C2)
+
+`UC_282_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.answer) as resolved from datamodel=Network_Resolution where DNS.query IN ("api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network") by host DNS.src DNS.src_user | `drop_dm_object_name(DNS)` | join type=inner host [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3") by host Processes.dest Processes.process_name Processes.process_command_line Processes._time | `drop_dm_object_name(Processes)` | rename _time as proc_time | where proc_time>=relative_time(now(),"-7d")] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let SolanaRpc = dynamic(["api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network"]);
+union
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName has_any ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3")
+    | where RemoteUrl has_any (SolanaRpc)
+    | project Timestamp, DeviceName, Source="Network", InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, AccountName=InitiatingProcessAccountName ),
+  ( DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | where InitiatingProcessFileName has_any ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3")
+    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
+    | where Query in~ (SolanaRpc)
+    | project Timestamp, DeviceName, Source="DNS", InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=Query, RemoteIP, RemotePort=int(null), AccountName=InitiatingProcessAccountName )
+| order by Timestamp desc
+```
+
+### [LLM] ForceMemo: init.json persistence file or i.js loader dropped by Python in user home root
+
+`UC_282_9` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND Filesystem.file_name IN ("init.json","i.js") AND Filesystem.process_name IN ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3") AND (Filesystem.file_path="*\\Users\\*\\init.json" OR Filesystem.file_path="*\\Users\\*\\i.js" OR Filesystem.file_path="/home/*/init.json" OR Filesystem.file_path="/home/*/i.js" OR Filesystem.file_path="/Users/*/init.json" OR Filesystem.file_path="/Users/*/i.js" OR Filesystem.file_path="/root/init.json" OR Filesystem.file_path="/root/i.js") by host Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName has_any ("python","python.exe","python3","python3.10","python3.11","python3.12","python3.13","pip","pip.exe","pip3")
+| where FileName in~ ("init.json","i.js")
+| where FolderPath matches regex @"(?i)^([A-Z]:\\Users\\[^\\]+\\?|/home/[^/]+/?|/Users/[^/]+/?|/root/?)$"
+| where FolderPath !has "site-packages" and FolderPath !has "node_modules" and FolderPath !has ".venv" and FolderPath !has "venv"
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -205,7 +282,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ForceMemo: Hundreds of GitHub Python Repos Compromised via Account Takeover and
 
-`UC_283_6` · phase: **exploit** · confidence: **High**
+`UC_282_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -255,4 +332,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

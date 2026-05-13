@@ -24,12 +24,100 @@ Back to Blog Threat Intel TeamPCP Plants WAV Steganography Credential Stealer in
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1001.002** — Data Obfuscation: Steganography
+- **T1041** — Exfiltration Over C2 Channel
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] TeamPCP C2 beacon to 83.142.209.203:8080 (telnyx/litellm WAV stego campaign)
+
+`UC_264_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="83.142.209.203" OR All_Traffic.dest_ip="83.142.209.203") AND All_Traffic.dest_port=8080 by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count from datamodel=Web.Web where (Web.url="http://83.142.209.203:8080/ringtone.wav" OR Web.url="http://83.142.209.203:8080/hangup.wav" OR Web.url="http://83.142.209.203:8080/*" OR Web.dest="83.142.209.203") by Web.src Web.user Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.203"
+| where RemotePort == 8080 or isempty(tostring(RemotePort))
+| project Timestamp, DeviceName, DeviceId, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP msbuild.exe LOLBin masquerade dropped to user Startup folder
+
+`UC_264_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as creating_process values(Filesystem.user) as user values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_name="msbuild.exe" OR Filesystem.file_name="msbuild.exe.lock" OR Filesystem.file_name="msbuild.exe.tmp") AND Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | eval campaign="TeamPCP-telnyx-PyPI-2026"
+```
+
+**Defender KQL:**
+```kql
+let _campaign_hashes = dynamic(["f66c1ea3b25ec95d0c6a07be92c761551e543a7b256f9c78a2ff781c77df7093",
+                              "a9235c0eb74a8e92e5a0150e055ee9dcdc6252a07785b6677a9ca831157833a5"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileRenamed", "FileModified")
+| where (FileName =~ "msbuild.exe" or FileName =~ "msbuild.exe.lock" or FileName =~ "msbuild.exe.tmp")
+| where FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup"
+| extend HashHit = iif(SHA256 in (_campaign_hashes), "TeamPCP-known-hash", "")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, HashHit,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP exfiltration signature: tpcp.tar.gz / X-Filename header / openssl OAEP chain
+
+`UC_264_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process_name) as parent_process values(Processes.process) as process from datamodel=Endpoint.Processes where ( Processes.process="*tpcp.tar.gz*" OR Processes.process="*X-Filename: tpcp.tar.gz*" OR (Processes.process_name="curl" AND Processes.process="*83.142.209.203*" AND Processes.process="*8080*") OR (Processes.process_name="openssl" AND Processes.process="*pkeyutl*" AND Processes.process="*rsa_padding_mode:oaep*") OR (Processes.parent_process_name IN ("python","python3","python3.10","python3.11","python3.12") AND Processes.process="*import base64*" AND Processes.process="*exec(base64.b64decode*") ) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where
+    // (a) Direct exfil signature — tpcp.tar.gz token in any cmdline
+    ProcessCommandLine has "tpcp.tar.gz"
+    // (b) curl POST to TeamPCP C2 IP+port
+    or (FileName =~ "curl" and ProcessCommandLine has "83.142.209.203" and ProcessCommandLine has "8080")
+    // (c) openssl RSA-OAEP wrap of an AES key — TeamPCP hybrid scheme
+    or (FileName =~ "openssl" and ProcessCommandLine has "pkeyutl" and ProcessCommandLine has "rsa_padding_mode:oaep")
+    // (d) Python -c base64 exec — the FetchAudio() launcher pattern
+    or (FileName matches regex @"(?i)python(3(\.\d+)?)?$" and ProcessCommandLine has "-c" and ProcessCommandLine has "base64.b64decode" and ProcessCommandLine has "exec(")
+| extend Signal = case(
+    ProcessCommandLine has "tpcp.tar.gz", "tpcp_tarball",
+    FileName =~ "openssl" and ProcessCommandLine has "rsa_padding_mode:oaep", "openssl_RSA_OAEP_wrap",
+    FileName =~ "curl" and ProcessCommandLine has "83.142.209.203", "curl_to_C2",
+    "python_b64_exec_launcher")
+| project Timestamp, DeviceName, AccountName, Signal, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -234,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_265_6` · phase: **exploit** · confidence: **High**
+`UC_264_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -291,4 +379,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

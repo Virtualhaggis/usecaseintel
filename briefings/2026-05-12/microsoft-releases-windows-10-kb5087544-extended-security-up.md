@@ -11,12 +11,8 @@ By Lawrence Abrams
 May 12, 2026
 02:58 PM
 0 
-
-
 Microsoft has released the Windows 10 KB5087544 extended security update to fix the May 2026 Patch Tuesday vulnerabilities and resolve an issue with the new Remote Desktop warnings.
-
-
-If you are running Windows 10 Enterprise LTSC or are enrolled in the ESU program, you can install this update like normal by going into  Settings , clicking on  Windows Update, and manually performin…
+If you are running Windows 10 Enterprise LTSC or are enrolled in the ESU program, you can install this update like normal by going into  Settings , clicking on  Windows Update, and manually performing a  'Ch…
 
 ## Indicators of Compromise (high-fidelity only)
 

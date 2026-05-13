@@ -11,15 +11,9 @@ By Bill Toulas
 May 12, 2026
 03:40 PM
 0 
-
-
 Signal has introduced new in-app confirmations and warning messages as additional safeguards against phishing and social engineering attempts that could lead to various forms of fraud.
-
-
 The purpose is to introduce enough friction that users get the time to evaluate the safety of an external request.
-
-
-Recently, there have been attacks targeting high-profile users with bogus ‘…
+Recently, there have been attacks targeting high-profile users with bogus ‘Signal Suppo…
 
 ## Indicators of Compromise (high-fidelity only)
 

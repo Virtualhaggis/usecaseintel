@@ -38,12 +38,111 @@ The payload tags itself with a hardcoded description, "A Min…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1105** — Ingress Tool Transfer
+- **T1546** — Event Triggered Execution
+- **T1554** — Compromise Host Software Binary
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mini Shai-Hulud npm preinstall chain: node setup.mjs → bun execution.js
+
+`UC_188_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where ( (Processes.process_name IN ("node.exe","node") AND Processes.process="*setup.mjs*" AND Processes.parent_process_name IN ("npm.cmd","npm","npm-cli.js","yarn.cmd","yarn","pnpm.cmd","pnpm","node.exe","node")) OR (Processes.process_name IN ("bun.exe","bun") AND Processes.process="*execution.js*") ) by Processes.dest Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.user _time | `drop_dm_object_name(Processes)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName in~ ("node.exe","node") and ProcessCommandLine has "setup.mjs"
+         and InitiatingProcessFileName in~ ("npm.cmd","npm","npm-cli.js","yarn.cmd","yarn","pnpm.cmd","pnpm","node.exe","node"))
+   or (FileName in~ ("bun.exe","bun") and ProcessCommandLine has "execution.js")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine,
+          ChildSHA256 = SHA256,
+          ChildPath = FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Mini Shai-Hulud payload file drop: setup.mjs/execution.js by hash & size in node_modules
+
+`UC_188_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash values(Filesystem.file_size) as file_size values(Filesystem.process_name) as writer_process from datamodel=Endpoint.Filesystem where ( Filesystem.file_hash IN ("4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac","6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95","29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7","5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007","fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d") OR ( Filesystem.file_name="execution.js" AND Filesystem.file_size=11678349 AND Filesystem.file_path="*node_modules*" ) OR ( Filesystem.file_name="setup.mjs" AND Filesystem.file_path="*node_modules*" AND Filesystem.file_path IN ("*node_modules/mbt/*","*node_modules/@cap-js/*","*node_modules\\mbt\\*","*node_modules\\@cap-js\\*") ) ) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.file_size Filesystem.process_name _time | `drop_dm_object_name(Filesystem)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+let _IOC_SHA256 = dynamic([
+    "4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34",
+    "80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac",
+    "6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95",
+    "29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7",
+    "5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007",
+    "fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d"
+  ]);
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where SHA256 in (_IOC_SHA256)
+   or (FileName =~ "execution.js" and FileSize == 11678349 and FolderPath has "node_modules")
+   or (FileName =~ "setup.mjs" and (FolderPath has @"node_modules\mbt" or FolderPath has "node_modules/mbt" or FolderPath has @"node_modules\@cap-js" or FolderPath has "node_modules/@cap-js"))
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, FileSize, SHA256,
+          Writer = InitiatingProcessFileName,
+          WriterCmd = InitiatingProcessCommandLine,
+          User = InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Mini Shai-Hulud post-compromise persistence artifacts in .claude/, .vscode/, .github/workflows/
+
+`UC_188_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer values(Filesystem.process_path) as writer_path from datamodel=Endpoint.Filesystem where ( ( Filesystem.file_name="settings.json" AND Filesystem.file_path="*\.claude\settings.json" ) OR ( Filesystem.file_name="settings.json" AND Filesystem.file_path="*/.claude/settings.json" ) OR ( Filesystem.file_name="tasks.json" AND Filesystem.file_path="*\.vscode\tasks.json" ) OR ( Filesystem.file_name="tasks.json" AND Filesystem.file_path="*/.vscode/tasks.json" ) OR ( Filesystem.file_name="format-check.yml" AND Filesystem.file_path IN ("*\.github\workflows\format-check.yml","*/.github/workflows/format-check.yml") ) ) AND Filesystem.process_name IN ("node.exe","node","bun.exe","bun","python.exe","python","python3","powershell.exe","pwsh.exe") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user _time | `drop_dm_object_name(Filesystem)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has @"\.claude\" and FileName =~ "settings.json")
+   or (FolderPath has "/.claude/" and FileName =~ "settings.json")
+   or (FolderPath has @"\.vscode\" and FileName =~ "tasks.json")
+   or (FolderPath has "/.vscode/" and FileName =~ "tasks.json")
+   or (FolderPath has @"\.github\workflows" and FileName =~ "format-check.yml")
+   or (FolderPath has "/.github/workflows" and FileName =~ "format-check.yml")
+| where InitiatingProcessFileName in~ ("node.exe","node","bun.exe","bun","python.exe","python","python3","powershell.exe","pwsh.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| extend ArtifactKind = case(
+      FileName =~ "settings.json" and FolderPath has ".claude", "claude_sessionstart_hook",
+      FileName =~ "tasks.json" and FolderPath has ".vscode", "vscode_folderopen_task",
+      FileName =~ "format-check.yml", "github_workflow_secret_dump",
+      "unknown")
+| project Timestamp, DeviceName, ActionType, ArtifactKind, FolderPath, FileName, SHA256,
+          Writer = InitiatingProcessFileName,
+          WriterCmd = InitiatingProcessCommandLine,
+          User = InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -186,7 +285,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — "A Mini Shai-Hulud Has Appeared": Bun-Based Stealer Hits SAP @cap-js and mbt npm
 
-`UC_189_7` · phase: **exploit** · confidence: **High**
+`UC_188_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,4 +345,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

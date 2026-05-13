@@ -10,12 +10,8 @@ Home Cyber Security
 Microsoft Patch Tuesday May 2026 – 120 Vulnerabilities Fixed, Including 29 Critical RCE Flaws 
 By Guru Baran 
 May 12, 2026 
-
-
-
-
 Microsoft’s May 2026 Patch Tuesday lands with a heavy enterprise focus, fixing 120 vulnerabilities across Windows, Office, Azure, developer tools, and Microsoft 365 apps, including 29 remote code execution (RCE) flaws rated Critical.
-Unlike several recent cycles , Microsoft reports no zero‑days exploited in the wild or publicly disclosed ahead o…
+Unlike several recent cycles , Microsoft reports no zero‑days exploited in the wild or publicly disclosed ahead of the re…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -152,12 +148,45 @@ Unlike several recent cycles , Microsoft reports no zero‑days exploited in the
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
+- **T1203** — Exploitation for Client Execution
+- **T1210** — Exploitation of Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] May 2026 Patch Tuesday — Defender TVM exposure to this month's Critical/RCE CVEs
+
+`UC_11_6` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-42898","CVE-2026-42833","CVE-2026-42831","CVE-2026-40363","CVE-2026-40358","CVE-2026-41096","CVE-2026-41089","CVE-2026-40403","CVE-2026-35421","CVE-2026-32161","CVE-2026-40365","CVE-2026-40368","CVE-2026-40357","CVE-2026-35439","CVE-2026-40367","CVE-2026-40366","CVE-2026-40364","CVE-2026-40362","CVE-2026-40361","CVE-2026-40359","CVE-2026-40415","CVE-2026-40380","CVE-2026-40370","CVE-2026-34329","CVE-2026-34332","CVE-2026-41094","CVE-2026-40402","CVE-2026-41611") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| eval criticality=case(cve IN ("CVE-2026-41089","CVE-2026-41096","CVE-2026-40402","CVE-2026-40365","CVE-2026-42898","CVE-2026-42833"),"P0-Internet/Identity",cve IN ("CVE-2026-40363","CVE-2026-40358","CVE-2026-40367","CVE-2026-40366","CVE-2026-40364","CVE-2026-40362","CVE-2026-40361","CVE-2026-40359","CVE-2026-42831","CVE-2026-40368","CVE-2026-40357","CVE-2026-35439"),"P1-Doc/Server",true(),"P2-Other")
+| stats values(cve) as cves values(signature) as titles count by dest criticality
+| sort 0 criticality dest
+```
+
+**Defender KQL:**
+```kql
+let _MayCVEs = dynamic(["CVE-2026-42898","CVE-2026-42833","CVE-2026-42831","CVE-2026-40363","CVE-2026-40358","CVE-2026-41096","CVE-2026-41089","CVE-2026-40403","CVE-2026-35421","CVE-2026-32161","CVE-2026-40365","CVE-2026-40368","CVE-2026-40357","CVE-2026-35439","CVE-2026-40367","CVE-2026-40366","CVE-2026-40364","CVE-2026-40362","CVE-2026-40361","CVE-2026-40359","CVE-2026-40415","CVE-2026-40380","CVE-2026-40370","CVE-2026-34329","CVE-2026-34332","CVE-2026-41094","CVE-2026-40402","CVE-2026-41611"]);
+let _NetworkExposed = dynamic(["CVE-2026-41089","CVE-2026-41096","CVE-2026-40365","CVE-2026-35439","CVE-2026-40357","CVE-2026-40368","CVE-2026-42898","CVE-2026-42833","CVE-2026-40370","CVE-2026-34329","CVE-2026-40415","CVE-2026-32161"]);
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in (_MayCVEs)
+| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable, PublishedDate) by CveId) on CveId
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, IsInternetFacing, MachineGroup) by DeviceId, DeviceName) on DeviceId
+| extend Priority = case(
+    IsInternetFacing == true and CveId in (_NetworkExposed), "P0-InternetFacing-NetworkRCE",
+    CveId in (_NetworkExposed), "P1-NetworkRCE",
+    VulnerabilitySeverityLevel =~ "Critical", "P2-Critical",
+    "P3-Other")
+| project DeviceName, OSPlatform, OSVersion, IsInternetFacing, MachineGroup, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable, RecommendedSecurityUpdate, RecommendedSecurityUpdateId, Priority
+| order by Priority asc, CvssScore desc, DeviceName asc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -370,4 +399,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

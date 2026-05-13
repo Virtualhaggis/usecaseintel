@@ -210,7 +210,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterWorm Gets Teeth: TeamPCP's Kubernetes Wiper Targets Iran
 
-`UC_290_7` · phase: **exploit** · confidence: **High**
+`UC_289_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -147,12 +147,85 @@ The number of bugs in each vulnerability category is listed below:
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1204.002** — User Execution: Malicious File
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Devices missing May 2026 Patch Tuesday Critical RCE fixes (TVM posture hunt)
+
+`UC_8_4` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.category) as category from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-41096","CVE-2026-40365","CVE-2026-35421","CVE-2026-40361","CVE-2026-40363","CVE-2026-40364","CVE-2026-40366","CVE-2026-40367","CVE-2026-40358","CVE-2026-42831","CVE-2026-42898","CVE-2026-41089","CVE-2026-32161","CVE-2026-40402","CVE-2026-41103","CVE-2026-26164") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - severity dest
+```
+
+**Defender KQL:**
+```kql
+let CriticalMayCVEs = dynamic([
+    "CVE-2026-41096","CVE-2026-40365","CVE-2026-35421","CVE-2026-40361",
+    "CVE-2026-40363","CVE-2026-40364","CVE-2026-40366","CVE-2026-40367",
+    "CVE-2026-40358","CVE-2026-42831","CVE-2026-42898","CVE-2026-41089",
+    "CVE-2026-32161","CVE-2026-40402","CVE-2026-41103","CVE-2026-26164"
+]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (CriticalMayCVEs)
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing, MachineGroup) by DeviceId
+  ) on DeviceId
+| summarize FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            DeviceCount = dcount(DeviceId),
+            InternetFacingCount = dcountif(DeviceId, IsInternetFacing == true),
+            AffectedDevices = make_set(DeviceName, 100),
+            AffectedSoftware = make_set(strcat(SoftwareVendor, " ", SoftwareName, " ", SoftwareVersion), 20),
+            RecommendedKB = any(RecommendedSecurityUpdate)
+            by CveId, VulnerabilitySeverityLevel
+| order by InternetFacingCount desc, DeviceCount desc
+```
+
+### [LLM] Microsoft Paint opening EMF attachment (CVE-2026-35421 pre-exploitation hunt)
+
+`UC_8_5` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.process_name=mspaint.exe (Processes.process="*.emf*" OR Processes.process="*.EMF*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_path
+| `drop_dm_object_name(Processes)`
+| eval suspicious_parent=if(match(lower(parent_process_name), "outlook\.exe|chrome\.exe|msedge\.exe|firefox\.exe|brave\.exe|winrar\.exe|7zfm\.exe|explorer\.exe"), 1, 0)
+| eval suspicious_path=if(match(lower(cmdline), "\\\\downloads\\\\|\\\\appdata\\\\local\\\\temp\\\\|\\\\inetcache\\\\content\\.outlook\\\\|\\\\public\\\\"), 1, 0)
+| where suspicious_parent=1 OR suspicious_path=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "mspaint.exe"
+| where ProcessCommandLine has ".emf"
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("outlook.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","winrar.exe","7zfm.exe","explorer.exe","teams.exe")
+   or InitiatingProcessFolderPath has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\Public\", @"\INetCache\Content.Outlook\", @"\Microsoft\Windows\INetCache\")
+| project Timestamp, DeviceName, AccountName,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath,
+          RemoteSession = IsInitiatingProcessRemoteSession,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 
@@ -209,7 +282,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft May 2026 Patch Tuesday fixes 120 flaws, no zero-days
 
-`UC_1_3` · phase: **exploit** · confidence: **High**
+`UC_8_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -266,4 +339,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

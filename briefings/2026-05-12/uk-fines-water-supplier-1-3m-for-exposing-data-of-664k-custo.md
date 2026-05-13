@@ -11,12 +11,8 @@ By Bill Toulas
 May 12, 2026
 04:17 PM
 0 
-
-
 The Information Commissioner's Office has fined South Staffordshire Water Plc and parent company South Staffordshire Plc £963,900 ($1.3 million) over a cyberattack that exposed the personal data of 663,887 customers and employees.
-
-
-The company supplies 330 million liters of drinking water to 1.6 million consumers daily and, in 2022, disclosed that it was the target of a cyberattack …
+The company supplies 330 million liters of drinking water to 1.6 million consumers daily and, in 2022, disclosed that it was the target of a cyberattack that dis…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -236,7 +236,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Supply Chain Security Alert: eslint-config-prettier Package Shows Signs of Compr
 
-`UC_488_7` · phase: **exploit** · confidence: **High**
+`UC_487_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

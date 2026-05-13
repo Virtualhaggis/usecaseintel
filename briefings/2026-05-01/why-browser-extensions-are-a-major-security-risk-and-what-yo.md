@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cyberhaven-cluster malicious Chrome extension C2 beacon to cyberhavenext[.]pro / Vultr IPs
 
-`UC_172_7` · phase: **c2** · confidence: **High**
+`UC_171_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### [LLM] GlassWorm — VS Code / Cursor process polling Solana mainnet RPC for C2
 
-`UC_172_8` · phase: **c2** · confidence: **High**
+`UC_171_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### [LLM] Non-browser process writing manifest.json / background.js into Chrome / Edge extension folder
 
-`UC_172_9` · phase: **install** · confidence: **Medium**
+`UC_171_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

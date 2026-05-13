@@ -34,12 +34,99 @@ Blog Vulnerabilities & Threats Someone published four versions of a fake "tansta
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1567** — Exfiltration Over Web Service
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Malicious tanstack npm package (2.0.4–2.0.7) hashes written to node_modules
+
+`UC_185_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.file_name) as file_names values(Filesystem.process_name) as initiators from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90", "04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566", "abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9", "7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f") by Filesystem.dest Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// Malicious tanstack@2.0.4-2.0.7 file hashes from Aikido write-up
+let _malicious_hashes = dynamic([
+    "72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90",  // tanstack@2.0.4
+    "04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566",  // tanstack@2.0.5
+    "abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9",  // tanstack@2.0.6 (full directory sweep)
+    "7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f"   // tanstack@2.0.7
+]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in~ (_malicious_hashes)
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Outbound exfiltration to attacker Svix Ingest source ID from Node/npm initiator
+
+`UC_185_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as urls values(All_Traffic.app) as procs from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="api.svix.com" OR All_Traffic.url="*api.svix.com/ingest/api/v1/source/src_3387PLMB2uhXOBe3Q8sHu*" OR All_Traffic.url="*src_3387PLMB2uhXOBe3Q8sHu*") (All_Traffic.app="node.exe" OR All_Traffic.app="node" OR All_Traffic.app="npm*" OR All_Traffic.app="pnpm*" OR All_Traffic.app="yarn*") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// Egress to Svix Ingest source ID used by the fake tanstack postinstall hook
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has "api.svix.com")
+    or (RemoteUrl has "src_3387PLMB2uhXOBe3Q8sHu")
+    or (RemoteUrl has "3j2jokvbaF4WWdngv8zBbk")
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","npm.cmd","npm",
+                                       "pnpm.exe","pnpm.cmd","yarn.exe","yarn.cmd",
+                                       "npx.exe","npx.cmd")
+   or InitiatingProcessParentFileName in~ ("node.exe","npm.exe","npm.cmd",
+                                            "pnpm.exe","pnpm.cmd","yarn.exe","yarn.cmd")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] npm/pnpm/yarn install of malicious unscoped tanstack@2.0.4-2.0.7
+
+`UC_185_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where (Processes.process_name="npm.exe" OR Processes.process_name="npm.cmd" OR Processes.process_name="pnpm.exe" OR Processes.process_name="pnpm.cmd" OR Processes.process_name="yarn.exe" OR Processes.process_name="yarn.cmd" OR Processes.process_name="node.exe" OR Processes.process_name="npx.exe") (Processes.process="*tanstack@2.0.4*" OR Processes.process="*tanstack@2.0.5*" OR Processes.process="*tanstack@2.0.6*" OR Processes.process="*tanstack@2.0.7*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// npm/pnpm/yarn installing the malicious unscoped tanstack at one of the 4 known-bad versions
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("npm.exe","npm.cmd","pnpm.exe","pnpm.cmd","yarn.exe",
+                      "yarn.cmd","npx.exe","npx.cmd","node.exe")
+   or InitiatingProcessFileName in~ ("npm.exe","npm.cmd","pnpm.exe","pnpm.cmd",
+                                      "yarn.exe","yarn.cmd","node.exe")
+| where ProcessCommandLine has_any ("tanstack@2.0.4","tanstack@2.0.5",
+                                     "tanstack@2.0.6","tanstack@2.0.7")
+   or InitiatingProcessCommandLine has_any ("tanstack@2.0.4","tanstack@2.0.5",
+                                              "tanstack@2.0.6","tanstack@2.0.7")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -329,7 +416,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_186_10` · phase: **exploit** · confidence: **High**
+`UC_185_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,4 +476,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -49,12 +49,146 @@ Blog Vulnerabilities & Threats GlassWorm Hides a RAT Inside a Malicious Chrome E
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1546.003** — Persistence (article-specific)
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1573** — Encrypted Channel
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GlassWorm RAT install paths and persistence artifacts (QtCvyfVWKH / UpdateApp / UpdateLedger)
+
+`UC_301_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\AppData\\Roaming\\QtCvyfVWKH\\index.js","*\\AppData\\Local\\QtCvyfVWKH\\AghzgY.ps1","*\\AppData\\Roaming\\_node_x64\\webrtc\\wrtc-win32-x64\\index.js","*\\AppData\\Local\\Temp\\hJxPxpHP\\*","*\\AppData\\Local\\Temp\\EUXFUxzOVe\\*","*\\AppData\\Local\\Temp\\SKuyzYcDD.exe") by host Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_key_name) as registry_key_name values(Registry.registry_value_name) as registry_value_name values(Registry.registry_value_data) as registry_value_data from datamodel=Endpoint.Registry where Registry.registry_key_name="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name IN ("UpdateApp","UpdateLedger") OR Registry.registry_value_data IN ("*QtCvyfVWKH*","*AghzgY.ps1*","*SKuyzYcDD.exe*")) by host Registry.user Registry.registry_key_name Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _glassworm_paths = dynamic([
+    @"\AppData\Roaming\QtCvyfVWKH\",
+    @"\AppData\Local\QtCvyfVWKH\",
+    @"\AppData\Roaming\_node_x64\webrtc\wrtc-win32-x64\",
+    @"\AppData\Local\Temp\hJxPxpHP\",
+    @"\AppData\Local\Temp\EUXFUxzOVe\"
+]);
+let _glassworm_files = dynamic(["AghzgY.ps1","SKuyzYcDD.exe","index.js"]);
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | where (FolderPath has_any (_glassworm_paths))
+         or (FileName =~ "SKuyzYcDD.exe")
+         or (FolderPath has @"\AppData\Local\Temp\" and FileName =~ "AghzgY.ps1")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              FolderPath, FileName, SHA256, ReportId, Signal="FileArtifact";
+let RegHits = DeviceRegistryEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run"
+    | where RegistryValueName in~ ("UpdateApp","UpdateLedger")
+         or RegistryValueData has_any ("QtCvyfVWKH","AghzgY.ps1","SKuyzYcDD.exe")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RegistryKey, RegistryValueName, RegistryValueData,
+              FolderPath="", FileName="", SHA256="", ReportId, Signal="RegistryPersistence";
+let TaskHits = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName in~ ("schtasks.exe","powershell.exe","pwsh.exe","node.exe")
+    | where ProcessCommandLine has "UpdateApp"
+         and ProcessCommandLine has_any ("schtasks","Register-ScheduledTask","/Create","-TaskName")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              FolderPath=FolderPath, FileName=FileName, SHA256, ReportId,
+              RegistryKey="", RegistryValueName="", RegistryValueData="",
+              Signal="ScheduledTaskUpdateApp";
+union isfuzzy=true FileHits, RegHits, TaskHits
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm C2 / exfiltration egress to 45.32.150.251, 217.69.3.152, 217.69.0.159, 45.150.34.158
+
+`UC_301_15` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158") by host All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | eval c2_role=case(dest="45.32.150.251","WebSocket C2 / payload server",dest="217.69.3.152","Exfiltration server (/wall,/log)",dest="217.69.0.159","DHT bootstrap node",dest="45.150.34.158","Ledger/Trezor seed-phrase exfil") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _glassworm_c2 = dynamic(["45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where RemoteIP in (_glassworm_c2)
+| extend C2Role = case(
+    RemoteIP == "45.32.150.251", "WebSocket C2 / payload server (ports 80/4787)",
+    RemoteIP == "217.69.3.152",  "Exfiltration server (/wall, /log)",
+    RemoteIP == "217.69.0.159",  "DHT bootstrap node (port 10000)",
+    RemoteIP == "45.150.34.158", "Ledger/Trezor seed-phrase exfil",
+    "unknown")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          RemoteIP, RemotePort, RemoteUrl, Protocol, C2Role, ReportId
+| order by Timestamp desc
+```
+
+### [LLM] node.exe / npm-spawned process polling multiple Solana mainnet RPC endpoints (GlassWorm Stage 1 dead-drop)
+
+`UC_301_16` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest dc(All_Traffic.dest) as distinct_dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","pnpx.exe","npx.exe") AND (All_Traffic.dest IN ("api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network") OR All_Traffic.url IN ("*api.mainnet-beta.solana.com*","*solana-mainnet.gateway.tatum.io*","*solana-rpc.publicnode.com*","*solana.drpc.org*","*solana.leorpc.com*","*solana.api.onfinality.io*","*solana.api.pocket.network*","*api.blockeden.xyz/solana*","*go.getblock.us*")) by host All_Traffic.src All_Traffic.user All_Traffic.process_name span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_dest >= 2 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _solana_rpc_hosts = dynamic([
+    "api.mainnet-beta.solana.com",
+    "solana-mainnet.gateway.tatum.io",
+    "go.getblock.us",
+    "solana-rpc.publicnode.com",
+    "api.blockeden.xyz",
+    "solana.drpc.org",
+    "solana.leorpc.com",
+    "solana.api.onfinality.io",
+    "solana.api.pocket.network"
+]);
+let _node_loaders = dynamic(["node.exe","npm.exe","yarn.exe","pnpm.exe","pnpx.exe","npx.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ (_node_loaders)
+| where RemoteUrl has_any (_solana_rpc_hosts)
+   or RemoteUrl has "BjVeAjPrSKFiingBn4vZvghsGj9KCE8AJVtbc9S8o8SC"
+   or RemoteUrl has "6YGcuyFRJKZtcaYCCFba9fScNUvPkGXodXE1mJiSzqDJ"
+   or RemoteUrl has "DSRUBTziADDHSik7WQvSMjvwCHFsbsThrbbjWMoJPUiW"
+| summarize FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            DistinctRpcHosts = dcount(tolower(tostring(parse_url(RemoteUrl).Host))),
+            RpcHostsSeen = make_set(tolower(tostring(parse_url(RemoteUrl).Host)), 20),
+            HitCount = count(),
+            SampleUrls = make_set(RemoteUrl, 10),
+            ProcessCmdLines = make_set(InitiatingProcessCommandLine, 5),
+            ParentProcesses = make_set(InitiatingProcessParentFileName, 5)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+               bin(Timestamp, 10m)
+| where DistinctRpcHosts >= 2
+     or HitCount >= 6      // ~60s polling loop sustained over 10m
+     or any(SampleUrls has_any ("BjVeAjPrSKFiingBn4vZv","6YGcuyFRJKZtcaYCCFba","DSRUBTziADDHSik7WQv"))
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -434,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm Hides a RAT Inside a Malicious Chrome Extension
 
-`UC_302_13` · phase: **exploit** · confidence: **High**
+`UC_301_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -494,4 +628,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

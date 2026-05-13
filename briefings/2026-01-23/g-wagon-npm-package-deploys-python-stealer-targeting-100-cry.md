@@ -244,7 +244,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — G_Wagon: npm Package Deploys Python Stealer Targeting 100+ Crypto Wallets
 
-`UC_428_9` · phase: **exploit** · confidence: **High**
+`UC_427_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

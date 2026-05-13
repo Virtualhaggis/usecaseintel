@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How Harden Runner Detected the Sha1-Hulud Supply Chain Attack in CNCF's Backstag
 
-`UC_486_2` · phase: **exploit** · confidence: **High**
+`UC_485_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

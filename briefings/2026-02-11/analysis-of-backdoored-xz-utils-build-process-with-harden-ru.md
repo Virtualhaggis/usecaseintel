@@ -19,12 +19,87 @@ Table of Contents Loading na…
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1554** — Compromise Host Software Binary
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1027.004** — Obfuscated Files or Information: Compile After Delivery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] XZ Utils backdoor: liblzma object file written by shell during build (CVE-2024-3094)
+
+`UC_387_3` · phase: **weapon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="liblzma_la-crc64-fast.o" AND Filesystem.process_name IN ("dash","sh","bash","ash","zsh") by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// CVE-2024-3094 — liblzma_la-crc64-fast.o written by a POSIX shell instead of the assembler/linker
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "liblzma_la-crc64-fast.o"
+| where InitiatingProcessFileName in~ ("dash","sh","bash","ash","zsh")
+| project Timestamp, DeviceName, FolderPath, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName, ReportId
+| order by Timestamp desc
+```
+
+### [LLM] XZ Utils backdoor: bad-3-corrupt_lzma2.xz test file referenced or decoded during build (CVE-2024-3094)
+
+`UC_387_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.process="*bad-3-corrupt_lzma2.xz*" OR Processes.process="*good-large_compressed.lzma*") by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// CVE-2024-3094 — process command line references the malicious XZ test files used as backdoor stagers
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("bad-3-corrupt_lzma2.xz","good-large_compressed.lzma")
+   or InitiatingProcessCommandLine has_any ("bad-3-corrupt_lzma2.xz","good-large_compressed.lzma")
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, ReportId
+| order by Timestamp desc
+```
+
+### [LLM] XZ Utils backdoor: GCC reads C source from stdin via -x c - while linking liblzma backdoor object (CVE-2024-3094)
+
+`UC_387_5` · phase: **weapon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("gcc","cc","clang","x86_64-linux-gnu-gcc","x86_64-linux-gnu-gcc-12","x86_64-linux-gnu-gcc-13") AND Processes.process="*-x c -*" AND Processes.process="*liblzma_la-crc64-fast.o*" by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// CVE-2024-3094 — compiler invoked with stdin C source AND backdoor object on the same command line
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("gcc","cc","clang","x86_64-linux-gnu-gcc","x86_64-linux-gnu-gcc-12","x86_64-linux-gnu-gcc-13","ld","ld.bfd")
+   or InitiatingProcessFileName in~ ("gcc","cc","clang","x86_64-linux-gnu-gcc","ld.bfd")
+| where ProcessCommandLine matches regex @"(?i)-x\s+c\s+-(\s|$)"
+| where ProcessCommandLine has "liblzma_la-crc64-fast.o"
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, ReportId
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -52,7 +127,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Analysis of Backdoored XZ Utils Build Process with Harden-Runner
 
-`UC_388_2` · phase: **install** · confidence: **High**
+`UC_387_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,4 +168,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

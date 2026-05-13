@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SnakeStealer exfiltration to Telegram Bot API from non-browser process
 
-`UC_561_4` · phase: **actions** · confidence: **High**
+`UC_560_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### [LLM] SnakeStealer persistence: wscript.exe launching .vbs from Startup folder dropping .NET EXE in AppData
 
-`UC_561_5` · phase: **install** · confidence: **High**
+`UC_560_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### [LLM] SnakeStealer process-hollowing target RegSvcs.exe / RegAsm.exe / InstallUtil.exe egressing to public IP
 
-`UC_561_6` · phase: **c2** · confidence: **High**
+`UC_560_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
