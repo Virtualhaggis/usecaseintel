@@ -427,9 +427,11 @@ flowchart LR
   </div>
   <div class="mermaid">
 flowchart TB
-  A[article + indicators] --> T0{{Tier 0:<br/>KEV cited?<br/>CVE + actively exploited?<br/>hashes / IPs / domains?<br/>named threat actor?<br/>named campaign / @scope/pkg?<br/>security-estate keyword?<br/>analyst override allowlist?}}
+  A[article + indicators + early sev] --> T0{{Tier 0:<br/>KEV cited?<br/>CVE + actively exploited?<br/>hashes / IPs / domains?<br/>named threat actor?<br/>named campaign / @scope/pkg?<br/>security-estate keyword?<br/>analyst override allowlist?}}
   T0 -- any hit --> K0[KEEP — alert]
-  T0 -- none --> T1{{Tier 1 regex:<br/>listicle / Top N?<br/>state of / year in / one year of?<br/>opinion: 'Why X is …', 'Your X isn't Y'?<br/>tutorial: How to / beginner / What is?<br/>'[Webinar] …' / 'with FirstName LastName'?<br/>cumulative update / Patch Tuesday + no zero-days?<br/>'X Releases …' without RCE/exploit context?<br/>generic OS feature launch?<br/>': The Case for X'?}}
+  T0 -- none --> SEV{{Severity floor:<br/>is sev in low / med?}}
+  SEV -- yes --> DS[DROP — sev floor]
+  SEV -- no — sev crit or high --> T1{{Tier 1 regex:<br/>listicle / Top N?<br/>state of / year in / one year of?<br/>opinion: 'Why X is …', 'Your X isn't Y'?<br/>tutorial: How to / beginner / What is?<br/>'[Webinar] …' / 'with FirstName LastName'?<br/>cumulative update / Patch Tuesday + no zero-days?<br/>'X Releases …' without RCE/exploit context?<br/>generic OS feature launch?<br/>': The Case for X'?}}
   T1 -- match --> D1[DROP]
   T1 -- no match --> T2[Tier 2:<br/>Haiku LLM with 1500-char body excerpt<br/>'Reply ALERT or DROP — JSON only'<br/>cached by SHA1 CLASSIFIER_VERSION pipe URL]
   T2 -- alert --> K1[KEEP — alert]
@@ -438,7 +440,8 @@ flowchart TB
   K0 --> R[render card]
   K1 --> R
   K2 --> R
-  D1 --> X[skip render<br/>append to relevance_drops.jsonl]
+  DS --> X[skip render<br/>append to relevance_drops.jsonl]
+  D1 --> X
   D2 --> X
   </div>
   <span class="ref">classify_relevance at generate.py:13942 · invoked from main
