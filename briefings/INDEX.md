@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_764 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -107,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
-- [threatsday bulletin edge plaintext passwords ics 0 days patc](./2026-05-07/threatsday-bulletin-edge-plaintext-passwords-ics-0-days-patc.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
@@ -193,7 +192,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
 - [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
-- [this month in security with tony anscombe april 2026 edition](./2026-04-30/this-month-in-security-with-tony-anscombe-april-2026-edition.md)
 
 ## 2026-04-29
 - [a mini shai hulud has appeared bun based stealer hits sap ca](./2026-04-29/a-mini-shai-hulud-has-appeared-bun-based-stealer-hits-sap-ca.md)
@@ -305,9 +303,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-01
 - [cisa kev cve 2026 5281 google dawn use after free vulnerabil](./2026-04-01/cisa-kev-cve-2026-5281-google-dawn-use-after-free-vulnerabil.md)
 
-## 2026-03-31
-- [this month in security with tony anscombe march 2026 edition](./2026-03-31/this-month-in-security-with-tony-anscombe-march-2026-edition.md)
-
 ## 2026-03-30
 - [axios compromised on npm maintainer account hijacked rat dep](./2026-03-30/axios-compromised-on-npm-maintainer-account-hijacked-rat-dep.md)
 - [cisa kev cve 2026 3055 citrix netscaler out of bounds read v](./2026-03-30/cisa-kev-cve-2026-3055-citrix-netscaler-out-of-bounds-read-v.md)
@@ -403,9 +398,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [harden runner now supports windows and macos github actions ](./2026-03-01/harden-runner-now-supports-windows-and-macos-github-actions-.md)
 - [how stepsecurity caught a release storm in microsoft s types](./2026-03-01/how-stepsecurity-caught-a-release-storm-in-microsoft-s-types.md)
 
-## 2026-02-28
-- [this month in security with tony anscombe february 2026 edit](./2026-02-28/this-month-in-security-with-tony-anscombe-february-2026-edit.md)
-
 ## 2026-02-26
 - [plugx meeting invitation via msbuild and gdata](./2026-02-26/plugx-meeting-invitation-via-msbuild-and-gdata.md)
 
@@ -488,7 +480,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-30
 - [dynowiper update technical analysis and attribution](./2026-01-30/dynowiper-update-technical-analysis-and-attribution.md)
-- [this month in security with tony anscombe january 2026 editi](./2026-01-30/this-month-in-security-with-tony-anscombe-january-2026-editi.md)
 
 ## 2026-01-29
 - [cisa kev cve 2026 1281 ivanti endpoint manager mobile epmm c](./2026-01-29/cisa-kev-cve-2026-1281-ivanti-endpoint-manager-mobile-epmm-c.md)
@@ -548,7 +539,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-29
 - [cisa kev cve 2025 14847 mongodb and mongodb server improper ](./2025-12-29/cisa-kev-cve-2025-14847-mongodb-and-mongodb-server-improper-.md)
-- [this month in security with tony anscombe december 2025 edit](./2025-12-29/this-month-in-security-with-tony-anscombe-december-2025-edit.md)
 
 ## 2025-12-28
 - [shai hulud strikes again the golden path](./2025-12-28/shai-hulud-strikes-again-the-golden-path.md)
@@ -623,7 +613,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-28
 - [cisa kev cve 2021 26829 openplc scadabr cross site scripting](./2025-11-28/cisa-kev-cve-2021-26829-openplc-scadabr-cross-site-scripting.md)
-- [this month in security with tony anscombe november 2025 edit](./2025-11-28/this-month-in-security-with-tony-anscombe-november-2025-edit.md)
 
 ## 2025-11-23
 - [shai hulud self replicating worm compromises 500 npm package](./2025-11-23/shai-hulud-self-replicating-worm-compromises-500-npm-package.md)
@@ -669,9 +658,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-11-03
 - [ground zero 5 things to do after discovering a cyberattack](./2025-11-03/ground-zero-5-things-to-do-after-discovering-a-cyberattack.md)
 
-## 2025-10-31
-- [this month in security with tony anscombe october 2025 editi](./2025-10-31/this-month-in-security-with-tony-anscombe-october-2025-editi.md)
-
 ## 2025-10-30
 - [cisa kev cve 2025 24893 xwiki platform eval injection vulner](./2025-10-30/cisa-kev-cve-2025-24893-xwiki-platform-eval-injection-vulner.md)
 - [cisa kev cve 2025 41244 broadcom vmware aria operations and ](./2025-10-30/cisa-kev-cve-2025-41244-broadcom-vmware-aria-operations-and-.md)
@@ -685,7 +671,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-10-24
 - [cisa kev cve 2025 54236 adobe commerce and magento improper ](./2025-10-24/cisa-kev-cve-2025-54236-adobe-commerce-and-magento-improper-.md)
 - [cisa kev cve 2025 59287 microsoft windows server update serv](./2025-10-24/cisa-kev-cve-2025-59287-microsoft-windows-server-update-serv.md)
-- [cybersecurity awareness month 2025 cyber risk thrives in the](./2025-10-24/cybersecurity-awareness-month-2025-cyber-risk-thrives-in-the.md)
 
 ## 2025-10-23
 - [gotta fly lazarus targets the uav sector](./2025-10-23/gotta-fly-lazarus-targets-the-uav-sector.md)
@@ -699,7 +684,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 2746 kentico xperience cms authentication ](./2025-10-20/cisa-kev-cve-2025-2746-kentico-xperience-cms-authentication-.md)
 - [cisa kev cve 2025 33073 microsoft windows smb client imprope](./2025-10-20/cisa-kev-cve-2025-33073-microsoft-windows-smb-client-imprope.md)
 - [cisa kev cve 2025 61884 oracle e business suite server side ](./2025-10-20/cisa-kev-cve-2025-61884-oracle-e-business-suite-server-side-.md)
-- [cybersecurity awareness month 2025 building resilience again](./2025-10-20/cybersecurity-awareness-month-2025-building-resilience-again.md)
 
 ## 2025-10-15
 - [cisa kev cve 2025 54253 adobe experience manager forms code ](./2025-10-15/cisa-kev-cve-2025-54253-adobe-experience-manager-forms-code-.md)
@@ -743,7 +727,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 20352 cisco ios and ios xe software snmp d](./2025-09-29/cisa-kev-cve-2025-20352-cisco-ios-and-ios-xe-software-snmp-d.md)
 - [cisa kev cve 2025 32463 sudo inclusion of functionality from](./2025-09-29/cisa-kev-cve-2025-32463-sudo-inclusion-of-functionality-from.md)
 - [cisa kev cve 2025 59689 libraesva email security gateway com](./2025-09-29/cisa-kev-cve-2025-59689-libraesva-email-security-gateway-com.md)
-- [this month in security with tony anscombe september 2025 edi](./2025-09-29/this-month-in-security-with-tony-anscombe-september-2025-edi.md)
 
 ## 2025-09-25
 - [cisa kev cve 2025 20362 cisco secure firewall adaptive secur](./2025-09-25/cisa-kev-cve-2025-20362-cisco-secure-firewall-adaptive-secur.md)
