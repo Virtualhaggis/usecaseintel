@@ -14039,6 +14039,35 @@ _RELEVANCE_OVERRIDE_TITLES = (
     # Add lowercase substrings here, e.g. "specific incident name"
 )
 
+# Hard-reject patterns. These run BEFORE Tier 0 (strong-keep) — they drop
+# the article even if the body is full of named actors, CVEs, and IOCs.
+# Reserved for categorically non-actionable content formats: monthly /
+# weekly recaps, awareness-month evergreen posts, conference replays.
+# An ESET monthly summary that namechecks Lazarus / FIN7 / Volt Typhoon
+# is still a recap, not threat intel the SOC needs to act on.
+_HARD_REJECT_PATTERNS = (
+    re.compile(r"^this month in security\b", re.I),
+    re.compile(r"\bcybersecurity awareness month\b", re.I),
+    re.compile(r"^weekly recap\b", re.I),
+    re.compile(r"^labscon\d*\s+replay\b", re.I),
+    re.compile(r"^looking back at\b", re.I),
+    re.compile(r"\bthreatsday bulletin\b", re.I),
+    re.compile(r"\bunlocked\s+403\b", re.I),
+)
+
+
+def _hard_reject_match(article: dict) -> str | None:
+    """Return the matched pattern source if the title fires a hard-reject,
+    else None. Hard rejects beat Tier 0 keep — recap formats stay out
+    even when their body mentions threat actors / CVEs."""
+    title = article.get("title") or ""
+    if not title:
+        return None
+    for rx in _HARD_REJECT_PATTERNS:
+        if rx.search(title):
+            return rx.pattern[:60]
+    return None
+
 # Active-threat keywords that move an article straight into ALERT when
 # paired with a CVE in the body — these are the words vendors use when
 # something is being exploited rather than just patched.
@@ -14199,12 +14228,20 @@ def _llm_relevance_call(prompt: str) -> dict | None:
 def classify_relevance(article: dict, ind: dict, sev: str | None) -> tuple[str, str, str]:
     """Return (class, reason, tier) where class is 'alert' or 'drop'.
 
-    Tier names: 'keep-0' (strong-keep override), 'drop-sev' (low/medium
-    severity drop after Tier 0), 'drop-1' (regex hard drop),
-    'llm-2-alert' / 'llm-2-drop' (LLM classifier), 'default-keep' (fallback).
-    On LLM auth missing or any infra failure the function defaults to ALERT —
-    we never silently drop on errors.
+    Tier names: 'hard-reject' (categorically non-actionable recap formats —
+    runs BEFORE Tier 0), 'keep-0' (strong-keep override), 'drop-sev'
+    (low/medium severity drop after Tier 0), 'drop-1' (regex hard drop),
+    'llm-2-alert' / 'llm-2-drop' (LLM classifier), 'default-keep'
+    (fallback). On LLM auth missing or any infra failure the function
+    defaults to ALERT — we never silently drop on errors.
     """
+    # Hard-reject — beats Tier 0. Reserved for recap / awareness-month /
+    # conference-replay formats whose bodies mention threats but which
+    # aren't themselves actionable.
+    hr = _hard_reject_match(article)
+    if hr:
+        return ("drop", f"hard-reject: {hr}", "hard-reject")
+
     # Tier 0
     keep_reason = _strong_keep_signal(article, ind)
     if keep_reason:
@@ -14417,8 +14454,8 @@ def main():
     total_cves = set()
     sev_counts = {"crit":0,"high":0,"med":0,"low":0}
     # Relevance gate accounting
-    relevance_tier_counts = {"keep-0": 0, "drop-sev": 0, "drop-1": 0,
-                             "llm-2-alert": 0, "llm-2-drop": 0,
+    relevance_tier_counts = {"hard-reject": 0, "keep-0": 0, "drop-sev": 0,
+                             "drop-1": 0, "llm-2-alert": 0, "llm-2-drop": 0,
                              "default-keep": 0}
     relevance_drop_log = []  # list of dicts -> intel/relevance_drops.jsonl
 
@@ -14617,7 +14654,8 @@ def main():
     rel_kept   = (relevance_tier_counts.get("keep-0", 0)
                   + relevance_tier_counts.get("llm-2-alert", 0)
                   + relevance_tier_counts.get("default-keep", 0))
-    rel_dropped = (relevance_tier_counts.get("drop-sev", 0)
+    rel_dropped = (relevance_tier_counts.get("hard-reject", 0)
+                   + relevance_tier_counts.get("drop-sev", 0)
                    + relevance_tier_counts.get("drop-1", 0)
                    + relevance_tier_counts.get("llm-2-drop", 0))
     if rel_kept or rel_dropped:
@@ -14629,7 +14667,8 @@ def main():
                             sorted(top_sources.items(), key=lambda x:-x[1])[:5])
         print(
             f"[*] Relevance: kept {rel_kept} alert, dropped {rel_dropped} "
-            f"(tier-0 override: {relevance_tier_counts.get('keep-0',0)}, "
+            f"(hard-reject: {relevance_tier_counts.get('hard-reject',0)}, "
+            f"tier-0 override: {relevance_tier_counts.get('keep-0',0)}, "
             f"sev-floor (low/med): {relevance_tier_counts.get('drop-sev',0)}, "
             f"tier-1 regex: {relevance_tier_counts.get('drop-1',0)}, "
             f"tier-2 LLM: {relevance_tier_counts.get('llm-2-alert',0)} alert / "
