@@ -13909,6 +13909,11 @@ _RELEVANCE_DROP_PATTERNS = (
     # word subjects like "Why Agentic AI Is Security's Next Blind Spot".
     re.compile(r"^why\s+\S+(?:\s+\S+){0,5}\s+(is|are|will|won['’]?t|isn['’]?t)\b", re.I),
     re.compile(r"^(is\s+\w+\s+the\s+next|the\s+case\s+for)\b", re.I),
+    # "The Case for X" after a colon — headlines like
+    # "73 Seconds to Breach, 24 Hours to Patch: The Case for Autonomous
+    # Validation". The colon makes the LHS a hook and the RHS an opinion
+    # subtitle. Catch the subtitle directly.
+    re.compile(r":\s*the\s+case\s+for\b", re.I),
     re.compile(r"\bis\s+(dead|back|broken|over|a\s+fear\s+response)\b", re.I),
     re.compile(r"\b(next\s+blind\s+spot|fear\s+response|hot\s+take)\b", re.I),
     re.compile(r"^(how to|a beginner|step.by.step|getting started|what is)", re.I),
