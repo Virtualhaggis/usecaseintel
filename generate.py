@@ -994,15 +994,64 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 """
 
 
+# =============================================================================
+# OAuth circuit breaker. claude-agent-sdk's subprocess (cli runner) occasionally
+# crashes mid-stream with "Fatal error in message reader: Command failed with
+# exit code 1". When that happens the pipeline can stall waiting for a dead
+# child process, or fail every subsequent article and waste minutes. Track
+# consecutive failures here so once the SDK is clearly broken for this run,
+# we stop dialling it and either fall back to ANTHROPIC_API_KEY or skip the
+# LLM step entirely. Reset in main() at the start of each run.
+# =============================================================================
+_OAUTH_FAILURES = 0
+_OAUTH_CIRCUIT_OPEN = False
+_OAUTH_MAX_CONSECUTIVE_FAILURES = 3
+_OAUTH_UC_CALL_TIMEOUT_SEC = 180         # _llm_call_via_oauth: max_turns=4 + search
+_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
+
+
+def _reset_oauth_circuit_breaker():
+    """Call at the start of every main() run so a fresh pipeline doesn't
+    inherit a stuck-open breaker from a previous in-process retry."""
+    global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
+    _OAUTH_FAILURES = 0
+    _OAUTH_CIRCUIT_OPEN = False
+
+
+def _note_oauth_failure(reason: str) -> None:
+    global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
+    _OAUTH_FAILURES += 1
+    safe = str(reason).encode("ascii", "replace").decode("ascii")[:120]
+    print(f"    [!] OAuth call failed ({_OAUTH_FAILURES}/"
+          f"{_OAUTH_MAX_CONSECUTIVE_FAILURES}): {safe}")
+    if _OAUTH_FAILURES >= _OAUTH_MAX_CONSECUTIVE_FAILURES and not _OAUTH_CIRCUIT_OPEN:
+        _OAUTH_CIRCUIT_OPEN = True
+        print(f"    [!] OAuth circuit breaker OPEN — skipping further OAuth "
+              f"calls this run (rules-only + ANTHROPIC_API_KEY fallback if set)")
+
+
+def _note_oauth_success() -> None:
+    """A clean response resets the consecutive-failure count so transient
+    blips don't accumulate across hours of normal operation."""
+    global _OAUTH_FAILURES
+    _OAUTH_FAILURES = 0
+
+
 def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
     """Call Claude through the user's Claude Code OAuth session via
     claude-agent-sdk. Returns the raw response text or None if the SDK
     isn't installed / the user isn't authenticated.
 
+    Wrapped in the OAuth circuit breaker (see above): once the SDK has
+    failed `_OAUTH_MAX_CONSECUTIVE_FAILURES` times in a row this returns
+    None immediately so the pipeline doesn't waste minutes per article.
+
     When enable_search=True (default), Claude can use the WebSearch tool
     to cross-reference the article against other public sources before
     answering. This is what lets the LLM-emitted UCs reach genuinely
     high fidelity — multiple article sources confirm the IOCs / TTPs."""
+    if _OAUTH_CIRCUIT_OPEN:
+        return None
     try:
         from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
     except ImportError:
@@ -1030,11 +1079,22 @@ def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
                     if isinstance(block, TextBlock):
                         chunks.append(block.text)
         return "".join(chunks)
+    async def _run_with_timeout():
+        return await asyncio.wait_for(_run(), timeout=_OAUTH_UC_CALL_TIMEOUT_SEC)
     try:
-        return asyncio.run(_run())
-    except Exception as e:
-        safe = str(e).encode("ascii","replace").decode("ascii")[:120]
-        print(f"    [!] Claude Code OAuth call failed: {safe}")
+        out = asyncio.run(_run_with_timeout())
+        if out:
+            _note_oauth_success()
+        return out
+    except TimeoutError:  # builtin alias for asyncio.TimeoutError in py3.11+
+        _note_oauth_failure(f"timeout after {_OAUTH_UC_CALL_TIMEOUT_SEC}s")
+        return None
+    except BaseException as e:
+        # BaseException covers SystemExit / KeyboardInterrupt-like exits that
+        # the SDK subprocess can raise on a dirty crash. We do NOT want one
+        # of those to abort the whole pipeline — count it as a failure and
+        # carry on.
+        _note_oauth_failure(e)
         return None
 
 
@@ -14053,11 +14113,18 @@ _RELEVANCE_PROMPT = (
 
 def _llm_relevance_call(prompt: str) -> dict | None:
     """Cheap binary classifier — Haiku, max_tokens=120, no web search.
-    Returns parsed dict or None on any failure (caller defaults to ALERT)."""
+    Returns parsed dict or None on any failure (caller defaults to ALERT).
+
+    Shares the same OAuth circuit breaker as _llm_call_via_oauth: once
+    the SDK has flapped `_OAUTH_MAX_CONSECUTIVE_FAILURES` times this run,
+    relevance calls also short-circuit so the pipeline doesn't slow to a
+    crawl. Caller (`classify_relevance`) defaults to ALERT on None — we
+    never silently drop on infrastructure failures.
+    """
     use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     raw = None
-    if use_oauth:
+    if use_oauth and not _OAUTH_CIRCUIT_OPEN:
         try:
             from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
             import asyncio
@@ -14070,8 +14137,16 @@ def _llm_relevance_call(prompt: str) -> dict | None:
                             if isinstance(block, TextBlock):
                                 chunks.append(block.text)
                 return "".join(chunks)
-            raw = asyncio.run(_run())
-        except Exception:
+            async def _run_with_timeout():
+                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
+            raw = asyncio.run(_run_with_timeout())
+            if raw:
+                _note_oauth_success()
+        except TimeoutError:  # builtin alias for asyncio.TimeoutError py3.11+
+            _note_oauth_failure(f"relevance timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s")
+            raw = None
+        except BaseException as e:
+            _note_oauth_failure(e)
             raw = None
     if raw is None and api_key:
         try:
@@ -14293,6 +14368,10 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
 
 
 def main():
+    # Fresh circuit breaker per run — don't inherit a stuck-open state
+    # from anything that imported this module earlier.
+    _reset_oauth_circuit_breaker()
+
     articles = fetch_articles()
     if not articles:
         sys.exit("[!] No articles returned from any source.")
@@ -14529,6 +14608,11 @@ def main():
         )
         if top_str:
             print(f"    Top dropped sources: {top_str}")
+    if _OAUTH_CIRCUIT_OPEN:
+        print(f"[!] OAuth circuit breaker tripped during this run after "
+              f"{_OAUTH_MAX_CONSECUTIVE_FAILURES} consecutive failures "
+              f"— LLM calls were short-circuited for the remainder. "
+              f"Pipeline still completed end-to-end.")
     try:
         drops_path = Path(__file__).parent / "intel" / "relevance_drops.jsonl"
         drops_path.parent.mkdir(parents=True, exist_ok=True)
