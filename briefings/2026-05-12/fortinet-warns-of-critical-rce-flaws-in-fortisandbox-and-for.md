@@ -29,12 +29,50 @@ The first one, tracked as CVE-2026-44277, impacts the company's FortiAuthenticat
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1592.002** — Gather Victim Host Information: Software
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Asset exposure: FortiAuthenticator CVE-2026-44277 / FortiSandbox CVE-2026-26083 vulnerable versions
+
+`UC_36_4` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-44277","CVE-2026-26083") by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.cvss | `drop_dm_object_name(Vulnerabilities)` | eval product=case(cve=="CVE-2026-44277","FortiAuthenticator",cve=="CVE-2026-26083","FortiSandbox",true(),"unknown"), fix=case(cve=="CVE-2026-44277","Upgrade to FortiAuthenticator 6.5.7 / 6.6.9 / 8.0.3",cve=="CVE-2026-26083","Upgrade to FortiSandbox 4.4.9 / 5.0.2 (Cloud/PaaS 5.0.6+)",true(),"") | sort - cvss, dest
+```
+
+**Defender KQL:**
+```kql
+// Catches Fortinet appliances only if TVM enumerates them via Network Device Discovery; pair with the inventory query below for hosts that have FortiClient/Forti agents installed.
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-44277", "CVE-2026-26083")
+| extend FixGuidance = case(CveId == "CVE-2026-44277", "Upgrade FortiAuthenticator to 6.5.7 / 6.6.9 / 8.0.3",
+                            CveId == "CVE-2026-26083", "Upgrade FortiSandbox to 4.4.9 / 5.0.2 (Cloud/PaaS 5.0.6+)",
+                            "")
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, FixGuidance
+| union (
+    // Fallback: hit on Fortinet inventory string + affected-version regex, in case CVE feed lag
+    DeviceTvmSoftwareInventory
+    | where SoftwareVendor =~ "fortinet"
+    | where (SoftwareName has "fortiauthenticator" and (SoftwareVersion startswith "6.5." and SoftwareVersion matches regex @"^6\.5\.[0-6]($|[^0-9])"
+             or SoftwareVersion startswith "6.6." and SoftwareVersion matches regex @"^6\.6\.[0-8]($|[^0-9])"
+             or SoftwareVersion startswith "8.0." and SoftwareVersion matches regex @"^8\.0\.[0-2]($|[^0-9])"))
+       or (SoftwareName has "fortisandbox" and (SoftwareVersion startswith "4.4." and SoftwareVersion matches regex @"^4\.4\.[0-8]($|[^0-9])"
+             or SoftwareVersion startswith "5.0." and SoftwareVersion matches regex @"^5\.0\.[0-1]($|[^0-9])"))
+    | extend CveId = iff(SoftwareName has "fortiauthenticator", "CVE-2026-44277", "CVE-2026-26083"),
+             VulnerabilitySeverityLevel = "Critical",
+             RecommendedSecurityUpdate = iff(SoftwareName has "fortiauthenticator", "6.5.7 / 6.6.9 / 8.0.3", "4.4.9 / 5.0.2"),
+             FixGuidance = "See Fortinet PSIRT (May 12 2026)"
+    | project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, FixGuidance
+  )
+| summarize arg_max(Timestamp, *) by DeviceName, SoftwareName, CveId
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -130,4 +168,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -26,12 +26,105 @@ Cybersecurity researchers are calling attention to a new campaign dubbed GemStuf
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1567.001** — Exfiltration to Code Repository
+- **T1059.004** — Unix Shell
+- **T1078** — Valid Accounts
+- **T1552.001** — Credentials In Files
+- **T1102.002** — Bidirectional Communication
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GemStuffer: `gem push` to RubyGems from /tmp staging directory
+
+`UC_14_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process="*gem push*" OR Processes.process="*gem build*") Processes.process="*rubygems.org*" by Processes.dest Processes.user Processes.process_name
+| `drop_dm_object_name(Processes)`
+| where match(cmdline, "(?i)/tmp/") OR match(cmdline, "(?i)gemhome")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "gem" and ProcessCommandLine has_any ("push", "build")
+| where ProcessCommandLine has "rubygems.org"
+| where ProcessCommandLine has_any ("/tmp/", "gemhome", ".gem/credentials")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] GemStuffer: fabricated RubyGems credentials dropped at /tmp/gemhome/.gem/credentials
+
+`UC_14_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/tmp/gemhome/.gem/credentials*" OR Filesystem.file_path="*/tmp/gemhome/.gem/*") by Filesystem.dest Filesystem.file_path Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has "/tmp/gemhome" or (FolderPath endswith "/.gem" and FileName =~ "credentials" and FolderPath has "/tmp/")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] GemStuffer: host scrapes UK council ModernGov portal then POSTs to RubyGems API
+
+`UC_14_7` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods from datamodel=Web where (Web.url="*moderngov.lambeth.gov.uk*" OR Web.url="*democracy.wandsworth.gov.uk*" OR Web.url="*moderngov.southwark.gov.uk*" OR Web.url="*rubygems.org/api/v1/gems*") by Web.src
+| `drop_dm_object_name(Web)`
+| eval hitCouncil=if(match(mvjoin(urls,"|"), "moderngov\.lambeth|democracy\.wandsworth|moderngov\.southwark"), 1, 0)
+| eval hitGemsApi=if(match(mvjoin(urls,"|"), "rubygems\.org/api/v1/gems"), 1, 0)
+| where hitCouncil=1 AND hitGemsApi=1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let CorrWindowMin = 10;
+let CouncilHits = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where RemoteUrl has_any ("moderngov.lambeth.gov.uk","democracy.wandsworth.gov.uk","moderngov.southwark.gov.uk")
+    | project CouncilTime = Timestamp, DeviceId, DeviceName,
+              CouncilUrl = RemoteUrl,
+              ScraperProc = InitiatingProcessFileName,
+              ScraperCmd  = InitiatingProcessCommandLine;
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where RemoteUrl has "rubygems.org"
+| where InitiatingProcessFileName in~ ("ruby","gem","curl","wget")
+   or InitiatingProcessCommandLine has_any ("gem push","api/v1/gems","application/octet-stream")
+| join kind=inner CouncilHits on DeviceId
+| where Timestamp between (CouncilTime .. CouncilTime + CorrWindowMin * 1m)
+| project DeviceName, CouncilTime, PushTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, CouncilTime),
+          CouncilUrl, RubyGemsUrl = RemoteUrl,
+          ScraperProc, ScraperCmd,
+          PushProc = InitiatingProcessFileName, PushCmd = InitiatingProcessCommandLine
+| order by PushTime desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -215,4 +308,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

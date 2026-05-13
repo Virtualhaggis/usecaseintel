@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterSprawl: pgserve Compromised on npm: Malicious Versions Harvest Credentia
 
-`UC_194_4` · phase: **exploit** · confidence: **High**
+`UC_196_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

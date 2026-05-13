@@ -1,4 +1,4 @@
-# [CRIT] Foxconn confirms cyberattack claimed by Nitrogen ransomware gang
+# [HIGH] Foxconn confirms cyberattack claimed by Nitrogen ransomware gang
 
 **Source:** BleepingComputer, Cyber Security News
 **Published:** 2026-05-13
@@ -6,35 +6,48 @@
 
 ## Threat Profile
 
-Home Cyber Security 
-Foxconn Confirms Cyberattack After Nitrogen Ransomware Gang Claim 
-By Guru Baran 
+Home Cyber Security News 
+ClickFix Evolves with 10-Year-Old Open-Source Python SOCKS5 Proxy 
+By Tushar Subhra Dutta 
 May 13, 2026 
-
-
-
-
-Foxconn has officially confirmed a cyberattack targeting its North American operations after the Nitrogen ransomware gang publicly listed the company on its data leak site, claiming to have stolen a staggering 8 terabytes of sensitive data.
-The Nitrogen ransomware group made its move on Monday, posting Foxconn on its breach and extortion portal and asserting it had exfiltr…
+A cyberattack campaign that tricks users into running malicious commands on their own computers has taken a dangerous new turn. The technique, known as “ClickFix,” has been circulating for some time, but a recent incident revealed that attackers are now pairing it with a 10-year-old open-source Python tool to create a far more resilient form of access. 
+What was once…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `185.205.211.217`
+- **IPv4 (defanged):** `206.206.103.120`
+- **IPv4 (defanged):** `206.206.103.106`
+- **IPv4 (defanged):** `167.99.158.97`
+- **Domain (defanged):** `strapness.com`
+- **Domain (defanged):** `abledom.net`
+- **Domain (defanged):** `overlateise.com`
+- **Domain (defanged):** `jquery.js`
 
 ## MITRE ATT&CK Techniques
 
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
+- **T1053.005** — Scheduled Task
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1027** — Obfuscated Files or Information
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1195.002** — Compromise Software Supply Chain
+- **T1219** — Remote Access Software
+- **T1090** — Proxy
+- **T1090.001** — Internal Proxy
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1189** — Drive-by Compromise
 
 ## Kill chain phases observed
 
@@ -42,33 +55,148 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Infostealer — non-browser process accessing browser cookie/login DBs
+### [LLM] PySoxy SOCKS5 proxy execution via Python (-ssl -remote_ip -remote_port flags)
 
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+`UC_8_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe") AND Processes.process="*-ssl*" AND Processes.process="*-remote_ip*" AND Processes.process="*-remote_port*" by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| where FileName in~ ("python.exe","pythonw.exe","python3.exe","py.exe")
+| where ProcessCommandLine has "-ssl"
+| where ProcessCommandLine has "-remote_ip"
+| where ProcessCommandLine has "-remote_port"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] ClickFix persistence — schtasks /create pointing to script in C:\ProgramData
+
+`UC_8_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" AND Processes.process="*/create*" AND Processes.process="*\\ProgramData\\*" AND Processes.parent_process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","mshta.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has @"\ProgramData\"
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","mshta.exe")
+| where AccountName !endswith "$"
+| extend Frequency = extract(@"(?i)/sc\s+(\w+)", 1, ProcessCommandLine),
+         Interval  = extract(@"(?i)/mo\s+(\d+)", 1, ProcessCommandLine),
+         TaskRun   = extract(@"(?i)/tr\s+\"?([^\"]+?)\"?(?:\s+/|$)", 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, Frequency, Interval, TaskRun, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] ClickFix/PySoxy IOC sweep — connections to named C2 IPs and stager domains
+
+`UC_8_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("185.205.211.217","206.206.103.120","206.206.103.106","167.99.158.97") OR All_Traffic.url IN ("*strapness.com*","*abledom.net*","*overlateise.com*") OR All_Traffic.dest_host IN ("strapness.com","abledom.net","overlateise.com","*.strapness.com","*.abledom.net","*.overlateise.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.url All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _ClickFixIPs = dynamic(["185.205.211.217","206.206.103.120","206.206.103.106","167.99.158.97"]);
+let _ClickFixDomains = dynamic(["strapness.com","abledom.net","overlateise.com"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (_ClickFixIPs)
+         or RemoteUrl has_any (_ClickFixDomains)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              RemoteIP, RemoteUrl, RemotePort, Protocol,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+              EvidenceSource = "DeviceNetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has_any (_ClickFixDomains)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              RemoteIP = "", RemoteUrl = Q, RemotePort = int(null), Protocol = "DNS",
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+              EvidenceSource = "DeviceEvents:DnsQueryResponse" )
+| order by Timestamp desc
+```
+
+### Beaconing — periodic outbound to small set of destinations
+
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
+```
+
+### Scheduled task created with suspicious image / encoded args
+
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -184,6 +312,35 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -268,17 +425,18 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### Trusted vendor binary / installer launching unusual children
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
 
@@ -287,12 +445,21 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
+
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `185.205.211.217`, `206.206.103.120`, `206.206.103.106`, `167.99.158.97`, `strapness.com`, `abledom.net`, `overlateise.com`, `jquery.js`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

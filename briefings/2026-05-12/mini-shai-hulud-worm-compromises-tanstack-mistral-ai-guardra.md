@@ -1,6 +1,6 @@
 # [CRIT] Mini Shai-Hulud Worm Compromises TanStack, Mistral AI, Guardrails AI & More Packages
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-05-12
 **Article:** https://thehackernews.com/2026/05/mini-shai-hulud-worm-compromises.html
 
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud / TeamPCP exfil to getsession.org, masscan.cloud, git-tanstack.com or 83.142.209.194
 
-`UC_42_8` · phase: **c2** · confidence: **High**
+`UC_45_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] guardrails-ai 0.10.1 stealer: python3 executes /tmp/transformers.pyz on Linux
 
-`UC_42_9` · phase: **exploit** · confidence: **High**
+`UC_45_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud npm worm artifact: router_init.js written into node_modules
 
-`UC_42_10` · phase: **install** · confidence: **Medium**
+`UC_45_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -350,7 +350,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Worm Compromises TanStack, Mistral AI, Guardrails AI & More Pack
 
-`UC_42_7` · phase: **exploit** · confidence: **High**
+`UC_45_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
