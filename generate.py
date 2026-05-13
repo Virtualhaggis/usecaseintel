@@ -7209,27 +7209,28 @@ cards.forEach(c => observer.observe(c));
 // content-visibility:auto on article cards means offscreen cards
 // contribute only their `contain-intrinsic-size` (720px) to layout
 // until they actually render. scrollIntoView calculates the target's
-// position using those 720px placeholders, but as smooth-scroll passes
-// through each card it materialises at its real height (often 1.5-3k px),
-// pushing the target further down — so the scroll lands several cards
-// short. Helper: force-render every card in the strip between current
-// scroll and target BEFORE scrolling, so layout offsets are accurate
-// and scrollIntoView lands on the right card first try.
+// position using those 720px placeholders, but as the smooth-scroll
+// passes through each card it materialises at its real height (often
+// 1.5-3k px), pushing the target further down — so the scroll lands
+// several cards short for far jumps.
+//
+// Naïve fix (force-render an estimated band around the target) only
+// works for SHORT jumps because the estimate itself is placeholder-
+// based. For TOC jumps to article #100+, the path between current
+// scroll and target spans cards that aren't in the estimated band
+// and they materialise during the scroll animation, shifting the
+// target by 100k+ px.
+//
+// Robust fix: force-render EVERY article card up-front. Cheap (~ms)
+// for ~900 cards because they share styles and contain:layout is
+// already in effect. After this one-time pass on the first TOC click
+// every subsequent scroll uses real cached heights and is accurate
+// without re-forcing.
 function scrollToArticleAccurate(target, block) {
   if (!target) return;
-  const currentY = window.scrollY;
-  const estTargetY = target.getBoundingClientRect().top + currentY;
-  const lo = Math.min(currentY, estTargetY) - 200;
-  const hi = Math.max(currentY, estTargetY) + window.innerHeight + 200;
-  cards.forEach(c => {
-    const r = c.getBoundingClientRect();
-    const top = r.top + currentY;
-    if (top + r.height >= lo && top <= hi) {
-      c.style.contentVisibility = 'visible';
-    }
-  });
-  // Synchronous layout flush so the now-rendered cards contribute their
-  // real heights before scrollIntoView reads offsets.
+  cards.forEach(c => { c.style.contentVisibility = 'visible'; });
+  // Synchronous layout flush so every card contributes its real height
+  // before scrollIntoView reads offsets.
   void document.body.offsetHeight;
   target.scrollIntoView({behavior:'smooth', block: block || 'start'});
 }
@@ -8638,8 +8639,15 @@ function _libDetailHtml(p) {
 const viewTabs = document.querySelectorAll('.view-tab');
 const views = document.querySelectorAll('.view');
 function showView(name) {
+  const prevActive = document.querySelector('.view-tab.active')?.dataset.view;
   viewTabs.forEach(b => b.classList.toggle('active', b.dataset.view === name));
   views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+  // Reset scroll to top whenever the user changes tab. Leaving the
+  // previous tab's scrollY makes the new tab appear "mid-page" or even
+  // blank if the previous tab was tall and the new tab is short.
+  if (prevActive !== name) {
+    window.scrollTo({top: 0, left: 0, behavior: 'instant'});
+  }
   // Each tab has its own top-bar stats area. Body class drives the
   // CSS visibility transition; only the active tab's stats are shown.
   document.body.classList.toggle('view-articles-active', name === 'articles');
