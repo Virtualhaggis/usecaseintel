@@ -10369,8 +10369,23 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
 """
 
 
-def compute_severity(article_text: str, ind: dict, ucs: list, techs: list) -> str:
-    """Return 'crit' | 'high' | 'med' | 'low' based on signals."""
+def compute_severity(article_text: str, ind: dict, ucs: list, techs: list,
+                     *, title_hint: str = "") -> str:
+    """Return 'crit' | 'high' | 'med' | 'low' based on signals.
+
+    Explicit-severity sources short-circuit the body-score heuristic:
+      - "[GHSA / CRITICAL] ..." titles -> crit (the GHSA feed is now
+        Critical-only at fetch, so every entry IS a critical advisory
+        even if the body text doesn't score high on the keyword model)
+      - "CISA KEV: ..." titles -> crit (KEV catalogue entries are by
+        definition actively exploited)
+    Without this guard, GHSA Critical advisories with terse bodies
+    (path traversal, prototype pollution, etc.) get downgraded to
+    'med' and then dropped by the low/med relevance gate.
+    """
+    t_low = (title_hint or "").lower().strip()
+    if t_low.startswith("[ghsa / critical]") or t_low.startswith("cisa kev:"):
+        return "crit"
     t = article_text.lower()
     score = 0
     if ind["cves"]:
@@ -14181,10 +14196,11 @@ def _llm_relevance_call(prompt: str) -> dict | None:
     return {"class": cls, "reason": (d.get("reason") or "")[:120]}
 
 
-def classify_relevance(article: dict, ind: dict, sev: str) -> tuple[str, str, str]:
+def classify_relevance(article: dict, ind: dict, sev: str | None) -> tuple[str, str, str]:
     """Return (class, reason, tier) where class is 'alert' or 'drop'.
 
-    Tier names: 'keep-0' (strong-keep override), 'drop-1' (regex hard drop),
+    Tier names: 'keep-0' (strong-keep override), 'drop-sev' (low/medium
+    severity drop after Tier 0), 'drop-1' (regex hard drop),
     'llm-2-alert' / 'llm-2-drop' (LLM classifier), 'default-keep' (fallback).
     On LLM auth missing or any infra failure the function defaults to ALERT —
     we never silently drop on errors.
@@ -14193,6 +14209,13 @@ def classify_relevance(article: dict, ind: dict, sev: str) -> tuple[str, str, st
     keep_reason = _strong_keep_signal(article, ind)
     if keep_reason:
         return ("alert", keep_reason, "keep-0")
+
+    # Tier 1 — severity floor. Once Tier-0 has had its chance to save the
+    # article (KEV, IOCs, named actor, security estate, named campaign,
+    # CVE+exploit language) anything still rated low/med isn't worth a
+    # card. Real threats already qualified for Tier 0 above.
+    if sev in ("low", "med"):
+        return ("drop", f"severity={sev}", "drop-sev")
 
     # Tier 1
     drop_pat = _relevance_drop_pattern(article)
@@ -14394,8 +14417,9 @@ def main():
     total_cves = set()
     sev_counts = {"crit":0,"high":0,"med":0,"low":0}
     # Relevance gate accounting
-    relevance_tier_counts = {"keep-0": 0, "drop-1": 0, "llm-2-alert": 0,
-                             "llm-2-drop": 0, "default-keep": 0}
+    relevance_tier_counts = {"keep-0": 0, "drop-sev": 0, "drop-1": 0,
+                             "llm-2-alert": 0, "llm-2-drop": 0,
+                             "default-keep": 0}
     relevance_drop_log = []  # list of dicts -> intel/relevance_drops.jsonl
 
     # Need a stable mapping from UseCase object -> python variable name (so
@@ -14420,10 +14444,13 @@ def main():
         # Decides if this article gets a card at all. Moved here from the
         # post-LLM point so dropped articles don't burn tokens on UC gen —
         # listicles / OS launches / opinion pieces skip _llm_generate_ucs
-        # entirely. ind / _actors / _ids are already populated; sev hasn't
-        # been computed yet but the classifier doesn't need it (it weighs
-        # the article's content, not the severity rating).
-        rel_class, rel_reason, rel_tier = classify_relevance(a, ind, None)
+        # entirely. Compute an EARLY severity from rule-based UCs only
+        # (LLM-generated UCs haven't been added yet); good enough to gate
+        # low/med drops without losing reasonable cases. Display sev is
+        # recomputed below after the LLM pass for the most-informed badge.
+        sev_early = compute_severity(text, ind, ucs, techniques,
+                                     title_hint=a.get("title", ""))
+        rel_class, rel_reason, rel_tier = classify_relevance(a, ind, sev_early)
         relevance_tier_counts[rel_tier] = relevance_tier_counts.get(rel_tier, 0) + 1
         if rel_class == "drop":
             relevance_drop_log.append({
@@ -14474,7 +14501,8 @@ def main():
         for ph in list(hit):
             inferred |= INFER_FROM_PHASE.get(ph, set())
         inferred -= hit
-        sev = compute_severity(text, ind, ucs, techniques)
+        sev = compute_severity(text, ind, ucs, techniques,
+                               title_hint=a.get("title", ""))
         sev_counts[sev] += 1
         total_ucs += len(ucs)
         for tid, _ in techniques: total_techs.add(tid)
@@ -14589,7 +14617,8 @@ def main():
     rel_kept   = (relevance_tier_counts.get("keep-0", 0)
                   + relevance_tier_counts.get("llm-2-alert", 0)
                   + relevance_tier_counts.get("default-keep", 0))
-    rel_dropped = (relevance_tier_counts.get("drop-1", 0)
+    rel_dropped = (relevance_tier_counts.get("drop-sev", 0)
+                   + relevance_tier_counts.get("drop-1", 0)
                    + relevance_tier_counts.get("llm-2-drop", 0))
     if rel_kept or rel_dropped:
         top_sources = {}
@@ -14601,6 +14630,7 @@ def main():
         print(
             f"[*] Relevance: kept {rel_kept} alert, dropped {rel_dropped} "
             f"(tier-0 override: {relevance_tier_counts.get('keep-0',0)}, "
+            f"sev-floor (low/med): {relevance_tier_counts.get('drop-sev',0)}, "
             f"tier-1 regex: {relevance_tier_counts.get('drop-1',0)}, "
             f"tier-2 LLM: {relevance_tier_counts.get('llm-2-alert',0)} alert / "
             f"{relevance_tier_counts.get('llm-2-drop',0)} drop, "
