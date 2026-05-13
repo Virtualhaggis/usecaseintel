@@ -7139,6 +7139,34 @@ const observer = new IntersectionObserver(entries => {
 cards.forEach(c => observer.observe(c));
 
 // ----- Nav click jumps -----------------------------------------------
+// content-visibility:auto on article cards means offscreen cards
+// contribute only their `contain-intrinsic-size` (720px) to layout
+// until they actually render. scrollIntoView calculates the target's
+// position using those 720px placeholders, but as smooth-scroll passes
+// through each card it materialises at its real height (often 1.5-3k px),
+// pushing the target further down — so the scroll lands several cards
+// short. Helper: force-render every card in the strip between current
+// scroll and target BEFORE scrolling, so layout offsets are accurate
+// and scrollIntoView lands on the right card first try.
+function scrollToArticleAccurate(target, block) {
+  if (!target) return;
+  const currentY = window.scrollY;
+  const estTargetY = target.getBoundingClientRect().top + currentY;
+  const lo = Math.min(currentY, estTargetY) - 200;
+  const hi = Math.max(currentY, estTargetY) + window.innerHeight + 200;
+  cards.forEach(c => {
+    const r = c.getBoundingClientRect();
+    const top = r.top + currentY;
+    if (top + r.height >= lo && top <= hi) {
+      c.style.contentVisibility = 'visible';
+    }
+  });
+  // Synchronous layout flush so the now-rendered cards contribute their
+  // real heights before scrollIntoView reads offsets.
+  void document.body.offsetHeight;
+  target.scrollIntoView({behavior:'smooth', block: block || 'start'});
+}
+
 navItems.forEach(item => {
   item.addEventListener('click', () => {
     const id = item.dataset.jump;
@@ -7149,7 +7177,7 @@ navItems.forEach(item => {
     navItems.forEach(n => n.classList.remove('active'));
     item.classList.add('active');
     scrollLockUntil = Date.now() + 700;
-    target.scrollIntoView({behavior:'smooth', block:'start'});
+    scrollToArticleAccurate(target, 'start');
   });
 });
 
@@ -7499,7 +7527,8 @@ function _navigate(item) {
     const el = document.getElementById(item.id);
     if (el) {
       _switchToTab('articles');
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      // Defer one frame so the tab-switch repaints before measuring.
+      requestAnimationFrame(() => scrollToArticleAccurate(el, 'start'));
       el.classList.add('deeplink-target');
       setTimeout(() => el.classList.remove('deeplink-target'), 1700);
     }
@@ -7517,7 +7546,10 @@ function _navigate(item) {
     if (found) {
       _switchToTab('articles');
       found.open = true;
-      found.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Walk up to the owning article.card so content-visibility:auto
+      // pre-materialises the right strip before scrolling.
+      const ownerCard = found.closest('article.card') || found;
+      requestAnimationFrame(() => scrollToArticleAccurate(ownerCard, 'center'));
       found.classList.add('deeplink-target');
       setTimeout(() => found.classList.remove('deeplink-target'), 1700);
     } else {
