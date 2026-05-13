@@ -13909,22 +13909,51 @@ _RELEVANCE_DROP_PATTERNS = (
     # word subjects like "Why Agentic AI Is Security's Next Blind Spot".
     re.compile(r"^why\s+\S+(?:\s+\S+){0,5}\s+(is|are|will|won['’]?t|isn['’]?t)\b", re.I),
     re.compile(r"^(is\s+\w+\s+the\s+next|the\s+case\s+for)\b", re.I),
+    # "Your X isn't Y" — opinion piece ("Your Purple Team Isn't Purple…").
+    re.compile(r"^your\s+\S+(?:\s+\S+){0,5}\s+(isn['’]?t|is\s+not)\b", re.I),
+    # "Most X never Y" / "X never confirm" — vendor-essay openers
+    # ("Most Remediation Programs Never Confirm the Fix Actually Worked").
+    re.compile(r"^most\s+\S+(?:\s+\S+){0,4}\s+never\b", re.I),
     # "The Case for X" after a colon — headlines like
     # "73 Seconds to Breach, 24 Hours to Patch: The Case for Autonomous
     # Validation". The colon makes the LHS a hook and the RHS an opinion
     # subtitle. Catch the subtitle directly.
     re.compile(r":\s*the\s+case\s+for\b", re.I),
     re.compile(r"\bis\s+(dead|back|broken|over|a\s+fear\s+response)\b", re.I),
-    re.compile(r"\b(next\s+blind\s+spot|fear\s+response|hot\s+take)\b", re.I),
+    re.compile(r"\b(next\s+blind\s+spot|fear\s+response|hot\s+take|"
+               r"friends\s+you\s+don['’]?t\s+want)\b", re.I),
     re.compile(r"^(how to|a beginner|step.by.step|getting started|what is)", re.I),
-    # Generic consumer / OS feature-launch with no attack vocab. Allows up
-    # to 3 words between the verb and the feature noun ("iOS 26.5 Brings
-    # Default End-to-End Encrypted RCS Messaging…"). Tier-0 override list
-    # already excludes actively-exploited language.
+    # Bracket-prefixed promotional formats: [Webinar], [Podcast], [Interview],
+    # [Event], [Video] etc. These are vendor-driven and have no SOC value.
+    re.compile(r"^\s*\[(webinar|podcast|interview|event|video|"
+               r"press\s+release|sponsored)\]", re.I),
+    # "the complete X checklist|guide|playbook|handbook" — non-actionable
+    # meta content.
+    re.compile(r"\b(the\s+)?(complete|ultimate|definitive|comprehensive)\s+"
+               r"\S+(?:\s+\S+){0,4}\s+(guide|checklist|playbook|handbook|"
+               r"primer)\b", re.I),
+    # Podcast / interview formats ending with "with FirstName LastName".
+    re.compile(r"\bwith\s+[A-Z][a-z]+\s+[A-Z][a-z]+\s*$"),
+    # Vendor / OS patch-tuesday roundup with no exploitation language.
+    # Tier-0 already keeps "actively exploited" / "in the wild" / KEV
+    # entries; this catches the residual "Microsoft Releases Cumulative
+    # Update", "Windows 11 KBxxxxx … released", "Patch Tuesday fixes N
+    # flaws, no zero-days" titles.
+    re.compile(r"\bcumulative\s+update(s)?\b", re.I),
+    re.compile(r"\bpatch\s+tuesday\b.*\bno\s+zero[\s-]?days?\b", re.I),
+    re.compile(r"^\s*(microsoft|google|apple|samsung|cisco)\s+"
+               r"releases\b(?!.*\b(critical|rce|zero[\s-]?day|0[\s-]?day|"
+               r"actively\s+exploited|in\s+the\s+wild)\b)", re.I),
+    # Generic consumer / OS feature-launch with no attack vocab. Two
+    # variants: (a) verb close to feature noun, (b) the "X to expand"
+    # future-tense form. Tier-0 override list already excludes actively-
+    # exploited language.
     re.compile(r"\b(brings|launches|introduces|unveils|adds|enhances|"
-               r"rolls\s+out)\b(?:\s+\S+){0,3}\s+"
+               r"rolls\s+out|expands?|to\s+expand)\b(?:\s+\S+){0,5}\s+"
                r"(end-to-end|encryption|messaging|protections?|privacy|"
-               r"banking\s+scam|consent|onboarding|rcs)", re.I),
+               r"banking\s+scam|consent|onboarding|rcs|warnings?|"
+               r"intrusion\s+logging|new\s+ai|ai[\s-]powered|"
+               r"safer\s+browsing|spam\s+filter)", re.I),
 )
 
 # Analyst escape hatch — title-substring matches here ALWAYS keep, even if
