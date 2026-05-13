@@ -89,7 +89,7 @@ SOURCES = [
     # the TanStack / Mini Shai-Hulud advisory (CVE-2026-45321) within
     # minutes of publication, hours before vendor blogs picked it up.
     {"name": "GitHub Security Advisories", "kind": "ghsa",
-     "url":  "https://api.github.com/advisories?type=reviewed&per_page=100&sort=published"},
+     "url":  "https://api.github.com/advisories?type=reviewed&severity=critical&per_page=100&sort=published"},
 ]
 
 # Legacy (kept for callers using the old API)
@@ -13535,11 +13535,11 @@ def _fetch_ghsa(source, since):
         print(f"    [!] GHSA fetch failed: {e}")
         return []
     out = []
-    # Medium/Low advisories get bundled into a single "Daily GHSA digest"
-    # entry per publish-day instead of generating one card each — 78 GHSA
-    # entries on a Tuesday is too noisy for the Articles view. Critical /
-    # High still get individual cards (those are usually actively-exploited).
-    digest_by_day = {}  # date_str -> list of summary bits
+    # GHSA is Critical-only now. High / Medium / Low are routine vendor
+    # patch advisories that drown the Articles feed without earning their
+    # place — analysts asked us to keep them out entirely. The feed is
+    # still polled so canonical-ID dedupe can use GHSA entries to merge
+    # cross-vendor coverage when a CVE matches a news article.
     for a in advisories or []:
         pub_iso = a.get("published_at") or a.get("updated_at") or ""
         try:
@@ -13567,18 +13567,10 @@ def _fetch_ghsa(source, since):
                 if rng: seg += f" (vuln {rng})"
                 if pf:  seg += f" — patched {pf}"
                 pkg_bits.append(seg)
-        # Medium / Low / unknown — fold into the per-day digest.
-        if severity in ("medium", "low", "unknown"):
-            day_key = (pub or dt.datetime.now(dt.timezone.utc)).strftime("%Y-%m-%d")
-            line_id = cve_id or ghsa_id
-            packages = (pkg_bits[0] if pkg_bits else "")
-            digest_by_day.setdefault(day_key, []).append({
-                "severity": severity,
-                "id":       line_id,
-                "summary":  summary,
-                "packages": packages,
-                "url":      a.get("html_url") or f"https://github.com/advisories/{ghsa_id}",
-            })
+        # Drop everything that isn't Critical. The advisory still exists
+        # in the GHSA feed and could be re-enabled later; we just don't
+        # publish a card for it.
+        if severity != "critical":
             continue
         body_parts = [summary, a.get("description") or ""]
         if pkg_bits:
@@ -13595,41 +13587,6 @@ def _fetch_ghsa(source, since):
             "published":    pub_iso,
             "published_dt": pub,
             "summary":      summary,
-            "raw_body":     body,
-            "image_urls":   [],
-        })
-    # Emit one digest article per day with all bundled Medium/Low entries.
-    for day_key, entries in digest_by_day.items():
-        if len(out) >= MAX_PER_SOURCE:
-            break
-        try:
-            pub = dt.datetime.strptime(day_key, "%Y-%m-%d").replace(tzinfo=dt.timezone.utc)
-        except Exception:
-            pub = dt.datetime.now(dt.timezone.utc)
-        # Sort: high-then-medium-then-low, then by ID for stability.
-        sev_order = {"medium": 0, "low": 1, "unknown": 2}
-        entries.sort(key=lambda e: (sev_order.get(e["severity"], 9), e["id"]))
-        title = f"[GHSA / DIGEST] {len(entries)} medium/low advisories published {day_key}"
-        body_lines = [
-            f"Daily roundup of {len(entries)} medium- and low-severity "
-            f"GitHub Security Advisories reviewed on {day_key}. Individual "
-            f"high-severity advisories still get their own cards.",
-            "",
-        ]
-        for e in entries:
-            sev_tag = f"[{e['severity'].upper():>6}]"
-            line = f"- {sev_tag} {e['id']}: {e['summary'][:200]}"
-            if e["packages"]:
-                line += f"  (affects: {e['packages']})"
-            body_lines.append(line)
-        body = "\n".join(body_lines)
-        out.append({
-            "source":       "GitHub Security Advisories",
-            "title":        title,
-            "link":         f"https://github.com/advisories?published={day_key}&severity=medium,low&type=reviewed",
-            "published":    day_key,
-            "published_dt": pub,
-            "summary":      body_lines[0],
             "raw_body":     body,
             "image_urls":   [],
         })
