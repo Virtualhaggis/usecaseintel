@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] litellm PyPI compromise: C2 egress to models.litellm.cloud / checkmarx.zone (TeamPCP)
 
-`UC_297_10` · phase: **c2** · confidence: **High**
+`UC_300_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ union
 
 ### [LLM] litellm credential-stealer persistence: sysmon.py implant + systemd user service drop
 
-`UC_297_11` · phase: **install** · confidence: **High**
+`UC_300_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### [LLM] litellm K8s lateral movement: privileged node-setup-* pod in kube-system with hostPID+hostNetwork
 
-`UC_297_12` · phase: **actions** · confidence: **High**
+`UC_300_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -434,7 +434,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_297_9` · phase: **exploit** · confidence: **High**
+`UC_300_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

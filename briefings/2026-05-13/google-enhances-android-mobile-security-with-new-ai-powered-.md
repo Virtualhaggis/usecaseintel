@@ -10,11 +10,7 @@ Home Cyber Security News
 Google Enhances Android Mobile Security with New AI-Powered Protections 
 By Tushar Subhra Dutta 
 May 13, 2026 
-
-
-
-
-Android smartphones have become the go-to device for billions of people around the world. From banking and messaging to storing personal photos and sensitive documents, people rely on them for almost everything. That reliance has made mobile devices a prime target for scammers, cybercriminals, and threat actors who constantly evolve their tactics to sli…
+Android smartphones have become the go-to device for billions of people around the world. From banking and messaging to storing personal photos and sensitive documents, people rely on them for almost everything. That reliance has made mobile devices a prime target for scammers, cybercriminals, and threat actors who constantly evolve their tactics to slip past e…
 
 ## Indicators of Compromise (high-fidelity only)
 

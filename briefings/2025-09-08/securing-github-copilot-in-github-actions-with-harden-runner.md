@@ -24,7 +24,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Securing GitHub Copilot in GitHub Actions with Harden-Runner
 
-`UC_640_0` · phase: **exploit** · confidence: **High**
+`UC_643_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

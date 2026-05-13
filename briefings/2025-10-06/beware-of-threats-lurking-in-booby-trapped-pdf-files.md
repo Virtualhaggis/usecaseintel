@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Beware of threats lurking in booby-trapped PDF files
 
-`UC_608_4` · phase: **exploit** · confidence: **High**
+`UC_611_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

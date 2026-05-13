@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Storybook CVE-2026-27148 — story file written with JS injection markers in filename
 
-`UC_359_5` · phase: **install** · confidence: **High**
+`UC_362_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### [LLM] Storybook dev server bound to non-loopback interface (publicly exposed CVE-2026-27148 attack surface)
 
-`UC_359_6` · phase: **recon** · confidence: **Medium**
+`UC_362_6` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] Node test runner (Vitest/Jest) spawning OS shell or recon binary from Storybook context
 
-`UC_359_7` · phase: **exploit** · confidence: **Medium**
+`UC_362_7` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -195,7 +195,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server
 
-`UC_359_4` · phase: **exploit** · confidence: **High**
+`UC_362_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

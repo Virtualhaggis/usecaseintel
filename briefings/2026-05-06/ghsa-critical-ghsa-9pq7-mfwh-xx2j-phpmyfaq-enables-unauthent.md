@@ -1,4 +1,4 @@
-# [MED] [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brute-force attack via /admin/check acceptance of arbitrary user-id
+# [HIGH] [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brute-force attack via /admin/check acceptance of arbitrary user-id
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-06
@@ -19,6 +19,9 @@ The `/admin/check` endpoint in `AuthenticationController` implements `SkipsAuthe
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1110.001** — Brute Force: Password Guessing
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -26,9 +29,27 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] phpMyFAQ /admin/check unauthenticated 2FA brute-force burst (GHSA-9pq7-mfwh-xx2j)
+
+`UC_134_1` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count as Attempts, values(Web.status) as Statuses, values(Web.http_user_agent) as UserAgents, min(_time) as FirstSeen, max(_time) as LastSeen from datamodel=Web where Web.http_method=POST AND Web.url="*/admin/check*" by Web.src, Web.dest, _time span=5m | `drop_dm_object_name("Web")` | where Attempts > 50 | sort - Attempts
+```
+
+### [LLM] phpMyFAQ /admin/check accessed by scripted HTTP client (curl / python-requests / Go-http-client)
+
+`UC_134_2` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count as Hits, values(Web.status) as Statuses, values(Web.http_user_agent) as UserAgents, min(_time) as FirstSeen, max(_time) as LastSeen from datamodel=Web where Web.http_method=POST AND Web.url="*/admin/check*" AND (Web.http_user_agent="*python-requests*" OR Web.http_user_agent="*curl/*" OR Web.http_user_agent="*Go-http-client*" OR Web.http_user_agent="*Apache-HttpClient*" OR Web.http_user_agent="*libwww-perl*" OR Web.http_user_agent="*Wget/*" OR Web.http_user_agent="*aiohttp*" OR Web.http_user_agent="*okhttp*") by Web.src, Web.dest, Web.http_user_agent | `drop_dm_object_name("Web")` | sort - Hits
+```
+
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brut
 
-`UC_125_0` · phase: **install** · confidence: **High**
+`UC_134_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,4 +83,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
