@@ -14303,6 +14303,30 @@ def main():
         # against the curated alias list. Used to power the new Threat
         # Actors tab and a per-actor article filter.
         a["_actors"] = extract_threat_actors(a["title"], a["raw_body"])
+        # ---- Relevance gate (runs BEFORE any LLM call) -----------------
+        # Decides if this article gets a card at all. Moved here from the
+        # post-LLM point so dropped articles don't burn tokens on UC gen —
+        # listicles / OS launches / opinion pieces skip _llm_generate_ucs
+        # entirely. ind / _actors / _ids are already populated; sev hasn't
+        # been computed yet but the classifier doesn't need it (it weighs
+        # the article's content, not the severity rating).
+        rel_class, rel_reason, rel_tier = classify_relevance(a, ind, None)
+        relevance_tier_counts[rel_tier] = relevance_tier_counts.get(rel_tier, 0) + 1
+        if rel_class == "drop":
+            relevance_drop_log.append({
+                "id":     f"art-{i:02d}",
+                "source": (a.get("sources") or [a.get("source", "?")])[0],
+                "title":  a.get("title", ""),
+                "tier":   rel_tier,
+                "reason": rel_reason,
+                "published": a.get("published", ""),
+                "link":   a.get("link", ""),
+            })
+            # IOCs + canonical-IDs already merged earlier in fetch_articles;
+            # we just stop processing this article from here on.
+            continue
+        a["_relevance"] = rel_class
+        a["_relevance_reason"] = rel_reason
         # Article-specific bespoke UC built from the actual mechanics named
         # in this article. Augments rather than replaces the rule-fired UCs:
         # the generic templates still cover the technique class; the bespoke
@@ -14338,25 +14362,6 @@ def main():
             inferred |= INFER_FROM_PHASE.get(ph, set())
         inferred -= hit
         sev = compute_severity(text, ind, ucs, techniques)
-        # Relevance gate — decides whether this article gets a card on the
-        # Articles tab. See `classify_relevance` for the three-tier rules.
-        rel_class, rel_reason, rel_tier = classify_relevance(a, ind, sev)
-        relevance_tier_counts[rel_tier] = relevance_tier_counts.get(rel_tier, 0) + 1
-        if rel_class == "drop":
-            relevance_drop_log.append({
-                "id":     f"art-{i:02d}",
-                "source": (a.get("sources") or [a.get("source", "?")])[0],
-                "title":  a.get("title", ""),
-                "tier":   rel_tier,
-                "reason": rel_reason,
-                "published": a.get("published", ""),
-                "link":   a.get("link", ""),
-            })
-            # Drop quietly — article still contributed to IOC enrichment and
-            # canonical-ID dedupe earlier in the pipeline.
-            continue
-        a["_relevance"] = rel_class
-        a["_relevance_reason"] = rel_reason
         sev_counts[sev] += 1
         total_ucs += len(ucs)
         for tid, _ in techniques: total_techs.add(tid)
