@@ -1,4 +1,4 @@
-# [MED] [GHSA / CRITICAL] GHSA-9h64-2846-7x7f: Axonflow fixed bugs by implementing multi-tenant isolation and access-control hardening
+# [CRIT] [GHSA / CRITICAL] GHSA-9h64-2846-7x7f: Axonflow fixed bugs by implementing multi-tenant isolation and access-control hardening
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-06
@@ -80,4 +80,4 @@ DeviceNetworkEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

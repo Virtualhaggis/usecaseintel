@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_784 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,14 +12,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [azerbaijani energy firm hit by repeated microsoft exchange e](./2026-05-13/azerbaijani-energy-firm-hit-by-repeated-microsoft-exchange-e.md)
 - [critical sandboxjs escape vulnerability enables host takeove](./2026-05-13/critical-sandboxjs-escape-vulnerability-enables-host-takeove.md)
 - [foxconn confirms cyberattack claimed by nitrogen ransomware ](./2026-05-13/foxconn-confirms-cyberattack-claimed-by-nitrogen-ransomware-.md)
-- [fragnesia linux vulnerability let attackers gain root privil](./2026-05-13/fragnesia-linux-vulnerability-let-attackers-gain-root-privil.md)
 - [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
 - [new exim bdat gnutls vulnerability enables code execution at](./2026-05-13/new-exim-bdat-gnutls-vulnerability-enables-code-execution-at.md)
-- [webinar how modern attack paths cross code pipelines and clo](./2026-05-13/webinar-how-modern-attack-paths-cross-code-pipelines-and-clo.md)
 - [windows bitlocker zero day gives access to protected drives ](./2026-05-13/windows-bitlocker-zero-day-gives-access-to-protected-drives-.md)
 
 ## 2026-05-12
@@ -35,12 +33,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
-- [signal adds security warnings for social engineering phishin](./2026-05-12/signal-adds-security-warnings-for-social-engineering-phishin.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [uk fines water supplier 1 3m for exposing data of 664k custo](./2026-05-12/uk-fines-water-supplier-1-3m-for-exposing-data-of-664k-custo.md)
 - [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
-- [us govt seeks instructure testimony on massive canvas cybera](./2026-05-12/us-govt-seeks-instructure-testimony-on-massive-canvas-cybera.md)
 
 ## 2026-05-11
 - [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
@@ -132,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [ghsa critical ghsa 9pq7 mfwh xx2j phpmyfaq enables unauthent](./2026-05-06/ghsa-critical-ghsa-9pq7-mfwh-xx2j-phpmyfaq-enables-unauthent.md)
 - [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
-- [insights into the clustering and reuse of phone numbers in s](./2026-05-06/insights-into-the-clustering-and-reuse-of-phone-numbers-in-s.md)
 - [microsoft named an overall leader in kuppingercole analyst s](./2026-05-06/microsoft-named-an-overall-leader-in-kuppingercole-analyst-s.md)
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
@@ -423,7 +418,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-02-23
 - [astro full read ssrf via host header injection](./2026-02-23/astro-full-read-ssrf-via-host-header-injection.md)
-- [faking it on the phone how to tell if a voice call is ai or ](./2026-02-23/faking-it-on-the-phone-how-to-tell-if-a-voice-call-is-ai-or-.md)
 
 ## 2026-02-20
 - [cisa kev cve 2025 49113 roundcube webmail deserialization of](./2026-02-20/cisa-kev-cve-2025-49113-roundcube-webmail-deserialization-of.md)
@@ -498,7 +492,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-29
 - [cisa kev cve 2026 1281 ivanti endpoint manager mobile epmm c](./2026-01-29/cisa-kev-cve-2026-1281-ivanti-endpoint-manager-mobile-epmm-c.md)
-- [cve 2026 22709 critical sandbox escape vulnerability in vm2](./2026-01-29/cve-2026-22709-critical-sandbox-escape-vulnerability-in-vm2.md)
 
 ## 2026-01-28
 - [black industry irgc linked offensive ot framework](./2026-01-28/black-industry-irgc-linked-offensive-ot-framework.md)
@@ -685,7 +678,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-28
 - [cisa kev cve 2025 6204 dassault syst mes delmia apriso code ](./2025-10-28/cisa-kev-cve-2025-6204-dassault-syst-mes-delmia-apriso-code-.md)
-- [recruitment red flags can you spot a spy posing as a job see](./2025-10-28/recruitment-red-flags-can-you-spot-a-spy-posing-as-a-job-see.md)
 
 ## 2025-10-27
 - [how mdr can give msps the edge in a competitive market](./2025-10-27/how-mdr-can-give-msps-the-edge-in-a-competitive-market.md)
@@ -843,7 +835,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-08
 - [evolving harden runner s disable sudo policy for improved ru](./2025-07-08/evolving-harden-runner-s-disable-sudo-policy-for-improved-ru.md)
-- [grafana github actions security incident](./2025-07-08/grafana-github-actions-security-incident.md)
 - [harden runner flags anomalous outbound call leading to docke](./2025-07-08/harden-runner-flags-anomalous-outbound-call-leading-to-docke.md)
 - [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
 

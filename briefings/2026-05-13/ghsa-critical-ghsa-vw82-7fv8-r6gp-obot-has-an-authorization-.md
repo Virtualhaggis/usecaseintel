@@ -1,4 +1,4 @@
-# [HIGH] [GHSA / CRITICAL] GHSA-vw82-7fv8-r6gp: Obot has an authorization bypass in /mcp-connect/{id} that allows any authenticated user to use any registered MCP server
+# [CRIT] [GHSA / CRITICAL] GHSA-vw82-7fv8-r6gp: Obot has an authorization bypass in /mcp-connect/{id} that allows any authenticated user to use any registered MCP server
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-13
@@ -90,4 +90,4 @@ CloudAppEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

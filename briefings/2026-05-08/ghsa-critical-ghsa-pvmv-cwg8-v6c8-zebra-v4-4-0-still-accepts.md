@@ -1,4 +1,4 @@
-# [MED] [GHSA / CRITICAL] GHSA-pvmv-cwg8-v6c8: Zebra v4.4.0 still accepts V5 SIGHASH_SINGLE without a corresponding output
+# [CRIT] [GHSA / CRITICAL] GHSA-pvmv-cwg8-v6c8: Zebra v4.4.0 still accepts V5 SIGHASH_SINGLE without a corresponding output
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-08
@@ -61,4 +61,4 @@ ZebraProcs
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

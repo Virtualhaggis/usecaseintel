@@ -1,4 +1,4 @@
-# [HIGH] [GHSA / CRITICAL] GHSA-54pg-9963-v8vg: Compromised version of intercom-client published to npm
+# [CRIT] [GHSA / CRITICAL] GHSA-54pg-9963-v8vg: Compromised version of intercom-client published to npm
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-07
@@ -192,4 +192,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

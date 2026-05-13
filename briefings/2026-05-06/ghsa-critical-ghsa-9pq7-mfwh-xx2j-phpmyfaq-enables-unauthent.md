@@ -1,4 +1,4 @@
-# [HIGH] [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brute-force attack via /admin/check acceptance of arbitrary user-id
+# [CRIT] [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brute-force attack via /admin/check acceptance of arbitrary user-id
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-06
@@ -83,4 +83,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

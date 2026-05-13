@@ -1,4 +1,4 @@
-# [MED] [GHSA / CRITICAL] GHSA-h29g-c9cx-c73q: torrentpier has PHP Serialize Injections
+# [CRIT] [GHSA / CRITICAL] GHSA-h29g-c9cx-c73q: torrentpier has PHP Serialize Injections
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-11
@@ -33,4 +33,4 @@ _No actionable hunts can be derived from the RSS summary alone. The article may 
 
 ## Why this matters
 
-Severity classified as **MED** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

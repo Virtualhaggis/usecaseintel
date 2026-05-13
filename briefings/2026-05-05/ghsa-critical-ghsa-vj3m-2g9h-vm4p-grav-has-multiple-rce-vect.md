@@ -1,4 +1,4 @@
-# [HIGH] [GHSA / CRITICAL] GHSA-vj3m-2g9h-vm4p: Grav has multiple RCE vectors: unsafe unserialize (x3), command injection in git clone, SSTI blocklist bypass
+# [CRIT] [GHSA / CRITICAL] GHSA-vj3m-2g9h-vm4p: Grav has multiple RCE vectors: unsafe unserialize (x3), command injection in git clone, SSTI blocklist bypass
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-05
@@ -86,4 +86,4 @@ DeviceNetworkEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

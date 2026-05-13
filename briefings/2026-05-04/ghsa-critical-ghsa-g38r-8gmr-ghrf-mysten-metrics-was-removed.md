@@ -1,4 +1,4 @@
-# [LOW] [GHSA / CRITICAL] GHSA-g38r-8gmr-ghrf: `mysten-metrics` was removed from crates.io for malicious code
+# [CRIT] [GHSA / CRITICAL] GHSA-g38r-8gmr-ghrf: `mysten-metrics` was removed from crates.io for malicious code
 
 **Source:** GitHub Security Advisories
 **Published:** 2026-05-04
@@ -33,4 +33,4 @@ _No actionable hunts can be derived from the RSS summary alone. The article may 
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 0 use case(s) fired, 0 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
