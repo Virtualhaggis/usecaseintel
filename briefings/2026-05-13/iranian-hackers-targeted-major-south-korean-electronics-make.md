@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Seedworm DLL side-load via Fortemedia fmapp.exe / SentinelOne sentinelmemoryscanner.exe
 
-`UC_53_3` · phase: **install** · confidence: **High**
+`UC_54_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Seedworm data exfiltration to sendit.sh file-sharing service
 
-`UC_53_4` · phase: **actions** · confidence: **High**
+`UC_54_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union
 
 ### [LLM] Seedworm Node.js loader spawning PowerShell for recon / credential theft
 
-`UC_53_5` · phase: **exploit** · confidence: **Medium**
+`UC_54_5` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,7 +206,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Iranian hackers targeted major South Korean electronics maker
 
-`UC_53_2` · phase: **exploit** · confidence: **High**
+`UC_54_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

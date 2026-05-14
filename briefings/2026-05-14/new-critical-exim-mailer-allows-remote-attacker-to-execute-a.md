@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable Exim 4.97–4.99.2 (GnuTLS build) inventory — CVE-2026-45185 Dead.Letter
 
-`UC_32_2` · phase: **recon** · confidence: **High**
+`UC_33_2` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Exim mail daemon spawning shell or network LOLBin — CVE-2026-45185 Dead.Letter post-exploit
 
-`UC_32_3` · phase: **exploit** · confidence: **High**
+`UC_33_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Critical Exim Mailer Allows Remote Attacker to Execute Arbitrary Code
 
-`UC_32_1` · phase: **exploit** · confidence: **High**
+`UC_33_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

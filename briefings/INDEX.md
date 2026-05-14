@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_779 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -35,6 +35,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
+- [hackers compromise 170 npm packages to steal github npm aws ](./2026-05-14/hackers-compromise-170-npm-packages-to-steal-github-npm-aws-.md)
 - [hackers exploit auth bypass flaw in burst statistics wordpre](./2026-05-14/hackers-exploit-auth-bypass-flaw-in-burst-statistics-wordpre.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
@@ -44,10 +45,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new malware framework enables screen control browser artifac](./2026-05-14/new-malware-framework-enables-screen-control-browser-artifac.md)
 - [node ipc npm package with 822k weekly downloads compromised ](./2026-05-14/node-ipc-npm-package-with-822k-weekly-downloads-compromised-.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
-- [openai confirms security breach in tanstack supply chain att](./2026-05-14/openai-confirms-security-breach-in-tanstack-supply-chain-att.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [sandworm hackers pivot from compromised it systems toward cr](./2026-05-14/sandworm-hackers-pivot-from-compromised-it-systems-toward-cr.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
+- [teampcp hackers advertise mistral ai code repos for sale](./2026-05-14/teampcp-hackers-advertise-mistral-ai-code-repos-for-sale.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 - [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
 - [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)

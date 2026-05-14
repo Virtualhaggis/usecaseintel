@@ -10,12 +10,8 @@ Home Cyber Security News
 Sandworm Hackers Pivot From Compromised IT Systems Toward Critical OT Assets 
 By Tushar Subhra Dutta 
 May 14, 2026 
-
-
-
-
 A Russian state-sponsored hacking group known as Sandworm has been caught making a calculated pivot from compromised IT networks into operational technology systems that control physical infrastructure. 
-The campaign is alarming because it does not rely on cutting-edge exploits. Instead, Sandworm walks through doors that were already left open, tur…
+The campaign is alarming because it does not rely on cutting-edge exploits. Instead, Sandworm walks through doors that were already left open, turning unr…
 
 ## Indicators of Compromise (high-fidelity only)
 
