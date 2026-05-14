@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Astro SSRF (CVE-2026-25545) — Node.js egress fetch for /404.html or /500.html with UA 'node'
 
-`UC_384_4` · phase: **exploit** · confidence: **High**
+`UC_382_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceNetworkEvents
 
 ### [LLM] Astro SSRF (CVE-2026-25545) — inbound Host header mismatch with 4xx/5xx response (trigger)
 
-`UC_384_5` · phase: **delivery** · confidence: **Medium**
+`UC_382_5` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_773 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,9 +13,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [18 year old nginx vulnerability allows dos potential rce](./2026-05-14/18-year-old-nginx-vulnerability-allows-dos-potential-rce.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-14/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [amazon quick bug exposed ai chat agents to users blocked by ](./2026-05-14/amazon-quick-bug-exposed-ai-chat-agents-to-users-blocked-by-.md)
+- [anthropic s mythos ai reportedly found macos vulnerabilities](./2026-05-14/anthropic-s-mythos-ai-reportedly-found-macos-vulnerabilities.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
+- [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [critical canon mailsuite vulnerability enables remote code e](./2026-05-14/critical-canon-mailsuite-vulnerability-enables-remote-code-e.md)
-- [critical gitlab vulnerabilities enables xss and unauthentica](./2026-05-14/critical-gitlab-vulnerabilities-enables-xss-and-unauthentica.md)
 - [defense in depth for autonomous ai agents](./2026-05-14/defense-in-depth-for-autonomous-ai-agents.md)
 - [ghostwriter targets ukrainian government with geofenced pdf ](./2026-05-14/ghostwriter-targets-ukrainian-government-with-geofenced-pdf-.md)
 - [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
@@ -23,24 +24,25 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44791 n8n has an xml node prototype p](./2026-05-14/ghsa-critical-cve-2026-44791-n8n-has-an-xml-node-prototype-p.md)
 - [ghsa critical cve 2026 44848 portainer missing authorization](./2026-05-14/ghsa-critical-cve-2026-44848-portainer-missing-authorization.md)
 - [ghsa critical cve 2026 44849 portainer has an endpoint secur](./2026-05-14/ghsa-critical-cve-2026-44849-portainer-has-an-endpoint-secur.md)
+- [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa 9rvc vf7m pgm2 flowiseai authenticated ho](./2026-05-14/ghsa-critical-ghsa-9rvc-vf7m-pgm2-flowiseai-authenticated-ho.md)
-- [hackers abuse legitimate hwmonitor binary to load malicious ](./2026-05-14/hackers-abuse-legitimate-hwmonitor-binary-to-load-malicious-.md)
-- [hackers compromise 170 npm packages to steal github npm aws ](./2026-05-14/hackers-compromise-170-npm-packages-to-steal-github-npm-aws-.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
 - [new critical exim mailer allows remote attacker to execute a](./2026-05-14/new-critical-exim-mailer-allows-remote-attacker-to-execute-a.md)
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
-- [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
-- [palo alto pan os 0 day exploited to execute arbitrary code w](./2026-05-14/palo-alto-pan-os-0-day-exploited-to-execute-arbitrary-code-w.md)
+- [new malware framework enables screen control browser artifac](./2026-05-14/new-malware-framework-enables-screen-control-browser-artifac.md)
+- [node ipc npm package with 822k weekly downloads compromised ](./2026-05-14/node-ipc-npm-package-with-822k-weekly-downloads-compromised-.md)
+- [openai confirms security breach in tanstack supply chain att](./2026-05-14/openai-confirms-security-breach-in-tanstack-supply-chain-att.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
+- [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
+- [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 - [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
 - [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
 
 ## 2026-05-13
 - [azerbaijani energy firm hit by repeated microsoft exchange e](./2026-05-13/azerbaijani-energy-firm-hit-by-repeated-microsoft-exchange-e.md)
-- [foxconn confirms cyberattack claimed by nitrogen ransomware ](./2026-05-13/foxconn-confirms-cyberattack-claimed-by-nitrogen-ransomware-.md)
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
 - [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
@@ -155,12 +157,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 289f fq7w 6q2w phpmyfaq has unauthenticat](./2026-05-06/ghsa-critical-ghsa-289f-fq7w-6q2w-phpmyfaq-has-unauthenticat.md)
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [ghsa critical ghsa 9pq7 mfwh xx2j phpmyfaq enables unauthent](./2026-05-06/ghsa-critical-ghsa-9pq7-mfwh-xx2j-phpmyfaq-enables-unauthent.md)
-- [google s android apps get public verification to stop supply](./2026-05-06/google-s-android-apps-get-public-verification-to-stop-supply.md)
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
-- [your ai agents are already inside the perimeter do you know ](./2026-05-06/your-ai-agents-are-already-inside-the-perimeter-do-you-know-.md)
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
@@ -187,7 +187,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bitwarden cli hijacked on npm bun staged credential stealer ](./2026-05-04/bitwarden-cli-hijacked-on-npm-bun-staged-credential-stealer-.md)
 - [canistersprawl pgserve compromised on npm malicious versions](./2026-05-04/canistersprawl-pgserve-compromised-on-npm-malicious-versions.md)
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
-- [ghsa critical cve 2026 42571 pelican web ui affected by a pr](./2026-05-04/ghsa-critical-cve-2026-42571-pelican-web-ui-affected-by-a-pr.md)
 - [ghsa critical cve 2026 42601 archivebox vulnerable to rce vi](./2026-05-04/ghsa-critical-cve-2026-42601-archivebox-vulnerable-to-rce-vi.md)
 - [ghsa critical ghsa g38r 8gmr ghrf mysten metrics was removed](./2026-05-04/ghsa-critical-ghsa-g38r-8gmr-ghrf-mysten-metrics-was-removed.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)

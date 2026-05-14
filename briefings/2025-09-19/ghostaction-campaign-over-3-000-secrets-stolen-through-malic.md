@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GhostAction C2 egress to bold-dhawan/objective-hopper .plesk.page or 45.139.104.115
 
-`UC_647_2` · phase: **c2** · confidence: **High**
+`UC_645_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ union isfuzzy=true
 
 ### [LLM] GhostAction curl POST exfiltrating *_TOKEN= to plesk.page sub-domain on self-hosted runner
 
-`UC_647_3` · phase: **actions** · confidence: **High**
+`UC_645_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

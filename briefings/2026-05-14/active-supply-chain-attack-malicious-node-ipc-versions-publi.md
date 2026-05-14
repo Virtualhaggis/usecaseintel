@@ -308,7 +308,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm
 
-`UC_0_9` · phase: **exploit** · confidence: **High**
+`UC_8_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

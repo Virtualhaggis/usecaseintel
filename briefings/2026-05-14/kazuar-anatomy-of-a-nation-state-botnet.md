@@ -286,7 +286,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kazuar: Anatomy of a nation-state botnet
 
-`UC_17_7` · phase: **exploit** · confidence: **High**
+`UC_24_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
