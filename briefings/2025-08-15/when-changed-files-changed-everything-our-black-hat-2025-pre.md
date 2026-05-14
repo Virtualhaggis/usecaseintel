@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] tj-actions/changed-files supply chain: memdump.py fetched from attacker gist on CI runner (CVE-2025-30066)
 
-`UC_665_2` · phase: **actions** · confidence: **High**
+`UC_668_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### [LLM] CI/CD runner outbound to attacker gist (gist.githubusercontent.com/nikitastupin/30e525b776...)
 
-`UC_665_3` · phase: **c2** · confidence: **High**
+`UC_668_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the
 
-`UC_665_1` · phase: **exploit** · confidence: **High**
+`UC_668_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

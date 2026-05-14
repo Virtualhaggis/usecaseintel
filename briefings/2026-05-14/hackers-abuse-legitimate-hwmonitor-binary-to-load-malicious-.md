@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HWMonitor_x64.exe sideloads CRYPTBASE.dll from non-System32 path (STX RAT)
 
-`UC_13_8` · phase: **install** · confidence: **High**
+`UC_27_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceImageLoadEvents
 
 ### [LLM] STX RAT C2 callback to welcome.supp0v3.com or staging on Cloudflare R2 bucket
 
-`UC_13_9` · phase: **c2** · confidence: **High**
+`UC_27_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ union isfuzzy=true
 
 ### [LLM] HWMonitor_x64.exe makes outbound connection to non-CPUID public infrastructure
 
-`UC_13_10` · phase: **c2** · confidence: **Medium**
+`UC_27_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -260,7 +260,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse Legitimate HWMonitor Binary to Load Malicious DLL Payload
 
-`UC_13_7` · phase: **exploit** · confidence: **High**
+`UC_27_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

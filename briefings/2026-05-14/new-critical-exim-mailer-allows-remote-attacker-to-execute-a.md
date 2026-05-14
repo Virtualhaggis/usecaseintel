@@ -10,13 +10,9 @@ Home Cyber Security News
 New Critical Exim Mailer Allows Remote Attacker to Execute Arbitrary Code 
 By Abinaya 
 May 14, 2026 
-
-
-
-
 A critical vulnerability in the widely used Exim mail server allows unauthenticated attackers to execute arbitrary code and fully compromise exposed servers.
 Federico Kirschbaum, head of the Security Lab at XBOW, discovered and reported the issue, which has been dubbed Dead.Letter.
-The vulnerability carries a massive CVSS severity score of 9.8, making it one of t…
+The vulnerability carries a massive CVSS severity score of 9.8, making it one of the highe…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — New Critical Exim Mailer Allows Remote Attacker to Execute Arbitrary Code
 
-`UC_1_1` · phase: **exploit** · confidence: **High**
+`UC_13_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-9rvc-vf7m-pgm2: FlowiseAI: Authenticated Host RCE via POS
 
-`UC_5_2` · phase: **exploit** · confidence: **High**
+`UC_18_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

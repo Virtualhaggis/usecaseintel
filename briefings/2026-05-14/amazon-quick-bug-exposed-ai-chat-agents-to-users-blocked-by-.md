@@ -10,13 +10,9 @@ Home Cyber Security News
 Amazon Quick Bug Exposed AI Chat Agents to Users Blocked by Custom Permissions 
 By Abinaya 
 May 14, 2026 
-
-
-
-
 Imagine locking your organization’s sensitive data behind a heavy vault door, only to realize the locking mechanism is entirely missing.
 Security researchers at Fog Security recently uncovered a severe authorization bypass in Amazon Quick’s AI Chat Agents.
-This vulnerability allowed blocked users to interact freely with enterprise AI tools, despite explicit …
+This vulnerability allowed blocked users to interact freely with enterprise AI tools, despite explicit administ…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -29,8 +25,8 @@ This vulnerability allowed blocked users to interact freely with enterprise AI t
 - **T1190** — Exploit Public-Facing Application
 - **T1219** — Remote Access Software
 - **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1530** — Data from Cloud Storage
 - **T1213** — Data from Information Repositories
-- **T1580** — Cloud Infrastructure Discovery
 
 ## Kill chain phases observed
 
@@ -38,22 +34,45 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Successful Amazon Quick/QuickSight chat-agent API invocations from non-console user agents
+### [LLM] Amazon Quick Chat Agent API – AGENT_ACCESS_DENIED denial hunt (post-CWE-862 patch audit)
 
-`UC_0_3` · phase: **actions** · confidence: **Medium**
+`UC_12_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as objects values(All_Changes.command) as actions from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" (All_Changes.command="*ChatAgent*" OR All_Changes.command="*ChatExperience*" OR All_Changes.command="InvokeAgent" OR All_Changes.command="GenerateAssistantResponse" OR All_Changes.command="StartChat*") All_Changes.status=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.dest All_Changes.action | `drop_dm_object_name(All_Changes)` | where NOT match(user_agent, "(?i)^(aws-internal|console\.amazonaws|signin\.aws\.amazon|quicksight-frontend|Mozilla)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+`cim_Change_indexes` sourcetype=aws:cloudtrail eventSource="quicksight.amazonaws.com" (errorCode="AGENT_ACCESS_DENIED" OR errorMessage="*AGENT_ACCESS_DENIED*" OR (errorCode="AccessDeniedException" AND errorMessage="*AGENT_ACCESS_DENIED*")) (eventName=*Chat* OR eventName=*Agent* OR eventName=*Topic* OR eventName=*Q* OR requestParameters.*=*ChatAgent*)
+| eval AwsAccount=coalesce('recipientAccountId','userIdentity.accountId'), Principal=coalesce('userIdentity.userName','userIdentity.sessionContext.sessionIssuer.userName','userIdentity.arn'), SrcIP='sourceIPAddress'
+| stats min(_time) as firstDeny max(_time) as lastDeny count as deniedCalls values(eventName) as actions values(userAgent) as userAgents values(SrcIP) as sourceIPs dc(eventName) as distinctActions by AwsAccount, Principal
+| where firstDeny >= relative_time(now(), "-90d@d")
+| convert ctime(firstDeny) ctime(lastDeny)
+| sort - deniedCalls
 ```
 
-### [LLM] Repeated post-patch AGENT_ACCESS_DENIED / 401 responses on Amazon Quick chat-agent calls by a single principal
-
-`UC_0_4` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as actions values(All_Changes.user_agent) as agents from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" (All_Changes.command="*ChatAgent*" OR All_Changes.command="*ChatExperience*" OR All_Changes.command="InvokeAgent" OR All_Changes.command="GenerateAssistantResponse" OR All_Changes.command="StartChat*") (All_Changes.status=failure OR All_Changes.result="AccessDenied*" OR All_Changes.result="AGENT_ACCESS_DENIED" OR All_Changes.result="UnauthorizedOperation") by All_Changes.user All_Changes.src _time span=10m | `drop_dm_object_name(All_Changes)` | where count >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+**Defender KQL:**
+```kql
+// Defender for Cloud Apps CloudAppEvents — AWS connector ships QuickSight/Quick activity here
+CloudAppEvents
+| where Timestamp > ago(90d)
+| where Application has_any ("Amazon Web Services", "AWS", "QuickSight", "Amazon Quick")
+| where ActionType has_any ("Chat", "Agent", "Topic", "Q") or tostring(RawEventData) has_any ("ChatAgent", "chatAgent")
+| extend ErrorCode = tostring(parse_json(tostring(RawEventData)).errorCode),
+         ErrorMessage = tostring(parse_json(tostring(RawEventData)).errorMessage),
+         EventSource = tostring(parse_json(tostring(RawEventData)).eventSource),
+         AwsAccountId = tostring(parse_json(tostring(RawEventData)).recipientAccountId),
+         SrcIp = tostring(parse_json(tostring(RawEventData)).sourceIPAddress),
+         UA = tostring(parse_json(tostring(RawEventData)).userAgent)
+| where EventSource =~ "quicksight.amazonaws.com"
+| where ErrorCode == "AGENT_ACCESS_DENIED"
+    or ErrorMessage has "AGENT_ACCESS_DENIED"
+    or (ErrorCode =~ "AccessDeniedException" and ErrorMessage has "AGENT_ACCESS_DENIED")
+| summarize FirstDeny = min(Timestamp),
+            LastDeny  = max(Timestamp),
+            DeniedCalls = count(),
+            Actions   = make_set(ActionType, 25),
+            SourceIPs = make_set(SrcIp, 25),
+            UserAgents = make_set(UA, 10)
+            by AwsAccountId, AccountObjectId, AccountDisplayName
+| order by DeniedCalls desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -122,4 +141,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
