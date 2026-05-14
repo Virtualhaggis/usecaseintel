@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] QLNX developer-credential fan-out: single process reading multiple secret files (.npmrc/.pypirc/.aws/.kube/.docker/.vault-token/.env)
 
-`UC_120_5` · phase: **actions** · confidence: **High**
+`UC_128_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX userland rootkit / PAM backdoor: write to /etc/ld.so.preload or PAM module directories
 
-`UC_120_6` · phase: **install** · confidence: **High**
+`UC_128_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX shell-injection persistence: append to .bashrc / .bash_profile / .profile / /etc/profile.d by non-shell process
 
-`UC_120_7` · phase: **install** · confidence: **Medium**
+`UC_128_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

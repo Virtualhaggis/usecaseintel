@@ -40,12 +40,125 @@ Kazuar, a sophisticated malware family attributed to the Russian state actor Sec
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
+- **T1559.001** — Inter-Process Communication: Component Object Model
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1055.012** — Process Injection: Process Hollowing
+- **T1546.003** — Event Triggered Execution: Windows Management Instrumentation Event Subscription
+- **T1071.003** — Application Layer Protocol: Mail Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Kazuar (Secret Blizzard) Kernel Module IPC named pipe \\.\pipe\82760B84F1D703D596C79B88BA4FAC1E
+
+`UC_35_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`sysmon` (EventCode=17 OR EventCode=18) PipeName="*82760B84F1D703D596C79B88BA4FAC1E*" | stats min(_time) as firstSeen max(_time) as lastSeen values(Image) as images values(PipeName) as pipes by host User | `drop_dm_object_name(Endpoint)`
+```
+
+**Defender KQL:**
+```kql
+// Kazuar Kernel module IPC pipe — default name is MD5("pipename-kernel-<bot ver>")
+// = 82760B84F1D703D596C79B88BA4FAC1E. Variant deployments may use other 32-hex pipe names.
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType =~ "NamedPipeEvent"
+| extend PipeName = coalesce(FileName, tostring(parse_json(AdditionalFields).PipeName))
+| where PipeName has "82760B84F1D703D596C79B88BA4FAC1E"
+   or PipeName matches regex @"(?i)\\pipe\\[a-f0-9]{32}$"   // 32-hex hash-named pipes (Kazuar pattern)
+| project Timestamp, DeviceName, ActionType, PipeName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName, ReportId
+| order by Timestamp desc
+```
+
+### [LLM] Kazuar (Secret Blizzard) Pelmeni dropper / .NET loader sample hashes on disk or in-memory
+
+`UC_35_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmdline values(Processes.process_path) as paths from datamodel=Endpoint.Processes where (Processes.process_hash IN ("69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85") OR Processes.parent_process_hash IN ("69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85")) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+let KazuarHashes = dynamic([
+  "69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4",
+  "c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9",
+  "6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d",
+  "436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85"
+]);
+union isfuzzy=true
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (KazuarHashes) or InitiatingProcessSHA256 in (KazuarHashes)
+    | project Timestamp, Source = "Process", DeviceName, ActionType, FileName, FolderPath,
+              SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              AccountName ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (KazuarHashes)
+    | project Timestamp, Source = "File", DeviceName, ActionType, FileName, FolderPath,
+              SHA256, ProcessCommandLine = "",
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              AccountName = InitiatingProcessAccountName ),
+  ( DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (KazuarHashes)
+    | project Timestamp, Source = "ImageLoad", DeviceName, ActionType, FileName, FolderPath,
+              SHA256, ProcessCommandLine = "",
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              AccountName = InitiatingProcessAccountName )
+| order by Timestamp desc
+```
+
+### [LLM] Kazuar `live_in_scrcons` — scrcons.exe (WMI Event Consumer) reaching public C2 or hosting unsigned modules
+
+`UC_35_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.dest_ip) as destIPs values(All_Traffic.dest_port) as destPorts values(All_Traffic.dest) as destHosts from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="scrcons.exe" AND All_Traffic.dest_category!="internal" by host All_Traffic.user | where count > 0 | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+// Kazuar `live_in_scrcons` config option hosts the implant inside the WMI Standard Event Consumer.
+// scrcons.exe legitimately runs local scripts — it should NEVER egress to the public internet
+// or load DLLs from user-writable paths.
+let ScrconsEgress =
+    DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName =~ "scrcons.exe"
+    | where RemoteIPType == "Public"
+    | where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+    | project Timestamp, Signal = "PublicEgress", DeviceName, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName,
+              RemoteIP, RemotePort, RemoteUrl,
+              InitiatingProcessParentFileName;
+let ScrconsLoadsNonMs =
+    DeviceImageLoadEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName =~ "scrcons.exe"
+    | where FolderPath has_any (@"\AppData\", @"\Users\Public\", @"\ProgramData\", @"\Temp\", @"\Windows\Tasks\")
+    | where FileName endswith ".dll"
+    | project Timestamp, Signal = "NonMsDllLoad", DeviceName,
+              InitiatingProcessFileName,
+              InitiatingProcessCommandLine,
+              InitiatingProcessAccountName = InitiatingProcessAccountName,
+              RemoteIP = "", RemotePort = int(null), RemoteUrl = FolderPath,
+              InitiatingProcessParentFileName = "";
+union ScrconsEgress, ScrconsLoadsNonMs
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -286,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kazuar: Anatomy of a nation-state botnet
 
-`UC_24_7` · phase: **exploit** · confidence: **High**
+`UC_35_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,4 +456,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

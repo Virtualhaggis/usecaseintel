@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [active supply chain attack malicious node ipc versions publi](./2026-05-14/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [amazon quick bug exposed ai chat agents to users blocked by ](./2026-05-14/amazon-quick-bug-exposed-ai-chat-agents-to-users-blocked-by-.md)
 - [anthropic s mythos ai reportedly found macos vulnerabilities](./2026-05-14/anthropic-s-mythos-ai-reportedly-found-macos-vulnerabilities.md)
+- [chinese apt hackers exploit microsoft exchange to breach ene](./2026-05-14/chinese-apt-hackers-exploit-microsoft-exchange-to-breach-ene.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [critical canon mailsuite vulnerability enables remote code e](./2026-05-14/critical-canon-mailsuite-vulnerability-enables-remote-code-e.md)
@@ -25,8 +26,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44848 portainer missing authorization](./2026-05-14/ghsa-critical-cve-2026-44848-portainer-missing-authorization.md)
 - [ghsa critical cve 2026 44849 portainer has an endpoint secur](./2026-05-14/ghsa-critical-cve-2026-44849-portainer-has-an-endpoint-secur.md)
 - [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
+- [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
+- [ghsa critical cve 2026 45311 deepseek tui run tests tool ena](./2026-05-14/ghsa-critical-cve-2026-45311-deepseek-tui-run-tests-tool-ena.md)
+- [ghsa critical cve 2026 45353 electerm local code through ele](./2026-05-14/ghsa-critical-cve-2026-45353-electerm-local-code-through-ele.md)
+- [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
+- [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
+- [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
+- [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
-- [ghsa critical ghsa 9rvc vf7m pgm2 flowiseai authenticated ho](./2026-05-14/ghsa-critical-ghsa-9rvc-vf7m-pgm2-flowiseai-authenticated-ho.md)
+- [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
+- [hackers exploit auth bypass flaw in burst statistics wordpre](./2026-05-14/hackers-exploit-auth-bypass-flaw-in-burst-statistics-wordpre.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
@@ -34,8 +43,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [new malware framework enables screen control browser artifac](./2026-05-14/new-malware-framework-enables-screen-control-browser-artifac.md)
 - [node ipc npm package with 822k weekly downloads compromised ](./2026-05-14/node-ipc-npm-package-with-822k-weekly-downloads-compromised-.md)
+- [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [openai confirms security breach in tanstack supply chain att](./2026-05-14/openai-confirms-security-breach-in-tanstack-supply-chain-att.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
+- [sandworm hackers pivot from compromised it systems toward cr](./2026-05-14/sandworm-hackers-pivot-from-compromised-it-systems-toward-cr.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 - [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
@@ -166,9 +177,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
-- [ghsa critical cve 2026 24781 vm2 has sandbox breakout throug](./2026-05-05/ghsa-critical-cve-2026-24781-vm2-has-sandbox-breakout-throug.md)
-- [ghsa critical cve 2026 25660 codechecker has an authenticati](./2026-05-05/ghsa-critical-cve-2026-25660-codechecker-has-an-authenticati.md)
-- [ghsa critical cve 2026 26956 vm2 has a wasm sandbox escape n](./2026-05-05/ghsa-critical-cve-2026-26956-vm2-has-a-wasm-sandbox-escape-n.md)
 - [ghsa critical cve 2026 42048 langflow knowledge bases api is](./2026-05-05/ghsa-critical-cve-2026-42048-langflow-knowledge-bases-api-is.md)
 - [ghsa critical cve 2026 42155 magento lts has weak api sessio](./2026-05-05/ghsa-critical-cve-2026-42155-magento-lts-has-weak-api-sessio.md)
 - [ghsa critical cve 2026 42281 magicmirror vulnerable to unaut](./2026-05-05/ghsa-critical-cve-2026-42281-magicmirror-vulnerable-to-unaut.md)
@@ -187,8 +195,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bitwarden cli hijacked on npm bun staged credential stealer ](./2026-05-04/bitwarden-cli-hijacked-on-npm-bun-staged-credential-stealer-.md)
 - [canistersprawl pgserve compromised on npm malicious versions](./2026-05-04/canistersprawl-pgserve-compromised-on-npm-malicious-versions.md)
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
-- [ghsa critical cve 2026 42601 archivebox vulnerable to rce vi](./2026-05-04/ghsa-critical-cve-2026-42601-archivebox-vulnerable-to-rce-vi.md)
-- [ghsa critical ghsa g38r 8gmr ghrf mysten metrics was removed](./2026-05-04/ghsa-critical-ghsa-g38r-8gmr-ghrf-mysten-metrics-was-removed.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
 - [shai hulud worm pivots to multi cloud intercom client 7 0 4 ](./2026-05-04/shai-hulud-worm-pivots-to-multi-cloud-intercom-client-7-0-4-.md)
 

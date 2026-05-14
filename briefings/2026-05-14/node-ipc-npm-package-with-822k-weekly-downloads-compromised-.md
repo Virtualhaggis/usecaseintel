@@ -10,12 +10,8 @@ Home Cyber Attack News
 node-ipc npm Package with 822K Weekly Downloads Compromised in Supply Chain Attack 
 By Guru Baran 
 May 14, 2026 
-
-
-
-
 A widely used JavaScript inter-process communication library has been weaponized again. Socket and Stepsecurity have confirmed that three newly published versions of node-ipc, a package with over 822,000 weekly downloads, contain obfuscated stealer and backdoor payloads, marking the second major supply chain compromise of this package since 2022.
-The af…
+The affected v…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,12 +40,127 @@ The af…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1567** — Exfiltration Over Web Service
+- **T1571** — Non-Standard Port
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1074.001** — Local Data Staging
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] node-ipc stealer DNS TXT exfiltration to bt.node.js zone (xh/xd/xf prefixes)
+
+`UC_16_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen dc(Resolution.query) as uniqueQueries values(Resolution.src) as src from datamodel=Network_Resolution.DNS where Resolution.query="*.bt.node.js" OR Resolution.query="xh.*.bt.node.js" OR Resolution.query="xd.*.bt.node.js" OR Resolution.query="xf.*.bt.node.js" OR Resolution.record_type="TXT" Resolution.query="*bt.node.js" by Resolution.src Resolution.query_type span=5m | `drop_dm_object_name(Resolution)` | where count > 50 OR uniqueQueries > 25
+```
+
+**Defender KQL:**
+```kql
+// Defender: catch the DNS TXT burst to bt.node.js (29k queries per 500KiB archive)
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "DnsQueryResponse"
+| extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+| where Q endswith ".bt.node.js" or Q == "bt.node.js"
+   or Q startswith "xh." or Q startswith "xd." or Q startswith "xf."
+   and Q contains "bt.node.js"
+| summarize QueryCount = count(),
+            DistinctSubdomains = dcount(Q),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            SampleQueries = make_set(Q, 25)
+            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where QueryCount >= 50 or DistinctSubdomains >= 25   // single archive => ~29,400 queries; 50 is a soft floor
+| order by QueryCount desc
+```
+
+### [LLM] node-ipc bootstrap C2 contact: sh.azurestaticprovider.net / 37.16.75.69
+
+`UC_16_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.src) as src values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="37.16.75.69" OR All_Traffic.dest_ip="37.16.75.69" OR All_Traffic.dest="sh.azurestaticprovider.net" OR All_Traffic.dest_host="sh.azurestaticprovider.net" OR All_Traffic.url="*azurestaticprovider.net*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | append [ | tstats `summariesonly` count from datamodel=Network_Resolution.DNS where Resolution.query="sh.azurestaticprovider.net" OR Resolution.query="*.azurestaticprovider.net" by Resolution.src Resolution.query | `drop_dm_object_name(Resolution)` ]
+```
+
+**Defender KQL:**
+```kql
+// Defender: any device contacting the node-ipc bootstrap C2
+let bad_ips = dynamic(["37.16.75.69"]);
+let bad_domains = dynamic(["sh.azurestaticprovider.net", "azurestaticprovider.net"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteIP in (bad_ips)
+       or RemoteUrl has_any (bad_domains)
+    | project Timestamp, DeviceName, DeviceId, ActionType,
+              RemoteIP, RemotePort, RemoteUrl, Protocol,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName ),
+  ( DeviceEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q endswith "azurestaticprovider.net"
+    | project Timestamp, DeviceName, DeviceId, ActionType,
+              RemoteIP = tostring(parse_json(AdditionalFields).IPAddresses),
+              RemotePort = int(null), RemoteUrl = Q, Protocol = "dns",
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName )
+| order by Timestamp desc
+```
+
+### [LLM] node-ipc stager archive drop: <tmp>/nt-<pid>/<machineHex>.tar.gz or known-bad node-ipc.cjs SHA256
+
+`UC_16_12` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Processes.parent_process_name) as parent values(Processes.process) as process values(Filesystem.file_path) as file_path from datamodel=Endpoint where (Filesystem.file_path="*/nt-*/*.tar.gz" OR Filesystem.file_path="*\\nt-*\\*.tar.gz" OR Filesystem.file_hash="96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144" OR Filesystem.file_hash="449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e" OR Filesystem.file_hash="c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea" OR Filesystem.file_hash="78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981" OR Processes.process="*__ntw=1*") by host Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+// Defender: stager tarball drop + known-bad hashes + __ntw=1 fork marker
+let bad_hashes = dynamic([
+    "96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144",  // node-ipc.cjs payload
+    "449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e",  // 9.1.6 tgz
+    "c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea",  // 9.2.3 tgz
+    "78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981"   // 12.0.1 tgz
+]);
+union isfuzzy=true
+  ( DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "FileCreated"
+    | where SHA256 in (bad_hashes)
+       or (FolderPath matches regex @"(?i)[\\/]nt-\d+[\\/]" and FileName endswith ".tar.gz")
+       or FileName matches regex @"(?i)^[0-9a-f]{8,}\.tar\.gz$" and FolderPath has "nt-"
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName ),
+  ( DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where ProcessCommandLine has "__ntw=1"
+       or InitiatingProcessCommandLine has "__ntw=1"
+    | where InitiatingProcessFileName has_any ("node", "node.exe", "npm", "yarn", "pnpm")
+         or FileName has_any ("node", "node.exe")
+    | project Timestamp, DeviceName, FileName, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, AccountName, SHA256 = "",
+              FolderPath, ActionType = "ProcessCreated" )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -295,4 +406,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

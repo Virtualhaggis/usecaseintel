@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GlassWorm Mar 2026 wave — compromised npm/VS Code package artifacts on disk
 
-`UC_343_3` · phase: **delivery** · confidence: **High**
+`UC_345_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceFileEvents
 
 ### [LLM] GlassWorm invisible-Unicode decoder signature (variation-selector eval loader) in process cmdline
 
-`UC_343_4` · phase: **exploit** · confidence: **High**
+`UC_345_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

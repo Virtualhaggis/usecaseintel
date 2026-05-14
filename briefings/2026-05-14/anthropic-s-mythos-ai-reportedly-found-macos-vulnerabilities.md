@@ -10,12 +10,8 @@ Home Cyber Security News
 Anthropic’s Mythos AI Reportedly Found macOS Vulnerabilities that Could Bypass Apple Security 
 By Guru Baran 
 May 14, 2026 
-
-
-
-
 Security researchers at Calif, a Palo Alto-based cybersecurity firm, have used techniques derived from an early version of Anthropic’s secretive Mythos AI model to uncover two previously undocumented vulnerabilities in Apple’s macOS.
-The bugs were chained together into a privilege escalation exploit capable of bypassing Apple’s state-of-the…
+The bugs were chained together into a privilege escalation exploit capable of bypassing Apple’s state-of-the-art mem…
 
 ## Indicators of Compromise (high-fidelity only)
 

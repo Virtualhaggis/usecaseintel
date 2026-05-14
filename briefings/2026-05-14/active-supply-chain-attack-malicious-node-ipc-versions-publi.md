@@ -38,12 +38,100 @@ Back to Blog Threat Intel Active Supply Chain Attack: Malicious node-ipc Version
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573** — Encrypted Channel
+- **T1567** — Exfiltration Over Web Service
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1568** — Dynamic Resolution
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] node-ipc malicious package C2 egress to sh.azurestaticprovider.net / 37.16.75.69
+
+`UC_19_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="37.16.75.69" OR All_Traffic.dest="sh.azurestaticprovider.net" OR All_Traffic.dest="*.azurestaticprovider.net") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name All_Traffic.process_path | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | where (process_name="node.exe" OR process_name="node" OR isnull(process_name) OR process_name="*")
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "37.16.75.69"
+   or RemoteUrl has "azurestaticprovider.net"
+   or RemoteUrl has_cs "sh.azurestaticprovider.net"
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessSHA256, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] node-ipc DNS exfiltration via .bt.node.js suffix or direct-to-C2 resolver
+
+`UC_19_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*.bt.node.js" OR DNS.query="*bt.node.js" OR DNS.dest="37.16.75.69") by DNS.src DNS.dest DNS.query DNS.record_type DNS.answer | `drop_dm_object_name(DNS)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="37.16.75.69" All_Traffic.dest_port=53 All_Traffic.transport="udp" by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName endswith "bt.node.js" or QueryName has "bt.node.js"
+    | project Timestamp, DeviceName, DeviceId, QueryName,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName ),
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP == "37.16.75.69" and RemotePort == 53 and Protocol == "Udp"
+    | project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, Protocol,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName )
+| order by Timestamp desc
+```
+
+### [LLM] Malicious node-ipc.cjs bundle hash present on disk (v9.1.6 / 9.2.3 / 12.0.1)
+
+`UC_19_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\node_modules\\node-ipc\\*" OR Filesystem.file_path="*/node_modules/node-ipc/*" OR Filesystem.file_name="node-ipc.cjs" OR Filesystem.file_hash IN ("96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144","b2001dc4e13d0244f96e70258346700109907b90e1d0b09522778829dcd5e4cf","78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981","c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea","449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e") by host Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | where (file_hash IN ("96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144","b2001dc4e13d0244f96e70258346700109907b90e1d0b09522778829dcd5e4cf","78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981","c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea","449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e") OR (file_name="node-ipc.cjs" AND file_path LIKE "%node-ipc%")) | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _bad_hashes = dynamic([
+  "96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144",
+  "b2001dc4e13d0244f96e70258346700109907b90e1d0b09522778829dcd5e4cf",
+  "78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981",
+  "c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea",
+  "449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e"
+]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (_bad_hashes)
+   or (FileName =~ "node-ipc.cjs" and FolderPath has "node-ipc")
+| project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA256, MD5, FileSize,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -308,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm
 
-`UC_8_9` · phase: **exploit** · confidence: **High**
+`UC_19_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -368,4 +456,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

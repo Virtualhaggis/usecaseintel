@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PhantomRPC coercion: Network Service / Local Service context spawning gpupdate.exe /force or ipconfig
 
-`UC_233_2` · phase: **exploit** · confidence: **Medium**
+`UC_235_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] PhantomRPC post-impersonation pivot: SYSTEM child process spawned by Network Service / Local Service parent
 
-`UC_233_3` · phase: **exploit** · confidence: **High**
+`UC_235_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PhantomRPC: A new privilege escalation technique in Windows RPC
 
-`UC_233_1` · phase: **exploit** · confidence: **High**
+`UC_235_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

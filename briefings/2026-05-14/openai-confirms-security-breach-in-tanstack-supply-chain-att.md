@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OpenAI confirms security breach in TanStack supply chain attack
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_12_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

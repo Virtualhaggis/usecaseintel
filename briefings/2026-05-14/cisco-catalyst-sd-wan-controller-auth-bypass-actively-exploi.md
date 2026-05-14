@@ -1,69 +1,37 @@
 # [CRIT] Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Access
 
-**Source:** The Hacker News, Cisco Talos
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-05-14
 **Article:** https://thehackernews.com/2026/05/cisco-catalyst-sd-wan-controller-auth.html
 
 ## Threat Profile
 
-Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities 
-By 
-Cisco Talos 
-Thursday, May 14, 2026 12:02
-Threat Advisory
-Cisco Talos is tracking the active exploitation of CVE-2026-20182 , an authentication bypass vulnerability in Cisco Catalyst SD-WAN Controller, formerly SD-WAN vSmart, and Cisco Catalyst SD-WAN Manager, formerly SD-WAN vManage.
-Successful exploitation of CVE-2026-20182 allows an unauthenticated, remote attacker to bypass authentication and obtain administrative privileges …
+Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Access 
+ Ravie Lakshmanan  May 14, 2026 Vulnerability / Network Security 
+Cisco has released updates to address a maximum-severity authentication bypass flaw in Catalyst SD-WAN Controller that it said has been exploited in limited attacks.
+The vulnerability, tracked as CVE-2026-20182 , carries a CVSS score of 10.0.
+"A vulnerability in the peering authentication in Cisco Catalyst SD-WAN Controller, formerly SD-WAN vSm…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-20182`
-- **CVE:** `CVE-2026-20133`
-- **CVE:** `CVE-2026-20128`
-- **CVE:** `CVE-2026-20122`
 - **CVE:** `CVE-2026-20127`
-- **IPv4 (defanged):** `38.181.52.89`
-- **IPv4 (defanged):** `89.125.244.33`
-- **IPv4 (defanged):** `89.125.244.51`
-- **IPv4 (defanged):** `71.80.85.135`
-- **IPv4 (defanged):** `212.83.162.37`
-- **IPv4 (defanged):** `38.60.214.92`
-- **IPv4 (defanged):** `65.20.67.134`
-- **IPv4 (defanged):** `104.233.156.1`
-- **IPv4 (defanged):** `194.233.100.40`
-- **IPv4 (defanged):** `194.163.175.135`
-- **IPv4 (defanged):** `23.27.143.170`
-- **IPv4 (defanged):** `83.229.126.195`
-- **IPv4 (defanged):** `13.62.52.206`
-- **IPv4 (defanged):** `79.135.105.208`
-- **IPv4 (defanged):** `176.65.139.31`
-- **IPv4 (defanged):** `47.104.248.7`
-- **Domain (defanged):** `replit.dev`
-- **Domain (defanged):** `defunct.dat`
-- **Domain (defanged):** `config.json`
-- **Domain (defanged):** `1a820b09-95ba-44eb-b350-417e8241b725-00-1lgwuuen9b77p.worf.replit`
-- **Domain (defanged):** `a820b09-95ba-44eb-b350-417e8241b725-00-1lgwuuen9b77p.worf.replit`
-- **SHA256:** `f6f8e0d790645395188fc521039385b7c4f42fa8b426fd035f489f6cda9b5da1`
-- **SHA256:** `02654acfb21f83485393ba8b14bd8862b919b9ec966fc6768f6aac1338a45ee8`
-- **SHA256:** `0ed72d52347bfe4a78afff8a6982a64050c8fc86d8957a20eeb3e0f3f5342ed0`
-- **SHA256:** `96fc528ca5e7d1c2b3add5e31b8797cb126f704976c8fbeaecdbf0aa4309ad46`
-- **SHA256:** `7aa88a64a527ade7d93c20faf23b54f2ee33ad9b1246cdc2f8ded2ab639affb1`
-- **SHA256:** `0c87871642f84e09e8d3fb23ec36bf55601323e31151a7017a85dbec929cf15d`
-- **SHA256:** `18d77c9c5bbb5b9d5bdfd366fdfcf26bad9e64c63ca865fad711bcce8e3d5a80`
-- **SHA256:** `d94f75a70b5cabaf786ac57177ed841732e62bdcc9a29e06e5b41d9be567bcfa`
-- **SHA256:** `5bc5998161056b7c8f70c9724d8a63abc7ff8c3843b91c30cffab0899e39b7f8`
-- **SHA256:** `b0f51b098842cd630097b462aab0ec357e2c7824af37cca6d08165265da2c2d3`
-- **SHA256:** `72f570ce97de3eaaffef33d90b0c337a153fc9690cc34ee207b557d868360060`
-- **SHA256:** `17302d903baf182f94dc3be40ab1e0874dd0eb2ec5255bf9131fd53591efe925`
-- **MD5:** `fece5b954e69b2c6a8d0a1029631a0d7`
+- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
+- **T1566.002** — Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
+- **T1059.001** — PowerShell
+- **T1566.001** — Spearphishing Attachment
 - **T1204.002** — User Execution: Malicious File
+- **T1059.005** — Visual Basic
+- **T1218** — System Binary Proxy Execution
+- **T1195.002** — Compromise Software Supply Chain
+- **T1078.003** — Valid Accounts: Local Accounts
+- **T1556** — Modify Authentication Process
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -71,64 +39,221 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Beaconing — periodic outbound to small set of destinations
+### [LLM] Cisco Catalyst SD-WAN Controller — vmanage-admin SSH publickey logon from non-fabric IP (CVE-2026-20182 / CVE-2026-20127 post-exploit IOC)
 
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
+`UC_10_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest values(Authentication.signature) as signature from datamodel=Authentication where Authentication.user="vmanage-admin" Authentication.app="sshd" Authentication.action=success by Authentication.src Authentication.dest host
+| `drop_dm_object_name(Authentication)`
+| search NOT [| inputlookup sdwan_fabric_system_ips.csv | fields src]
+| where match(host, "(?i)vmanage|vsmart|sdwan|catalyst")
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime host dest src signature
+```
+
+### [LLM] Inbound DTLS peering to Cisco SD-WAN vdaemon (UDP/12346) from non-fabric / internet source
+
+`UC_10_7` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.action) as action values(All_Traffic.bytes) as bytes from datamodel=Network_Traffic where All_Traffic.dest_port=12346 All_Traffic.transport=udp by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport
 | `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
+| search [| inputlookup sdwan_controller_ips.csv | fields dest]
+| search NOT [| inputlookup sdwan_fabric_system_ips.csv | fields src]
+| where NOT cidrmatch("10.0.0.0/8", src) AND NOT cidrmatch("172.16.0.0/12", src) AND NOT cidrmatch("192.168.0.0/16", src)
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime lastTime src dest dest_port transport action bytes count
+```
+
+### Phishing-link click correlated to endpoint execution
+
+`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
+```
+
+### Email attachment opened from external sender
+
+`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                      "mshta.exe","rundll32.exe","regsvr32.exe")
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
+```
+
+### Office app spawning script/LOLBin child process
+
+`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### Article-specific behavioural hunt — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 
-`UC_6_4` · phase: **exploit** · confidence: **High**
+`UC_10_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 ``` Article-specific bespoke detection — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("miner.sh","loot_run.sh"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/tmp/moneroocean/miner.sh*" OR Filesystem.file_path="*/tmp/moneroocean/config_background.json*" OR Filesystem.file_path="*/dev/null*" OR Filesystem.file_name IN ("miner.sh","loot_run.sh"))
+      AND (Filesystem.file_path="*/var/log/auth.log*")
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]
 ```
 
 **Defender KQL:**
@@ -136,19 +261,12 @@ DeviceNetworkEvents
 // Article-specific bespoke detection — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("miner.sh", "loot_run.sh"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
 
 // File-creation events for the named binaries / paths
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/tmp/moneroocean/miner.sh", "/tmp/moneroocean/config_background.json", "/dev/null") or FileName in~ ("miner.sh", "loot_run.sh"))
+| where (FolderPath has_any ("/var/log/auth.log"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -159,16 +277,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `38.181.52.89`, `89.125.244.33`, `89.125.244.51`, `71.80.85.135`, `212.83.162.37`, `38.60.214.92`, `65.20.67.134`, `104.233.156.1` _(+13 more)_
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20182`, `CVE-2026-20133`, `CVE-2026-20128`, `CVE-2026-20122`, `CVE-2026-20127`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `f6f8e0d790645395188fc521039385b7c4f42fa8b426fd035f489f6cda9b5da1`, `02654acfb21f83485393ba8b14bd8862b919b9ec966fc6768f6aac1338a45ee8`, `0ed72d52347bfe4a78afff8a6982a64050c8fc86d8957a20eeb3e0f3f5342ed0`, `96fc528ca5e7d1c2b3add5e31b8797cb126f704976c8fbeaecdbf0aa4309ad46`, `7aa88a64a527ade7d93c20faf23b54f2ee33ad9b1246cdc2f8ded2ab639affb1`, `0c87871642f84e09e8d3fb23ec36bf55601323e31151a7017a85dbec929cf15d`, `18d77c9c5bbb5b9d5bdfd366fdfcf26bad9e64c63ca865fad711bcce8e3d5a80`, `d94f75a70b5cabaf786ac57177ed841732e62bdcc9a29e06e5b41d9be567bcfa` _(+5 more)_
+  - CVE(s): `CVE-2026-20182`, `CVE-2026-20127`, `CVE-2026-23918`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
