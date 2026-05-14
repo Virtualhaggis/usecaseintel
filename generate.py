@@ -14560,7 +14560,7 @@ def main():
         for tid, _ in techniques: total_techs.add(tid)
         for c in ind["cves"]: total_cves.add(c)
         cards.append(render_card(i, a, ind, techniques, hit, inferred, ucs, sev))
-        nav_meta.append({"title": a["title"], "sev": sev})
+        nav_meta.append({"id": f"art-{i:02d}", "title": a["title"], "sev": sev})
         # For the matrix view: combine narrative-inferred techniques with the
         # techniques covered by any use case fired for this article. Otherwise
         # ~70% of articles look "uncovered" on the matrix purely because the
