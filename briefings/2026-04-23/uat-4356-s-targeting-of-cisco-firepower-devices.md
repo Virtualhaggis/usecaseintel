@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FIRESTARTER backdoor on-device strings in Cisco ASA/FTD/FXOS syslog (UAT-4356)
 
-`UC_232_2` · phase: **install** · confidence: **High**
+`UC_237_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### [LLM] Cisco ASA/FTD assets exposed to CVE-2025-20333 / CVE-2025-20362 (UAT-4356 entry vectors)
 
-`UC_232_3` · phase: **exploit** · confidence: **Medium**
+`UC_237_3` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — UAT-4356's Targeting of Cisco Firepower Devices
 
-`UC_232_1` · phase: **install** · confidence: **High**
+`UC_237_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

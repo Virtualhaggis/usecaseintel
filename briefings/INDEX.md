@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_764 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_771 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,34 +8,51 @@ _764 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-14
+- [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
+- [critical gitlab vulnerabilities enables xss and unauthentica](./2026-05-14/critical-gitlab-vulnerabilities-enables-xss-and-unauthentica.md)
+- [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
+- [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
+- [hackers abuse legitimate hwmonitor binary to load malicious ](./2026-05-14/hackers-abuse-legitimate-hwmonitor-binary-to-load-malicious-.md)
+- [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
+- [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
+- [lyrie ai launches the global identity standard for the ai ag](./2026-05-14/lyrie-ai-launches-the-global-identity-standard-for-the-ai-ag.md)
+- [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
+- [openai hit with class action privacy lawsuit for sharing cha](./2026-05-14/openai-hit-with-class-action-privacy-lawsuit-for-sharing-cha.md)
+- [packagist urges immediate composer update after github actio](./2026-05-14/packagist-urges-immediate-composer-update-after-github-actio.md)
+- [palo alto pan os 0 day exploited to execute arbitrary code w](./2026-05-14/palo-alto-pan-os-0-day-exploited-to-execute-arbitrary-code-w.md)
+- [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
+- [seedworm apt abuses signed fortemedia and sentinelone binari](./2026-05-14/seedworm-apt-abuses-signed-fortemedia-and-sentinelone-binari.md)
+- [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
+
 ## 2026-05-13
 - [azerbaijani energy firm hit by repeated microsoft exchange e](./2026-05-13/azerbaijani-energy-firm-hit-by-repeated-microsoft-exchange-e.md)
-- [critical sandboxjs escape vulnerability enables host takeove](./2026-05-13/critical-sandboxjs-escape-vulnerability-enables-host-takeove.md)
 - [foxconn confirms cyberattack claimed by nitrogen ransomware ](./2026-05-13/foxconn-confirms-cyberattack-claimed-by-nitrogen-ransomware-.md)
+- [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
 - [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
+- [iranian hackers targeted major south korean electronics make](./2026-05-13/iranian-hackers-targeted-major-south-korean-electronics-make.md)
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
-- [new exim bdat gnutls vulnerability enables code execution at](./2026-05-13/new-exim-bdat-gnutls-vulnerability-enables-code-execution-at.md)
+- [new critical exim mailer flaw allows remote code execution](./2026-05-13/new-critical-exim-mailer-flaw-allows-remote-code-execution.md)
+- [west pharmaceutical says hackers stole data encrypted system](./2026-05-13/west-pharmaceutical-says-hackers-stole-data-encrypted-system.md)
 - [windows bitlocker zero day gives access to protected drives ](./2026-05-13/windows-bitlocker-zero-day-gives-access-to-protected-drives-.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
-- [fortinet warns of critical rce flaws in fortisandbox and for](./2026-05-12/fortinet-warns-of-critical-rce-flaws-in-fortisandbox-and-for.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
-- [microsoft may 2026 patch tuesday fixes 120 flaws no zero day](./2026-05-12/microsoft-may-2026-patch-tuesday-fixes-120-flaws-no-zero-day.md)
+- [microsoft patch tuesday for may 2026 snort rules and promine](./2026-05-12/microsoft-patch-tuesday-for-may-2026-snort-rules-and-promine.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
-- [uk fines water supplier 1 3m for exposing data of 664k custo](./2026-05-12/uk-fines-water-supplier-1-3m-for-exposing-data-of-664k-custo.md)
 - [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
 
 ## 2026-05-11
@@ -138,11 +155,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
-- [china linked uat 8302 targets governments using shared apt m](./2026-05-05/china-linked-uat-8302-targets-governments-using-shared-apt-m.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
-- [critical apache http 2 flaw cve 2026 23918 enables dos and p](./2026-05-05/critical-apache-http-2-flaw-cve-2026-23918-enables-dos-and-p.md)
-- [daemon tools supply chain attack compromises official instal](./2026-05-05/daemon-tools-supply-chain-attack-compromises-official-instal.md)
 - [ghsa critical cve 2026 24781 vm2 has sandbox breakout throug](./2026-05-05/ghsa-critical-cve-2026-24781-vm2-has-sandbox-breakout-throug.md)
 - [ghsa critical cve 2026 25660 codechecker has an authenticati](./2026-05-05/ghsa-critical-cve-2026-25660-codechecker-has-an-authenticati.md)
 - [ghsa critical cve 2026 26956 vm2 has a wasm sandbox escape n](./2026-05-05/ghsa-critical-cve-2026-26956-vm2-has-a-wasm-sandbox-escape-n.md)
@@ -157,9 +171,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44221 arcadedb vulnerable to cross da](./2026-05-05/ghsa-critical-cve-2026-44221-arcadedb-vulnerable-to-cross-da.md)
 - [ghsa critical cve 2026 7411 eclipse basyx java server sdk vu](./2026-05-05/ghsa-critical-cve-2026-7411-eclipse-basyx-java-server-sdk-vu.md)
 - [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
-- [metinfo cms cve 2026 29014 exploited for remote code executi](./2026-05-05/metinfo-cms-cve-2026-29014-exploited-for-remote-code-executi.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
-- [the back door attackers know about and most security teams s](./2026-05-05/the-back-door-attackers-know-about-and-most-security-teams-s.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
 
 ## 2026-05-04
@@ -169,7 +181,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
 - [ghsa critical cve 2026 41258 openmrs has stored velocity sst](./2026-05-04/ghsa-critical-cve-2026-41258-openmrs-has-stored-velocity-sst.md)
 - [ghsa critical cve 2026 41901 sandboxed thymeleaf expressions](./2026-05-04/ghsa-critical-cve-2026-41901-sandboxed-thymeleaf-expressions.md)
-- [ghsa critical cve 2026 42027 apache opennlp extensionloader ](./2026-05-04/ghsa-critical-cve-2026-42027-apache-opennlp-extensionloader-.md)
 - [ghsa critical cve 2026 42569 phpvms has an importer authoriz](./2026-05-04/ghsa-critical-cve-2026-42569-phpvms-has-an-importer-authoriz.md)
 - [ghsa critical cve 2026 42571 pelican web ui affected by a pr](./2026-05-04/ghsa-critical-cve-2026-42571-pelican-web-ui-affected-by-a-pr.md)
 - [ghsa critical cve 2026 42601 archivebox vulnerable to rce vi](./2026-05-04/ghsa-critical-cve-2026-42601-archivebox-vulnerable-to-rce-vi.md)
@@ -253,9 +264,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-16
 - [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
-
-## 2026-04-15
-- [threat landscape for industrial automation systems in q4 202](./2026-04-15/threat-landscape-for-industrial-automation-systems-in-q4-202.md)
 
 ## 2026-04-14
 - [cisa kev cve 2009 0238 microsoft office remote code executio](./2026-04-14/cisa-kev-cve-2009-0238-microsoft-office-remote-code-executio.md)
@@ -514,9 +522,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-21
 - [cisa kev cve 2026 20045 cisco unified communications product](./2026-01-21/cisa-kev-cve-2026-20045-cisco-unified-communications-product.md)
-
-## 2026-01-20
-- [llms in the soc part 1 why benchmarks fail security operatio](./2026-01-20/llms-in-the-soc-part-1-why-benchmarks-fail-security-operatio.md)
 
 ## 2026-01-13
 - [cisa kev cve 2026 20805 microsoft windows information disclo](./2026-01-13/cisa-kev-cve-2026-20805-microsoft-windows-information-disclo.md)

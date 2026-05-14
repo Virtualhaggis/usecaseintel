@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud C2 beacon — zero.masscan.cloud /v1/telemetry exfiltration endpoint
 
-`UC_107_2` · phase: **c2** · confidence: **High**
+`UC_119_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### [LLM] Composer post-install/post-update hook spawns Bun runtime or setup-intercom.sh dropper
 
-`UC_107_3` · phase: **install** · confidence: **High**
+`UC_119_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud payload artefact on disk — router_runtime.js / setup-intercom.sh / known SHA256
 
-`UC_107_4` · phase: **install** · confidence: **High**
+`UC_119_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
