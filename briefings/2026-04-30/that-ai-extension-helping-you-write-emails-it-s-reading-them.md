@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_208_11` · phase: **c2** · confidence: **High**
+`UC_210_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
 
-`UC_208_12` · phase: **install** · confidence: **High**
+`UC_210_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -380,7 +380,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_208_10` · phase: **exploit** · confidence: **High**
+`UC_210_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical GitLab Vulnerabilities Enables XSS and Unauthenticated DoS Attacks
 
-`UC_4_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

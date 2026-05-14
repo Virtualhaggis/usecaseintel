@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_19_5` · phase: **install** · confidence: **High**
+`UC_23_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

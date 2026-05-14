@@ -10,19 +10,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
+- [amazon quick bug exposed ai chat agents to users blocked by ](./2026-05-14/amazon-quick-bug-exposed-ai-chat-agents-to-users-blocked-by-.md)
 - [critical gitlab vulnerabilities enables xss and unauthentica](./2026-05-14/critical-gitlab-vulnerabilities-enables-xss-and-unauthentica.md)
+- [ghostwriter targets ukrainian government with geofenced pdf ](./2026-05-14/ghostwriter-targets-ukrainian-government-with-geofenced-pdf-.md)
 - [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
+- [ghsa critical ghsa 9rvc vf7m pgm2 flowiseai authenticated ho](./2026-05-14/ghsa-critical-ghsa-9rvc-vf7m-pgm2-flowiseai-authenticated-ho.md)
 - [hackers abuse legitimate hwmonitor binary to load malicious ](./2026-05-14/hackers-abuse-legitimate-hwmonitor-binary-to-load-malicious-.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
 - [lyrie ai launches the global identity standard for the ai ag](./2026-05-14/lyrie-ai-launches-the-global-identity-standard-for-the-ai-ag.md)
+- [new critical exim mailer allows remote attacker to execute a](./2026-05-14/new-critical-exim-mailer-allows-remote-attacker-to-execute-a.md)
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [openai hit with class action privacy lawsuit for sharing cha](./2026-05-14/openai-hit-with-class-action-privacy-lawsuit-for-sharing-cha.md)
-- [packagist urges immediate composer update after github actio](./2026-05-14/packagist-urges-immediate-composer-update-after-github-actio.md)
 - [palo alto pan os 0 day exploited to execute arbitrary code w](./2026-05-14/palo-alto-pan-os-0-day-exploited-to-execute-arbitrary-code-w.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
-- [seedworm apt abuses signed fortemedia and sentinelone binari](./2026-05-14/seedworm-apt-abuses-signed-fortemedia-and-sentinelone-binari.md)
 - [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
 
 ## 2026-05-13
@@ -148,7 +150,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
-- [palo alto pan os flaw under active exploitation enables remo](./2026-05-06/palo-alto-pan-os-flaw-under-active-exploitation-enables-remo.md)
 - [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 - [windows phone link exploited by cloudz rat to steal credenti](./2026-05-06/windows-phone-link-exploited-by-cloudz-rat-to-steal-credenti.md)
 - [your ai agents are already inside the perimeter do you know ](./2026-05-06/your-ai-agents-are-already-inside-the-perimeter-do-you-know-.md)
@@ -493,7 +494,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 1281 ivanti endpoint manager mobile epmm c](./2026-01-29/cisa-kev-cve-2026-1281-ivanti-endpoint-manager-mobile-epmm-c.md)
 
 ## 2026-01-28
-- [black industry irgc linked offensive ot framework](./2026-01-28/black-industry-irgc-linked-offensive-ot-framework.md)
 - [love actually fake dating app used as lure in targeted spywa](./2026-01-28/love-actually-fake-dating-app-used-as-lure-in-targeted-spywa.md)
 
 ## 2026-01-27
