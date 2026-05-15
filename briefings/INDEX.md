@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,12 +12,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
+- [hackers abuse oauth device authorization flow to steal micro](./2026-05-15/hackers-abuse-oauth-device-authorization-flow-to-steal-micro.md)
 - [hackers use orbit rootkit to harvest ssh and sudo credential](./2026-05-15/hackers-use-orbit-rootkit-to-harvest-ssh-and-sudo-credential.md)
+- [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
-- [microsoft details kazuar malware s modular architecture and ](./2026-05-15/microsoft-details-kazuar-malware-s-modular-architecture-and-.md)
 - [microsoft warns of attackers using trusted hpe operations ag](./2026-05-15/microsoft-warns-of-attackers-using-trusted-hpe-operations-ag.md)
 - [multiple cpanel vulnerabilities allows access to sensitive s](./2026-05-15/multiple-cpanel-vulnerabilities-allows-access-to-sensitive-s.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
+- [penetration testing vs red teaming what s the difference](./2026-05-15/penetration-testing-vs-red-teaming-what-s-the-difference.md)
+- [shai hulud worm steals npm github aws and kubernetes secrets](./2026-05-15/shai-hulud-worm-steals-npm-github-aws-and-kubernetes-secrets.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
 - [tycoon 2fa operators adopt oauth device code phishing to byp](./2026-05-15/tycoon-2fa-operators-adopt-oauth-device-code-phishing-to-byp.md)
 
@@ -64,9 +67,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
-- [iranian hackers targeted major south korean electronics make](./2026-05-13/iranian-hackers-targeted-major-south-korean-electronics-make.md)
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
-- [west pharmaceutical says hackers stole data encrypted system](./2026-05-13/west-pharmaceutical-says-hackers-stole-data-encrypted-system.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)

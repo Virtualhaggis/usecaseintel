@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use OrBit Rootkit to Harvest SSH and Sudo Credentials From Linux Systems 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 A dangerous rootkit called OrBit has been quietly targeting Linux systems for years, stealing login credentials and hiding deep inside infected machines without triggering most security tools. 
-New research reveals that what was once believed to be a custom-built threat is actually a modified version of a publicly available rootkit, spreading a…
+New research reveals that what was once believed to be a custom-built threat is actually a modified version of a publicly available rootkit, spreading across th…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -70,12 +66,96 @@ New research reveals that what was once believed to be a custom-built threat is 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
+- **T1014** — Rootkit
+- **T1574.006** — Hijack Execution Flow: Dynamic Linker Hijacking
+- **T1056.001** — Input Capture: Keylogging
+- **T1547** — Boot or Logon Autostart Execution
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] OrBit/Medusa rootkit fixed file artefacts on Linux (sshpass.txt, .logpam, .ports in /lib/lib*)
+
+`UC_5_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/lib/libseconf/*" OR Filesystem.file_path="/lib/libntpVnQE6mk/*" OR Filesystem.file_path="/lib/locate/*" OR Filesystem.file_name="sshpass.txt" OR Filesystem.file_name=".logpam" OR Filesystem.file_name=".ports") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath startswith "/lib/libseconf/"
+    or FolderPath startswith "/lib/libntpVnQE6mk/"
+    or FolderPath startswith "/lib/locate/"
+    or FileName in~ ("sshpass.txt", ".logpam", ".ports")
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] OrBit dynamic-linker hijack — /etc/ld.so.preload modified by non-package-manager process
+
+`UC_5_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/ld.so.preload" OR Filesystem.file_path="/etc/ld.so.conf.d/*") Filesystem.action IN ("created","modified","renamed") NOT Filesystem.process_name IN ("apt","apt-get","dpkg","rpm","yum","dnf","zypper","pacman","yast","yast2") by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath == "/etc/" and FileName =~ "ld.so.preload"
+    or FolderPath startswith "/etc/ld.so.conf.d/"
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where InitiatingProcessFileName !in~ ("apt","apt-get","dpkg","rpm","yum","dnf","zypper","pacman","yast","yast2","ldconfig")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] OrBit cron-based payload fetch from cf0.pw / 109.95.212.253 / 109.95.211.141
+
+`UC_5_13` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("109.95.212.253","109.95.211.141") OR All_Traffic.dest="cf0.pw" OR All_Traffic.url="*cf0.pw*") by All_Traffic.src All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let CronArtefacts = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FolderPath == "/etc/cron.hourly/" and FileName == "0"
+    | where ActionType in ("FileCreated","FileModified")
+    | project CronTime = Timestamp, DeviceId, DeviceName,
+              CronCreatedBy = InitiatingProcessFileName,
+              CronCmd = InitiatingProcessCommandLine;
+let C2Hits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in ("109.95.212.253","109.95.211.141")
+        or RemoteUrl contains "cf0.pw"
+    | project NetTime = Timestamp, DeviceId, DeviceName, RemoteIP, RemoteUrl, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath;
+union isfuzzy=true
+    (CronArtefacts | extend Signal = "OrBit cron persistence dropped (/etc/cron.hourly/0)"),
+    (C2Hits      | extend Signal = "OrBit C2 contact (cf0.pw / Russia-based IP)")
+| order by coalesce(CronTime, NetTime) desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -373,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use OrBit Rootkit to Harvest SSH and Sudo Credentials From Linux Systems
 
-`UC_1_10` · phase: **install** · confidence: **High**
+`UC_5_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -417,4 +497,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -254,7 +254,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_8_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

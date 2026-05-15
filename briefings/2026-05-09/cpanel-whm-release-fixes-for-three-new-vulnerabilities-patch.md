@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unpatched cPanel / WHM servers exposed to CVE-2026-29201/29202/29203
 
-`UC_112_5` · phase: **recon** · confidence: **High**
+`UC_113_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] cPanel create_user UAPI call with Perl-injection markers in 'plugin' parameter (CVE-2026-29202)
 
-`UC_112_6` · phase: **exploit** · confidence: **Medium**
+`UC_113_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### [LLM] cPanel feature::LOADFEATUREFILE adminbin call with path traversal (CVE-2026-29201)
 
-`UC_112_7` · phase: **actions** · confidence: **Medium**
+`UC_113_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

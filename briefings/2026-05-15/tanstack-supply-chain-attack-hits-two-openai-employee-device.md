@@ -427,7 +427,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TanStack Supply Chain Attack Hits Two OpenAI Employee Devices, Forces macOS Upda
 
-`UC_5_11` · phase: **exploit** · confidence: **High**
+`UC_9_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] YellowKey BitLocker bypass — FsTx staging on USB/EFI partition
 
-`UC_53_5` · phase: **weapon** · confidence: **High**
+`UC_56_5` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### [LLM] YellowKey post-exploitation — cmd.exe spawned from WinRE volume (X:)
 
-`UC_53_6` · phase: **exploit** · confidence: **High**
+`UC_56_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] BitLocker downgrade — anomalous bootmgfw.efi write outside Windows Update
 
-`UC_53_7` · phase: **install** · confidence: **Medium**
+`UC_56_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

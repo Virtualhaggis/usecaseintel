@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hoppscotch device-login open redirect exploitation (GHSA-7fg7-wx5q-6m3v)
 
-`UC_298_3` · phase: **exploit** · confidence: **High**
+`UC_299_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ union isfuzzy=true UrlPattern, DnsExfil
 
 ### [LLM] Hoppscotch Mock Server stored XSS via GraphQL response-header injection
 
-`UC_298_4` · phase: **exploit** · confidence: **Medium**
+`UC_299_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

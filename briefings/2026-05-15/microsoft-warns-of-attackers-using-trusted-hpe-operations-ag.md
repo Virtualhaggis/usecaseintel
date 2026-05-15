@@ -10,12 +10,8 @@ Home Cyber Security News
 Microsoft Warns of Attackers Using Trusted HPE Operations Agent for Malware-Free Intrusions 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 A recent intrusion uncovered by security researchers revealed a calculated attack campaign that used a legitimate enterprise management tool as a weapon. 
-The threat actor gained access through a compromised third-party IT services provider, then quietly moved through the victim’s environment using tools that were already approved an…
+The threat actor gained access through a compromised third-party IT services provider, then quietly moved through the victim’s environment using tools that were already approved and runnin…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -327,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Warns of Attackers Using Trusted HPE Operations Agent for Malware-Free
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
