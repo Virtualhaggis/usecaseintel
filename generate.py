@@ -4231,12 +4231,29 @@ body:not(.view-library-active)  .stats-library{
   font-weight:600; color:var(--accent-2);
 }
 .hunt-query-head .copy-btn{
-  margin-left:auto; font-family:inherit; font-size:11px;
-  background:transparent; color:var(--muted); border:1px solid var(--border-2);
-  padding:3px 10px; border-radius:6px; cursor:pointer; transition:all .15s;
+  margin-left:auto; font-family:inherit; font-size:12px; font-weight:600;
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(95,212,163,0.10); color:var(--good);
+  border:1px solid rgba(95,212,163,0.40);
+  padding:5px 12px 5px 10px; border-radius:7px;
+  cursor:pointer; transition:all .15s;
+  letter-spacing:0.01em;
 }
-.hunt-query-head .copy-btn:hover{color:var(--text); border-color:var(--accent-2);}
-.hunt-query-head .copy-btn.copied{background:var(--good); color:#04130a; border-color:transparent;}
+.hunt-query-head .copy-btn::before{
+  content:""; display:inline-block; width:12px; height:12px;
+  background:currentColor;
+  /* clipboard-page icon as CSS mask so it inherits the text color */
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
+}
+.hunt-query-head .copy-btn:hover{
+  background:rgba(95,212,163,0.22); color:#caf2dc;
+  border-color:rgba(95,212,163,0.65);
+}
+.hunt-query-head .copy-btn.copied{
+  background:var(--good); color:#04130a; border-color:transparent;
+}
+.hunt-query-head .copy-btn.copied::before{background:#04130a;}
 .hunt-query pre{
   margin:0; padding:14px 16px; background:#0e1117;
   font-family:var(--mono); font-size:11.5px; line-height:1.55;
