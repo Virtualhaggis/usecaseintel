@@ -1,21 +1,21 @@
-# [CRIT] PyPI Packages Deliver ZiChatBot Malware via Zulip APIs on Windows and Linux
+# [CRIT] Turla Turns Kazuar Backdoor Into Modular P2P Botnet for Persistent Access
 
 **Source:** The Hacker News
-**Published:** 2026-05-07
-**Article:** https://thehackernews.com/2026/05/pypi-packages-deliver-zichatbot-malware.html
+**Published:** 2026-05-15
+**Article:** https://thehackernews.com/2026/05/turla-turns-kazuar-backdoor-into.html
 
 ## Threat Profile
 
-PyPI Packages Deliver ZiChatBot Malware via Zulip APIs on Windows and Linux 
- Ravie Lakshmanan  May 07, 2026 Malware / Threat Intelligence 
-Cybersecurity researchers have discovered three packages on the Python Package Index (PyPI) repository that are designed to stealthily deliver a previously unknown malware family called  ZiChatBot on Windows and Linux systems.
-"While these wheel packages do implement the features described on their PyPI web pages, their true purpose is to covertly deliver …
+Turla Turns Kazuar Backdoor Into Modular P2P Botnet for Persistent Access 
+ Ravie Lakshmanan  May 15, 2026 Botnet / Threat Intelligence 
+The Russian state-sponsored hacking group known as
+Turla 
+has transformed its custom backdoor Kazuar into a modular peer-to-peer (P2P) botnet that's engineered for stealth and persistent access to compromised hosts.
+Turla, per the U.S. Cybersecurity and Infrastructure Security Agency (CISA), is assessed to be affiliated with Center 16 of Russia's Federal Secu…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,90 +29,13 @@ Cybersecurity researchers have discovered three packages on the Python Package I
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1574.002** — DLL Side-Loading
-- **T1053.003** — Scheduled Task/Job: Cron
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] PyPI install of OceanLotus ZiChatBot droppers (uuid32-utils / colorinal / termncolor)
-
-`UC_158_8` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip3.exe","pip","pip3","python.exe","python3.exe","python","python3","pythonw.exe")) AND (Processes.process IN ("*uuid32-utils*","*uuid32_utils*","*colorinal*","*termncolor*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","pythonw.exe") or InitiatingProcessFileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","pythonw.exe"))
-| where ProcessCommandLine has_any ("uuid32-utils","uuid32_utils","colorinal","termncolor")
-   or InitiatingProcessCommandLine has_any ("uuid32-utils","uuid32_utils","colorinal","termncolor")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] ZiChatBot dropper artifact: terminate.dll / terminate.so / /tmp/obsHub/obs-check-update
-
-`UC_158_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("terminate.dll","terminate.so","obs-check-update") OR Filesystem.file_path IN ("*/tmp/obsHub/*","*\\tmp\\obsHub\\*")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName in~ ("terminate.dll","terminate.so","obs-check-update")
-   or FolderPath has @"\tmp\obsHub\"
-   or FolderPath has "/tmp/obsHub/"
-| extend SuspiciousParent = iff(InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","pip.exe","pip3.exe","python","python3","pip","pip3"),"yes","no")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspiciousParent
-| order by Timestamp desc
-```
-
-### [LLM] ZiChatBot Zulip-API C2 from Python interpreter or terminate.dll loader
-
-`UC_158_10` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*.zulipchat.com" OR All_Traffic.dest="*.zulipchat.com" OR All_Traffic.url="*zulipchat.com*") AND (All_Traffic.process_name IN ("python.exe","python3.exe","pythonw.exe","rundll32.exe","obs-check-update") OR All_Traffic.process="*terminate.dll*" OR All_Traffic.process="*obsHub*") by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.process All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _zichatbot_loaders =
-    DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "terminate.dll" or FolderPath has "obsHub"
-    | distinct DeviceId, InitiatingProcessId, InitiatingProcessFileName;
-let _net_zulip =
-    DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has "zulipchat.com" or RemoteUrl has "zulip.com";
-_net_zulip
-| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","rundll32.exe","obs-check-update")
-   or InitiatingProcessCommandLine has_any ("terminate.dll","terminate.so","obs-check-update","/tmp/obsHub/")
-| union ( _net_zulip | join kind=inner _zichatbot_loaders on DeviceId, $left.InitiatingProcessId == $right.InitiatingProcessId )
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -297,34 +220,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -349,63 +244,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — PyPI Packages Deliver ZiChatBot Malware via Zulip APIs on Windows and Linux
-
-`UC_158_7` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — PyPI Packages Deliver ZiChatBot Malware via Zulip APIs on Windows and Linux ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("terminate.dll"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/tmp/obsHub/obs-check-update*" OR Filesystem.file_name IN ("terminate.dll"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — PyPI Packages Deliver ZiChatBot Malware via Zulip APIs on Windows and Linux
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("terminate.dll"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/tmp/obsHub/obs-check-update") or FileName in~ ("terminate.dll"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
+  - CVE(s): `CVE-2026-23918`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

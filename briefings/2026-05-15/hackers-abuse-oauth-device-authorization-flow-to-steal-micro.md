@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Abuse OAuth Device Authorization Flow to Steal Microsoft 365 Tokens 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 Hackers are exploiting a little-known feature of Microsoft’s authentication system to steal account credentials at scale. 
 Device code phishing campaigns now target organizations worldwide by manipulating the OAuth device authorization flow, turning a security feature into a major vulnerability. 
-This emerging threat has surged dramatically since la…
+This emerging threat has surged dramatically since late 2024,…
 
 ## Indicators of Compromise (high-fidelity only)
 

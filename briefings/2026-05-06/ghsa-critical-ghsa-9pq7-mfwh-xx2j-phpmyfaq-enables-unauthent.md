@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ /admin/check unauthenticated 2FA brute-force burst (GHSA-9pq7-mfwh-xx2j)
 
-`UC_182_1` · phase: **exploit** · confidence: **High**
+`UC_184_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ /admin/check accessed by scripted HTTP client (curl / python-requests / Go-http-client)
 
-`UC_182_2` · phase: **exploit** · confidence: **High**
+`UC_184_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-9pq7-mfwh-xx2j: phpMyFAQ enables unauthenticated 2FA brut
 
-`UC_182_0` · phase: **install** · confidence: **High**
+`UC_184_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

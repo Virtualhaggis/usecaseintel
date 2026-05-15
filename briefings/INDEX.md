@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_780 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,18 +10,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
+- [avada builder wordpress plugin flaws allow site credential t](./2026-05-15/avada-builder-wordpress-plugin-flaws-allow-site-credential-t.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
+- [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
+- [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
+- [gunra ransomware expands raas operations after shifting from](./2026-05-15/gunra-ransomware-expands-raas-operations-after-shifting-from.md)
 - [hackers abuse oauth device authorization flow to steal micro](./2026-05-15/hackers-abuse-oauth-device-authorization-flow-to-steal-micro.md)
 - [hackers use orbit rootkit to harvest ssh and sudo credential](./2026-05-15/hackers-use-orbit-rootkit-to-harvest-ssh-and-sudo-credential.md)
 - [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [microsoft warns of attackers using trusted hpe operations ag](./2026-05-15/microsoft-warns-of-attackers-using-trusted-hpe-operations-ag.md)
-- [multiple cpanel vulnerabilities allows access to sensitive s](./2026-05-15/multiple-cpanel-vulnerabilities-allows-access-to-sensitive-s.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 - [penetration testing vs red teaming what s the difference](./2026-05-15/penetration-testing-vs-red-teaming-what-s-the-difference.md)
+- [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)
 - [shai hulud worm steals npm github aws and kubernetes secrets](./2026-05-15/shai-hulud-worm-steals-npm-github-aws-and-kubernetes-secrets.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
+- [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
 - [tycoon 2fa operators adopt oauth device code phishing to byp](./2026-05-15/tycoon-2fa-operators-adopt-oauth-device-code-phishing-to-byp.md)
 
 ## 2026-05-14
@@ -134,7 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
-- [day zero readiness the operational gaps that break incident ](./2026-05-07/day-zero-readiness-the-operational-gaps-that-break-incident-.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [ghsa critical cve 2025 63706 next npm version is vulnerable ](./2026-05-07/ghsa-critical-cve-2025-63706-next-npm-version-is-vulnerable-.md)
 - [ghsa critical cve 2026 41050 fleet helm impersonation bypass](./2026-05-07/ghsa-critical-cve-2026-41050-fleet-helm-impersonation-bypass.md)
@@ -157,7 +161,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
-- [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
@@ -1372,6 +1375,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-03-26
 - [cisa kev cve 2023 24955 microsoft sharepoint server code inj](./2024-03-26/cisa-kev-cve-2023-24955-microsoft-sharepoint-server-code-inj.md)
-
-## 2024-03-25
-- [cisa kev cve 2019 7256 nice linear emerge e3 series os comma](./2024-03-25/cisa-kev-cve-2019-7256-nice-linear-emerge-e3-series-os-comma.md)

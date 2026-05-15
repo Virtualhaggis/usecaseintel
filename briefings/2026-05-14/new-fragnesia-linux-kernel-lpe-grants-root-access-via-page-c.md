@@ -1,6 +1,6 @@
 # [CRIT] New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-05-14
 **Article:** https://thehackernews.com/2026/05/new-fragnesia-linux-kernel-lpe-grants.html
 
@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_59_5` · phase: **install** · confidence: **High**
+`UC_63_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

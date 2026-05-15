@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AI agent token exfil via gh CLI issue/PR edit with embedded secret (PromptPwnd)
 
-`UC_548_3` · phase: **actions** · confidence: **High**
+`UC_550_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### [LLM] AI agent CLI on CI runner spawning shell that references token environment variables
 
-`UC_548_4` · phase: **actions** · confidence: **Medium**
+`UC_550_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

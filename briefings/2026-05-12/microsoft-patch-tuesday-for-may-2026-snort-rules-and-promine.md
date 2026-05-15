@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Asset hunt: devices missing May 2026 Patch Tuesday critical fixes
 
-`UC_79_1` · phase: **recon** · confidence: **High**
+`UC_83_1` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] CVE-2026-40403: outbound mstsc.exe RDP session to non-corporate IP (vulnerable RDP Client → attacker server)
 
-`UC_79_2` · phase: **delivery** · confidence: **Medium**
+`UC_83_2` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceNetworkEvents
 
 ### [LLM] CVE-2026-35421: Microsoft Paint (mspaint.exe) opening Enhanced Metafile (.emf)
 
-`UC_79_3` · phase: **exploit** · confidence: **High**
+`UC_83_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

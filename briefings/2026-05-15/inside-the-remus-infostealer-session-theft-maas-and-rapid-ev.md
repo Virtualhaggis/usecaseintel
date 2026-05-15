@@ -11,9 +11,7 @@ Sponsored by Flare
 May 15, 2026
 10:02 AM
 0 
-
-
-In recent months, a new infostealer malware known as REMUS has emerged across the cybercrime landscape, drawing attention from security researchers and malware analysts. Several technical analyses published in recent months focused on the malware’s capabilities, infrastructure, and similarities to Lumma Stealer, including browser targeting mechanisms, and credential theft func…
+In recent months, a new infostealer malware known as REMUS has emerged across the cybercrime landscape, drawing attention from security researchers and malware analysts. Several technical analyses published in recent months focused on the malware’s capabilities, infrastructure, and similarities to Lumma Stealer, including browser targeting mechanisms, and credential theft function…
 
 ## Indicators of Compromise (high-fidelity only)
 

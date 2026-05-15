@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Thymeleaf CVE-2026-40478 SpEL sandbox bypass payload (new[TAB] + FileSystemResource) in HTTP request
 
-`UC_234_1` · phase: **exploit** · confidence: **High**
+`UC_236_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JSP file written to disk by Java/Tomcat process — likely Thymeleaf CVE-2026-40478 webshell drop
 
-`UC_234_2` · phase: **install** · confidence: **High**
+`UC_236_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

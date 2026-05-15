@@ -10,13 +10,9 @@ Home Cyber Security News
 Shai-Hulud Worm Steals npm, GitHub, AWS, and Kubernetes Secrets From Developers 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 A dangerous new piece of malware called Shai-Hulud has emerged as one of the most alarming supply chain threats of 2026. 
 It is a self-propagating worm that quietly tunnels through developer environments, stealing credentials from npm, GitHub, AWS, and Kubernetes all at once. 
-Hundreds of malicious packages have already been tied to this campaig…
+Hundreds of malicious packages have already been tied to this campaign , maki…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -279,7 +275,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud Worm Steals npm, GitHub, AWS, and Kubernetes Secrets From Developers
 
-`UC_0_6` · phase: **exploit** · confidence: **High**
+`UC_5_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
