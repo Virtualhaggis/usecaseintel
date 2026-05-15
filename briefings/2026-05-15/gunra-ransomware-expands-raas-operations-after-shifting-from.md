@@ -10,12 +10,8 @@ Home Cyber Security News
 Gunra Ransomware Expands RaaS Operations After Shifting From Conti-Based Locker 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 Gunra ransomware has quickly grown from a new threat into a serious global problem, hitting dozens of organizations in less than a year. 
-The group behind it is not just encrypting data, but also running a business-like operation that sells access, leaks stolen files, and recruits partners to spread its malware. For defenders, this is not a one-…
+The group behind it is not just encrypting data, but also running a business-like operation that sells access, leaks stolen files, and recruits partners to spread its malware. For defenders, this is not a one-off camp…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -390,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — KongTuke hackers now use Microsoft Teams for corporate breaches
 
-`UC_56_10` · phase: **exploit** · confidence: **High**
+`UC_57_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OrBit/Medusa rootkit fixed file artefacts on Linux (sshpass.txt, .logpam, .ports in /lib/lib*)
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_11_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### [LLM] OrBit dynamic-linker hijack — /etc/ld.so.preload modified by non-package-manager process
 
-`UC_10_12` · phase: **install** · confidence: **High**
+`UC_11_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents
 
 ### [LLM] OrBit cron-based payload fetch from cf0.pw / 109.95.212.253 / 109.95.211.141
 
-`UC_10_13` · phase: **c2** · confidence: **High**
+`UC_11_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -453,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use OrBit Rootkit to Harvest SSH and Sudo Credentials From Linux Systems
 
-`UC_10_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

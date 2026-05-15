@@ -116,7 +116,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kimsuky HelloDoor 'tdll' Run-key persistence with regsvr32 loader
 
-`UC_59_13` · phase: **install** · confidence: **High**
+`UC_60_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceRegistryEvents
 
 ### [LLM] Kimsuky httpMalice persistence: 'Everything 1.9a-/1.8a-' Run-key or CacheDB service install
 
-`UC_59_14` · phase: **install** · confidence: **High**
+`UC_60_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ union
 
 ### [LLM] Kimsuky JSE dropper: wscript -> powershell hidden + certutil -decode chain
 
-`UC_59_15` · phase: **delivery** · confidence: **High**
+`UC_60_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -566,7 +566,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kimsuky targets organizations with PebbleDash-based tools
 
-`UC_59_12` · phase: **exploit** · confidence: **High**
+`UC_60_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

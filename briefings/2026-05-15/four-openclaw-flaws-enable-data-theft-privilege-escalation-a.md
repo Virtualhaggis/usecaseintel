@@ -10,12 +10,8 @@ Home Cyber Security News
 OpenClaw Chain Vulnerabilities Expose 245,000 Public AI Agent Servers to Attack 
 By Guru Baran 
 May 15, 2026 
-
-
-
-
 A chain of four critical vulnerabilities discovered in OpenClaw , one of the fastest-growing open-source platforms for autonomous AI agents, has left an estimated 245,000 publicly accessible server instances exposed to remote exploitation, credential theft, and persistent backdoor installation.
-Originally launched as “Clawdbot” in late 2025, OpenClaw con…
+Originally launched as “Clawdbot” in late 2025, OpenClaw connects la…
 
 ## Indicators of Compromise (high-fidelity only)
 

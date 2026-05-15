@@ -275,7 +275,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud Worm Steals npm, GitHub, AWS, and Kubernetes Secrets From Developers
 
-`UC_5_6` · phase: **exploit** · confidence: **High**
+`UC_6_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

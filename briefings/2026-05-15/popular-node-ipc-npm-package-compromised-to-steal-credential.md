@@ -11,15 +11,9 @@ By Bill Toulas
 May 15, 2026
 01:10 PM
 0 
-
-
 Hackers have injected credential-stealing malware into newly published versions of node-ipc, a popular inter-process communication package, in a new supply chain attack targeting npm.
-
-
 The node-ipc package is a Node.js module that enables various processes to communicate through all forms of sockets, including Unix, Windows, UDP, TLS, and TCP.
-
-
-Despite the maintainer publishing in Ma…
+Despite the maintainer publishing in March 2022 wea…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -219,7 +213,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular node-ipc npm package compromised to steal credentials
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_1_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
