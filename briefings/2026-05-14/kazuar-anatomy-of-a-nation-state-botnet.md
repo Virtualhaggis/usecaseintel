@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kazuar (Secret Blizzard) Kernel Module IPC named pipe \\.\pipe\82760B84F1D703D596C79B88BA4FAC1E
 
-`UC_37_8` · phase: **c2** · confidence: **High**
+`UC_38_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceEvents
 
 ### [LLM] Kazuar (Secret Blizzard) Pelmeni dropper / .NET loader sample hashes on disk or in-memory
 
-`UC_37_9` · phase: **install** · confidence: **High**
+`UC_38_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ union isfuzzy=true
 
 ### [LLM] Kazuar `live_in_scrcons` — scrcons.exe (WMI Event Consumer) reaching public C2 or hosting unsigned modules
 
-`UC_37_10` · phase: **c2** · confidence: **High**
+`UC_38_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -399,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kazuar: Anatomy of a nation-state botnet
 
-`UC_37_7` · phase: **exploit** · confidence: **High**
+`UC_38_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

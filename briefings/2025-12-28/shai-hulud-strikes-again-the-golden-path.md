@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud 3.0 'Golden Path' worm filename created in node_modules
 
-`UC_500_5` · phase: **install** · confidence: **High**
+`UC_504_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound fetch to raw.githubusercontent.com for Shai-Hulud Golden Path exfil JSON paths
 
-`UC_500_6` · phase: **c2** · confidence: **High**
+`UC_504_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] Compromised npm package @vietmoney/react-big-calendar installed under node_modules
 
-`UC_500_7` · phase: **delivery** · confidence: **High**
+`UC_504_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai Hulud strikes again - The golden path
 
-`UC_500_4` · phase: **exploit** · confidence: **High**
+`UC_504_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

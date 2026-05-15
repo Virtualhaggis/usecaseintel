@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Endpoints exposed to May 2026 critical Chrome CVEs (CVE-2026-8509…8522 — fixed in 148.0.7778.167)
 
-`UC_8_7` · phase: **exploit** · confidence: **High**
+`UC_9_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 79 Chrome Vulnerabilities Patched, Including 14 Critical One’s – Update Now!
 
-`UC_8_6` · phase: **exploit** · confidence: **High**
+`UC_9_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

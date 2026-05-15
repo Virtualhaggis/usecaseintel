@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MCPHub SSE endpoint user-impersonation via arbitrary username in URL path (GHSA-wf8q-wvv8-p8jf)
 
-`UC_16_0` · phase: **exploit** · confidence: **High**
+`UC_17_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### [LLM] MCPHub vulnerable middleware log line — 'User context set for SSE/MCP endpoint' (spoofed identity created)
 
-`UC_16_1` · phase: **exploit** · confidence: **High**
+`UC_17_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -327,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse Scheduled Tasks to Maintain Persistence in FrostyNeighbor Attacks
 
-`UC_7_9` · phase: **exploit** · confidence: **High**
+`UC_8_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP C2 beacon to 83.142.209.203:8080 (telnyx/litellm WAV stego campaign)
 
-`UC_299_7` · phase: **c2** · confidence: **High**
+`UC_303_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP msbuild.exe LOLBin masquerade dropped to user Startup folder
 
-`UC_299_8` · phase: **install** · confidence: **High**
+`UC_303_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP exfiltration signature: tpcp.tar.gz / X-Filename header / openssl OAEP chain
 
-`UC_299_9` · phase: **actions** · confidence: **High**
+`UC_303_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_299_6` · phase: **exploit** · confidence: **High**
+`UC_303_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

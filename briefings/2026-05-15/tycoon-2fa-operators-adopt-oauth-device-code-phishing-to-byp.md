@@ -1,34 +1,35 @@
-# [CRIT] Amazon Redshift JDBC Driver Vulnerabilities Enables Remote Code Execution Attacks
+# [CRIT] Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA
 
 **Source:** Cyber Security News
 **Published:** 2026-05-15
-**Article:** https://cybersecuritynews.com/amazon-redshift-jdbc-driver-vulnerabilities/
+**Article:** https://cybersecuritynews.com/tycoon-2fa-operators-adopt-oauth-device-code/
 
 ## Threat Profile
 
 Home Cyber Security News 
-TeamPCP Hackers Abuse CI/CD Pipelines to Steal Developer and Cloud Credentials 
+Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA 
 By Tushar Subhra Dutta 
 May 15, 2026 
 
 
 
 
-TeamPCP is quietly turning trusted development tools into entry points for large scale credential theft. 
-By slipping malicious code into popular CI/CD components, the group has shown how easily attacker controlled logic can blend into normal build and release activity. 
-The result is a campaign that focuses less on breaking into laptops and more…
+Cybercriminals behind the Tycoon 2FA phishing kit have added a powerful new weapon to their playbook. 
+By combining their well-known phishing infrastructure with OAuth Device Code abuse, they can now steal access to Microsoft 365 accounts without ever capturing a single password. 
+The Tycoon 2FA phishing kit first gained attention as a Phishing-as-a-Service…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `events.trustifi.com`
+- **Domain (defanged):** `cookies.28gholland.workers.dev`
+- **Domain (defanged):** `shivacrio.com`
+- **Domain (defanged):** `fijothi.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1005** — Data from Local System
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -36,20 +37,102 @@ The result is a campaign that focuses less on breaking into laptops and more…
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1053.005** — Scheduled Task
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
-- **T1195.002** — Compromise Software Supply Chain
-- **T1053.005** — Persistence (article-specific)
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] OAuth Device Code phishing: node/undici UA against Microsoft Authentication Broker AppId (Tycoon 2FA)
+
+`UC_0_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as ua from datamodel=Authentication where Authentication.app="29d9ed98-a469-4536-ade2-f981bc1d605e" (Authentication.user_agent="node" OR Authentication.user_agent="undici" OR Authentication.user_agent="node*") by Authentication.user Authentication.signature Authentication.dest | `drop_dm_object_name(Authentication)` | where firstTime >= relative_time(now(), "-7d@d")
+```
+
+**Defender KQL:**
+```kql
+// Tycoon 2FA OAuth device-code operator polling — node/undici UA on Microsoft Authentication Broker AppId
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker — eSentire IOC
+| where UserAgent in~ ("node", "undici")                          // operator Node.js backend fingerprint
+   or UserAgent startswith "node/" or UserAgent startswith "undici/"
+| where ErrorCode == 0                                            // successful token issuance
+| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country,
+          ApplicationId, Application, ResourceDisplayName,
+          UserAgent, ClientAppUsed, IsInteractive, ConditionalAccessStatus,
+          RiskLevelDuringSignIn, AuthenticationRequirement
+| order by Timestamp desc
+```
+
+### [LLM] Successful M365 sign-in originating from Tycoon 2FA operator Alibaba Cloud ASN 45102
+
+`UC_0_8` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Authentication.user_agent) as ua values(Authentication.app) as app from datamodel=Authentication where Authentication.signature_id="AAD" (Authentication.src="47.90.180.205" OR Authentication.src="47.252.11.99" OR Authentication.src_asn=45102 OR Authentication.src_asn_name="ALIBABA-US-NET") Authentication.action="success" by Authentication.user Authentication.dest Authentication.src | `drop_dm_object_name(Authentication)` | where firstTime >= relative_time(now(), "-14d@d")
+```
+
+**Defender KQL:**
+```kql
+// Tycoon 2FA operator-side M365 access from Alibaba AS45102 (eSentire IOCs, since ~2026-04-10)
+let _opIPs = dynamic(["47.90.180.205","47.252.11.99"]);
+let _opAppIds = dynamic([
+    "29d9ed98-a469-4536-ade2-f981bc1d605e",   // Microsoft Authentication Broker
+    "4765445b-32c6-49b0-83e6-1d93765276ca"    // OfficeHome — primary AppId for credential-relay variant
+]);
+AADSignInEventsBeta
+| where Timestamp > ago(14d)
+| where ErrorCode == 0
+| where IPAddress in (_opIPs)                              // exact operator IPs
+    or (ApplicationId in (_opAppIds) and IPAddress startswith "47.")  // ASN heuristic for AS45102 (47.0.0.0/8 Alibaba block)
+| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country, City,
+          ApplicationId, Application, ResourceDisplayName,
+          UserAgent, ClientAppUsed, IsInteractive,
+          ConditionalAccessStatus, RiskLevelDuringSignIn, RiskState
+| order by Timestamp desc
+```
+
+### [LLM] Endpoint contact with Tycoon 2FA Layer-2 / Check Domain / C2 staging hosts
+
+`UC_0_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.src) as src from datamodel=Web where (Web.url="*cookies.28gholland.workers.dev*" OR Web.url="*shivacrio.com/bytecore*" OR Web.url="*fijothi.com/*" OR Web.dest="fijothi.com" OR Web.dest="shivacrio.com" OR Web.dest="cookies.28gholland.workers.dev") by Web.dest Web.src | `drop_dm_object_name(Web)` | where firstTime >= relative_time(now(), "-14d@d")
+```
+
+**Defender KQL:**
+```kql
+// Tycoon 2FA Layer-2 / Check Domain / backend C2 contact (eSentire IOCs, April 2026 campaign)
+let _tycoonHosts = dynamic([
+    "cookies.28gholland.workers.dev",  // Cloudflare Workers delivery point
+    "shivacrio.com",                    // Check Domain gate (bytecore~tx1j8 path)
+    "fijothi.com"                       // AES-CBC encrypted backend C2
+]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any (_tycoonHosts)
+   or (RemoteUrl has "shivacrio.com" and RemoteUrl has "bytecore")
+   or RemoteUrl matches regex @"(?i)fijothi\.com/[A-Za-z]{50,}"   // long opaque path = AES-CBC session blob
+| project Timestamp, DeviceName, DeviceId,
+          InitiatingProcessAccountName, InitiatingProcessAccountUpn,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -84,65 +167,6 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
-```
-
-### Crypto-wallet file/keystore access by non-wallet process
-
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -293,152 +317,43 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Scheduled task created with suspicious image / encoded args
+### OAuth consent / suspicious app grant
 
-`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
-      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
-        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
-        OR Processes.process="*\AppData\*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "/create"
-| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
-```
-
-### Ransomware-style mass file rename / extension change
-
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceEvents
+CloudAppEvents
 | where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
 ```
 
-### Remote service execution — PsExec / SMB lateral movement
+### Article-specific behavioural hunt — Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA
 
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+`UC_0_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### Article-specific behavioural hunt — Amazon Redshift JDBC Driver Vulnerabilities Enables Remote Code Execution Attack
-
-`UC_1_11` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — Amazon Redshift JDBC Driver Vulnerabilities Enables Remote Code Execution Attack ```
+``` Article-specific bespoke detection — Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("next.js"))
+    where (Processes.process_name IN ("node.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -447,7 +362,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("next.js"))
+      AND (Filesystem.file_name IN ("node.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -456,12 +371,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Amazon Redshift JDBC Driver Vulnerabilities Enables Remote Code Execution Attack
+// Article-specific bespoke detection — Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("next.js"))
+| where (FileName in~ ("node.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -471,14 +386,21 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("next.js"))
+| where (FileName in~ ("node.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `events.trustifi.com`, `cookies.28gholland.workers.dev`, `shivacrio.com`, `fijothi.com`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

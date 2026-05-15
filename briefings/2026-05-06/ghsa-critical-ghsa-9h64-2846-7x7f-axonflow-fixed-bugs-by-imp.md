@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AxonFlow Onboard-Customer Endpoint Invocation (GHSA-9h64-2846-7x7f Item #3)
 
-`UC_167_0` · phase: **exploit** · confidence: **High**
+`UC_172_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### [LLM] SQL-Injection Pattern in Request Path/Query to AxonFlow Agent Hosts (Item #8 SQLI_ACTION Regression)
 
-`UC_167_1` · phase: **exploit** · confidence: **Medium**
+`UC_172_1` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

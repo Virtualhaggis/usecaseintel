@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,14 +11,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-15
 - [79 chrome vulnerabilities patched including 14 critical one ](./2026-05-15/79-chrome-vulnerabilities-patched-including-14-critical-one-.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [amazon redshift jdbc driver vulnerabilities enables remote c](./2026-05-15/amazon-redshift-jdbc-driver-vulnerabilities-enables-remote-c.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [hackers abuse scheduled tasks to maintain persistence in fro](./2026-05-15/hackers-abuse-scheduled-tasks-to-maintain-persistence-in-fro.md)
 - [microsoft details kazuar malware s modular architecture and ](./2026-05-15/microsoft-details-kazuar-malware-s-modular-architecture-and-.md)
 - [multiple cpanel vulnerabilities allows access to sensitive s](./2026-05-15/multiple-cpanel-vulnerabilities-allows-access-to-sensitive-s.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
-- [praisonai vulnerability exploited within hours of public dis](./2026-05-15/praisonai-vulnerability-exploited-within-hours-of-public-dis.md)
+- [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
+- [tycoon 2fa operators adopt oauth device code phishing to byp](./2026-05-15/tycoon-2fa-operators-adopt-oauth-device-code-phishing-to-byp.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
@@ -140,6 +140,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 42589 gotenberg has unauthenticated r](./2026-05-07/ghsa-critical-cve-2026-42589-gotenberg-has-unauthenticated-r.md)
 - [ghsa critical cve 2026 42596 gotenberg vulnerable to unauthe](./2026-05-07/ghsa-critical-cve-2026-42596-gotenberg-vulnerable-to-unauthe.md)
 - [ghsa critical cve 2026 42880 argocd serversidediff is vulner](./2026-05-07/ghsa-critical-cve-2026-42880-argocd-serversidediff-is-vulner.md)
+- [ghsa critical cve 2026 43997 vm2 access to host object enabl](./2026-05-07/ghsa-critical-cve-2026-43997-vm2-access-to-host-object-enabl.md)
+- [ghsa critical cve 2026 43999 vm2 has a nodevm builtin allowl](./2026-05-07/ghsa-critical-cve-2026-43999-vm2-has-a-nodevm-builtin-allowl.md)
+- [ghsa critical cve 2026 44005 vm2 mutable proxies for host in](./2026-05-07/ghsa-critical-cve-2026-44005-vm2-mutable-proxies-for-host-in.md)
+- [ghsa critical cve 2026 44006 vm2 has a sandbox escape vulner](./2026-05-07/ghsa-critical-cve-2026-44006-vm2-has-a-sandbox-escape-vulner.md)
+- [ghsa critical cve 2026 44007 vm2 nodevm nesting true bypasse](./2026-05-07/ghsa-critical-cve-2026-44007-vm2-nodevm-nesting-true-bypasse.md)
 - [ghsa critical cve 2026 44484 compromise of pytorch lightning](./2026-05-07/ghsa-critical-cve-2026-44484-compromise-of-pytorch-lightning.md)
 - [ghsa critical cve 2026 44497 zebra has consensus divergence ](./2026-05-07/ghsa-critical-cve-2026-44497-zebra-has-consensus-divergence-.md)
 - [ghsa critical cve 2026 44498 zebra s block validator underco](./2026-05-07/ghsa-critical-cve-2026-44498-zebra-s-block-validator-underco.md)
@@ -154,7 +159,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pypi packages deliver zichatbot malware via zulip apis on wi](./2026-05-07/pypi-packages-deliver-zichatbot-malware-via-zulip-apis-on-wi.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
-- [vm2 node js library vulnerabilities enable sandbox escape an](./2026-05-07/vm2-node-js-library-vulnerabilities-enable-sandbox-escape-an.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
 - [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
 
@@ -171,7 +175,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 289f fq7w 6q2w phpmyfaq has unauthenticat](./2026-05-06/ghsa-critical-ghsa-289f-fq7w-6q2w-phpmyfaq-has-unauthenticat.md)
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [ghsa critical ghsa 9pq7 mfwh xx2j phpmyfaq enables unauthent](./2026-05-06/ghsa-critical-ghsa-9pq7-mfwh-xx2j-phpmyfaq-enables-unauthent.md)
-- [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 
 ## 2026-05-05
