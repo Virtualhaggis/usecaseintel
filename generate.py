@@ -4132,6 +4132,122 @@ body:not(.view-library-active)  .stats-library{
 .lib-drawer-close:hover{color:var(--text); background:rgba(255,255,255,0.12); border-color:var(--accent-2);}
 .lib-drawer-content{padding:24px 28px 56px;}
 @media (max-width: 640px){ .lib-drawer-content{padding:16px 18px 36px;} }
+
+/* ----- Hunt-IOCs button + drawer ------------------------------------ */
+.btn.btn-hunt{
+  font-size:11px; padding:5px 11px;
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(95,212,163,0.10); color:var(--good);
+  border:1px solid rgba(95,212,163,0.30);
+}
+.btn.btn-hunt:hover{
+  background:rgba(95,212,163,0.18); color:#caf2dc;
+  border-color:rgba(95,212,163,0.55);
+}
+.hunt-drawer{
+  position:fixed; inset:0; z-index:8600;
+  background:rgba(8,9,10,0.58);
+  display:flex; align-items:stretch; justify-content:flex-end;
+  opacity:0; transition:opacity 0.22s ease-out;
+  pointer-events:none;
+}
+.hunt-drawer.open{opacity:1; pointer-events:auto;}
+.hunt-drawer[hidden]{display:none;}
+.hunt-drawer-inner{
+  width:min(960px, 100vw); height:100vh; overflow-y:auto;
+  background:var(--bg); border-left:1px solid rgba(95,212,163,0.30);
+  box-shadow:-24px 0 48px rgba(0,0,0,0.55);
+  transform:translateX(40px);
+  transition:transform 0.32s cubic-bezier(0.2,0.8,0.2,1);
+  position:relative;
+}
+.hunt-drawer.open .hunt-drawer-inner{transform:translateX(0);}
+.hunt-close{
+  position:sticky; top:14px; left:auto; float:right;
+  margin:14px 14px 0 0; z-index:10;
+  background:rgba(255,255,255,0.06); color:var(--muted);
+  border:1px solid var(--border-2);
+  width:32px; height:32px; border-radius:50%;
+  font-size:20px; line-height:1; cursor:pointer;
+  display:inline-flex; align-items:center; justify-content:center;
+  transition:all 0.15s;
+}
+.hunt-close:hover{color:var(--text); background:rgba(255,255,255,0.12); border-color:var(--good);}
+.hunt-body{padding:24px 28px 56px;}
+.hunt-head{margin:0 0 18px;}
+.hunt-head h2{margin:0 0 4px; font-size:18px; letter-spacing:-0.01em;}
+.hunt-head .sub{color:var(--muted); font-size:13px; max-width:680px;}
+.hunt-types{
+  display:grid; grid-template-columns:1fr; gap:8px;
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; padding:14px 16px; margin-bottom:14px;
+}
+.hunt-type-row{
+  display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+  padding:6px 0; border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.hunt-type-row:last-child{border-bottom:none;}
+.hunt-type-row label.tk{
+  display:flex; align-items:center; gap:8px; min-width:170px;
+  cursor:pointer; user-select:none; font-size:13px;
+}
+.hunt-type-row label.tk input[type="checkbox"]{width:14px; height:14px; accent-color:var(--good);}
+.hunt-type-row .cnt{color:var(--muted-2); font-variant-numeric:tabular-nums;}
+.hunt-type-row.empty label.tk{color:var(--muted-2); cursor:not-allowed;}
+.hunt-type-row.empty input[type="checkbox"]{accent-color:var(--muted);}
+.hunt-type-row select.plat{
+  background:var(--panel-elev); color:var(--text);
+  border:1px solid var(--border-2); border-radius:6px;
+  padding:4px 8px; font-size:12px; font-family:var(--mono);
+  margin-left:auto;
+}
+.hunt-actions{display:flex; gap:10px; margin-bottom:18px;}
+.hunt-actions .btn{font-size:13px; padding:7px 14px;}
+.hunt-actions .btn-gen{
+  background:linear-gradient(180deg, rgba(95,212,163,0.30), rgba(95,212,163,0.18));
+  color:#caf2dc; border:1px solid rgba(95,212,163,0.55); font-weight:600;
+}
+.hunt-actions .btn-gen:hover{
+  background:linear-gradient(180deg, rgba(95,212,163,0.42), rgba(95,212,163,0.24));
+}
+.hunt-out{display:flex; flex-direction:column; gap:14px;}
+.hunt-query{
+  background:var(--panel); border:1px solid var(--border);
+  border-radius:10px; overflow:hidden;
+}
+.hunt-query-head{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; background:var(--panel-elev);
+  border-bottom:1px solid var(--border);
+}
+.hunt-query-head .tag{
+  font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em;
+  font-weight:700; color:var(--good);
+  padding:2px 8px; border-radius:99px;
+  background:rgba(95,212,163,0.12); border:1px solid rgba(95,212,163,0.30);
+}
+.hunt-query-head .plat-tag{
+  font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em;
+  font-weight:600; color:var(--accent-2);
+}
+.hunt-query-head .copy-btn{
+  margin-left:auto; font-family:inherit; font-size:11px;
+  background:transparent; color:var(--muted); border:1px solid var(--border-2);
+  padding:3px 10px; border-radius:6px; cursor:pointer; transition:all .15s;
+}
+.hunt-query-head .copy-btn:hover{color:var(--text); border-color:var(--accent-2);}
+.hunt-query-head .copy-btn.copied{background:var(--good); color:#04130a; border-color:transparent;}
+.hunt-query pre{
+  margin:0; padding:14px 16px; background:#0e1117;
+  font-family:var(--mono); font-size:11.5px; line-height:1.55;
+  color:#dde4ec; white-space:pre-wrap; word-break:break-word;
+  max-height:380px; overflow:auto;
+}
+.hunt-empty{
+  color:var(--muted-2); font-size:13px; padding:16px;
+  background:var(--panel); border:1px dashed var(--border-2); border-radius:8px;
+  text-align:center;
+}
 .lib-detail-head{
   display:flex; flex-direction:column; gap:10px;
   margin-bottom:18px; padding-bottom:18px;
@@ -6378,6 +6494,15 @@ details.uc.uc-platform-hidden{display:none !important;}
   </div>
 </div>
 
+<!-- Hunt IOCs drawer — opens when the per-article Hunt button is clicked.
+     Populated dynamically by the JS handler that reads MATRIX.arts[i].ind. -->
+<div class="hunt-drawer" id="huntDrawer" hidden role="dialog" aria-modal="true" aria-labelledby="huntTitle">
+  <div class="hunt-drawer-inner">
+    <button type="button" class="hunt-close" id="huntClose" aria-label="Close">×</button>
+    <div class="hunt-body" id="huntBody"><!-- populated on open --></div>
+  </div>
+</div>
+
 <div id="view-matrix" class="view">
   <div class="matrix-wrap">
     <div class="matrix-toolbar">
@@ -7176,13 +7301,356 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('.copy-btn');
   if (!btn) return;
   e.stopPropagation();
-  const code = btn.parentElement.querySelector('code').innerText;
+  const pre = btn.closest('pre, .hunt-query');
+  const codeEl = pre ? pre.querySelector('code, pre code, pre') : null;
+  const code = codeEl ? (codeEl.innerText || codeEl.textContent || '') : '';
   navigator.clipboard.writeText(code).then(() => {
     const orig = btn.textContent;
     btn.textContent = 'Copied';
     btn.classList.add('copied');
     setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 1300);
   });
+});
+
+// =====================================================================
+// Hunt IOCs drawer — analyst-driven threat hunt kickstarter.
+// User picks IOC types + a platform per type; we generate ready-to-paste
+// queries for the chosen SIEM/EDR. Data comes from MATRIX.arts[i].ind
+// which the Python pipeline already populates with extracted IOCs.
+// =====================================================================
+const HUNT_PLATFORMS = [
+  ["defender",  "Defender KQL"],
+  ["sentinel",  "Sentinel KQL"],
+  ["sigma",     "Sigma"],
+  ["splunk",    "Splunk SPL"],
+  ["datadog",   "Datadog"],
+];
+const HUNT_TYPES = [
+  ["hashes",  "Hashes",  (i) => (i.sha256 || []).length + (i.sha1 || []).length + (i.md5 || []).length],
+  ["domains", "Domains", (i) => (i.domains || []).length],
+  ["ips",     "IPs",     (i) => (i.ips || []).length],
+  ["cves",    "CVEs",    (i) => (i.cves || []).length],
+];
+const _q = (arr) => arr.map(v => `"${String(v).replace(/"/g, '\\"')}"`).join(", ");
+const HUNT_TEMPLATES = {
+  hashes: {
+    defender: (ind) => {
+      const all = [].concat(ind.sha256 || [], ind.sha1 || [], ind.md5 || []);
+      return `let hashes = dynamic([${_q(all)}]);
+union isfuzzy=true
+    (DeviceFileEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (hashes) or SHA1 in (hashes) or MD5 in (hashes)
+      | project Timestamp, DeviceName, FileName, FolderPath, SHA256, SHA1, MD5,
+                InitiatingProcessFileName, InitiatingProcessAccountName,
+                _Src = "DeviceFileEvents"),
+    (DeviceProcessEvents
+      | where Timestamp > ago(30d)
+      | where SHA256 in (hashes) or SHA1 in (hashes) or MD5 in (hashes)
+         or InitiatingProcessSHA256 in (hashes)
+      | project Timestamp, DeviceName, FileName, ProcessCommandLine, SHA256, SHA1, MD5,
+                InitiatingProcessFileName, AccountName,
+                _Src = "DeviceProcessEvents")
+| order by Timestamp desc`;
+    },
+    sentinel: (ind) => {
+      const sha256 = ind.sha256 || []; const sha1 = ind.sha1 || []; const md5 = ind.md5 || [];
+      return `let sha256s = dynamic([${_q(sha256)}]);
+let sha1s   = dynamic([${_q(sha1)}]);
+let md5s    = dynamic([${_q(md5)}]);
+ImFileEvent
+| where TimeGenerated > ago(30d)
+| where (array_length(sha256s) > 0 and TargetFileSHA256 in (sha256s))
+     or (array_length(sha1s)   > 0 and TargetFileSHA1   in (sha1s))
+     or (array_length(md5s)    > 0 and TargetFileMD5    in (md5s))
+| project TimeGenerated, DvcHostname, EventType, TargetFileName, TargetFilePath,
+          TargetFileSHA256, TargetFileSHA1, TargetFileMD5, ActorUsername
+| order by TimeGenerated desc`;
+    },
+    sigma: (ind) => {
+      const all = [].concat(ind.sha256 || [], ind.sha1 || [], ind.md5 || []);
+      return `title: Hunt — Article hashes (auto-generated)
+id: hunt-hashes-${Date.now()}
+description: Detection for file hashes extracted from a threat-intel article.
+status: experimental
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    SHA256:
+${(ind.sha256 || []).map(h => `      - '${h}'`).join('\\n') || '      # (no SHA256 in this article)'}
+    SHA1:
+${(ind.sha1 || []).map(h => `      - '${h}'`).join('\\n') || '      # (no SHA1 in this article)'}
+    MD5:
+${(ind.md5 || []).map(h => `      - '${h}'`).join('\\n') || '      # (no MD5 in this article)'}
+  condition: selection
+level: critical`;
+    },
+    splunk: (ind) => {
+      const all = [].concat(ind.sha256 || [], ind.sha1 || [], ind.md5 || []);
+      return `| tstats \`summariesonly\` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (${_q(all)})
+    by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_hash
+| \`drop_dm_object_name(Filesystem)\`
+| convert ctime(firstTime) ctime(lastTime)
+| append [
+  | tstats \`summariesonly\` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Endpoint.Processes
+      where Processes.process_hash IN (${_q(all)})
+      by Processes.dest Processes.user Processes.process_name Processes.process_hash
+  | \`drop_dm_object_name(Processes)\`
+  | convert ctime(firstTime) ctime(lastTime)
+]`;
+    },
+    datadog: (ind) => {
+      const all = [].concat(ind.sha256 || [], ind.sha1 || [], ind.md5 || []);
+      return `@file.hash.sha256:(${all.map(v => `"${v}"`).join(" OR ")})
+OR @file.hash.sha1:(${(ind.sha1 || []).map(v => `"${v}"`).join(" OR ") || '""'})
+OR @file.hash.md5:(${(ind.md5 || []).map(v => `"${v}"`).join(" OR ") || '""'})`;
+    },
+  },
+  domains: {
+    defender: (ind) => `let badDomains = dynamic([${_q(ind.domains || [])}]);
+union isfuzzy=true
+    (DeviceNetworkEvents
+      | where Timestamp > ago(30d)
+      | where RemoteUrl has_any (badDomains)
+      | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+                InitiatingProcessFileName, InitiatingProcessCommandLine,
+                _Src = "DeviceNetworkEvents"),
+    (DeviceEvents
+      | where Timestamp > ago(30d)
+      | where ActionType == "DnsQueryResponse"
+      | extend Domain = tostring(parse_json(AdditionalFields).query)
+      | where Domain has_any (badDomains)
+      | project Timestamp, DeviceName, Domain, InitiatingProcessFileName,
+                _Src = "DeviceEvents/DNS")
+| order by Timestamp desc`,
+    sentinel: (ind) => `let badDomains = dynamic([${_q(ind.domains || [])}]);
+union isfuzzy=true
+    (_Im_Dns(starttime=ago(30d), domain_has_any=badDomains)),
+    (_Im_WebSession(starttime=ago(30d), url_has_any=badDomains))
+| project TimeGenerated, EventType, SrcHostname, DvcHostname, Domain, Url
+| order by TimeGenerated desc`,
+    sigma: (ind) => `title: Hunt — Article domains (auto-generated)
+id: hunt-domains-${Date.now()}
+description: Detection for domains extracted from a threat-intel article.
+status: experimental
+logsource:
+  category: dns_query
+detection:
+  selection:
+    QueryName:
+${(ind.domains || []).map(d => `      - '${d}'`).join('\\n')}
+  condition: selection
+level: high`,
+    splunk: (ind) => `| tstats \`summariesonly\` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Resolution.DNS
+    where DNS.query IN (${_q(ind.domains || [])})
+    by DNS.src DNS.query DNS.answer
+| \`drop_dm_object_name(DNS)\`
+| convert ctime(firstTime) ctime(lastTime)
+| append [
+  | tstats \`summariesonly\` count min(_time) as firstTime max(_time) as lastTime
+      from datamodel=Web.Web
+      where Web.url IN (${_q(ind.domains || [])})
+      by Web.src Web.dest Web.url
+  | \`drop_dm_object_name(Web)\`
+  | convert ctime(firstTime) ctime(lastTime)
+]`,
+    datadog: (ind) => `@dns.question.name:(${(ind.domains || []).map(v => `"${v}"`).join(" OR ")})
+OR @http.url:(${(ind.domains || []).map(v => `"*${v}*"`).join(" OR ")})`,
+  },
+  ips: {
+    defender: (ind) => `let badIps = dynamic([${_q(ind.ips || [])}]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (badIps)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc`,
+    sentinel: (ind) => `let badIps = dynamic([${_q(ind.ips || [])}]);
+_Im_NetworkSession(starttime=ago(30d), dstipaddr_has_any_prefix=badIps)
+| project TimeGenerated, SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber,
+          EventType, NetworkApplicationProtocol, EventResult
+| order by TimeGenerated desc`,
+    sigma: (ind) => `title: Hunt — Article IPs (auto-generated)
+id: hunt-ips-${Date.now()}
+description: Detection for IPs extracted from a threat-intel article.
+status: experimental
+logsource:
+  category: network_connection
+detection:
+  selection:
+    DestinationIp:
+${(ind.ips || []).map(ip => `      - '${ip}'`).join('\\n')}
+  condition: selection
+level: high`,
+    splunk: (ind) => `| tstats \`summariesonly\` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest IN (${_q(ind.ips || [])})
+    by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
+| \`drop_dm_object_name(All_Traffic)\`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count`,
+    datadog: (ind) => `(@network.destination.ip:(${(ind.ips || []).map(v => `"${v}"`).join(" OR ")})
+OR @http.url_details.host:(${(ind.ips || []).map(v => `"${v}"`).join(" OR ")}))`,
+  },
+  cves: {
+    defender: (ind) => `let cves = dynamic([${_q(ind.cves || [])}]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (cves)
+| summarize Devices = make_set(DeviceName), Products = make_set(SoftwareName)
+            by CveId
+| order by array_length(Devices) desc`,
+    sentinel: (ind) => `let cves = dynamic([${_q(ind.cves || [])}]);
+SecurityAlert
+| where TimeGenerated > ago(90d)
+| where ExtendedProperties has_any (cves) or ProductName has_any (cves) or AlertName has_any (cves)
+| project TimeGenerated, AlertName, AlertSeverity, ProductName, CompromisedEntity
+| order by TimeGenerated desc`,
+    sigma: (ind) => `title: Hunt — Article CVEs (auto-generated)
+id: hunt-cves-${Date.now()}
+description: Detection for CVEs cited in a threat-intel article. Map to your
+             vuln-scanner / EDR vulnerability table; the field name varies.
+status: experimental
+logsource:
+  category: vulnerability_scan
+detection:
+  selection:
+    cve.id:
+${(ind.cves || []).map(c => `      - '${c}'`).join('\\n')}
+  condition: selection
+level: medium`,
+    splunk: (ind) => `index=vulnerability_scan OR index=qualys OR index=tenable
+| search cve IN (${_q(ind.cves || [])})
+| stats count by host, cve, severity
+| sort - count`,
+    datadog: (ind) => `@cve.id:(${(ind.cves || []).map(v => `"${v}"`).join(" OR ")})`,
+  },
+};
+
+function _huntEscape(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function openHuntDrawer(artId){
+  const drawer = document.getElementById('huntDrawer');
+  const body = document.getElementById('huntBody');
+  if (!drawer || !body) return;
+  let artData = null;
+  try {
+    artData = (MATRIX.arts || []).find(a => a && a.id === artId);
+  } catch (_) { /* MATRIX maybe absent on partial pages */ }
+  const ind = (artData && artData.ind) || {hashes:[],sha256:[],sha1:[],md5:[],domains:[],ips:[],cves:[]};
+  ind.hashes = [].concat(ind.sha256 || [], ind.sha1 || [], ind.md5 || []);
+  const title = (artData && artData.title) || 'this article';
+
+  const platOptions = HUNT_PLATFORMS
+    .map(([k,l]) => `<option value="${k}">${_huntEscape(l)}</option>`).join('');
+
+  const rows = HUNT_TYPES.map(([key, label, counter]) => {
+    const n = counter(ind);
+    const empty = n === 0;
+    const defaultPlat = key === 'cves' ? 'sentinel' : 'defender';
+    return `<div class="hunt-type-row${empty ? ' empty' : ''}">
+      <label class="tk">
+        <input type="checkbox" data-hunt-type="${key}" ${empty?'disabled':'checked'}>
+        <span>${_huntEscape(label)}</span>
+        <span class="cnt">(${n})</span>
+      </label>
+      <select class="plat" data-hunt-plat="${key}" ${empty?'disabled':''}>
+        ${HUNT_PLATFORMS.map(([k,l]) => `<option value="${k}" ${k===defaultPlat?'selected':''}>${_huntEscape(l)}</option>`).join('')}
+      </select>
+    </div>`;
+  }).join('');
+
+  body.innerHTML = `
+    <div class="hunt-head">
+      <h2 id="huntTitle">🔍 Hunt IOCs — ${_huntEscape(title.slice(0,90))}</h2>
+      <p class="sub">Pick which IOC categories to hunt, then choose a target platform per type.
+        Each query covers the last 30 days and is ready to paste; adjust the time window in
+        your SIEM if needed.</p>
+    </div>
+    <div class="hunt-types">${rows}</div>
+    <div class="hunt-actions">
+      <button class="btn btn-gen" id="huntGen">Generate hunt queries</button>
+      <button class="btn" id="huntReset">Reset</button>
+    </div>
+    <div class="hunt-out" id="huntOut">
+      <div class="hunt-empty">Click <b>Generate hunt queries</b> to build queries for the selected types.</div>
+    </div>
+  `;
+
+  const generate = () => {
+    const out = document.getElementById('huntOut');
+    if (!out) return;
+    const picks = HUNT_TYPES.map(([key]) => {
+      const cb = body.querySelector(`input[data-hunt-type="${key}"]`);
+      const ps = body.querySelector(`select[data-hunt-plat="${key}"]`);
+      if (!cb || !cb.checked || cb.disabled) return null;
+      return { type: key, plat: ps.value };
+    }).filter(Boolean);
+    if (!picks.length){
+      out.innerHTML = `<div class="hunt-empty">Select at least one IOC type, then click <b>Generate</b>.</div>`;
+      return;
+    }
+    out.innerHTML = picks.map(({type, plat}) => {
+      const tmpl = HUNT_TEMPLATES[type] && HUNT_TEMPLATES[type][plat];
+      if (!tmpl) return '';
+      let q = '';
+      try { q = tmpl(ind); } catch (e) { q = `// generation error: ${e.message}`; }
+      const platLabel = (HUNT_PLATFORMS.find(p => p[0]===plat) || ['',''])[1];
+      const typeLabel = (HUNT_TYPES.find(t => t[0]===type) || ['',''])[1];
+      return `<div class="hunt-query">
+        <div class="hunt-query-head">
+          <span class="tag">${_huntEscape(typeLabel)}</span>
+          <span class="plat-tag">${_huntEscape(platLabel)}</span>
+          <button class="copy-btn" type="button">Copy</button>
+        </div>
+        <pre><code>${_huntEscape(q)}</code></pre>
+      </div>`;
+    }).join('');
+  };
+
+  body.querySelector('#huntGen').addEventListener('click', generate);
+  body.querySelector('#huntReset').addEventListener('click', () => {
+    body.querySelectorAll('input[data-hunt-type]:not([disabled])').forEach(cb => { cb.checked = true; });
+    body.querySelectorAll('select[data-hunt-plat]').forEach(s => { s.selectedIndex = 0; });
+    document.getElementById('huntOut').innerHTML =
+      `<div class="hunt-empty">Click <b>Generate hunt queries</b> to build queries for the selected types.</div>`;
+  });
+
+  drawer.removeAttribute('hidden');
+  requestAnimationFrame(() => drawer.classList.add('open'));
+  generate();  // fire one round at open so the analyst sees output immediately
+}
+
+function closeHuntDrawer(){
+  const drawer = document.getElementById('huntDrawer');
+  if (!drawer) return;
+  drawer.classList.remove('open');
+  setTimeout(() => drawer.setAttribute('hidden', ''), 280);
+}
+
+document.addEventListener('click', e => {
+  const huntBtn = e.target.closest('.btn-hunt[data-hunt-art]');
+  if (huntBtn){
+    e.preventDefault();
+    openHuntDrawer(huntBtn.dataset.huntArt);
+    return;
+  }
+  if (e.target.id === 'huntClose'){ closeHuntDrawer(); return; }
+  if (e.target.classList && e.target.classList.contains('hunt-drawer')){ closeHuntDrawer(); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    const d = document.getElementById('huntDrawer');
+    if (d && d.classList.contains('open')){ closeHuntDrawer(); }
+  }
 });
 
 // ----- Active nav highlighting on scroll ------------------------------
@@ -10736,6 +11204,7 @@ def render_card(idx: int, article: dict, ind: dict,
   {indicators_html}
   <div class="action-row">
     <button class="btn btn-kc" data-target="{aid}-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="{aid}"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
   {killchain_html}
@@ -11132,12 +11601,27 @@ def build_matrix_data(articles_meta):
     for a in articles_meta:
         a_idx = len(art_records)
         art_techs = sorted({t for t, _ in a["techs"]})
+        # Compact IOC payload for the in-page "Hunt IOCs" feature. We dedupe
+        # and cap each list so a degenerate article (e.g. 500 IPs from a
+        # log dump) doesn't bloat the matrix payload. Hashes are kept as
+        # three separate lists so the generated queries can target the
+        # right schema fields (SHA256 vs SHA1 vs MD5).
+        a_ind = a.get("ind") or {}
+        ioc_payload = {
+            "cves":    list(dict.fromkeys(a_ind.get("cves") or []))[:50],
+            "ips":     list(dict.fromkeys(a_ind.get("ips") or []))[:50],
+            "domains": list(dict.fromkeys(a_ind.get("domains") or []))[:50],
+            "sha256":  list(dict.fromkeys(a_ind.get("sha256") or []))[:30],
+            "sha1":    list(dict.fromkeys(a_ind.get("sha1") or []))[:30],
+            "md5":     list(dict.fromkeys(a_ind.get("md5") or []))[:30],
+        }
         art_records.append({
             "i": a_idx,
             "id": a["id"],
             "title": a["title"][:140],
             "sev": a["sev"],
             "techs": art_techs,
+            "ind": ioc_payload,
         })
         for tid in art_techs:
             if tid in technique_view:
