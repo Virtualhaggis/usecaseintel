@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_776 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,16 +11,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-15
 - [79 chrome vulnerabilities patched including 14 critical one ](./2026-05-15/79-chrome-vulnerabilities-patched-including-14-critical-one-.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
+- [amazon redshift jdbc driver vulnerabilities enables remote c](./2026-05-15/amazon-redshift-jdbc-driver-vulnerabilities-enables-remote-c.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
-- [critical next js vulnerability exposes cloud credentials api](./2026-05-15/critical-next-js-vulnerability-exposes-cloud-credentials-api.md)
+- [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [hackers abuse scheduled tasks to maintain persistence in fro](./2026-05-15/hackers-abuse-scheduled-tasks-to-maintain-persistence-in-fro.md)
 - [microsoft details kazuar malware s modular architecture and ](./2026-05-15/microsoft-details-kazuar-malware-s-modular-architecture-and-.md)
+- [multiple cpanel vulnerabilities allows access to sensitive s](./2026-05-15/multiple-cpanel-vulnerabilities-allows-access-to-sensitive-s.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
+- [praisonai vulnerability exploited within hours of public dis](./2026-05-15/praisonai-vulnerability-exploited-within-hours-of-public-dis.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
 - [18 year old nginx vulnerability allows dos potential rce](./2026-05-14/18-year-old-nginx-vulnerability-allows-dos-potential-rce.md)
-- [chinese apt hackers exploit microsoft exchange to breach ene](./2026-05-14/chinese-apt-hackers-exploit-microsoft-exchange-to-breach-ene.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [defense in depth for autonomous ai agents](./2026-05-14/defense-in-depth-for-autonomous-ai-agents.md)
@@ -48,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
-- [sandworm hackers pivot from compromised it systems toward cr](./2026-05-14/sandworm-hackers-pivot-from-compromised-it-systems-toward-cr.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [teampcp hackers advertise mistral ai code repos for sale](./2026-05-14/teampcp-hackers-advertise-mistral-ai-code-repos-for-sale.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
@@ -66,7 +67,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
 - [new critical exim mailer flaw allows remote code execution](./2026-05-13/new-critical-exim-mailer-flaw-allows-remote-code-execution.md)
 - [west pharmaceutical says hackers stole data encrypted system](./2026-05-13/west-pharmaceutical-says-hackers-stole-data-encrypted-system.md)
-- [windows bitlocker zero day gives access to protected drives ](./2026-05-13/windows-bitlocker-zero-day-gives-access-to-protected-drives-.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
@@ -307,7 +307,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-07
 - [as breakout time accelerates prevention first cybersecurity ](./2026-04-07/as-breakout-time-accelerates-prevention-first-cybersecurity-.md)
-- [cracks in the bedrock escaping the aws agentcore sandbox](./2026-04-07/cracks-in-the-bedrock-escaping-the-aws-agentcore-sandbox.md)
 
 ## 2026-04-06
 - [cisa kev cve 2026 35616 fortinet forticlient ems improper ac](./2026-04-06/cisa-kev-cve-2026-35616-fortinet-forticlient-ems-improper-ac.md)

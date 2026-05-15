@@ -1,8 +1,8 @@
-# [CRIT] Cracks in the Bedrock: Escaping the AWS AgentCore Sandbox
+# [HIGH] Gremlin Stealer's Evolved Tactics: Hiding in Plain Sight With Resource Files
 
 **Source:** Unit 42 (Palo Alto)
-**Published:** 2026-04-07
-**Article:** https://unit42.paloaltonetworks.com/bypass-of-aws-sandbox-network-isolation-mode/
+**Published:** 2026-05-15
+**Article:** https://unit42.paloaltonetworks.com/gremlin-stealer-evolution/
 
 ## Threat Profile
 
@@ -10,46 +10,53 @@ Threat Research Center
 Threat Research 
 Malware 
 Malware 
-Cracks in the Bedrock: Escaping the AWS AgentCore Sandbox 
-13 min read 
-Related Products Cortex Cortex Cloud Unit 42 AI Security Assessment Unit 42 Cloud Security Assessment Unit 42 Incident Response 
-By: Ori Hadad 
-Published: April 7, 2026 
+Gremlin Stealer's Evolved Tactics: Hiding in Plain Sight With Resource Files 
+7 min read 
+Related Products Advanced DNS Security Advanced Threat Prevention Advanced URL Filtering Advanced WildFire Cloud-Delivered Security Services Cortex Cortex XDR Cortex XSIAM Unit 42 Incident Response 
+By: Pranay Kumar Chhaparwal 
+Mark Lim 
+Published: May 15, 2026 
 Categories: Malware 
 Threat Research 
-Tags: Agentcore 
-Agentcore runtime 
-AWS 
-DNS tunneling 
-GenAI 
-Sandbox 
-Executive Summary 
-When researching the boundaries of cloud services, two of the main asp…
+Tags: API 
+Cryptocurrency 
+Gremlin stealer 
+Obfusc…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2025-55182`
-- **Domain (defanged):** `dnshook.site`
-- **Domain (defanged):** `my-secret.dnshook.site`
+- **IPv4 (defanged):** `194.87.92.109`
+- **Domain (defanged):** `api.ipify.org`
+- **SHA256:** `2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b`
+- **SHA256:** `9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614`
+- **SHA256:** `971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759`
+- **SHA256:** `ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd`
+- **SHA256:** `f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346`
+- **SHA256:** `a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd`
+- **SHA256:** `691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3`
+- **SHA256:** `281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2`
+- **SHA256:** `9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20`
+- **SHA256:** `d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c`
+- **SHA256:** `1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
-- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1195.002** — Compromise Software Supply Chain
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted/Obfuscated
-- **T1572** — Protocol Tunneling
+- **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1027.009** — Embedded Payloads
+- **T1115** — Clipboard Data
+- **T1016** — System Network Configuration Discovery
 
 ## Kill chain phases observed
 
@@ -57,71 +64,126 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DNS queries to dnshook.site (Unit42/BeyondTrust AgentCore sandbox-escape PoC domain)
+### [LLM] Gremlin Stealer C2 exfiltration to 194.87.92.109/i.php
 
-`UC_295_9` · phase: **c2** · confidence: **High**
+`UC_3_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Network_Resolution.query) as queries values(Network_Resolution.answer) as answers from datamodel=Network_Resolution where (Network_Resolution.query="dnshook.site" OR Network_Resolution.query="*.dnshook.site") by Network_Resolution.src Network_Resolution.dest_domain Network_Resolution.record_type | `drop_dm_object_name(Network_Resolution)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="194.87.92.109" by All_Traffic.src All_Traffic.src_user All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.user) as user from datamodel=Web.Web where Web.url="*194.87.92.109/i.php*" OR (Web.dest="194.87.92.109" AND Web.url="*/i.php*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// AgentCore sandbox-escape PoC domain (Unit 42 + BeyondTrust corroborated)
-let _pocDomain = "dnshook.site";
-DeviceEvents
+// Gremlin Stealer exfiltration to 194.87.92.109/i.php
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ActionType == "DnsQueryResponse"
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueryName == _pocDomain or QueryName endswith strcat(".", _pocDomain)
-| project Timestamp, DeviceName, DeviceId, QueryName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, AdditionalFields
+| where RemoteIP == "194.87.92.109"
+   or RemoteUrl has "194.87.92.109"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| project Timestamp, DeviceName, DeviceId,
+          InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine,
+          InitiatingProcessSHA256,
+          RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
 | order by Timestamp desc
 ```
 
-### [LLM] AgentCore-style DNS tunnelling: high-volume long-label subdomain queries to a single parent domain
+### [LLM] Gremlin Stealer .NET sample execution by SHA256
 
-`UC_295_10` · phase: **c2** · confidence: **Medium**
+`UC_3_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as queryCount values(Network_Resolution.query) as sampleQueries dc(Network_Resolution.query) as distinctSubdomains from datamodel=Network_Resolution where Network_Resolution.record_type IN ("A","AAAA","TXT","CNAME") by Network_Resolution.src _time span=10m | `drop_dm_object_name(Network_Resolution)` | eval parentDomain=mvindex(split(mvindex(sampleQueries,0),"."),-2)+"."+mvindex(split(mvindex(sampleQueries,0),"."),-1) | stats sum(queryCount) as totalQueries sum(distinctSubdomains) as totalDistinct values(sampleQueries) as sampleQueries by src parentDomain | eval avgLabelLen=mvindex(mvfilter(len(sampleQueries)>30),0) | where totalDistinct >= 50 AND totalQueries >= 100 AND len(parentDomain) > 5 | sort - totalDistinct
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b","9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614","971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759","ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd","f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346","a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd","691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3","281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2","9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20","d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c","1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// AgentCore-style DNS exfil pattern: many long-label subdomains under one parent
-let _windowMin = 10m;
-let _minDistinctLabels = 50;     // article: each query encodes a chunk
-let _minLabelLen = 30;            // base64 chunks are typically long
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType == "DnsQueryResponse"
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where isnotempty(QueryName) and QueryName contains "."
-| extend Labels = split(QueryName, ".")
-| where array_length(Labels) >= 3
-| extend ParentDomain = strcat(tostring(Labels[array_length(Labels)-2]), ".", tostring(Labels[array_length(Labels)-1]))
-| extend FirstLabel = tostring(Labels[0])
-| extend FirstLabelLen = strlen(FirstLabel)
-| where FirstLabelLen >= _minLabelLen
-| where FirstLabel matches regex @"^[A-Za-z0-9+/=_-]+$"      // base64-ish / hex / b32
-| summarize DistinctSubdomains = dcount(QueryName),
-            QueryCount = count(),
-            MaxLabelLen = max(FirstLabelLen),
-            SampleQueries = make_set(QueryName, 5),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceId, DeviceName, ParentDomain, InitiatingProcessFileName, bin(Timestamp, _windowMin)
-| where DistinctSubdomains >= _minDistinctLabels
-| where ParentDomain !endswith ".amazonaws.com"
-      and ParentDomain !endswith ".microsoft.com"
-      and ParentDomain !endswith ".windowsupdate.com"
-      and ParentDomain !endswith ".akadns.net"          // CDN/ESI noise suppression
-      and ParentDomain !endswith ".akamaiedge.net"
-      and ParentDomain !endswith ".cloudfront.net"
-| order by DistinctSubdomains desc
+// Gremlin Stealer SHA256 hash sweep — execution, drop, or load
+let GremlinHashes = dynamic([
+    "2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b",
+    "9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614",
+    "971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759",
+    "ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd",
+    "f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346",
+    "a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd",
+    "691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3",
+    "281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2",
+    "9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20",
+    "d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c",
+    "1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5"]);
+union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (GremlinHashes)
+        | project Timestamp, Source="ProcessEvent", DeviceName, AccountName,
+                  FileName, FolderPath, SHA256,
+                  ProcessCommandLine, InitiatingProcessFileName,
+                  InitiatingProcessCommandLine),
+    (DeviceFileEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (GremlinHashes)
+        | project Timestamp, Source="FileEvent", DeviceName,
+                  AccountName=InitiatingProcessAccountName,
+                  FileName, FolderPath, SHA256,
+                  ProcessCommandLine="",
+                  InitiatingProcessFileName, InitiatingProcessCommandLine),
+    (DeviceImageLoadEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (GremlinHashes)
+        | project Timestamp, Source="ImageLoad", DeviceName,
+                  AccountName=InitiatingProcessAccountName,
+                  FileName, FolderPath, SHA256,
+                  ProcessCommandLine="",
+                  InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] Gremlin Stealer reconnaissance: api.ipify.org call followed by egress to 194.87.92.109
+
+`UC_3_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true min(_time) as ipifyTime values(All_Traffic.app) as ipifyApp from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="api.ipify.org" OR All_Traffic.url="*api.ipify.org*" by All_Traffic.src All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` | join type=inner src [ | tstats summariesonly=true min(_time) as gremlinTime values(All_Traffic.dest) as gremlinDest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="194.87.92.109" by All_Traffic.src | `drop_dm_object_name(All_Traffic)` ] | eval delaySec = gremlinTime - ipifyTime | where delaySec >= 0 AND delaySec <= 600 | table ipifyTime gremlinTime delaySec src gremlinDest
+```
+
+**Defender KQL:**
+```kql
+// Gremlin Stealer recon→exfil chain: api.ipify.org lookup then egress to 194.87.92.109 within 10 min, same host+process
+let WindowMin = 10m;
+let IpifyHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "api.ipify.org"
+       or RemoteUrl has "ipify.org"
+    | project IpifyTime = Timestamp, DeviceId, DeviceName,
+              InitiatingProcessId, InitiatingProcessFileName,
+              InitiatingProcessCommandLine,
+              InitiatingProcessAccountName,
+              InitiatingProcessSHA256;
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "194.87.92.109" or RemoteUrl has "194.87.92.109"
+| project GremlinTime = Timestamp, DeviceId, DeviceName,
+          InitiatingProcessId, InitiatingProcessFileName,
+          InitiatingProcessCommandLine,
+          InitiatingProcessAccountName,
+          InitiatingProcessSHA256,
+          RemoteIP, RemoteUrl, RemotePort
+| join kind=inner IpifyHits on DeviceId, InitiatingProcessId,
+                                InitiatingProcessFileName
+| where GremlinTime between (IpifyTime .. IpifyTime + WindowMin)
+| extend DelaySec = datetime_diff('second', GremlinTime, IpifyTime)
+| project IpifyTime, GremlinTime, DelaySec, DeviceName,
+          InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          InitiatingProcessCommandLine,
+          InitiatingProcessSHA256,
+          RemoteIP, RemoteUrl
+| order by GremlinTime desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -159,6 +221,31 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+```
+
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
 `UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
@@ -186,39 +273,6 @@ DeviceFileEvents
 | where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
 | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### DNS tunneling / TXT-heavy domain queries
-
-`UC_DNS_TUNNEL` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-    where DNS.message_type="QUERY"
-    by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| eval qlen=len(query)
-| where qlen > 50
-| rex field=query "(?<second_level_domain>[\w-]+\.[\w-]+)$"
-| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-    by src, second_level_domain
-| where qcount > 100 AND unique_subs > 20
-| sort - qcount
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemotePort == 53 and isnotempty(RemoteUrl)
-| extend qlen = strlen(RemoteUrl)
-| where qlen > 50
-| extend SecondLevelDomain = extract(@"([\w-]+\.[a-zA-Z]{2,})$", 1, RemoteUrl)
-| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
-    by DeviceName, SecondLevelDomain
-| where qcount > 100 and uniqueSubs > 20
-| order by qcount desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -363,41 +417,17 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `dnshook.site`, `my-secret.dnshook.site`
+  - IP / domain IOC(s): `194.87.92.109`, `api.ipify.org`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-55182`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b`, `9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614`, `971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759`, `ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd`, `f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346`, `a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd`, `691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3`, `281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2` _(+3 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

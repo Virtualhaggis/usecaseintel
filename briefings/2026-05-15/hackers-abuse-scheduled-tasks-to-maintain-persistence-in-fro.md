@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse Scheduled Tasks to Maintain Persistence in FrostyNeighbor Attacks 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 A state-aligned hacking group known as FrostyNeighbor has resurfaced with a fresh wave of cyberattacks targeting government organizations in Ukraine, using a carefully designed infection chain that is harder than ever to detect. 
-The group, active since at least 2016, has a long history of targeting countries neighboring Belarus, and its latest …
+The group, active since at least 2016, has a long history of targeting countries neighboring Belarus, and its latest campaign…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -331,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse Scheduled Tasks to Maintain Persistence in FrostyNeighbor Attacks
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_7_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

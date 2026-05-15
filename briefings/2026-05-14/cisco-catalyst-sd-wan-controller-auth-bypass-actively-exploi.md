@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cisco SD-WAN 'vmanage-admin' SSH publickey logon from unauthorized IP (CVE-2026-20182 / 20127, UAT-8616)
 
-`UC_19_6` · phase: **install** · confidence: **High**
+`UC_21_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound DTLS to Cisco SD-WAN vdaemon UDP/12346 from non-fabric peer (CVE-2026-20182 exploit path)
 
-`UC_19_7` · phase: **exploit** · confidence: **Medium**
+`UC_21_7` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -241,7 +241,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 
-`UC_19_5` · phase: **install** · confidence: **High**
+`UC_21_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

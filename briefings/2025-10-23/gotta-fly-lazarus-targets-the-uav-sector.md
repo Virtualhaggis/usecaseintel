@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Lazarus Operation DreamJob: wksprt.exe / wkspbroker.exe side-loading webservices.dll or radcui.dll outside System32
 
-`UC_593_6` · phase: **install** · confidence: **High**
+`UC_592_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ union isfuzzy=true ProcLeg, ImgLoad
 
 ### [LLM] ScoringMathTea / BinMergeLoader C2 callouts to ESET-published Lazarus DreamJob 2025 infrastructure
 
-`UC_593_7` · phase: **c2** · confidence: **High**
+`UC_592_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceNetworkEvents
 
 ### [LLM] DroneEXEHijackingLoader DLL hash / internal-name observation
 
-`UC_593_8` · phase: **delivery** · confidence: **High**
+`UC_592_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gotta fly: Lazarus targets the UAV sector
 
-`UC_593_5` · phase: **exploit** · confidence: **High**
+`UC_592_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

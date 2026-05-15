@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm postinstall hook executes node init.js/child.js from GlassWorm React Native compromised packages
 
-`UC_316_4` · phase: **install** · confidence: **High**
+`UC_315_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### [LLM] Malicious launcher file (init.js / child.js / install.js) written under compromised React Native npm package paths
 
-`UC_316_5` · phase: **delivery** · confidence: **High**
+`UC_315_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound connection to GlassWorm npm-supply-chain payload server 45.32.150.251 (Vultr AS20473)
 
-`UC_316_6` · phase: **c2** · confidence: **High**
+`UC_315_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_316_3` · phase: **exploit** · confidence: **High**
+`UC_315_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

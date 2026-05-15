@@ -10,13 +10,9 @@ Home Cyber Security News
 79 Chrome Vulnerabilities Patched, Including 14 Critical One’s – Update Now! 
 By Abinaya 
 May 15, 2026 
-
-
-
-
 Google has rolled out a massive security update for its Chrome browser , sealing a staggering 79 vulnerabilities before threat actors can exploit them.
 With 14 of these flaws rated as critical, browsing the web on an outdated version leaves your entire system wide open to devastating cyberattacks.
-The newest stable release bumps Chrome to 148.0.7778.167/168 on…
+The newest stable release bumps Chrome to 148.0.7778.167/168 on Windows…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,12 +44,45 @@ The newest stable release bumps Chrome to 148.0.7778.167/168 on…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1189** — Drive-by Compromise
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Endpoints exposed to May 2026 critical Chrome CVEs (CVE-2026-8509…8522 — fixed in 148.0.7778.167)
+
+`UC_8_7` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.signature_id IN ("CVE-2026-8509","CVE-2026-8510","CVE-2026-8511","CVE-2026-8512","CVE-2026-8513","CVE-2026-8514","CVE-2026-8515","CVE-2026-8516","CVE-2026-8517","CVE-2026-8518","CVE-2026-8519","CVE-2026-8520","CVE-2026-8521","CVE-2026-8522") by Vulnerabilities.dest Vulnerabilities.signature_id Vulnerabilities.severity Vulnerabilities.vendor_product
+| `drop_dm_object_name(Vulnerabilities)`
+| stats values(signature_id) as exposed_cves dc(signature_id) as cve_count values(vendor_product) as product values(severity) as severity by dest
+| where cve_count >= 1
+| sort - cve_count
+```
+
+**Defender KQL:**
+```kql
+let chrome_cves = dynamic(["CVE-2026-8509","CVE-2026-8510","CVE-2026-8511","CVE-2026-8512","CVE-2026-8513","CVE-2026-8514","CVE-2026-8515","CVE-2026-8516","CVE-2026-8517","CVE-2026-8518","CVE-2026-8519","CVE-2026-8520","CVE-2026-8521","CVE-2026-8522"]);
+let patched_win_mac = "148.0.7778.167";
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (chrome_cves)
+| where SoftwareVendor =~ "google" and SoftwareName has "chrome"
+| summarize ExposedCVEs = make_set(CveId),
+            ExposedCveCount = dcount(CveId),
+            InstalledVersion = any(SoftwareVersion),
+            RecommendedUpdate = any(RecommendedSecurityUpdate),
+            Severity = max(VulnerabilitySeverityLevel)
+            by DeviceId, DeviceName, OSPlatform
+| extend NeedsPatch = InstalledVersion != patched_win_mac and InstalledVersion !startswith "148.0.7778.168"
+| where NeedsPatch == true
+| order by ExposedCveCount desc, DeviceName asc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -165,7 +194,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 79 Chrome Vulnerabilities Patched, Including 14 Critical One’s – Update Now!
 
-`UC_3_6` · phase: **exploit** · confidence: **High**
+`UC_8_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -225,4 +254,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
