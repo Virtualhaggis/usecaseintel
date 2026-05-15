@@ -4230,36 +4230,46 @@ body:not(.view-library-active)  .stats-library{
   font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em;
   font-weight:600; color:var(--accent-2);
 }
-.hunt-query-head .copy-btn{
-  margin-left:auto; font-family:inherit; font-size:12px; font-weight:600;
-  display:inline-flex; align-items:center; gap:6px;
-  background:rgba(95,212,163,0.10); color:var(--good);
-  border:1px solid rgba(95,212,163,0.40);
-  padding:5px 12px 5px 10px; border-radius:7px;
-  cursor:pointer; transition:all .15s;
-  letter-spacing:0.01em;
-}
-.hunt-query-head .copy-btn::before{
-  content:""; display:inline-block; width:12px; height:12px;
-  background:currentColor;
-  /* clipboard-page icon as CSS mask so it inherits the text color */
-  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
-  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
-}
-.hunt-query-head .copy-btn:hover{
-  background:rgba(95,212,163,0.22); color:#caf2dc;
-  border-color:rgba(95,212,163,0.65);
-}
-.hunt-query-head .copy-btn.copied{
-  background:var(--good); color:#04130a; border-color:transparent;
-}
-.hunt-query-head .copy-btn.copied::before{background:#04130a;}
+/* Per-query Copy button — sits ABSOLUTE top-right of each <pre> so it's
+   visually attached to its own query block. GitHub-style "copy this
+   code" affordance. Each Hunt-IOCs query gets its own button; the
+   delegated click handler reads the parent .hunt-query > pre > code. */
 .hunt-query pre{
-  margin:0; padding:14px 16px; background:#0e1117;
+  position:relative;
+  margin:0; padding:14px 56px 14px 16px;   /* extra right-pad reserves space for the button */
+  background:#0e1117;
   font-family:var(--mono); font-size:11.5px; line-height:1.55;
   color:#dde4ec; white-space:pre-wrap; word-break:break-word;
   max-height:380px; overflow:auto;
 }
+.hunt-query pre .copy-btn{
+  position:absolute; top:8px; right:8px; z-index:2;
+  font-family:inherit; font-size:11.5px; font-weight:600;
+  display:inline-flex; align-items:center; gap:6px;
+  background:rgba(95,212,163,0.14); color:var(--good);
+  border:1px solid rgba(95,212,163,0.45);
+  padding:4px 10px 4px 9px; border-radius:7px;
+  cursor:pointer; transition:all .15s;
+  letter-spacing:0.01em;
+  /* Slight backdrop so the button stays readable when the query
+     scrolls beneath it. */
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+}
+.hunt-query pre .copy-btn::before{
+  content:""; display:inline-block; width:12px; height:12px;
+  background:currentColor;
+  -webkit-mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
+  mask:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='12' height='12' rx='2'/><path d='M5 15 H4 a2 2 0 0 1 -2 -2 V4 a2 2 0 0 1 2 -2 h9 a2 2 0 0 1 2 2 v1'/></svg>") center/contain no-repeat;
+}
+.hunt-query pre .copy-btn:hover{
+  background:rgba(95,212,163,0.28); color:#caf2dc;
+  border-color:rgba(95,212,163,0.75);
+}
+.hunt-query pre .copy-btn.copied{
+  background:var(--good); color:#04130a; border-color:transparent;
+}
+.hunt-query pre .copy-btn.copied::before{background:#04130a;}
 .hunt-empty{
   color:var(--muted-2); font-size:13px; padding:16px;
   background:var(--panel); border:1px dashed var(--border-2); border-radius:8px;
@@ -7626,9 +7636,8 @@ function openHuntDrawer(artId){
         <div class="hunt-query-head">
           <span class="tag">${_huntEscape(typeLabel)}</span>
           <span class="plat-tag">${_huntEscape(platLabel)}</span>
-          <button class="copy-btn" type="button">Copy</button>
         </div>
-        <pre><code>${_huntEscape(q)}</code></pre>
+        <pre><button class="copy-btn" type="button">Copy</button><code>${_huntEscape(q)}</code></pre>
       </div>`;
     }).join('');
   };
