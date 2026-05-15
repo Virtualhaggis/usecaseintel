@@ -323,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Warns of Attackers Using Trusted HPE Operations Agent for Malware-Free
 
-`UC_13_8` · phase: **exploit** · confidence: **High**
+`UC_14_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

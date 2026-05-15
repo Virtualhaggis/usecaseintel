@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Talos weekly top-prevalent malware hash watch (Coinminer / Injector / W32.Variant)
 
-`UC_37_9` · phase: **install** · confidence: **High**
+`UC_38_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -280,7 +280,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The time of much patching is coming
 
-`UC_37_8` · phase: **exploit** · confidence: **High**
+`UC_38_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
