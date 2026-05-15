@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious Network Provider 'mslogon' registered on domain controller
 
-`UC_80_11` · phase: **install** · confidence: **High**
+`UC_82_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceRegistryEvents
 
 ### [LLM] LSA Notification Packages adds 'passms' password filter on domain controllers
 
-`UC_80_12` · phase: **install** · confidence: **High**
+`UC_82_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ union LsaPackageChange, PassmsArtefact
 
 ### [LLM] Credential-theft staging files and web shells from HPE OA trusted-relationship intrusion
 
-`UC_80_13` · phase: **actions** · confidence: **High**
+`UC_82_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -510,7 +510,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Undermining the trust boundary: Investigating a stealthy intrusion through third
 
-`UC_80_10` · phase: **exploit** · confidence: **High**
+`UC_82_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

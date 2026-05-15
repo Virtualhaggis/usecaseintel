@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Windows BitLocker zero-day gives access to protected drives, PoC released
 
-`UC_57_1` · phase: **install** · confidence: **High**
+`UC_59_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

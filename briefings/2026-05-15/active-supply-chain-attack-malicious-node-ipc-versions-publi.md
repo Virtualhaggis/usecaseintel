@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc malicious package C2 egress to sh.azurestaticprovider.net / 37.16.75.69
 
-`UC_2_10` · phase: **c2** · confidence: **High**
+`UC_3_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### [LLM] node-ipc DNS exfiltration via .bt.node.js suffix or direct-to-C2 resolver
 
-`UC_2_11` · phase: **c2** · confidence: **High**
+`UC_3_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union isfuzzy=true
 
 ### [LLM] Malicious node-ipc.cjs bundle hash present on disk (v9.1.6 / 9.2.3 / 12.0.1)
 
-`UC_2_12` · phase: **install** · confidence: **High**
+`UC_3_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_3_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

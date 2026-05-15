@@ -1,45 +1,38 @@
-# [CRIT] DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based deception
+# [CRIT] FrostyNeighbor: Fresh mischief and digital shenanigans
 
 **Source:** ESET WeLiveSecurity
-**Published:** 2025-09-25
-**Article:** https://www.welivesecurity.com/en/eset-research/deceptivedevelopment-from-primitive-crypto-theft-to-sophisticated-ai-based-deception/
+**Published:** 2026-05-14
+**Article:** https://www.welivesecurity.com/en/eset-research/frostyneighbor-fresh-mischief-digital-shenanigans/
 
 ## Threat Profile
 
-DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based deception 
+FrostyNeighbor: Fresh mischief and digital shenanigans 
 ESET Research
-DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based deception Malware operators collaborate with covert North Korean IT workers, posing a threat to both headhunters and job seekers
-Peter Kálnai 
-Matěj Havránek 
-25 Sep 2025 
+FrostyNeighbor: Fresh mischief and digital shenanigans ESET researchers uncovered new activities attributed to FrostyNeighbor, updating its compromise chain to support the group’s continual cyberespionage operations
+Damien Schaeffer 
+14 May 2026 
  •  
 , 
-18 min. read 
-This blogpost introduces our latest white paper, presented at Virus Bulletin 2025 , where we detail the operations of the North K…
+10 min. read 
+This blogpost covers newly discovered activities attributed to FrostyNeighbor, targeting governmental organizations in Ukraine. FrostyNeighbor has been running c…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `103.231.75.101`
-- **IPv4 (defanged):** `176.223.112.74`
-- **IPv4 (defanged):** `164.132.209.191`
-- **IPv4 (defanged):** `199.188.200.147`
-- **IPv4 (defanged):** `116.125.126.38`
-- **IPv4 (defanged):** `45.159.248.110`
-- **IPv4 (defanged):** `45.8.146.93`
-- **IPv4 (defanged):** `86.104.72.247`
-- **IPv4 (defanged):** `103.35.190.170`
-- **Domain (defanged):** `s.store`
-- **Domain (defanged):** `es.com`
-- **Domain (defanged):** `5zqd.onion`
+- **Domain (defanged):** `book-happy.needbinding.icu`
+- **Domain (defanged):** `nama-belakang.nebao.icu`
+- **Domain (defanged):** `static.needbinding.icu`
+- **Domain (defanged):** `g.icu`
+- **Domain (defanged):** `view.algsat.icu`
+- **Domain (defanged):** `exavegas.icu`
+- **Domain (defanged):** `hinesafar.sardk.icu`
+- **Domain (defanged):** `shinesafar.sardk.icu`
+- **Domain (defanged):** `e.buzz`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
-- **T1005** — Data from Local System
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -47,125 +40,18 @@ This blogpost introduces our latest white paper, presented at Virus Bulletin 202
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1219** — Remote Access Tools
-- **T1027.004** — Obfuscated Files or Information: Compile After Delivery
-- **T1059** — Command and Scripting Interpreter
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
-- **T1496.001** — Resource Hijacking: Compute Hijacking
+- **T1053.005** — Persistence (article-specific)
+- **T1547.001** — Persistence (article-specific)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] DeceptiveDevelopment ClickFix lure: nvidiaRelease.zip + run.vbs/shell.bat Node.js BeaverTail loader and AkdoorTea drvUpdate.exe
-
-`UC_640_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("ClickFix-1.bat","shell.bat","run.vbs","drvUpdate.exe") OR Processes.process IN ("*ClickFix-1.bat*","*nvidiaRelease.zip*","*\\run.vbs*","*\\shell.bat*","*main.js*","*drvUpdate.exe*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | where (parent_process_name IN ("wscript.exe","cscript.exe","cmd.exe","powershell.exe") OR process_name IN ("node.exe") OR process_path LIKE "%\\Users\\Public\\%" OR process_path LIKE "%\\AppData\\Local\\Temp\\%" OR process_path LIKE "%\\Downloads\\%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _files = dynamic(["clickfix-1.bat","nvidiarelease.zip","run.vbs","shell.bat","main.js","drvupdate.exe"]);
-let _writes = DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where ActionType in ("FileCreated","FileRenamed")
-  | where tolower(FileName) in (_files)
-     or tolower(FileName) endswith "clickfix-1.bat"
-     or tolower(FileName) endswith "nvidiarelease.zip"
-  | project FileTime=Timestamp, DeviceId, DeviceName, FileName, FolderPath,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-let _execs = DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessAccountName !endswith "$"
-  | where (FileName =~ "wscript.exe" and ProcessCommandLine has "run.vbs")
-       or (FileName =~ "cmd.exe" and ProcessCommandLine has_any ("ClickFix-1.bat","shell.bat"))
-       or (FileName =~ "node.exe" and ProcessCommandLine has "main.js")
-       or FileName =~ "drvUpdate.exe"
-       or InitiatingProcessFileName =~ "drvUpdate.exe"
-  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath,
-            ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-            InitiatingProcessFolderPath, SHA256;
-union isfuzzy=true _writes, _execs
-| order by Timestamp desc, FileTime desc
-```
-
-### [LLM] WeaselStore / GolangGhost / PylangGhost: Go toolchain shipped to victim and used to compile-and-run RAT from user-writable path
-
-`UC_640_13` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name IN ("go.exe","go") AND (Processes.process IN ("*go build*","*go run*","*go install*")) by Processes.dest Processes.user Processes.process_path Processes.parent_process_path | `drop_dm_object_name(Processes)` | where (process_path LIKE "%\\Users\\%\\AppData\\%" OR process_path LIKE "%\\Users\\%\\Downloads\\%" OR process_path LIKE "%\\Users\\Public\\%" OR process_path LIKE "%\\Temp\\%" OR process_path LIKE "/tmp/%" OR process_path LIKE "/Users/%/Downloads/%" OR process_path LIKE "/Users/Shared/%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _ioc_ips = dynamic(["103.231.75.101","176.223.112.74","164.132.209.191","199.188.200.147","116.125.126.38","45.159.248.110","45.8.146.93","86.104.72.247"]);
-let _go_compile = DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessAccountName !endswith "$"
-  | where FileName in~ ("go.exe","go")
-  | where ProcessCommandLine has_any ("go build","go run","go install")
-  | where FolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\", "/tmp/", "/Users/Shared/")
-     or InitiatingProcessFolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\")
-  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath,
-            ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-            CompileTime=Timestamp;
-_go_compile
-| join kind=inner (
-    DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIPType == "Public"
-    | where InitiatingProcessFolderPath has_any (@"\AppData\", @"\Downloads\", @"\Users\Public\", @"\Temp\")
-        or RemoteIP in (_ioc_ips)
-    | project NetTime=Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-  ) on DeviceId
-| where NetTime between (CompileTime .. CompileTime + 30m)
-| project DeviceName, AccountName, CompileTime, NetTime, ProcessCommandLine,
-          CompiledBin=InitiatingProcessFileName1, CompiledFolder=InitiatingProcessFolderPath1,
-          RemoteIP, RemotePort, RemoteUrl
-| order by CompileTime desc
-```
-
-### [LLM] TsunamiKit TsunamiHardener: Defender exclusions added for TsunamiClient + XMRig/NBMiner cryptominer components
-
-`UC_640_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","powershell_ise.exe") AND Processes.process IN ("*Add-MpPreference*","*Set-MpPreference*") AND Processes.process IN ("*Exclusion*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(cmdline,"(?i)Tsunami|XMRig|NBMiner|System\s+Runtime\s+Monitor") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe","powershell_ise.exe","cmd.exe")
-| where ProcessCommandLine has_any ("Add-MpPreference","Set-MpPreference")
-| where ProcessCommandLine has_any ("ExclusionPath","ExclusionProcess","ExclusionExtension")
-| where ProcessCommandLine matches regex @"(?i)(Tsunami|XMRig|NBMiner|System\s+Runtime\s+Monitor)"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -200,65 +86,6 @@ DeviceNetworkEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
 | order by conn_count desc
-```
-
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### Crypto-wallet file/keystore access by non-wallet process
-
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -409,6 +236,34 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### Scheduled task created with suspicious image / encoded args
+
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+```
+
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
 `UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
@@ -466,33 +321,6 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -517,16 +345,16 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based dece
+### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_640_11` · phase: **exploit** · confidence: **High**
+`UC_51_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based dece ```
+``` Article-specific bespoke detection — FrostyNeighbor: Fresh mischief and digital shenanigans ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("car.dll","img_layer_generate.dll","clickfix-1.bat","run.vbs","shell.bat","node.js","main.js","drvupdate.exe","splwow32.exe","mmdx64fx.exe","nvidia.js","ffmpeg.sh","fig.js","drivfixer.sh") OR Processes.process_path="*E:\Programming\The*")
+    where (Processes.process_name IN ("53_7.03.2026_r.js","update.js","viberpc.exe","viberpc.dll","certificate.js") OR Processes.process_path="*%AppData%\WinDataScope\Update.js*")
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -535,7 +363,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*E:\Programming\The*" OR Filesystem.file_name IN ("car.dll","img_layer_generate.dll","clickfix-1.bat","run.vbs","shell.bat","node.js","main.js","drvupdate.exe","splwow32.exe","mmdx64fx.exe","nvidia.js","ffmpeg.sh","fig.js","drivfixer.sh"))
+      AND (Filesystem.file_path="*%AppData%\WinDataScope\Update.js*" OR Filesystem.file_name IN ("53_7.03.2026_r.js","update.js","viberpc.exe","viberpc.dll","certificate.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -544,12 +372,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — DeceptiveDevelopment: From primitive crypto theft to sophisticated AI-based dece
+// Article-specific bespoke detection — FrostyNeighbor: Fresh mischief and digital shenanigans
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("car.dll", "img_layer_generate.dll", "clickfix-1.bat", "run.vbs", "shell.bat", "node.js", "main.js", "drvupdate.exe", "splwow32.exe", "mmdx64fx.exe", "nvidia.js", "ffmpeg.sh", "fig.js", "drivfixer.sh") or FolderPath has_any ("E:\Programming\The"))
+| where (FileName in~ ("53_7.03.2026_r.js", "update.js", "viberpc.exe", "viberpc.dll", "certificate.js") or FolderPath has_any ("%AppData%\WinDataScope\Update.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -559,7 +387,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("E:\Programming\The") or FileName in~ ("car.dll", "img_layer_generate.dll", "clickfix-1.bat", "run.vbs", "shell.bat", "node.js", "main.js", "drvupdate.exe", "splwow32.exe", "mmdx64fx.exe", "nvidia.js", "ffmpeg.sh", "fig.js", "drivfixer.sh"))
+| where (FolderPath has_any ("%AppData%\WinDataScope\Update.js") or FileName in~ ("53_7.03.2026_r.js", "update.js", "viberpc.exe", "viberpc.dll", "certificate.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -571,9 +399,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `103.231.75.101`, `176.223.112.74`, `164.132.209.191`, `199.188.200.147`, `116.125.126.38`, `45.159.248.110`, `45.8.146.93`, `86.104.72.247` _(+4 more)_
+  - IP / domain IOC(s): `book-happy.needbinding.icu`, `nama-belakang.nebao.icu`, `static.needbinding.icu`, `g.icu`, `view.algsat.icu`, `exavegas.icu`, `hinesafar.sardk.icu`, `shinesafar.sardk.icu` _(+1 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

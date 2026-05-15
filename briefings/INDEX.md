@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_779 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [cisco catalyst sd wan controller 0 day actively exploited to](./2026-05-15/cisco-catalyst-sd-wan-controller-0-day-actively-exploited-to.md)
-- [openai confirms security breach via tanstack npm supply chai](./2026-05-15/openai-confirms-security-breach-via-tanstack-npm-supply-chai.md)
+- [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
+- [critical next js vulnerability exposes cloud credentials api](./2026-05-15/critical-next-js-vulnerability-exposes-cloud-credentials-api.md)
+- [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
@@ -22,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [critical canon mailsuite vulnerability enables remote code e](./2026-05-14/critical-canon-mailsuite-vulnerability-enables-remote-code-e.md)
 - [defense in depth for autonomous ai agents](./2026-05-14/defense-in-depth-for-autonomous-ai-agents.md)
+- [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
 - [ghostwriter targets ukrainian government with geofenced pdf ](./2026-05-14/ghostwriter-targets-ukrainian-government-with-geofenced-pdf-.md)
 - [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
 - [ghsa critical cve 2026 44789 n8n http request node paginatio](./2026-05-14/ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio.md)
@@ -172,9 +174,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [ghsa critical ghsa 9pq7 mfwh xx2j phpmyfaq enables unauthent](./2026-05-06/ghsa-critical-ghsa-9pq7-mfwh-xx2j-phpmyfaq-enables-unauthent.md)
 - [mirai based xlabs v1 botnet exploits adb to hijack iot devic](./2026-05-06/mirai-based-xlabs-v1-botnet-exploits-adb-to-hijack-iot-devic.md)
-- [muddywater uses microsoft teams to steal credentials in fals](./2026-05-06/muddywater-uses-microsoft-teams-to-steal-credentials-in-fals.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
-- [the hacker news launches cybersecurity stars awards 2026 sub](./2026-05-06/the-hacker-news-launches-cybersecurity-stars-awards-2026-sub.md)
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
@@ -746,7 +746,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-09-25
 - [cisa kev cve 2025 20362 cisco secure firewall adaptive secur](./2025-09-25/cisa-kev-cve-2025-20362-cisco-secure-firewall-adaptive-secur.md)
-- [deceptivedevelopment from primitive crypto theft to sophisti](./2025-09-25/deceptivedevelopment-from-primitive-crypto-theft-to-sophisti.md)
 
 ## 2025-09-23
 - [cisa kev cve 2025 10585 google chromium v8 type confusion vu](./2025-09-23/cisa-kev-cve-2025-10585-google-chromium-v8-type-confusion-vu.md)
