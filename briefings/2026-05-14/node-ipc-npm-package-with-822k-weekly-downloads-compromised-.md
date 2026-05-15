@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc stealer DNS TXT exfiltration to bt.node.js zone (xh/xd/xf prefixes)
 
-`UC_18_10` · phase: **c2** · confidence: **High**
+`UC_19_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceEvents
 
 ### [LLM] node-ipc bootstrap C2 contact: sh.azurestaticprovider.net / 37.16.75.69
 
-`UC_18_11` · phase: **c2** · confidence: **High**
+`UC_19_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ union isfuzzy=true
 
 ### [LLM] node-ipc stager archive drop: <tmp>/nt-<pid>/<machineHex>.tar.gz or known-bad node-ipc.cjs SHA256
 
-`UC_18_12` · phase: **actions** · confidence: **High**
+`UC_19_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

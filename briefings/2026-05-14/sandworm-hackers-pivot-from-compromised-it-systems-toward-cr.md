@@ -34,12 +34,133 @@ The campaign is alarming because it does not rely on cutting-edge exploits. Inst
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1195.002** — Compromise Software Supply Chain
+- **T1210** — Exploitation of Remote Services
+- **T1021.002** — Remote Services: SMB/Windows Admin Shares
+- **T0866** — Exploitation of Remote Services (ICS)
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568** — Dynamic Resolution
+- **T0883** — Internet Accessible Device (ICS)
+- **T0846** — Remote System Discovery (ICS)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Sandworm SMB lateral fan-out — single source hitting many internal port 445 hosts
+
+`UC_13_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(All_Traffic.dest) AS unique_targets, values(All_Traffic.dest) AS targets, values(All_Traffic.action) AS actions FROM datamodel=Network_Traffic.All_Traffic WHERE All_Traffic.dest_port=445 AND All_Traffic.transport=tcp BY All_Traffic.src _time span=1h
+| `drop_dm_object_name("All_Traffic")`
+| where unique_targets > 50
+| where (like(src,"10.%") OR like(src,"172.16.%") OR like(src,"172.17.%") OR like(src,"172.18.%") OR like(src,"172.19.%") OR like(src,"172.2_.%") OR like(src,"172.3_.%") OR like(src,"192.168.%"))
+| where NOT match(src,"^(10\.99\.1\.|10\.0\.250\.)")  /* exclude tenant vuln-scanner/Nessus/Qualys IPs */
+| sort 0 - unique_targets
+```
+
+**Defender KQL:**
+```kql
+// Sandworm SMB fan-out: single host attempts SMB to 50+ unique internal targets in 1h
+// Tune _known_scanners with your authorised internal scanners (Nessus, Qualys, Tenable, Defender for IoT sensors)
+let _known_scanners = dynamic(["NESSUS-SCANNER-01","QUALYS-SCAN-01"]);
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemotePort == 445
+| where Protocol == "Tcp"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionFailed")
+| where RemoteIPType in ("Private","Reserved")
+| where DeviceName !in~ (_known_scanners)
+| summarize
+    UniqueTargets = dcount(RemoteIP),
+    SampleTargets = make_set(RemoteIP, 100),
+    SuccessCount  = countif(ActionType == "ConnectionSuccess"),
+    AttemptCount  = countif(ActionType == "ConnectionAttempt"),
+    FailedCount   = countif(ActionType == "ConnectionFailed"),
+    InitiatingProcs = make_set(InitiatingProcessFileName, 20),
+    FirstSeen = min(Timestamp),
+    LastSeen  = max(Timestamp)
+    by DeviceName, DeviceId, LocalIP, bin(Timestamp, 1h)
+| where UniqueTargets > 50      // Nozomi observed 405 hosts from one source; 50 is a conservative floor
+| order by UniqueTargets desc
+```
+
+### [LLM] WannaCry kill-switch domain DNS query (Sandworm pre-compromise indicator)
+
+`UC_13_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(DNS.src) AS src, values(DNS.dest) AS resolver, min(_time) AS firstTime, max(_time) AS lastTime FROM datamodel=Network_Resolution.DNS WHERE (DNS.query="iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com" OR DNS.query="ifferfsodp9ifjaposdfjhgosurijfaewrwergwea.com" OR DNS.query="www.iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com" OR DNS.query="www.ifferfsodp9ifjaposdfjhgosurijfaewrwergwea.com") BY DNS.src DNS.query
+| `drop_dm_object_name("DNS")`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// WannaCry kill-switch resolution — indicates an unremediated WannaCry/Sandworm-foothold host
+let _killswitch = dynamic([
+    "iuqerfsodp9ifjaposdfjhgosurijfaewrwergwea.com",
+    "ifferfsodp9ifjaposdfjhgosurijfaewrwergwea.com"
+]);
+let _killswitch_substr = dynamic([
+    "iuqerfsodp9ifjaposdfjh",     // catches www.* and subdomain variants
+    "ifferfsodp9ifjaposdfjh"
+]);
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "DnsQueryResponse"
+| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
+| where QueryName in (_killswitch) or QueryName has_any (_killswitch_substr)
+| project Timestamp, DeviceName, DeviceId, QueryName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Sandworm IT→OT pivot — ICS protocol fan-out during Moscow work-window
+
+`UC_13_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(All_Traffic.dest) AS unique_ot_targets, dc(All_Traffic.dest_port) AS unique_ports, values(All_Traffic.dest_port) AS ports, values(All_Traffic.dest) AS targets FROM datamodel=Network_Traffic.All_Traffic WHERE (All_Traffic.dest_port=445 OR All_Traffic.dest_port=502 OR All_Traffic.dest_port=102 OR All_Traffic.dest_port=44818 OR All_Traffic.dest_port=20000 OR All_Traffic.dest_port=2222 OR All_Traffic.dest_port=2404 OR All_Traffic.dest_port=4840 OR All_Traffic.dest_port=3389 OR All_Traffic.dest_port=5985 OR All_Traffic.dest_port=5986) BY All_Traffic.src _time span=30m
+| `drop_dm_object_name("All_Traffic")`
+| eval src_hour=strftime(_time,"%H"), src_wday=strftime(_time,"%A")
+| where unique_ot_targets >= 20
+| where src_wday="Wednesday" AND src_hour>="10" AND src_hour<="12"  /* ~14:00 Moscow = ~11:00 UTC */
+| sort 0 - unique_ot_targets
+```
+
+**Defender KQL:**
+```kql
+// Sandworm ICS-protocol fan-out during Wed ~14:00 Moscow (~10-12 UTC)
+// Ports: 445 SMB (Eng WS), 502 Modbus, 102 S7/ISO-TSAP, 44818 EtherNet/IP, 20000 DNP3,
+//        2222 EtherNet/IP-IO, 2404 IEC-104, 4840 OPC-UA, 3389 RDP, 5985/5986 WinRM
+let _ics_ports = dynamic([445, 502, 102, 44818, 20000, 2222, 2404, 4840, 3389, 5985, 5986]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| where RemotePort in (_ics_ports)
+| where RemoteIPType in ("Private","Reserved")
+| where dayofweek(Timestamp) == 3d                       // Wednesday
+| where hourofday(Timestamp) between (10 .. 12)          // 10:00-12:00 UTC ~ 13:00-15:00 Moscow
+| summarize
+    UniqueOtTargets = dcount(RemoteIP),
+    DistinctIcsPorts = dcount(RemotePort),
+    PortList = make_set(RemotePort),
+    SampleTargets = make_set(RemoteIP, 50),
+    InitiatingProcs = make_set(InitiatingProcessFileName, 20),
+    SampleCmd = any(InitiatingProcessCommandLine),
+    FirstSeen = min(Timestamp),
+    LastSeen  = max(Timestamp)
+    by DeviceName, DeviceId, bin(Timestamp, 30m)
+| where UniqueOtTargets >= 20 and DistinctIcsPorts >= 2   // hitting many hosts AND multiple ICS ports — not just RDP admin work
+| order by UniqueOtTargets desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -353,4 +474,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

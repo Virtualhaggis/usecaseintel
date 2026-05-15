@@ -29,12 +29,43 @@ The vulnerability, tracked as CVE-2026-20182 , carries a CVSS score of 10.0.
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1078.003** — Valid Accounts: Local Accounts
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Cisco SD-WAN 'vmanage-admin' SSH publickey logon from unauthorized IP (CVE-2026-20182 / 20127, UAT-8616)
+
+`UC_14_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Authentication.signature) as signature from datamodel=Authentication where Authentication.app="sshd" Authentication.action="success" Authentication.user="vmanage-admin" by Authentication.src Authentication.dest Authentication.user
+| `drop_dm_object_name(Authentication)`
+| search NOT [| inputlookup sdwan_admin_allowed_ips.csv | fields src]
+| where NOT cidrmatch("10.0.0.0/8", src) AND NOT cidrmatch("172.16.0.0/12", src) AND NOT cidrmatch("192.168.0.0/16", src)
+| eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
+| table firstTime lastTime user src dest count signature
+```
+
+### [LLM] Inbound DTLS to Cisco SD-WAN vdaemon UDP/12346 from non-fabric peer (CVE-2026-20182 exploit path)
+
+`UC_14_7` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.action) as action from datamodel=Network_Traffic where All_Traffic.dest_port=12346 All_Traffic.transport=udp by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| search NOT [| inputlookup sdwan_fabric_peers.csv | fields src]
+| search dest IN ([| inputlookup sdwan_controllers.csv | fields dest])
+| eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
+| table firstTime lastTime src dest dest_port count action
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -210,7 +241,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 
-`UC_13_5` · phase: **install** · confidence: **High**
+`UC_14_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,4 +282,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

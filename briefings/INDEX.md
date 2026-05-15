@@ -11,11 +11,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [cisco catalyst sd wan controller 0 day actively exploited to](./2026-05-15/cisco-catalyst-sd-wan-controller-0-day-actively-exploited-to.md)
+- [openai confirms security breach via tanstack npm supply chai](./2026-05-15/openai-confirms-security-breach-via-tanstack-npm-supply-chai.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
 - [18 year old nginx vulnerability allows dos potential rce](./2026-05-14/18-year-old-nginx-vulnerability-allows-dos-potential-rce.md)
-- [amazon quick bug exposed ai chat agents to users blocked by ](./2026-05-14/amazon-quick-bug-exposed-ai-chat-agents-to-users-blocked-by-.md)
 - [anthropic s mythos ai reportedly found macos vulnerabilities](./2026-05-14/anthropic-s-mythos-ai-reportedly-found-macos-vulnerabilities.md)
 - [chinese apt hackers exploit microsoft exchange to breach ene](./2026-05-14/chinese-apt-hackers-exploit-microsoft-exchange-to-breach-ene.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
