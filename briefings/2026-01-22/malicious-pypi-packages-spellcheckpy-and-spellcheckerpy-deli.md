@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] spellcheckpy/spellcheckerpy RAT C2 callback to updatenet.work (172.86.73.139)
 
-`UC_467_10` · phase: **c2** · confidence: **High**
+`UC_466_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation footprint of malicious PyPI packages spellcheckpy / spellcheckerpy
 
-`UC_467_11` · phase: **install** · confidence: **High**
+`UC_466_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ union isfuzzy=true
 
 ### [LLM] Python spawning python with stdin payload (-) and detached session - spellcheckpy RAT stage-2
 
-`UC_467_12` · phase: **exploit** · confidence: **Medium**
+`UC_466_12` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -364,7 +364,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious PyPI Packages spellcheckpy and spellcheckerpy Deliver Python RAT
 
-`UC_467_9` · phase: **exploit** · confidence: **High**
+`UC_466_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

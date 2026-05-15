@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai Hulud 2.0: What the Unknown Wonderer Tells Us About the Attackers’ Endgame
 
-`UC_550_4` · phase: **exploit** · confidence: **High**
+`UC_549_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

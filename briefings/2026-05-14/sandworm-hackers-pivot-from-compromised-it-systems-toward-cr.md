@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sandworm SMB lateral fan-out — single source hitting many internal port 445 hosts
 
-`UC_14_9` · phase: **actions** · confidence: **High**
+`UC_18_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### [LLM] WannaCry kill-switch domain DNS query (Sandworm pre-compromise indicator)
 
-`UC_14_10` · phase: **c2** · confidence: **High**
+`UC_18_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceEvents
 
 ### [LLM] Sandworm IT→OT pivot — ICS protocol fan-out during Moscow work-window
 
-`UC_14_11` · phase: **actions** · confidence: **High**
+`UC_18_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

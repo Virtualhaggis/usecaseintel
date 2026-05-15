@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_776 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,19 +9,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-15
+- [79 chrome vulnerabilities patched including 14 critical one ](./2026-05-15/79-chrome-vulnerabilities-patched-including-14-critical-one-.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [critical next js vulnerability exposes cloud credentials api](./2026-05-15/critical-next-js-vulnerability-exposes-cloud-credentials-api.md)
+- [hackers abuse scheduled tasks to maintain persistence in fro](./2026-05-15/hackers-abuse-scheduled-tasks-to-maintain-persistence-in-fro.md)
+- [microsoft details kazuar malware s modular architecture and ](./2026-05-15/microsoft-details-kazuar-malware-s-modular-architecture-and-.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
 - [18 year old nginx vulnerability allows dos potential rce](./2026-05-14/18-year-old-nginx-vulnerability-allows-dos-potential-rce.md)
-- [anthropic s mythos ai reportedly found macos vulnerabilities](./2026-05-14/anthropic-s-mythos-ai-reportedly-found-macos-vulnerabilities.md)
 - [chinese apt hackers exploit microsoft exchange to breach ene](./2026-05-14/chinese-apt-hackers-exploit-microsoft-exchange-to-breach-ene.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
-- [critical canon mailsuite vulnerability enables remote code e](./2026-05-14/critical-canon-mailsuite-vulnerability-enables-remote-code-e.md)
 - [defense in depth for autonomous ai agents](./2026-05-14/defense-in-depth-for-autonomous-ai-agents.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
 - [ghostwriter targets ukrainian government with geofenced pdf ](./2026-05-14/ghostwriter-targets-ukrainian-government-with-geofenced-pdf-.md)
@@ -40,14 +41,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
-- [hackers compromise 170 npm packages to steal github npm aws ](./2026-05-14/hackers-compromise-170-npm-packages-to-steal-github-npm-aws-.md)
 - [hackers exploit auth bypass flaw in burst statistics wordpre](./2026-05-14/hackers-exploit-auth-bypass-flaw-in-burst-statistics-wordpre.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
-- [new malware framework enables screen control browser artifac](./2026-05-14/new-malware-framework-enables-screen-control-browser-artifac.md)
-- [node ipc npm package with 822k weekly downloads compromised ](./2026-05-14/node-ipc-npm-package-with-822k-weekly-downloads-compromised-.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [sandworm hackers pivot from compromised it systems toward cr](./2026-05-14/sandworm-hackers-pivot-from-compromised-it-systems-toward-cr.md)

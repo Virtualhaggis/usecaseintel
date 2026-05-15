@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection to axios npm compromise C2 sfrclak.com
 
-`UC_288_8` · phase: **c2** · confidence: **High**
+`UC_287_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### [LLM] plain-crypto-js package directory or setup.js dropped on disk (axios compromise)
 
-`UC_288_9` · phase: **install** · confidence: **High**
+`UC_287_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] node.exe executes setup.js postinstall script under npm parent (RAT dropper)
 
-`UC_288_10` · phase: **exploit** · confidence: **Medium**
+`UC_287_10` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -277,7 +277,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios Compromised on npm - Malicious Versions Drop Remote Access Trojan
 
-`UC_288_7` · phase: **exploit** · confidence: **High**
+`UC_287_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sha1-Hulud: npm preinstall hook spawns bun.sh installer via curl/PowerShell
 
-`UC_521_6` · phase: **install** · confidence: **High**
+`UC_520_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### [LLM] Sha1-Hulud: self-hosted GitHub Actions runner registered with name "SHA1HULUD"
 
-`UC_521_7` · phase: **install** · confidence: **High**
+`UC_520_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ union runner_proc, runner_file
 
 ### [LLM] Sha1-Hulud Stage-5 destructive home-directory shred via find | xargs shred -uvz
 
-`UC_521_8` · phase: **actions** · confidence: **High**
+`UC_520_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -266,7 +266,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_521_5` · phase: **exploit** · confidence: **High**
+`UC_520_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
