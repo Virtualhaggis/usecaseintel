@@ -8,10 +8,12 @@ _779 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-15
+- [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
+
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
 - [18 year old nginx vulnerability allows dos potential rce](./2026-05-14/18-year-old-nginx-vulnerability-allows-dos-potential-rce.md)
-- [active supply chain attack malicious node ipc versions publi](./2026-05-14/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [amazon quick bug exposed ai chat agents to users blocked by ](./2026-05-14/amazon-quick-bug-exposed-ai-chat-agents-to-users-blocked-by-.md)
 - [anthropic s mythos ai reportedly found macos vulnerabilities](./2026-05-14/anthropic-s-mythos-ai-reportedly-found-macos-vulnerabilities.md)
 - [chinese apt hackers exploit microsoft exchange to breach ene](./2026-05-14/chinese-apt-hackers-exploit-microsoft-exchange-to-breach-ene.md)
