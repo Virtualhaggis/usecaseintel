@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Compromise 170 npm Packages to Steal GitHub, npm, AWS, and Kubernetes Se
 
-`UC_21_8` · phase: **exploit** · confidence: **High**
+`UC_22_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

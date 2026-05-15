@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Amazon Quick Chat Agent API – AGENT_ACCESS_DENIED denial hunt (post-CWE-862 patch audit)
 
-`UC_32_3` · phase: **actions** · confidence: **Medium**
+`UC_33_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

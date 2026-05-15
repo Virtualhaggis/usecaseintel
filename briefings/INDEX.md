@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
+- [cisco catalyst sd wan controller 0 day actively exploited to](./2026-05-15/cisco-catalyst-sd-wan-controller-0-day-actively-exploited-to.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
@@ -42,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [kongtuke hackers now use microsoft teams for corporate breac](./2026-05-14/kongtuke-hackers-now-use-microsoft-teams-for-corporate-breac.md)
-- [new critical exim mailer allows remote attacker to execute a](./2026-05-14/new-critical-exim-mailer-allows-remote-attacker-to-execute-a.md)
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [new malware framework enables screen control browser artifac](./2026-05-14/new-malware-framework-enables-screen-control-browser-artifac.md)
 - [node ipc npm package with 822k weekly downloads compromised ](./2026-05-14/node-ipc-npm-package-with-822k-weekly-downloads-compromised-.md)
