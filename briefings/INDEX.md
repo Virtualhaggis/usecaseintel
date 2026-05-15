@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-15
-- [79 chrome vulnerabilities patched including 14 critical one ](./2026-05-15/79-chrome-vulnerabilities-patched-including-14-critical-one-.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
-- [hackers abuse scheduled tasks to maintain persistence in fro](./2026-05-15/hackers-abuse-scheduled-tasks-to-maintain-persistence-in-fro.md)
+- [hackers use orbit rootkit to harvest ssh and sudo credential](./2026-05-15/hackers-use-orbit-rootkit-to-harvest-ssh-and-sudo-credential.md)
+- [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [microsoft details kazuar malware s modular architecture and ](./2026-05-15/microsoft-details-kazuar-malware-s-modular-architecture-and-.md)
+- [microsoft warns of attackers using trusted hpe operations ag](./2026-05-15/microsoft-warns-of-attackers-using-trusted-hpe-operations-ag.md)
 - [multiple cpanel vulnerabilities allows access to sensitive s](./2026-05-15/multiple-cpanel-vulnerabilities-allows-access-to-sensitive-s.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
@@ -65,7 +66,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 - [iranian hackers targeted major south korean electronics make](./2026-05-13/iranian-hackers-targeted-major-south-korean-electronics-make.md)
 - [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
-- [new critical exim mailer flaw allows remote code execution](./2026-05-13/new-critical-exim-mailer-flaw-allows-remote-code-execution.md)
 - [west pharmaceutical says hackers stole data encrypted system](./2026-05-13/west-pharmaceutical-says-hackers-stole-data-encrypted-system.md)
 
 ## 2026-05-12
@@ -218,7 +218,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 
 ## 2026-04-29
-- [a mini shai hulud has appeared bun based stealer hits sap ca](./2026-04-29/a-mini-shai-hulud-has-appeared-bun-based-stealer-hits-sap-ca.md)
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 - [bridging the gap to autonomous fixes snyk and atlassian unve](./2026-04-29/bridging-the-gap-to-autonomous-fixes-snyk-and-atlassian-unve.md)
 - [don t panic the thymeleaf template injection that only hurts](./2026-04-29/don-t-panic-the-thymeleaf-template-injection-that-only-hurts.md)

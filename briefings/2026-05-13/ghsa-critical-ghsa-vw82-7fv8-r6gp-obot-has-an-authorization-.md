@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Obot /mcp-connect/{id} authenticated-user fan-out (ACR bypass probing)
 
-`UC_62_2` · phase: **actions** · confidence: **Medium**
+`UC_64_2` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] First-time-seen authenticated user → MCP server ID pairing on /mcp-connect
 
-`UC_62_3` · phase: **actions** · confidence: **Medium**
+`UC_64_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

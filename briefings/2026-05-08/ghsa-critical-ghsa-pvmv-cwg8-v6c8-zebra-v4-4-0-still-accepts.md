@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable Zebra (zebrad) v4.4.0 node running on managed endpoint — GHSA-pvmv-cwg8-v6c8
 
-`UC_121_0` · phase: **recon** · confidence: **Medium**
+`UC_123_0` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

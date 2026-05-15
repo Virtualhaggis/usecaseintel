@@ -10,13 +10,9 @@ Home Cyber Security News
 Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA 
 By Tushar Subhra Dutta 
 May 15, 2026 
-
-
-
-
 Cybercriminals behind the Tycoon 2FA phishing kit have added a powerful new weapon to their playbook. 
 By combining their well-known phishing infrastructure with OAuth Device Code abuse, they can now steal access to Microsoft 365 accounts without ever capturing a single password. 
-The Tycoon 2FA phishing kit first gained attention as a Phishing-as-a-Service…
+The Tycoon 2FA phishing kit first gained attention as a Phishing-as-a-Service (PhaaS)…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,100 +35,12 @@ The Tycoon 2FA phishing kit first gained attention as a Phishing-as-a-Service…
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] OAuth Device Code phishing: node/undici UA against Microsoft Authentication Broker AppId (Tycoon 2FA)
-
-`UC_0_7` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as ua from datamodel=Authentication where Authentication.app="29d9ed98-a469-4536-ade2-f981bc1d605e" (Authentication.user_agent="node" OR Authentication.user_agent="undici" OR Authentication.user_agent="node*") by Authentication.user Authentication.signature Authentication.dest | `drop_dm_object_name(Authentication)` | where firstTime >= relative_time(now(), "-7d@d")
-```
-
-**Defender KQL:**
-```kql
-// Tycoon 2FA OAuth device-code operator polling — node/undici UA on Microsoft Authentication Broker AppId
-AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker — eSentire IOC
-| where UserAgent in~ ("node", "undici")                          // operator Node.js backend fingerprint
-   or UserAgent startswith "node/" or UserAgent startswith "undici/"
-| where ErrorCode == 0                                            // successful token issuance
-| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country,
-          ApplicationId, Application, ResourceDisplayName,
-          UserAgent, ClientAppUsed, IsInteractive, ConditionalAccessStatus,
-          RiskLevelDuringSignIn, AuthenticationRequirement
-| order by Timestamp desc
-```
-
-### [LLM] Successful M365 sign-in originating from Tycoon 2FA operator Alibaba Cloud ASN 45102
-
-`UC_0_8` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Authentication.user_agent) as ua values(Authentication.app) as app from datamodel=Authentication where Authentication.signature_id="AAD" (Authentication.src="47.90.180.205" OR Authentication.src="47.252.11.99" OR Authentication.src_asn=45102 OR Authentication.src_asn_name="ALIBABA-US-NET") Authentication.action="success" by Authentication.user Authentication.dest Authentication.src | `drop_dm_object_name(Authentication)` | where firstTime >= relative_time(now(), "-14d@d")
-```
-
-**Defender KQL:**
-```kql
-// Tycoon 2FA operator-side M365 access from Alibaba AS45102 (eSentire IOCs, since ~2026-04-10)
-let _opIPs = dynamic(["47.90.180.205","47.252.11.99"]);
-let _opAppIds = dynamic([
-    "29d9ed98-a469-4536-ade2-f981bc1d605e",   // Microsoft Authentication Broker
-    "4765445b-32c6-49b0-83e6-1d93765276ca"    // OfficeHome — primary AppId for credential-relay variant
-]);
-AADSignInEventsBeta
-| where Timestamp > ago(14d)
-| where ErrorCode == 0
-| where IPAddress in (_opIPs)                              // exact operator IPs
-    or (ApplicationId in (_opAppIds) and IPAddress startswith "47.")  // ASN heuristic for AS45102 (47.0.0.0/8 Alibaba block)
-| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country, City,
-          ApplicationId, Application, ResourceDisplayName,
-          UserAgent, ClientAppUsed, IsInteractive,
-          ConditionalAccessStatus, RiskLevelDuringSignIn, RiskState
-| order by Timestamp desc
-```
-
-### [LLM] Endpoint contact with Tycoon 2FA Layer-2 / Check Domain / C2 staging hosts
-
-`UC_0_9` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`summariesonly` | tstats count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.src) as src from datamodel=Web where (Web.url="*cookies.28gholland.workers.dev*" OR Web.url="*shivacrio.com/bytecore*" OR Web.url="*fijothi.com/*" OR Web.dest="fijothi.com" OR Web.dest="shivacrio.com" OR Web.dest="cookies.28gholland.workers.dev") by Web.dest Web.src | `drop_dm_object_name(Web)` | where firstTime >= relative_time(now(), "-14d@d")
-```
-
-**Defender KQL:**
-```kql
-// Tycoon 2FA Layer-2 / Check Domain / backend C2 contact (eSentire IOCs, April 2026 campaign)
-let _tycoonHosts = dynamic([
-    "cookies.28gholland.workers.dev",  // Cloudflare Workers delivery point
-    "shivacrio.com",                    // Check Domain gate (bytecore~tx1j8 path)
-    "fijothi.com"                       // AES-CBC encrypted backend C2
-]);
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has_any (_tycoonHosts)
-   or (RemoteUrl has "shivacrio.com" and RemoteUrl has "bytecore")
-   or RemoteUrl matches regex @"(?i)fijothi\.com/[A-Za-z]{50,}"   // long opaque path = AES-CBC session blob
-| project Timestamp, DeviceName, DeviceId,
-          InitiatingProcessAccountName, InitiatingProcessAccountUpn,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteUrl, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -346,7 +254,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Tycoon 2FA Operators Adopt OAuth Device Code Phishing to Bypass MFA
 
-`UC_0_6` · phase: **exploit** · confidence: **High**
+`UC_4_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -403,4 +311,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

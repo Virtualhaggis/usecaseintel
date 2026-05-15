@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] lightning PyPI compromise artifacts: start.py / router_runtime.js write
 
-`UC_225_7` · phase: **install** · confidence: **High**
+`UC_227_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### [LLM] Python child process executing lightning _runtime/start.py bootstrapper
 
-`UC_225_8` · phase: **install** · confidence: **High**
+`UC_227_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud style repository poisoning — .claude/router_runtime.js drop
 
-`UC_225_9` · phase: **actions** · confidence: **High**
+`UC_227_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — lightning PyPI Compromise: A Bun-Based Credential Stealer in Python
 
-`UC_225_6` · phase: **exploit** · confidence: **High**
+`UC_227_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
