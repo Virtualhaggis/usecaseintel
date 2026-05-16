@@ -40,6 +40,12 @@ pipeline.html
 intel/.llm_relevance_cache/
 intel/relevance_drops.jsonl
 
+# LLM IOC-extraction cache + fallback audit log. Cache is keyed on
+# (url, body_sha) so it warms naturally; audit log captures every
+# article that fell back to regex (timeout / malformed JSON / auth).
+intel/.llm_ioc_cache/
+intel/ioc_drops.jsonl
+
 # Cache backup files left behind by invalidate_problem_uc_cache.py.
 # The originals get renamed with a timestamp suffix; keep them locally
 # as a recovery option but don't pollute git status with them.

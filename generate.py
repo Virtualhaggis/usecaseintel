@@ -855,14 +855,27 @@ def extract_mechanics(title: str, body: str) -> dict:
 LLM_UC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_uc_cache"
 LLM_ACTOR_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_actor_uc_cache"
 LLM_RELEVANCE_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_relevance_cache"
+# IOC-extraction cache. Each entry stores the LLM's parsed JSON keyed by
+# SHA1(IOC_VERSION|url|body_sha256[:16]) so a republished article with
+# rewritten body re-extracts automatically.
+LLM_IOC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_ioc_cache"
 LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
 # Lighter model for the binary relevance gate — Haiku is plenty for "is this
 # article SOC-actionable y/n". Falls back to LLM_UC_MODEL if Haiku is missing.
 LLM_RELEVANCE_MODEL = os.environ.get("USECASEINTEL_RELEVANCE_MODEL", "claude-haiku-4-5-20251001")
+# IOC-extraction model. Same as relevance: bounded structured JSON,
+# Haiku matches Opus quality at ~10% the cost on this task.
+LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", LLM_RELEVANCE_MODEL)
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
+# Cap on chars sent to the IOC extractor. 12k captures full article
+# bodies for >95% of sources without inflating Haiku input token cost.
+LLM_IOC_MAX_BODY_CHARS = 12000
 # Bump this when the relevance prompt or rule set changes — folded into the
 # cache key so old decisions don't stick around.
 CLASSIFIER_VERSION = "v1"
+# Bump when the IOC-extraction prompt or schema changes so existing
+# cached entries silently expire without a manual cache delete.
+IOC_VERSION = "v1"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -15100,6 +15113,303 @@ def classify_relevance(article: dict, ind: dict, sev: str | None) -> tuple[str, 
     return (result["class"], result["reason"], f"llm-2-{result['class']}")
 
 
+# ---------------------------------------------------------------------
+# LLM-driven IOC extraction. Replaces the regex-only `extract_indicators`
+# as the primary path; regex stays as the fallback when OAuth is down,
+# the SDK times out, or the LLM returns unparseable output. The end-of-
+# run summary in main() prints how many articles took each path so an
+# operator can spot pipeline degradation immediately.
+# ---------------------------------------------------------------------
+
+# Run-scoped counters. Reset at the top of main(); incremented inside
+# `_extract_iocs`. Kept module-level for cheap access without threading
+# state through every callsite.
+_IOC_STATS = {
+    "llm": 0,           # extracted via LLM (fresh + cached)
+    "llm_cached": 0,    # served from cache, no API call
+    "regex": 0,         # fell back to regex (LLM failed or unavailable)
+}
+
+_IOC_PROMPT_SYSTEM = (
+    "You are a SOC analyst extracting indicators of compromise from a "
+    "threat-intel article. Return strict JSON only. No prose. No code "
+    "fences. No commentary."
+)
+
+_IOC_PROMPT_USER = (
+    "Title: <<TITLE>>\n"
+    "URL: <<URL>>\n"
+    "Source: <<SOURCE>>\n"
+    "\n"
+    "Body (truncated):\n"
+    "<<BODY>>\n"
+    "\n"
+    "Extract indicators of compromise from this article. Accept both "
+    "defanged (evil[.]com, hxxps://) and plain-text forms; output them "
+    "in normal form (evil.com, https://).\n"
+    "\n"
+    "ONLY emit indicators clearly described as malicious / attacker-"
+    "controlled / used in the attack:\n"
+    "  - C2 servers, payload-hosting infra, redirect domains\n"
+    "  - Victim-side artefacts dropped or modified by the attacker\n"
+    "    (config files like ~/.claude.json an attacker writes to, npm\n"
+    "    packages with malicious versions, dropped binaries)\n"
+    "  - Hashes of malware samples\n"
+    "  - CVEs being actively exploited in this campaign\n"
+    "  - Named campaigns, repository title patterns, wallet addresses\n"
+    "\n"
+    "DO NOT emit:\n"
+    "  - The vendor's blog domain (the article publisher itself)\n"
+    "  - The victim organisation as a collateral mention\n"
+    "  - Legitimate platforms cited as context (google.com, github.com,\n"
+    "    npmjs.com, microsoft.com, etc.)\n"
+    "  - OS / browser versions mentioned only as 'not affected'\n"
+    "\n"
+    "Return JSON with EXACTLY these keys (use [] for empty):\n"
+    "{\n"
+    '  "cves":      ["CVE-2026-12345", ...],\n'
+    '  "ips":       ["1.2.3.4", ...],\n'
+    '  "domains":   ["evil.com", ...],\n'
+    '  "sha256":    ["<64 hex>", ...],\n'
+    '  "sha1":      ["<40 hex>", ...],\n'
+    '  "md5":       ["<32 hex>", ...],\n'
+    '  "software":  [{"name":"OpenClaw","versions":["8.10.3"]}, ...],\n'
+    '  "campaign":  "shai-hulud" | "",\n'
+    '  "actors":    ["Storm-2372", ...]\n'
+    "}\n"
+    "\n"
+    "Caps: ≤30 per list; ≤20 software entries; ≤10 versions per software."
+)
+
+
+_IOC_REQUIRED_KEYS = ("cves", "ips", "domains", "sha256", "sha1",
+                      "md5", "software")
+
+
+def _ioc_normalise_llm_dict(d: dict) -> dict | None:
+    """Coerce a raw LLM JSON dict into the canonical IOC shape, or
+    return None if it's missing every required key. Permissive on
+    types (strings vs lists) but strict on key presence."""
+    if not isinstance(d, dict):
+        return None
+    out = {}
+    for key in ("cves", "ips", "domains", "sha256", "sha1", "md5"):
+        v = d.get(key) or []
+        if isinstance(v, str):
+            v = [v]
+        if not isinstance(v, list):
+            v = []
+        out[key] = [str(x).strip() for x in v if x and isinstance(x, (str, int, float))][:30]
+    # Software: list of {name, versions}.
+    sw_raw = d.get("software") or []
+    sw_out = []
+    if isinstance(sw_raw, list):
+        for entry in sw_raw[:20]:
+            if not isinstance(entry, dict):
+                continue
+            name = str(entry.get("name") or "").strip()
+            versions = entry.get("versions") or []
+            if isinstance(versions, str):
+                versions = [versions]
+            if not name or not isinstance(versions, list):
+                continue
+            v_clean = [str(v).strip() for v in versions
+                       if v and isinstance(v, (str, int, float))][:10]
+            if v_clean:
+                sw_out.append({"name": name, "versions": v_clean})
+    out["software"] = sw_out
+    out["campaign"] = str(d.get("campaign") or "").strip()[:80]
+    actors = d.get("actors") or []
+    if isinstance(actors, str):
+        actors = [actors]
+    if not isinstance(actors, list):
+        actors = []
+    out["actors"] = [str(a).strip() for a in actors
+                     if a and isinstance(a, str)][:20]
+    # explicit_ttps is filled by extract_indicators (regex MITRE pass)
+    # and merged in by _extract_iocs — LLM isn't asked for it.
+    out["explicit_ttps"] = []
+    # Final defensive coverage: every required key present and a list.
+    if any(not isinstance(out.get(k), list) for k in _IOC_REQUIRED_KEYS):
+        return None
+    return out
+
+
+def _llm_extract_iocs(article: dict) -> dict | None:
+    """Single Haiku call. Returns canonical IOC dict on success, None
+    on any failure (caller falls back to regex). Shares OAuth circuit
+    breaker with relevance + UC calls."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+
+    body = (article.get("raw_body") or "")[:LLM_IOC_MAX_BODY_CHARS]
+    title = (article.get("title") or "")[:300]
+    url = article.get("link") or ""
+    source = (article.get("source") or "").strip()[:80]
+    prompt = (_IOC_PROMPT_USER
+              .replace("<<TITLE>>", title)
+              .replace("<<URL>>", url)
+              .replace("<<SOURCE>>", source)
+              .replace("<<BODY>>", body))
+
+    raw = None
+    if use_oauth and not _OAUTH_CIRCUIT_OPEN:
+        try:
+            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
+            import asyncio
+            async def _run():
+                chunks = []
+                opts = ClaudeAgentOptions(
+                    model=LLM_IOC_MODEL,
+                    max_turns=1,
+                    allowed_tools=[],
+                    system_prompt=_IOC_PROMPT_SYSTEM,
+                )
+                async for msg in query(prompt=prompt, options=opts):
+                    if isinstance(msg, AssistantMessage):
+                        for block in msg.content:
+                            if isinstance(block, TextBlock):
+                                chunks.append(block.text)
+                return "".join(chunks)
+            async def _run_with_timeout():
+                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
+            raw = asyncio.run(_run_with_timeout())
+            if raw:
+                _note_oauth_success()
+        except TimeoutError:
+            _note_oauth_failure(f"ioc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s")
+            raw = None
+        except BaseException as e:
+            _note_oauth_failure(e)
+            raw = None
+    if raw is None and api_key:
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key)
+            msg = client.messages.create(
+                model=LLM_IOC_MODEL,
+                max_tokens=900,
+                system=_IOC_PROMPT_SYSTEM,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
+        except Exception:
+            raw = None
+    if not raw:
+        return None
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```\s*$", "", raw)
+    # Tolerate any preamble — find the first {..} object greedily.
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if not m:
+        return None
+    import json as _json
+    try:
+        parsed = _json.loads(m.group(0))
+    except Exception:
+        return None
+    return _ioc_normalise_llm_dict(parsed)
+
+
+def _extract_iocs(article: dict) -> dict:
+    """Primary IOC entry-point. LLM-first with regex fallback.
+
+    Output is always a complete schema (every required key present),
+    so downstream `ind["cves"]` bracket access cannot raise KeyError
+    even when both paths fail (returns an all-empty dict).
+    """
+    title = article.get("title", "") or ""
+    body  = article.get("raw_body", "") or ""
+    url   = article.get("link", "") or ""
+
+    # Always compute the regex output up-front; we need its explicit_ttps
+    # (MITRE technique matcher) regardless of which path wins, and it's
+    # the fallback if the LLM path collapses.
+    regex_ind = extract_indicators(title, body)
+
+    # No URL or empty body — LLM call has nothing to anchor on. Use
+    # regex without burning a token.
+    if not url or len(body) < 200:
+        _IOC_STATS["regex"] += 1
+        return regex_ind
+
+    # Cache lookup.
+    body_sha = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()[:16]
+    key_input = f"{IOC_VERSION}|{url}|{body_sha}".encode("utf-8", "replace")
+    cache_key = hashlib.sha1(key_input).hexdigest()
+    try:
+        LLM_IOC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        cache_path = LLM_IOC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        if cache_path.exists():
+            try:
+                cached = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+                if isinstance(cached, dict) and all(k in cached for k in _IOC_REQUIRED_KEYS):
+                    _IOC_STATS["llm"] += 1
+                    _IOC_STATS["llm_cached"] += 1
+                    # Merge regex explicit_ttps in (LLM doesn't emit them).
+                    cached.setdefault("explicit_ttps", [])
+                    cached["explicit_ttps"] = regex_ind.get("explicit_ttps") or []
+                    # Apply the same allowlist-exclusion pass that regex
+                    # output goes through, so a cached LLM that emitted
+                    # `google.com` still gets pruned.
+                    cached["domains"] = [d for d in cached.get("domains") or []
+                                         if not _ioc_is_known_safe(d, kind="domain")]
+                    cached["ips"] = [i for i in cached.get("ips") or []
+                                     if not _ioc_is_known_safe(i, kind="ipv4")]
+                    return cached
+            except Exception:
+                pass
+    except Exception:
+        # Cache init failed; carry on without caching this run.
+        cache_path = None
+
+    # Fresh LLM call.
+    llm_ind = _llm_extract_iocs(article)
+    if llm_ind is None:
+        # Audit drop and fall back to regex.
+        try:
+            (Path(__file__).parent / "intel").mkdir(parents=True, exist_ok=True)
+            with open(Path(__file__).parent / "intel" / "ioc_drops.jsonl",
+                      "a", encoding="utf-8") as fh:
+                fh.write(__import__("json").dumps({
+                    "url": url,
+                    "title": title[:200],
+                    "reason": "llm_unavailable_or_malformed",
+                    "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+                }) + "\n")
+        except Exception:
+            pass
+        _IOC_STATS["regex"] += 1
+        return regex_ind
+
+    # LLM success. Merge regex explicit_ttps + apply allowlist exclusion.
+    llm_ind["explicit_ttps"] = regex_ind.get("explicit_ttps") or []
+    llm_ind["domains"] = [d for d in llm_ind.get("domains") or []
+                          if not _ioc_is_known_safe(d, kind="domain")]
+    llm_ind["ips"] = [i for i in llm_ind.get("ips") or []
+                      if not _ioc_is_known_safe(i, kind="ipv4")]
+
+    # Persist to cache.
+    try:
+        if cache_path is not None:
+            payload = dict(llm_ind)
+            payload["_meta"] = {
+                "version": IOC_VERSION,
+                "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+                "url": url,
+            }
+            cache_path.write_text(__import__("json").dumps(payload, ensure_ascii=False),
+                                  encoding="utf-8")
+    except Exception:
+        pass
+
+    _IOC_STATS["llm"] += 1
+    return llm_ind
+
+
 def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     """
     Pull articles from every configured source, filter to a rolling window
@@ -15231,6 +15541,12 @@ def main():
     # Fresh circuit breaker per run — don't inherit a stuck-open state
     # from anything that imported this module earlier.
     _reset_oauth_circuit_breaker()
+    # Reset run-scoped IOC extraction counters so the end-of-run summary
+    # reflects only this invocation. (Same pattern as the relevance
+    # tier_counts dict initialised in the per-article loop below.)
+    _IOC_STATS["llm"] = 0
+    _IOC_STATS["llm_cached"] = 0
+    _IOC_STATS["regex"] = 0
 
     articles = fetch_articles()
     if not articles:
@@ -15270,7 +15586,10 @@ def main():
     actor_index = {}      # canonical actor name -> {articles:set, ucs:int, techs:set, ips:set, ...}
     for i, a in enumerate(articles):
         text = f"{a['title']}\n{a['raw_body']}"
-        ind = extract_indicators(a["title"], a["raw_body"])
+        # LLM-first IOC extraction. Cached per (url, body_hash); falls
+        # back to the regex extractor if OAuth is down, the SDK times
+        # out, or the response is malformed. See `_extract_iocs`.
+        ind = _extract_iocs(a)
         techniques = infer_techniques(text, ind["explicit_ttps"])
         ucs = select_use_cases(text, ind)
         # Threat-actor extraction — case-insensitive substring match
@@ -15477,6 +15796,16 @@ def main():
         )
         if top_str:
             print(f"    Top dropped sources: {top_str}")
+    # IOC extraction summary — per-run telemetry so an operator can see
+    # how many articles took the LLM path vs the regex fallback. A spike
+    # in regex-fallback usually means OAuth is flapping or the prompt
+    # needs tightening (every fallback is also logged to ioc_drops.jsonl).
+    llm_fresh = max(0, _IOC_STATS["llm"] - _IOC_STATS["llm_cached"])
+    print(
+        f"[*] IOC extraction: llm={_IOC_STATS['llm']} "
+        f"(fresh={llm_fresh}, cached={_IOC_STATS['llm_cached']}), "
+        f"regex-fallback={_IOC_STATS['regex']}"
+    )
     if _OAUTH_CIRCUIT_OPEN:
         print(f"[!] OAuth circuit breaker tripped during this run after "
               f"{_OAUTH_MAX_CONSECUTIVE_FAILURES} consecutive failures "
