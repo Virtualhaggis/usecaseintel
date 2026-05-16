@@ -863,12 +863,16 @@ LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
 # Lighter model for the binary relevance gate — Haiku is plenty for "is this
 # article SOC-actionable y/n". Falls back to LLM_UC_MODEL if Haiku is missing.
 LLM_RELEVANCE_MODEL = os.environ.get("USECASEINTEL_RELEVANCE_MODEL", "claude-haiku-4-5-20251001")
-# IOC-extraction model. Same as relevance: bounded structured JSON,
-# Haiku matches Opus quality at ~10% the cost on this task.
-LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", LLM_RELEVANCE_MODEL)
+# IOC-extraction model. Phase 1 upgrade: Opus 4.7 with WebSearch for the
+# corroboration pass + Opus for the gap-fill pass. The earlier single-
+# Haiku design produced a "trust the article author" extraction; this
+# one lets the model cross-check against vendor advisories, GHSA, and
+# abuse.ch before emitting IOCs (and flag confidence by source count).
+LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", "claude-opus-4-7")
 LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
 # Cap on chars sent to the IOC extractor. 12k captures full article
-# bodies for >95% of sources without inflating Haiku input token cost.
+# bodies for >95% of sources; Opus context window is generous so we
+# also include up to 2 inline image URLs for vision-capable runs.
 LLM_IOC_MAX_BODY_CHARS = 12000
 # Bump this when the relevance prompt or rule set changes — folded into the
 # cache key so old decisions don't stick around.
@@ -877,7 +881,11 @@ CLASSIFIER_VERSION = "v1"
 # cached entries silently expire without a manual cache delete.
 # v2: prompt expanded with few-shot software-extraction examples after
 #     the v1 prompt missed OpenClaw / Avada Builder version lists.
-IOC_VERSION = "v2"
+# v3: Phase 1 upgrade — Opus 4.7 + WebSearch corroboration pass +
+#     gap-fill second pass. Schema gains sources_by_ioc,
+#     confidence_by_ioc, techniques_by_ioc, campaign_certainty,
+#     inferred_iocs. Old v2 entries stay on disk but no longer hit.
+IOC_VERSION = "v3"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -12131,6 +12139,16 @@ def build_matrix_data(articles_meta):
             "sha1":     list(dict.fromkeys(a_ind.get("sha1") or []))[:30],
             "md5":      list(dict.fromkeys(a_ind.get("md5") or []))[:30],
             "software": sw_payload,
+            # Phase 1 v3: corroboration metadata. The JS Hunt-IOCs
+            # drawer renders confidence chips and source-count badges
+            # off these. Older articles whose cache predates v3 will
+            # have empty dicts here — the UI degrades to its previous
+            # behaviour for those.
+            "sources_by_ioc":    a_ind.get("sources_by_ioc") or {},
+            "confidence_by_ioc": a_ind.get("confidence_by_ioc") or {},
+            "techniques_by_ioc": a_ind.get("techniques_by_ioc") or {},
+            "campaign_certainty": float(a_ind.get("campaign_certainty") or 0.0),
+            "inferred_iocs":     (a_ind.get("inferred_iocs") or [])[:20],
         }
         art_records.append({
             "i": a_idx,
@@ -15335,9 +15353,14 @@ _IOC_STATS = {
 }
 
 _IOC_PROMPT_SYSTEM = (
-    "You are a SOC analyst extracting indicators of compromise from a "
-    "threat-intel article. Return strict JSON only. No prose. No code "
-    "fences. No commentary."
+    "You are a senior SOC analyst extracting indicators of compromise "
+    "from a threat-intel article. You have WebSearch and WebFetch "
+    "available — USE them to cross-check the article against vendor "
+    "advisories (Microsoft, Mandiant, Unit 42, Talos, Sentinel One, "
+    "CrowdStrike, ESET, Kaspersky, abuse.ch, ThreatFox, URLhaus, "
+    "OTX, NVD, GHSA) before emitting IOCs. Aim for at least one "
+    "corroborating source per IOC where possible. Return strict JSON "
+    "only. No prose. No code fences. No commentary outside the JSON."
 )
 
 _IOC_PROMPT_USER = (
@@ -15348,9 +15371,15 @@ _IOC_PROMPT_USER = (
     "Body (truncated):\n"
     "<<BODY>>\n"
     "\n"
-    "Extract indicators of compromise from this article. Accept both "
-    "defanged (evil[.]com, hxxps://) and plain-text forms; output them "
-    "in normal form (evil.com, https://).\n"
+    "Read the article carefully. Then run 1-2 targeted WebSearches to "
+    "find independent coverage of the SAME incident (search by CVE ID, "
+    "campaign name, named threat actor, malware family, or unique "
+    "domain). Pull the most relevant 1-2 vendor pages with WebFetch. "
+    "Reconcile IOCs across sources before emitting them.\n"
+    "\n"
+    "Extract indicators of compromise. Accept both defanged "
+    "(evil[.]com, hxxps://) and plain-text forms; output them in "
+    "normal form (evil.com, https://).\n"
     "\n"
     "ONLY emit indicators clearly described as malicious / attacker-"
     "controlled / used in the attack:\n"
@@ -15397,15 +15426,35 @@ _IOC_PROMPT_USER = (
     "\n"
     "Return JSON with EXACTLY these keys (use [] for empty):\n"
     "{\n"
-    '  "cves":      ["CVE-2026-12345", ...],\n'
-    '  "ips":       ["1.2.3.4", ...],\n'
-    '  "domains":   ["evil.com", ...],\n'
-    '  "sha256":    ["<64 hex>", ...],\n'
-    '  "sha1":      ["<40 hex>", ...],\n'
-    '  "md5":       ["<32 hex>", ...],\n'
-    '  "software":  [{"name":"OpenClaw","versions":["8.10.3","8.10.4","8.10.5"]}, ...],\n'
-    '  "campaign":  "shai-hulud" | "",\n'
-    '  "actors":    ["Storm-2372", ...]\n'
+    '  "cves":              ["CVE-2026-12345", ...],\n'
+    '  "ips":               ["1.2.3.4", ...],\n'
+    '  "domains":           ["evil.com", ...],\n'
+    '  "sha256":            ["<64 hex>", ...],\n'
+    '  "sha1":              ["<40 hex>", ...],\n'
+    '  "md5":               ["<32 hex>", ...],\n'
+    '  "software":          [{"name":"OpenClaw","versions":["8.10.3"]}, ...],\n'
+    '  "campaign":          "shai-hulud" | "",\n'
+    '  "actors":            ["Storm-2372", ...],\n'
+    "  // ---- Corroboration fields (NEW in v3) ---------------------\n"
+    "  // For each IOC string, list the URLs that mentioned it. The\n"
+    "  // article URL itself counts as one source. Cross-vendor\n"
+    "  // sources = high confidence. The model is responsible for\n"
+    "  // calling WebSearch / WebFetch to find these.\n"
+    '  "sources_by_ioc":    {"<ioc>": ["https://vendor1.com/...", ...]},\n'
+    "  // For each IOC: 'high' if seen in 2+ independent sources,\n"
+    "  // 'medium' if seen in 1 vendor source + this article, 'low'\n"
+    "  // if only mentioned in this article.\n"
+    '  "confidence_by_ioc": {"<ioc>": "high" | "medium" | "low"},\n'
+    "  // MITRE ATT&CK technique IDs each IOC enables. Use the most\n"
+    "  // specific sub-technique. Example: a C2 domain might map to\n"
+    "  // [\"T1071.001\"] (web protocols), a dropped binary might map\n"
+    "  // to [\"T1204.002\", \"T1027\"]. Empty array if the IOC is\n"
+    "  // purely indicator-only (e.g. a hash with no behavioural\n"
+    "  // context).\n"
+    '  "techniques_by_ioc": {"<ioc>": ["T1071.001", ...]},\n'
+    "  // Your confidence (0.0-1.0) that this article describes a\n"
+    "  // coherent named campaign vs scattered unrelated IOCs.\n"
+    '  "campaign_certainty": 0.0\n'
     "}\n"
     "\n"
     "Caps: ≤30 per list; ≤20 software entries; ≤10 versions per software."
@@ -15419,7 +15468,14 @@ _IOC_REQUIRED_KEYS = ("cves", "ips", "domains", "sha256", "sha1",
 def _ioc_normalise_llm_dict(d: dict) -> dict | None:
     """Coerce a raw LLM JSON dict into the canonical IOC shape, or
     return None if it's missing every required key. Permissive on
-    types (strings vs lists) but strict on key presence."""
+    types (strings vs lists) but strict on key presence.
+
+    Phase 1 v3 adds optional corroboration metadata (sources_by_ioc,
+    confidence_by_ioc, techniques_by_ioc, campaign_certainty). Older
+    cached entries that don't carry these keys are still readable —
+    the fields default to empty dicts / zero so downstream UI code
+    can degrade gracefully.
+    """
     if not isinstance(d, dict):
         return None
     out = {}
@@ -15459,16 +15515,127 @@ def _ioc_normalise_llm_dict(d: dict) -> dict | None:
     # explicit_ttps is filled by extract_indicators (regex MITRE pass)
     # and merged in by _extract_iocs — LLM isn't asked for it.
     out["explicit_ttps"] = []
+
+    # ---- Phase 1 v3: corroboration fields (defensive coerce) -----
+    sbi = d.get("sources_by_ioc") or {}
+    out["sources_by_ioc"] = {}
+    if isinstance(sbi, dict):
+        for k, v in sbi.items():
+            if not isinstance(k, str):
+                continue
+            if isinstance(v, str):
+                v = [v]
+            if not isinstance(v, list):
+                continue
+            out["sources_by_ioc"][k.strip()[:200]] = [
+                str(u).strip()[:300] for u in v
+                if u and isinstance(u, str)
+            ][:6]
+    cbi = d.get("confidence_by_ioc") or {}
+    out["confidence_by_ioc"] = {}
+    if isinstance(cbi, dict):
+        for k, v in cbi.items():
+            if isinstance(k, str) and isinstance(v, str) and v.lower() in ("high", "medium", "low"):
+                out["confidence_by_ioc"][k.strip()[:200]] = v.lower()
+    tbi = d.get("techniques_by_ioc") or {}
+    out["techniques_by_ioc"] = {}
+    if isinstance(tbi, dict):
+        for k, v in tbi.items():
+            if not isinstance(k, str):
+                continue
+            if isinstance(v, str):
+                v = [v]
+            if not isinstance(v, list):
+                continue
+            techs = [str(t).strip().upper() for t in v
+                     if t and isinstance(t, str)
+                     and re.match(r"^T\d{4}(?:\.\d{3})?$", str(t).strip().upper())][:8]
+            if techs:
+                out["techniques_by_ioc"][k.strip()[:200]] = techs
+    try:
+        out["campaign_certainty"] = float(d.get("campaign_certainty") or 0)
+        out["campaign_certainty"] = max(0.0, min(1.0, out["campaign_certainty"]))
+    except (TypeError, ValueError):
+        out["campaign_certainty"] = 0.0
+    # Phase 1 v3 also carries gap-fill IOCs the model inferred (not
+    # in the article body) — stored separately so the UI can badge them.
+    inferred_raw = d.get("inferred_iocs") or []
+    out["inferred_iocs"] = []
+    if isinstance(inferred_raw, list):
+        for entry in inferred_raw[:30]:
+            if not isinstance(entry, dict):
+                continue
+            kind = str(entry.get("kind") or "").lower().strip()
+            value = str(entry.get("value") or "").strip()
+            reason = str(entry.get("reason") or "").strip()[:200]
+            if kind in ("cve","ip","domain","sha256","sha1","md5","registry_key",
+                        "file_path","mutex","named_pipe","process_command","other") and value:
+                out["inferred_iocs"].append({
+                    "kind": kind, "value": value[:300], "reason": reason
+                })
+
     # Final defensive coverage: every required key present and a list.
     if any(not isinstance(out.get(k), list) for k in _IOC_REQUIRED_KEYS):
         return None
     return out
 
 
-def _llm_extract_iocs(article: dict) -> dict | None:
-    """Single Haiku call. Returns canonical IOC dict on success, None
-    on any failure (caller falls back to regex). Shares OAuth circuit
-    breaker with relevance + UC calls."""
+_IOC_GAPFILL_PROMPT_USER = (
+    "Article title: <<TITLE>>\n"
+    "Article URL:   <<URL>>\n"
+    "\n"
+    "First-pass extraction (already done):\n"
+    "<<PASS1_JSON>>\n"
+    "\n"
+    "Body (truncated):\n"
+    "<<BODY>>\n"
+    "\n"
+    "You are now doing a gap-fill pass. Given the article and the IOCs "
+    "already extracted, what IOCs are MISSING that a SOC analyst would "
+    "expect for this kind of attack? Examples:\n"
+    "  - A credential-stealer article should usually mention the\n"
+    "    Mutex name, registry persistence key, and SQLite/leveldb\n"
+    "    paths it reads (browser password DBs).\n"
+    "  - An npm supply-chain article should usually mention the\n"
+    "    package name, malicious version range, the postinstall\n"
+    "    script behaviour, and the C2 endpoint or wallet address.\n"
+    "  - A phishing-kit article should usually mention the lure\n"
+    "    page URL pattern, the credential-exfil endpoint, and the\n"
+    "    abused service (Cloudflare, Vercel, Pages.dev, etc.).\n"
+    "  - A ransomware article should usually mention the ransom\n"
+    "    note filename, the file-extension pattern, the shadow-copy\n"
+    "    deletion command, and the leak-site address.\n"
+    "\n"
+    "If the article describes behaviour but doesn't list the matching\n"
+    "IOC explicitly, infer the IOC type AND flag it as `inferred`. If\n"
+    "you genuinely have no high-confidence gap-fill candidates,\n"
+    "return an empty list — do NOT pad with low-quality guesses.\n"
+    "\n"
+    "Return JSON ONLY in this shape (no prose, no fences):\n"
+    "{\n"
+    "  \"inferred_iocs\": [\n"
+    "    {\n"
+    "      \"kind\": \"cve\" | \"ip\" | \"domain\" | \"sha256\" | \"sha1\"\n"
+    "             | \"md5\" | \"registry_key\" | \"file_path\" | \"mutex\"\n"
+    "             | \"named_pipe\" | \"process_command\" | \"other\",\n"
+    "      \"value\": \"<the IOC string>\",\n"
+    "      \"reason\": \"<why you'd expect this; cite article phrase if any>\"\n"
+    "    }, ...\n"
+    "  ]\n"
+    "}"
+)
+
+
+def _llm_extract_iocs_pass1(article: dict) -> dict | None:
+    """Pass 1 — Opus + WebSearch corroboration pass.
+
+    Reads the article body and runs 1-2 WebSearches to find independent
+    coverage of the same incident. Returns the canonical IOC dict
+    enriched with `sources_by_ioc`, `confidence_by_ioc`,
+    `techniques_by_ioc`, and `campaign_certainty`. Shares the per-kind
+    OAuth circuit breaker so a failing IOC path doesn't drag down UC
+    or relevance.
+    """
     use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
 
@@ -15480,6 +15647,107 @@ def _llm_extract_iocs(article: dict) -> dict | None:
               .replace("<<TITLE>>", title)
               .replace("<<URL>>", url)
               .replace("<<SOURCE>>", source)
+              .replace("<<BODY>>", body))
+
+    raw = None
+    if use_oauth and not _oauth_circuit_open("ioc"):
+        try:
+            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
+            import asyncio
+            async def _run():
+                chunks = []
+                opts = ClaudeAgentOptions(
+                    model=LLM_IOC_MODEL,
+                    max_turns=4,            # room for 1-2 WebSearch + WebFetch + final answer
+                    allowed_tools=["WebSearch", "WebFetch"],
+                    system_prompt=_IOC_PROMPT_SYSTEM,
+                )
+                async for msg in query(prompt=prompt, options=opts):
+                    if isinstance(msg, AssistantMessage):
+                        for block in msg.content:
+                            if isinstance(block, TextBlock):
+                                chunks.append(block.text)
+                return "".join(chunks)
+            async def _run_with_timeout():
+                # IOC extraction with WebSearch needs longer budget than
+                # the no-tool Haiku call did. Reuse the UC-call timeout
+                # since both are tool-using Opus paths.
+                return await asyncio.wait_for(_run(), timeout=_OAUTH_UC_CALL_TIMEOUT_SEC)
+            raw = asyncio.run(_run_with_timeout())
+            if raw:
+                _note_oauth_success("ioc")
+        except TimeoutError:
+            _note_oauth_failure(f"ioc pass1 timeout {_OAUTH_UC_CALL_TIMEOUT_SEC}s",
+                                kind="ioc")
+            raw = None
+        except BaseException as e:
+            _note_oauth_failure(e, kind="ioc")
+            raw = None
+    if raw is None and api_key:
+        # API-key fallback has no WebSearch — degrades gracefully to a
+        # single-pass extraction without corroboration, but still
+        # honours the schema so downstream code is happy.
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key)
+            msg = client.messages.create(
+                model=LLM_IOC_MODEL,
+                max_tokens=2000,
+                system=_IOC_PROMPT_SYSTEM,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
+        except Exception:
+            raw = None
+    if not raw:
+        return None
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```\s*$", "", raw)
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if not m:
+        return None
+    import json as _json
+    try:
+        parsed = _json.loads(m.group(0))
+    except Exception:
+        return None
+    return _ioc_normalise_llm_dict(parsed)
+
+
+def _llm_extract_iocs_pass2(article: dict, pass1: dict) -> list:
+    """Pass 2 — no-tool gap-fill. Returns a list of inferred IOCs
+    to merge into Pass 1 output. On failure returns [] so the caller
+    just keeps the Pass 1 result intact."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if not (use_oauth or api_key):
+        return []
+    if _oauth_circuit_open("ioc"):
+        return []
+
+    body = (article.get("raw_body") or "")[:LLM_IOC_MAX_BODY_CHARS]
+    title = (article.get("title") or "")[:300]
+    url = article.get("link") or ""
+    # Slim the pass1 payload — only the fields the gap-fill model
+    # actually needs to know about, so the prompt stays compact.
+    import json as _json
+    slim = {
+        "cves": pass1.get("cves") or [],
+        "ips": pass1.get("ips") or [],
+        "domains": pass1.get("domains") or [],
+        "sha256": pass1.get("sha256") or [],
+        "sha1": pass1.get("sha1") or [],
+        "md5": pass1.get("md5") or [],
+        "software": pass1.get("software") or [],
+        "campaign": pass1.get("campaign") or "",
+        "actors": pass1.get("actors") or [],
+    }
+    prompt = (_IOC_GAPFILL_PROMPT_USER
+              .replace("<<TITLE>>", title)
+              .replace("<<URL>>", url)
+              .replace("<<PASS1_JSON>>", _json.dumps(slim, ensure_ascii=False))
               .replace("<<BODY>>", body))
 
     raw = None
@@ -15507,7 +15775,7 @@ def _llm_extract_iocs(article: dict) -> dict | None:
             if raw:
                 _note_oauth_success("ioc")
         except TimeoutError:
-            _note_oauth_failure(f"ioc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
+            _note_oauth_failure(f"ioc pass2 timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
                                 kind="ioc")
             raw = None
         except BaseException as e:
@@ -15519,7 +15787,7 @@ def _llm_extract_iocs(article: dict) -> dict | None:
             client = anthropic.Anthropic(api_key=api_key)
             msg = client.messages.create(
                 model=LLM_IOC_MODEL,
-                max_tokens=900,
+                max_tokens=1200,
                 system=_IOC_PROMPT_SYSTEM,
                 messages=[{"role": "user", "content": prompt}],
             )
@@ -15527,21 +15795,75 @@ def _llm_extract_iocs(article: dict) -> dict | None:
         except Exception:
             raw = None
     if not raw:
-        return None
+        return []
     raw = raw.strip()
     if raw.startswith("```"):
         raw = re.sub(r"^```(?:json)?\s*", "", raw)
         raw = re.sub(r"\s*```\s*$", "", raw)
-    # Tolerate any preamble — find the first {..} object greedily.
     m = re.search(r"\{[\s\S]*\}", raw)
     if not m:
-        return None
-    import json as _json
+        return []
     try:
         parsed = _json.loads(m.group(0))
     except Exception:
+        return []
+    if not isinstance(parsed, dict):
+        return []
+    inferred = parsed.get("inferred_iocs") or []
+    if not isinstance(inferred, list):
+        return []
+    # Coerce + dedup against pass1 to avoid re-emitting already-known
+    # IOCs. The normaliser already trims sizes / sanitises kinds.
+    fake = {"inferred_iocs": inferred}
+    norm = _ioc_normalise_llm_dict(fake) or {}
+    already = set()
+    for k in ("cves","ips","domains","sha256","sha1","md5"):
+        for v in pass1.get(k) or []:
+            already.add(str(v).strip().lower())
+    out = []
+    for e in norm.get("inferred_iocs") or []:
+        v = e.get("value","").strip().lower()
+        if v and v not in already:
+            out.append(e)
+    return out[:20]
+
+
+def _llm_extract_iocs(article: dict) -> dict | None:
+    """Phase 1 v3 entry-point: two-pass corroborated IOC extraction.
+
+    Pass 1: Opus + WebSearch reads the article, runs cross-vendor
+    searches, returns IOCs with `sources_by_ioc`, `confidence_by_ioc`,
+    `techniques_by_ioc`, and `campaign_certainty`.
+
+    Pass 2: Opus no-tools gap-fill — given Pass 1 output, infer the
+    IOCs a SOC analyst would expect (mutex names, registry keys,
+    ransom-note filenames, etc.) and flag them as `inferred`.
+
+    Returns the merged canonical dict on success, None on any failure
+    so the caller falls back to regex.
+    """
+    p1 = _llm_extract_iocs_pass1(article)
+    if p1 is None:
         return None
-    return _ioc_normalise_llm_dict(parsed)
+    # Skip Pass 2 if Pass 1 already burned through enough budget OR if
+    # the article is so sparse that gap-fill won't add value.
+    body_len = len(article.get("raw_body") or "")
+    if body_len < 800:
+        return p1
+    # If pass 2 fails, we still keep pass 1 — partial result beats no
+    # result. Gap-fill is purely additive.
+    inferred = _llm_extract_iocs_pass2(article, p1)
+    if inferred:
+        existing = p1.get("inferred_iocs") or []
+        # Merge + dedup by value.
+        seen = {e.get("value","").lower() for e in existing}
+        for e in inferred:
+            v = e.get("value","").lower()
+            if v and v not in seen:
+                seen.add(v)
+                existing.append(e)
+        p1["inferred_iocs"] = existing[:30]
+    return p1
 
 
 def _extract_iocs(article: dict) -> dict:
@@ -15590,6 +15912,14 @@ def _extract_iocs(article: dict) -> dict:
                                          if not _ioc_is_known_safe(d, kind="domain")]
                     cached["ips"] = [i for i in cached.get("ips") or []
                                      if not _ioc_is_known_safe(i, kind="ipv4")]
+                    # Phase 1 v3: defensively backfill the new metadata
+                    # fields for older cached entries so the downstream
+                    # JS payload always sees a complete shape.
+                    cached.setdefault("sources_by_ioc", {})
+                    cached.setdefault("confidence_by_ioc", {})
+                    cached.setdefault("techniques_by_ioc", {})
+                    cached.setdefault("inferred_iocs", [])
+                    cached.setdefault("campaign_certainty", 0.0)
                     return cached
             except Exception:
                 pass
