@@ -18,6 +18,16 @@ setlocal
 cd /d "%~dp0"
 if not exist logs mkdir logs
 
+REM Route every LLM call through Claude Code OAuth (claude-agent-sdk +
+REM the user's Claude Code session). Without this flag, generate.py's
+REM article-bespoke [LLM] UC generator silently no-ops on any article
+REM not already in cache — same fall-through path as having no
+REM ANTHROPIC_API_KEY. The other wrappers (run_once.bat, biweekly.bat,
+REM loop_pipeline.sh) already set this; the scheduled daily run was
+REM missing it, which is why the [LLM] count was decaying as cache
+REM entries got invalidated.
+set USECASEINTEL_USE_CLAUDE_OAUTH=1
+
 for /f %%a in ('powershell -nop -c "Get-Date -Format yyyy-MM-dd"') do set TS=%%a
 set LOG=logs\daily_%TS%.log
 
