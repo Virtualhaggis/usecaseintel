@@ -1368,45 +1368,54 @@ def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
     except ImportError:
         return None
     import asyncio
-    async def _run():
-        chunks = []
-        if enable_search:
-            # WebSearch lets Claude cross-check the article against vendor
-            # advisories, MITRE attributions, public IOC dumps. max_turns=4
-            # gives it room to do 1-2 search rounds + the final answer.
-            # `model=LLM_UC_MODEL` so the OAuth path honours the same env-
-            # var override as the API-key path; otherwise it'd silently
-            # fall back to the agent SDK's default.
-            options = ClaudeAgentOptions(
-                model=LLM_UC_MODEL,
-                max_turns=4,
-                allowed_tools=["WebSearch", "WebFetch"],
-            )
-        else:
-            options = ClaudeAgentOptions(model=LLM_UC_MODEL, max_turns=1, allowed_tools=[])
-        async for msg in query(prompt=prompt, options=options):
-            if isinstance(msg, AssistantMessage):
-                for block in msg.content:
-                    if isinstance(block, TextBlock):
-                        chunks.append(block.text)
-        return "".join(chunks)
-    async def _run_with_timeout():
-        return await asyncio.wait_for(_run(), timeout=_OAUTH_UC_CALL_TIMEOUT_SEC)
-    try:
-        out = asyncio.run(_run_with_timeout())
-        if out:
-            _note_oauth_success()
+
+    def _attempt(use_tools: bool) -> str | None:
+        """Single SDK call. Returns the raw text on success, None on any
+        failure (timeout / subprocess crash / exception). Doesn't touch
+        the breaker — the caller decides whether to count the outcome."""
+        async def _run():
+            chunks = []
+            if use_tools:
+                options = ClaudeAgentOptions(
+                    model=LLM_UC_MODEL,
+                    max_turns=3,
+                    allowed_tools=["WebSearch", "WebFetch"],
+                )
+            else:
+                options = ClaudeAgentOptions(model=LLM_UC_MODEL, max_turns=1, allowed_tools=[])
+            async for msg in query(prompt=prompt, options=options):
+                if isinstance(msg, AssistantMessage):
+                    for block in msg.content:
+                        if isinstance(block, TextBlock):
+                            chunks.append(block.text)
+            return "".join(chunks)
+        async def _run_with_timeout():
+            # No-tool retry doesn't need the full 180s — it's just a
+            # generate. Tool-enabled call gets the full budget.
+            budget = _OAUTH_UC_CALL_TIMEOUT_SEC if use_tools else _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2
+            return await asyncio.wait_for(_run(), timeout=budget)
+        try:
+            return asyncio.run(_run_with_timeout())
+        except TimeoutError:
+            return None
+        except BaseException:
+            return None
+
+    # Attempt 1: tools enabled (when requested by caller). The SDK
+    # subprocess flaps badly on WebSearch round-trips — observed ~50%
+    # crash rate vs 0% on no-tool calls (relevance + KC both run clean
+    # at the same load). When attempt 1 returns None we retry the SAME
+    # OAuth path WITHOUT tools so the article stays on Opus + OAuth
+    # rather than degrading to regex/rules. The retry loses live
+    # corroboration but keeps the prompt-and-model quality.
+    out = _attempt(use_tools=enable_search)
+    if not out and enable_search:
+        out = _attempt(use_tools=False)
+    if out:
+        _note_oauth_success()
         return out
-    except TimeoutError:  # builtin alias for asyncio.TimeoutError in py3.11+
-        _note_oauth_failure(f"timeout after {_OAUTH_UC_CALL_TIMEOUT_SEC}s")
-        return None
-    except BaseException as e:
-        # BaseException covers SystemExit / KeyboardInterrupt-like exits that
-        # the SDK subprocess can raise on a dirty crash. We do NOT want one
-        # of those to abort the whole pipeline — count it as a failure and
-        # carry on.
-        _note_oauth_failure(e)
-        return None
+    _note_oauth_failure(f"both attempts failed (timeout {_OAUTH_UC_CALL_TIMEOUT_SEC}s)")
+    return None
 
 
 def _llm_call_via_api_key(prompt: str, api_key: str) -> str | None:
@@ -16331,8 +16340,15 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
               .replace("<<SOURCE>>", source)
               .replace("<<BODY>>", body))
 
-    raw = None
-    if use_oauth and not _oauth_circuit_open("ioc"):
+    # OAuth pass — try WebSearch-enabled first, then retry SAME OAuth path
+    # without tools if the subprocess flapped. claude-agent-sdk's
+    # subprocess is markedly more reliable on no-tool calls (KC + relevance
+    # both run with 0 failures at the same load that crashes the
+    # WebSearch-enabled IOC pass at ~50% rate). The retry keeps every
+    # article on Opus + OAuth (user's preference) at the cost of losing
+    # live web corroboration on the retry attempt — Opus's intrinsic
+    # knowledge still produces the v3 schema fields.
+    def _try_oauth_ioc(allow_tools: bool) -> str | None:
         try:
             from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
             import asyncio
@@ -16340,8 +16356,8 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
                 chunks = []
                 opts = ClaudeAgentOptions(
                     model=LLM_IOC_MODEL,
-                    max_turns=4,            # room for 1-2 WebSearch + WebFetch + final answer
-                    allowed_tools=["WebSearch", "WebFetch"],
+                    max_turns=3 if allow_tools else 1,
+                    allowed_tools=["WebSearch", "WebFetch"] if allow_tools else [],
                     system_prompt=_IOC_PROMPT_SYSTEM,
                 )
                 async for msg in query(prompt=prompt, options=opts):
@@ -16351,20 +16367,37 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
                                 chunks.append(block.text)
                 return "".join(chunks)
             async def _run_with_timeout():
-                # IOC extraction with WebSearch needs longer budget than
-                # the no-tool Haiku call did. Reuse the UC-call timeout
-                # since both are tool-using Opus paths.
-                return await asyncio.wait_for(_run(), timeout=_OAUTH_UC_CALL_TIMEOUT_SEC)
-            raw = asyncio.run(_run_with_timeout())
-            if raw:
-                _note_oauth_success("ioc")
+                # WebSearch path needs the full UC budget; no-tool retry
+                # needs much less.
+                budget = _OAUTH_UC_CALL_TIMEOUT_SEC if allow_tools else _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2
+                return await asyncio.wait_for(_run(), timeout=budget)
+            return asyncio.run(_run_with_timeout())
         except TimeoutError:
-            _note_oauth_failure(f"ioc pass1 timeout {_OAUTH_UC_CALL_TIMEOUT_SEC}s",
-                                kind="ioc")
-            raw = None
-        except BaseException as e:
-            _note_oauth_failure(e, kind="ioc")
-            raw = None
+            return None
+        except BaseException:
+            return None
+
+    raw = None
+    if use_oauth and not _oauth_circuit_open("ioc"):
+        # Attempt 1: full WebSearch corroboration.
+        raw = _try_oauth_ioc(allow_tools=True)
+        if not raw:
+            # Attempt 2: same OAuth path, no tools. Saves the article from
+            # falling back to regex when the SDK subprocess crashes on the
+            # WebSearch round-trip — we still emit v3 schema, just from
+            # Opus's intrinsic knowledge rather than live vendor lookups.
+            raw = _try_oauth_ioc(allow_tools=False)
+            if raw:
+                # Only ATTEMPT 2 succeeded — note this as a degraded but
+                # successful call (no breaker increment, no api_key
+                # fallback). The cached output is still useful.
+                _note_oauth_success("ioc")
+            else:
+                # Both attempts failed: this is a real failure for the
+                # breaker. Caller falls back to regex.
+                _note_oauth_failure("ioc pass1 both attempts failed", kind="ioc")
+        else:
+            _note_oauth_success("ioc")
     if raw is None and api_key:
         # API-key fallback has no WebSearch — degrades gracefully to a
         # single-pass extraction without corroboration, but still
