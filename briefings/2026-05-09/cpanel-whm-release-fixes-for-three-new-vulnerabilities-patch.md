@@ -18,9 +18,6 @@ CVE-2026-29201 (CVSS score: 4.3) - An insufficient input validation of the featu
 - **CVE:** `CVE-2026-29202`
 - **CVE:** `CVE-2026-29203`
 - **CVE:** `CVE-2026-41940`
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
 
 ## MITRE ATT&CK Techniques
 
@@ -241,7 +238,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-29201`, `CVE-2026-29202`, `CVE-2026-29203`, `CVE-2026-41940`, `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
+  - CVE(s): `CVE-2026-29201`, `CVE-2026-29202`, `CVE-2026-29203`, `CVE-2026-41940`
 
 
 ## Why this matters

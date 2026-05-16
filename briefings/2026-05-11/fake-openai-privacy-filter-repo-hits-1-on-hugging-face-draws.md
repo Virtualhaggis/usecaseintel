@@ -1,4 +1,4 @@
-# [CRIT] Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
+# [HIGH] Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
 
 **Source:** The Hacker News
 **Published:** 2026-05-11
@@ -13,7 +13,6 @@ The project, named Open-OSS/privacy-filter , masqueraded as its legitimate count
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
 - **Domain (defanged):** `api.eth-fastscan.org`
 - **Domain (defanged):** `recargapopular.com`
 - **Domain (defanged):** `welovechinatown.info`
@@ -25,7 +24,6 @@ The project, named Open-OSS/privacy-filter , masqueraded as its legitimate count
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -55,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hugging Face Open-OSS/privacy-filter C2 egress (api.eth-fastscan.org, recargapopular.com, welovechinatown.info)
 
-`UC_116_12` · phase: **c2** · confidence: **High**
+`UC_116_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +83,7 @@ union isfuzzy=true
 
 ### [LLM] Python loader.py spawning PowerShell/cmd referencing JSON Keeper dead drop or eth-fastscan stager
 
-`UC_116_13` · phase: **delivery** · confidence: **High**
+`UC_116_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Self-deleting one-shot SYSTEM scheduled task running PowerShell from %TEMP% (HiddenLayer 'one-shot launcher')
 
-`UC_116_14` · phase: **install** · confidence: **Medium**
+`UC_116_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +470,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
 
-`UC_116_11` · phase: **exploit** · confidence: **High**
+`UC_116_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -526,10 +524,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `api.eth-fastscan.org`, `recargapopular.com`, `welovechinatown.info`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

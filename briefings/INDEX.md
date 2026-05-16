@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_782 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,7 +12,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
 - [critical linux kernel flaw ssh keysign pwn exposes ssh keys ](./2026-05-16/critical-linux-kernel-flaw-ssh-keysign-pwn-exposes-ssh-keys-.md)
 - [google project zero discloses zero click exploit chain for p](./2026-05-16/google-project-zero-discloses-zero-click-exploit-chain-for-p.md)
+- [jdownloader website compromised to distribute malicious wind](./2026-05-16/jdownloader-website-compromised-to-distribute-malicious-wind.md)
 - [malicious jpeg images could trigger php memory safety vulner](./2026-05-16/malicious-jpeg-images-could-trigger-php-memory-safety-vulner.md)
+- [microsoft exchange windows 11 and cursor zero days exploited](./2026-05-16/microsoft-exchange-windows-11-and-cursor-zero-days-exploited.md)
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
@@ -24,11 +26,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [gunra ransomware expands raas operations after shifting from](./2026-05-15/gunra-ransomware-expands-raas-operations-after-shifting-from.md)
 - [hackers abuse oauth device authorization flow to steal micro](./2026-05-15/hackers-abuse-oauth-device-authorization-flow-to-steal-micro.md)
-- [hackers use orbit rootkit to harvest ssh and sudo credential](./2026-05-15/hackers-use-orbit-rootkit-to-harvest-ssh-and-sudo-credential.md)
 - [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
-- [penetration testing vs red teaming what s the difference](./2026-05-15/penetration-testing-vs-red-teaming-what-s-the-difference.md)
 - [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)
 - [shai hulud worm steals npm github aws and kubernetes secrets](./2026-05-15/shai-hulud-worm-steals-npm-github-aws-and-kubernetes-secrets.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
@@ -50,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
 - [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
 - [ghsa critical cve 2026 45311 deepseek tui run tests tool ena](./2026-05-14/ghsa-critical-cve-2026-45311-deepseek-tui-run-tests-tool-ena.md)
-- [ghsa critical cve 2026 45353 electerm local code through ele](./2026-05-14/ghsa-critical-cve-2026-45353-electerm-local-code-through-ele.md)
 - [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
 - [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
@@ -76,7 +75,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
-- [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
@@ -85,7 +83,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
-- [microsoft patch tuesday for may 2026 snort rules and promine](./2026-05-12/microsoft-patch-tuesday-for-may-2026-snort-rules-and-promine.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
@@ -122,7 +119,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [ghsa critical cve 2026 43940 electerm runwidget has a path t](./2026-05-08/ghsa-critical-cve-2026-43940-electerm-runwidget-has-a-path-t.md)
-- [ghsa critical cve 2026 43944 electerm users can run dangrous](./2026-05-08/ghsa-critical-cve-2026-43944-electerm-users-can-run-dangrous.md)
 - [ghsa critical cve 2026 44008 vm2 has sandbox breakout via ne](./2026-05-08/ghsa-critical-cve-2026-44008-vm2-has-sandbox-breakout-via-ne.md)
 - [ghsa critical cve 2026 44009 vm2 has sandbox breakout throug](./2026-05-08/ghsa-critical-cve-2026-44009-vm2-has-sandbox-breakout-throug.md)
 - [ghsa critical cve 2026 44211 cline kanban server has a cross](./2026-05-08/ghsa-critical-cve-2026-44211-cline-kanban-server-has-a-cross.md)

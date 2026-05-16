@@ -26,18 +26,7 @@ Obfusc…
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `194.87.92.109`
-- **Domain (defanged):** `api.ipify.org`
 - **SHA256:** `2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b`
-- **SHA256:** `9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614`
-- **SHA256:** `971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759`
-- **SHA256:** `ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd`
-- **SHA256:** `f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346`
-- **SHA256:** `a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd`
-- **SHA256:** `691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3`
-- **SHA256:** `281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2`
-- **SHA256:** `9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20`
-- **SHA256:** `d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c`
-- **SHA256:** `1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5`
 
 ## MITRE ATT&CK Techniques
 
@@ -422,10 +411,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `194.87.92.109`, `api.ipify.org`
+  - IP / domain IOC(s): `194.87.92.109`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b`, `9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614`, `971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759`, `ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd`, `f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346`, `a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd`, `691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3`, `281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2` _(+3 more)_
+  - file hash IOC(s): `2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b`
 
 
 ## Why this matters

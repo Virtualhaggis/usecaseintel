@@ -1,4 +1,4 @@
-# [CRIT] Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
+# [HIGH] Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
 **Source:** The Hacker News
 **Published:** 2026-05-14
@@ -17,7 +17,6 @@ node-ipc@12.0.1
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
 - **Domain (defanged):** `sh.azurestaticprovider.net`
 
 ## MITRE ATT&CK Techniques
@@ -25,7 +24,6 @@ node-ipc@12.0.1
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -53,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc supply-chain stealer C2 contact (sh.azurestaticprovider.net)
 
-`UC_42_10` · phase: **c2** · confidence: **High**
+`UC_42_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +77,7 @@ union net_hits, dns_hits
 
 ### [LLM] node.exe initiating direct UDP/53 to public resolvers (DNS exfil resolver bypass)
 
-`UC_42_11` · phase: **c2** · confidence: **Medium**
+`UC_42_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +107,7 @@ DeviceNetworkEvents
 
 ### [LLM] Install or import of compromised node-ipc 9.1.6 / 9.2.3 / 12.0.1 versions
 
-`UC_42_12` · phase: **delivery** · confidence: **High**
+`UC_42_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -402,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
-`UC_42_9` · phase: **exploit** · confidence: **High**
+`UC_42_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,10 +454,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `sh.azurestaticprovider.net`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

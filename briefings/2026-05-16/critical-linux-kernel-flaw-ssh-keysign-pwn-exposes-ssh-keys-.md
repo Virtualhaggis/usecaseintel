@@ -33,12 +33,96 @@ Linux syste…
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1053.005** — Persistence (article-specific)
+- **T1068** — Exploitation for Privilege Escalation
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1552.004** — Unsecured Credentials: Private Keys
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Burst execution of ssh-keysign / chage by non-root user (CVE-2026-46333 race exploitation)
+
+`UC_3_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as spawn_count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process) as sample_cmds, values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where (Processes.process_name IN ("ssh-keysign","chage") OR Processes.process_path IN ("/usr/lib/openssh/ssh-keysign","/usr/libexec/openssh/ssh-keysign","/usr/bin/chage")) AND Processes.user!="root" AND NOT Processes.user IN ("_chrony","systemd-resolve","systemd-coredump") by Processes.dest, Processes.user, Processes.process_name, _time span=5m
+| `drop_dm_object_name(Processes)`
+| where spawn_count >= 50
+| eval rationale="CVE-2026-46333 ssh-keysign-pwn race needs 100-2000 spawns"
+| convert ctime(firstTime) ctime(lastTime)
+| sort - spawn_count
+```
+
+**Defender KQL:**
+```kql
+// CVE-2026-46333 ssh-keysign-pwn — Linux EDR
+DeviceProcessEvents
+| where Timestamp > ago(1h)
+| where FileName in~ ("ssh-keysign","chage")
+   or FolderPath in~ ("/usr/lib/openssh/ssh-keysign","/usr/libexec/openssh/ssh-keysign","/usr/bin/chage")
+| where AccountName !in~ ("root","_chrony","systemd-resolve","systemd-coredump")
+| where AccountName !endswith "$"          // skip machine accts (cross-platform safety)
+| summarize Spawns      = count(),
+            FirstSeen   = min(Timestamp),
+            LastSeen    = max(Timestamp),
+            SampleCmds  = make_set(ProcessCommandLine, 10),
+            Parents     = make_set(InitiatingProcessFileName, 10)
+            by DeviceId, DeviceName, AccountName, FileName, bin(Timestamp, 5m)
+| where Spawns >= 50                        // race window — PoC needs 100-2000
+| extend WindowSeconds = datetime_diff('second', LastSeen, FirstSeen)
+| order by Spawns desc
+```
+
+### [LLM] Unprivileged pidfd_getfd() syscall targeting ssh-keysign / chage process (auditd)
+
+`UC_3_10` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+index=linux sourcetype="linux_audit" ("syscall=pidfd_getfd" OR "syscall=438")
+| rex field=_raw "auid=(?<auid>\d+)"
+| rex field=_raw "uid=(?<uid>\d+)"
+| rex field=_raw "comm=\"(?<comm>[^\"]+)\""
+| rex field=_raw "exe=\"(?<exe>[^\"]+)\""
+| where uid!=0 AND auid!=0 AND auid!=4294967295
+| stats count as syscalls, values(comm) as caller_comm, values(exe) as caller_exe, min(_time) as firstTime, max(_time) as lastTime by host, uid, auid
+| where syscalls >= 5
+| join type=left host [
+    | tstats `summariesonly` count as helper_spawns from datamodel=Endpoint.Processes where Processes.process_name IN ("ssh-keysign","chage") by Processes.dest
+    | rename Processes.dest as host helper_spawns as helper_spawns_same_host
+  ]
+| where helper_spawns_same_host > 0
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// MDE for Linux exposes pidfd_getfd via DeviceEvents auditd passthrough in some agent
+// versions; fall back to correlated ssh-keysign/chage spawns when syscall data absent.
+let HelperSpawns =
+    DeviceProcessEvents
+    | where Timestamp > ago(1h)
+    | where FileName in~ ("ssh-keysign","chage")
+    | where AccountName !in~ ("root","_chrony")
+    | summarize HelperCount = count() by DeviceId, DeviceName, AccountName, bin(Timestamp, 5m);
+DeviceEvents
+| where Timestamp > ago(1h)
+| where ActionType has "Syscall" or ActionType == "AuditdEvent"
+| extend Syscall = tostring(parse_json(AdditionalFields).syscall)
+| where Syscall in ("pidfd_getfd","438")
+| where AccountName !in~ ("root")
+| summarize Calls = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            CallerExe = make_set(InitiatingProcessFileName, 10)
+            by DeviceId, DeviceName, AccountName, bin(Timestamp, 5m)
+| join kind=inner HelperSpawns on DeviceId, AccountName
+| project FirstSeen, LastSeen, DeviceName, AccountName, Calls, HelperCount, CallerExe
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -234,7 +318,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — Critical Linux Kernel Flaw ‘ssh-keysign-pwn’ Exposes SSH Keys and Shadow Passwor
 
-`UC_1_8` · phase: **install** · confidence: **High**
+`UC_3_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -275,4 +359,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

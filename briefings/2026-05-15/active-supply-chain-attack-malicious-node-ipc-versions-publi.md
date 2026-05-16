@@ -10,21 +10,8 @@ Back to Blog Threat Intel Active Supply Chain Attack: Malicious node-ipc Version
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `37.16.75.69`
 - **Domain (defanged):** `sh.azurestaticprovider.net`
-- **Domain (defanged):** `azurestaticapps.net`
-- **Domain (defanged):** `azurestaticprovider.net`
 - **SHA256:** `bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301`
-- **SHA256:** `96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144`
-- **SHA256:** `b2001dc4e13d0244f96e70258346700109907b90e1d0b09522778829dcd5e4cf`
-- **SHA256:** `78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981`
-- **SHA256:** `c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea`
-- **SHA256:** `449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e`
-- **SHA1:** `ab7388363936bf527afd4173b5728c7cdbdd01ab`
-- **SHA1:** `fe5d107b9d285327af579259a32977c4f475fa26`
-- **SHA1:** `58ae7338960ef525d7c655023d7c81e3ddb283d6`
-- **SHA1:** `f5974a9774a22a863728b960543f68e7009099ef`
-- **MD5:** `9672e9fb93a457f1d359511b4e53490d`
 
 ## MITRE ATT&CK Techniques
 
@@ -451,10 +438,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `37.16.75.69`, `sh.azurestaticprovider.net`, `azurestaticapps.net`, `azurestaticprovider.net`
+  - IP / domain IOC(s): `sh.azurestaticprovider.net`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301`, `96097e0612d9575cb133021017fb1a5c68a03b60f9f3d24ebdc0e628d9034144`, `b2001dc4e13d0244f96e70258346700109907b90e1d0b09522778829dcd5e4cf`, `78a82d93b4f580835f5823b85a3d9ee1f03a15ee6f0e01b4eac86252a7002981`, `c2f4dc64aec4631540a568e88932b61daebbfb7e8281b812fa01b7215f9be9ea`, `449e4265979b5fdb2d3446c021af437e815debd66de7da2fe54f1ad93cbcc75e`, `ab7388363936bf527afd4173b5728c7cdbdd01ab`, `fe5d107b9d285327af579259a32977c4f475fa26` _(+3 more)_
+  - file hash IOC(s): `bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301`
 
 
 ## Why this matters

@@ -34,54 +34,11 @@ Over the past few months, we have cond…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `female-disorder-beta-metropolitan.trycloudflare.com`
-- **Domain (defanged):** `file.bigcloud.n-e.kr`
-- **Domain (defanged):** `vscode.dev`
-- **Domain (defanged):** `www.yespp.co.kr`
-- **Domain (defanged):** `out.php`
-- **Domain (defanged):** `node896147.dwservice.net`
-- **Domain (defanged):** `node828765.dwservice.net`
-- **Domain (defanged):** `node484265.dwservice.net`
-- **Domain (defanged):** `www.dwservice.net`
-- **Domain (defanged):** `naedomain.hankook`
-- **Domain (defanged):** `opedromos1.r-e.kr`
-- **Domain (defanged):** `morames.r-e.kr`
-- **Domain (defanged):** `load.ssangyongcne.o-r.kr`
-- **Domain (defanged):** `load.yju.o-r.kr`
-- **Domain (defanged):** `attach.docucloud.o-r.kr`
-- **Domain (defanged):** `load.supershop.o-r.kr`
-- **Domain (defanged):** `load.erasecloud.n-e.kr`
-- **Domain (defanged):** `cms.spaceyou.o-r.kr`
-- **Domain (defanged):** `erp.spaceme.p-e.kr`
-- **Domain (defanged):** `load.auraria.org`
-- **Domain (defanged):** `www.pyrotech.co.kr`
-- **Domain (defanged):** `newjo-imd.com`
-- **Domain (defanged):** `www.yespp.co`
-- **Domain (defanged):** `p-e.kr`
-- **Domain (defanged):** `o-r.kr`
-- **Domain (defanged):** `n-e.kr`
-- **Domain (defanged):** `r-e.kr`
-- **Domain (defanged):** `kro.kr`
-- **SHA1:** `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`
-- **SHA1:** `1e3c50d64110be466c0b4a45222e81d2c9352888`
 - **MD5:** `995a0a49ae4b244928b3f67e2bfd7a6e`
 - **MD5:** `52f1ff082e981cbdfd1f045c6021c63f`
 - **MD5:** `65fc9f06de5603e2c1af9b4f288bb22c`
 - **MD5:** `8e15c4d4f71bdd9dbc48cd2cabc87806`
 - **MD5:** `8983ffa6da23e0b99ccc58c17b9788c7`
-- **MD5:** `9fe43e08c8f446554340f972dac8a68c`
-- **MD5:** `c19aeaedbbfc4e029f7e9bdface495b9`
-- **MD5:** `a7f0a18ac87e982d6f32f7a715e12532`
-- **MD5:** `f4465403f9693939fe9c439f0ab33610`
-- **MD5:** `5c373c2116ab4a615e622f577e22e9be`
-- **MD5:** `d1ec20144c83bba921243e72c517da5e`
-- **MD5:** `58ac2f65e335922be3f60e57099dc8a3`
-- **MD5:** `f73ba062116ea9f37d072aa41c7f5108`
-- **MD5:** `7e0825019d0de0c1c4a1673f94043ddb`
-- **MD5:** `08160acf08fccecde7b34090db18b321`
-- **MD5:** `94faed9af49c98a89c8acc55e97276c9`
-- **MD5:** `c42ae004badddd3017adadbdd1421e00`
-- **MD5:** `9ca5f93a732f404bbb2cee848f5bbda0`
-- **MD5:** `678fb1a87af525c33ba2492552d5c0e2`
 
 ## MITRE ATT&CK Techniques
 
@@ -624,10 +581,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`, `file.bigcloud.n-e.kr`, `vscode.dev`, `www.yespp.co.kr`, `out.php`, `node896147.dwservice.net`, `node828765.dwservice.net`, `node484265.dwservice.net` _(+20 more)_
+  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`, `1e3c50d64110be466c0b4a45222e81d2c9352888`, `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`, `9fe43e08c8f446554340f972dac8a68c` _(+13 more)_
+  - file hash IOC(s): `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`
 
 
 ## Why this matters

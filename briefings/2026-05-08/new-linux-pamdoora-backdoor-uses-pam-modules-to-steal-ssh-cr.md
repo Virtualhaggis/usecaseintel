@@ -1,4 +1,4 @@
-# [CRIT] New Linux PamDOORa Backdoor Uses PAM Modules to Steal SSH Credentials
+# [HIGH] New Linux PamDOORa Backdoor Uses PAM Modules to Steal SSH Credentials
 
 **Source:** The Hacker News
 **Published:** 2026-05-08
@@ -13,13 +13,10 @@ The backdoor is designed as a Pluggable Authentication Module ( PAM )-based post
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -38,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Suspicious PAM module (.so) drop in /lib/security by non-package-manager process
 
-`UC_142_4` · phase: **install** · confidence: **High**
+`UC_142_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +60,7 @@ DeviceFileEvents
 
 ### [LLM] Linux authentication log tampering by non-syslog process (PamDOORa anti-forensic)
 
-`UC_142_5` · phase: **actions** · confidence: **Medium**
+`UC_142_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,14 +223,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

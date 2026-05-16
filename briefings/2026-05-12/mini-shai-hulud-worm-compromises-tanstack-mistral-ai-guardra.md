@@ -14,10 +14,10 @@ The affected npm packages have been modified to include an obfuscated JavaScript
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45321`
-- **CVE:** `CVE-2026-23918`
 - **IPv4 (defanged):** `83.142.209.194`
 - **Domain (defanged):** `filev2.getsession.org`
 - **Domain (defanged):** `api.masscan.cloud`
+- **Domain (defanged):** `git-tanstack.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -402,10 +402,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45321`, `CVE-2026-23918`
+  - CVE(s): `CVE-2026-45321`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `83.142.209.194`, `filev2.getsession.org`, `api.masscan.cloud`
+  - IP / domain IOC(s): `83.142.209.194`, `filev2.getsession.org`, `api.masscan.cloud`, `git-tanstack.com`
 
 
 ## Why this matters

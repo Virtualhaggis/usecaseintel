@@ -22,14 +22,13 @@ Affected Endpoint…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `2e8ea913573610667ad54e31dba2e8198ebf7cf9`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
@@ -44,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree
 
-`UC_121_4` · phase: **exploit** · confidence: **High**
+`UC_121_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source
 
-`UC_121_5` · phase: **delivery** · confidence: **Medium**
+`UC_121_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +133,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS
 
-`UC_121_3` · phase: **exploit** · confidence: **High**
+`UC_121_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,14 +180,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `2e8ea913573610667ad54e31dba2e8198ebf7cf9`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

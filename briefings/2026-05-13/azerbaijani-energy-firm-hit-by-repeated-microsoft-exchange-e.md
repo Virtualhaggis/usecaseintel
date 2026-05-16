@@ -13,13 +13,13 @@ The activity has been attributed by Bitdefender with moderate-to-high confidence
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
+- **Domain (defanged):** `sentinelonepro.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -38,6 +38,7 @@ The activity has been attributed by Bitdefender with moderate-to-high confidence
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 - **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
 - **T1505.003** — Server Software Component: Web Shell
+- **T1190** — Exploit Public-Facing Application
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
@@ -447,10 +448,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `sentinelonepro.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,4 +1,4 @@
-# [CRIT] Quasar Linux RAT Steals Developer Credentials for Software Supply Chain Compromise
+# [HIGH] Quasar Linux RAT Steals Developer Credentials for Software Supply Chain Compromise
 
 **Source:** The Hacker News
 **Published:** 2026-05-08
@@ -13,15 +13,12 @@ A previously undocumented Linux implant codenamed Quasar Linux RAT (QLNX) is tar
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -44,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] QLNX developer-credential fan-out: single process reading multiple secret files (.npmrc/.pypirc/.aws/.kube/.docker/.vault-token/.env)
 
-`UC_140_5` · phase: **actions** · confidence: **High**
+`UC_140_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +67,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX userland rootkit / PAM backdoor: write to /etc/ld.so.preload or PAM module directories
 
-`UC_140_6` · phase: **install** · confidence: **High**
+`UC_140_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +91,7 @@ DeviceFileEvents
 
 ### [LLM] QLNX shell-injection persistence: append to .bashrc / .bash_profile / .profile / /etc/profile.d by non-shell process
 
-`UC_140_7` · phase: **install** · confidence: **Medium**
+`UC_140_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -289,14 +286,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

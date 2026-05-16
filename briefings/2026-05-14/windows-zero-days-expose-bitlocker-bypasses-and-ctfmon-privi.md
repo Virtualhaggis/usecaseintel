@@ -15,7 +15,6 @@ The security defects have been codenamed YellowKey and GreenPlasma , respectivel
 
 - **CVE:** `CVE-2026-33825`
 - **CVE:** `CVE-2025-48804`
-- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -299,7 +298,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33825`, `CVE-2025-48804`, `CVE-2026-23918`
+  - CVE(s): `CVE-2026-33825`, `CVE-2025-48804`
 
 
 ## Why this matters

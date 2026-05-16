@@ -20,7 +20,6 @@ Because of this, vulnerabilities in the AI layer are no longer just a …
 
 - **CVE:** `CVE-2026-26030`
 - **CVE:** `CVE-2026-25592`
-- **CVE:** `CVE-2026-31431`
 
 ## MITRE ATT&CK Techniques
 
@@ -394,7 +393,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-26030`, `CVE-2026-25592`, `CVE-2026-31431`
+  - CVE(s): `CVE-2026-26030`, `CVE-2026-25592`
 
 
 ## Why this matters

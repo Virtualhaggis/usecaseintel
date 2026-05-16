@@ -14,18 +14,11 @@ May 11, 2026
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45321`
-- **Domain (defanged):** `filev2.getsession.org`
-- **SHA256:** `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2186c40aa`
-- **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
-- **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
-- **SHA1:** `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
-- **SHA1:** `d4323d4df104b026a6aa633fdb11d772146be0bf`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
@@ -53,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud Wave 4 (TanStack/TeamPCP) worm payload file created in node_modules
 
-`UC_117_12` · phase: **install** · confidence: **High**
+`UC_117_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +76,7 @@ DeviceFileEvents
 
 ### [LLM] Session/Oxen P2P exfil DNS or TCP to getsession.org from build/CI host
 
-`UC_117_13` · phase: **c2** · confidence: **High**
+`UC_117_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -406,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack
 
-`UC_117_11` · phase: **exploit** · confidence: **High**
+`UC_117_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -457,16 +450,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `filev2.getsession.org`
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-45321`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2186c40aa`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `79ac49eedf774dd4b0cfa308722bc463cfe5885c`, `d4323d4df104b026a6aa633fdb11d772146be0bf`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

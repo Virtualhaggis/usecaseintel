@@ -16,7 +16,6 @@ The vulnerability, tracked as CVE-2026-20182 , carries a CVSS score of 10.0.
 
 - **CVE:** `CVE-2026-20182`
 - **CVE:** `CVE-2026-20127`
-- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -277,7 +276,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-20182`, `CVE-2026-20127`, `CVE-2026-23918`
+  - CVE(s): `CVE-2026-20182`, `CVE-2026-20127`
 
 
 ## Why this matters

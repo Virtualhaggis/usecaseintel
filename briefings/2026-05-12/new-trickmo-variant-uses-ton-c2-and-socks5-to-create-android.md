@@ -1,4 +1,4 @@
-# [CRIT] New TrickMo Variant Uses TON C2 and SOCKS5 to Create Android Network Pivots
+# [HIGH] New TrickMo Variant Uses TON C2 and SOCKS5 to Create Android Network Pivots
 
 **Source:** The Hacker News
 **Published:** 2026-05-12
@@ -14,13 +14,12 @@ The new variant, observed by ThreatFabric between January and February 2026, has
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -44,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TrickMo C2 DNS resolution for TON overlay hostnames (.adnl / .bag / .ton)
 
-`UC_93_6` · phase: **c2** · confidence: **High**
+`UC_93_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +68,7 @@ DeviceEvents
 
 ### [LLM] TrickMo C dropper / payload Android package identifiers observed in telemetry
 
-`UC_93_7` · phase: **install** · confidence: **High**
+`UC_93_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -312,14 +311,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
