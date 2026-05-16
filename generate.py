@@ -7152,6 +7152,269 @@ body.view-home-active .stats-articles{display:none !important;}
   .home-browse-tiles.environment{grid-template-columns:1fr;}
 }
 
+/* =====================================================================
+   Round 2 — homepage refinement (enterprise confidence).
+   Adds: big hero search input + sample chips + live counts;
+         two-row trust strip (numeric tiles + qualitative chips + pill);
+         unified card radii + hover; subtle motion (hero stagger +
+         IntersectionObserver section reveal).  Reuses existing tokens.
+   ===================================================================== */
+
+/* ----- Hero typography polish + spacing bump -------------------------- */
+.home-hero{padding:104px 0 72px;}
+.home-headline{
+  font-size:clamp(36px, 5.0vw, 60px);
+  line-height:1.04;
+  letter-spacing:-0.030em;
+  margin-bottom:20px;
+}
+.home-headline .home-headline-2{
+  display:inline;
+  background:linear-gradient(180deg, #ffffff 0%, #c9cad0 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+}
+.home-sub{
+  font-size:18.5px; line-height:1.6;
+  margin-bottom:28px;
+  max-width:760px;
+  color:var(--muted);
+}
+.home-eyebrow{
+  font-size:10.5px; letter-spacing:0.16em; text-transform:uppercase;
+  margin-bottom:22px;
+}
+.home-section{padding:80px 0 8px;}
+.home-section-head{margin-bottom:32px;}
+.home-section-head h2{
+  font-size:28px; letter-spacing:-0.022em; font-weight:600;
+}
+.home-section-sub{font-size:14.5px; line-height:1.6;}
+
+/* ----- Big inline search input --------------------------------------- */
+.home-search{
+  display:flex; align-items:center; gap:10px;
+  padding:14px 18px;
+  background:var(--panel);
+  border:1px solid var(--border-2);
+  border-radius:12px;
+  box-shadow:0 1px 0 rgba(255,255,255,0.04) inset, 0 8px 24px rgba(0,0,0,0.20);
+  max-width:760px;
+  margin-bottom:14px;
+  transition:border-color 0.18s, box-shadow 0.18s;
+}
+.home-search:focus-within{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(113,112,255,0.18), 0 8px 24px rgba(0,0,0,0.24);
+}
+.home-search-glyph{
+  display:inline-flex; width:18px; height:18px; flex:none;
+  color:var(--muted);
+}
+.home-search-glyph svg{width:18px; height:18px;}
+.home-search-input{
+  flex:1 1 auto; min-width:0;
+  appearance:none;
+  background:transparent; border:0; outline:none;
+  color:var(--text);
+  font:500 16px/1.4 "Inter",sans-serif;
+  letter-spacing:-0.005em;
+  padding:2px 0;
+}
+.home-search-input::placeholder{color:var(--muted-2);}
+.home-search-enter{
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--muted-2);
+  padding:3px 8px;
+  border:1px solid var(--hairline);
+  border-radius:5px;
+  flex:none;
+}
+.home-search-counts{
+  margin:0 0 22px;
+  font-family:var(--mono);
+  font-size:12px;
+  color:var(--muted);
+  letter-spacing:-0.003em;
+}
+.home-search-counts strong{color:var(--text); font-weight:600;}
+
+/* ----- Sample-query chip row ----------------------------------------- */
+.home-sample-row{
+  display:flex; flex-wrap:wrap; align-items:center;
+  gap:8px;
+  margin-bottom:18px;
+  max-width:760px;
+}
+.home-sample-label{
+  font-family:var(--mono);
+  font-size:11px; letter-spacing:0.10em; text-transform:uppercase;
+  color:var(--muted-2);
+  margin-right:4px;
+}
+.home-sample-chip{
+  appearance:none; cursor:pointer;
+  font:500 12.5px/1 "Inter",sans-serif;
+  color:var(--text);
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:999px;
+  padding:6px 12px;
+  letter-spacing:-0.003em;
+  transition:border-color 0.16s, background-color 0.16s, color 0.16s, transform 0.12s;
+}
+.home-sample-chip:hover{
+  border-color:var(--accent);
+  color:var(--accent-2);
+  background:var(--panel-elev);
+  transform:translateY(-1px);
+}
+.home-sample-chip:focus-visible{
+  outline:2px solid var(--accent); outline-offset:2px;
+}
+
+/* ----- Trust strip --------------------------------------------------- */
+.home-trust-strip{
+  margin-top:28px;
+  padding:24px 0 0;
+  border-top:1px solid var(--hairline);
+}
+.home-trust-tiles{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:0;
+}
+.home-trust-tile{
+  padding:6px 24px 6px 0;
+  position:relative;
+}
+.home-trust-tile + .home-trust-tile{
+  border-left:1px solid var(--hairline);
+  padding-left:24px;
+}
+.home-trust-tile .num{
+  font-family:var(--mono);
+  font-size:34px;
+  font-weight:500;
+  letter-spacing:-0.015em;
+  color:var(--text);
+  line-height:1.1;
+}
+.home-trust-tile .lbl{
+  margin-top:6px;
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--muted);
+}
+.home-trust-chips{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-top:22px;
+}
+.home-trust-chip{
+  display:inline-flex; align-items:center; gap:6px;
+  padding:6px 12px 6px 8px;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--hairline);
+  border-radius:999px;
+  font:500 11.5px/1.2 "Inter",sans-serif;
+  color:var(--text);
+  letter-spacing:-0.003em;
+}
+.home-trust-chip svg{
+  width:12px; height:12px; flex:none;
+  color:var(--good);
+}
+.home-trust-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  margin-top:18px;
+  font-family:var(--mono);
+  font-size:11.5px;
+  color:var(--muted);
+  letter-spacing:0.005em;
+}
+.home-trust-pill .pulse{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--good);
+  box-shadow:0 0 0 3px rgba(76,183,130,0.18);
+}
+@media (prefers-reduced-motion: no-preference){
+  .home-trust-pill .pulse{animation:homePulse 2.4s ease-in-out infinite;}
+}
+
+/* ----- Card consistency — unify radius + hover lift ------------------ */
+.home-value-card,
+.home-feat-card,
+.home-platform-tile,
+.home-env-tile,
+.home-cred-card{
+  border-radius:10px;
+  transition:border-color 0.18s cubic-bezier(.2,.8,.2,1),
+             background-color 0.18s cubic-bezier(.2,.8,.2,1),
+             transform 0.18s cubic-bezier(.2,.8,.2,1),
+             box-shadow 0.18s cubic-bezier(.2,.8,.2,1);
+}
+.home-value-card:hover,
+.home-feat-card:hover,
+.home-platform-tile:hover,
+.home-env-tile:hover,
+.home-cred-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.20);
+}
+
+/* ----- Motion: hero stagger + section reveal ------------------------- */
+@media (prefers-reduced-motion: no-preference){
+  @keyframes home-rise-up{
+    from{opacity:0; transform:translateY(8px);}
+    to  {opacity:1; transform:translateY(0);}
+  }
+  .home-rise{
+    opacity:0;
+    animation:home-rise-up 0.46s cubic-bezier(.2,.8,.2,1) forwards;
+    animation-delay:var(--rise-delay, 0ms);
+  }
+  .home-section-reveal{
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity 0.5s cubic-bezier(.2,.8,.2,1),
+               transform 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+  .home-section-reveal.in-view{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .home-rise, .home-section-reveal{opacity:1; transform:none;}
+}
+
+/* ----- Round-2 responsive ------------------------------------------- */
+@media (max-width: 1080px){
+  .home-trust-tiles{grid-template-columns:repeat(2, 1fr);}
+  .home-trust-tile + .home-trust-tile{border-left:0; padding-left:0;}
+  .home-trust-tile:nth-child(odd){border-right:1px solid var(--hairline); padding-right:24px;}
+  .home-trust-tile:nth-child(n+3){
+    margin-top:16px; padding-top:16px; border-top:1px solid var(--hairline);
+  }
+}
+@media (max-width: 720px){
+  .home-hero{padding:56px 0 40px;}
+  .home-headline{font-size:32px; line-height:1.08;}
+  .home-headline .home-headline-2{display:inline;}
+  .home-sub{font-size:16px;}
+  .home-search{padding:10px 12px;}
+  .home-search-input{font-size:15px;}
+  .home-search-enter{display:none;}
+  .home-trust-tiles{grid-template-columns:repeat(2, 1fr);}
+  .home-trust-tile{padding:6px 12px 6px 0;}
+  .home-trust-tile + .home-trust-tile{padding-left:12px;}
+  .home-trust-tile .num{font-size:26px;}
+  .home-section{padding:56px 0 8px;}
+}
+
 </style>
 </head>
 <body>
@@ -9851,6 +10114,155 @@ document.addEventListener('click', e => {
     }, 60);
   }
 });
+
+// =================================================================
+// Home (front-door) — big inline search input.
+// Submit (Enter or sample-chip click) opens the existing rich
+// search palette with the query pre-applied. Keyup runs a debounced
+// live-count under the input so users see how many records match
+// before they commit.  Reuses MATRIX, INTEL, and ACTORS payloads
+// that are already in scope on this page; no new index built.
+// =================================================================
+(function homeSearchHero(){
+  const form     = document.getElementById('homeSearchForm');
+  const input    = document.getElementById('homeSearch');
+  const counts   = document.getElementById('homeSearchCounts');
+  if (!form || !input) return;
+
+  // Submit handler — routes to the existing site-wide search overlay.
+  function submitQuery(q){
+    q = (q || '').trim();
+    if (!q) { input.focus(); return; }
+    try {
+      history.replaceState(null, '',
+        '?q=' + encodeURIComponent(q) + location.hash);
+    } catch (_) {}
+    // Open the existing Ctrl-K palette with the query pre-applied. The
+    // overlay handles keyboard nav + grouped results — same surface
+    // power users already know.
+    const trig    = document.getElementById('searchTrigger');
+    const overlay = document.getElementById('searchOverlay');
+    const pInput  = document.getElementById('searchInput');
+    if (trig) trig.click();           // opens overlay
+    requestAnimationFrame(() => {
+      if (pInput) {
+        pInput.value = q;
+        pInput.dispatchEvent(new Event('input', {bubbles: true}));
+        pInput.focus();
+      }
+    });
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    submitQuery(input.value);
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter'){
+      e.preventDefault();
+      submitQuery(input.value);
+    }
+  });
+
+  // Sample-chip clicks share the same submit path.
+  document.addEventListener('click', e => {
+    const chip = e.target.closest('.home-sample-chip[data-home-search]');
+    if (!chip) return;
+    e.preventDefault();
+    const q = chip.getAttribute('data-home-search') || '';
+    input.value = q;
+    submitQuery(q);
+  });
+
+  // -------- Live-count under the input --------
+  function _liveCounts(q){
+    const ql = q.toLowerCase();
+    let artN = 0, ucN = 0, actorN = 0, iocN = 0;
+    if (window.MATRIX){
+      if (Array.isArray(MATRIX.arts)){
+        for (const a of MATRIX.arts){
+          const blob = ((a.t || '') + ' ' + (a.s || '') + ' ' +
+                        (Array.isArray(a.tt) ? a.tt.join(' ') : '') +
+                        ' ' + (Array.isArray(a.act) ? a.act.join(' ') : '')
+                       ).toLowerCase();
+          if (blob.indexOf(ql) !== -1) artN++;
+        }
+      }
+      if (Array.isArray(MATRIX.ucs)){
+        for (const uc of MATRIX.ucs){
+          const blob = ((uc.t || '') + ' ' + (uc.n || '') + ' ' +
+                        (Array.isArray(uc.techs) ? uc.techs.join(' ') : '') +
+                        ' ' + (uc.ph || '') + ' ' + (uc.src || '')
+                       ).toLowerCase();
+          if (blob.indexOf(ql) !== -1) ucN++;
+        }
+      }
+    }
+    if (Array.isArray(window.ACTORS)){
+      for (const ac of ACTORS){
+        const blob = ((ac.name || '') + ' ' +
+                      (Array.isArray(ac.aliases) ? ac.aliases.join(' ') : '') +
+                      ' ' + (ac.country || '') + ' ' + (ac.mitre_id || '')
+                     ).toLowerCase();
+        if (blob.indexOf(ql) !== -1) actorN++;
+      }
+    }
+    if (window.INTEL && Array.isArray(INTEL.iocs)){
+      for (const i of INTEL.iocs){
+        const blob = ((i.value || '') + ' ' + (i.type || '')).toLowerCase();
+        if (blob.indexOf(ql) !== -1) iocN++;
+        if (iocN > 9999) break;  // hard cap, large feed
+      }
+    }
+    return {arts: artN, ucs: ucN, actors: actorN, iocs: iocN};
+  }
+  let _liveT = 0;
+  input.addEventListener('input', () => {
+    const q = (input.value || '').trim();
+    clearTimeout(_liveT);
+    if (q.length < 2){
+      if (counts){ counts.hidden = true; counts.textContent = ''; }
+      return;
+    }
+    _liveT = setTimeout(() => {
+      if (!counts) return;
+      const c = _liveCounts(q);
+      const parts = [];
+      if (c.arts)   parts.push('<strong>' + c.arts.toLocaleString() + '</strong> articles');
+      if (c.ucs)    parts.push('<strong>' + c.ucs.toLocaleString() + '</strong> detections');
+      if (c.actors) parts.push('<strong>' + c.actors.toLocaleString() + '</strong> actors');
+      if (c.iocs)   parts.push('<strong>' + c.iocs.toLocaleString() + '</strong> IOCs');
+      if (!parts.length){
+        counts.innerHTML = 'No matches in the loaded library yet — press <strong>⏎</strong> to search the full corpus.';
+      } else {
+        counts.innerHTML = parts.join(' &nbsp;·&nbsp; ') +
+          ' match "<strong>' + q.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</strong>"';
+      }
+      counts.hidden = false;
+    }, 120);
+  });
+})();
+
+// =================================================================
+// Home — IntersectionObserver section reveal (one-shot fade-up).
+// Hero blocks use the CSS .home-rise stagger directly; below the
+// hero, each section is wrapped in .home-section-reveal so it can
+// fade up the first time it enters the viewport.
+// =================================================================
+(function homeSectionReveal(){
+  if (!('IntersectionObserver' in window)) return;
+  const reveal = document.querySelectorAll('.home-section-reveal');
+  if (!reveal.length) return;
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        en.target.classList.add('in-view');
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold: 0.12, rootMargin: '0px 0px -40px 0px'});
+  reveal.forEach(el => io.observe(el));
+})();
 
 // =================================================================
 // Welcome banner — permanent strapline. Only thing JS does here is

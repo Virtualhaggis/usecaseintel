@@ -20,95 +20,12 @@ Blog Vulnerabilities & Threats Persistent XSS/RCE using WebSockets in Storybook�
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1027** — Obfuscated Files or Information
-- **T1133** — External Remote Services
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1106** — Native API
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Storybook CVE-2026-27148 — story file written with JS injection markers in filename
-
-`UC_380_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\src\\stories\\*" OR Filesystem.file_path="*/src/stories/*") AND (Filesystem.file_name="*.stories.ts" OR Filesystem.file_name="*.stories.tsx" OR Filesystem.file_name="*.stories.js" OR Filesystem.file_name="*.stories.jsx" OR Filesystem.file_name="*.tsx" OR Filesystem.file_name="*.ts") AND (Filesystem.file_name="*';*" OR Filesystem.file_name="*document.domain*" OR Filesystem.file_name="*child_process*" OR Filesystem.file_name="*execSync*" OR Filesystem.file_name="*RCE_PROOF*" OR Filesystem.file_name="*alert(*" OR Filesystem.file_name="*require(*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where FolderPath has @"\src\stories\" or FolderPath has "/src/stories/"
-| where FileName endswith ".stories.ts" or FileName endswith ".stories.tsx"
-    or FileName endswith ".stories.js" or FileName endswith ".stories.jsx"
-    or FileName endswith ".tsx" or FileName endswith ".ts"
-    or FileName endswith ".jsx" or FileName endswith ".js"
-| where FileName has_any ("';", "document.domain", "child_process", "execSync", "RCE_PROOF", "alert(", "require(", "';var", "console.log('RCE")
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","node")
-   or InitiatingProcessCommandLine has_any ("storybook","@storybook/","storybook-server-channel")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Storybook dev server bound to non-loopback interface (publicly exposed CVE-2026-27148 attack surface)
-
-`UC_380_6` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Ports where All_Ports.dest_port=6006 AND All_Ports.transport="tcp" AND NOT (All_Ports.dest IN ("127.0.0.1","::1","localhost")) by All_Ports.dest All_Ports.user All_Ports.process_name All_Ports.process_guid | `drop_dm_object_name(All_Ports)` | join type=left process_guid [| tstats `summariesonly` values(Processes.process) as process_cmd from datamodel=Endpoint.Processes where (Processes.process="*storybook*" OR Processes.process="*@storybook/*" OR Processes.process="*start-storybook*") by Processes.process_guid | `drop_dm_object_name(Processes)`] | where isnotnull(process_cmd) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType == "ListeningConnectionCreated"
-| where LocalPort == 6006
-| where LocalIP !startswith "127." and LocalIP != "::1"
-| where InitiatingProcessFileName has_any ("node","node.exe")
-   or InitiatingProcessCommandLine has_any ("storybook","@storybook/","start-storybook","storybook dev")
-| extend Internet_Bound = iff(LocalIP == "0.0.0.0" or LocalIP == "::", "all-interfaces", "specific")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, LocalIP, LocalPort, Internet_Bound,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### [LLM] Node test runner (Vitest/Jest) spawning OS shell or recon binary from Storybook context
-
-`UC_380_7` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node","npx.exe","npm.exe","pnpm.exe","yarn.exe") AND (Processes.parent_process="*vitest*" OR Processes.parent_process="*jest*" OR Processes.parent_process="*storybook*" OR Processes.parent_process="*portable-stories*" OR Processes.parent_process="*\\src\\stories\\*" OR Processes.parent_process="*/src/stories/*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe","whoami.exe","hostname.exe","wmic.exe","curl.exe","wget.exe","net.exe","reg.exe") by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe","node","npx.exe","npm.exe","pnpm.exe","yarn.exe")
-| where InitiatingProcessCommandLine has_any ("vitest","jest","storybook","portable-stories",@"\src\stories\","/src/stories/","@storybook/")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe","whoami.exe","hostname.exe","wmic.exe","curl.exe","wget.exe","net.exe","reg.exe","ipconfig.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -252,4 +169,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

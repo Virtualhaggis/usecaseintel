@@ -10,8 +10,8 @@ Back to Blog Threat Intel CanisterSprawl: pgserve Compromised on npm: Malicious 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `telemetry.api-monitor.com`
 - **Domain (defanged):** `cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io`
+- **Domain (defanged):** `telemetry.api-monitor.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -196,7 +196,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `telemetry.api-monitor.com`, `cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io`
+  - IP / domain IOC(s): `cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io`, `telemetry.api-monitor.com`
 
 
 ## Why this matters

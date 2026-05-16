@@ -14,6 +14,7 @@ On April 7,…
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `89.36.224.5`
+- **Domain (defanged):** `install.sh`
 
 ## MITRE ATT&CK Techniques
 
@@ -22,91 +23,12 @@ On April 7,…
 - **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1543.004** — Create or Modify System Process: Launch Daemon
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1105** — Ingress Tool Transfer
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] macOS launchctl persistence registering 'zsh.profiler' from @velora-dex/sdk backdoor
-
-`UC_297_4` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=launchctl AND (Processes.process="*zsh.profiler*" OR Processes.process="*com.apple.Terminal/profiler*") by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name, Processes.process, Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "launchctl"
-| where ProcessCommandLine has "zsh.profiler"
-   or ProcessCommandLine has @"Library/Application Support/com.apple.Terminal/profiler"
-| project Timestamp, DeviceName, AccountName, FileName,
-          ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### [LLM] Node.js child spawns shell with base64 payload or curl to velora-dex C2 89.36.224.5
-
-`UC_297_5` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (node, npm) AND (Processes.process="*89.36.224.5*" OR Processes.process="*bm9odXAgYmFzaCAtYyAiJChjdXJsIC1mc1NMIGh0dHA6Ly84OS4zNi4yMjQuNS*" OR Processes.process="*troubleshoot/mac/install.sh*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node","npm","npx","yarn","pnpm")
-   or InitiatingProcessParentFileName in~ ("node","npm")
-| where ProcessCommandLine has_any (
-    "89.36.224.5",
-    "bm9odXAgYmFzaCAtYyAiJChjdXJsIC1mc1NMIGh0dHA6Ly84OS4zNi4yMjQuNS",
-    "troubleshoot/mac/install.sh",
-    "mac/arm/driver/profiler",
-    "mac/intel/driver/profiler")
-| project Timestamp, DeviceName, AccountName, FileName,
-          ProcessCommandLine, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] Outbound network connection to velora-dex C2 IP 89.36.224.5
-
-`UC_297_6` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app values(All_Traffic.src) as src_hosts from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="89.36.224.5" by All_Traffic.src, All_Traffic.dest, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "89.36.224.5"
-| project Timestamp, DeviceName, ActionType,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName,
-          RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -221,9 +143,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `89.36.224.5`
+  - IP / domain IOC(s): `89.36.224.5`, `install.sh`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

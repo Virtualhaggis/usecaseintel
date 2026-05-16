@@ -28,92 +28,12 @@ April 30, 2026
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1105** — Ingress Tool Transfer
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1098** — Account Manipulation
-- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] lightning PyPI compromise artifacts: start.py / router_runtime.js write
-
-`UC_233_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2","5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1","56070a9d8de0c0ffb1ec5c309953cf4679432df5a78df9aeb020fbb73d2be9fb")) OR ((Filesystem.file_name="start.py" OR Filesystem.file_name="router_runtime.js") AND (Filesystem.file_path="*\\lightning\\_runtime\\*" OR Filesystem.file_path="*/lightning/_runtime/*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where SHA256 in~ (
-    "8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2",
-    "5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1",
-    "56070a9d8de0c0ffb1ec5c309953cf4679432df5a78df9aeb020fbb73d2be9fb"
-  )
-  or (FileName in~ ("start.py","router_runtime.js")
-      and (FolderPath has @"\lightning\_runtime\" or FolderPath has "/lightning/_runtime/"))
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] Python child process executing lightning _runtime/start.py bootstrapper
-
-`UC_233_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","pythonw.exe","python","python3","python3.exe") AND (Processes.process="*lightning\\_runtime\\start.py*" OR Processes.process="*lightning/_runtime/start.py*") by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("python.exe","pythonw.exe","python","python3","python3.exe")
-| where ProcessCommandLine matches regex @"(?i)lightning[\\/]_runtime[\\/]start\.py"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Shai-Hulud style repository poisoning — .claude/router_runtime.js drop
-
-`UC_233_9` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified") AND (Filesystem.file_path="*\\.claude\\router_runtime.js" OR Filesystem.file_path="*/.claude/router_runtime.js" OR Filesystem.file_path="*\\.claude\\setup.mjs" OR Filesystem.file_path="*/.claude/setup.mjs" OR Filesystem.file_path="*\\.vscode\\setup.mjs" OR Filesystem.file_path="*/.vscode/setup.mjs" OR Filesystem.file_path="*\\.github\\workflows\\format-check.yml" OR Filesystem.file_path="*/.github/workflows/format-check.yml") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has @"\.claude\" and FileName in~ ("router_runtime.js","setup.mjs","settings.json"))
-    or (FolderPath has "/.claude/" and FileName in~ ("router_runtime.js","setup.mjs","settings.json"))
-    or (FolderPath has @"\.vscode\" and FileName =~ "setup.mjs")
-    or (FolderPath has "/.vscode/" and FileName =~ "setup.mjs")
-    or (FolderPath has @"\.github\workflows\" and FileName =~ "format-check.yml")
-    or (FolderPath has "/.github/workflows/" and FileName =~ "format-check.yml")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
 
 ### OAuth consent / suspicious app grant
 
@@ -367,4 +287,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

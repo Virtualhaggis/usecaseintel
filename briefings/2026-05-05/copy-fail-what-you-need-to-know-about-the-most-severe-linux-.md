@@ -30,6 +30,18 @@ On April 29, 2026, res…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-31431`
+- **CVE:** `CVE-2026-314331`
+- **CVE:** `CVE-2023-33538`
+- **CVE:** `CVE-2026-1731`
+- **CVE:** `CVE-2026-1281`
+- **CVE:** `CVE-2026-1340`
+- **CVE:** `CVE-2025-0921`
+- **CVE:** `CVE-2025-14847`
+- **CVE:** `CVE-2025-23304`
+- **CVE:** `CVE-2026-22584`
+- **CVE:** `CVE-2025-55182`
+- **CVE:** `CVE-2025-66478`
+- **CVE:** `CVE-2025-21042`
 
 ## MITRE ATT&CK Techniques
 
@@ -41,68 +53,12 @@ On April 29, 2026, res…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1105** — Ingress Tool Transfer
-- **T1588.005** — Obtain Capabilities: Exploits
-- **T1068** — Exploitation for Privilege Escalation
-- **T1611** — Escape to Host
-- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Copy Fail (CVE-2026-31431) PoC retrieval from copy.fail/exp
-
-`UC_200_5` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as commands values(Processes.parent_process_name) as parents values(Processes.process_path) as image_paths from datamodel=Endpoint.Processes where Processes.os=Linux Processes.process_name IN ("curl","wget","python","python2","python3","python3.8","python3.9","python3.10","python3.11","python3.12") Processes.process="*copy.fail*" by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFolderPath has "/" or FolderPath has "/"   // crude Linux scope
-| where (FileName in~ ("curl","wget","python","python2","python3","python3.8","python3.9","python3.10","python3.11","python3.12")
-         and ProcessCommandLine has "copy.fail")
-     or (InitiatingProcessFileName in~ ("curl","wget","python","python2","python3","python3.8","python3.9","python3.10","python3.11","python3.12")
-         and InitiatingProcessCommandLine has "copy.fail")
-| project Timestamp, DeviceName, AccountName, AccountSid,
-          FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Copy Fail (CVE-2026-31431) - Python interpreter spawning su/sudo/passwd as non-root
-
-`UC_200_6` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmds values(Processes.parent_process) as parent_cmds values(Processes.process_path) as child_paths values(Processes.parent_process_path) as parent_paths from datamodel=Endpoint.Processes where Processes.os=Linux Processes.parent_process_name IN ("python","python2","python3","python3.6","python3.7","python3.8","python3.9","python3.10","python3.11","python3.12") Processes.process_name IN ("su","sudo","passwd") Processes.user!="root" Processes.user!="0" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName matches regex @"(?i)^python(\d(\.\d+)?)?$"
-| where FileName in~ ("su","sudo","passwd")
-| where AccountName !in~ ("root")
-| where AccountSid != "0"
-| project Timestamp, DeviceName, AccountName, AccountSid,
-          ChildBin = FileName, ChildCmd = ProcessCommandLine,
-          ParentBin = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentPath = InitiatingProcessFolderPath,
-          GrandParent = InitiatingProcessParentFileName
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -238,9 +194,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-31431`
+  - CVE(s): `CVE-2026-31431`, `CVE-2026-314331`, `CVE-2023-33538`, `CVE-2026-1731`, `CVE-2026-1281`, `CVE-2026-1340`, `CVE-2025-0921`, `CVE-2025-14847` _(+5 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

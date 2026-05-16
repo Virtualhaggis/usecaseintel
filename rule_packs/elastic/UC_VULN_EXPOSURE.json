@@ -38,7 +38,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\n// TVM tables are daily snapshots \u2014 pin a 1-day window so the engine\n// partitions on Timestamp instead of scanning the full retention.\nDeviceTvmSoftwareVulnerabilities\n| where Timestamp > ago(1d)\n| where CveId in~ (__CVE_LIST__)\n| join kind=inner (DeviceInfo | where Timestamp > ago(1d)) on DeviceId\n| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate\n| order by VulnerabilitySeverityLevel asc, DeviceName asc\n\n```",
   "references": [
-    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/recon/UC_VULN_EXPOSURE.yml"
+    "https://clankerusecase.com/use_cases/recon/UC_VULN_EXPOSURE.yml"
   ],
   "meta": {
     "tier": "alerting",

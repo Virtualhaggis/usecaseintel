@@ -38,102 +38,12 @@ The attack exploits CVE-2026-41940 , a vulnerability impacting cPanel and WebHos
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1546** — Event Triggered Execution
-- **T1105** — Ingress Tool Transfer
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1041** — Exfiltration Over C2 Channel
-- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Mini Shai-Hulud npm Worm — Bun executes tanstack_runner.js / router_init.js via npm lifecycle hook
-
-`UC_105_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.cmd","npm","node","yarn","yarn.cmd","pnpm","pnpm.cmd","sh","bash","cmd.exe") OR Processes.parent_process IN ("*npm install*","*npm ci*","*yarn install*","*pnpm install*")) Processes.process_name IN ("bun.exe","bun") (Processes.process="*tanstack_runner.js*" OR Processes.process="*router_init.js*" OR Processes.process="*router_runtime.js*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("bun.exe","bun")
-| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","node","npm","yarn","yarn.cmd","pnpm","pnpm.cmd","sh","bash","cmd.exe")
-   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","pnpm install","prepare","preinstall")
-| where ProcessCommandLine has_any ("tanstack_runner.js","router_init.js","router_runtime.js")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud worm payload file written to disk (router_init.js / tanstack_runner.js by SHA-256 or name)
-
-`UC_105_11` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c","2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96") OR Filesystem.file_name IN ("router_init.js","router_runtime.js","tanstack_runner.js")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search (file_path="*node_modules*" OR file_path="*\\.npm\\*" OR file_path="*/.npm/*" OR file_path="*\\AppData\\Local\\npm-cache*" OR file_hash!="") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (SHA256 in~ ("ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c",
-                    "2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96"))
-     or (FileName in~ ("router_init.js","router_runtime.js","tanstack_runner.js")
-         and (FolderPath has "node_modules"
-              or FolderPath has @"\.npm\"
-              or FolderPath has "/.npm/"
-              or FolderPath has "npm-cache"
-              or InitiatingProcessFileName in~ ("node.exe","npm.cmd","bun.exe","yarn.cmd","pnpm.cmd")))
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud — Bun-spawned process touches AWS IMDS / K8s Vault / getsession.org during npm install
-
-`UC_105_12` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("bun.exe","bun") OR All_Traffic.process_name IN ("bun.exe","bun")) (All_Traffic.dest="169.254.169.254" OR All_Traffic.dest="fd00:ec2::254" OR All_Traffic.dest_host="*filev2.getsession.org*" OR All_Traffic.dest_host="*vault.svc.cluster.local*" OR All_Traffic.url="*filev2.getsession.org*" OR All_Traffic.url="*vault.svc.cluster.local*") by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest All_Traffic.dest_host All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let bun_procs = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName in~ ("bun.exe","bun")
-    | where InitiatingProcessFileName in~ ("node.exe","npm.cmd","node","npm","yarn.cmd","pnpm.cmd","sh","bash")
-         or ProcessCommandLine has_any ("tanstack_runner.js","router_init.js","router_runtime.js","prepare","preinstall")
-    | project ProcStart = Timestamp, DeviceId, BunPid = ProcessId, BunCmd = ProcessCommandLine;
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("bun.exe","bun")
-| where RemoteIP == "169.254.169.254"
-     or RemoteUrl has_any ("filev2.getsession.org","vault.svc.cluster.local","169.254.169.254")
-| join kind=inner bun_procs on $left.DeviceId == $right.DeviceId, $left.InitiatingProcessId == $right.BunPid
-| where Timestamp between (ProcStart .. ProcStart + 10m)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine = BunCmd,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -439,4 +349,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -16,6 +16,7 @@ Active since at least 2016, Ghostwriter has been linked to both cyber espionage 
 - **CVE:** `CVE-2023-38831`
 - **CVE:** `CVE-2024-42009`
 - **CVE:** `CVE-2025-8088`
+- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -278,7 +279,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2023-38831`, `CVE-2024-42009`, `CVE-2025-8088`
+  - CVE(s): `CVE-2023-38831`, `CVE-2024-42009`, `CVE-2025-8088`, `CVE-2026-23918`
 
 
 ## Why this matters

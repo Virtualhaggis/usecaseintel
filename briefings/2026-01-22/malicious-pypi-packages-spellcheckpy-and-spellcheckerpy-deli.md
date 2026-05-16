@@ -13,8 +13,10 @@ Hidden ins…
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `172.86.73.139`
+- **IPv4 (defanged):** `172.86.73.0`
 - **Domain (defanged):** `updatenet.work`
 - **Domain (defanged):** `dothebest.store`
+- **Domain (defanged):** `cloudzy.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -33,103 +35,12 @@ Hidden ins…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1573** — Encrypted Channel
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1564.010** — Hide Artifacts: Process Argument Spoofing
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] spellcheckpy/spellcheckerpy RAT C2 callback to updatenet.work (172.86.73.139)
-
-`UC_477_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as user_agents from datamodel=Web where Web.url="*updatenet.work*" OR Web.site IN ("updatenet.work","www.updatenet.work") OR Web.dest="172.86.73.139" by Web.src Web.user Web.dest Web.site | `drop_dm_object_name(Web)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.dest_ip="172.86.73.139" OR Network_Traffic.dest="172.86.73.139" by Network_Traffic.src Network_Traffic.dest_ip Network_Traffic.dest_port Network_Traffic.app | `drop_dm_object_name(Network_Traffic)` ] | append [ | tstats summariesonly=true count from datamodel=Network_Resolution where Network_Resolution.query IN ("updatenet.work","*.updatenet.work","dothebest.store","*.dothebest.store") by Network_Resolution.src Network_Resolution.query Network_Resolution.answer | `drop_dm_object_name(Network_Resolution)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _c2_domains = dynamic(["updatenet.work","dothebest.store"]);
-let _c2_ips = dynamic(["172.86.73.139"]);
-let _c2_urls = dynamic(["updatenet.work/settings/history.php","updatenet.work/update1.php"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (isnotempty(RemoteUrl) and (RemoteUrl has_any (_c2_domains) or RemoteUrl has_any (_c2_urls)))
-   or RemoteIP in (_c2_ips)
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
-| order by Timestamp desc
-```
-
-### [LLM] Installation footprint of malicious PyPI packages spellcheckpy / spellcheckerpy
-
-`UC_477_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where (Processes.process="*spellcheckpy*" OR Processes.process="*spellcheckerpy*") AND (Processes.process_name IN ("pip","pip.exe","pip3","pip3.exe","python","python.exe","python3","python3.exe","uv","uv.exe","poetry","poetry.exe","pipx","pipx.exe") OR Processes.parent_process_name IN ("pip","pip.exe","pip3","pip3.exe","python","python.exe","python3","python3.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*spellcheckpy*" OR Filesystem.file_path="*spellcheckerpy*" OR Filesystem.file_path="*/spellcheckpy/resources/eu.json.gz" OR Filesystem.file_path="*\\spellcheckpy\\resources\\eu.json.gz" OR Filesystem.file_path="*/spellcheckerpy/resources/eu.json.gz") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _bad_packages = dynamic(["spellcheckpy","spellcheckerpy"]);
-union isfuzzy=true
-    ( DeviceProcessEvents
-        | where Timestamp > ago(30d)
-        | where ProcessCommandLine has_any (_bad_packages)
-        | where FileName in~ ("pip","pip.exe","pip3","pip3.exe","python","python.exe","python3","python3.exe","uv","uv.exe","poetry","poetry.exe","pipx","pipx.exe")
-           or InitiatingProcessFileName in~ ("pip","pip.exe","pip3","pip3.exe","python","python.exe","python3","python3.exe")
-           or ProcessCommandLine has_any ("pip install","pip3 install","uv pip install","poetry add","pipx install")
-        | project Timestamp, DeviceName, AccountName, EvidenceType="ProcessExecution",
-                  FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine ),
-    ( DeviceFileEvents
-        | where Timestamp > ago(30d)
-        | where (FolderPath has_any (_bad_packages) or FileName has_any (_bad_packages))
-           or (FolderPath has_any ("spellcheckpy\\resources","spellcheckpy/resources","spellcheckerpy\\resources","spellcheckerpy/resources")
-               and FileName =~ "eu.json.gz")
-        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EvidenceType="FileWrite",
-                  FileName=FileName, ProcessCommandLine=InitiatingProcessCommandLine,
-                  InitiatingProcessFileName, InitiatingProcessCommandLine=FolderPath )
-| order by Timestamp desc
-```
-
-### [LLM] Python spawning python with stdin payload (-) and detached session - spellcheckpy RAT stage-2
-
-`UC_477_12` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python.exe","python3","python3.exe","python3.9","python3.10","python3.11","python3.12")) AND (Processes.process_name IN ("python","python.exe","python3","python3.exe","python3.9","python3.10","python3.11","python3.12")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | rex field=process "(?i)python[0-9.]*(?:\.exe)?\s+(?<argv>.*)$" | where match(argv, "^-\s*$") OR match(argv, "^- ") OR argv="-" | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _py_names = dynamic(["python","python.exe","python3","python3.exe","python3.9","python3.10","python3.11","python3.12","python3.13"]);
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ (_py_names)
-| where FileName in~ (_py_names)
-| extend CmdTrim = trim(@"\s+", tostring(ProcessCommandLine))
-| where CmdTrim matches regex @"(?i)(^|[\\/\"' ])python[0-9.]*(\.exe)?[\"']?\s+-\s*$"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine,
-          ChildImage=FolderPath, ChildCmd=ProcessCommandLine,
-          InitiatingProcessParentFileName
-| join kind=leftouter (
-    DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where RemoteUrl has_any ("updatenet.work","dothebest.store") or RemoteIP == "172.86.73.139"
-    | project DeviceId, NetTime=Timestamp, RemoteUrl, RemoteIP
-   ) on $left.DeviceName == $right.DeviceId
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -416,9 +327,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `172.86.73.139`, `updatenet.work`, `dothebest.store`
+  - IP / domain IOC(s): `172.86.73.139`, `172.86.73.0`, `updatenet.work`, `dothebest.store`, `cloudzy.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

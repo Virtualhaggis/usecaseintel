@@ -12,6 +12,7 @@ Back to Blog Threat Intel CanisterWorm: How a Self-Propagating npm Worm Is Sprea
 
 - **Domain (defanged):** `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`
 - **Domain (defanged):** `scan.aquasecurtiy.org`
+- **Domain (defanged):** `aquasecurity.org`
 
 ## MITRE ATT&CK Techniques
 
@@ -287,7 +288,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `scan.aquasecurtiy.org`
+  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `scan.aquasecurtiy.org`, `aquasecurity.org`
 
 
 ## Why this matters

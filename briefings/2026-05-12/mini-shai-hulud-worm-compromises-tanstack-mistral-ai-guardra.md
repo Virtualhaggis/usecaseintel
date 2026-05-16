@@ -14,10 +14,10 @@ The affected npm packages have been modified to include an obfuscated JavaScript
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45321`
+- **CVE:** `CVE-2026-23918`
 - **IPv4 (defanged):** `83.142.209.194`
 - **Domain (defanged):** `filev2.getsession.org`
 - **Domain (defanged):** `api.masscan.cloud`
-- **Domain (defanged):** `git-tanstack.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,120 +32,12 @@ The affected npm packages have been modified to include an obfuscated JavaScript
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1567** — Exfiltration Over Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1105** — Ingress Tool Transfer
-- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Mini Shai-Hulud / TeamPCP exfil to getsession.org, masscan.cloud, git-tanstack.com or 83.142.209.194
-
-`UC_94_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.194" OR All_Traffic.dest_ip="83.142.209.194" by All_Traffic.src host All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| append [
-    | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dns_resolver from datamodel=Network_Resolution.DNS where DNS.query IN ("filev2.getsession.org","*.filev2.getsession.org","api.masscan.cloud","*.api.masscan.cloud","git-tanstack.com","*.git-tanstack.com") by DNS.query host
-    | `drop_dm_object_name(DNS)` ]
-| append [
-    | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.user) as user from datamodel=Web.Web where Web.url="*filev2.getsession.org*" OR Web.url="*api.masscan.cloud*" OR Web.url="*git-tanstack.com*" OR Web.dest="83.142.209.194" by Web.src Web.dest host
-    | `drop_dm_object_name(Web)` ]
-| eval campaign="Mini Shai-Hulud / TeamPCP (CVE-2026-45321)"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// Mini Shai-Hulud / TeamPCP egress — Microsoft Defender XDR
-let _campaignDomains = dynamic(["filev2.getsession.org","api.masscan.cloud","git-tanstack.com"]);
-let _campaignIPs = dynamic(["83.142.209.194"]);
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where (isnotempty(RemoteUrl) and RemoteUrl has_any (_campaignDomains))
-    or RemoteIP in (_campaignIPs)
-| project Timestamp, DeviceName, DeviceId,
-          InitiatingProcessAccountName, InitiatingProcessAccountDomain,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RemoteUrl, RemoteIP, RemotePort, Protocol, ActionType,
-          Campaign = "Mini Shai-Hulud / TeamPCP (CVE-2026-45321)"
-| order by Timestamp desc
-```
-
-### [LLM] guardrails-ai 0.10.1 stealer: python3 executes /tmp/transformers.pyz on Linux
-
-`UC_94_9` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_proc values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python3.8","python3.9","python3.10","python3.11","python3.12") AND (Processes.process="*/tmp/transformers.pyz*" OR Processes.process="*transformers.pyz*") by Processes.dest Processes.process_name host
-| `drop_dm_object_name(Processes)`
-| eval campaign="Mini Shai-Hulud — guardrails-ai@0.10.1 (Socket)"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// guardrails-ai 0.10.1 stealer execution — Defender XDR (Linux MDE)
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName matches regex @"(?i)^python(3(\.[0-9]+)?)?$"
-| where ProcessCommandLine has "transformers.pyz"
-   and (ProcessCommandLine has "/tmp/" or ProcessCommandLine has @"\tmp\")
-| project Timestamp, DeviceName, DeviceId,
-          AccountName, AccountDomain,
-          FileName, FolderPath, ProcessCommandLine, ProcessId, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          Campaign = "Mini Shai-Hulud — guardrails-ai@0.10.1"
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud npm worm artifact: router_init.js written into node_modules
-
-`UC_94_10` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where Filesystem.file_name="router_init.js" AND Filesystem.action IN ("created","modified","write") by Filesystem.dest host
-| `drop_dm_object_name(Filesystem)`
-| eval campaign="Mini Shai-Hulud / TeamPCP — npm worm payload"
-| eval triage_pivot="Examine paths for node_modules/@tanstack, @squawk, @tallyui, @opensearch-project, uipath, draftlab; pivot to DeviceNetworkEvents for filev2.getsession.org"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// router_init.js drop — Defender XDR
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName =~ "router_init.js"
-| extend SuspiciousScope = case(
-    FolderPath has @"\node_modules\" or FolderPath has "/node_modules/", "node_modules drop (likely worm)",
-    FolderPath has @"\@tanstack\" or FolderPath has "/@tanstack/", "TanStack package directory",
-    FolderPath has @"\@squawk\" or FolderPath has @"\@tallyui\" or FolderPath has @"\@opensearch-project\", "Other compromised maintainer namespace",
-    "other — review manually")
-| project Timestamp, DeviceName, DeviceId,
-          FileName, FolderPath, SHA256, FileSize,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          SuspiciousScope,
-          Campaign = "Mini Shai-Hulud / TeamPCP — CVE-2026-45321"
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -402,12 +294,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45321`
+  - CVE(s): `CVE-2026-45321`, `CVE-2026-23918`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `83.142.209.194`, `filev2.getsession.org`, `api.masscan.cloud`, `git-tanstack.com`
+  - IP / domain IOC(s): `83.142.209.194`, `filev2.getsession.org`, `api.masscan.cloud`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

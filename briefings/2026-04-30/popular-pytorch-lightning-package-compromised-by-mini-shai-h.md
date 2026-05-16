@@ -22,89 +22,12 @@ Thi…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1129** — Shared Modules
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1555** — Credentials from Password Stores
-- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Mini Shai-Hulud: Python subprocess spawns `_runtime/start.py` from lightning site-packages
-
-`UC_228_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","python","python3")) AND Processes.process="*start.py*" AND Processes.process="*_runtime*" AND (Processes.process="*lightning*" OR Processes.parent_process="*lightning*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","python","python3")
-| where ProcessCommandLine has "start.py"
-| where ProcessCommandLine has "_runtime"
-| where ProcessCommandLine has "lightning" or InitiatingProcessCommandLine has "lightning" or FolderPath has "lightning" or InitiatingProcessFolderPath has "lightning"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud PyPI payload known SHA256 (start.py / router_runtime.js)
-
-`UC_228_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1","8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_hash IN ("5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1","8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let _badHashes = dynamic([
-    "5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1",
-    "8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2"]);
-union
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (_badHashes)
-  | project Timestamp, DeviceName, Src="DeviceFileEvents", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (_badHashes) or InitiatingProcessSHA256 in (_badHashes)
-  | project Timestamp, DeviceName, Src="DeviceProcessEvents", ActionType="ProcessCreated", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName),
-(DeviceImageLoadEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (_badHashes)
-  | project Timestamp, DeviceName, Src="DeviceImageLoadEvents", ActionType="ImageLoaded", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud: Bun runtime executing `router_runtime.js` (2nd-stage stealer)
-
-`UC_228_7` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("bun","bun.exe") OR Processes.process="*\\bun.exe*" OR Processes.process="*/bun *") AND (Processes.process="*router_runtime.js*" OR Processes.process="*router_init.js*" OR Processes.process="*tanstack_runner.js*" OR Processes.process="*_runtime*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("bun.exe","bun") or InitiatingProcessFileName in~ ("bun.exe","bun")
-| where ProcessCommandLine has_any ("router_runtime.js","router_init.js","tanstack_runner.js") or ProcessCommandLine has "_runtime" or InitiatingProcessCommandLine has_any ("router_runtime.js","router_init.js")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -243,4 +166,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

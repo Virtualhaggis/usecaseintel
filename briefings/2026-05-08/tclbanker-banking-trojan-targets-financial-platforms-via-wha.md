@@ -35,97 +35,12 @@ The activity is being tracked by Elastic Security Labs under the moniker REF3076
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1218.007** — System Binary Proxy Execution: Msiexec
-- **T1566.001** — Phishing: Spearphishing Attachment
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] TCLBANKER side-load: screen_retriever_plugin.dll loaded by LogiAiPromptBuilder.exe outside Program Files
-
-`UC_132_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_name="screen_retriever_plugin.dll" (Filesystem.process_name IN ("logiaipromptbuilder.exe","tclloader.exe")) NOT (Filesystem.file_path IN ("*\\Program Files\\Logi*","*\\Program Files (x86)\\Logi*")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "screen_retriever_plugin.dll"
-| where InitiatingProcessFileName in~ ("logiaipromptbuilder.exe", "tclloader.exe")
-| where not(FolderPath startswith @"C:\Program Files\")
-    and not(FolderPath startswith @"C:\Program Files (x86)\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          LoaderImage = InitiatingProcessFolderPath,
-          LoaderCmd   = InitiatingProcessCommandLine,
-          LoadedDll   = FolderPath,
-          DllSHA256   = SHA256,
-          LoaderSHA256 = InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### [LLM] Logi AI Prompt Builder spawned from user-writable path by msiexec.exe (TCLBANKER ZIP-MSI delivery)
-
-`UC_132_11` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="logiaipromptbuilder.exe" Processes.parent_process_name="msiexec.exe" (Processes.process_path IN ("*\\AppData\\Local\\Temp\\*","*\\AppData\\Roaming\\*","*\\Downloads\\*","*\\ProgramData\\*","*\\Users\\Public\\*","*\\Windows\\Temp\\*")) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "logiaipromptbuilder.exe"
-| where InitiatingProcessFileName =~ "msiexec.exe"
-| where FolderPath has_any (
-    @"\AppData\Local\Temp\",
-    @"\AppData\Roaming\",
-    @"\Downloads\",
-    @"\ProgramData\",
-    @"\Users\Public\",
-    @"\Windows\Temp\"
-  )
-| project Timestamp, DeviceName, AccountName,
-          ChildPath = FolderPath,
-          ChildCmd  = ProcessCommandLine,
-          ParentCmd = InitiatingProcessCommandLine,
-          MsiHash   = InitiatingProcessSHA256,
-          ChildHash = SHA256
-| order by Timestamp desc
-```
-
-### [LLM] TCLBANKER developer-named loader binary tclloader.exe execution
-
-`UC_132_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="tclloader.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "tclloader.exe"
-| project Timestamp, DeviceName, AccountName,
-          FolderPath, ProcessCommandLine,
-          ParentName = InitiatingProcessFileName,
-          ParentCmd  = InitiatingProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -478,4 +393,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

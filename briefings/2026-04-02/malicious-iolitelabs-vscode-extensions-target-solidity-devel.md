@@ -13,8 +13,18 @@ Back to Blog Threat Intel Malicious IoliteLabs VSCode Extensions Target Solidity
 - **Domain (defanged):** `rraghh.com`
 - **Domain (defanged):** `cdn.rraghh.com`
 - **Domain (defanged):** `oortt.com`
+- **Domain (defanged):** `doc.sh`
+- **Domain (defanged):** `stepsecurity-dev-machine-guard.sh`
+- **SHA256:** `e7ec4e35d94d01a2e4ee5dca62b8fb08ac7411596edb54b398651f4eb563561d`
 - **SHA256:** `fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508`
 - **SHA256:** `e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3`
+- **SHA256:** `5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c`
+- **SHA256:** `e0f206aac2c3fa733b0c466d2ebb86ba038cf1fe2edeee21e94a4d943a27f63b`
+- **SHA256:** `40a6bbc8260bc17faa583dd3c3954a0e3c4b0abb923baaecd2ad7901311d5d82`
+- **SHA256:** `5886a9b659c05fb3e3077c80bb6a8be6acb1064683db542fae90e3bf9757f95f`
+- **SHA256:** `38cb0e1209a721a565e71f9dc0593437723dc32c4d2fe2d23de141f4d306ccea`
+- **SHA256:** `8e7213940a2f590af145226d22a96d416bcca4bc6cba3400a8a96fd3e7018080`
+- **SHA256:** `37516a0a420b21ef3b68129f8d089be706974a597a821ec83e598cd180716f60`
 
 ## MITRE ATT&CK Techniques
 
@@ -28,102 +38,12 @@ Back to Blog Threat Intel Malicious IoliteLabs VSCode Extensions Target Solidity
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1105** — Ingress Tool Transfer
-- **T1218.010** — System Binary Proxy Execution: Regsvr32
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] IoliteLabs VSCode extension dropper: VS Code child process reaching rraghh.com / oortt.com C2
-
-`UC_310_8` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Code.exe","Code - Insiders.exe","Cursor.exe","Windsurf.exe","VSCodium.exe","Positron.exe") OR Processes.parent_process_path="*\\Microsoft VS Code\\Code.exe" OR Processes.parent_process_path="*\\Cursor\\Cursor.exe") AND (Processes.process="*rraghh.com*" OR Processes.process="*oortt.com*" OR Processes.process="*cdn.rraghh.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("Code.exe","Code - Insiders.exe","Cursor.exe","Windsurf.exe","VSCodium.exe","Positron.exe")
-   or InitiatingProcessFolderPath has_any (@"\Microsoft VS Code\", @"\Cursor\", @"\Windsurf\", @"\VSCodium\")
-| where ProcessCommandLine has_any ("rraghh.com","oortt.com","cdn.rraghh.com")
-   or (ProcessCommandLine has "curl" and ProcessCommandLine has_any (@"%TEMP%\1.bat", @"\Temp\1.bat"))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] IoliteLabs Stage-2 regsvr32 LOLbin loading ntuser DLL from fake Chrome\ChromeUpdate path
-
-`UC_310_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="regsvr32.exe" AND Processes.process="*ntuser*" AND (Processes.process="*\\Chrome\\ChromeUpdate*" OR Processes.process="* /i *") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process,"(?i)regsvr32.*\\s/(s|i)\\b.*ntuser") OR match(process,"(?i)Chrome\\\\ChromeUpdate\\\\ntuser") | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _knownHashes = dynamic(["5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3"]);
-let ProcSig = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "regsvr32.exe"
-    | where ProcessCommandLine has "ntuser"
-    | where ProcessCommandLine has @"\Chrome\ChromeUpdate"
-         or ProcessCommandLine matches regex @"(?i)regsvr32(\.exe)?\s+/s\s+/i\s+.*ntuser"
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="ProcessExec";
-let HashSig = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_knownHashes)
-       or (FileName =~ "ntuser" and FolderPath has @"\Chrome\ChromeUpdate")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine=tostring(SHA256), Source="FileWrite";
-union ProcSig, HashSig
-| order by Timestamp desc
-```
-
-### [LLM] IoliteLabs IOC sweep: rraghh.com / oortt.com hostnames + campaign file hashes
-
-`UC_310_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-(| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*rraghh.com*" OR Web.url="*oortt.com*" OR Web.dest="*rraghh.com*" OR Web.dest="*oortt.com*") by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)`) | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*rraghh.com" OR DNS.query="*oortt.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | rename src as Web_src query as Web_url] | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3","5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c") OR Filesystem.file_name IN ("7WhiteSmoke.msi","calc.bat") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _iocHashes = dynamic(["fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3","5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c"]);
-let _iocDomains = dynamic(["rraghh.com","oortt.com","cdn.rraghh.com"]);
-let Net = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (_iocDomains) or tostring(RemoteIP) in (_iocDomains)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="Network";
-let Dns = DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q endswith "rraghh.com" or Q endswith "oortt.com"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=Q, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DNS";
-let Files = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_iocHashes)
-       or (FileName =~ "7WhiteSmoke.msi")
-       or (FileName =~ "1.bat" and FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\"))
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=strcat(FileName," / ",SHA256), InitiatingProcessFileName, InitiatingProcessCommandLine, Source="File";
-union Net, Dns, Files
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -340,12 +260,12 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `rraghh.com`, `cdn.rraghh.com`, `oortt.com`
+  - IP / domain IOC(s): `rraghh.com`, `cdn.rraghh.com`, `oortt.com`, `doc.sh`, `stepsecurity-dev-machine-guard.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508`, `e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3`
+  - file hash IOC(s): `e7ec4e35d94d01a2e4ee5dca62b8fb08ac7411596edb54b398651f4eb563561d`, `fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508`, `e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3`, `5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c`, `e0f206aac2c3fa733b0c466d2ebb86ba038cf1fe2edeee21e94a4d943a27f63b`, `40a6bbc8260bc17faa583dd3c3954a0e3c4b0abb923baaecd2ad7901311d5d82`, `5886a9b659c05fb3e3077c80bb6a8be6acb1064683db542fae90e3bf9757f95f`, `38cb0e1209a721a565e71f9dc0593437723dc32c4d2fe2d23de141f4d306ccea` _(+2 more)_
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

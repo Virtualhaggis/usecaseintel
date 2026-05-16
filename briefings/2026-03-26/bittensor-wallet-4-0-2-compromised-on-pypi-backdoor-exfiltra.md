@@ -11,14 +11,15 @@ Back to Blog Threat Intel bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `finney.opentensor-metrics.com`
-- **Domain (defanged):** `finney.subtensor-telemetry.com`
 - **Domain (defanged):** `finney.metagraph-stats.com`
+- **Domain (defanged):** `finney.subtensor-telemetry.com`
 - **Domain (defanged):** `opentensor-cdn.com`
-- **Domain (defanged):** `tuwyqibtvy.opentensor-cdn.com`
-- **Domain (defanged):** `yccansiwfr.opentensor-cdn.com`
-- **Domain (defanged):** `tbqcbkpbhy.opentensor-cdn.com`
 - **Domain (defanged):** `t.opentensor-cdn.com`
+- **Domain (defanged):** `opentensor-metrics.com`
+- **Domain (defanged):** `metagraph-stats.com`
+- **Domain (defanged):** `subtensor-telemetry.com`
 - **SHA256:** `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`
+- **SHA256:** `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,101 +31,12 @@ Back to Blog Threat Intel bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor 
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
-- **T1567** — Exfiltration Over Web Service
-- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes)
-
-`UC_326_7` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="*opentensor-metrics.com" OR DNS.query="*subtensor-telemetry.com" OR DNS.query="*metagraph-stats.com" OR DNS.query="*opentensor-cdn.com") by DNS.src DNS.dest DNS.query host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=true count from datamodel=Network_Traffic where (All_Traffic.dest="*opentensor-metrics.com" OR All_Traffic.dest="*subtensor-telemetry.com" OR All_Traffic.dest="*metagraph-stats.com" OR All_Traffic.dest="*opentensor-cdn.com") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]
-```
-
-**Defender KQL:**
-```kql
-let _c2_domains = dynamic(["opentensor-metrics.com","subtensor-telemetry.com","metagraph-stats.com","opentensor-cdn.com"]);
-union isfuzzy=true
-(DeviceNetworkEvents
-  | where Timestamp > ago(7d)
-  | where isnotempty(RemoteUrl) and RemoteUrl has_any (_c2_domains)
-  | project Timestamp, DeviceName, EvtSource="NetConn", InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, Indicator=RemoteUrl, RemoteIP, RemotePort),
-(DeviceEvents
-  | where Timestamp > ago(7d)
-  | where ActionType == "DnsQueryResponse"
-  | extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-  | where isnotempty(QueryName) and QueryName has_any (_c2_domains)
-  | project Timestamp, DeviceName, EvtSource="DNS", InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, Indicator=QueryName, RemoteIP="", RemotePort=int(0))
-| order by Timestamp desc
-```
-
-### [LLM] DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session)
-
-`UC_326_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Network_Resolution where DNS.query="*.t.opentensor-cdn.com" by DNS.src DNS.query host _time | `drop_dm_object_name(DNS)` | rex field=query "^(?<hex_chunk>[0-9a-f]{40,})\.(?<idx>\d+)\.(?<total>\d+)\.(?<session>\d+)\.t\.opentensor-cdn\.com$" | where isnotnull(hex_chunk) | stats count as chunk_count min(_time) as firstTime max(_time) as lastTime dc(session) as session_count values(session) as sessions values(total) as expected_total values(query) as sample_queries by src host | where chunk_count >= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType == "DnsQueryResponse"
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueryName endswith ".t.opentensor-cdn.com"
-| where QueryName matches regex @"^[0-9a-f]{40,}\.[0-9]+\.[0-9]+\.[0-9]+\.t\.opentensor-cdn\.com$"
-| extend SessionId = extract(@"\.([0-9]+)\.t\.opentensor-cdn\.com$", 1, QueryName)
-| extend ChunkTotal = extract(@"\.([0-9]+)\.[0-9]+\.t\.opentensor-cdn\.com$", 1, QueryName)
-| summarize ChunkCount = count(),
-            Sessions = make_set(SessionId, 10),
-            ExpectedTotal = make_set(ChunkTotal, 5),
-            SampleQueries = make_set(QueryName, 5),
-            FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp)
-            by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
-| where ChunkCount >= 3
-| order by LastSeen desc
-```
-
-### [LLM] Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk
-
-`UC_326_9` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e" OR Filesystem.file_hash="edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.user host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_hash="6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e" OR Processes.process_hash="edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5") by Processes.dest Processes.process Processes.process_hash Processes.user | `drop_dm_object_name(Processes)` ]
-```
-
-**Defender KQL:**
-```kql
-let _bad_hashes = dynamic([
-  "6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e",
-  "edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5"]);
-union isfuzzy=true
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (_bad_hashes)
-  | project Timestamp, DeviceName, Source="FileEvent", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (_bad_hashes) or InitiatingProcessSHA256 in (_bad_hashes)
-  | project Timestamp, DeviceName, Source="ProcessEvent", ActionType="ProcessCreated", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName)
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -301,12 +213,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `finney.opentensor-metrics.com`, `finney.subtensor-telemetry.com`, `finney.metagraph-stats.com`, `opentensor-cdn.com`, `tuwyqibtvy.opentensor-cdn.com`, `yccansiwfr.opentensor-cdn.com`, `tbqcbkpbhy.opentensor-cdn.com`, `t.opentensor-cdn.com`
+  - IP / domain IOC(s): `finney.opentensor-metrics.com`, `finney.metagraph-stats.com`, `finney.subtensor-telemetry.com`, `opentensor-cdn.com`, `t.opentensor-cdn.com`, `opentensor-metrics.com`, `metagraph-stats.com`, `subtensor-telemetry.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`
+  - file hash IOC(s): `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`, `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

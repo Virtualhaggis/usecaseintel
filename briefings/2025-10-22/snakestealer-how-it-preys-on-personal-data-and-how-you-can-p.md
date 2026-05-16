@@ -24,103 +24,12 @@ ESET researchers have tracked numerous campaigns recently where an infostealer w
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1055.012** — Process Injection: Process Hollowing
-- **T1041** — Exfiltration Over C2 Channel
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] SnakeStealer exfiltration to Telegram Bot API from non-browser process
-
-`UC_603_4` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest values(Web.user) as user from datamodel=Web where Web.url="*api.telegram.org/bot*" (Web.url="*sendMessage*" OR Web.url="*sendDocument*" OR Web.url="*sendPhoto*" OR Web.url="*getMe*") Web.app!="telegram*" by Web.src Web.process_name Web.app | `drop_dm_object_name(Web)` | where NOT match(process_name,"(?i)^(telegram|brave|chrome|firefox|msedge|iexplore|opera|safari)\.exe$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// SnakeStealer Telegram-bot exfil: api.telegram.org from a non-browser process
-let _browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","telegram.exe","telegramdesktop.exe","safari.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "api.telegram.org"
-| where InitiatingProcessFileName !in~ (_browsers)
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### [LLM] SnakeStealer persistence: wscript.exe launching .vbs from Startup folder dropping .NET EXE in AppData
-
-`UC_603_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where Processes.process_name="wscript.exe" (Processes.process="*\\Start Menu\\Programs\\Startup\\*.vbs*" OR Processes.process="*\\Startup\\*.vbs*") by Processes.dest Processes.user Processes.process_id Processes.parent_process_name | `drop_dm_object_name(Processes)` | join type=inner dest process_id [| tstats summariesonly=t values(Processes.process) as child_cmd values(Processes.process_path) as child_path values(Processes.process_name) as child_name from datamodel=Endpoint.Processes where (Processes.parent_process_name="wscript.exe" Processes.process_path="*\\AppData\\Local\\*" Processes.process_name="*.exe") by Processes.dest Processes.parent_process_id | rename Processes.parent_process_id as process_id | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-// SnakeStealer persistence: wscript.exe in Startup folder spawning EXE from %LocalAppData%
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "wscript.exe"
-| where InitiatingProcessCommandLine has_any (@"\Start Menu\Programs\Startup\", @"\Startup\")
-| where InitiatingProcessCommandLine has ".vbs"
-| where FolderPath has @"\AppData\Local\" or FolderPath has @"\AppData\Roaming\"
-| where FileName endswith ".exe"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentVbsCmd = InitiatingProcessCommandLine,
-          ChildExe = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ChildSHA256 = SHA256,
-          ProcessVersionInfoCompanyName, ProcessVersionInfoProductName
-| order by Timestamp desc
-```
-
-### [LLM] SnakeStealer process-hollowing target RegSvcs.exe / RegAsm.exe / InstallUtil.exe egressing to public IP
-
-`UC_603_6` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic where All_Traffic.process_name IN ("RegSvcs.exe","RegAsm.exe","InstallUtil.exe","aspnet_compiler.exe","MSBuild.exe") AND NOT (All_Traffic.dest IN ("127.0.0.1","::1") OR cidrmatch("10.0.0.0/8",All_Traffic.dest) OR cidrmatch("172.16.0.0/12",All_Traffic.dest) OR cidrmatch("192.168.0.0/16",All_Traffic.dest)) by All_Traffic.src All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// SnakeStealer / Agent Tesla / FormBook process-hollowing target making outbound C2
-let _hollow_targets = dynamic(["regsvcs.exe","regasm.exe","installutil.exe","aspnet_compiler.exe","msbuild.exe","caspol.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ (_hollow_targets)
-| where RemoteIPType == "Public"
-| where InitiatingProcessAccountName !endswith "$"
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            Connections = count(),
-            DestIPs = make_set(RemoteIP, 25),
-            DestUrls = make_set(RemoteUrl, 25),
-            DestPorts = make_set(RemotePort, 10)
-            by DeviceName, InitiatingProcessAccountName,
-               InitiatingProcessFileName, InitiatingProcessSHA256,
-               InitiatingProcessFolderPath, InitiatingProcessParentFileName
-| order by FirstSeen desc
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -302,4 +211,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

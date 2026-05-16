@@ -14,6 +14,11 @@ Table of Contents Loadi…
 
 - **SHA256:** `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`
 - **SHA256:** `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`
+- **SHA256:** `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`
+- **SHA256:** `fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d`
+- **SHA256:** `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`
+- **SHA1:** `de0fac2e4500dabe0009e67214ff5f5447ce83dd`
+- **SHA1:** `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,123 +35,12 @@ Table of Contents Loadi…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1027.002** — Software Packing
-- **T1546** — Event Triggered Execution
-- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Shai-Hulud npm preinstall: node spawns Bun runtime from bun-dl-* tmpdir
-
-`UC_217_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as process_path values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name=node.exe OR Processes.parent_process_name=node) AND (Processes.process_name=bun OR Processes.process_name=bun.exe OR Processes.process_path="*bun-dl-*" OR Processes.process_path="*\\bun-windows-x64-baseline*" OR Processes.process_path="*/bun-linux-x64-baseline*" OR Processes.process_path="*/bun-linux-x64-musl-baseline*" OR Processes.process_path="*/bun-linux-aarch64*" OR Processes.process_path="*/bun-darwin*" OR Processes.process="*execution.js*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where (FileName in~ ("bun","bun.exe")
-      or FolderPath has "bun-dl-"
-      or FolderPath has "bun-windows-x64-baseline"
-      or FolderPath has "bun-linux-x64-baseline"
-      or FolderPath has "bun-linux-x64-musl-baseline"
-      or FolderPath has "bun-linux-aarch64"
-      or FolderPath has "bun-darwin"
-      or ProcessCommandLine has "execution.js")
-| where InitiatingProcessCommandLine has_any ("setup.mjs","preinstall","npm install","yarn install","pnpm install")
-   or FolderPath has "bun-dl-"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### [LLM] Shai-Hulud AI coding-agent persistence: .claude/settings.json + .vscode/tasks.json drops
-
-`UC_217_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.action=created OR Filesystem.action=modified OR Filesystem.action=write) AND (Filesystem.file_path="*\\.claude\\settings.json" OR Filesystem.file_path="*/.claude/settings.json" OR Filesystem.file_path="*\\.vscode\\tasks.json" OR Filesystem.file_path="*/.vscode/tasks.json") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | eventstats dc(file_name) as distinct_files by dest user | where distinct_files>=2 | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _window = 1h;
-let _suspect_files = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileCreated","FileModified","FileRenamed")
-    | where (FolderPath endswith @"\.claude\settings.json"
-          or FolderPath endswith "/.claude/settings.json"
-          or FolderPath endswith @"\.vscode\tasks.json"
-          or FolderPath endswith "/.vscode/tasks.json")
-    | extend FileKind = case(
-        FolderPath has ".claude", "claude_settings",
-        FolderPath has ".vscode", "vscode_tasks",
-        "other")
-    | extend Bucket = bin(Timestamp, _window);
-_suspect_files
-| summarize FilesDropped = make_set(FileKind),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            Paths = make_set(FolderPath, 50),
-            Initiators = make_set(InitiatingProcessFileName, 20),
-            InitiatingCmds = make_set(InitiatingProcessCommandLine, 20)
-            by DeviceId, DeviceName, InitiatingProcessAccountName, Bucket
-| where array_length(FilesDropped) >= 2
-   or Initiators has_any ("node.exe","node","bun.exe","bun","git.exe","git")
-| order by FirstSeen desc
-```
-
-### [LLM] Shai-Hulud known-bad setup.mjs / execution.js SHA256 hash match
-
-`UC_217_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`indextime` | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_hash IN ("4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` ]
-```
-
-**Defender KQL:**
-```kql
-let _ShaiHulud_Hashes = dynamic([
-    "4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34",  // setup.mjs (loader, identical across all 4 compromised packages)
-    "80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac"   // execution.js (11.6MB obfuscated payload from mbt@1.2.48)
-]);
-union isfuzzy=true
-    ( DeviceFileEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (_ShaiHulud_Hashes)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  InitiatingProcessFileName, InitiatingProcessCommandLine,
-                  InitiatingProcessAccountName, Source="DeviceFileEvents" ),
-    ( DeviceProcessEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (_ShaiHulud_Hashes) or InitiatingProcessSHA256 in (_ShaiHulud_Hashes)
-        | project Timestamp, DeviceName, ActionType="ProcessCreated", FileName, FolderPath, SHA256,
-                  InitiatingProcessFileName, InitiatingProcessCommandLine,
-                  InitiatingProcessAccountName=AccountName, Source="DeviceProcessEvents" ),
-    ( DeviceImageLoadEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (_ShaiHulud_Hashes)
-        | project Timestamp, DeviceName, ActionType="ImageLoaded", FileName, FolderPath, SHA256,
-                  InitiatingProcessFileName, InitiatingProcessCommandLine="",
-                  InitiatingProcessAccountName, Source="DeviceImageLoadEvents" )
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -462,9 +356,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`
+  - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`, `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`, `fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d`, `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`, `de0fac2e4500dabe0009e67214ff5f5447ce83dd`, `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
