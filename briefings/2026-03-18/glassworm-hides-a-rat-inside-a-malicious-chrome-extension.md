@@ -12,21 +12,9 @@ Blog Vulnerabilities & Threats GlassWorm Hides a RAT Inside a Malicious Chrome E
 
 - **IPv4 (defanged):** `45.32.150.251`
 - **IPv4 (defanged):** `217.69.3.152`
-- **IPv4 (defanged):** `45.150.34.158`
 - **IPv4 (defanged):** `217.69.0.159`
-- **Domain (defanged):** `calendar.app.google`
-- **Domain (defanged):** `socket.io`
-- **Domain (defanged):** `calendar.app`
+- **IPv4 (defanged):** `45.150.34.158`
 - **SHA256:** `06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d`
-- **SHA256:** `f171c383e21243ac85b5ee69821d16f10e8d718089a5c090c41efeaa42e81fca`
-- **SHA256:** `9df62cefd87784c7ee1ca8b4e6fc49737a90492fa6c23901e3b7981b18c6c988`
-- **SHA256:** `43253a888417dfab034f781527e08fb58e929096cb4ef69456c3e13550cb4e9e`
-- **SHA256:** `4a60afa085fe5a847aef164578537bc33b9b58954143381e0c65c6354e4501e3`
-- **SHA256:** `de81eacd045a88598f16680ce01bf99837b1d8170c7fc38a18747ef10e930776`
-- **SHA256:** `fdba5be3da2467e642bd8710f971e6b266b30ac15f5f413982fd719d7e0bffd9`
-- **SHA256:** `ee3e4dd5c1e073b8805f4107ccc7bc7e6e3c209fe13ea04ff3f2173c8dbe74a6`
-- **SHA1:** `3c90fa0e84dd76c94b1468f38ed640945d72bc12`
-- **MD5:** `86aac42ad4484f3c813079afc201451c`
 
 ## MITRE ATT&CK Techniques
 
@@ -51,12 +39,146 @@ Blog Vulnerabilities & Threats GlassWorm Hides a RAT Inside a Malicious Chrome E
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1546.003** — Persistence (article-specific)
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1573** — Encrypted Channel
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GlassWorm RAT install paths and persistence artifacts (QtCvyfVWKH / UpdateApp / UpdateLedger)
+
+`UC_348_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\AppData\\Roaming\\QtCvyfVWKH\\index.js","*\\AppData\\Local\\QtCvyfVWKH\\AghzgY.ps1","*\\AppData\\Roaming\\_node_x64\\webrtc\\wrtc-win32-x64\\index.js","*\\AppData\\Local\\Temp\\hJxPxpHP\\*","*\\AppData\\Local\\Temp\\EUXFUxzOVe\\*","*\\AppData\\Local\\Temp\\SKuyzYcDD.exe") by host Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_key_name) as registry_key_name values(Registry.registry_value_name) as registry_value_name values(Registry.registry_value_data) as registry_value_data from datamodel=Endpoint.Registry where Registry.registry_key_name="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name IN ("UpdateApp","UpdateLedger") OR Registry.registry_value_data IN ("*QtCvyfVWKH*","*AghzgY.ps1*","*SKuyzYcDD.exe*")) by host Registry.user Registry.registry_key_name Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _glassworm_paths = dynamic([
+    @"\AppData\Roaming\QtCvyfVWKH\",
+    @"\AppData\Local\QtCvyfVWKH\",
+    @"\AppData\Roaming\_node_x64\webrtc\wrtc-win32-x64\",
+    @"\AppData\Local\Temp\hJxPxpHP\",
+    @"\AppData\Local\Temp\EUXFUxzOVe\"
+]);
+let _glassworm_files = dynamic(["AghzgY.ps1","SKuyzYcDD.exe","index.js"]);
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | where (FolderPath has_any (_glassworm_paths))
+         or (FileName =~ "SKuyzYcDD.exe")
+         or (FolderPath has @"\AppData\Local\Temp\" and FileName =~ "AghzgY.ps1")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              FolderPath, FileName, SHA256, ReportId, Signal="FileArtifact";
+let RegHits = DeviceRegistryEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run"
+    | where RegistryValueName in~ ("UpdateApp","UpdateLedger")
+         or RegistryValueData has_any ("QtCvyfVWKH","AghzgY.ps1","SKuyzYcDD.exe")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              RegistryKey, RegistryValueName, RegistryValueData,
+              FolderPath="", FileName="", SHA256="", ReportId, Signal="RegistryPersistence";
+let TaskHits = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName in~ ("schtasks.exe","powershell.exe","pwsh.exe","node.exe")
+    | where ProcessCommandLine has "UpdateApp"
+         and ProcessCommandLine has_any ("schtasks","Register-ScheduledTask","/Create","-TaskName")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              FolderPath=FolderPath, FileName=FileName, SHA256, ReportId,
+              RegistryKey="", RegistryValueName="", RegistryValueData="",
+              Signal="ScheduledTaskUpdateApp";
+union isfuzzy=true FileHits, RegHits, TaskHits
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm C2 / exfiltration egress to 45.32.150.251, 217.69.3.152, 217.69.0.159, 45.150.34.158
+
+`UC_348_15` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158") by host All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | eval c2_role=case(dest="45.32.150.251","WebSocket C2 / payload server",dest="217.69.3.152","Exfiltration server (/wall,/log)",dest="217.69.0.159","DHT bootstrap node",dest="45.150.34.158","Ledger/Trezor seed-phrase exfil") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _glassworm_c2 = dynamic(["45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where RemoteIP in (_glassworm_c2)
+| extend C2Role = case(
+    RemoteIP == "45.32.150.251", "WebSocket C2 / payload server (ports 80/4787)",
+    RemoteIP == "217.69.3.152",  "Exfiltration server (/wall, /log)",
+    RemoteIP == "217.69.0.159",  "DHT bootstrap node (port 10000)",
+    RemoteIP == "45.150.34.158", "Ledger/Trezor seed-phrase exfil",
+    "unknown")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          RemoteIP, RemotePort, RemoteUrl, Protocol, C2Role, ReportId
+| order by Timestamp desc
+```
+
+### [LLM] node.exe / npm-spawned process polling multiple Solana mainnet RPC endpoints (GlassWorm Stage 1 dead-drop)
+
+`UC_348_16` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest dc(All_Traffic.dest) as distinct_dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","pnpx.exe","npx.exe") AND (All_Traffic.dest IN ("api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network") OR All_Traffic.url IN ("*api.mainnet-beta.solana.com*","*solana-mainnet.gateway.tatum.io*","*solana-rpc.publicnode.com*","*solana.drpc.org*","*solana.leorpc.com*","*solana.api.onfinality.io*","*solana.api.pocket.network*","*api.blockeden.xyz/solana*","*go.getblock.us*")) by host All_Traffic.src All_Traffic.user All_Traffic.process_name span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_dest >= 2 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _solana_rpc_hosts = dynamic([
+    "api.mainnet-beta.solana.com",
+    "solana-mainnet.gateway.tatum.io",
+    "go.getblock.us",
+    "solana-rpc.publicnode.com",
+    "api.blockeden.xyz",
+    "solana.drpc.org",
+    "solana.leorpc.com",
+    "solana.api.onfinality.io",
+    "solana.api.pocket.network"
+]);
+let _node_loaders = dynamic(["node.exe","npm.exe","yarn.exe","pnpm.exe","pnpx.exe","npx.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ (_node_loaders)
+| where RemoteUrl has_any (_solana_rpc_hosts)
+   or RemoteUrl has "BjVeAjPrSKFiingBn4vZvghsGj9KCE8AJVtbc9S8o8SC"
+   or RemoteUrl has "6YGcuyFRJKZtcaYCCFba9fScNUvPkGXodXE1mJiSzqDJ"
+   or RemoteUrl has "DSRUBTziADDHSik7WQvSMjvwCHFsbsThrbbjWMoJPUiW"
+| summarize FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp),
+            DistinctRpcHosts = dcount(tolower(tostring(parse_url(RemoteUrl).Host))),
+            RpcHostsSeen = make_set(tolower(tostring(parse_url(RemoteUrl).Host)), 20),
+            HitCount = count(),
+            SampleUrls = make_set(RemoteUrl, 10),
+            ProcessCmdLines = make_set(InitiatingProcessCommandLine, 5),
+            ParentProcesses = make_set(InitiatingProcessParentFileName, 5)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+               bin(Timestamp, 10m)
+| where DistinctRpcHosts >= 2
+     or HitCount >= 6      // ~60s polling loop sustained over 10m
+     or any(SampleUrls has_any ("BjVeAjPrSKFiingBn4vZv","6YGcuyFRJKZtcaYCCFba","DSRUBTziADDHSik7WQv"))
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -488,12 +610,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.32.150.251`, `217.69.3.152`, `45.150.34.158`, `217.69.0.159`, `calendar.app.google`, `socket.io`, `calendar.app`
+  - IP / domain IOC(s): `45.32.150.251`, `217.69.3.152`, `217.69.0.159`, `45.150.34.158`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d`, `f171c383e21243ac85b5ee69821d16f10e8d718089a5c090c41efeaa42e81fca`, `9df62cefd87784c7ee1ca8b4e6fc49737a90492fa6c23901e3b7981b18c6c988`, `43253a888417dfab034f781527e08fb58e929096cb4ef69456c3e13550cb4e9e`, `4a60afa085fe5a847aef164578537bc33b9b58954143381e0c65c6354e4501e3`, `de81eacd045a88598f16680ce01bf99837b1d8170c7fc38a18747ef10e930776`, `fdba5be3da2467e642bd8710f971e6b266b30ac15f5f413982fd719d7e0bffd9`, `ee3e4dd5c1e073b8805f4107ccc7bc7e6e3c209fe13ea04ff3f2173c8dbe74a6` _(+2 more)_
+  - file hash IOC(s): `06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

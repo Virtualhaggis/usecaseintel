@@ -13,13 +13,12 @@ The activity is said to …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -28,12 +27,65 @@ The activity is said to …
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1588.005** — Obtain Capabilities: Exploits
+- **T1588.001** — Obtain Capabilities: Malware
+- **T1593.003** — Search Open Websites/Domains: Code Repositories
+- **T1588.002** — Obtain Capabilities: Tool
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] WooYun-Legacy LLM-Priming Repository Pulled by Developer / Build Host
+
+`UC_112_5` · phase: **weapon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("git.exe","git","curl.exe","curl","wget.exe","wget","python.exe","python","python3","pip.exe","pip","pip3","pwsh.exe","powershell.exe","cmd.exe","bash","zsh")) AND (Processes.process="*wooyun-legacy*" OR Processes.process="*WooYun-Legacy*" OR Processes.process="*WOOYUN-LEGACY*") by Processes.dest Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("git.exe","curl.exe","wget.exe","python.exe","python3.exe","pip.exe","pip3.exe","pwsh.exe","powershell.exe","cmd.exe","bash.exe","wsl.exe")
+| where ProcessCommandLine contains "wooyun-legacy"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Agentic Offensive-AI Tooling Execution (Hexstrike AI / Strix)
+
+`UC_112_6` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_name IN ("hexstrike.exe","hexstrike","hexstrike-ai","hexstrike_ai","strix.exe","strix") OR Processes.process="*hexstrike-ai*" OR Processes.process="*hexstrike_ai*" OR Processes.process="*0x4m4/hexstrike-ai*" OR Processes.process="*usestrix/strix*" OR Processes.process="*strix-agent*" OR Processes.process="*pip install hexstrike*" OR Processes.process="*pip install strix*") by Processes.dest Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where (FileName in~ ("hexstrike.exe","hexstrike-ai.exe","strix.exe"))
+    or ProcessCommandLine has "hexstrike"
+    or ProcessCommandLine contains "hexstrike-ai"
+    or ProcessCommandLine contains "hexstrike_ai"
+    or ProcessCommandLine contains "0x4m4/hexstrike-ai"
+    or ProcessCommandLine contains "usestrix/strix"
+    or ProcessCommandLine contains "strix-agent"
+    or ProcessCommandLine contains "pip install hexstrike"
+    or ProcessCommandLine contains "pip install strix"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -242,14 +294,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

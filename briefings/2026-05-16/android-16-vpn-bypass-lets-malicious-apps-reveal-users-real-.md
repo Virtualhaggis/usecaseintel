@@ -23,12 +23,98 @@ This b…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1053.005** — Scheduled Task
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1095** — Non-Application Layer Protocol
+- **T1599** — Network Boundary Bridging
+- **T1633** — Virtualization/Sandbox Evasion (Mobile)
+- **T1041** — Exfiltration Over C2 Channel
+- **T1602** — Data from Configuration Repository
+- **T1592** — Gather Victim Host Information
+- **T1426** — System Information Discovery (Mobile)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mobile-subnet UDP egress to attacker port 3131 (Android 'Tiny UDP Cannon' VPN bypass)
+
+`UC_8_2` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(All_Traffic.dest_ip) as dest_ips, values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport=udp All_Traffic.dest_port=3131 (All_Traffic.src_ip="192.168.0.0/16" OR All_Traffic.src_ip="10.0.0.0/8" OR All_Traffic.src_ip="172.16.0.0/12") NOT (All_Traffic.dest_ip="10.0.0.0/8" OR All_Traffic.dest_ip="172.16.0.0/12" OR All_Traffic.dest_ip="192.168.0.0/16") by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime), ctime(lastTime) | where count >= 1
+```
+
+**Defender KQL:**
+```kql
+// Defender for Endpoint Android — UDP egress to port 3131 from Android 16 devices
+let Android16Devices = DeviceInfo
+    | where Timestamp > ago(1d)
+    | where OSPlatform =~ "Android"
+    | where OSVersion has "16" or OSBuild has "16"
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, DeviceName, OSPlatform, OSVersion;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where Protocol =~ "Udp"
+| where RemotePort == 3131
+| where RemoteIPType == "Public"
+| join kind=inner Android16Devices on DeviceId
+| project Timestamp, DeviceName, OSVersion, LocalIP, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessAccountSid,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] Plaintext 'EXFIL{src=' marker in UDP payload via L7 DPI (Tiny UDP Cannon payload pattern)
+
+`UC_8_3` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+index=firewall OR index=ids OR index=zeek sourcetype=* ("EXFIL{src=" OR "EXFIL%7Bsrc%3D")
+| where transport="udp" OR protocol="udp" OR proto="udp"
+| stats count, min(_time) as firstTime, max(_time) as lastTime, values(dest_ip) as dest_ips, values(dest_port) as dest_ports, values(payload) as payload_samples by src_ip
+| convert ctime(firstTime), ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// Defender XDR has no native UDP payload-inspection telemetry; if mobile-focused
+// firewall logs land in a custom table, query there. Otherwise this UC lives in Sentinel.
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where Protocol =~ "Udp"
+| where AdditionalFields has "EXFIL{src=" or AdditionalFields has "EXFIL%7Bsrc"
+| project Timestamp, DeviceName, LocalIP, RemoteIP, RemotePort,
+          InitiatingProcessFileName, AdditionalFields
+```
+
+### [LLM] Android 16 device fleet vulnerable to Tiny UDP Cannon without ADB mitigation applied
+
+`UC_8_4` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, values(All_Inventory.Endpoint.os) as os_full, values(All_Inventory.Endpoint.os_build) as os_build, max(_time) as last_checkin from datamodel=Endpoint.Inventory where (All_Inventory.Endpoint.os="Android*" AND (All_Inventory.Endpoint.os_version="16*" OR All_Inventory.Endpoint.os="Android 16*")) by All_Inventory.Endpoint.dest, All_Inventory.Endpoint.user
+| `drop_dm_object_name(All_Inventory.Endpoint)` | convert ctime(last_checkin) | sort - last_checkin
+```
+
+**Defender KQL:**
+```kql
+// Defender for Endpoint Android — vulnerable device fleet inventory
+DeviceInfo
+| where Timestamp > ago(7d)
+| where OSPlatform =~ "Android"
+| where OSVersion has "16" or OSBuild has "16" or OSVersion startswith "16."
+| summarize arg_max(Timestamp, *) by DeviceId
+| project DeviceId, DeviceName, OSPlatform, OSVersion, OSBuild, Vendor, Model, JoinType,
+          PublicIP, LoggedOnUsers, MachineGroup, Timestamp
+| extend MitigationNeeded = "adb shell device_config put tethering close_quic_connection -1"
+| order by Timestamp desc
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -88,4 +174,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

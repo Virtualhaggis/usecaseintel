@@ -18,12 +18,56 @@ Blog Vulnerabilities & Threats Aikido Attack finds multiple 0-days in Hoppscotch
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1190** — Exploit Public-Facing Application
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1185** — Browser Session Hijacking
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Hoppscotch device-login open redirect exploitation (GHSA-7fg7-wx5q-6m3v)
+
+`UC_305_3` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.user) as user values(Web.http_user_agent) as ua values(Web.url) as url from datamodel=Web where (Web.url="*/device-login*") Web.url="*redirect_uri=*" (Web.url="*redirect_uri=http://localhost.*" OR Web.url="*redirect_uri=https://localhost.*" OR Web.url="*redirect_uri=http%3A%2F%2Flocalhost.*" OR Web.url="*redirect_uri=https%3A%2F%2Flocalhost.*" OR Web.url="*redirect_uri=http%3A%2F%2Flocalhost%2E*" OR Web.url="*redirect_uri=https%3A%2F%2Flocalhost%2E*") by Web.dest, Web.url | `drop_dm_object_name(Web)` | rex field=url "(?i)redirect_uri=(?<redirect_target>[^&]+)" | eval redirect_decoded=urldecode(redirect_target) | where match(redirect_decoded, "(?i)^https?://localhost\.[a-zA-Z0-9.\-]+") | convert ctime(firstTime) ctime(lastTime) | table firstTime, lastTime, src, user, ua, dest, url, redirect_decoded
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let UrlPattern = DeviceNetworkEvents
+    | where Timestamp > ago(LookbackDays)
+    | where RemoteUrl has "device-login"
+    | where RemoteUrl has "redirect_uri"
+    | extend Decoded = url_decode(RemoteUrl)
+    | where Decoded matches regex @"(?i)redirect_uri=https?://localhost\.[a-zA-Z0-9.\-]+"
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, Indicator = RemoteUrl, Signal = "device-login URL with localhost.<subdomain> redirect_uri";
+let DnsExfil = DeviceEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q startswith "localhost."
+    | where Q !endswith ".localdomain" and Q !endswith ".local" and Q != "localhost."
+    | where Q endswith ".sslip.io" or Q endswith ".nip.io" or Q matches regex @"^localhost\.[a-z0-9\-]+\.[a-z]{2,}$"
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, Indicator = Q, Signal = "DNS resolution of localhost.<attacker-subdomain> (Hoppscotch token-exfil channel)";
+union isfuzzy=true UrlPattern, DnsExfil
+| order by Timestamp desc
+```
+
+### [LLM] Hoppscotch Mock Server stored XSS via GraphQL response-header injection
+
+`UC_305_4` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.user) as user values(Web.url) as url values(Web.http_user_agent) as ua values(Web.form_data) as body from datamodel=Web where Web.http_method=POST (Web.url="*/graphql*" OR Web.url="*/v1/graphql*") Web.form_data="*updateRESTUserRequest*" Web.form_data="*content-type*" Web.form_data="*text/html*" by Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | table firstTime, lastTime, src, user, dest, url, ua, body
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -111,4 +155,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

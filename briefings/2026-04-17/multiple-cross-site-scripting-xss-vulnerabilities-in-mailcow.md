@@ -19,12 +19,33 @@ Blog Vulnerabilities & Threats Multiple Cross-Site Scripting (XSS) Vulnerabiliti
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1185** — Browser Session Hijacking
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mailcow Autodiscover unauthenticated XSS attempt (GHSA-f9xf-vc72-rcgm)
+
+`UC_277_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.http_user_agent) as user_agent values(Web.status) as status values(Web.dest) as dest from datamodel=Web where Web.uri_path="/Autodiscover/Autodiscover.xml" Web.http_method=POST by Web.dest, Web.uri_path, host, _raw | `drop_dm_object_name(Web)` | regex _raw="(?i)<\s*(img|script|svg|iframe|body|object|embed|a |input)\b|\bon(error|load|click|mouseover|focus|toggle)\s*=|javascript:" | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(src) as src_ips values(user_agent) as user_agents by dest, uri_path | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### [LLM] Mailcow login X-Real-IP header XSS injection (GHSA-jprq-w83q-q62h)
+
+`UC_277_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.http_user_agent) as user_agent values(Web.dest) as dest values(Web.status) as status from datamodel=Web where Web.http_method=POST (Web.uri_path="/" OR Web.uri_path="/index.php" OR Web.uri_path="/mailcow*") by Web.dest, Web.uri_path, host, _raw | `drop_dm_object_name(Web)` | regex _raw="(?i)X-Real-?IP\s*:\s*[\"\']?[^\r\n]*(<\s*(img|script|svg|iframe|body)|\bon(error|load|click|mouseover|focus)\s*=|javascript:)" | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(src) as src_ips values(user_agent) as user_agents by dest, uri_path | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -161,4 +182,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

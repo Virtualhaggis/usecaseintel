@@ -19,10 +19,8 @@ According to the functionalities of the CloudZ RAT and Pheno plugin, this wa
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `185.196.10.136`
-- **Domain (defanged):** `update.txt`
 - **Domain (defanged):** `calm-wildflower-1349.hellohiall.workers.dev`
 - **Domain (defanged):** `round-cherry-4418.hellohiall.workers.dev`
-- **Domain (defanged):** `orange-cell-1353.hellohiall.workers.dev`
 
 ## MITRE ATT&CK Techniques
 
@@ -34,12 +32,108 @@ According to the functionalities of the CloudZ RAT and Pheno plugin, this wa
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1218.009** — System Binary Proxy Execution: Regsvcs/Regasm
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1005** — Data from Local System
+- **T1119** — Automated Collection
+- **T1083** — File and Directory Discovery
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1571** — Non-Standard Port
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] CloudZ persistence: regasm.exe executing dropped .txt loader (update.txt/msupdate.txt)
+
+`UC_215_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="regasm.exe" OR Processes.process_path="*\\Microsoft.NET\\Framework64\\v4.0.30319\\regasm.exe") AND (Processes.process="*update.txt*" OR Processes.process="*msupdate.txt*" OR Processes.process="*\\ProgramData\\Microsoft\\Windo*Doc\\*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "regasm.exe"
+| where ProcessCommandLine has_any ("update.txt", "msupdate.txt")
+   or ProcessCommandLine has @"\ProgramData\Microsoft\WindowsDoc\"
+   or ProcessCommandLine has @"\ProgramData\Microsoft\windosDoc\"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          IsRemoteSession = InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Pheno plugin recon artefacts: phonelink-<HOST>.txt in Microsoft\feedback\cm staging
+
+`UC_215_7` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_name="pheno.exe" OR Filesystem.file_path="*\\Microsoft\\feedback\\cm\\phonelink-*.txt" OR (Filesystem.file_name="phonelink-*" AND Filesystem.file_path="*\\Microsoft\\feedback\\cm\\*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let pheno_files = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+    | where (FileName =~ "pheno.exe")
+         or (FileName startswith "phonelink-" and FileName endswith ".txt"
+             and FolderPath has @"\Microsoft\feedback\cm\")
+         or (FolderPath has @"\ProgramData\Microsoft\whealth\")
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+              SHA256, Initiator = InitiatingProcessFileName,
+              InitiatorCmd = InitiatingProcessCommandLine,
+              Account = InitiatingProcessAccountName;
+let phonelink_db_access = DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where FileName startswith "PhoneExperiences-" and FileName endswith ".db"
+    | where InitiatingProcessFileName !in~ ("PhoneExperienceHost.exe","YourPhone.exe","PhoneLink.exe",
+                                            "svchost.exe","explorer.exe","backgroundtaskhost.exe",
+                                            "runtimebroker.exe","searchindexer.exe")
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath,
+              Initiator = InitiatingProcessFileName,
+              InitiatorCmd = InitiatingProcessCommandLine,
+              Account = InitiatingProcessAccountName;
+union pheno_files, phonelink_db_access
+| order by Timestamp desc
+```
+
+### [LLM] CloudZ C2/staging beacon: hellohiall.workers.dev or 185.196.10.136:8089
+
+`UC_215_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="185.196.10.136" AND All_Traffic.dest_port=8089) OR All_Traffic.dest="*.hellohiall.workers.dev" by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteIP == "185.196.10.136" and RemotePort == 8089)
+     or (RemoteUrl endswith ".hellohiall.workers.dev")
+     or (RemoteUrl in~ ("calm-wildflower-1349.hellohiall.workers.dev",
+                        "round-cherry-4418.hellohiall.workers.dev",
+                        "orange-cell-1353.hellohiall.workers.dev"))
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          Initiator = InitiatingProcessFileName,
+          InitiatorCmd = InitiatingProcessCommandLine,
+          InitiatorPath = InitiatingProcessFolderPath,
+          Account = InitiatingProcessAccountName, InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -214,9 +308,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.196.10.136`, `update.txt`, `calm-wildflower-1349.hellohiall.workers.dev`, `round-cherry-4418.hellohiall.workers.dev`, `orange-cell-1353.hellohiall.workers.dev`
+  - IP / domain IOC(s): `185.196.10.136`, `calm-wildflower-1349.hellohiall.workers.dev`, `round-cherry-4418.hellohiall.workers.dev`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

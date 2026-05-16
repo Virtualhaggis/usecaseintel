@@ -22,42 +22,11 @@ The toolset harvests credentials from cloud, container, developer, productivity,
 - **CVE:** `CVE-2026-1357`
 - **CVE:** `CVE-2025-9501`
 - **CVE:** `CVE-2025-48703`
-- **IPv4 (defanged):** `38.242.204.245`
-- **IPv4 (defanged):** `38.242.237.196`
-- **IPv4 (defanged):** `38.242.245.147`
-- **IPv4 (defanged):** `83.171.249.231`
-- **IPv4 (defanged):** `161.97.129.25`
-- **IPv4 (defanged):** `161.97.135.154`
-- **IPv4 (defanged):** `161.97.163.87`
-- **IPv4 (defanged):** `161.97.186.175`
-- **IPv4 (defanged):** `161.97.187.42`
-- **IPv4 (defanged):** `193.187.129.143`
-- **IPv4 (defanged):** `213.136.80.73`
-- **Domain (defanged):** `126.com`
-- **Domain (defanged):** `163.com`
-- **Domain (defanged):** `qq.com`
-- **Domain (defanged):** `lastpass-login-help.com`
-- **Domain (defanged):** `cdn.cloudfront-js.com`
-- **Domain (defanged):** `check.sh`
-- **Domain (defanged):** `bootstrap.sh`
-- **SHA1:** `005587975a483876c1fa26b64b418931019be38f`
-- **SHA1:** `01cebc48016395e284ac76afc1816f143ee3e7b6`
-- **SHA1:** `0b86434ca5145636d745222f7e49c903ce6ef538`
-- **SHA1:** `2cd2c5268e41cdece1b0506bcda3b9eba2998119`
-- **SHA1:** `2fab324eb0d927846c8744dc0e217beea65138e0`
-- **SHA1:** `339cbf61c80f757085c5afb7304d69f323bdf87a`
-- **SHA1:** `6060da100b5cd587131a1c11a20d6e0108604744`
-- **SHA1:** `848ef1f638807826586802428a7ebafdc710915c`
-- **SHA1:** `9c7ab48c9fdbbeecdad8433529bdab38584f0e25`
-- **SHA1:** `a20a9924d92c2b06d82b79c0fe87451c650cabec`
-- **SHA1:** `c2dd8051d89c4efa71bd67d2df7d9b4bc3e67810`
-- **SHA1:** `fed52a4bbac7b5b6ae4f76cab3eadd67e79227e3`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
@@ -459,7 +428,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PCPJack | Cloud Worm Evicts TeamPCP and Steals Credentials at Scale
 
-`UC_163_14` · phase: **exploit** · confidence: **High**
+`UC_163_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -510,16 +479,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `38.242.204.245`, `38.242.237.196`, `38.242.245.147`, `83.171.249.231`, `161.97.129.25`, `161.97.135.154`, `161.97.163.87`, `161.97.186.175` _(+10 more)_
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-29927`, `CVE-2025-55182`, `CVE-2026-1357`, `CVE-2025-9501`, `CVE-2025-48703`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `005587975a483876c1fa26b64b418931019be38f`, `01cebc48016395e284ac76afc1816f143ee3e7b6`, `0b86434ca5145636d745222f7e49c903ce6ef538`, `2cd2c5268e41cdece1b0506bcda3b9eba2998119`, `2fab324eb0d927846c8744dc0e217beea65138e0`, `339cbf61c80f757085c5afb7304d69f323bdf87a`, `6060da100b5cd587131a1c11a20d6e0108604744`, `848ef1f638807826586802428a7ebafdc710915c` _(+4 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -18,12 +18,65 @@ Blog Vulnerabilities & Threats Glassworm Is Back: A New Wave of Invisible Unicod
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1027** — Obfuscated Files or Information
+- **T1140** — Deobfuscate/Decode Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GlassWorm Mar 2026 wave — compromised npm/VS Code package artifacts on disk
+
+`UC_355_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\@aifabrix\\miso-client\\*" OR Filesystem.file_path="*/node_modules/@aifabrix/miso-client/*" OR Filesystem.file_path="*\\node_modules\\@iflow-mcp\\watercrawl-watercrawl-mcp\\*" OR Filesystem.file_path="*/node_modules/@iflow-mcp/watercrawl-watercrawl-mcp/*" OR Filesystem.file_path="*\\.vscode\\extensions\\quartz.quartz-markdown-editor-*" OR Filesystem.file_path="*/.vscode/extensions/quartz.quartz-markdown-editor-*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort 0 - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has @"\node_modules\@aifabrix\miso-client"
+    or FolderPath has @"\node_modules\@iflow-mcp\watercrawl-watercrawl-mcp"
+    or FolderPath has @"\.vscode\extensions\quartz.quartz-markdown-editor-"
+    or FolderPath has "/node_modules/@aifabrix/miso-client"
+    or FolderPath has "/node_modules/@iflow-mcp/watercrawl-watercrawl-mcp"
+    or FolderPath has "/.vscode/extensions/quartz.quartz-markdown-editor-"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm invisible-Unicode decoder signature (variation-selector eval loader) in process cmdline
+
+`UC_355_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("node.exe","node","npm.exe","npx.exe","pwsh.exe","powershell.exe","cmd.exe","bash","sh") Processes.process="*0xFE00*" Processes.process="*0xE0100*" Processes.process="*codePointAt*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_guid | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort 0 - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where ProcessCommandLine has "0xFE00"
+   and ProcessCommandLine has "0xE0100"
+   and ProcessCommandLine has "codePointAt"
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -111,4 +164,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

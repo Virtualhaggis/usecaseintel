@@ -44,12 +44,82 @@ Mah…
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1110.003** — Password Spraying
+- **T1110.001** — Password Guessing
+- **T1133** — External Remote Services
+- **T1078** — Valid Accounts
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] RDWeb portal brute-force / password-spray success against IIS (ransomware IAB precursor)
+
+`UC_100_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where (Web.uri_path="*RDWeb*" OR Web.url="*RDWeb*") (Web.status=401 OR Web.status=403 OR Web.status=200 OR Web.status=302) by Web.src Web.dest Web.status _time span=10m
+| `drop_dm_object_name(Web)`
+| eval class=case(status=401 OR status=403,"fail",status=200 OR status=302,"success",1=1,"other")
+| stats sum(eval(if(class="fail",count,0))) as failures sum(eval(if(class="success",count,0))) as successes by src dest _time
+| where failures>=20 AND (successes>=1 OR failures>=100)
+| eval signal="RDWeb /RDWeb/Pages/login.aspx brute-force burst with subsequent 200/302 success"
+| sort 0 -failures
+```
+
+**Defender KQL:**
+```kql
+// RDWeb uses IIS Windows-auth by default; auth failures surface in DeviceLogonEvents under w3wp.exe initiator with LogonType Network.
+DeviceLogonEvents
+| where Timestamp > ago(2h)
+| where ActionType == "LogonFailed"
+| where LogonType in ("Network","RemoteInteractive")
+| where InitiatingProcessFileName in~ ("w3wp.exe","inetinfo.exe")
+| where RemoteIPType == "Public"
+| where AccountName !endswith "$"
+| summarize Failures=count(),
+            DistinctAccounts=dcount(AccountName),
+            AccountsTried=make_set(AccountName, 30),
+            FailureReasons=make_set(FailureReason, 5),
+            FirstSeen=min(Timestamp),
+            LastSeen=max(Timestamp)
+            by RemoteIP, DeviceName, bin(Timestamp, 10m)
+| where Failures >= 20 and DistinctAccounts >= 5   // spray shape: many users from one src
+| join kind=leftouter (
+    DeviceLogonEvents
+    | where Timestamp > ago(2h)
+    | where ActionType == "LogonSuccess"
+    | where InitiatingProcessFileName in~ ("w3wp.exe","inetinfo.exe")
+    | where RemoteIPType == "Public"
+    | summarize SuccessCount=count(),
+                SuccessAccounts=make_set(AccountName, 10),
+                SuccessTime=min(Timestamp)
+                by RemoteIP, DeviceName
+  ) on RemoteIP, DeviceName
+| extend BruteForceToSuccess = iif(isnotempty(SuccessCount), "yes", "no")
+| order by Failures desc
+```
+
+### [LLM] The Gentlemen RaaS — Fortinet/SonicWall/Cisco ASA SSL-VPN brute-force success from public source
+
+`UC_100_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Authentication where (Authentication.app IN ("fortigate","fortios","fortinet*","fortiproxy","sonicwall*","cisco_asa","cisco-asa","asa","anyconnect") OR Authentication.signature IN ("ssl-login*","ssl-new-con*","sslvpn*","webvpn*","SVC*","%ASA-6-113004","%ASA-6-113005","%ASA-6-605004","%ASA-6-605005")) by Authentication.src Authentication.dest Authentication.user Authentication.action _time span=30m
+| `drop_dm_object_name(Authentication)`
+| stats sum(eval(if(action="failure",count,0))) as failures sum(eval(if(action="success",count,0))) as successes values(eval(if(action="success",user,null()))) as success_users dc(user) as users_tried by src dest _time
+| where failures>=10 AND successes>=1
+| `cim_corporate_web_domain_search(src)` 
+| iplocation src
+| eval signal="The Gentlemen RaaS: Fortinet/SonicWall/Cisco ASA SSL-VPN brute-force then success — CVE-2024-55591 plausible"
+| table _time signal src dest Country failures successes users_tried success_users
+| sort 0 -_time
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -366,4 +436,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

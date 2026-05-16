@@ -32,12 +32,133 @@ The primary goal for attackers in a phishing campaign is to bypass email securit
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1656** — Impersonation
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1585.002** — Establish Accounts: Email Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Inbound phishing via Amazon SES with e-signature lure linking to AWS-hosted infrastructure
+
+`UC_221_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.src_user) as sender values(All_Email.message_id) as message_id values(All_Email.url) as url from datamodel=Email where All_Email.direction="inbound" (All_Email.message_id="*amazonses.com*" OR All_Email.src_user="*@*amazonses.com") (All_Email.subject IN ("*docusign*","*adobe sign*","*echosign*","*pandadoc*","*hellosign*","*sign and return*","*please review and sign*","*document for signature*","*signed document*","*completed: please sign*")) (All_Email.url="*amazonaws.com*" OR All_Email.url="*awstrack.me*" OR All_Email.url="*cloudfront.net*") by All_Email.recipient All_Email.src All_Email.message_id | `drop_dm_object_name("All_Email")` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let SignatureLures = dynamic(["docusign","adobe sign","echosign","hellosign","pandadoc","signnow","document for signature","please review and sign","review and sign","signed document","completed: please sign","completed via docusign","action required: sign"]);
+let AwsHosted = dynamic(["amazonaws.com","awstrack.me","cloudfront.net","awsapps.com"]);
+let SuspectMail = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    // Securelist: SES-routed phishing "almost always contains .amazonses.com in the Message-ID headers"
+    | where InternetMessageId has "amazonses.com"
+        or SenderMailFromDomain endswith "amazonses.com"
+    | where tolower(Subject) has_any (SignatureLures);
+SuspectMail
+| join kind=inner (
+    EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | where UrlDomain has_any (AwsHosted)
+    | project NetworkMessageId, Url, UrlDomain, UrlLocation
+  ) on NetworkMessageId
+| project Timestamp, NetworkMessageId, InternetMessageId,
+          SenderFromAddress, SenderMailFromAddress, SenderMailFromDomain,
+          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation,
+          Url, UrlDomain, UrlLocation
+| order by Timestamp desc
+```
+
+### [LLM] Click on Amazon SES-routed phishing link to AWS-hosted credential-harvest page
+
+`UC_221_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as clickTime values(Web.user) as user values(Web.url) as url values(Web.src) as src values(All_Email.message_id) as message_id values(All_Email.subject) as subject from datamodel=Web where Web.url IN ("*amazonaws.com*","*awstrack.me*","*cloudfront.net*") by Web.user Web.dest Web.url | join type=inner user [| tstats `summariesonly` count from datamodel=Email where All_Email.direction="inbound" All_Email.message_id="*amazonses.com*" by All_Email.recipient All_Email.message_id All_Email.subject | rename All_Email.recipient as user] | `security_content_ctime(clickTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let AwsHosted = dynamic(["amazonaws.com","awstrack.me","cloudfront.net","awsapps.com"]);
+let SesEmails = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | where InternetMessageId has "amazonses.com"
+        or SenderMailFromDomain endswith "amazonses.com"
+    | project NetworkMessageId, EmailTime = Timestamp,
+              SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress,
+              Subject, InternetMessageId;
+let SesUrls = SesEmails
+    | join kind=inner (
+        EmailUrlInfo
+        | where Timestamp > ago(LookbackDays)
+        | where UrlDomain has_any (AwsHosted)
+        | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId;
+UrlClickEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any (AwsHosted)
+| join kind=inner SesUrls on $left.Url == $right.Url
+| project ClickTime = Timestamp, AccountUpn, IPAddress, ActionType,
+          IsClickedThrough, EmailTime, SenderFromAddress, RecipientEmailAddress,
+          Subject, InternetMessageId, Url, UrlDomain
+| order by ClickTime desc
+```
+
+### [LLM] Compromised IAM key prepares SES for mass phishing (CreateAccessKey + AttachUserPolicy + SendEmail burst)
+
+`UC_221_6` · phase: **weapon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`cloudtrail` eventSource IN ("ses.amazonaws.com","email.amazonaws.com","iam.amazonaws.com","support.amazonaws.com") eventName IN ("SendEmail","SendRawEmail","SendBulkTemplatedEmail","VerifyEmailIdentity","VerifyDomainIdentity","UpdateAccountSendingEnabled","PutAccountDetails","CreateAccessKey","AttachUserPolicy","CreatePolicy","CreateCase") | stats count earliest(_time) as firstTime latest(_time) as lastTime values(eventName) as eventNames values(awsRegion) as regions dc(eventName) as uniqueEventNames by userIdentity.userName userIdentity.accountId sourceIPAddress | where uniqueEventNames>=2 AND mvfind(eventNames,"SendEmail|SendRawEmail|SendBulkTemplatedEmail|UpdateAccountSendingEnabled")>=0 AND mvfind(eventNames,"CreateAccessKey|AttachUserPolicy|CreatePolicy|CreateCase")>=0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackHours = 24h;
+let SesActions = dynamic(["SendEmail","SendRawEmail","SendBulkTemplatedEmail","VerifyEmailIdentity","VerifyDomainIdentity","UpdateAccountSendingEnabled","PutAccountDetails","CreateConfigurationSet","CreateEmailIdentity"]);
+let StagingActions = dynamic(["CreateAccessKey","AttachUserPolicy","CreatePolicy","CreateCase","PutUserPolicy"]);
+CloudAppEvents
+| where Timestamp > ago(LookbackHours)
+| where Application has_any ("Amazon Web Services","AWS")
+| extend Raw = parse_json(tostring(RawEventData))
+| extend EventName = tostring(Raw.eventName),
+         EventSource = tostring(Raw.eventSource),
+         AwsRegion = tostring(Raw.awsRegion),
+         PolicyName = tostring(Raw.requestParameters.policyName),
+         AccessKeyId = tostring(Raw.userIdentity.accessKeyId),
+         PrincipalArn = tostring(Raw.userIdentity.arn)
+| where EventName in (SesActions) or EventName in (StagingActions)
+| summarize Events = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            SesEventsSeen = make_set_if(EventName, EventName in (SesActions)),
+            StagingEventsSeen = make_set_if(EventName, EventName in (StagingActions)),
+            SuspiciousPolicies = make_set_if(PolicyName, PolicyName has_any ("ses","support","admin","FullAccess")),
+            Regions = make_set(AwsRegion, 10),
+            SourceIPs = make_set(IPAddress, 10),
+            Countries = make_set(CountryCode, 10)
+            by PrincipalArn, AccessKeyId
+| where array_length(SesEventsSeen) > 0 and array_length(StagingEventsSeen) > 0
+| order by Events desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -218,4 +339,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -39,12 +39,51 @@ Many solutions have been proposed to reduce software bugs: zero-defect mandates,
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1496** — Resource Hijacking
+- **T1055** — Process Injection
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Talos weekly top-prevalent malware hash watch (Coinminer / Injector / W32.Variant)
+
+`UC_44_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","dbd8dbecaa80795c135137d69921fdba","c2efb2dcacba6d3ccc175b6ce1b7ed0a") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","dbd8dbecaa80795c135137d69921fdba","c2efb2dcacba6d3ccc175b6ce1b7ed0a") OR Filesystem.file_name IN ("VID001.exe","u112417.dat","APQ9305.dll") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` ] | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let MaliciousSHA256 = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59"]);
+let MaliciousMD5 = dynamic(["2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","dbd8dbecaa80795c135137d69921fdba","c2efb2dcacba6d3ccc175b6ce1b7ed0a"]);
+let KnownFilenames = dynamic(["VID001.exe","u112417.dat","APQ9305.dll"]);
+union
+  ( DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where SHA256 in (MaliciousSHA256)
+        or MD5 in (MaliciousMD5)
+        or InitiatingProcessSHA256 in (MaliciousSHA256)
+        or InitiatingProcessMD5 in (MaliciousMD5)
+    | extend SourceTable = "DeviceProcessEvents"
+    | project Timestamp, SourceTable, DeviceName, AccountName, FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where SHA256 in (MaliciousSHA256) or MD5 in (MaliciousMD5)
+    | extend SourceTable = "DeviceFileEvents"
+    | project Timestamp, SourceTable, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine ),
+  ( DeviceImageLoadEvents
+    | where Timestamp > ago(7d)
+    | where SHA256 in (MaliciousSHA256) or MD5 in (MaliciousMD5)
+    | extend SourceTable = "DeviceImageLoadEvents"
+    | project Timestamp, SourceTable, DeviceName, FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine )
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -241,7 +280,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The time of much patching is coming
 
-`UC_42_8` · phase: **exploit** · confidence: **High**
+`UC_44_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -298,4 +337,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

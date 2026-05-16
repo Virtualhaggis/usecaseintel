@@ -28,12 +28,67 @@ The incident, confirmed by developers and security researchers, occurred between
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1036.001** — Masquerading: Invalid Code Signature
+- **T1553.002** — Subvert Trust Controls: Code Signing
+- **T1204.002** — User Execution: Malicious File
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1027.002** — Software Packing
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] JDownloader trojanized installer — process signed/branded as 'Zipline LLC' or 'The Water Team' instead of AppWork GmbH
+
+`UC_4_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_company="Zipline LLC" OR Processes.process_company="The Water Team" OR Processes.process_publisher="Zipline LLC" OR Processes.process_publisher="The Water Team") OR (Processes.process_name="JDownloader*Installer*" AND NOT (Processes.process_company="AppWork GmbH" OR Processes.process_publisher="AppWork GmbH")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_company Processes.process_publisher Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessVersionInfoCompanyName in~ ("Zipline LLC", "The Water Team")
+   or (FileName has "jdownloader" and not(ProcessVersionInfoCompanyName =~ "AppWork GmbH"))
+   or (InitiatingProcessVersionInfoCompanyName in~ ("Zipline LLC", "The Water Team"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCompany = ProcessVersionInfoCompanyName,
+          ProcessProduct = ProcessVersionInfoProductName,
+          ParentCompany = InitiatingProcessVersionInfoCompanyName,
+          ProcessCommandLine, InitiatingProcessFileName, FileOriginUrl = tostring(parse_json(AdditionalFields).FileOriginUrl)
+| order by Timestamp desc
+```
+
+### [LLM] JDownloader installer spawning Python interpreter or PyInstaller _MEI temp dir (Python RAT execution)
+
+`UC_4_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="JDownloader*Installer*.exe" OR Processes.parent_process="*JDownloader*" OR match(Processes.parent_process,"(?i)jdownloader")) AND (Processes.process_name IN ("python.exe","pythonw.exe","py.exe") OR Processes.process="*\\_MEI*\\*" OR Processes.process="*\\Temp\\_MEI*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName has "jdownloader" or InitiatingProcessFolderPath has "JDownloader" or InitiatingProcessVersionInfoProductName has "JDownloader")
+| where FileName in~ ("python.exe","pythonw.exe","py.exe") 
+     or FolderPath matches regex @"(?i)\\Temp\\_MEI\d+\\" 
+     or ProcessCommandLine matches regex @"(?i)_MEI\d+"
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentCompany = InitiatingProcessVersionInfoCompanyName,
+          Child = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 
@@ -199,4 +254,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

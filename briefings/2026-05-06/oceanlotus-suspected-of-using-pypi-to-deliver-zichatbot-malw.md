@@ -65,12 +65,127 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1027.013** — Encrypted/Encoded File
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] OceanLotus ZiChatBot persistence: 'pkt-update' Run key → vcpacket\vcpktsvr.exe
+
+`UC_192_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Microsoft\\Windows\\CurrentVersion\\Run*" AND (Registry.registry_value_name="pkt-update" OR Registry.registry_value_data="*\\vcpacket\\vcpktsvr.exe*")) by Registry.dest Registry.user Registry.process_name Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run"
+| where RegistryValueName =~ "pkt-update"
+   or RegistryValueData has @"\vcpacket\vcpktsvr.exe"
+   or RegistryValueData has_all (@"\AppData\Local\vcpacket\", "vcpktsvr.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RegistryKey, RegistryValueName, RegistryValueData
+```
+
+### [LLM] ZiChatBot C2 to helper.zulipchat.com via Zulip REST API
+
+`UC_192_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="helper.zulipchat.com" OR All_Traffic.dest_url="*helper.zulipchat.com*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_url All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="helper.zulipchat.com" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let lookback = 30d;
+let zulip_c2 = dynamic(["helper.zulipchat.com"]);
+let zulip_auth_b64 = "TW9yaWFuLWJvdEBoZWxwZXIuenVsaXBjaGF0LmNvbTpVOFJFWGxJNktmOHFYQjlyUXpPUEJpSUE0YnJKNThxRw==";
+(
+    DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | where RemoteUrl in~ (zulip_c2)
+       or InitiatingProcessFileName in~ ("vcpktsvr.exe")
+       or InitiatingProcessFolderPath has @"\AppData\Local\vcpacket\"
+    | project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine, InitiatingProcessSHA256
+)
+| union (
+    DeviceEvents
+    | where Timestamp > ago(lookback)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q in~ (zulip_c2)
+       and InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","slack.exe","teams.exe")
+    | project Timestamp, DeviceName, ActionType, Q, InitiatingProcessFileName,
+              InitiatingProcessFolderPath, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
+### [LLM] Malicious PyPI wheel (colorinal/uuid32-utils/termncolor) drops terminate.dll loaded by python.exe
+
+`UC_192_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","pip.exe","pip3.exe") AND (Processes.process_name="vcpktsvr.exe" OR Processes.process IN ("*\\colorinal*\\terminate.dll*","*\\uuid32_utils*\\terminate.dll*","*\\vcpacket\\vcpktsvr.exe*"))) OR (Processes.process_name="vcpktsvr.exe" AND Processes.parent_process_path="*\\AppData\\Local\\vcpacket\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("terminate.dll","terminate.so","libcef.dll","vcpktsvr.exe") AND (Filesystem.file_path IN ("*\\site-packages\\colorinal*","*\\site-packages\\uuid32_utils*","*\\AppData\\Local\\vcpacket\\*","/tmp/obsHub/*"))) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let known_md5 = dynamic([
+    "c33782c94c29dd268a42cbe03542bca5","454b85dc32dc8023cd2be04e4501f16a",
+    "1995682d600e329b7833003a01609252","38b75af6cbdb60127decd59140d10640",
+    "a26019b68ef060e593b8651262cbd0f6","fce65c540d8186d9506e2f84c38a57c4",
+    "652f4da6c467838957de19eed40d39da","48be833b0b0ca1ad3cf99c66dc89c3f4"]);
+let wheel_paths = dynamic([@"\site-packages\colorinal",@"\site-packages\uuid32_utils",@"\colorinal-0.1.7-py3-none-",@"\uuid32_utils-1."]);
+union isfuzzy=true
+( DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","pip.exe")
+    | where FileName =~ "terminate.dll"
+       or FolderPath has_any (wheel_paths)
+       or MD5 in (known_md5)
+    | project Timestamp, DeviceName, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, FileName, FolderPath, MD5, SHA256 ),
+( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where (FileName in~ ("terminate.dll","terminate.so","libcef.dll","vcpktsvr.exe")
+             and (FolderPath has @"\site-packages\colorinal"
+               or FolderPath has @"\site-packages\uuid32_utils"
+               or FolderPath has @"\AppData\Local\vcpacket\"
+               or FolderPath startswith "/tmp/obsHub/"))
+         or MD5 in (known_md5)
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, MD5, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine ),
+( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where (FileName =~ "vcpktsvr.exe" and FolderPath has @"\vcpacket\")
+         or (InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","pip.exe")
+             and (ProcessCommandLine has "terminate.dll" or ProcessCommandLine has "xterminalunicod"))
+         or MD5 in (known_md5)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+              ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, MD5, SHA256 )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -369,4 +484,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

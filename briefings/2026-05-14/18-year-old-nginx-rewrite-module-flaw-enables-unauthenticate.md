@@ -30,12 +30,88 @@ The vulnerability, discovered by depthfirst, is a heap buffer overflow issue imp
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1499.004** — Endpoint Denial of Service: Application or System Exploitation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] NGINX worker process crash burst — CVE-2026-42945 (Rift) heap overflow exploitation
+
+`UC_68_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`nginx_error_indexes` ("worker process" AND ("exited on signal 11" OR "exited on signal 6" OR "exited on signal 7" OR "SIGSEGV" OR "SIGABRT"))
+| rex "worker process (?<worker_pid>\d+) exited on signal (?<signal>\d+)"
+| bin _time span=10m
+| stats count AS crash_count, dc(worker_pid) AS distinct_workers, values(signal) AS signals, latest(_raw) AS sample by _time, host
+| where crash_count >= 3
+| eval cve="CVE-2026-42945 / 42946 / 40701 / 42934"
+```
+
+**Defender KQL:**
+```kql
+// MDE for Linux — repeated nginx worker spawns indicate a crash/respawn loop.
+// Healthy nginx workers persist; a sustained burst of new worker PIDs on one
+// host within minutes mirrors the heap-overflow exploit chain restarting workers.
+DeviceProcessEvents
+| where Timestamp > ago(1h)
+| where FileName =~ "nginx" or InitiatingProcessFileName =~ "nginx"
+| where ProcessCommandLine has "worker process" or InitiatingProcessCommandLine has "master process"
+| summarize WorkerSpawns = count(),
+            DistinctPids = dcount(ProcessId),
+            SampleCmd    = any(ProcessCommandLine),
+            FirstSeen    = min(Timestamp),
+            LastSeen     = max(Timestamp)
+            by DeviceName, DeviceId, bin(Timestamp, 10m)
+| where WorkerSpawns >= 5     // 5 = empirical: idle nginx respawns 0/10m, reload = 1-2/10m
+| order by Timestamp desc
+```
+
+### [LLM] Exposure inventory — hosts running NGINX versions vulnerable to CVE-2026-42945/42946/40701/42934
+
+`UC_68_6` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, values(Vulnerabilities.signature) AS signatures, values(Vulnerabilities.severity) AS severity, latest(_time) AS last_seen
+  FROM datamodel=Vulnerabilities
+  WHERE Vulnerabilities.cve IN ("CVE-2026-42945","CVE-2026-42946","CVE-2026-40701","CVE-2026-42934")
+  BY Vulnerabilities.dest, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval priority=case(cve="CVE-2026-42945","CRITICAL-RCE-Rift", true(),"HIGH-Worker-Restart")
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+// Direct CVE→device join. The four CVEs all come from the same F5 advisory and
+// share remediation cadence, so surface them together for unified patch priority.
+let TargetCVEs = dynamic(["CVE-2026-42945","CVE-2026-42946","CVE-2026-40701","CVE-2026-42934"]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (TargetCVEs)
+| join kind=leftouter (
+    DeviceTvmSoftwareVulnerabilitiesKB
+    | project CveId, CvssScore, IsExploitAvailable, PublishedDate
+  ) on CveId
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId
+  ) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, IsInternetFacing, PublicIP,
+          SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, CvssScore, VulnerabilitySeverityLevel,
+          IsExploitAvailable, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| extend Priority = case(
+    CveId == "CVE-2026-42945" and IsInternetFacing == true, "P0-Internet-Facing-Rift",
+    CveId == "CVE-2026-42945", "P1-Rift-Internal",
+    IsInternetFacing == true, "P2-Internet-Facing",
+    "P3-Internal")
+| order by Priority asc, CvssScore desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -219,4 +295,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,4 +1,4 @@
-# [CRIT] Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
+# [HIGH] Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
 
 **Source:** The Hacker News
 **Published:** 2026-05-11
@@ -13,7 +13,6 @@ The project, named Open-OSS/privacy-filter , masqueraded as its legitimate count
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
 - **Domain (defanged):** `api.eth-fastscan.org`
 - **Domain (defanged):** `recargapopular.com`
 - **Domain (defanged):** `welovechinatown.info`
@@ -25,7 +24,6 @@ The project, named Open-OSS/privacy-filter , masqueraded as its legitimate count
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -38,12 +36,116 @@ The project, named Open-OSS/privacy-filter , masqueraded as its legitimate count
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1102** — Web Service
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1070.004** — Indicator Removal: File Deletion
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Hugging Face Open-OSS/privacy-filter C2 egress (api.eth-fastscan.org, recargapopular.com, welovechinatown.info)
+
+`UC_117_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answer values(DNS.record_type) as record_type from datamodel=Network_Resolution.DNS where (DNS.query="api.eth-fastscan.org" OR DNS.query="*.eth-fastscan.org" OR DNS.query="eth-fastscan.org" OR DNS.query="recargapopular.com" OR DNS.query="*.recargapopular.com" OR DNS.query="welovechinatown.info" OR DNS.query="*.welovechinatown.info") by host DNS.src DNS.query | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _campaign_c2 = dynamic(["api.eth-fastscan.org","eth-fastscan.org","recargapopular.com","welovechinatown.info"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemoteUrl has_any (_campaign_c2)
+    | project Timestamp, DeviceName, Source="DeviceNetworkEvents",
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort ),
+  ( DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
+    | where Query has_any (_campaign_c2)
+    | project Timestamp, DeviceName, Source="DnsQueryResponse",
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, RemoteUrl=Query, RemoteIP="", RemotePort=int(null) )
+| order by Timestamp desc
+```
+
+### [LLM] Python loader.py spawning PowerShell/cmd referencing JSON Keeper dead drop or eth-fastscan stager
+
+`UC_117_12` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe") OR Processes.parent_process="*loader.py*") Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") (Processes.process="*jsonkeeper.com*" OR Processes.process="*eth-fastscan.org*" OR Processes.process="*eth-fastscan*" OR Processes.process="*update.bat*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","py.exe")
+     or InitiatingProcessCommandLine has "loader.py"
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| where ProcessCommandLine has_any ("jsonkeeper.com","eth-fastscan.org","eth-fastscan","update.bat")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] Self-deleting one-shot SYSTEM scheduled task running PowerShell from %TEMP% (HiddenLayer 'one-shot launcher')
+
+`UC_117_13` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name=schtasks.exe (Processes.process="*/create*" OR Processes.process="*-create*" OR Processes.process="*/delete*" OR Processes.process="*-delete*") by _time host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=process "(?i)/tn\s+[\"']?(?<task_name>[^\"'\s]+)" | eval action=if(match(process,"(?i)(/|-)create"),"create",if(match(process,"(?i)(/|-)delete"),"delete",null())) | where isnotnull(action) AND isnotnull(task_name) | stats min(_time) as create_time max(_time) as delete_time values(eval(if(action="create",process,null()))) as create_cmd values(eval(if(action="delete",process,null()))) as delete_cmd dc(action) as actions by host user task_name | where actions=2 AND (delete_time-create_time) <= 300 AND (delete_time-create_time) >= 0 AND (match(mvjoin(create_cmd," "),"(?i)(powershell|pwsh)") AND match(mvjoin(create_cmd," "),"(?i)(\\\\Temp\\\\|AppData\\\\Local\\\\Temp|%TEMP%)")) | eval delay_sec=delete_time-create_time | table host user task_name delay_sec create_time delete_time create_cmd delete_cmd
+```
+
+**Defender KQL:**
+```kql
+let lookback = 7d;
+let WindowSec = 300;
+let TaskCreates =
+    DeviceProcessEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "schtasks.exe"
+    | where ProcessCommandLine has_any ("/create","-create","/CREATE")
+    | where ProcessCommandLine has_any ("powershell","pwsh")
+    | where ProcessCommandLine has_any (@"\Temp\", @"\AppData\Local\Temp", "%TEMP%")
+    | extend TaskName = extract(@"(?i)/tn\s+[""']?([^""'\s]+)", 1, ProcessCommandLine)
+    | where isnotempty(TaskName)
+    | project DeviceId, DeviceName, CreateTime = Timestamp,
+              CreateCmd = ProcessCommandLine, TaskName, AccountName;
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has_any ("/delete","-delete","/DELETE")
+| extend DelTaskName = extract(@"(?i)/tn\s+[""']?([^""'\s]+)", 1, ProcessCommandLine)
+| where isnotempty(DelTaskName)
+| join kind=inner TaskCreates on DeviceId, $left.DelTaskName == $right.TaskName
+| where Timestamp between (CreateTime .. CreateTime + WindowSec * 1s)
+| extend DelaySec = datetime_diff('second', Timestamp, CreateTime)
+| where DelaySec >= 0 and DelaySec <= WindowSec
+| project DeviceName, AccountName, CreateTime, DeleteTime = Timestamp, DelaySec,
+          TaskName, CreateCmd, DeleteCmd = ProcessCommandLine
+| order by CreateTime desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -368,7 +470,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
 
-`UC_116_11` · phase: **exploit** · confidence: **High**
+`UC_117_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,10 +524,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `api.eth-fastscan.org`, `recargapopular.com`, `welovechinatown.info`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

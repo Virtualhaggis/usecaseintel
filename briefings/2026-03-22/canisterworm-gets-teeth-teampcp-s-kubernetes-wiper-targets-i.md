@@ -12,11 +12,8 @@ The script uses the exact same ICP canister ( tdtqy-oyaaa-aaaae-af2dq-cai[.]raw[
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`
-- **Domain (defanged):** `souls-entire-defined-routes.trycloudflare`
 - **Domain (defanged):** `souls-entire-defined-routes.trycloudflare.com`
-- **Domain (defanged):** `icp0.io`
 - **Domain (defanged):** `championships-peoples-point-cassette.trycloudflare.com`
-- **Domain (defanged):** `investigation-launches-hearings-copying.trycloudflare.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -262,7 +259,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `souls-entire-defined-routes.trycloudflare`, `souls-entire-defined-routes.trycloudflare.com`, `icp0.io`, `championships-peoples-point-cassette.trycloudflare.com`, `investigation-launches-hearings-copying.trycloudflare.com`
+  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `souls-entire-defined-routes.trycloudflare.com`, `championships-peoples-point-cassette.trycloudflare.com`
 
 
 ## Why this matters

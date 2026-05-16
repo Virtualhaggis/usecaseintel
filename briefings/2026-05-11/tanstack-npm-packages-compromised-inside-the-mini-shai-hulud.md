@@ -14,18 +14,11 @@ May 11, 2026
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45321`
-- **Domain (defanged):** `filev2.getsession.org`
-- **SHA256:** `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2186c40aa`
-- **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
-- **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
-- **SHA1:** `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
-- **SHA1:** `d4323d4df104b026a6aa633fdb11d772146be0bf`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
@@ -39,12 +32,85 @@ May 11, 2026
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1041** — Exfiltration Over C2 Channel
+- **T1071.004** — Application Layer Protocol: DNS
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mini Shai-Hulud Wave 4 (TanStack/TeamPCP) worm payload file created in node_modules
+
+`UC_118_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.process_name) as process_names values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where (Filesystem.file_name="router_init.js" OR Filesystem.file_name="tanstack_runner.js" OR Filesystem.file_name="vite_setup.mjs") AND Filesystem.file_path="*node_modules*" by Filesystem.dest Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _knownHashes = dynamic(["ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c","2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96"]);
+let _affectedNamespaces = dynamic([@"\@tanstack\",@"/@tanstack/",@"\@mistralai\",@"/@mistralai/",@"\@uipath\",@"/@uipath/",@"\@draftlab\",@"/@draftlab/",@"\@draftauth\",@"/@draftauth/",@"\@squawk\",@"/@squawk/"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("router_init.js","tanstack_runner.js","vite_setup.mjs")
+   or SHA256 in (_knownHashes)
+| where FolderPath has "node_modules"
+   or FolderPath has_any (_affectedNamespaces)
+   or FolderPath has_any ("safe-action","cmux-agent-mcp","nextmove-mcp","ts-dna","cross-stitch")
+| project Timestamp, DeviceName, FileName, FolderPath, FileSize, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Session/Oxen P2P exfil DNS or TCP to getsession.org from build/CI host
+
+`UC_118_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src_hosts values(DNS.answer) as answers from datamodel=Network_Resolution.DNS where (DNS.query="*.getsession.org" OR DNS.query="getsession.org" OR DNS.query="filev2.getsession.org" OR DNS.query="seed1.getsession.org" OR DNS.query="seed2.getsession.org" OR DNS.query="seed3.getsession.org") by DNS.src DNS.query
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| appendpipe [| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*.getsession.org" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]
+```
+
+**Defender KQL:**
+```kql
+let _sessionDomains = dynamic(["getsession.org","filev2.getsession.org","seed1.getsession.org","seed2.getsession.org","seed3.getsession.org"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl endswith "getsession.org"
+    | project Timestamp, DeviceName, Source="NetworkEvent", Indicator=RemoteUrl,
+              RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q endswith "getsession.org"
+    | project Timestamp, DeviceName, Source="DnsQuery", Indicator=Q,
+              RemoteIP=tostring(parse_json(AdditionalFields).IPAddresses),
+              RemotePort=int(null),
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName )
+| extend LikelyBuildHost = InitiatingProcessFileName in~ ("node.exe","node","bun.exe","bun","npm.exe","npm","pnpm.exe","pnpm","yarn.exe","yarn","Runner.Worker.exe","Runner.Worker")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -333,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack
 
-`UC_117_11` · phase: **exploit** · confidence: **High**
+`UC_118_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -384,16 +450,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `filev2.getsession.org`
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-45321`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2186c40aa`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `79ac49eedf774dd4b0cfa308722bc463cfe5885c`, `d4323d4df104b026a6aa633fdb11d772146be0bf`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

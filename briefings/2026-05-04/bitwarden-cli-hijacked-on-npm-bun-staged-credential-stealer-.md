@@ -11,6 +11,7 @@ Back to Blog Threat Intel Bitwarden CLI Hijacked on npm: Bun-Staged Credential S
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `94.154.172.43`
+- **Domain (defanged):** `audit.checkmarx.cx`
 - **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
 - **SHA256:** `8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14`
 
@@ -28,12 +29,90 @@ Back to Blog Threat Intel Bitwarden CLI Hijacked on npm: Bun-Staged Credential S
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — JavaScript
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Bitwarden CLI npm hijack: malicious bw_setup.js / bw1.js dropped under node_modules
+
+`UC_219_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14")) OR (Filesystem.file_path="*node_modules*@bitwarden*cli*bw_setup.js" OR Filesystem.file_path="*node_modules*@bitwarden*cli*bw1.js") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where SHA256 in ("18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14")
+    or (FolderPath has "node_modules" and FolderPath has "@bitwarden" and FolderPath has "cli" and FileName in~ ("bw_setup.js","bw1.js"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Outbound C2 to spoofed Checkmarx domain (audit.checkmarx.cx / 94.154.172.43)
+
+`UC_219_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="audit.checkmarx.cx" OR All_Traffic.dest_ip="94.154.172.43" OR All_Traffic.url="*audit.checkmarx.cx*") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.url | `drop_dm_object_name(All_Traffic)` | appendpipe [ | tstats summariesonly=t count from datamodel=Network_Resolution.DNS where (DNS.query="audit.checkmarx.cx" OR DNS.query="*.checkmarx.cx") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let c2_domain = "audit.checkmarx.cx";
+let c2_ip = "94.154.172.43";
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has c2_domain or RemoteIP == c2_ip
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Source="NetworkEvent" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has c2_domain
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP="", RemotePort=int(null), RemoteUrl=Q, Source="DnsQuery" )
+| order by Timestamp desc
+```
+
+### [LLM] npm preinstall chain: node executing bw_setup.js spawns Bun runtime (bw1.js)
+
+`UC_219_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*bw_setup.js*","*bw1.js*") OR (Processes.parent_process IN ("*bw_setup.js*","*bw1.js*")) OR (Processes.process_name IN ("bun","bun.exe") AND Processes.parent_process_name IN ("node","node.exe")) OR (Processes.process_name IN ("node","node.exe") AND Processes.process="*node_modules*@bitwarden*cli*bw_setup.js*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where
+    // node executing bw_setup.js (preinstall hook)
+    (InitiatingProcessFileName in~ ("node.exe","node") and (ProcessCommandLine has "bw_setup.js" or ProcessCommandLine has "bw1.js"))
+    // bun spawned as child of node — anomalous during npm install
+    or (FileName in~ ("bun.exe","bun") and InitiatingProcessFileName in~ ("node.exe","node"))
+    // bun executing bw1.js directly
+    or (FileName in~ ("bun.exe","bun") and ProcessCommandLine has "bw1.js")
+    // any process whose path is the malicious file location
+    or (ProcessCommandLine has "node_modules" and ProcessCommandLine has "@bitwarden" and ProcessCommandLine has_any ("bw_setup.js","bw1.js"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -317,7 +396,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `94.154.172.43`
+  - IP / domain IOC(s): `94.154.172.43`, `audit.checkmarx.cx`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`, `8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14`
@@ -325,4 +404,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

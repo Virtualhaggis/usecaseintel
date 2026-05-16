@@ -17,69 +17,154 @@ fast16.sys selectively targets high-precision calculation software, patching cod
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `mcafee.com`
 - **SHA256:** `9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525`
 - **SHA256:** `07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529`
 - **SHA256:** `8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9`
-- **SHA256:** `5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010`
-- **SHA256:** `09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22`
-- **SHA256:** `8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0`
-- **SHA256:** `06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47`
-- **SHA256:** `bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613`
-- **SHA256:** `da2b170994031477091be89c8835ff9db1a5304f3f2f25344654f44d0430ced1`
-- **SHA256:** `aeaa389453f04a9e79ff6c8b7b66db7b65d4aaffc6cac0bd7957257a30468e33`
-- **SHA256:** `37414d9ca87a132ec5081f3e7590d04498237746f9a7479c6b443accee17a062`
-- **SHA256:** `66fe485f29a6405265756aaf7f822b9ceb56e108afabd414ee222ee9657dd7e2`
-- **SHA256:** `c11a210cb98095422d0d33cbd4e9ecc86b95024f956ede812e17c97e79591cfa`
-- **SHA256:** `7e00030a35504de5c0d16020aa40cbaf5d36561e0716feb8f73235579a7b0909`
-- **SHA256:** `e775049d1ecf68dee870f1a5c36b2f3542d1182782eb497b8ccfd2309c400b3a`
 - **SHA1:** `de584703c78a60a56028f9834086facd1401b355`
-- **SHA1:** `2fa28ef1c6744bdc2021abd4048eefc777dccf22`
-- **SHA1:** `586edef41c3b3fba87bf0f0346c7e402f86fc11e`
-- **SHA1:** `3ce5b358c2ddd116ac9582efbb38354809999cb5`
-- **SHA1:** `650fc6b3e4f62ecdc1ec5728f36bb46ba0f74d05`
-- **SHA1:** `d475ace24b9aedebf431efc68f9db32d5ae761bd`
-- **SHA1:** `1ce1111702b765f5c4d09315ff1f0d914f7e5c70`
-- **SHA1:** `ca665b59bc590292f94c23e04fa458f90d7b20c9`
-- **SHA1:** `829f8be65dfe159d2b0dc7ee7a61a017acb54b7b`
-- **SHA1:** `e6018cd482c012de8b69c64dc3165337bc121b86`
-- **SHA1:** `145ef372c3e9c352eaaa53bb0893749163e49892`
-- **SHA1:** `952ed694b60c34ba12df9d392269eae3a4f11be4`
-- **SHA1:** `9e089a733fb2740c0e408b2a25d8f5a451584cf6`
-- **SHA1:** `92e9dcaf7249110047ef121b7586c81d4b8cb4e5`
-- **SHA1:** `675cb83cec5f25ebbe8d9f90dea3d836fcb1c234`
 - **MD5:** `dbe51eabebf9d4ef9581ef99844a2944`
 - **MD5:** `0ff6abe0252d4f37a196a1231fae5f26`
 - **MD5:** `410eddfc19de44249897986ecc8ac449`
-- **MD5:** `1d2f32c57ae2f2013f513d342925e972`
-- **MD5:** `af4461a149bfd2ba566f2abefe7dcde4`
-- **MD5:** `49a8934ccd34e2aaae6ea1e6a6313ffe`
-- **MD5:** `e0c10106626711f287ff91c0d6314407`
-- **MD5:** `2717b58246237b35d44ef2e49712d3a2`
-- **MD5:** `daea40562458fc7ae1adb812137d3d05`
-- **MD5:** `2740a703859cbd8b43425d4a2cacb5ec`
-- **MD5:** `ebff5b7d4c5becb8715009df596c5a91`
-- **MD5:** `cb66a4d52a30bfcd980fe50e7e3f73f0`
-- **MD5:** `075b4aa105e728f2b659723e3f36c72c`
-- **MD5:** `cf859f164870d113608a843e4a9600ab`
-- **MD5:** `f4dbbb78979c1ee8a1523c77065e18a5`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1543.003** — Persistence (article-specific)
+- **T1014** — Rootkit
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
+- **T1112** — Modify Registry
+- **T1564** — Hide Artifacts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] fast16 Sabotage Framework Hash IOC Sweep (svcmgmt.exe / fast16.sys / svcmgmt.dll)
+
+`UC_251_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525","07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529","8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9","5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010","09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22","8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0","06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47","bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613") OR Processes.parent_process_hash IN ("9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525","07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529","8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9","5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010","09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22","8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0","06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47","bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_hash Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| append [
+    | tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525","07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529","8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9","5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010","09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22","8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0","06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47","bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name
+    | `drop_dm_object_name(Filesystem)`
+    | `security_content_ctime(firstTime)`
+    | `security_content_ctime(lastTime)`
+]
+```
+
+**Defender KQL:**
+```kql
+let _fast16_sha256 = dynamic([
+    "9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525",
+    "07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529",
+    "8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9",
+    "5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010",
+    "09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22",
+    "8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0",
+    "06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47",
+    "bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613"]);
+let _fast16_sha1 = dynamic([
+    "de584703c78a60a56028f9834086facd1401b355",
+    "2fa28ef1c6744bdc2021abd4048eefc777dccf22",
+    "586edef41c3b3fba87bf0f0346c7e402f86fc11e",
+    "3ce5b358c2ddd116ac9582efbb38354809999cb5",
+    "650fc6b3e4f62ecdc1ec5728f36bb46ba0f74d05",
+    "d475ace24b9aedebf431efc68f9db32d5ae761bd",
+    "1ce1111702b765f5c4d09315ff1f0d914f7e5c70",
+    "ca665b59bc590292f94c23e04fa458f90d7b20c9"]);
+let _fast16_md5 = dynamic([
+    "dbe51eabebf9d4ef9581ef99844a2944",
+    "0ff6abe0252d4f37a196a1231fae5f26",
+    "410eddfc19de44249897986ecc8ac449",
+    "1d2f32c57ae2f2013f513d342925e972",
+    "af4461a149bfd2ba566f2abefe7dcde4",
+    "49a8934ccd34e2aaae6ea1e6a6313ffe",
+    "e0c10106626711f287ff91c0d6314407",
+    "2717b58246237b35d44ef2e49712d3a2"]);
+union isfuzzy=true
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (_fast16_sha256) or SHA1 in (_fast16_sha1) or MD5 in (_fast16_md5)
+       or InitiatingProcessSHA256 in (_fast16_sha256) or InitiatingProcessSHA1 in (_fast16_sha1) or InitiatingProcessMD5 in (_fast16_md5)
+    | project Timestamp, DeviceName, AccountName, EventSource="Process", FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256 ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (_fast16_sha256) or SHA1 in (_fast16_sha1) or MD5 in (_fast16_md5)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventSource="FileWrite", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256 ),
+  ( DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (_fast16_sha256) or SHA1 in (_fast16_sha1) or MD5 in (_fast16_md5)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventSource="ImageLoad", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256 )
+| order by Timestamp desc
+```
+
+### [LLM] fast16 Carrier Runtime Artefacts (SvcMgmt service / pipe p577 / \Device\fast16)
+
+`UC_251_6` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("svcmgmt.exe","svcmgmt.dll","fast16.sys") OR Filesystem.file_path="*\\Device\\fast16*" OR Filesystem.file_path="*\\pipe\\p577*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| append [
+    | tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Services\\SvcMgmt*" OR (Registry.registry_path="*\\Session Manager\\Memory Management\\PrefetchParameters*" AND Registry.registry_value_name="EnablePrefetcher" AND Registry.registry_value_data="0")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name
+    | `drop_dm_object_name(Registry)`
+    | `security_content_ctime(firstTime)`
+    | `security_content_ctime(lastTime)`
+]
+| append [
+    | tstats summariesonly=true allow_old_summaries=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where (Services.service_name="SvcMgmt" OR Services.service_path="*svcmgmt.exe*" OR Services.service_path="*fast16.sys*") by Services.dest Services.user Services.service_name Services.service_path Services.start_mode
+    | `drop_dm_object_name(Services)`
+    | `security_content_ctime(firstTime)`
+    | `security_content_ctime(lastTime)`
+]
+```
+
+**Defender KQL:**
+```kql
+let _fast16_files = dynamic(["svcmgmt.exe","svcmgmt.dll","fast16.sys"]);
+union isfuzzy=true
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where FileName in~ (_fast16_files)
+       or FolderPath has @"\Device\fast16"
+    | project Timestamp, DeviceName, EventSource=strcat("File:", ActionType), Detail=strcat(FolderPath, "\\", FileName), SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "NamedPipeEvent"
+    | where FileName has "p577" or AdditionalFields has "p577" or AdditionalFields has @"\\.\pipe\p577"
+    | project Timestamp, DeviceName, EventSource="NamedPipe", Detail=tostring(coalesce(FileName, AdditionalFields)), SHA256=InitiatingProcessSHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("DriverLoad","ServiceInstalled")
+    | where FileName in~ (_fast16_files) or FolderPath has @"fast16" or RegistryValueName has "SvcMgmt" or RegistryValueData has "svcmgmt.exe" or RegistryValueData has "fast16.sys"
+    | project Timestamp, DeviceName, EventSource=ActionType, Detail=strcat(coalesce(FolderPath,""), "\\", coalesce(FileName,""), " reg=", coalesce(RegistryValueData,"")), SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
+  ( DeviceRegistryEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+    | where (RegistryKey has @"\Services\SvcMgmt")
+         or (RegistryKey has @"\Session Manager\Memory Management\PrefetchParameters" and RegistryValueName =~ "EnablePrefetcher" and RegistryValueData == "0")
+         or (RegistryValueData has "svcmgmt.exe" or RegistryValueData has "fast16.sys")
+    | project Timestamp, DeviceName, EventSource=strcat("Registry:", ActionType), Detail=strcat(RegistryKey, " ", RegistryValueName, "=", RegistryValueData), SHA256=InitiatingProcessSHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=InitiatingProcessAccountName )
+| summarize HitCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Sources=make_set(EventSource), Details=make_set(Detail, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| where HitCount >= 1
+| order by LastSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -172,7 +257,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast16 | Mystery Shadow Brokers Reference Reveals High-Precision Software Sabota
 
-`UC_251_5` · phase: **exploit** · confidence: **High**
+`UC_251_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,13 +327,10 @@ DeviceRegistryEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `mcafee.com`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525`, `07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529`, `8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9`, `5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010`, `09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22`, `8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0`, `06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47`, `bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613` _(+37 more)_
+  - file hash IOC(s): `9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525`, `07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529`, `8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9`, `de584703c78a60a56028f9834086facd1401b355`, `dbe51eabebf9d4ef9581ef99844a2944`, `0ff6abe0252d4f37a196a1231fae5f26`, `410eddfc19de44249897986ecc8ac449`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

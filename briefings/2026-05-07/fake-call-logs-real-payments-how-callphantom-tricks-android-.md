@@ -18,22 +18,14 @@ There’s an app for everything nowadays… right? Well, looking up call records
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `34.120.160.131`
-- **IPv4 (defanged):** `34.120.206.254`
-- **Domain (defanged):** `lt-rtdb.firebaseio.com`
-- **Domain (defanged):** `ebaseio.com`
-- **Domain (defanged):** `firebaseio.com`
-- **Domain (defanged):** `callhistoryeditor.ca`
-- **Domain (defanged):** `on.datadetailswho.ca`
-- **Domain (defanged):** `details.callerids.ca`
-- **Domain (defanged):** `com.easyranktools.ca`
+- **SHA1:** `799BB5127CA54239D3D4A14367DB3B712012CF14`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -104,8 +96,8 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `34.120.160.131`, `34.120.206.254`, `lt-rtdb.firebaseio.com`, `ebaseio.com`, `firebaseio.com`, `callhistoryeditor.ca`, `on.datadetailswho.ca`, `details.callerids.ca` _(+1 more)_
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `799BB5127CA54239D3D4A14367DB3B712012CF14`
 
 
 ## Why this matters

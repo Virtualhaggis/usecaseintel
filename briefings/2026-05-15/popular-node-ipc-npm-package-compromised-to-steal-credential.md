@@ -34,12 +34,108 @@ Despite the maintainer publishing in March 2022 wea…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1074.001** — Data Staged: Local Data Staging
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] node-ipc supply chain: DNS TXT exfil to azurestaticprovider.net / bt.node.js with xh/xd/xf labels
+
+`UC_11_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Network_Resolution.record_type) as record_type values(Network_Resolution.src) as src values(Network_Resolution.dest) as dest from datamodel=Network_Resolution where (Network_Resolution.query="*azurestaticprovider.net" OR Network_Resolution.query="*.bt.node.js" OR Network_Resolution.query="bt.node.js" OR Network_Resolution.query="xh.*" OR Network_Resolution.query="xd.*" OR Network_Resolution.query="xf.*") by Network_Resolution.query host | `drop_dm_object_name(Network_Resolution)` | where record_type="TXT" OR query LIKE "%azurestaticprovider.net" OR query LIKE "%bt.node.js" | sort - count | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _c2_domains = dynamic(["azurestaticprovider.net","bt.node.js"]);
+let _exfil_prefixes = dynamic(["xh.","xd.","xf."]);
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| extend Q  = tolower(tostring(parse_json(AdditionalFields).QueryName)),
+         QT = tostring(parse_json(AdditionalFields).QueryType)
+| where Q endswith "azurestaticprovider.net"
+     or Q endswith "bt.node.js"
+     or Q startswith "xh." or Q startswith "xd." or Q startswith "xf."
+| summarize Queries = count(),
+            Unique = dcount(Q),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            Samples = make_set(Q, 10),
+            TxtCount = countif(QT == "TXT")
+            by DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Queries >= 1
+| order by Queries desc
+```
+
+### [LLM] node-ipc malicious version install via npm/yarn/pnpm (9.1.6, 9.2.3, 12.0.1)
+
+`UC_11_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm","npm.cmd","npm-cli.js","yarn","yarn.cmd","pnpm","pnpm.cmd","node.exe","node")) AND Processes.process="*node-ipc*" AND (Processes.process="*9.1.6*" OR Processes.process="*9.2.3*" OR Processes.process="*12.0.1*") by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _pkg_mgrs = dynamic(["npm","npm.cmd","npm-cli.js","yarn","yarn.cmd","pnpm","pnpm.cmd","node.exe","node"]);
+let _bad_versions = dynamic(["9.1.6","9.2.3","12.0.1"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (_pkg_mgrs) or InitiatingProcessFileName in~ (_pkg_mgrs)
+| where ProcessCommandLine has "node-ipc"
+| where ProcessCommandLine has_any (_bad_versions)
+| project Timestamp, DeviceName, AccountName, FileName, InitiatingProcessFileName,
+          ProcessCommandLine, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Node.js process stages credential archive: tar.gz in temp followed by DNS bursts
+
+`UC_11_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node.exe","node")) AND (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*/tmp/*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*" OR Filesystem.file_path="*/var/folders/*") AND (Filesystem.file_name="*.tar.gz" OR Filesystem.file_name="*.tgz") by host Filesystem.user | `drop_dm_object_name(Filesystem)` | sort - lastTime | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _tmp_paths = dynamic([@"\Temp\",@"\AppData\Local\Temp\","/tmp/","/var/folders/","/private/var/folders/"]);
+let TarGzInTemp = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "FileCreated"
+    | where InitiatingProcessFileName in~ ("node.exe","node")
+    | where FolderPath has_any (_tmp_paths)
+    | where FileName endswith ".tar.gz" or FileName endswith ".tgz"
+    | project Timestamp, DeviceName, DeviceId,
+              InitiatingProcessAccountName, InitiatingProcessCommandLine,
+              FileName, FolderPath, SHA256;
+let DnsBursts = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName)),
+             QT = tostring(parse_json(AdditionalFields).QueryType)
+    | where QT == "TXT" and (Q endswith "azurestaticprovider.net" or Q endswith "bt.node.js"
+         or Q startswith "xh." or Q startswith "xd." or Q startswith "xf.")
+    | summarize TxtQueries = count(), DnsFirst = min(Timestamp), DnsLast = max(Timestamp) by DeviceId;
+TarGzInTemp
+| join kind=leftouter DnsBursts on DeviceId
+| extend DnsLinked = iff(isnotempty(DnsFirst), "yes", "no")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -213,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular node-ipc npm package compromised to steal credentials
 
-`UC_9_7` · phase: **exploit** · confidence: **High**
+`UC_11_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -270,4 +366,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

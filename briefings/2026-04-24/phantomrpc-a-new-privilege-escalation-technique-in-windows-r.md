@@ -1,4 +1,4 @@
-# [HIGH] PhantomRPC: A new privilege escalation technique in Windows RPC
+# [CRIT] PhantomRPC: A new privilege escalation technique in Windows RPC
 
 **Source:** Securelist (Kaspersky)
 **Published:** 2026-04-24
@@ -36,12 +36,83 @@ Wind…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1543.003** — Persistence (article-specific)
+- **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
+- **T1068** — Exploitation for Privilege Escalation
+- **T1484.001** — Domain or Tenant Policy Modification: Group Policy Modification
+- **T1134.002** — Access Token Manipulation: Create Process with Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PhantomRPC coercion: Network Service / Local Service context spawning gpupdate.exe /force or ipconfig
+
+`UC_246_2` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as process_id values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name="gpupdate.exe" AND Processes.process="*/force*") OR Processes.process_name="ipconfig.exe" (Processes.parent_user_id IN ("S-1-5-19","S-1-5-20") OR Processes.parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") OR Processes.parent_process_name IN ("w3wp.exe","svchost.exe")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.parent_user | `drop_dm_object_name(Processes)` | where parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where (FileName =~ "gpupdate.exe" and ProcessCommandLine has "/force")
+   or FileName =~ "ipconfig.exe"
+// Initiating process is running as Network Service or Local Service — the SeImpersonatePrivilege-holding accounts targeted by PhantomRPC
+| where InitiatingProcessAccountName in~ ("network service", "local service", "iusr")
+   or InitiatingProcessAccountSid in ("S-1-5-19", "S-1-5-20")
+// Exclude legitimate SYSTEM-driven gpupdate (scheduled task)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, AccountSid,
+          FileName, ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentAccount = InitiatingProcessAccountName,
+          ParentSid = InitiatingProcessAccountSid,
+          ParentFolderPath = InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] PhantomRPC post-impersonation pivot: SYSTEM child process spawned by Network Service / Local Service parent
+
+`UC_246_3` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_id) as process_id values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.user IN ("NT AUTHORITY\\SYSTEM","SYSTEM") Processes.parent_user IN ("NT AUTHORITY\\NETWORK SERVICE","NT AUTHORITY\\LOCAL SERVICE") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","net.exe","net1.exe","reg.exe","sc.exe","taskkill.exe","whoami.exe") by Processes.dest Processes.user Processes.parent_user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+// Child runs as SYSTEM
+| where AccountSid == "S-1-5-18" or AccountName =~ "system"
+// Parent was running as Network Service or Local Service — the privilege boundary that PhantomRPC crosses
+| where InitiatingProcessAccountSid in ("S-1-5-19", "S-1-5-20")
+   or InitiatingProcessAccountName in~ ("network service", "local service")
+// Focus on hands-on-keyboard / discovery-flavoured children typical of post-LPE confirmation
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "rundll32.exe",
+                       "regsvr32.exe", "net.exe", "net1.exe", "reg.exe",
+                       "sc.exe", "taskkill.exe", "whoami.exe", "wmic.exe",
+                       "mshta.exe", "bitsadmin.exe", "certutil.exe")
+// Filter expected svchost-hosted SYSTEM behaviour (legitimate service spawns SYSTEM child via service start, not as a Network/Local Service parent)
+| where InitiatingProcessFileName !in~ ("services.exe", "wininit.exe", "smss.exe", "csrss.exe")
+| project Timestamp, DeviceName, ChildAccount = AccountName, ChildSid = AccountSid,
+          ChildProcess = FileName, ChildCmd = ProcessCommandLine,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentAccount = InitiatingProcessAccountName,
+          ParentSid = InitiatingProcessAccountSid,
+          ParentIntegrity = InitiatingProcessIntegrityLevel,
+          ChildIntegrity = ProcessIntegrityLevel,
+          ChildElevation = ProcessTokenElevation
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -124,4 +195,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

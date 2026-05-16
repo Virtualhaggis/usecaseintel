@@ -26,12 +26,107 @@ Back to Blog Threat Intel 20+ Popular NPM Packages Compromised (Chalk, Debug, St
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Phishing lure impersonating NPM 2FA support from typosquat domain npmjs.help
+
+`UC_415_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (All_Email.src_user="*@npmjs.help" OR All_Email.src_user_domain="npmjs.help" OR All_Email.subject="*npmjs.help*") by All_Email.src_user, All_Email.src_user_domain, All_Email.recipient, All_Email.subject, All_Email.message_id | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _attacker_domains = dynamic(["npmjs.help"]);
+EmailEvents
+| where Timestamp > ago(90d)
+| where EmailDirection == "Inbound"
+| where SenderFromDomain in~ (_attacker_domains)
+    or SenderMailFromDomain in~ (_attacker_domains)
+    or SenderFromAddress has "@npmjs.help"
+    or SenderMailFromAddress has "@npmjs.help"
+| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress,
+          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain
+| order by Timestamp desc
+```
+
+### [LLM] Egress to Qix npm-compromise attacker infrastructure (npmjs.help / b-cdn.net staging / publicvm.com WS)
+
+`UC_415_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query IN ("npmjs.help","*.npmjs.help","static-mw-host.b-cdn.net","img-data-backup.b-cdn.net","websocket-api2.publicvm.com")) by DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest="185.7.81.108" OR All_Traffic.dest_ip="185.7.81.108") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) ]
+```
+
+**Defender KQL:**
+```kql
+let _attacker_hosts = dynamic(["npmjs.help","static-mw-host.b-cdn.net","img-data-backup.b-cdn.net","websocket-api2.publicvm.com"]);
+let _attacker_ips = dynamic(["185.7.81.108"]);
+let NetHits =
+    DeviceNetworkEvents
+    | where Timestamp > ago(90d)
+    | where RemoteUrl has_any (_attacker_hosts)
+        or RemoteIP in (_attacker_ips)
+    | project Timestamp, DeviceName, DeviceId, AccountName=InitiatingProcessAccountName,
+              ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
+              RemoteIP, RemotePort, RemoteUrl, Source="DeviceNetworkEvents";
+let DnsHits =
+    DeviceEvents
+    | where Timestamp > ago(90d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has_any (_attacker_hosts)
+    | project Timestamp, DeviceName, DeviceId, AccountName=InitiatingProcessAccountName,
+              ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
+              RemoteIP="", RemotePort=int(null), RemoteUrl=Q, Source="DeviceEvents/DNS";
+union isfuzzy=true NetHits, DnsHits
+| order by Timestamp desc
+```
+
+### [LLM] Install / lockfile reference to one of the 18 compromised Qix NPM package@version strings
+
+`UC_415_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm","npm.exe","npm.cmd","npm-cli.js","yarn","yarn.exe","yarn.cmd","pnpm","pnpm.exe","pnpm.cmd","node","node.exe") OR Processes.parent_process_name IN ("npm.exe","npm.cmd","yarn.exe","pnpm.exe")) (Processes.process="*ansi-styles@6.2.2*" OR Processes.process="*strip-ansi@7.1.1*" OR Processes.process="*ansi-regex@6.2.1*" OR Processes.process="*debug@4.4.2*" OR Processes.process="*color-convert@3.1.1*" OR Processes.process="*color-name@2.0.1*" OR Processes.process="*supports-color@10.2.1*" OR Processes.process="*chalk@5.6.1*" OR Processes.process="*wrap-ansi@9.0.1*" OR Processes.process="*slice-ansi@7.1.1*" OR Processes.process="*color@5.0.1*" OR Processes.process="*color-string@2.1.1*" OR Processes.process="*is-arrayish@0.3.3*" OR Processes.process="*simple-swizzle@0.2.3*" OR Processes.process="*supports-hyperlinks@4.1.1*" OR Processes.process="*has-ansi@6.0.1*" OR Processes.process="*chalk-template@1.1.1*" OR Processes.process="*backslash@0.2.1*") by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _bad_pkg_versions = dynamic([
+  "ansi-styles@6.2.2","strip-ansi@7.1.1","ansi-regex@6.2.1","debug@4.4.2",
+  "color-convert@3.1.1","color-name@2.0.1","supports-color@10.2.1","chalk@5.6.1",
+  "wrap-ansi@9.0.1","slice-ansi@7.1.1","color@5.0.1","color-string@2.1.1",
+  "is-arrayish@0.3.3","simple-swizzle@0.2.3","supports-hyperlinks@4.1.1",
+  "has-ansi@6.0.1","chalk-template@1.1.1","backslash@0.2.1"]);
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where FileName in~ ("npm.exe","npm.cmd","npm-cli.js","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","node.exe")
+    or InitiatingProcessFileName in~ ("npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd")
+| where ProcessCommandLine has_any (_bad_pkg_versions)
+    or InitiatingProcessCommandLine has_any (_bad_pkg_versions)
+| project Timestamp, DeviceName, AccountName,
+          Process=FileName, ProcessCmd=ProcessCommandLine,
+          Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine,
+          FolderPath
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -295,4 +390,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

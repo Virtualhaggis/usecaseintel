@@ -16,6 +16,7 @@ Packages like json-bigint-extend , jsonfx , and jsonfb were mimicking the popula
 - **Domain (defanged):** `gameland.21game.live`
 - **Domain (defanged):** `gameland.myapptest.top`
 - **Domain (defanged):** `gameland.nbzysp1.com`
+- **Domain (defanged):** `gali.web.test.myapptest.top`
 
 ## MITRE ATT&CK Techniques
 
@@ -25,12 +26,95 @@ Packages like json-bigint-extend , jsonfx , and jsonfb were mimicking the popula
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Egress to sidoraress json-bigint-extend gambling backdoor C2 infrastructure
+
+`UC_413_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods from datamodel=Web.Web where (Web.url="*payment.y1pay.vip*" OR Web.url="*payment.snip-site.cc*" OR Web.url="*gameland.21game.live*" OR Web.url="*gameland.myapptest.top*" OR Web.url="*gameland.nbzysp1.com*" OR Web.dest IN ("payment.y1pay.vip","payment.snip-site.cc","gameland.21game.live","gameland.myapptest.top","gameland.nbzysp1.com")) by Web.src Web.dest Web.user Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| append [
+  | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("payment.y1pay.vip","payment.snip-site.cc","gameland.21game.live","gameland.myapptest.top","gameland.nbzysp1.com") OR DNS.query="*.y1pay.vip" OR DNS.query="*.snip-site.cc" OR DNS.query="*.21game.live" OR DNS.query="*.myapptest.top" OR DNS.query="*.nbzysp1.com" by DNS.src DNS.query DNS.answer DNS.record_type
+  | `drop_dm_object_name(DNS)`
+]
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _c2_hosts = dynamic(["payment.y1pay.vip","payment.snip-site.cc","gameland.21game.live","gameland.myapptest.top","gameland.nbzysp1.com"]);
+let _c2_paths = dynamic(["/v1/risk/get-risk-code","/v1/risk/log"]);
+union isfuzzy=true
+  (DeviceNetworkEvents
+   | where Timestamp > ago(30d)
+   | where RemoteUrl has_any (_c2_hosts) or RemoteUrl has_any (_c2_paths)
+   | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort,
+             InitiatingProcessFileName, InitiatingProcessCommandLine,
+             InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessSHA256),
+  (DeviceEvents
+   | where Timestamp > ago(30d)
+   | where ActionType == "DnsQueryResponse"
+   | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+   | where QueryName has_any (_c2_hosts) or QueryName endswith ".y1pay.vip" or QueryName endswith ".snip-site.cc" or QueryName endswith ".21game.live" or QueryName endswith ".myapptest.top" or QueryName endswith ".nbzysp1.com"
+   | project Timestamp, DeviceName, ActionType, QueryName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)
+| order by Timestamp desc
+```
+
+### [LLM] Installation of sidoraress malicious npm packages (json-bigint-extend/jsonfb/jsonfx)
+
+`UC_413_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","npm","node","yarn","pnpm","npx") OR Processes.parent_process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","npm","node","yarn","pnpm","npx")) (Processes.process="*json-bigint-extend*" OR Processes.process="*jsonfb*" OR Processes.process="*jsonfx*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _pkg_managers = dynamic(["npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","npm","node","yarn","pnpm","npx"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (_pkg_managers) or InitiatingProcessFileName in~ (_pkg_managers)
+| where (ProcessCommandLine has_any ("jsonfb","jsonfx") or ProcessCommandLine contains "json-bigint-extend")
+     or (InitiatingProcessCommandLine has_any ("jsonfb","jsonfx") or InitiatingProcessCommandLine contains "json-bigint-extend")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Inbound HTTP request bearing sidoraress backdoor x-operation operator tokens
+
+`UC_413_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as uas from datamodel=Web.Web where (Web.url="*cfh2DNITa84qpYQ0tdCz*" OR Web.url="*m3QiEkg8Y1r9LFTI5e4f*" OR Web.url="*Y3SrZjVqWOvKsBdpTCh7*" OR Web.url="*SJQf31UJkZ1f88q9m361*" OR Web.http_user_agent="*cfh2DNITa84qpYQ0tdCz*" OR Web.http_user_agent="*m3QiEkg8Y1r9LFTI5e4f*" OR Web.http_user_agent="*Y3SrZjVqWOvKsBdpTCh7*" OR Web.http_user_agent="*SJQf31UJkZ1f88q9m361*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| append [
+  search (sourcetype=nginx* OR sourcetype=apache* OR sourcetype=iis* OR sourcetype=*waf* OR sourcetype=*cef* OR tag=web)
+    ("cfh2DNITa84qpYQ0tdCz" OR "m3QiEkg8Y1r9LFTI5e4f" OR "Y3SrZjVqWOvKsBdpTCh7" OR "SJQf31UJkZ1f88q9m361")
+  | stats count min(_time) as firstTime max(_time) as lastTime by host src sourcetype uri http_method
+]
+| convert ctime(firstTime) ctime(lastTime)
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -169,9 +253,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`
+  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`, `gali.web.test.myapptest.top`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
