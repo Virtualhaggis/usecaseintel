@@ -24,12 +24,44 @@ The MCP gateway endpoint `/mcp-connect/{mcp_id}` does not enforce Access Control
 - **T1555.003** — Credentials from Web Browsers
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1190** — Exploit Public-Facing Application
+- **T1078** — Valid Accounts
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Obot /mcp-connect/{id} authenticated-user fan-out (ACR bypass probing)
+
+`UC_72_2` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, dc(Web.url) as DistinctMcpIds, values(Web.url) as SampledUrls, min(_time) as FirstSeen, max(_time) as LastSeen from datamodel=Web.Web where Web.url="*/mcp-connect/*" Web.http_method=POST Web.status=200 by Web.user, Web.src, _time span=10m
+| `drop_dm_object_name(Web)`
+| rex field=SampledUrls "/mcp-connect/(?<McpId>[^/?\s\"]+)"
+| where DistinctMcpIds>=5 AND user!=""
+| sort - DistinctMcpIds
+```
+
+### [LLM] First-time-seen authenticated user → MCP server ID pairing on /mcp-connect
+
+`UC_72_3` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t min(_time) as FirstSeen, count from datamodel=Web.Web where Web.url="*/mcp-connect/*" Web.http_method=POST Web.status=200 earliest=-30d@d latest=-4h by Web.user, Web.url
+| `drop_dm_object_name(Web)`
+| rex field=url "/mcp-connect/(?<McpId>[^/?\s\"]+)"
+| fields user, McpId
+| inputlookup append=t obot_mcp_access_recent.csv
+| eval pair=user."|".McpId
+| stats count, values(*) as * by pair
+| where count==1   // pair only in recent window, not in 30d baseline
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -90,4 +122,4 @@ CloudAppEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_782 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -50,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
 - [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
 - [ghsa critical cve 2026 45311 deepseek tui run tests tool ena](./2026-05-14/ghsa-critical-cve-2026-45311-deepseek-tui-run-tests-tool-ena.md)
-- [ghsa critical cve 2026 45353 electerm local code through ele](./2026-05-14/ghsa-critical-cve-2026-45353-electerm-local-code-through-ele.md)
 - [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
 - [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
@@ -76,7 +75,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
-- [microsoft patches 138 vulnerabilities including dns and netl](./2026-05-13/microsoft-patches-138-vulnerabilities-including-dns-and-netl.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
@@ -85,7 +83,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
-- [microsoft patch tuesday for may 2026 snort rules and promine](./2026-05-12/microsoft-patch-tuesday-for-may-2026-snort-rules-and-promine.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
@@ -122,7 +119,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [fake call history apps stole payments from users after 7 3 m](./2026-05-08/fake-call-history-apps-stole-payments-from-users-after-7-3-m.md)
 - [ghsa critical cve 2026 43940 electerm runwidget has a path t](./2026-05-08/ghsa-critical-cve-2026-43940-electerm-runwidget-has-a-path-t.md)
-- [ghsa critical cve 2026 43944 electerm users can run dangrous](./2026-05-08/ghsa-critical-cve-2026-43944-electerm-users-can-run-dangrous.md)
 - [ghsa critical cve 2026 44008 vm2 has sandbox breakout via ne](./2026-05-08/ghsa-critical-cve-2026-44008-vm2-has-sandbox-breakout-via-ne.md)
 - [ghsa critical cve 2026 44009 vm2 has sandbox breakout throug](./2026-05-08/ghsa-critical-cve-2026-44009-vm2-has-sandbox-breakout-throug.md)
 - [ghsa critical cve 2026 44211 cline kanban server has a cross](./2026-05-08/ghsa-critical-cve-2026-44211-cline-kanban-server-has-a-cross.md)
@@ -197,7 +193,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
 - [ghsa critical cve 2026 42864 firefighter has unauthenticated](./2026-05-05/ghsa-critical-cve-2026-42864-firefighter-has-unauthenticated.md)
 - [ghsa critical cve 2026 42882 s3 proxy has security issues in](./2026-05-05/ghsa-critical-cve-2026-42882-s3-proxy-has-security-issues-in.md)
-- [ghsa critical cve 2026 44221 arcadedb vulnerable to cross da](./2026-05-05/ghsa-critical-cve-2026-44221-arcadedb-vulnerable-to-cross-da.md)
 - [ghsa critical cve 2026 7411 eclipse basyx java server sdk vu](./2026-05-05/ghsa-critical-cve-2026-7411-eclipse-basyx-java-server-sdk-vu.md)
 - [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
@@ -371,7 +366,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teampcp deploys canisterworm on npm following trivy compromi](./2026-03-20/teampcp-deploys-canisterworm-on-npm-following-trivy-compromi.md)
 
 ## 2026-03-19
-- [building an adversarial consensus engine multi agent llms fo](./2026-03-19/building-an-adversarial-consensus-engine-multi-agent-llms-fo.md)
 - [cisa kev cve 2026 20131 cisco secure firewall management cen](./2026-03-19/cisa-kev-cve-2026-20131-cisco-secure-firewall-management-cen.md)
 - [edr killers explained beyond the drivers](./2026-03-19/edr-killers-explained-beyond-the-drivers.md)
 
@@ -652,9 +646,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-11-14
 - [cisa kev cve 2025 64446 fortinet fortiweb path traversal vul](./2025-11-14/cisa-kev-cve-2025-64446-fortinet-fortiweb-path-traversal-vul.md)
-
-## 2025-11-13
-- [how password managers can be hacked and how to stay safe](./2025-11-13/how-password-managers-can-be-hacked-and-how-to-stay-safe.md)
 
 ## 2025-11-12
 - [cisa kev cve 2025 12480 gladinet triofox improper access con](./2025-11-12/cisa-kev-cve-2025-12480-gladinet-triofox-improper-access-con.md)

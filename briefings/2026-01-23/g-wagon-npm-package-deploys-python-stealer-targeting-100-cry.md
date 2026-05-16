@@ -36,12 +36,80 @@ Blog Vulnerabilities & Threats G_Wagon: npm Package Deploys Python Stealer Targe
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1105** — Ingress Tool Transfer
+- **T1547** — Boot or Logon Autostart Execution
+- **T1070.004** — Indicator Removal: File Deletion (counter prevents reinfection)
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1140** — Deobfuscate/Decode Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] G_Wagon npm stealer C2 egress to specific Appwrite project/bucket IDs
+
+`UC_473_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user) as users from datamodel=Web where (Web.dest IN ("nyc.cloud.appwrite.io","fra.cloud.appwrite.io") OR Web.url="*688625a0000f8a1b71e8*" OR Web.url="*6886229e003d46469fab*" OR Web.url="*6968ea5600316c128f22*" OR Web.url="*6968e9e9000ee4ac710c*") by Web.src Web.dest Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime), ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any ("nyc.cloud.appwrite.io","fra.cloud.appwrite.io"))
+   or RemoteUrl has_any ("688625a0000f8a1b71e8","6886229e003d46469fab","6968ea5600316c128f22","6968e9e9000ee4ac710c")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] G_Wagon stealer execution-counter file (.gwagon_status) created in user home
+
+`UC_473_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_name=".gwagon_status" by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime), ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ ".gwagon_status"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] node.exe spawning Python interpreter with stdin pipe (G_Wagon in-memory dropper chain)
+
+`UC_473_12` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_path) as image_paths values(Processes.parent_process) as parent_cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" (Processes.process_name IN ("python.exe","python3.exe","python","python3") OR Processes.process_name IN ("tar.exe","tar")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where (match(process,"(?i)python(\.exe)?\s+-\s*$") OR match(process,"(?i)python(\.exe)?\s+-\s+") OR (match(process,"(?i)tar(\.exe)?") AND match(process,"-x") AND match(process,"-f\s+-")) OR match(process,"(?i)latest_script\.py")) | convert ctime(firstTime), ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where FileName in~ ("python.exe","python3.exe","python","python3","tar.exe","tar")
+| where (FileName has "python" and (ProcessCommandLine matches regex @"(?i)python(\.exe)?\s+-\s*$" or ProcessCommandLine matches regex @"(?i)python(\.exe)?\s+-\s+"))
+   or (FileName has "tar" and ProcessCommandLine has_all ("-x","-f") and ProcessCommandLine matches regex @"-f\s+-\s")
+   or ProcessCommandLine has "latest_script.py"
+   or InitiatingProcessSHA256 in ("ecde55186231f1220218880db30d704904dd3ff6b3096c745a1e15885d6e99cc","eb19a25480916520aecc30c54afdf6a0ce465db39910a5c7a01b1b3d1f693c4c","ff514331b93a76c9bbf1f16cdd04e79c576d8efd0d3587cb3665620c9bf49432","a576844e131ed6b51ebdfa7cd509233723b441a340529441fb9612f226fafe52")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -304,4 +372,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -43,7 +43,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemoteIPType == \"Public\" and ActionType == \"ConnectionSuccess\"\n| project DeviceName, RemoteIP, RemotePort, Timestamp\n| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc\n| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),\n         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)\n| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port\n| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)\n| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)\n    by DeviceName, RemoteIP, RemotePort\n| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0\n| order by conn_count desc\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/c2/UC_BEACONING.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_BEACONING.yml"
   ],
   "meta": {
     "tier": "alerting",

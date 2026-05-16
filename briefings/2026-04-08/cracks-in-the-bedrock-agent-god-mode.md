@@ -1,4 +1,4 @@
-# [CRIT] Cracks in the Bedrock: Agent God Mode
+# [HIGH] Cracks in the Bedrock: Agent God Mode
 
 **Source:** Unit 42 (Palo Alto)
 **Published:** 2026-04-08
@@ -33,13 +33,12 @@ Our first article about the boundar…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2025-55182`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1071.004** — DNS
 - **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1021.002** — SMB/Windows Admin Shares
@@ -51,12 +50,113 @@ Our first article about the boundar…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1213.003** — Code Repositories
+- **T1530** — Data from Cloud Storage
+- **T1552.007** — Container API
+- **T1213** — Data from Information Repositories
+- **T1565.001** — Stored Data Manipulation
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1078.004** — Cloud Accounts
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Bedrock AgentCore execution role pulls ECR image of a different agent
+
+`UC_303_8` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as repos values(All_Changes.src) as src_ip values(All_Changes.command) as commands from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("BatchGetImage","GetDownloadUrlForLayer","GetAuthorizationToken") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=10m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand repos | rex field=repos "repository/(?<repo_name>[^/\s\"]+)" | where isnotnull(role_agent) AND isnotnull(repo_name) AND NOT match(repo_name, role_agent) | stats count min(firstTime) as firstTime max(lastTime) as lastTime values(repo_name) as cross_agent_repos values(action) as actions values(src_ip) as src_ip by role_name | where mvcount(cross_agent_repos)>=1
+```
+
+**Defender KQL:**
+```kql
+// Requires Microsoft Defender for Cloud Apps AWS connector — Bedrock AgentCore role pulls a non-self ECR repo
+let window = 30m;
+let ecr_actions = dynamic(["GetAuthorizationToken","BatchGetImage","GetDownloadUrlForLayer","BatchCheckLayerAvailability"]);
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (ecr_actions)
+| extend RoleArn = tostring(parse_json(tostring(RawEventData)).userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend RepoArn = tostring(parse_json(tostring(RawEventData)).requestParameters.repositoryName)
+| where ActionType != "GetAuthorizationToken"  // pair the token grab with a subsequent image pull
+| where isnotempty(RepoArn) and isnotempty(RoleAgentTag)
+| where not(RepoArn has RoleAgentTag)
+| project Timestamp, AccountDisplayName, RoleArn, RoleAgentTag, ActionType, TargetRepository = RepoArn, IPAddress, CountryCode
+| order by Timestamp desc
+```
+
+### [LLM] Cross-agent Bedrock AgentCore memory access (GetMemory / RetrieveMemoryRecords)
+
+`UC_303_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as memory_arns values(All_Changes.src) as src_ip from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("GetMemory","RetrieveMemoryRecords","ListMemoryRecords","DeleteMemoryRecord") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=10m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand memory_arns | rex field=memory_arns "memory/(?<memory_id>[^/\s\"]+)" | rex field=memory_id "(?<memory_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)_mem-" | where isnotnull(role_agent) AND isnotnull(memory_agent) AND role_agent!=memory_agent | stats count values(action) as actions values(memory_id) as cross_agent_memory_ids values(src_ip) as src_ip min(firstTime) as firstTime max(lastTime) as lastTime by role_name role_agent
+```
+
+**Defender KQL:**
+```kql
+// Requires Defender for Cloud Apps AWS connector ingesting bedrock-agentcore data-plane CloudTrail events
+let memory_actions = dynamic(["GetMemory","RetrieveMemoryRecords","ListMemoryRecords","DeleteMemoryRecord","PutMemoryRecord"]);
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (memory_actions)
+| extend Raw = parse_json(tostring(RawEventData))
+| extend EventSource = tostring(Raw.eventSource)
+| where EventSource == "bedrock-agentcore.amazonaws.com"
+| extend RoleArn = tostring(Raw.userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend MemoryId = tostring(coalesce(Raw.requestParameters.memoryId, Raw.requestParameters.MemoryId))
+| extend MemoryAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)_mem-", 1, MemoryId))
+| where isnotempty(RoleAgentTag) and isnotempty(MemoryAgentTag)
+| where RoleAgentTag != MemoryAgentTag
+| project Timestamp, RoleArn, RoleAgentTag, ActionType, TargetMemoryId = MemoryId, MemoryAgentTag, IPAddress, CountryCode
+| order by Timestamp desc
+```
+
+### [LLM] Bedrock AgentCore lateral pivot via InvokeAgentRuntime / InvokeCodeInterpreter
+
+`UC_303_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as target_arns values(All_Changes.src) as src_ip from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.action IN ("InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListCodeInterpreters","ListAgentRuntimes") (All_Changes.user="*BedrockAgentCore*" OR All_Changes.user="*AgentCoreSDKRuntime*") by All_Changes.user All_Changes.action _time span=15m | `drop_dm_object_name("All_Changes")` | rex field=user "role/(?<role_name>[^/]+)" | rex field=role_name "(?<role_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | mvexpand target_arns | rex field=target_arns "(?:runtime|code-interpreter)/(?<target_id>[^/\s\"]+)" | rex field=target_id "(?<target_agent>[A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)" | where isnotnull(role_agent) AND isnotnull(target_agent) AND role_agent!=target_agent | stats count dc(target_id) as distinct_targets values(action) as actions values(target_id) as cross_agent_targets by role_name role_agent | where distinct_targets>=1
+```
+
+**Defender KQL:**
+```kql
+// Requires Defender for Cloud Apps AWS connector
+let pivot_actions = dynamic(["InvokeAgentRuntime","InvokeCodeInterpreter","StartCodeInterpreterSession","ListCodeInterpreters","ListAgentRuntimes"]);
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in (pivot_actions)
+| extend Raw = parse_json(tostring(RawEventData))
+| where tostring(Raw.eventSource) == "bedrock-agentcore.amazonaws.com"
+| extend RoleArn = tostring(Raw.userIdentity.arn)
+| extend RoleName = tostring(extract(@"role/([^/]+)", 1, RoleArn))
+| where RoleName has_any ("BedrockAgentCore","AgentCoreSDKRuntime")
+| extend RoleAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, RoleName))
+| extend TargetArn = tostring(coalesce(Raw.requestParameters.agentRuntimeArn, Raw.requestParameters.codeInterpreterIdentifier, Raw.requestParameters.runtimeArn))
+| extend TargetAgentTag = tostring(extract(@"([A-Za-z0-9]+_agent_[0-9]+|[A-Za-z0-9]+Agent[0-9]+)", 1, TargetArn))
+| where isnotempty(RoleAgentTag) and isnotempty(TargetAgentTag)
+| where RoleAgentTag != TargetAgentTag
+| summarize Calls = count(), Targets = make_set(TargetArn, 25), Actions = make_set(ActionType) by RoleArn, RoleAgentTag, IPAddress, bin(Timestamp, 15m)
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -338,14 +438,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-55182`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -45,12 +45,110 @@ In recent years, many sophisticated intrusions have increasingly avoided using n
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
+- **T1556.008** — Modify Authentication Process: Network Provider DLL
+- **T1199** — Trusted Relationship
+- **T1556.002** — Modify Authentication Process: Password Filter DLL
+- **T1547.001** — Boot or Logon Autostart Execution
+- **T1505.003** — Server Software Component: Web Shell
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Malicious Network Provider 'mslogon' registered on domain controller
+
+`UC_92_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE (Registry.registry_path="*\\SYSTEM\\CurrentControlSet\\Services\\mslogon\\*" OR (Registry.registry_path="*\\Control\\NetworkProvider\\Order*" AND Registry.registry_value_data="*mslogon*") OR (Registry.registry_path="*\\NetworkProvider\\ProviderPath*" AND Registry.registry_value_data="*mslogon*")) BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid 
+| `drop_dm_object_name(Registry)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where (RegistryKey has @"\Services\mslogon")
+   or (RegistryKey endswith @"\NetworkProvider\Order" and RegistryValueData has "mslogon")
+   or (RegistryKey has @"\NetworkProvider" and RegistryValueName =~ "ProviderPath" and RegistryValueData has "mslogon")
+| project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] LSA Notification Packages adds 'passms' password filter on domain controllers
+
+`UC_92_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE Registry.registry_path="*\\Control\\Lsa\\Notification Packages*" AND Registry.registry_value_data="*passms*" BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_data Registry.process_guid 
+| `drop_dm_object_name(Registry)` 
+| append 
+   [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_name="passms.dll" OR Filesystem.file_path="*\\ProgramData\\WindowsUpdateService\\UpdateDir\\*") BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
+   | `drop_dm_object_name(Filesystem)`] 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LsaPackageChange = DeviceRegistryEvents
+    | where Timestamp > ago(30d)
+    | where RegistryKey endswith @"\Control\Lsa"
+    | where RegistryValueName =~ "Notification Packages"
+    | where RegistryValueData has "passms"
+    | project Timestamp, DeviceName, Evidence="LSA-NotificationPackage",
+              Detail=RegistryValueData, InitiatingProcessFileName,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName;
+let PassmsArtefact = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where FileName =~ "passms.dll"
+       or FolderPath has @"\ProgramData\WindowsUpdateService\UpdateDir\"
+    | project Timestamp, DeviceName, Evidence="PassmsFileArtefact",
+              Detail=strcat(FolderPath, FileName), InitiatingProcessFileName,
+              InitiatingProcessCommandLine, InitiatingProcessAccountName=InitiatingProcessAccountName;
+union LsaPackageChange, PassmsArtefact
+| order by Timestamp desc
+```
+
+### [LLM] Credential-theft staging files and web shells from HPE OA trusted-relationship intrusion
+
+`UC_92_13` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_path="*\\Users\\Public\\Music\\abc123c.d" OR Filesystem.file_path="*\\ProgramData\\WindowsUpdateService\\UpdateDir\\*" OR Filesystem.file_name IN ("mslogon.dll","passms.dll","msupdate.dll","abc003.vbs","ghost.inc","Errors.aspx","icon02.jpeg")) BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.action Filesystem.process_guid 
+| `drop_dm_object_name(Filesystem)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FileName =~ "abc123c.d" and FolderPath has @"\Users\Public\Music")
+   or FolderPath has @"\ProgramData\WindowsUpdateService\UpdateDir\"
+   or FileName in~ ("mslogon.dll","passms.dll","msupdate.dll","abc003.vbs","ghost.inc","Errors.aspx")
+   or (FileName =~ "icon02.jpeg" and RequestProtocol =~ "SMB2")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+          RequestProtocol, RequestSourceIP, ShareName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -462,4 +560,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 14 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

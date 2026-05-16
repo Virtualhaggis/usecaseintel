@@ -21,12 +21,105 @@ Introduction On November 23-24, 2025, the npm ecosystem experienced one of its l
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1133** — External Remote Services
+- **T1543** — Create or Modify System Process
+- **T1078** — Valid Accounts
+- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Sha1-Hulud npm Worm — Egress to bun.sh / oss.trufflehog.org / keychecker.trufflesecurity.com from npm/node context
+
+`UC_530_3` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.dest) as dest values(DNS.src) as src from datamodel=Network_Resolution.DNS where (DNS.query IN ("bun.sh","oss.trufflehog.org","keychecker.trufflesecurity.com") OR DNS.query="*.bun.sh" OR DNS.query="*.trufflehog.org" OR DNS.query="*.trufflesecurity.com") by host DNS.src DNS.query | `drop_dm_object_name(DNS)` | stats min(firstTime) as firstTime max(lastTime) as lastTime dc(query) as distinct_iocs values(query) as ioc_domains values(dest) as dest_ips by host src | where distinct_iocs >= 1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let _iocs = dynamic(["bun.sh","oss.trufflehog.org","keychecker.trufflesecurity.com"]);
+let _npm_ctx = dynamic(["node.exe","node","npm.exe","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","bash","sh","runner.listener.exe","runner.worker.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any (_iocs)
+     or RemoteUrl endswith ".bun.sh"
+     or RemoteUrl endswith ".trufflehog.org"
+     or RemoteUrl endswith ".trufflesecurity.com"
+| extend NpmContext = InitiatingProcessFileName in~ (_npm_ctx)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            DistinctIocDomains = dcount(RemoteUrl),
+            IocsHit = make_set(RemoteUrl, 10),
+            InitiatingProcs = make_set(InitiatingProcessFileName, 10),
+            SampleCmd = any(InitiatingProcessCommandLine),
+            RemoteIPs = make_set(RemoteIP, 10),
+            AnyNpmContext = max(tolong(NpmContext))
+          by DeviceId, DeviceName, InitiatingProcessAccountName
+| where DistinctIocDomains >= 2 or AnyNpmContext == 1
+| order by FirstSeen desc
+```
+
+### [LLM] Sha1-Hulud npm Worm — Self-Hosted GitHub Actions Runner Registration with Name 'SHA1HULUD'
+
+`UC_530_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process="*SHA1HULUD*" OR (Processes.process_name IN ("config.cmd","config.sh","Runner.Listener.exe","Runner.Listener") AND Processes.process="*--name*" AND (Processes.process="*runner-registration*" OR Processes.process="*--token*"))) by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "SHA1HULUD"
+     or InitiatingProcessCommandLine has "SHA1HULUD"
+     or (FileName in~ ("config.cmd","config.sh","Runner.Listener.exe","Runner.Listener")
+         and ProcessCommandLine has "--name"
+         and ProcessCommandLine has_any ("runner-registration","--token","--unattended"))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          GrandParent = InitiatingProcessParentFileName,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Sha1-Hulud npm Worm — Drop of setup_bun.js / bun_environment.js / discussion.yaml by node or shell
+
+`UC_530_5` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("setup_bun.js","bun_environment.js") OR Filesystem.file_path="*\\.github\\workflows\\discussion.yaml" OR Filesystem.file_path="*/.github/workflows/discussion.yaml") AND Filesystem.process_name IN ("node.exe","node","npm.exe","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","bash","sh","cmd.exe","powershell.exe") by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let _npm_writers = dynamic(["node.exe","node","npm.exe","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","bash","sh","cmd.exe","powershell.exe","pwsh.exe"]);
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("setup_bun.js","bun_environment.js")
+     or FolderPath has @"\.github\workflows\discussion.yaml"
+     or FolderPath has "/.github/workflows/discussion.yaml"
+| where InitiatingProcessFileName in~ (_npm_writers)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -133,4 +226,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

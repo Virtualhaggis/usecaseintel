@@ -38,7 +38,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIP in (__IP_LIST__) or RemoteUrl has_any (__DOMAIN_LIST__)\n| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,\n          InitiatingProcessFileName, InitiatingProcessCommandLine\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/c2/UC_NETWORK_IOC.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_NETWORK_IOC.yml"
   ],
   "meta": {
     "tier": "alerting",

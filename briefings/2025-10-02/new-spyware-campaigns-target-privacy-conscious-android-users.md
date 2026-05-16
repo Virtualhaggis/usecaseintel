@@ -60,12 +60,89 @@ ESET researchers have uncovered two Android spyware campaigns targeting individu
 - **T1218** — System Binary Proxy Execution
 - **T1053.005** — Scheduled Task
 - **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1437.001** — Application Layer Protocol: Web Protocols (Mobile)
+- **T1105** — Ingress Tool Transfer
+- **T1407** — Download New Code at Runtime (Mobile)
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ProSpy/ToSpy Android spyware C2 callback to ESET-named UAE infrastructure
+
+`UC_634_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("86.105.18.13","185.7.219.77","152.89.29.73","5.42.221.106","152.89.29.78","185.140.210.66","176.123.7.83","185.27.134.222")) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src from datamodel=Web.Web where (Web.url IN ("*signal.ct.ws*","*encryption-plug-in-signal.com-ae.net*","*totok-pro.io*","*store.appupdate.ai*","*spiralkey.co*","*noblico.net*","*ai-messenger.co*","*sion.ai*")) by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _prospy_ips = dynamic(["86.105.18.13","185.7.219.77","152.89.29.73","5.42.221.106","152.89.29.78","185.140.210.66","176.123.7.83","185.27.134.222"]);
+let _prospy_domains = dynamic(["signal.ct.ws","encryption-plug-in-signal.com-ae.net","totok-pro.io","store.appupdate.ai","spiralkey.co","noblico.net","ai-messenger.co","sion.ai"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (_prospy_ips)
+   or RemoteUrl has_any (_prospy_domains)
+| project Timestamp, DeviceName, DeviceId, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] ToSpy in-app update path: HTTP request to spiralkey.co /totok_update/ APK or version check
+
+`UC_634_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where (Web.url="*spiralkey.co/totok_update/totok_pro.apk*" OR Web.url="*spiralkey.co/totok_update/totokversion.php*" OR Web.url="*totok-pro.io/totok_pro_release_v2_8_8_10330.apk*" OR (Web.url="*spiralkey.co*" AND Web.url="*totok_update*")) by Web.src Web.user Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (
+        "spiralkey.co/totok_update/totok_pro.apk",
+        "spiralkey.co/totok_update/totokversion.php",
+        "totok-pro.io/totok_pro_release_v2_8_8_10330.apk"
+    )
+   or (RemoteUrl has "spiralkey.co" and RemoteUrl has "totok_update")
+| project Timestamp, DeviceName, DeviceId, ActionType,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] DNS resolution for ProSpy/ToSpy lure & C2 domains from internal resolvers
+
+`UC_634_9` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where (DNS.query IN ("signal.ct.ws","encryption-plug-in-signal.com-ae.net","totok-pro.io","store.appupdate.ai","spiralkey.co","noblico.net","ai-messenger.co","sion.ai") OR DNS.query="*.signal.ct.ws" OR DNS.query="*.encryption-plug-in-signal.com-ae.net" OR DNS.query="*.totok-pro.io" OR DNS.query="*.store.appupdate.ai" OR DNS.query="*.spiralkey.co" OR DNS.query="*.noblico.net" OR DNS.query="*.ai-messenger.co" OR DNS.query="*.sion.ai") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _prospy_domains = dynamic(["signal.ct.ws","encryption-plug-in-signal.com-ae.net","totok-pro.io","store.appupdate.ai","spiralkey.co","noblico.net","ai-messenger.co","sion.ai"]);
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+| where Q in (_prospy_domains) or Q endswith ".signal.ct.ws" or Q endswith ".totok-pro.io" or Q endswith ".spiralkey.co" or Q endswith ".store.appupdate.ai" or Q endswith ".noblico.net" or Q endswith ".ai-messenger.co" or Q endswith ".sion.ai" or Q endswith ".encryption-plug-in-signal.com-ae.net"
+| project Timestamp, DeviceName, DeviceId, Q, InitiatingProcessFileName, InitiatingProcessAccountName, AdditionalFields
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Queries=count(), Devices=make_set(DeviceName,50) by Q
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -291,4 +368,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

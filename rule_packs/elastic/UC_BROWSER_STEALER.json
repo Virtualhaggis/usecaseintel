@@ -43,7 +43,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceFileEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where FolderPath has_any (@\"\\Google\\Chrome\\User Data\\\", @\"\\Microsoft\\Edge\\User Data\\\", @\"\\Mozilla\\Firefox\\Profiles\\\")\n| where FileName in~ (\"Login Data\",\"Cookies\",\"logins.json\",\"cookies.sqlite\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType\n\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/actions/UC_BROWSER_STEALER.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_BROWSER_STEALER.yml"
   ],
   "meta": {
     "tier": "alerting",

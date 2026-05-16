@@ -29,12 +29,93 @@ The war in Iran was less than 24 hours old when it produced a historic first: th
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1087** — Account Discovery
+- **T1199** — Trusted Relationship
+- **T1621** — Multi-Factor Authentication Request Generation
+- **T1110.003** — Brute Force: Password Spraying
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1098.005** — Account Manipulation: Device Registration
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] MuddyWater SimpleHelp RMM client spawning shell or recon LOLBin
+
+`UC_361_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("SimpleHelpCustomer.exe","Remote Access.exe","SimpleService.exe","JWrapper-Remote Access.exe") OR Processes.parent_process_path="*\\JWrapper-Remote Access\\*") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","quser.exe","systeminfo.exe","ipconfig.exe","tasklist.exe") by host Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("SimpleHelpCustomer.exe","Remote Access.exe","SimpleService.exe","JWrapper-Remote Access.exe")
+   or InitiatingProcessFolderPath has @"\JWrapper-Remote Access\"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","quser.exe","systeminfo.exe","ipconfig.exe","tasklist.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Iran-aligned MFA push-bombing followed by new auth method registered (AA24-290A)
+
+`UC_361_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as FailCount min(_time) as FirstFail max(_time) as LastFail values(Authentication.src) as SrcIPs from datamodel=Authentication where Authentication.action=failure Authentication.signature_id IN ("500121","50074","50076","50097","50158") by Authentication.user | `drop_dm_object_name(Authentication)` | where FailCount>=5 | rename user as upn | join type=inner upn [| tstats `summariesonly` min(_time) as RegTime values(All_Changes.command) as Operation values(All_Changes.src) as RegSrcIP from datamodel=Change.All_Changes where All_Changes.object_category=user (All_Changes.command="User registered security info" OR All_Changes.command="Admin registered security info" OR All_Changes.command="User registered all required security info" OR All_Changes.command="Update user") by All_Changes.object | `drop_dm_object_name(All_Changes)` | rename object as upn] | where RegTime>=LastFail AND RegTime<=LastFail+7200 | table upn FailCount FirstFail LastFail SrcIPs RegTime Operation RegSrcIP
+```
+
+**Defender KQL:**
+```kql
+let LookbackHours = 24h;
+let WindowMin = 120;
+let BombingThreshold = 5;
+// MFA-friction failure codes per Entra docs
+let MfaFailCodes = dynamic([500121, 50074, 50076, 50097, 50158]);
+let Bombed = AADSignInEventsBeta
+    | where Timestamp > ago(LookbackHours)
+    | where ErrorCode in (MfaFailCodes)
+    | summarize FailCount = count(),
+                FirstFail = min(Timestamp),
+                LastFail  = max(Timestamp),
+                SourceIPs = make_set(IPAddress, 25),
+                SourceCountries = make_set(Country, 10)
+                by AccountUpn, AccountObjectId
+    | where FailCount >= BombingThreshold;
+let MFAReg = CloudAppEvents
+    | where Timestamp > ago(LookbackHours)
+    | where ApplicationId == 11161  // Office 365 / Azure AD audit feed
+    | where ActionType has_any ("User registered security info",
+                                "Admin registered security info",
+                                "User registered all required security info",
+                                "User started security info registration",
+                                "Update user")
+    | extend TargetUpn = tostring(parse_json(tostring(ActivityObjects))[0].name)
+    | where isnotempty(TargetUpn)
+    | project RegTime = Timestamp, TargetUpn, ActionType, RegIP = IPAddress,
+              ActorDisplayName = AccountDisplayName;
+Bombed
+| join kind=inner MFAReg on $left.AccountUpn == $right.TargetUpn
+| where RegTime between (LastFail .. LastFail + WindowMin * 1m)
+| project AccountUpn, FailCount, FirstFail, LastFail, RegTime,
+          MinutesAfterBombing = datetime_diff('minute', RegTime, LastFail),
+          ActionType, RegIP, SourceIPs, SourceCountries
+| order by RegTime desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -350,4 +431,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -26,12 +26,79 @@ During the monitore…
 - **T1569.002** — Service Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1203** — Exploitation for Client Execution
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Archive utility writing LNK/DLL/EXE to Windows Startup folder (RomCom CVE-2025-8088)
+
+`UC_586_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.process_name IN ("winrar.exe","rar.exe","unrar.exe","7z.exe","7zg.exe","7zfm.exe","winzip32.exe","winzip64.exe","wzzip.exe")) AND Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.cmd") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// CVE-2025-8088 / RomCom — archive utility silently writes a persistence artefact
+// into the per-user Startup folder during what looks like a routine extraction.
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where InitiatingProcessFileName in~ ("winrar.exe","rar.exe","unrar.exe","7z.exe","7zg.exe","7zfm.exe","winzip32.exe","winzip64.exe","wzzip.exe")
+| where FolderPath has @"\Start Menu\Programs\Startup\"
+| where FileName endswith ".lnk"
+      or FileName endswith ".dll"
+      or FileName endswith ".exe"
+      or FileName endswith ".bat"
+      or FileName endswith ".cmd"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          Archiver = InitiatingProcessFileName,
+          ArchiverCmd = InitiatingProcessCommandLine,
+          DroppedFile = FileName,
+          DroppedPath = FolderPath,
+          SHA256, MD5, FileSize
+| order by Timestamp desc
+```
+
+### [LLM] Python interpreter executed from %TEMP% / Public — RomCom DLL side-load chain (CVE-2025-8088)
+
+`UC_586_7` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3.exe","python310.exe","python311.exe","python312.exe","python313.exe")) AND (Processes.process_path="*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\Windows\\Temp\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\AppData\\Roaming\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// RomCom CVE-2025-8088 stage-2 — signed Python launched from a transient path so the
+// adversary's adjacent malicious python3xx.dll satisfies the import search order.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "python.exe"
+      or FileName =~ "pythonw.exe"
+      or FileName matches regex @"(?i)^python3\d{1,2}\.exe$"
+| where FolderPath has_any (@"\AppData\Local\Temp\", @"\Windows\Temp\", @"\Users\Public\", @"\AppData\Roaming\")
+// suppress the rare legit case of a Python installer extracting itself
+| where InitiatingProcessFileName !in~ ("msiexec.exe")
+| project Timestamp, DeviceName, AccountName,
+          PythonImage = strcat(FolderPath, "\\", FileName),
+          ProcessCommandLine, SHA256,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -264,4 +331,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

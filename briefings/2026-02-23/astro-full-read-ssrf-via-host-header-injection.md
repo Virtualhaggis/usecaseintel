@@ -19,12 +19,47 @@ Blog Vulnerabilities & Threats Astro Full-Read SSRF via Host Header Injection As
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Astro SSRF (CVE-2026-25545) — Node.js egress fetch for /404.html or /500.html with UA 'node'
+
+`UC_394_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.dest) as dest values(Web.http_method) as method values(Web.status) as status from datamodel=Web where (Web.http_user_agent="node" OR Web.http_user_agent="node-fetch*" OR Web.http_user_agent="undici*") (Web.url="*/404.html*" OR Web.url="*/500.html*") Web.http_method=GET by Web.src,Web.dest,Web.site,Web.http_user_agent | `drop_dm_object_name(Web)` | where NOT match(dest,"^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.|169\.254\.)") | rename src as astro_server, dest as attacker_host | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+// CVE-2026-25545 — Astro Node server egressing to external host fetching /404.html or /500.html
+let astro_hosts = dynamic(["node.exe","node"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (astro_hosts)
+| where RemoteIPType == "Public"
+| where ActionType in ("ConnectionSuccess","HttpConnectionInspected","ConnectionAttempt")
+| where RemoteUrl has_any ("/404.html","/500.html") or RemotePort in (80, 443)
+| where InitiatingProcessCommandLine has_any ("astro","@astrojs/node","dist/server","server/entry.mjs")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] Astro SSRF (CVE-2026-25545) — inbound Host header mismatch with 4xx/5xx response (trigger)
+
+`UC_394_5` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user_agent) as user_agent values(Web.src) as src from datamodel=Web where Web.status IN (404,500) by Web.site,Web.dest,Web.status | `drop_dm_object_name(Web)` | rex field=site "^(?<host_only>[^:]+)" | search NOT host_only IN ("www.example.com","example.com","astro.example.com") | where isnotnull(site) AND site!="-" AND len(site)>0 | `security_content_ctime(firstTime)`
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -119,4 +154,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 6 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

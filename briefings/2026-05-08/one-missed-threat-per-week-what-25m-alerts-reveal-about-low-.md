@@ -13,9 +13,7 @@ The dataset behind these findings …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -23,7 +21,6 @@ The dataset behind these findings …
 - **T1071.004** — DNS
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -36,12 +33,84 @@ The dataset behind these findings …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1566** — Phishing
+- **T1656** — Impersonation
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PayPal-Authentic Inbound Mail with Non-ASCII Subject or Embedded Callback Number (TOAD)
+
+`UC_141_9` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where Email.action IN ("delivered","deliveredasspam") Email.src_user_domain="paypal.com" by Email.src_user, Email.src_user_domain, Email.recipient, Email.subject, Email.message_id
+| `drop_dm_object_name("Email")`
+| where match(subject, "[^\x00-\x7F]") OR match(subject, "\+?\d[\d\-\s\(\)]{8,}")
+| eval reason=case(match(subject,"[^\x00-\x7F]"),"NonASCII_Homoglyph_in_Subject",match(subject,"\+?\d[\d\-\s\(\)]{8,}"),"PhoneNumber_in_Subject",1==1,"Other")
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, src_user, recipient, subject, message_id, reason, count
+```
+
+**Defender KQL:**
+```kql
+// Inbound mail from authentic PayPal infra with homoglyph or callback-number signal in subject
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound"
+| where SenderFromDomain =~ "paypal.com" or SenderMailFromDomain =~ "paypal.com"
+| where DeliveryAction in ("Delivered","DeliveredAsSpam")
+// Mail genuinely originated from PayPal — authentication passes
+| where AuthenticationDetails has "spf=pass" or AuthenticationDetails has "dkim=pass"
+// Subject contains non-ASCII (Unicode homoglyph candidate) OR an embedded phone number
+| extend HasNonAscii = iff(Subject matches regex @"[\u0080-\uFFFF]", true, false)
+| extend HasPhone    = iff(Subject matches regex @"\+?\d[\d\-\s\(\)]{8,}", true, false)
+| where HasNonAscii or HasPhone
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, AuthenticationDetails, HasNonAscii, HasPhone
+| order by Timestamp desc
+```
+
+### [LLM] Inbound SVG Email Attachment — Base64 Payload Smuggling Vector
+
+`UC_141_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where Email.action IN ("delivered","deliveredasspam") (Email.file_name="*.svg" OR Email.file_name="*.SVG") by Email.src_user, Email.src_user_domain, Email.recipient, Email.subject, Email.file_name, Email.file_hash, Email.message_id
+| `drop_dm_object_name("Email")`
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, src_user, recipient, subject, file_name, file_hash, message_id, count
+```
+
+**Defender KQL:**
+```kql
+// SVG attachment in delivered inbound mail — Intezer 2026 report flagged this as a Top-4 gateway-bypass technique
+EmailAttachmentInfo
+| where Timestamp > ago(7d)
+| where FileType =~ "svg" or FileName endswith ".svg"
+| join kind=inner (
+    EmailEvents
+    | where Timestamp > ago(7d)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | project NetworkMessageId, SenderFromAddress, SenderFromDomain, Subject, RecipientEmailAddress, DeliveryAction
+  ) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, FileName, FileType, SHA256, FileSize, DeliveryAction
+| order by Timestamp desc
+// Optional pivot — has the SHA256 already touched a host?
+| join kind=leftouter (
+    DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where FileName endswith ".svg"
+    | summarize Hosts = make_set(DeviceName) by SHA256
+  ) on SHA256
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -362,14 +431,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

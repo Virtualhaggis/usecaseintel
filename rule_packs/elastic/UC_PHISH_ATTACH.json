@@ -43,7 +43,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet LookbackDays = 7d;\nlet MalAttachments = EmailAttachmentInfo\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | project NetworkMessageId, RecipientEmailAddress,\n              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"OUTLOOK.EXE\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"wscript.exe\",\"cscript.exe\",\n                      \"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,\n          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/delivery/UC_PHISH_ATTACH.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_ATTACH.yml"
   ],
   "meta": {
     "tier": "hunting",

@@ -47,12 +47,120 @@ If I haven’t said it in a newsletter before, I'll say it now: If you want 
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1083** — File and Directory Discovery
+- **T1526** — Cloud Service Discovery
+- **T1564.006** — Hide Artifacts: Run Virtual Instance
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Inbound email link to Softr-hosted credential harvesting page (UAT Q1 2026)
+
+`UC_253_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.src_user) as src_user values(All_Email.recipient) as recipient values(All_Email.url) as url from datamodel=Email where All_Email.direction="inbound" All_Email.action="delivered" (All_Email.url="*.softr.app*" OR All_Email.url="*softr.io*") by All_Email.message_id All_Email.recipient | `drop_dm_object_name(All_Email)` | join type=inner message_id [| tstats `summariesonly` count values(Web.user) as click_user values(Web.url) as clicked_url min(_time) as click_time from datamodel=Web where (Web.url="*.softr.app*" OR Web.url="*softr.io*") Web.action IN ("allowed","clickthrough") by Web.message_id | `drop_dm_object_name(Web)` | rename message_id as message_id]
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let SoftrEmails = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | join kind=inner (
+        EmailUrlInfo
+        | where Timestamp > ago(LookbackDays)
+        | where UrlDomain endswith ".softr.app"
+           or UrlDomain endswith "softr.io"
+           or Url has_any ("softr.app","softr.io")
+        | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId
+    | project NetworkMessageId, EmailTime = Timestamp, SenderFromAddress,
+              RecipientEmailAddress, Subject, Url, UrlDomain;
+UrlClickEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any ("softr.app","softr.io")
+| join kind=leftouter SoftrEmails on NetworkMessageId
+| project Timestamp, AccountUpn, ActionType, IsClickedThrough, Url,
+          UrlDomain, SenderFromAddress, Subject, EmailTime, NetworkMessageId
+| order by Timestamp desc
+```
+
+### [LLM] TruffleHog secret-scanning binary executed on endpoint by non-developer account
+
+`UC_253_12` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog*" OR Processes.process="*trufflehog*" OR Processes.process IN ("*trufflehog git *","*trufflehog github *","*trufflehog gitlab *","*trufflehog s3 *","*trufflehog gcs *","*trufflehog filesystem *","*trufflehog docker *")) Processes.user!="*$" by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where AccountName !in~ ("system","local service","network service")
+| where FileName =~ "trufflehog.exe"
+   or FileName =~ "trufflehog"
+   or ProcessCommandLine matches regex @"(?i)(^|[\s\\"/])trufflehog(\.exe)?(\s|$)"
+   or ProcessCommandLine has_any (
+       "trufflehog git ","trufflehog github","trufflehog gitlab",
+       "trufflehog s3 ","trufflehog gcs ","trufflehog filesystem",
+       "trufflehog docker","trufflehog circleci","trufflehog jenkins")
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256,
+          ProcessCommandLine,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          IsRemoteSession = InitiatingProcessTokenElevation
+| order by Timestamp desc
+```
+
+### [LLM] QEMU machine emulator launched on user-class Windows endpoint (ransomware hidden-VM staging)
+
+`UC_253_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as path values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("qemu-system-x86_64.exe","qemu-system-i386.exe","qemu-system-aarch64.exe","qemu-system-arm.exe","qemu-img.exe") OR Processes.process="*qemu-system-*" OR Processes.process IN ("* -hda *","* -drive file=*","* -netdev *")) Processes.user!="*$" by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process,"(?i)qemu")
+```
+
+**Defender KQL:**
+```kql
+let _vm_host_groups = dynamic(["VM-Hosts","DevWorkstations-Virt"]);
+let _vm_hosts = DeviceInfo
+    | where Timestamp > ago(1d)
+    | where MachineGroup in (_vm_host_groups)
+    | summarize by DeviceName;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where DeviceName !in (_vm_hosts)
+| where FileName matches regex @"(?i)^qemu-system-.*\.exe$"
+   or FileName =~ "qemu-img.exe"
+   or FileName =~ "qemu-ga.exe"
+   or ProcessCommandLine has_any ("qemu-system-x86_64","qemu-system-i386",
+                                  "qemu-system-aarch64","qemu-system-arm")
+   or ProcessCommandLine matches regex @"(?i)\s-hda\s|\s-drive\s+file=|\s-netdev\s"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256,
+          ProcessCommandLine,
+          ParentFile = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ParentSHA  = InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -403,4 +511,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

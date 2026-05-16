@@ -24,12 +24,98 @@ Blog Vulnerabilities & Threats GlassWorm goes native: New Zig dropper infects ev
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1129** — Shared Modules
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1546** — Event Triggered Execution
+- **T1105** — Ingress Tool Transfer
+- **T1102.001** — Web Service: Dead Drop Resolver
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GlassWorm Zig dropper native node addon (win.node/mac.node) written to IDE extension bin/ folder
+
+`UC_304_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("2819ea44e22b9c47049e86894e544f3fd0de1d8afc7b545314bd3bc718bf2e02","112d1b33dd9b0244525f51e59e6a79ac5ae452bf6e98c310e7b4fa7902e4db44")) OR (Filesystem.file_name IN ("win.node","mac.node") AND (Filesystem.file_path="*\\.vscode\\extensions\\*\\bin\\*" OR Filesystem.file_path="*\\.cursor\\extensions\\*\\bin\\*" OR Filesystem.file_path="*\\.windsurf\\extensions\\*\\bin\\*" OR Filesystem.file_path="*\\.vscode-oss\\extensions\\*\\bin\\*" OR Filesystem.file_path="*\\Positron\\*extensions*\\bin\\*" OR Filesystem.file_path="*/.vscode/extensions/*/bin/*" OR Filesystem.file_path="*/.cursor/extensions/*/bin/*")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (SHA256 in~ ("2819ea44e22b9c47049e86894e544f3fd0de1d8afc7b545314bd3bc718bf2e02",
+                    "112d1b33dd9b0244525f51e59e6a79ac5ae452bf6e98c310e7b4fa7902e4db44"))
+      or (FileName in~ ("win.node","mac.node")
+          and (FolderPath has @"\.vscode\extensions\"
+               or FolderPath has @"\.vscode-oss\extensions\"
+               or FolderPath has @"\.cursor\extensions\"
+               or FolderPath has @"\.windsurf\extensions\"
+               or FolderPath has @"\Positron\"
+               or FolderPath has "/.vscode/extensions/"
+               or FolderPath has "/.cursor/extensions/"
+               or FolderPath has "/.windsurf/extensions/")
+          and FolderPath has @"\bin")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Force-install of IDE extension via cmd.exe with --install-extension flag spawned by node host
+
+`UC_304_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="cmd.exe" Processes.process="*--install-extension*" (Processes.process="*code.cmd*" OR Processes.process="*code-insiders.cmd*" OR Processes.process="*cursor.cmd*" OR Processes.process="*windsurf.cmd*" OR Processes.process="*codium.cmd*" OR Processes.process="*positron.cmd*") Processes.process="*/d*" Processes.process="*/e:ON*" Processes.process="*/v:OFF*" Processes.parent_process_name!="explorer.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "cmd.exe"
+| where ProcessCommandLine has "--install-extension"
+| where ProcessCommandLine has "/d" and ProcessCommandLine has "/e:ON" and ProcessCommandLine has "/v:OFF"
+| where ProcessCommandLine has_any ("code.cmd","code-insiders.cmd","cursor.cmd","windsurf.cmd","codium.cmd","positron.cmd")
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("explorer.exe","msiexec.exe")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentFile  = InitiatingProcessFileName,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildCmd    = ProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] Outbound fetch of attacker-controlled autoimport VSIX from ColossusQuailPray GitHub release
+
+`UC_304_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*ColossusQuailPray/oiegjqde*" OR Web.url="*autoimport-2.7.9.vsix*") by Web.src Web.dest Web.user Web.url Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any ("ColossusQuailPray/oiegjqde", "autoimport-2.7.9.vsix")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, ActionType ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "autoimport-2.7.9.vsix" or FileOriginUrl has_any ("ColossusQuailPray/oiegjqde", "autoimport-2.7.9.vsix")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, RemoteUrl = FileOriginUrl, ActionType )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -233,4 +319,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

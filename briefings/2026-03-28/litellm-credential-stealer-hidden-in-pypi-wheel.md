@@ -13,12 +13,14 @@ On March 24, 2026, a critical supply chain compromise was identified across two 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `models.litellm.cloud`
+- **Domain (defanged):** `checkmarx.zone`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1005** — Data from Local System
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -32,12 +34,88 @@ On March 24, 2026, a critical supply chain compromise was identified across two 
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1610** — Deploy Container
+- **T1611** — Escape to Host
+- **T1021.007** — Remote Services: Cloud Services
+- **T1098.006** — Account Manipulation: Additional Container Cluster Roles
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] litellm PyPI compromise: C2 egress to models.litellm.cloud / checkmarx.zone (TeamPCP)
+
+`UC_318_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("models.litellm.cloud","checkmarx.zone") OR DNS.query="*.litellm.cloud" OR DNS.query="*.checkmarx.zone") by DNS.src, DNS.query, DNS.answer, DNS.record_type | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("models.litellm.cloud","checkmarx.zone") OR All_Traffic.url="*models.litellm.cloud*" OR All_Traffic.url="*checkmarx.zone*") by All_Traffic.src, All_Traffic.dest, All_Traffic.url, All_Traffic.app, All_Traffic.user | `drop_dm_object_name(All_Traffic)`] | append [| tstats summariesonly=true count from datamodel=Web.Web where (Web.url="*models.litellm.cloud*" OR Web.url="*checkmarx.zone*" OR Web.dest IN ("models.litellm.cloud","checkmarx.zone")) by Web.src, Web.user, Web.url, Web.http_method, Web.dest | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any ("models.litellm.cloud","checkmarx.zone")
+         or RemoteUrl endswith ".litellm.cloud"
+         or RemoteUrl endswith ".checkmarx.zone"
+    | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessParentFileName ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has_any ("models.litellm.cloud","checkmarx.zone")
+    | project Timestamp, DeviceName, ActionType, Query = Q,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName )
+| order by Timestamp desc
+```
+
+### [LLM] litellm credential-stealer persistence: sysmon.py implant + systemd user service drop
+
+`UC_318_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND ( Filesystem.file_path="*/.config/sysmon/sysmon.py" OR Filesystem.file_path="*/.config/systemd/user/sysmon.service" OR Filesystem.file_name="litellm_init.pth" OR (Filesystem.file_path="/tmp/pglog" OR Filesystem.file_path="/tmp/.pg_state") ) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash, Filesystem.process_name, Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where ( FolderPath has "/.config/sysmon" and FileName =~ "sysmon.py" )
+     or ( FolderPath has "/.config/systemd/user" and FileName =~ "sysmon.service" )
+     or   FileName =~ "litellm_init.pth"
+     or ( FolderPath startswith "/tmp" and FileName in~ ("pglog",".pg_state") )
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] litellm K8s lateral movement: privileged node-setup-* pod in kube-system with hostPID+hostNetwork
+
+`UC_318_13` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`kubernetes_audit` verb=create objectRef.resource=pods objectRef.namespace=kube-system objectRef.name="node-setup-*" stage IN ("ResponseComplete","RequestReceived") | spath path=requestObject.spec.hostPID output=hostPID | spath path=requestObject.spec.hostNetwork output=hostNetwork | spath path=requestObject.spec.containers{}.securityContext.privileged output=privileged | spath path=requestObject.spec.containers{}.image output=images | spath path=requestObject.spec.tolerations{}.operator output=tolerations_op | spath path=requestObject.spec.volumes{}.hostPath.path output=hostPath_paths | where hostPID="true" OR hostNetwork="true" OR mvfind(mvsplit(privileged,","), "true")>=0 OR mvfind(mvsplit(tolerations_op,","), "Exists")>=0 OR mvfind(mvsplit(hostPath_paths,","), "^/$")>=0 | stats min(_time) as firstTime max(_time) as lastTime values(user.username) as user values(sourceIPs{}) as sourceIPs values(images) as images values(hostPath_paths) as hostPaths by objectRef.name, objectRef.namespace, hostPID, hostNetwork | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -358,7 +436,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_318_9` · phase: **exploit** · confidence: **High**
+`UC_318_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -405,7 +483,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `models.litellm.cloud`, `checkmarx.zone`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

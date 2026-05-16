@@ -23,12 +23,90 @@ It contains a new and novel strain of Shai Hulud. At this time, there does NOT 
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1567.001** — Exfiltration to Code Repository
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Shai-Hulud 3.0 'Golden Path' worm filename created in node_modules
+
+`UC_512_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name="bun_installer.js" OR Filesystem.file_name="environment_source.js") AND Filesystem.file_path="*node_modules*" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType == "FileCreated"
+| where FileName in~ ("bun_installer.js", "environment_source.js")
+| where FolderPath has "node_modules"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Outbound fetch to raw.githubusercontent.com for Shai-Hulud Golden Path exfil JSON paths
+
+`UC_512_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*raw.githubusercontent.com*" AND (Web.url="*/main/c0nt3nts.json" OR Web.url="*/main/c9nt3nts.json" OR Web.url="*/main/3nvir0nm3nt.json" OR Web.url="*/main/cl0vd.json" OR Web.url="*/main/pigS3cr3ts.json" OR Web.url="*/main/actionsSecrets.json") by Web.dest Web.src Web.user Web.url Web.http_user_agent Web.process | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "raw.githubusercontent.com"
+| where RemoteUrl has_any ("/main/c0nt3nts.json",
+                          "/main/c9nt3nts.json",
+                          "/main/3nvir0nm3nt.json",
+                          "/main/cl0vd.json",
+                          "/main/pigS3cr3ts.json",
+                          "/main/actionsSecrets.json")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Compromised npm package @vietmoney/react-big-calendar installed under node_modules
+
+`UC_512_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_path="*node_modules*@vietmoney*react-big-calendar*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType == "FileCreated"
+| where FolderPath has "node_modules"
+| where FolderPath has "@vietmoney" and FolderPath has "react-big-calendar"
+| summarize FilesWritten = count(),
+            FirstWrite = min(Timestamp),
+            LastWrite = max(Timestamp),
+            SampleFiles = make_set(FileName, 25),
+            SamplePaths = make_set(FolderPath, 5)
+            by DeviceName, InitiatingProcessFileName,
+               InitiatingProcessAccountName
+| order by FirstWrite desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -194,4 +272,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -22,21 +22,62 @@ Affected Endpoint…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `2e8ea913573610667ad54e31dba2e8198ebf7cf9`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1203** — Exploitation for Client Execution
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree
+
+`UC_121_3` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","npm","pnpm","yarn") OR Processes.parent_process="*mcp-server*" OR Processes.parent_process="*domain_lookup*") (Processes.process_name IN ("sh","bash","dash","tldx") OR Processes.process="*tldx *") Processes.process="*tldx*" (Processes.process="*tldx*;*" OR Processes.process="*tldx*|*" OR Processes.process="*tldx*$(*" OR Processes.process="*tldx*`*" OR Processes.process="*tldx*&&*" OR Processes.process="*tldx*>*" OR Processes.process="*tldx*<(*") by host Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// GHSA-v6wj-c83f-v46x — tldx command injection via @profullstack/mcp-server
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","npm","pnpm","yarn","npx")
+    or InitiatingProcessCommandLine has_any ("mcp-server","domain_lookup","@profullstack/mcp-server")
+| where FileName in~ ("sh","bash","dash","tldx") or ProcessCommandLine has "tldx"
+| where ProcessCommandLine has "tldx"
+// shell metachars that RFC-1035 hostnames/keywords can never contain
+| where ProcessCommandLine matches regex @"(?i)tldx[^\r\n]*[;|`&><]|tldx[^\r\n]*\$\("
+| project Timestamp, DeviceName, AccountName,
+          ParentProc = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ChildProc  = FileName,
+          ChildCmd   = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source
+
+`UC_121_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls values(Web.http_user_agent) as agents from datamodel=Web.Web where Web.http_method=POST (Web.url="*/domain-lookup/check*" OR Web.url="*/domain-lookup/bulk*" OR Web.uri_path="*/domain-lookup/check*" OR Web.uri_path="*/domain-lookup/bulk*") by Web.src Web.dest Web.http_method Web.uri_path | `drop_dm_object_name(Web)` | where NOT (cidrmatch("127.0.0.0/8",src) OR cidrmatch("::1/128",src) OR cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src)) | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -92,7 +133,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS
 
-`UC_121_3` · phase: **exploit** · confidence: **High**
+`UC_121_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,14 +180,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `2e8ea913573610667ad54e31dba2e8198ebf7cf9`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

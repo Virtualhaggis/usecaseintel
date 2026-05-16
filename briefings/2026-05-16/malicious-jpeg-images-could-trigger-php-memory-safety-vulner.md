@@ -28,12 +28,53 @@ The flaws, discovered in PHP’s ext/standard extension by Positive Technologies
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1212** — Exploitation for Credential Access
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vulnerable PHP versions affected by CVE-2025-14177 getimagesize heap leak
+
+`UC_2_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2025-14177" by Vulnerabilities.dest Vulnerabilities.category
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - severity
+``` enrich with internet-facing flag from Asset & Identity ```
+| `get_asset(dest)`
+```
+
+**Defender KQL:**
+```kql
+// Hosts vulnerable to CVE-2025-14177 (PHP getimagesize multi-chunk heap leak)
+let _exposure = DeviceInfo
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId, DeviceName;
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2025-14177"
+| where SoftwareName has "php"
+| join kind=leftouter _exposure on DeviceId
+| project DeviceName, OSPlatform, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc, DeviceName asc
+```
+
+### [LLM] php://filter stream wrapper in HTTP request path / query — CVE-2025-14177 exploit vector
+
+`UC_2_6` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count values(Web.http_method) as methods values(Web.url) as urls values(Web.http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*php://filter*" OR Web.url="*php%3A%2F%2Ffilter*" OR Web.url="*convert.base64-encode*" OR Web.url="*convert.base64-decode*") by Web.src Web.dest Web.uri_path Web.status
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count
+```
 
 ### Office app spawning script/LOLBin child process
 
@@ -154,4 +195,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

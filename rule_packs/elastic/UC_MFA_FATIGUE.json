@@ -38,7 +38,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nAADSignInEventsBeta\n| where Timestamp > ago(1d)\n| where ErrorCode in (50074, 50076, 50158, 50125, 50097)\n| extend MfaPrompt = AuthenticationRequirement == \"multiFactorAuthentication\"\n| where MfaPrompt\n| summarize attempts = count(), distinct_ips = dcount(IPAddress)\n    by AccountUpn, bin(Timestamp, 5m)\n| where attempts > 10\n| order by attempts desc\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/actions/UC_MFA_FATIGUE.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/actions/UC_MFA_FATIGUE.yml"
   ],
   "meta": {
     "tier": "alerting",

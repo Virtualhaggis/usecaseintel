@@ -1,4 +1,4 @@
-# [CRIT] Quasar Linux RAT Steals Developer Credentials for Software Supply Chain Compromise
+# [HIGH] Quasar Linux RAT Steals Developer Credentials for Software Supply Chain Compromise
 
 **Source:** The Hacker News
 **Published:** 2026-05-08
@@ -13,26 +13,106 @@ A previously undocumented Linux implant codenamed Quasar Linux RAT (QLNX) is tar
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555** — Credentials from Password Stores
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1574.006** — Hijack Execution Flow: Dynamic Linker Hijacking
+- **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
+- **T1014** — Rootkit
+- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] QLNX developer-credential fan-out: single process reading multiple secret files (.npmrc/.pypirc/.aws/.kube/.docker/.vault-token/.env)
+
+`UC_140_4` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as touched_files dc(Filesystem.file_path) as unique_secret_files from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*/.pypirc*" OR Filesystem.file_path="*/.git-credentials*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.kube/config*" OR Filesystem.file_path="*/.docker/config.json*" OR Filesystem.file_path="*/.vault-token*" OR Filesystem.file_path="*/.terraformrc*" OR Filesystem.file_path="*/terraform.rc*" OR Filesystem.file_path="*/.config/gh/hosts.yml*" OR Filesystem.file_path="*/.env") by Filesystem.dest Filesystem.process_id Filesystem.process_name _time span=5m | where unique_secret_files>=3 | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)^(git|gh|aws|kubectl|helm|docker|terraform|npm|yarn|pip|pip3|poetry|vault|cat|less|grep|find|node|python|python3)$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// QLNX credential harvester — one Linux process reading 3+ distinct developer secret files
+let _qlnx_secret_files = dynamic([".npmrc",".pypirc",".git-credentials",".vault-token","credentials","config.json","config",".terraformrc","terraform.rc","hosts.yml",".env"]);
+let _qlnx_secret_paths = dynamic(["/.aws/credentials","/.kube/config","/.docker/config.json","/.config/gh/hosts.yml","/.terraform.d/credentials.tfrc.json"]);
+let _allowed_readers = dynamic(["git","gh","aws","kubectl","helm","docker","dockerd","terraform","npm","node","yarn","pip","pip3","poetry","vault","ansible","ansible-playbook","python","python3","cat","less","more","grep","find","sshd"]);
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FileName in (_qlnx_secret_files) and (FolderPath has "/.aws/" or FolderPath has "/.kube/" or FolderPath has "/.docker/" or FolderPath has "/.config/gh/" or FolderPath has "/.terraform.d/" or FolderPath matches regex @"/home/[^/]+" or FolderPath matches regex @"/root"))
+   or _qlnx_secret_paths has_any (FolderPath)
+| where InitiatingProcessFileName !in~ (_allowed_readers)
+| summarize SecretFiles = make_set(strcat(FolderPath, "/", FileName), 25), UniqueSecrets = dcount(strcat(FolderPath, "/", FileName)), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleCmd = any(InitiatingProcessCommandLine) by DeviceId, DeviceName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessSHA256, bin(Timestamp, 5m)
+| where UniqueSecrets >= 3
+| order by LastSeen desc
+```
+
+### [LLM] QLNX userland rootkit / PAM backdoor: write to /etc/ld.so.preload or PAM module directories
+
+`UC_140_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/ld.so.preload" OR Filesystem.file_path="/etc/ld.so.preload.d/*" OR Filesystem.file_path="/lib/security/pam_*.so" OR Filesystem.file_path="/lib64/security/pam_*.so" OR Filesystem.file_path="/lib/x86_64-linux-gnu/security/pam_*.so" OR Filesystem.file_path="/usr/lib/security/pam_*.so" OR Filesystem.file_path="/usr/lib64/security/pam_*.so" OR Filesystem.file_path="/usr/lib/x86_64-linux-gnu/security/pam_*.so") (Filesystem.action=created OR Filesystem.action=modified OR Filesystem.action=written) by Filesystem.dest Filesystem.process_id Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)^(dpkg|apt|apt-get|aptitude|unattended-upgr|rpm|dnf|yum|zypper|pacman|snap|snapd|update-manager|cfengine-execd|puppet|chef-client|salt-minion|ansible-playbook|systemd|systemd-tmpfiles|authconfig|pam-auth-update)$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// QLNX userland rootkit (LD_PRELOAD) + PAM inline-hook backdoor file writes
+let _pkg_managers = dynamic(["dpkg","apt","apt-get","aptitude","unattended-upgr","rpm","dnf","yum","zypper","pacman","snap","snapd","systemd","systemd-tmpfiles","authconfig","pam-auth-update","update-manager","puppet","chef-client","salt-minion","ansible-playbook","cfengine-execd"]);
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath == "/etc" and FileName == "ld.so.preload")
+     or (FolderPath startswith "/etc/ld.so.preload.d")
+     or (FolderPath endswith "/security" and FileName startswith "pam_" and FileName endswith ".so" and (FolderPath startswith "/lib/" or FolderPath startswith "/lib64/" or FolderPath startswith "/usr/lib/" or FolderPath startswith "/usr/lib64/"))
+| where InitiatingProcessFileName !in~ (_pkg_managers)
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, ParentImage = InitiatingProcessParentFileName, Image = InitiatingProcessFileName, Cmd = InitiatingProcessCommandLine, ImageSHA256 = InitiatingProcessSHA256, DroppedPath = strcat(FolderPath, "/", FileName), DroppedSHA256 = SHA256, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] QLNX shell-injection persistence: append to .bashrc / .bash_profile / .profile / /etc/profile.d by non-shell process
+
+`UC_140_6` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_path) as process_path values(Filesystem.user) as actor from datamodel=Endpoint.Filesystem where (Filesystem.file_name=".bashrc" OR Filesystem.file_name=".bash_profile" OR Filesystem.file_name=".bash_login" OR Filesystem.file_name=".profile" OR Filesystem.file_name=".zshrc" OR Filesystem.file_name=".zprofile" OR Filesystem.file_path="/etc/profile" OR Filesystem.file_path="/etc/bash.bashrc" OR Filesystem.file_path="/etc/profile.d/*") (Filesystem.action=modified OR Filesystem.action=created OR Filesystem.action=written) by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)^(vim|vi|nano|emacs|gedit|kate|code|nvim|sed|bash|zsh|sh|dash|chsh|adduser|useradd|usermod|cloud-init|ansible-playbook|puppet|chef-client|salt-minion|dpkg|apt|apt-get|rpm|dnf|yum)$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// QLNX shell-rc persistence — non-editor / non-shell process modifying bash/zsh rc files
+let _allowed_writers = dynamic(["vim","vi","nano","emacs","gedit","kate","code","nvim","sed","awk","bash","zsh","sh","dash","chsh","adduser","useradd","usermod","cloud-init","ansible-playbook","puppet","chef-client","salt-minion","dpkg","apt","apt-get","rpm","dnf","yum","snap","snapd","systemd","systemd-tmpfiles"]);
+let _rc_files = dynamic([".bashrc",".bash_profile",".bash_login",".profile",".zshrc",".zprofile",".zlogin","bash.bashrc","profile"]);
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in (_rc_files) or FolderPath startswith "/etc/profile.d"
+| where (FolderPath matches regex @"^/(home/[^/]+|root)$") or (FolderPath == "/etc" and FileName in ("profile","bash.bashrc")) or (FolderPath startswith "/etc/profile.d")
+| where InitiatingProcessFileName !in~ (_allowed_writers)
+| where InitiatingProcessFolderPath !startswith "/usr/lib/snapd/"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, Image = InitiatingProcessFileName, ImagePath = InitiatingProcessFolderPath, Cmd = InitiatingProcessCommandLine, ImageSHA256 = InitiatingProcessSHA256, ModifiedFile = strcat(FolderPath, "/", FileName), ActionType
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -206,14 +286,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

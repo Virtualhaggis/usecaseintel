@@ -43,12 +43,140 @@ Public administration and health care tied as the most targeted indu…
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1090.001** — Proxy: Internal Proxy
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1530** — Data from Cloud Storage
+- **T1593** — Search Open Websites/Domains
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Softr-hosted phishing page impersonating OWA/Exchange (Crimson Collective TTP)
+
+`UC_260_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.recipient) as recipients values(All_Email.url) as urls from datamodel=Email.All_Email where (All_Email.url="*.softr.app*" OR All_Email.url="*.softr.io*" OR All_Email.url="*studio.softr.io*") AND (All_Email.subject IN ("*outlook*","*owa*","*exchange*","*mailbox*","*office 365*","*o365*","*microsoft*","*password*","*mfa*","*verify*","*quarantine*") OR All_Email.url IN ("*outlook*","*owa*","*exchange*","*login*","*signin*","*microsoft*","*verify*","*auth*")) AND All_Email.direction="inbound" by All_Email.src_user All_Email.recipient All_Email.message_id | `drop_dm_object_name(All_Email)` | append [| tstats `summariesonly` count from datamodel=Web.Web where (Web.url="*.softr.app*" OR Web.url="*.softr.io*") AND (Web.url="*outlook*" OR Web.url="*owa*" OR Web.url="*exchange*" OR Web.url="*login*" OR Web.url="*microsoft*") by Web.src Web.user Web.url Web.http_referrer | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 14d;
+let SoftrTokens = dynamic([".softr.app", ".softr.io", "studio.softr.io", "softrsite."]);
+let OwaTokens = dynamic(["outlook","owa","exchange","mailbox","office365","o365","microsoft","login","signin","verify","mfa","quarantine","password"]);
+let SoftrEmails = EmailEvents
+    | where Timestamp > ago(Lookback)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | join kind=inner (
+        EmailUrlInfo
+        | where Timestamp > ago(Lookback)
+        | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId
+    | where Url has_any (SoftrTokens) or UrlDomain has_any (SoftrTokens)
+    | where Subject has_any (OwaTokens) or Url has_any (OwaTokens)
+    | project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain;
+SoftrEmails
+| join kind=leftouter (
+    UrlClickEvents
+    | where Timestamp > ago(Lookback)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | project ClickTime = Timestamp, NetworkMessageId, AccountUpn, ClickIP = IPAddress, IsClickedThrough
+  ) on NetworkMessageId
+| project Timestamp, ClickTime, IsClickedThrough, SenderFromAddress, RecipientEmailAddress, AccountUpn, Subject, Url, UrlDomain, ClickIP
+| order by Timestamp desc
+```
+
+### [LLM] MeowBackConn proxy DLL drop / load (Gootloader -> Rhysida)
+
+`UC_260_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where Filesystem.file_name="meow_*.dll" by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [search index=* (sourcetype="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" OR source="WinEventLog:Microsoft-Windows-Sysmon/Operational") (EventCode=7 OR EventID=7) ImageLoaded="*\\meow_*.dll" | stats count min(_time) as firstTime max(_time) as lastTime values(Image) as LoaderImage values(ImageLoaded) as LoadedDLL values(User) as user by host] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 30d;
+let MeowPattern = @"(?i)\\meow_[a-z0-9]{1,8}\.dll$";
+let ImageLoads = DeviceImageLoadEvents
+    | where Timestamp > ago(Lookback)
+    | where FileName startswith "meow_" and FileName endswith ".dll"
+        or FolderPath matches regex MeowPattern
+    | project Timestamp, DeviceName, DeviceId, EventKind = "ImageLoad",
+              DllPath = strcat(FolderPath, FileName),
+              SHA256, MD5,
+              LoaderProcess = InitiatingProcessFileName,
+              LoaderCmd = InitiatingProcessCommandLine,
+              LoaderUser = InitiatingProcessAccountName,
+              LoaderSHA256 = InitiatingProcessSHA256;
+let FileWrites = DeviceFileEvents
+    | where Timestamp > ago(Lookback)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | where FileName startswith "meow_" and FileName endswith ".dll"
+    | project Timestamp, DeviceName, DeviceId, EventKind = "FileWrite",
+              DllPath = strcat(FolderPath, FileName),
+              SHA256, MD5,
+              LoaderProcess = InitiatingProcessFileName,
+              LoaderCmd = InitiatingProcessCommandLine,
+              LoaderUser = InitiatingProcessAccountName,
+              LoaderSHA256 = InitiatingProcessSHA256;
+union ImageLoads, FileWrites
+| order by Timestamp desc
+```
+
+### [LLM] First-seen service-principal Graph API sign-in after TruffleHog secret-scan exposure (Crimson Collective)
+
+`UC_260_16` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src_ips values(Authentication.app) as apps from datamodel=Authentication.Authentication where Authentication.signature_id IN ("ServicePrincipalSignIn","NonInteractiveUserSignIn") AND Authentication.dest="00000003-0000-0000-c000-000000000000" AND Authentication.action="success" by Authentication.user Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` | eventstats values(src) as historic_srcs by user | where firstTime > relative_time(now(), "-1h") AND NOT match(historic_srcs, src) | append [| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog*" OR Processes.process="*trufflehog *" OR Processes.process="*trufflehog scan*" OR Processes.process="*trufflehog github*" OR Processes.process="*trufflehog filesystem*") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Baseline = 30d;
+let Recent = 1d;
+let GraphResource = "00000003-0000-0000-c000-000000000000";
+let HistoricSPIPs = AADSignInEventsBeta
+    | where Timestamp between (ago(Baseline) .. ago(Recent))
+    | where ResourceId == GraphResource
+    | where ErrorCode == 0
+    | summarize by AccountObjectId, IPAddress;
+let RecentGraph = AADSignInEventsBeta
+    | where Timestamp > ago(Recent)
+    | where ResourceId == GraphResource
+    | where ErrorCode == 0
+    | where IsAnonymousProxy == true
+        or ClientAppUsed in ("Other clients","Other clients;Older Office clients")
+        or AuthenticationRequirement != "multiFactorAuthentication"
+    | project Timestamp, AccountObjectId, AccountUpn, AccountDisplayName, IPAddress, Country, Application, ApplicationId, ClientAppUsed, IsAnonymousProxy, AuthenticationRequirement;
+let NewSrc = RecentGraph
+    | join kind=leftanti HistoricSPIPs on AccountObjectId, IPAddress;
+let TruffleHogActivity = DeviceProcessEvents
+    | where Timestamp > ago(Baseline)
+    | where FileName startswith "trufflehog"
+        or ProcessCommandLine has "trufflehog"
+        or InitiatingProcessCommandLine has "trufflehog"
+    | summarize TruffleHogHosts = make_set(DeviceName), TruffleHogUsers = make_set(AccountName), Hits = count();
+NewSrc
+| extend Pivot_TruffleHog = toscalar(TruffleHogActivity | project Hits)
+| extend TruffleHogHosts = toscalar(TruffleHogActivity | project TruffleHogHosts)
+| project Timestamp, AccountUpn, AccountObjectId, IPAddress, Country, Application, ApplicationId, ClientAppUsed, IsAnonymousProxy, Pivot_TruffleHog, TruffleHogHosts
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -512,4 +640,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 17 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

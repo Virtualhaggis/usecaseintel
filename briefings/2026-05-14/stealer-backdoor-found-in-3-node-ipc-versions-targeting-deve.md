@@ -1,4 +1,4 @@
-# [CRIT] Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
+# [HIGH] Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
 **Source:** The Hacker News
 **Published:** 2026-05-14
@@ -17,7 +17,6 @@ node-ipc@12.0.1
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
 - **Domain (defanged):** `sh.azurestaticprovider.net`
 
 ## MITRE ATT&CK Techniques
@@ -25,7 +24,6 @@ node-ipc@12.0.1
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -36,12 +34,105 @@ node-ipc@12.0.1
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1567** — Exfiltration Over Web Service
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted/Obfuscated Non-C2 Protocol
+- **T1095** — Non-Application Layer Protocol
+- **T1568** — Dynamic Resolution
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] node-ipc supply-chain stealer C2 contact (sh.azurestaticprovider.net)
+
+`UC_42_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dest values(DNS.query) as query from datamodel=Network_Resolution where DNS.query="*sh.azurestaticprovider.net*" by host DNS.query DNS.src DNS.dest | `drop_dm_object_name(DNS)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest="sh.azurestaticprovider.net" OR All_Traffic.dest_host="sh.azurestaticprovider.net" OR All_Traffic.url="*sh.azurestaticprovider.net*" by host All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2_domain = "sh.azurestaticprovider.net";
+let net_hits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has c2_domain or tostring(parse_json(AdditionalFields)) has c2_domain
+    | project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ActionType, Source = "DeviceNetworkEvents";
+let dns_hits = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q has c2_domain
+    | project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, Query = Q, RemoteIP = "", RemoteUrl = Q, RemotePort = 53, ActionType, Source = "DeviceEvents.DnsQueryResponse";
+union net_hits, dns_hits
+| order by Timestamp desc
+```
+
+### [LLM] node.exe initiating direct UDP/53 to public resolvers (DNS exfil resolver bypass)
+
+`UC_42_10` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.user) as user from datamodel=Network_Traffic where (All_Traffic.app="node.exe" OR All_Traffic.process_name="node.exe" OR All_Traffic.process="*\\node.exe*") All_Traffic.dest_port=53 All_Traffic.transport="udp" by host All_Traffic.src All_Traffic.process_name All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | search NOT (dest_ip IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16,127.0.0.0/8)) | stats count dc(dest_ip) as unique_resolvers values(dest_ip) as resolvers by host src process_name | where count > 20 OR unique_resolvers >= 2
+```
+
+**Defender KQL:**
+```kql
+let _corp_resolvers = dynamic([]);  // populate with your corporate DNS server IPs to suppress
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where RemotePort == 53
+| where Protocol == "Udp"
+| where RemoteIPType == "Public"
+| where RemoteIP !in (_corp_resolvers)
+| summarize QueryCount = count(),
+           DistinctResolvers = dcount(RemoteIP),
+           Resolvers = make_set(RemoteIP, 25),
+           FirstSeen = min(Timestamp),
+           LastSeen = max(Timestamp),
+           SampleCmdLine = any(InitiatingProcessCommandLine)
+           by DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| where QueryCount >= 20 or DistinctResolvers >= 2 or Resolvers has_any ("1.1.1.1", "8.8.8.8", "8.8.4.4", "1.0.0.1")
+| order by QueryCount desc
+```
+
+### [LLM] Install or import of compromised node-ipc 9.1.6 / 9.2.3 / 12.0.1 versions
+
+`UC_42_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm-cli.js","npm","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","npx","node.exe","node")) Processes.process IN ("*node-ipc@9.1.6*","*node-ipc@9.2.3*","*node-ipc@12.0.1*","*node-ipc%409.1.6*","*node-ipc%409.2.3*","*node-ipc%4012.0.1*") by host Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("package.json","package-lock.json","yarn.lock","pnpm-lock.yaml") Filesystem.file_path="*node-ipc*" by host Filesystem.file_path | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let bad_versions = dynamic(["node-ipc@9.1.6","node-ipc@9.2.3","node-ipc@12.0.1"]);
+let proc_hits = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","npx.exe","node.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe")
+        or InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe","npx.exe")
+    | where ProcessCommandLine has_any (bad_versions)
+       or InitiatingProcessCommandLine has_any (bad_versions)
+    | project Timestamp, DeviceName, DeviceId, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, Source = "Process";
+let file_hits = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("package.json","package-lock.json","yarn.lock","pnpm-lock.yaml")
+    | where FolderPath has "node-ipc" or FolderPath has "node_modules\\node-ipc"
+    | where ActionType in ("FileCreated","FileModified")
+    | project Timestamp, DeviceName, DeviceId, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine = FolderPath, Source = "File";
+union proc_hits, file_hits
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -309,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
-`UC_42_9` · phase: **exploit** · confidence: **High**
+`UC_42_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -363,10 +454,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `sh.azurestaticprovider.net`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

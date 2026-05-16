@@ -29,16 +29,8 @@ The security of…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2025-55182`
 - **IPv4 (defanged):** `94.154.172.43`
-- **IPv4 (defanged):** `91.195.240.123`
 - **Domain (defanged):** `audit.checkmarx.cx`
-- **Domain (defanged):** `checkmarx.cx`
-- **Domain (defanged):** `proton.me`
-- **SHA256:** `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`
-- **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
-- **SHA256:** `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`
-- **SHA1:** `bc544f455d7c06c8a1f3446160a6d9a4a8236b11`
 
 ## MITRE ATT&CK Techniques
 
@@ -47,7 +39,6 @@ The security of…
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -55,12 +46,150 @@ The security of…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567** — Exfiltration Over Web Service
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1567.001** — Exfiltration to Code Repository
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Shai-Hulud 'Third Coming' C2 beacon to audit.checkmarx[.]cx /v1/telemetry
+
+`UC_222_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="audit.checkmarx.cx" OR All_Traffic.dest_ip="94.154.172.43" OR All_Traffic.dest_ip="91.195.240.123") by All_Traffic.src host All_Traffic.process_name | `drop_dm_object_name("All_Traffic")` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest from datamodel=Web.Web where Web.url="*audit.checkmarx.cx*" OR Web.url="*/v1/telemetry*" by Web.src host Web.process_name | `drop_dm_object_name("Web")`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _c2_hosts = dynamic(["audit.checkmarx.cx"]);
+let _c2_ips   = dynamic(["94.154.172.43","91.195.240.123"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any (_c2_hosts))
+      or (RemoteIP in (_c2_ips))
+| project Timestamp, DeviceName, DeviceId,
+          InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName,
+          RemoteUrl, RemoteIP, RemotePort, ActionType
+| union (
+    DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has "audit.checkmarx.cx" or Q endswith ".checkmarx.cx"
+    | project Timestamp, DeviceName, DeviceId,
+              InitiatingProcessAccountName,
+              InitiatingProcessFileName,
+              InitiatingProcessFolderPath,
+              InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              RemoteUrl=Q, RemoteIP=tostring(parse_json(AdditionalFields).IPAddresses),
+              RemotePort=int(null), ActionType
+  )
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud preinstall: node spawning Bun runtime to execute bw1.js / setup.mjs
+
+`UC_222_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where ( (Processes.process_name="bun" OR Processes.process_name="bun.exe") AND (Processes.process="*bw1.js*" OR Processes.process="*setup.mjs*") ) OR ( (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node" OR Processes.parent_process_name="npm" OR Processes.parent_process_name="npm.cmd") AND (Processes.process="*bw_setup.js*" OR Processes.process="*bw1.js*" OR Processes.process="*setup.mjs*") ) OR ( Processes.process="*github.com/oven-sh/bun*" AND Processes.parent_process_name IN ("node.exe","node","npm","npm.cmd","yarn.exe","pnpm.exe") ) by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name("Processes")` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _node_parents = dynamic(["node.exe","node","npm.cmd","npm","yarn.exe","pnpm.exe","bw","bw.exe"]);
+let _worm_scripts = dynamic(["bw_setup.js","bw1.js","setup.mjs","mcpAddon.js"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessAccountName !endswith "$"
+| where (
+      // Bun executing the obfuscated payload or worm dropper
+      (FileName in~ ("bun.exe","bun")
+         and ProcessCommandLine has_any (_worm_scripts))
+   or // node/npm preinstall invoking the bootstrap
+      (InitiatingProcessFileName in~ (_node_parents)
+         and ProcessCommandLine has_any (_worm_scripts))
+   or // bootstrap downloading the Bun release tarball from oven-sh
+      (InitiatingProcessFileName in~ (_node_parents)
+         and ProcessCommandLine has "oven-sh/bun"
+         and ProcessCommandLine has_any ("curl","wget","Invoke-WebRequest","iwr"))
+  )
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandparentFile = InitiatingProcessParentFileName,
+          ChildImage = FolderPath,
+          ChildFile = FileName,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud GitHub dead-drop fallback: api.github.com search for 'beautifulcastle'
+
+`UC_222_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.process_name) as proc from datamodel=Web.Web where Web.url="*api.github.com/search/commits*" AND Web.url="*beautifulcastle*" by host Web.src Web.dest | `drop_dm_object_name("Web")` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process="*beautifulcastle*" OR Processes.process="*LongLiveTheResistanceAgainstMachines*" OR Processes.process="*Checkmarx Configuration Storage*" OR Processes.process="*Shai-Hulud: The Third Coming*") AND (Processes.process_name="node.exe" OR Processes.process_name="node" OR Processes.process_name="bun.exe" OR Processes.process_name="bun" OR Processes.process_name="git.exe" OR Processes.process_name="gh.exe") by host Processes.dest Processes.user Processes.process_name | `drop_dm_object_name("Processes")`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let _runtimes = dynamic(["node.exe","node","bun.exe","bun","git.exe","gh.exe","curl.exe","powershell.exe","pwsh.exe"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "api.github.com"
+    | where RemoteUrl has "search/commits" and RemoteUrl has "beautifulcastle"
+    | where InitiatingProcessFileName in~ (_runtimes)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              RemoteUrl, RemoteIP, RemotePort, Signal="github_dead_drop_search" ),
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessAccountName !endswith "$"
+    | where ProcessCommandLine has_any ("beautifulcastle",
+                                        "LongLiveTheResistanceAgainstMachines",
+                                        "Checkmarx Configuration Storage",
+                                        "Shai-Hulud: The Third Coming",
+                                        "butlerian jihad")
+    | project Timestamp, DeviceName, AccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              RemoteUrl="", RemoteIP="", RemotePort=int(null),
+              Signal=strcat("worm_marker_string:", FileName) ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified")
+    | where (FileName =~ "setup.mjs" or FileName =~ "format-check.yml")
+    | where InitiatingProcessFileName in~ (_runtimes)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName="",
+              RemoteUrl=FolderPath, RemoteIP="", RemotePort=int(null),
+              Signal=strcat("worm_artifact_written:", FileName) )
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -294,7 +423,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_222_9` · phase: **exploit** · confidence: **High**
+`UC_222_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -346,15 +475,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `94.154.172.43`, `91.195.240.123`, `audit.checkmarx.cx`, `checkmarx.cx`, `proton.me`
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-55182`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`, `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`, `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`, `bc544f455d7c06c8a1f3446160a6d9a4a8236b11`
+  - IP / domain IOC(s): `94.154.172.43`, `audit.checkmarx.cx`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

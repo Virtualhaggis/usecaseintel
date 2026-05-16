@@ -43,7 +43,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\n// Safe Links assessed the URL as risky, showed a warning page, and the\n// user proceeded anyway. ClickedThrough events are inherently rare \u2014\n// every hit deserves analyst review. UrlDomain isn't on UrlClickEvents\n// or EmailEvents \u2014 it's only on EmailUrlInfo, so we left-outer join it.\nUrlClickEvents\n| where Timestamp > ago(30d)\n| where ActionType == \"ClickedThrough\"\n| join kind=leftouter (\n    EmailEvents\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,\n              RecipientEmailAddress, EmailDirection\n  ) on NetworkMessageId\n| join kind=leftouter (\n    EmailUrlInfo\n    | where Timestamp > ago(30d)\n    | project NetworkMessageId, Url, UrlDomain\n  ) on NetworkMessageId, Url\n| project Timestamp, AccountUpn, IPAddress, Url, UrlDomain,\n          EmailDirection, SenderFromAddress, SenderFromDomain,\n          RecipientEmailAddress, Subject, Workload\n| order by Timestamp desc\n\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/delivery/UC_PHISH_LINK_BYPASS.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/delivery/UC_PHISH_LINK_BYPASS.yml"
   ],
   "meta": {
     "tier": "alerting",

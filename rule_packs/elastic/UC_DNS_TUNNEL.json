@@ -43,7 +43,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceNetworkEvents\n| where Timestamp > ago(1d)\n| where RemotePort == 53 and isnotempty(RemoteUrl)\n| extend qlen = strlen(RemoteUrl)\n| where qlen > 50\n| extend SecondLevelDomain = extract(@\"([\\w-]+\\.[a-zA-Z]{2,})$\", 1, RemoteUrl)\n| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)\n    by DeviceName, SecondLevelDomain\n| where qcount > 100 and uniqueSubs > 20\n| order by qcount desc\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/c2/UC_DNS_TUNNEL.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/c2/UC_DNS_TUNNEL.yml"
   ],
   "meta": {
     "tier": "hunting",

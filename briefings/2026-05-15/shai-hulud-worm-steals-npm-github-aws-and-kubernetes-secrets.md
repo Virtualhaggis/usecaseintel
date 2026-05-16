@@ -17,7 +17,6 @@ Hundreds of malicious packages have already been tied to this campaign , maki…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `git-tanstack.com`
-- **Domain (defanged):** `tanstack.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -329,7 +328,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `git-tanstack.com`, `tanstack.com`
+  - IP / domain IOC(s): `git-tanstack.com`
 
 
 ## Why this matters

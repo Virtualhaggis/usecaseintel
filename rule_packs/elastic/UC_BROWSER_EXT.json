@@ -38,7 +38,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where RegistryKey has_any (\"\\Software\\Google\\Chrome\\Extensions\\\",\"\\Software\\Microsoft\\Edge\\Extensions\\\",\"\\Software\\Mozilla\\Firefox\\Extensions\\\")\n| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessAccountName\n```",
   "references": [
-    "https://clankerusecase.com/use_cases/install/UC_BROWSER_EXT.yml"
+    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/install/UC_BROWSER_EXT.yml"
   ],
   "meta": {
     "tier": "hunting",

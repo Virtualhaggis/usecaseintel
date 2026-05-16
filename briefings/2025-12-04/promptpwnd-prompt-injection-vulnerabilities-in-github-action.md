@@ -18,12 +18,74 @@ Blog Vulnerabilities & Threats PromptPwnd: Prompt Injection Vulnerabilities in G
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1567** — Exfiltration Over Web Service
+- **T1059** — Command and Scripting Interpreter
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] AI agent token exfil via gh CLI issue/PR edit with embedded secret (PromptPwnd)
+
+`UC_554_3` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="gh" OR Processes.process_name="gh.exe") (Processes.process="*issue edit*" OR Processes.process="*issue comment*" OR Processes.process="*issue create*" OR Processes.process="*pr edit*" OR Processes.process="*pr comment*" OR Processes.process="*pr create*") Processes.process="*--body*" (Processes.process="*ghp_*" OR Processes.process="*github_pat_*" OR Processes.process="*gho_*" OR Processes.process="*ghs_*" OR Processes.process="*ghu_*" OR Processes.process="*ghr_*" OR Processes.process="*AIza*" OR Processes.process="*ya29.*" OR Processes.process="*$GITHUB_TOKEN*" OR Processes.process="*$GEMINI_API_KEY*" OR Processes.process="*$GOOGLE_CLOUD_ACCESS_TOKEN*" OR Processes.process="*${GITHUB_TOKEN*" OR Processes.process="*${GEMINI_API_KEY*" OR Processes.process="*${GOOGLE_CLOUD_ACCESS_TOKEN*" OR Processes.process="*$ANTHROPIC_API_KEY*" OR Processes.process="*$OPENAI_API_KEY*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// PromptPwnd — gh CLI used to edit an issue/PR with a body that contains a token pattern
+// or an unexpanded env-var token reference. Article (Aikido) shows the exact PoC on gemini-cli.
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("gh", "gh.exe")
+| where ProcessCommandLine has_any ("issue edit", "issue comment", "issue create", "pr edit", "pr comment", "pr create")
+| where ProcessCommandLine has "--body"
+| where ProcessCommandLine matches regex @"(?i)(ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|gho_[A-Za-z0-9]{20,}|ghs_[A-Za-z0-9]{20,}|ghu_[A-Za-z0-9]{20,}|ghr_[A-Za-z0-9]{20,}|AIza[A-Za-z0-9_\-]{30,}|ya29\.[A-Za-z0-9_\-]{20,}|sk-[A-Za-z0-9]{20,}|\$\{?GITHUB_TOKEN\}?|\$\{?GEMINI_API_KEY\}?|\$\{?GOOGLE_CLOUD_ACCESS_TOKEN\}?|\$\{?ANTHROPIC_API_KEY\}?|\$\{?OPENAI_API_KEY\}?)"
+| project Timestamp, DeviceName, AccountName,
+          FileName, ProcessCommandLine,
+          Parent = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] AI agent CLI on CI runner spawning shell that references token environment variables
+
+`UC_554_4` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="gemini" OR Processes.parent_process_name="gemini.exe" OR Processes.parent_process_name="claude" OR Processes.parent_process_name="claude.exe" OR Processes.parent_process_name="claude-code" OR Processes.parent_process_name="codex" OR Processes.parent_process_name="codex.exe") (Processes.process_name="bash" OR Processes.process_name="sh" OR Processes.process_name="zsh" OR Processes.process_name="pwsh" OR Processes.process_name="pwsh.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="cmd.exe" OR Processes.process_name="gh" OR Processes.process_name="gh.exe" OR Processes.process_name="curl" OR Processes.process_name="curl.exe" OR Processes.process_name="wget") (Processes.process="*GITHUB_TOKEN*" OR Processes.process="*GEMINI_API_KEY*" OR Processes.process="*GOOGLE_CLOUD_ACCESS_TOKEN*" OR Processes.process="*ANTHROPIC_API_KEY*" OR Processes.process="*OPENAI_API_KEY*" OR Processes.process="*GH_TOKEN*" OR Processes.process="*NPM_TOKEN*") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+// AI agent process (gemini / claude / codex CLI) -> shell or HTTP/gh tool whose
+// command line references a privileged token env var. Catches the article's
+// run_shell_command(echo|gh issue ...) tool-call class beyond the gh-issue-edit PoC.
+let _agent_parents = dynamic(["gemini","gemini.exe","claude","claude.exe","claude-code","claude-code.exe","codex","codex.exe"]);
+let _exfil_children = dynamic(["bash","sh","zsh","dash","pwsh","pwsh.exe","powershell.exe","cmd.exe","gh","gh.exe","curl","curl.exe","wget","wget.exe"]);
+let _privileged_envvars = dynamic(["GITHUB_TOKEN","GEMINI_API_KEY","GOOGLE_CLOUD_ACCESS_TOKEN","ANTHROPIC_API_KEY","OPENAI_API_KEY","GH_TOKEN","NPM_TOKEN","AWS_ACCESS_KEY_ID","AWS_SECRET_ACCESS_KEY"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (_agent_parents)
+| where FileName in~ (_exfil_children)
+| where ProcessCommandLine has_any (_privileged_envvars)
+| project Timestamp, DeviceName, AccountName,
+          AgentParent = InitiatingProcessFileName,
+          AgentParentCmd = InitiatingProcessCommandLine,
+          Child = FileName,
+          ChildCmd = ProcessCommandLine,
+          Grandparent = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -111,4 +173,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

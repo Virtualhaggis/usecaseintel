@@ -11,7 +11,7 @@ The ongoing campaign uses convincing phishing lures related to tax compliance vi
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `gofile.io`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -23,13 +23,111 @@ The ongoing campaign uses convincing phishing lures related to tax compliance vi
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1071** — Application Layer Protocol
+- **T1105** — Ingress Tool Transfer
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1112** — Modify Registry
+- **T1027.013** — Encrypted/Encoded File
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Silver Fox Japan tax-season lure: inbound email with Japanese HR/ESOP subject + gofile.io URL or RAR/ZIP
+
+`UC_321_4` · phase: **delivery** · confidence: **High**
+
+**Defender KQL:**
+```kql
+let LookbackDays = 14d;
+let JpLureSubjectFragments = dynamic(["従業員持株会","人事異動","給与改定","給与調整","税務コンプライアンス","罰金通知","持株会規約"]);
+let ArchiveTypes = dynamic(["rar","zip","RAR","ZIP","7z","7Z"]);
+let SuspectMail = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound"
+    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
+    | where Subject contains "従業員持株会"
+        or Subject contains "人事異動"
+        or Subject contains "給与改定"
+        or Subject contains "給与調整"
+        or Subject contains "税務コンプライアンス"
+        or Subject contains "罰金通知"
+        or Subject contains "持株会規約"
+    | project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderDisplayName, RecipientEmailAddress, Subject, AuthenticationDetails;
+let UrlSide = SuspectMail
+    | join kind=inner (
+        EmailUrlInfo
+        | where Timestamp > ago(LookbackDays)
+        | where UrlDomain has_any ("gofile.io","wetransfer.com","we.tl")
+        | project NetworkMessageId, Url, UrlDomain, UrlLocation
+      ) on NetworkMessageId
+    | extend Vector = strcat("URL:", UrlDomain), Indicator = Url;
+let AttachSide = SuspectMail
+    | join kind=inner (
+        EmailAttachmentInfo
+        | where Timestamp > ago(LookbackDays)
+        | where FileType in~ (ArchiveTypes) or FileName endswith ".rar" or FileName endswith ".zip" or FileName endswith ".7z"
+        | project NetworkMessageId, FileName, FileType, SHA256, FileSize
+      ) on NetworkMessageId
+    | extend Vector = strcat("ATTACH:", FileType), Indicator = FileName;
+union UrlSide, AttachSide
+| project Timestamp, RecipientEmailAddress, SenderFromAddress, SenderMailFromAddress, SenderDisplayName, Subject, Vector, Indicator, NetworkMessageId
+| order by Timestamp desc
+```
+
+### [LLM] gofile.io archive download by browser followed by extracted-EXE execution within 30 minutes
+
+`UC_321_5` · phase: **install** · confidence: **Medium**
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let WindowMin = 30m;
+let GofileDrops = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where FileOriginUrl has_any ("gofile.io","wetransfer.com","we.tl")
+    | where FileName endswith ".rar" or FileName endswith ".zip" or FileName endswith ".7z"
+         or FileName endswith ".exe" or FileName endswith ".msi" or FileName endswith ".lnk" or FileName endswith ".iso"
+    | project DropTime = Timestamp, DeviceId, DeviceName, DroppedFile = FileName, DroppedPath = FolderPath, DroppedSHA256 = SHA256, FileOriginUrl, InitiatingProcessFileName;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where AccountName !endswith "$"
+| where FolderPath has_any (@"\Users\", @"\AppData\Local\Temp\", @"\Downloads\", @"\Desktop\", @"\Public\")
+| where FileName endswith ".exe" or FileName endswith ".dll" or FileName endswith ".scr"
+| join kind=inner GofileDrops on DeviceId
+| where Timestamp between (DropTime .. DropTime + WindowMin)
+| where InitiatingProcessFileName in~ ("explorer.exe","7zg.exe","7zfm.exe","winrar.exe","rar.exe","unrar.exe","chrome.exe","msedge.exe","firefox.exe","outlook.exe")
+| project Timestamp, DropTime, DelaySec = datetime_diff('second', Timestamp, DropTime), DeviceName, AccountName, DroppedFile, DroppedPath, FileOriginUrl, ExecutedFile = FileName, ExecutedPath = FolderPath, ExecutedSHA256 = SHA256, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### [LLM] ValleyRAT registry-resident shellcode (HKCU\Console\0|1) and MyPythonApp Run-key persistence
+
+`UC_321_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Console\\0*" OR Registry.registry_path="*\\Console\\1*") AND Registry.registry_value_name="d33f351a4aeea5e608853d1a56661059" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid 
+| `drop_dm_object_name(Registry)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)` 
+| append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" AND Registry.registry_value_name="MyPythonApp" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid 
+| `drop_dm_object_name(Registry)` 
+| `security_content_ctime(firstTime)` 
+| `security_content_ctime(lastTime)`]
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where (RegistryKey has_cs @"\Console\0" or RegistryKey has_cs @"\Console\1") and RegistryValueName =~ "d33f351a4aeea5e608853d1a56661059"
+    or (RegistryKey has @"\CurrentVersion\Run" and RegistryValueName =~ "MyPythonApp")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, RegistryKey, RegistryValueName, RegistryValueType, RegistryValueData
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -207,14 +305,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `gofile.io`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

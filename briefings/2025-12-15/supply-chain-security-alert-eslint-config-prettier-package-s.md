@@ -27,12 +27,85 @@ Sh…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1556** — Modify Authentication Process
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] rundll32.exe spawned by Node/npm loading node-gyp.dll or crashreporter.dll (CVE-2025-54313)
+
+`UC_532_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","bun.exe","corepack.exe") AND Processes.process_name="rundll32.exe" AND (Processes.process_command_line="*node-gyp.dll*" OR Processes.process_command_line="*crashreporter.dll*") AND Processes.process_command_line="*,main*" by host Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process Processes.process_command_line Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","bun.exe","corepack.exe")
+| where FileName =~ "rundll32.exe"
+| where ProcessCommandLine has_any ("node-gyp.dll","crashreporter.dll")
+| where ProcessCommandLine has ",main"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] DNS / outbound connection to npnjs[.]com phishing infrastructure
+
+`UC_532_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="npnjs.com" OR DNS.query="*.npnjs.com") by host DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [ | tstats summariesonly=t count from datamodel=Web where (Web.url="*npnjs.com*" OR Web.dest="*npnjs.com*") by host Web.src Web.url Web.user_agent | `drop_dm_object_name(Web)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has "npnjs.com"
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q has "npnjs.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, Q )
+| order by Timestamp desc
+```
+
+### [LLM] node-gyp.dll or crashreporter.dll created under node_modules by package-manager process
+
+`UC_532_10` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="node-gyp.dll" OR Filesystem.file_name="crashreporter.dll") AND Filesystem.file_path="*\\node_modules\\*" by host Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName in~ ("node-gyp.dll","crashreporter.dll")
+| where FolderPath has @"\node_modules\"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, MD5, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -296,4 +369,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
