@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_781 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_782 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-16
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
+- [google project zero discloses zero click exploit chain for p](./2026-05-16/google-project-zero-discloses-zero-click-exploit-chain-for-p.md)
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)

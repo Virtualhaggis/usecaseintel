@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm persistence via .claude/ payload drop (router_runtime.js / setup.mjs)
 
-`UC_26_1` · phase: **install** · confidence: **High**
+`UC_27_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP gh-token-monitor persistence daemon (macOS LaunchAgent / Linux systemd user unit)
 
-`UC_26_2` · phase: **install** · confidence: **High**
+`UC_27_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud C2 callout to git-tanstack[.]com / *.getsession.org / api.masscan.cloud / 83.142.209.194
 
-`UC_26_3` · phase: **c2** · confidence: **High**
+`UC_27_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

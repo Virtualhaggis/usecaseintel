@@ -1,6 +1,6 @@
 # [CRIT] TanStack Supply Chain Attack Hits Two OpenAI Employee Devices, Forces macOS Updates
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-05-15
 **Article:** https://thehackernews.com/2026/05/tanstack-supply-chain-attack-hits-two.html
 

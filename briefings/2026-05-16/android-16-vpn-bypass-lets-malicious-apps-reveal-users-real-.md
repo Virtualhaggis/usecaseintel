@@ -10,12 +10,9 @@ Home Android
 Android 16 VPN Bypass Lets Malicious Apps Reveal Users Real IP Address 
 By Abinaya 
 May 16, 2026 
-
-
-
-
 A newly disclosed flaw in Android 16 is raising serious privacy concerns after researchers revealed that malicious apps can bypass VPN protections and expose a user’s real IP address even when strict security settings are enabled.
-The vulnerability, dubbed the “Tiny UDP Cannon,” allows any regular Android app with basic permissions to leak network traffic outside the VPN tunnel…
+The vulnerability, dubbed the “Tiny UDP Cannon,” allows any regular Android app with basic permissions to leak network traffic outside the VPN tunnel.
+This b…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GlassWorm RAT install paths and persistence artifacts (QtCvyfVWKH / UpdateApp / UpdateLedger)
 
-`UC_346_14` · phase: **install** · confidence: **High**
+`UC_347_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union isfuzzy=true FileHits, RegHits, TaskHits
 
 ### [LLM] GlassWorm C2 / exfiltration egress to 45.32.150.251, 217.69.3.152, 217.69.0.159, 45.150.34.158
 
-`UC_346_15` · phase: **c2** · confidence: **High**
+`UC_347_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceNetworkEvents
 
 ### [LLM] node.exe / npm-spawned process polling multiple Solana mainnet RPC endpoints (GlassWorm Stage 1 dead-drop)
 
-`UC_346_16` · phase: **c2** · confidence: **Medium**
+`UC_347_16` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -568,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm Hides a RAT Inside a Malicious Chrome Extension
 
-`UC_346_13` · phase: **exploit** · confidence: **High**
+`UC_347_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

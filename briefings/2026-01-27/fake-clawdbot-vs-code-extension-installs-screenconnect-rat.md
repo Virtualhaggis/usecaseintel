@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Weaponised ScreenConnect install with ClawdBot attacker-tagged instance ID (083e4d30c7ea44f7)
 
-`UC_462_14` · phase: **install** · confidence: **High**
+`UC_463_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ union
 
 ### [LLM] Process execution or file drop staged in %TEMP%\Lightshot (ClawdBot dropper folder)
 
-`UC_462_15` · phase: **delivery** · confidence: **High**
+`UC_463_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### [LLM] ClawdBot ScreenConnect relay + Rust loader C2 network egress (port 8041, bulletmailer/getintwopc/darkgptprivate/Dropbox-zoomupdate)
 
-`UC_462_16` · phase: **c2** · confidence: **High**
+`UC_463_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -521,7 +521,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Clawdbot VS Code Extension Installs ScreenConnect RAT
 
-`UC_462_13` · phase: **exploit** · confidence: **High**
+`UC_463_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

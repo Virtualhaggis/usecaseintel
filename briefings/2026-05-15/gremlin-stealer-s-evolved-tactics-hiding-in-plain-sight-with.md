@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gremlin Stealer C2 exfiltration to 194.87.92.109/i.php
 
-`UC_19_8` · phase: **actions** · confidence: **High**
+`UC_20_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### [LLM] Gremlin Stealer .NET sample execution by SHA256
 
-`UC_19_9` · phase: **install** · confidence: **High**
+`UC_20_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ union isfuzzy=true
 
 ### [LLM] Gremlin Stealer reconnaissance: api.ipify.org call followed by egress to 194.87.92.109
 
-`UC_19_10` · phase: **c2** · confidence: **High**
+`UC_20_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

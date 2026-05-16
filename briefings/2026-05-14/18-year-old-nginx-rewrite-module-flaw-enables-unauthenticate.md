@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGINX worker process crash burst — CVE-2026-42945 (Rift) heap overflow exploitation
 
-`UC_65_5` · phase: **exploit** · confidence: **High**
+`UC_66_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] Exposure inventory — hosts running NGINX versions vulnerable to CVE-2026-42945/42946/40701/42934
 
-`UC_65_6` · phase: **recon** · confidence: **High**
+`UC_66_6` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
