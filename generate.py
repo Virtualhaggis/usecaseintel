@@ -875,7 +875,9 @@ LLM_IOC_MAX_BODY_CHARS = 12000
 CLASSIFIER_VERSION = "v1"
 # Bump when the IOC-extraction prompt or schema changes so existing
 # cached entries silently expire without a manual cache delete.
-IOC_VERSION = "v1"
+# v2: prompt expanded with few-shot software-extraction examples after
+#     the v1 prompt missed OpenClaw / Avada Builder version lists.
+IOC_VERSION = "v2"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -1193,38 +1195,71 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 # we stop dialling it and either fall back to ANTHROPIC_API_KEY or skip the
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
-_OAUTH_FAILURES = 0
-_OAUTH_CIRCUIT_OPEN = False
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3
 _OAUTH_UC_CALL_TIMEOUT_SEC = 180         # _llm_call_via_oauth: max_turns=4 + search
 _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
+
+# Per-kind circuit breakers. The earlier single-counter design meant a
+# few cold-start failures on UC generation would also block the IOC and
+# relevance calls — `_extract_iocs` returned regex output for 959 / 970
+# articles in the first warm-up run because the breaker tripped on the
+# UC path before IOC extraction even started. Splitting by kind keeps a
+# flap localised: UC degradation doesn't kill IOC coverage and vice
+# versa. The legacy `_OAUTH_FAILURES` / `_OAUTH_CIRCUIT_OPEN` names are
+# preserved as module-level proxies for the "uc" entry so existing
+# read-sites (end-of-run summary print, log lines elsewhere) keep
+# working unchanged.
+_OAUTH_BREAKERS: dict[str, dict] = {
+    "uc":        {"failures": 0, "open": False},
+    "relevance": {"failures": 0, "open": False},
+    "ioc":       {"failures": 0, "open": False},
+}
+# Backwards-compatible module aliases — kept in sync with the "uc" entry
+# at end of every note_* call so legacy reads of these names continue
+# to reflect the heaviest LLM path (which dominates per-run cost).
+_OAUTH_FAILURES = 0
+_OAUTH_CIRCUIT_OPEN = False
 
 
 def _reset_oauth_circuit_breaker():
     """Call at the start of every main() run so a fresh pipeline doesn't
     inherit a stuck-open breaker from a previous in-process retry."""
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
+    for bk in _OAUTH_BREAKERS.values():
+        bk["failures"] = 0
+        bk["open"] = False
     _OAUTH_FAILURES = 0
     _OAUTH_CIRCUIT_OPEN = False
 
 
-def _note_oauth_failure(reason: str) -> None:
+def _note_oauth_failure(reason: str, kind: str = "uc") -> None:
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
-    _OAUTH_FAILURES += 1
+    bk = _OAUTH_BREAKERS.setdefault(kind, {"failures": 0, "open": False})
+    bk["failures"] += 1
     safe = str(reason).encode("ascii", "replace").decode("ascii")[:120]
-    print(f"    [!] OAuth call failed ({_OAUTH_FAILURES}/"
+    print(f"    [!] OAuth call failed ({kind} {bk['failures']}/"
           f"{_OAUTH_MAX_CONSECUTIVE_FAILURES}): {safe}")
-    if _OAUTH_FAILURES >= _OAUTH_MAX_CONSECUTIVE_FAILURES and not _OAUTH_CIRCUIT_OPEN:
-        _OAUTH_CIRCUIT_OPEN = True
-        print(f"    [!] OAuth circuit breaker OPEN — skipping further OAuth "
-              f"calls this run (rules-only + ANTHROPIC_API_KEY fallback if set)")
+    if bk["failures"] >= _OAUTH_MAX_CONSECUTIVE_FAILURES and not bk["open"]:
+        bk["open"] = True
+        print(f"    [!] OAuth circuit breaker OPEN for '{kind}' — "
+              f"falling back to regex/API-key path for the rest of this run")
+    if kind == "uc":
+        _OAUTH_FAILURES = bk["failures"]
+        _OAUTH_CIRCUIT_OPEN = bk["open"]
 
 
-def _note_oauth_success() -> None:
+def _note_oauth_success(kind: str = "uc") -> None:
     """A clean response resets the consecutive-failure count so transient
     blips don't accumulate across hours of normal operation."""
     global _OAUTH_FAILURES
-    _OAUTH_FAILURES = 0
+    bk = _OAUTH_BREAKERS.setdefault(kind, {"failures": 0, "open": False})
+    bk["failures"] = 0
+    if kind == "uc":
+        _OAUTH_FAILURES = 0
+
+
+def _oauth_circuit_open(kind: str = "uc") -> bool:
+    return _OAUTH_BREAKERS.get(kind, {}).get("open", False)
 
 
 def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
@@ -14981,7 +15016,7 @@ def _llm_relevance_call(prompt: str) -> dict | None:
     use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     raw = None
-    if use_oauth and not _OAUTH_CIRCUIT_OPEN:
+    if use_oauth and not _oauth_circuit_open("relevance"):
         try:
             from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
             import asyncio
@@ -14998,12 +15033,13 @@ def _llm_relevance_call(prompt: str) -> dict | None:
                 return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
             raw = asyncio.run(_run_with_timeout())
             if raw:
-                _note_oauth_success()
+                _note_oauth_success("relevance")
         except TimeoutError:  # builtin alias for asyncio.TimeoutError py3.11+
-            _note_oauth_failure(f"relevance timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s")
+            _note_oauth_failure(f"relevance timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
+                                kind="relevance")
             raw = None
         except BaseException as e:
-            _note_oauth_failure(e)
+            _note_oauth_failure(e, kind="relevance")
             raw = None
     if raw is None and api_key:
         try:
@@ -15165,6 +15201,32 @@ _IOC_PROMPT_USER = (
     "    npmjs.com, microsoft.com, etc.)\n"
     "  - OS / browser versions mentioned only as 'not affected'\n"
     "\n"
+    "SOFTWARE FIELD — important. Extract every software product / library "
+    "/ plugin / firmware that the article describes as vulnerable, "
+    "affected, exploited, or patched. Include BOTH the vulnerable AND "
+    "the fixed/patched versions so an analyst can sweep CMDB/TVM "
+    "inventory and triage by which version a host runs. Use the most "
+    "natural product name (the one a sysadmin would search the asset "
+    "registry for); collapse vendor prefixes when the product alone is "
+    "unambiguous (e.g. 'Tomcat' is fine; '11.0.2' alone is not — must be "
+    "tied to a named product).\n"
+    "\n"
+    "Few-shot examples for the software field:\n"
+    "  Body excerpt: \"Apache Tomcat versions 11.0.2 prior to 11.0.3 "
+    "contained a DoS flaw, fixed in 11.0.4. Earlier 10.x branches are "
+    "unaffected.\"\n"
+    "  Expected: [{\"name\":\"Apache Tomcat\",\"versions\":[\"11.0.2\",\"11.0.3\",\"11.0.4\"]}]\n"
+    "\n"
+    "  Body excerpt: \"OpenClaw versions 8.10.3 and 8.10.4 are affected "
+    "by an RCE; a fix is available in OpenClaw 8.10.5. Earlier versions "
+    "before 8.9.0 are not impacted.\"\n"
+    "  Expected: [{\"name\":\"OpenClaw\",\"versions\":[\"8.10.3\",\"8.10.4\",\"8.10.5\"]}]\n"
+    "\n"
+    "  Body excerpt: \"The Avada Builder plugin versions 7.4.0 through "
+    "7.11.1 are vulnerable to arbitrary file read; patched in Avada "
+    "Builder 7.11.2.\"\n"
+    "  Expected: [{\"name\":\"Avada Builder\",\"versions\":[\"7.4.0\",\"7.11.1\",\"7.11.2\"]}]\n"
+    "\n"
     "Return JSON with EXACTLY these keys (use [] for empty):\n"
     "{\n"
     '  "cves":      ["CVE-2026-12345", ...],\n'
@@ -15173,7 +15235,7 @@ _IOC_PROMPT_USER = (
     '  "sha256":    ["<64 hex>", ...],\n'
     '  "sha1":      ["<40 hex>", ...],\n'
     '  "md5":       ["<32 hex>", ...],\n'
-    '  "software":  [{"name":"OpenClaw","versions":["8.10.3"]}, ...],\n'
+    '  "software":  [{"name":"OpenClaw","versions":["8.10.3","8.10.4","8.10.5"]}, ...],\n'
     '  "campaign":  "shai-hulud" | "",\n'
     '  "actors":    ["Storm-2372", ...]\n'
     "}\n"
@@ -15253,7 +15315,7 @@ def _llm_extract_iocs(article: dict) -> dict | None:
               .replace("<<BODY>>", body))
 
     raw = None
-    if use_oauth and not _OAUTH_CIRCUIT_OPEN:
+    if use_oauth and not _oauth_circuit_open("ioc"):
         try:
             from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
             import asyncio
@@ -15275,12 +15337,13 @@ def _llm_extract_iocs(article: dict) -> dict | None:
                 return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
             raw = asyncio.run(_run_with_timeout())
             if raw:
-                _note_oauth_success()
+                _note_oauth_success("ioc")
         except TimeoutError:
-            _note_oauth_failure(f"ioc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s")
+            _note_oauth_failure(f"ioc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
+                                kind="ioc")
             raw = None
         except BaseException as e:
-            _note_oauth_failure(e)
+            _note_oauth_failure(e, kind="ioc")
             raw = None
     if raw is None and api_key:
         try:
@@ -15806,11 +15869,12 @@ def main():
         f"(fresh={llm_fresh}, cached={_IOC_STATS['llm_cached']}), "
         f"regex-fallback={_IOC_STATS['regex']}"
     )
-    if _OAUTH_CIRCUIT_OPEN:
-        print(f"[!] OAuth circuit breaker tripped during this run after "
-              f"{_OAUTH_MAX_CONSECUTIVE_FAILURES} consecutive failures "
-              f"— LLM calls were short-circuited for the remainder. "
-              f"Pipeline still completed end-to-end.")
+    tripped = [k for k, bk in _OAUTH_BREAKERS.items() if bk.get("open")]
+    if tripped:
+        print(f"[!] OAuth circuit breaker tripped this run for: "
+              f"{', '.join(tripped)} (after "
+              f"{_OAUTH_MAX_CONSECUTIVE_FAILURES} consecutive failures each). "
+              f"Other paths kept running; pipeline completed end-to-end.")
     try:
         drops_path = Path(__file__).parent / "intel" / "relevance_drops.jsonl"
         drops_path.parent.mkdir(parents=True, exist_ok=True)
