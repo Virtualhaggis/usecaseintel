@@ -859,6 +859,9 @@ LLM_RELEVANCE_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_relevance_cach
 # SHA1(IOC_VERSION|url|body_sha256[:16]) so a republished article with
 # rewritten body re-extracts automatically.
 LLM_IOC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_ioc_cache"
+# Kill-chain reconstruction cache. One entry per (url, body_sha, KC_VERSION)
+# carrying the ordered phase list — see `_llm_kill_chain`.
+LLM_KC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_kc_cache"
 LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
 # Lighter model for the binary relevance gate — Haiku is plenty for "is this
 # article SOC-actionable y/n". Falls back to LLM_UC_MODEL if Haiku is missing.
@@ -886,6 +889,8 @@ CLASSIFIER_VERSION = "v1"
 #     confidence_by_ioc, techniques_by_ioc, campaign_certainty,
 #     inferred_iocs. Old v2 entries stay on disk but no longer hit.
 IOC_VERSION = "v3"
+# Kill-chain reconstruction schema version. Bump on prompt change.
+KC_VERSION = "v1"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -1225,17 +1230,22 @@ _OAUTH_WINDOW_SIZE = 12          # last N call outcomes to consider
 _OAUTH_FAIL_THRESHOLD = 6        # >= K failures in the window opens the breaker
 _OAUTH_BREAKERS: dict[str, dict] = {
     # uc generation: heaviest call (Opus + WebSearch + 180s budget).
-    # Generous call budget — only ~50-100 fresh-uc calls per run anyway
-    # thanks to per-article UC cache.
+    # Phase 1C uses this kind for the per-kill-chain-phase calls, so
+    # the budget is sized for ~30-50 fresh articles × 3-6 phases each.
     "uc":        {"failures": 0, "open": False, "window": [],
                   "budget": 250, "used": 0},
     "relevance": {"failures": 0, "open": False, "window": [],
                   "budget": 400, "used": 0},
-    # IOC extraction: bounded Haiku call, but runs on every kept
-    # article. 200 calls is enough to cover a typical day's new
-    # articles + warm the cache for older ones across runs.
+    # IOC extraction: Phase 1A Opus + WebSearch two-pass. Each fresh
+    # article costs ~2 calls (pass 1 + pass 2). 200 budget supports
+    # ~100 fresh articles per run; cache hits don't consume budget.
     "ioc":       {"failures": 0, "open": False, "window": [],
                   "budget": 200, "used": 0},
+    # Kill-chain reconstruction: Phase 1B single Opus call per fresh
+    # article (no WebSearch). Cheaper than IOC extraction but runs on
+    # every kept article. 150 budget covers ~150 fresh articles.
+    "kc":        {"failures": 0, "open": False, "window": [],
+                  "budget": 150, "used": 0},
 }
 # Backwards-compatible module aliases — kept in sync with the "uc"
 # entry at the end of every note_* call so legacy reads of these names
@@ -12150,6 +12160,13 @@ def build_matrix_data(articles_meta):
             "campaign_certainty": float(a_ind.get("campaign_certainty") or 0.0),
             "inferred_iocs":     (a_ind.get("inferred_iocs") or [])[:20],
         }
+        # Phase 1B — kill chain payload. Surfaced on the article card
+        # and consumed by Phase 1C's per-phase UC generator.
+        kc_obj = a.get("kill_chain") or {"phases": [], "overall_summary": ""}
+        kc_payload = {
+            "phases": kc_obj.get("phases") or [],
+            "overall_summary": kc_obj.get("overall_summary") or "",
+        }
         art_records.append({
             "i": a_idx,
             "id": a["id"],
@@ -12157,6 +12174,7 @@ def build_matrix_data(articles_meta):
             "sev": a["sev"],
             "techs": art_techs,
             "ind": ioc_payload,
+            "kc": kc_payload,
         })
         for tid in art_techs:
             if tid in technique_view:
@@ -15971,6 +15989,299 @@ def _extract_iocs(article: dict) -> dict:
     return llm_ind
 
 
+# ---------------------------------------------------------------------
+# Phase 1B — Kill-chain reconstruction.
+# Runs between IOC extraction and UC generation. Asks Opus to read the
+# article + IOC set and produce an ordered list of attack phases (MITRE
+# kill chain) with techniques, citations, IOCs-at-this-phase, and log
+# sources. The downstream Phase 1C UC generator calls once per phase
+# rather than once per article, so each detection is grounded in a
+# specific attack step rather than spread across "whatever the LLM
+# noticed". Falls back to an empty kill chain when the LLM is
+# unavailable; Phase 1C then falls back to the single-call whole-article
+# UC generator.
+# ---------------------------------------------------------------------
+
+_KC_STATS = {"llm": 0, "llm_cached": 0, "skipped": 0}
+
+_KC_PROMPT_SYSTEM = (
+    "You are a senior incident-response analyst. You read a threat-intel "
+    "article plus its IOC set, and reconstruct the kill chain — the "
+    "ordered list of MITRE ATT&CK phases the attacker walked through, "
+    "with technique IDs and the IOCs / log sources relevant to each "
+    "phase. Use the canonical MITRE kill-chain phases. Return strict "
+    "JSON only — no prose, no fences, no commentary outside the JSON."
+)
+
+_KC_PROMPT_USER = (
+    "Title: <<TITLE>>\n"
+    "URL: <<URL>>\n"
+    "Source: <<SOURCE>>\n"
+    "\n"
+    "IOC set already extracted (JSON):\n"
+    "<<IND_JSON>>\n"
+    "\n"
+    "Body (truncated):\n"
+    "<<BODY>>\n"
+    "\n"
+    "Reconstruct the kill chain. Only emit phases the article actually "
+    "describes (not the full 12-phase template). Order phases the way "
+    "the attacker executed them. For each phase, cite the exact phrase "
+    "from the body that establishes it, list the MITRE techniques most "
+    "specifically matching the behaviour described, list which IOCs "
+    "from the set above appear at this phase, and name the log sources "
+    "a SOC would monitor to catch it.\n"
+    "\n"
+    "Use these phase identifiers (MITRE canonical):\n"
+    "  initial_access | execution | persistence | privilege_escalation\n"
+    "  | defense_evasion | credential_access | discovery\n"
+    "  | lateral_movement | collection | command_and_control\n"
+    "  | exfiltration | impact\n"
+    "\n"
+    "For log_sources, use either MITRE-style names (DeviceProcessEvents,\n"
+    "DeviceNetworkEvents, AzureSignInLogs, OfficeActivity, EmailEvents,\n"
+    "IdentityLogonEvents, AADNonInteractiveUserSignInLogs, etc.) or\n"
+    "Sigma-style logsource categories (proxy, dns, firewall, etc.) — the\n"
+    "downstream UC generator pivots on these.\n"
+    "\n"
+    "Return JSON ONLY in this shape:\n"
+    "{\n"
+    "  \"phases\": [\n"
+    "    {\n"
+    "      \"phase\": \"initial_access\",\n"
+    "      \"mitre_techniques\": [\"T1566.002\", \"T1204.001\"],\n"
+    "      \"behavioral_summary\": \"<one sentence, analyst's voice>\",\n"
+    "      \"citation\": \"<exact phrase quoted from body>\",\n"
+    "      \"iocs_at_this_phase\": [\"evil.com\", \"CVE-2026-12345\"],\n"
+    "      \"log_sources\": [\"EmailEvents\", \"DeviceNetworkEvents\"],\n"
+    "      \"detection_hint\": \"<what to look for in those logs>\"\n"
+    "    }, ...\n"
+    "  ],\n"
+    "  \"overall_summary\": \"<2-3 sentences: who, what, how, impact>\"\n"
+    "}"
+)
+
+
+_KC_VALID_PHASES = (
+    "initial_access", "execution", "persistence", "privilege_escalation",
+    "defense_evasion", "credential_access", "discovery",
+    "lateral_movement", "collection", "command_and_control",
+    "exfiltration", "impact",
+)
+
+
+def _kc_normalise(d: dict) -> dict | None:
+    """Coerce a raw LLM kill-chain response into the canonical shape.
+    Returns None if no usable phases survive validation."""
+    if not isinstance(d, dict):
+        return None
+    raw_phases = d.get("phases") or []
+    if not isinstance(raw_phases, list):
+        return None
+    out_phases = []
+    for entry in raw_phases[:12]:
+        if not isinstance(entry, dict):
+            continue
+        phase = str(entry.get("phase") or "").strip().lower()
+        if phase not in _KC_VALID_PHASES:
+            continue
+        techs = entry.get("mitre_techniques") or []
+        if isinstance(techs, str):
+            techs = [techs]
+        if not isinstance(techs, list):
+            techs = []
+        techs_clean = [str(t).strip().upper() for t in techs
+                       if t and isinstance(t, str)
+                       and re.match(r"^T\d{4}(?:\.\d{3})?$", str(t).strip().upper())][:6]
+        iocs = entry.get("iocs_at_this_phase") or []
+        if isinstance(iocs, str):
+            iocs = [iocs]
+        if not isinstance(iocs, list):
+            iocs = []
+        iocs_clean = [str(i).strip()[:300] for i in iocs
+                      if i and isinstance(i, str)][:12]
+        logs = entry.get("log_sources") or []
+        if isinstance(logs, str):
+            logs = [logs]
+        if not isinstance(logs, list):
+            logs = []
+        logs_clean = [str(s).strip()[:80] for s in logs
+                      if s and isinstance(s, str)][:8]
+        out_phases.append({
+            "phase": phase,
+            "mitre_techniques": techs_clean,
+            "behavioral_summary": str(entry.get("behavioral_summary") or "").strip()[:300],
+            "citation": str(entry.get("citation") or "").strip()[:400],
+            "iocs_at_this_phase": iocs_clean,
+            "log_sources": logs_clean,
+            "detection_hint": str(entry.get("detection_hint") or "").strip()[:400],
+        })
+    if not out_phases:
+        return None
+    return {
+        "phases": out_phases,
+        "overall_summary": str(d.get("overall_summary") or "").strip()[:600],
+    }
+
+
+def _llm_kill_chain_call(article: dict, ind: dict) -> dict | None:
+    """Run the kill-chain prompt; return the normalised dict on
+    success, None on failure (caller proceeds without a kill chain)."""
+    use_oauth = os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "").lower() in ("1", "true", "yes")
+    api_key = os.environ.get("ANTHROPIC_API_KEY")
+    if _oauth_circuit_open("kc"):
+        return None
+
+    body = (article.get("raw_body") or "")[:LLM_IOC_MAX_BODY_CHARS]
+    title = (article.get("title") or "")[:300]
+    url = article.get("link") or ""
+    source = (article.get("source") or "").strip()[:80]
+    # Slim IOC payload for the prompt so we don't burn tokens on huge
+    # software/version lists — only the kinds the kill-chain reasoning
+    # actually pivots on.
+    import json as _json
+    slim = {
+        "cves": (ind.get("cves") or [])[:10],
+        "ips": (ind.get("ips") or [])[:10],
+        "domains": (ind.get("domains") or [])[:15],
+        "sha256": (ind.get("sha256") or [])[:5],
+        "sha1": (ind.get("sha1") or [])[:5],
+        "md5": (ind.get("md5") or [])[:5],
+        "software": (ind.get("software") or [])[:10],
+        "campaign": ind.get("campaign") or "",
+        "actors": (ind.get("actors") or [])[:5],
+    }
+    prompt = (_KC_PROMPT_USER
+              .replace("<<TITLE>>", title)
+              .replace("<<URL>>", url)
+              .replace("<<SOURCE>>", source)
+              .replace("<<IND_JSON>>", _json.dumps(slim, ensure_ascii=False))
+              .replace("<<BODY>>", body))
+
+    raw = None
+    if use_oauth and not _oauth_circuit_open("kc"):
+        try:
+            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
+            import asyncio
+            async def _run():
+                chunks = []
+                opts = ClaudeAgentOptions(
+                    model=LLM_IOC_MODEL,
+                    max_turns=1,
+                    allowed_tools=[],
+                    system_prompt=_KC_PROMPT_SYSTEM,
+                )
+                async for msg in query(prompt=prompt, options=opts):
+                    if isinstance(msg, AssistantMessage):
+                        for block in msg.content:
+                            if isinstance(block, TextBlock):
+                                chunks.append(block.text)
+                return "".join(chunks)
+            async def _run_with_timeout():
+                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2)
+            raw = asyncio.run(_run_with_timeout())
+            if raw:
+                _note_oauth_success("kc")
+        except TimeoutError:
+            _note_oauth_failure(f"kc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC*2}s",
+                                kind="kc")
+            raw = None
+        except BaseException as e:
+            _note_oauth_failure(e, kind="kc")
+            raw = None
+    if raw is None and api_key:
+        try:
+            import anthropic
+            client = anthropic.Anthropic(api_key=api_key)
+            msg = client.messages.create(
+                model=LLM_IOC_MODEL,
+                max_tokens=2500,
+                system=_KC_PROMPT_SYSTEM,
+                messages=[{"role": "user", "content": prompt}],
+            )
+            raw = "".join(b.text for b in msg.content if hasattr(b, "text"))
+        except Exception:
+            raw = None
+    if not raw:
+        return None
+    raw = raw.strip()
+    if raw.startswith("```"):
+        raw = re.sub(r"^```(?:json)?\s*", "", raw)
+        raw = re.sub(r"\s*```\s*$", "", raw)
+    m = re.search(r"\{[\s\S]*\}", raw)
+    if not m:
+        return None
+    import json as _json
+    try:
+        parsed = _json.loads(m.group(0))
+    except Exception:
+        return None
+    return _kc_normalise(parsed)
+
+
+def reconstruct_kill_chain(article: dict, ind: dict) -> dict:
+    """Primary kill-chain entry-point. Cached per (url, body_sha,
+    ioc_hash, KC_VERSION). Returns an empty kill chain when the LLM
+    isn't available — Phase 1C falls back to whole-article UC
+    generation in that case."""
+    empty = {"phases": [], "overall_summary": ""}
+    body = article.get("raw_body") or ""
+    url = article.get("link") or ""
+    if not url or len(body) < 200:
+        _KC_STATS["skipped"] += 1
+        return empty
+
+    body_sha = hashlib.sha256(body.encode("utf-8", "replace")).hexdigest()[:16]
+    # Include a digest of the IOC set so an article whose IOCs were
+    # re-extracted (e.g. v2 -> v3 cache invalidation) also gets a fresh
+    # kill chain. Otherwise stale kill chains would reference IOCs that
+    # no longer exist in the current `ind`.
+    ioc_digest_input = "|".join([
+        ",".join(sorted(ind.get("cves") or [])),
+        ",".join(sorted(ind.get("domains") or [])),
+        ",".join(sorted(ind.get("ips") or [])),
+        ",".join(sorted(ind.get("sha256") or [])),
+    ])
+    ioc_sha = hashlib.sha1(ioc_digest_input.encode("utf-8", "replace")).hexdigest()[:8]
+    key_input = f"{KC_VERSION}|{url}|{body_sha}|{ioc_sha}".encode("utf-8", "replace")
+    cache_key = hashlib.sha1(key_input).hexdigest()
+    cache_path = None
+    try:
+        LLM_KC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        cache_path = LLM_KC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        if cache_path.exists():
+            try:
+                cached = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+                if isinstance(cached, dict) and isinstance(cached.get("phases"), list):
+                    _KC_STATS["llm"] += 1
+                    _KC_STATS["llm_cached"] += 1
+                    return cached
+            except Exception:
+                pass
+    except Exception:
+        cache_path = None
+
+    result = _llm_kill_chain_call(article, ind)
+    if result is None:
+        _KC_STATS["skipped"] += 1
+        return empty
+    try:
+        if cache_path is not None:
+            payload = dict(result)
+            payload["_meta"] = {
+                "version": KC_VERSION,
+                "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+                "url": url,
+            }
+            cache_path.write_text(__import__("json").dumps(payload, ensure_ascii=False),
+                                  encoding="utf-8")
+    except Exception:
+        pass
+    _KC_STATS["llm"] += 1
+    return result
+
+
 def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     """
     Pull articles from every configured source, filter to a rolling window
@@ -16648,6 +16959,10 @@ def main():
     _IOC_STATS["llm"] = 0
     _IOC_STATS["llm_cached"] = 0
     _IOC_STATS["regex"] = 0
+    # Phase 1B — kill-chain reconstruction counters.
+    _KC_STATS["llm"] = 0
+    _KC_STATS["llm_cached"] = 0
+    _KC_STATS["skipped"] = 0
 
     articles = fetch_articles()
     if not articles:
@@ -16691,6 +17006,11 @@ def main():
         # back to the regex extractor if OAuth is down, the SDK times
         # out, or the response is malformed. See `_extract_iocs`.
         ind = _extract_iocs(a)
+        # Phase 1B — kill-chain reconstruction. Runs ONLY if the article
+        # survives the relevance gate (below); we don't burn a KC call
+        # on listicles / vendor PR. Compute techniques + rule-based UCs
+        # first so the relevance gate has its full signal set; the KC
+        # call happens after the gate, just before the LLM UC pass.
         techniques = infer_techniques(text, ind["explicit_ttps"])
         ucs = select_use_cases(text, ind)
         # Threat-actor extraction — case-insensitive substring match
@@ -16740,6 +17060,18 @@ def main():
                 a["_mechanics"] = mechanics
         except Exception as _e:
             print(f"    [!] bespoke UC failed for article {i}: {_e}")
+        # Phase 1B — kill-chain reconstruction. One Opus call returns
+        # the ordered phase list (initial_access → execution → ...) with
+        # MITRE techniques, citation phrases, and log sources per phase.
+        # Cached per (url, body_sha, ioc_hash). Empty kill chain if the
+        # LLM is unavailable / over budget — Phase 1C falls back to
+        # whole-article UC generation in that case.
+        try:
+            kc = reconstruct_kill_chain(a, ind)
+            a["kill_chain"] = kc
+        except Exception as _e:
+            print(f"    [!] kill-chain reconstruction failed for article {i}: {_e}")
+            a["kill_chain"] = {"phases": [], "overall_summary": ""}
         # LLM-driven bespoke UCs — opt-in via ANTHROPIC_API_KEY env var.
         # Reads the article and emits per-attack SPL/KQL targeting the
         # specific binaries / domains / chain described, qualitatively
@@ -16906,6 +17238,12 @@ def main():
         f"[*] IOC extraction: llm={_IOC_STATS['llm']} "
         f"(fresh={llm_fresh}, cached={_IOC_STATS['llm_cached']}), "
         f"regex-fallback={_IOC_STATS['regex']}"
+    )
+    kc_fresh = max(0, _KC_STATS["llm"] - _KC_STATS["llm_cached"])
+    print(
+        f"[*] Kill-chain reconstruction: llm={_KC_STATS['llm']} "
+        f"(fresh={kc_fresh}, cached={_KC_STATS['llm_cached']}), "
+        f"skipped={_KC_STATS['skipped']}"
     )
     tripped = [k for k, bk in _OAUTH_BREAKERS.items() if bk.get("open")]
     if tripped:
