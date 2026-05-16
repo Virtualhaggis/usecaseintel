@@ -891,6 +891,14 @@ CLASSIFIER_VERSION = "v1"
 IOC_VERSION = "v3"
 # Kill-chain reconstruction schema version. Bump on prompt change.
 KC_VERSION = "v1"
+# Phase 1C — UC generation prompt version. Bumped to v2 when the prompt
+# learned to consume the kill-chain reconstruction block and emit four
+# new per-UC fields (kill_chain_phase, expected_fp_scenarios,
+# response_runbook, false_positive_filters). Existing v1 UC caches stay
+# on disk but no longer match the cache key, so fresh articles get the
+# upgraded prompt. UC cache cost is significant (Opus + WebSearch);
+# bump conservatively.
+UC_VERSION = "v2"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
@@ -1099,7 +1107,11 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule (https://sigmahq.io). Emit ONLY when the detection is single-event-shape (one selection block + condition). Skip Sigma — leave empty string — for: counts/thresholds, time-window correlation, cross-table joins, statistical anomaly, multi-stage chains. Required fields: title, id (UUID), description, references, author, date (YYYY/MM/DD), tags (`attack.t####`), logsource (category + product), detection (selection blocks + condition), level. Use logsource categories: process_creation, file_event, file_access, network_connection, registry_event, dns, image_load, process_access; or product+service for cloud (azure auditlogs / signinlogs / etc.).>",
       "datadog_query": "<Datadog Cloud SIEM logs query string (the bare query, not the full rule wrapper — we wrap it at export time). Use Datadog syntax: `source:<source>` to scope (cloudtrail, windows.security, windows.sysmon, windows.defender, azure.activity_logs, azure.activeDirectory, gcp.audit, kubernetes.audit, okta, linux.auditd, linux.syslog), `@field.path:value` for structured-log attributes, AND/OR/NOT and parentheses, wildcards `*`, CIDR for IPs (`@network.client.ip:81.171.16.0/24`), numeric ranges (`@status:>=400`). Reference the Datadog schema below — only use field paths that actually exist on Datadog's standard log format for the source you're querying. Leave empty string if the detection cannot be expressed on Datadog telemetry (e.g. detection that depends on Defender XDR signals not shipped to Datadog).>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
-      "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"]
+      "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"],
+      "kill_chain_phase": "<MITRE-style phase name from the kill-chain block below this article body — one of: initial_access, execution, persistence, privilege_escalation, defense_evasion, credential_access, discovery, lateral_movement, collection, command_and_control, exfiltration, impact. Pick the phase this UC's primary detection logic targets. Distinct from the existing legacy `kill_chain` field which uses Lockheed-Martin terminology — both fields MUST be present; this new one maps to MITRE phases for grounding.>",
+      "expected_fp_scenarios": ["<3-5 SPECIFIC false-positive cases an analyst would see in production. E.g. for a 'suspicious WMIC shadow copy delete' detection: 'Veeam backup pre-snapshot cleanup', 'sysadmin VSS troubleshooting', 'Windows update DISM operations'. Concrete scenarios, not vague handwaving.>"],
+      "response_runbook": "<3-step SOC playbook on detection. Step 1: triage (what to check first). Step 2: contain (immediate action). Step 3: hunt (what else to look for if confirmed). Concrete, actionable, under 200 words total.>",
+      "false_positive_filters": "<OPTIONAL KQL/SPL refinement that suppresses the FP scenarios above without losing the true-positive signal. E.g. 'and not (InitiatingProcessFileName in (\"veeam.backup.shell.exe\", \"vssadmin.exe\") and InitiatingProcessParentFileName == \"services.exe\")'. Empty string if no clean refinement is possible.>"
     }
   ]
 }
@@ -1111,6 +1123,7 @@ Hard rules:
 - Defender KQL must be Advanced Hunting (real table + column names).
 - Don't generate the same logic that would already be matched by these existing rules: phishing-link click+exec, LSASS access, PsExec lateral movement, Office spawning scripts, encoded PowerShell. Add ONLY genuinely article-specific detections.
 - Maximum 3 UCs per article.
+- If the kill-chain block below is non-empty, AT LEAST ONE UC must target each of the top 2 phases the attacker walked through (so a stealer article gets initial_access + credential_access coverage, a ransomware article gets execution + impact coverage). The kill-chain block carries the article-specific log_sources you should be pivoting on.
 
 Article title: <<TITLE>>
 Article URL: <<URL>>
@@ -1121,6 +1134,9 @@ Article body:
 
 Pre-extracted IOCs from the article (use these in your queries where appropriate):
 <<IOC_SUMMARY>>
+
+Kill-chain reconstruction (Phase 1B output — if non-empty, this is the analyst-grade structured walk-through of the attack steps. Use this to map each UC to a specific phase and to ground your detection in the log sources listed per phase. If empty, fall back to your own reading of the body.):
+<<KILL_CHAIN>>
 
 In-article image URLs (WebFetch the screenshots/diagrams; skip banner/hero/ads):
 <<IMAGE_URLS>>
@@ -1497,7 +1513,9 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # creds set (e.g. a quick UI-only rebuild). Only NEW LLM calls require
     # auth; the env-var gate moved below the cache lookup.
     LLM_UC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
-    cache_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
+    # Cache key folds in UC_VERSION so prompt changes (Phase 1C onward)
+    # silently invalidate old entries without manual cache deletes.
+    cache_key = hashlib.sha1(f"{UC_VERSION}|{url}".encode("utf-8", "replace")).hexdigest()
     cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     if cache_path.exists():
@@ -1535,11 +1553,47 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # Manual placeholder substitution — the prompt body contains literal
     # JSON `{...}` braces which would confuse str.format(), causing every
     # call to fail with a KeyError before ever reaching the LLM.
+    # Phase 1C — kill-chain context block. If reconstruct_kill_chain
+    # produced phases for this article, format them into a structured
+    # block the LLM can pivot on; else emit an empty placeholder so the
+    # prompt template doesn't carry literal `<<KILL_CHAIN>>` text.
+    kc = article.get("kill_chain") or {}
+    kc_phases = kc.get("phases") or []
+    if kc_phases:
+        kc_block_lines = []
+        if kc.get("overall_summary"):
+            kc_block_lines.append(f"Overall: {kc['overall_summary']}")
+            kc_block_lines.append("")
+        for i, ph in enumerate(kc_phases, 1):
+            kc_block_lines.append(f"  Phase {i}: {ph.get('phase','?')}")
+            techs = ph.get("mitre_techniques") or []
+            if techs:
+                kc_block_lines.append(f"    MITRE: {', '.join(techs)}")
+            summary = ph.get("behavioral_summary") or ""
+            if summary:
+                kc_block_lines.append(f"    Behaviour: {summary}")
+            citation = ph.get("citation") or ""
+            if citation:
+                kc_block_lines.append(f"    Citation: \"{citation}\"")
+            phase_iocs = ph.get("iocs_at_this_phase") or []
+            if phase_iocs:
+                kc_block_lines.append(f"    IOCs: {', '.join(phase_iocs[:8])}")
+            logs = ph.get("log_sources") or []
+            if logs:
+                kc_block_lines.append(f"    Log sources: {', '.join(logs)}")
+            hint = ph.get("detection_hint") or ""
+            if hint:
+                kc_block_lines.append(f"    Detection hint: {hint}")
+            kc_block_lines.append("")
+        kc_block = "\n".join(kc_block_lines).rstrip()
+    else:
+        kc_block = "  (kill-chain reconstruction unavailable for this article)"
     prompt = (_LLM_UC_PROMPT
               .replace("<<TITLE>>",       article.get("title", "")[:200])
               .replace("<<URL>>",         url[:200])
               .replace("<<BODY>>",        body)
               .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
+              .replace("<<KILL_CHAIN>>",  kc_block)
               .replace("<<IMAGE_URLS>>",  image_block)
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
@@ -1980,6 +2034,26 @@ def _uc_from_llm_dict(d: dict):
     # don't want to compound to "[LLM] [LLM] foo" — strip any leading
     # repetitions before adding our canonical single prefix.
     title = re.sub(r"^(\[LLM\]\s*)+", "", title).strip()
+    # Phase 1C fields — coerce defensively so older cached UC JSONs
+    # (which won't have these keys) continue to parse cleanly.
+    kc_phase = (d.get("kill_chain_phase") or "").strip().lower()
+    if kc_phase not in (
+        "initial_access", "execution", "persistence", "privilege_escalation",
+        "defense_evasion", "credential_access", "discovery",
+        "lateral_movement", "collection", "command_and_control",
+        "exfiltration", "impact", "",
+    ):
+        kc_phase = ""
+    fp_scenarios_raw = d.get("expected_fp_scenarios") or []
+    if isinstance(fp_scenarios_raw, str):
+        fp_scenarios_raw = [fp_scenarios_raw]
+    if not isinstance(fp_scenarios_raw, list):
+        fp_scenarios_raw = []
+    fp_scenarios = [str(s).strip()[:300] for s in fp_scenarios_raw
+                    if s and isinstance(s, str)][:6]
+    runbook = str(d.get("response_runbook") or "").strip()[:1000]
+    fp_filters = str(d.get("false_positive_filters") or "").strip()[:1000]
+
     return UseCase(
         title=f"[LLM] {title[:140]}",
         description="".join(desc_parts),
@@ -1995,6 +2069,10 @@ def _uc_from_llm_dict(d: dict):
         tier=tier,
         fp_rate_estimate=fp_rate,
         required_telemetry=[str(t) for t in req_telem][:8],
+        kill_chain_phase=kc_phase,
+        expected_fp_scenarios=fp_scenarios,
+        response_runbook=runbook,
+        false_positive_filters=fp_filters,
     )
 
 
@@ -2258,6 +2336,25 @@ class UseCase:
     # list of strings, e.g. ["Sysmon EID 1", "Defender DeviceProcessEvents",
     # "EDR process telemetry", "M365 EmailEvents"].
     required_telemetry: list = field(default_factory=list)
+    # ---- Phase 1C additions ----
+    # MITRE-style kill-chain phase this UC targets — distinct from the
+    # legacy Lockheed-Martin `kill_chain` field above. Populated by the
+    # LLM when Phase 1B reconstruction is available; empty string when
+    # the legacy field is the only signal. The UI surfaces this as a
+    # chip on each detection card.
+    kill_chain_phase: str = ""
+    # 3-5 concrete false-positive scenarios an analyst would see in
+    # production for this detection. Shown as a "Known FPs" sub-section
+    # next to the query so analysts can pre-empt noise tickets.
+    expected_fp_scenarios: list = field(default_factory=list)
+    # 3-step SOC playbook (triage → contain → hunt) for what to do
+    # when this detection fires. Short, actionable, under 200 words.
+    response_runbook: str = ""
+    # OPTIONAL KQL/SPL refinement that suppresses the expected FP
+    # scenarios above without losing the true-positive signal. Surfaced
+    # as a copyable "FP-suppressing where-clause" alongside the main
+    # query. Empty when no clean refinement is possible.
+    false_positive_filters: str = ""
 
 
 def _infer_tier_from_query(spl: str, kql: str, confidence: str) -> str:
