@@ -1533,6 +1533,27 @@ def _llm_generate_ucs(article: dict, ind: dict):
             return [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
         except Exception:
             pass
+    # ---- Legacy v1 fallback ----
+    # Older cached UCs were keyed by SHA1(url) alone (no UC_VERSION
+    # prefix). Reading them transparently means a UC_VERSION bump no
+    # longer orphans hundreds of previously-generated LLM UCs from the
+    # rendered site while the new prompt's coverage warms up. The
+    # legacy entries parse cleanly through _uc_from_llm_dict — the new
+    # Phase 1C fields (kill_chain_phase, expected_fp_scenarios,
+    # response_runbook, false_positive_filters) default to empty so
+    # the UC still renders with its original detection content. Fresh
+    # extraction will only fire for articles that have no cached UC
+    # under EITHER key, so legacy UCs aren't redundantly re-generated.
+    legacy_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
+    legacy_path = LLM_UC_CACHE_DIR / f"{legacy_key[:2]}/{legacy_key}.json"
+    if legacy_path.exists() and legacy_path != cache_path:
+        try:
+            data = __import__("json").loads(legacy_path.read_text(encoding="utf-8"))
+            ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
+            if ucs:
+                return ucs
+        except Exception:
+            pass
     # Cache miss — only proceed to make a new LLM call if auth is configured.
     if not use_oauth and not api_key:
         return []
@@ -16641,6 +16662,42 @@ def _extract_iocs(article: dict) -> dict:
     except Exception:
         # Cache init failed; carry on without caching this run.
         cache_path = None
+
+    # ---- Legacy v2 fallback ----
+    # The v2→v3 IOC_VERSION bump introduced corroboration fields
+    # (sources_by_ioc / confidence_by_ioc / techniques_by_ioc) but
+    # silently orphaned hundreds of valid v2 Haiku-extracted entries.
+    # The Hunt-IOCs drawer was rendering empty for those articles
+    # because they were neither hitting v3 cache nor getting fresh
+    # extraction (budget+breaker). Read the v2 entry transparently
+    # when v3 misses, backfilling empty quality maps so the schema
+    # stays uniform.
+    try:
+        legacy_key_input = f"v2|{url}|{body_sha}".encode("utf-8", "replace")
+        legacy_key = hashlib.sha1(legacy_key_input).hexdigest()
+        legacy_path = LLM_IOC_CACHE_DIR / f"{legacy_key[:2]}/{legacy_key}.json"
+        if cache_path is not None and legacy_path != cache_path and legacy_path.exists():
+            try:
+                cached = __import__("json").loads(legacy_path.read_text(encoding="utf-8"))
+                if isinstance(cached, dict) and all(k in cached for k in _IOC_REQUIRED_KEYS):
+                    _IOC_STATS["llm"] += 1
+                    _IOC_STATS["llm_cached"] += 1
+                    cached.setdefault("explicit_ttps", [])
+                    cached["explicit_ttps"] = regex_ind.get("explicit_ttps") or []
+                    cached["domains"] = [d for d in cached.get("domains") or []
+                                         if not _ioc_is_known_safe(d, kind="domain")]
+                    cached["ips"] = [i for i in cached.get("ips") or []
+                                     if not _ioc_is_known_safe(i, kind="ipv4")]
+                    cached.setdefault("sources_by_ioc", {})
+                    cached.setdefault("confidence_by_ioc", {})
+                    cached.setdefault("techniques_by_ioc", {})
+                    cached.setdefault("inferred_iocs", [])
+                    cached.setdefault("campaign_certainty", 0.0)
+                    return cached
+            except Exception:
+                pass
+    except Exception:
+        pass
 
     # Fresh LLM call.
     llm_ind = _llm_extract_iocs(article)
