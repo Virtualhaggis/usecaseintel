@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] xygeni-action C2 callback to 91.214.78.178 (incl. nip.io wildcard)
 
-`UC_326_6` · phase: **c2** · confidence: **High**
+`UC_327_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### [LLM] xygeni-action backdoor process pattern — curl with X-B auth header to /b/in|/b/q|/b/r
 
-`UC_326_7` · phase: **c2** · confidence: **High**
+`UC_327_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] Repository workflow reference to compromised xygeni-action@v5 tag
 
-`UC_326_8` · phase: **delivery** · confidence: **Medium**
+`UC_327_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +227,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — xygeni-action Compromised: C2 Reverse Shell Backdoor Injected via Tag Poisoning
 
-`UC_326_5` · phase: **install** · confidence: **High**
+`UC_327_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

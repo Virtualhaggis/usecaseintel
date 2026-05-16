@@ -238,6 +238,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 57728 simplehelp path traversal vulnerabil](./2026-04-24/cisa-kev-cve-2024-57728-simplehelp-path-traversal-vulnerabil.md)
 - [cisa kev cve 2024 7399 samsung magicinfo 9 server path trave](./2026-04-24/cisa-kev-cve-2024-7399-samsung-magicinfo-9-server-path-trave.md)
 - [cisa kev cve 2025 29635 d link dir 823x command injection vu](./2026-04-24/cisa-kev-cve-2025-29635-d-link-dir-823x-command-injection-vu.md)
+- [it s time to treat browser extensions like supply chain atta](./2026-04-24/it-s-time-to-treat-browser-extensions-like-supply-chain-atta.md)
 - [phantomrpc a new privilege escalation technique in windows r](./2026-04-24/phantomrpc-a-new-privilege-escalation-technique-in-windows-r.md)
 - [tgr sta 1030 new activity in central and south america](./2026-04-24/tgr-sta-1030-new-activity-in-central-and-south-america.md)
 
@@ -628,7 +629,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 48572 android framework privilege escalati](./2025-12-02/cisa-kev-cve-2025-48572-android-framework-privilege-escalati.md)
 - [cisa kev cve 2025 48633 android framework information disclo](./2025-12-02/cisa-kev-cve-2025-48633-android-framework-information-disclo.md)
 - [muddywater snakes by the riverbank](./2025-12-02/muddywater-snakes-by-the-riverbank.md)
-- [shai hulud 2 0 what the unknown wonderer tells us about the ](./2025-12-02/shai-hulud-2-0-what-the-unknown-wonderer-tells-us-about-the-.md)
 
 ## 2025-11-28
 - [cisa kev cve 2021 26829 openplc scadabr cross site scripting](./2025-11-28/cisa-kev-cve-2021-26829-openplc-scadabr-cross-site-scripting.md)

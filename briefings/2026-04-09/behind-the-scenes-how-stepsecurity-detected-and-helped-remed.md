@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
 
-`UC_294_4` · phase: **c2** · confidence: **High**
+`UC_295_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ union isfuzzy=true
 
 ### [LLM] Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
 
-`UC_294_5` · phase: **actions** · confidence: **High**
+`UC_295_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP sysmon.py systemd-user persistence on developer host
 
-`UC_294_6` · phase: **install** · confidence: **High**
+`UC_295_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
