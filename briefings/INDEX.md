@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
 - [critical linux kernel flaw ssh keysign pwn exposes ssh keys ](./2026-05-16/critical-linux-kernel-flaw-ssh-keysign-pwn-exposes-ssh-keys-.md)
 - [google project zero discloses zero click exploit chain for p](./2026-05-16/google-project-zero-discloses-zero-click-exploit-chain-for-p.md)
+- [malicious jpeg images could trigger php memory safety vulner](./2026-05-16/malicious-jpeg-images-could-trigger-php-memory-safety-vulner.md)
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
@@ -26,7 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers use orbit rootkit to harvest ssh and sudo credential](./2026-05-15/hackers-use-orbit-rootkit-to-harvest-ssh-and-sudo-credential.md)
 - [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
-- [microsoft warns of attackers using trusted hpe operations ag](./2026-05-15/microsoft-warns-of-attackers-using-trusted-hpe-operations-ag.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 - [penetration testing vs red teaming what s the difference](./2026-05-15/penetration-testing-vs-red-teaming-what-s-the-difference.md)
 - [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)

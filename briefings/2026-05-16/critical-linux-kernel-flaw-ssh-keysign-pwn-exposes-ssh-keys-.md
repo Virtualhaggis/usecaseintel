@@ -10,13 +10,9 @@ Home Cyber Security News
 Critical Linux Kernel Flaw ‘ssh-keysign-pwn’ Exposes SSH Keys and Shadow Passwords 
 By Dhivya 
 May 16, 2026 
-
-
-
-
 A newly disclosed Linux kernel vulnerability is raising serious concerns across the security community, as it allows attackers to access highly sensitive data, including SSH private keys and password hashes, on affected systems. 
 Tracked as  CVE-2026-46333 , the flaw has been nicknamed “ssh-keysign-pwn” and impacts a wide range of Linux distributions.
-Lin…
+Linux syste…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -238,7 +234,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — Critical Linux Kernel Flaw ‘ssh-keysign-pwn’ Exposes SSH Keys and Shadow Passwor
 
-`UC_0_8` · phase: **install** · confidence: **High**
+`UC_1_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

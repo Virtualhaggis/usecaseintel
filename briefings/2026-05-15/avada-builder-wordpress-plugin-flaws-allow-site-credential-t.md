@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Avada Builder CVE-2026-4782 arbitrary file read via fusion_section_separator custom_svg parameter
 
-`UC_7_1` · phase: **exploit** · confidence: **High**
+`UC_8_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Avada Builder CVE-2026-4798 unauthenticated time-based SQL injection via product_order ORDER BY
 
-`UC_7_2` · phase: **exploit** · confidence: **High**
+`UC_8_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
