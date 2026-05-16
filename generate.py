@@ -4567,6 +4567,49 @@ body:not(.view-library-active)  .stats-library{
 .hunt-head{margin:0 0 18px;}
 .hunt-head h2{margin:0 0 4px; font-size:18px; letter-spacing:-0.01em;}
 .hunt-head .sub{color:var(--muted); font-size:13px; max-width:680px;}
+/* Phase 1 v3 IOC quality summary */
+.hunt-quality{
+  background:linear-gradient(180deg, rgba(46,160,67,0.07), rgba(46,160,67,0.02));
+  border:1px solid rgba(46,160,67,0.25);
+  border-radius:10px; padding:12px 14px; margin-bottom:14px;
+}
+.hunt-quality-head{
+  display:flex; justify-content:space-between; align-items:center;
+  font-size:12px; font-weight:600; letter-spacing:0.04em;
+  text-transform:uppercase; color:var(--muted); margin-bottom:10px;
+}
+.hunt-quality-head .cert{
+  font-size:11px; font-weight:500; letter-spacing:0;
+  text-transform:none; padding:2px 8px; border-radius:999px;
+  background:rgba(255,255,255,0.05); border:1px solid var(--border);
+}
+.hunt-quality-head .cert.cert-high{color:#4ade80; border-color:rgba(74,222,128,0.4);}
+.hunt-quality-head .cert.cert-medium{color:#fbbf24; border-color:rgba(251,191,36,0.4);}
+.hunt-quality-head .cert.cert-low{color:#94a3b8; border-color:rgba(148,163,184,0.4);}
+.hunt-quality-grid{
+  display:grid; grid-template-columns:repeat(4, 1fr); gap:8px;
+  font-size:12px;
+}
+.hunt-quality-grid .qcell{
+  display:flex; flex-direction:column; align-items:center;
+  background:rgba(255,255,255,0.03); border:1px solid var(--border);
+  border-radius:8px; padding:8px 6px;
+}
+.hunt-quality-grid .qcell b{
+  font-size:18px; font-variant-numeric:tabular-nums;
+  color:var(--text); line-height:1.1;
+}
+.hunt-quality-grid .qcell span{color:var(--muted-2); font-size:11px; margin-top:3px; text-align:center;}
+@media (max-width:560px){.hunt-quality-grid{grid-template-columns:repeat(2, 1fr);}}
+.hunt-inferred{margin-top:10px; font-size:12px;}
+.hunt-inferred summary{cursor:pointer; color:var(--muted); padding:4px 0;}
+.hunt-inferred summary:hover{color:var(--text);}
+.hunt-inferred ul{margin:6px 0 0; padding-left:20px; color:var(--text);}
+.hunt-inferred li{margin:4px 0;}
+.hunt-inferred code{background:rgba(255,255,255,0.05); padding:1px 5px; border-radius:4px;
+  font-size:11px; color:#a5d6ff;}
+.hunt-inferred .hunt-why{color:var(--muted-2); font-size:11px;}
+.hunt-inferred .hunt-more{color:var(--muted-2); font-style:italic; list-style:none;}
 .hunt-types{
   display:grid; grid-template-columns:1fr; gap:8px;
   background:var(--panel); border:1px solid var(--border);
@@ -8113,6 +8156,49 @@ function openHuntDrawer(artId){
     </div>`;
   }).join('');
 
+  // Phase 1 v3 IOC quality summary — counts how many IOCs the LLM
+  // corroborated against external sources vs flagged as single-source,
+  // and surfaces gap-fill inferred IOCs the analyst should validate
+  // before hunting on them. Older articles whose IOC extraction predates
+  // Phase 1A have empty quality maps; the block hides itself in that case.
+  const confMap = (artData && artData.ind && artData.ind.confidence_by_ioc) || {};
+  const srcMap  = (artData && artData.ind && artData.ind.sources_by_ioc) || {};
+  const inferredList = (artData && artData.ind && artData.ind.inferred_iocs) || [];
+  const campCert = (artData && artData.ind && artData.ind.campaign_certainty) || 0;
+  const confCounts = { high: 0, medium: 0, low: 0 };
+  Object.values(confMap).forEach(v => {
+    if (confCounts[v] !== undefined) confCounts[v] += 1;
+  });
+  const totalScored = confCounts.high + confCounts.medium + confCounts.low;
+  let qualityBlock = '';
+  if (totalScored > 0 || inferredList.length > 0) {
+    const corrCount = Object.values(srcMap).reduce(
+      (n, arr) => n + (Array.isArray(arr) && arr.length > 1 ? 1 : 0), 0
+    );
+    const certPct = Math.round(campCert * 100);
+    const certLabel = certPct >= 70 ? 'high' : certPct >= 40 ? 'medium' : 'low';
+    const inferredPreview = inferredList.slice(0, 3).map(e => {
+      const kind = _huntEscape(e.kind || '?');
+      const val  = _huntEscape((e.value || '').slice(0, 80));
+      const why  = _huntEscape((e.reason || '').slice(0, 90));
+      return `<li><b>${kind}</b>: <code>${val}</code>${why ? ` <span class="hunt-why">— ${why}</span>` : ''}</li>`;
+    }).join('');
+    qualityBlock = `
+    <div class="hunt-quality">
+      <div class="hunt-quality-head">
+        <span>IOC quality</span>
+        <span class="cert cert-${certLabel}" title="LLM confidence (0-100%) that this is a coherent named campaign">campaign certainty ${certPct}%</span>
+      </div>
+      <div class="hunt-quality-grid">
+        <span class="qcell"><b>${confCounts.high}</b><span>high (2+ sources)</span></span>
+        <span class="qcell"><b>${confCounts.medium}</b><span>medium (1 vendor)</span></span>
+        <span class="qcell"><b>${confCounts.low}</b><span>low (article only)</span></span>
+        <span class="qcell"><b>${corrCount}</b><span>multi-source corroborated</span></span>
+      </div>
+      ${inferredList.length ? `<details class="hunt-inferred"><summary><b>${inferredList.length}</b> inferred IOCs (LLM gap-fill — validate before hunting)</summary><ul>${inferredPreview}${inferredList.length > 3 ? `<li class="hunt-more">+ ${inferredList.length - 3} more…</li>` : ''}</ul></details>` : ''}
+    </div>`;
+  }
+
   body.innerHTML = `
     <div class="hunt-head">
       <h2 id="huntTitle">🔍 Hunt IOCs — ${_huntEscape(title.slice(0,90))}</h2>
@@ -8120,6 +8206,7 @@ function openHuntDrawer(artId){
         Each query covers the last 30 days and is ready to paste; adjust the time window in
         your SIEM if needed.</p>
     </div>
+    ${qualityBlock}
     <div class="hunt-types">${rows}</div>
     <div class="hunt-actions">
       <button class="btn btn-gen" id="huntGen">Generate hunt queries</button>
@@ -16803,35 +16890,137 @@ def _home_card_html(eyebrow: str, title: str, body: str,
     )
 
 
-def render_home_hero(usecase_count: int, tech_count: int,
-                     article_count: int, generated_human: str) -> str:
+def _home_sample_chips(articles_meta: list) -> list[str]:
+    """Pick 5 sample-query chips for the hero search row. Data-driven
+    where possible (latest CVE, most-referenced actor, most-referenced
+    technique) with evergreen fallbacks so the row never renders empty.
+    Order: CVE, actor, technique, evergreen threat, evergreen platform."""
+    # 1) Most recent CVE — walk articles_meta newest-first.
+    cve = ""
+    for am in articles_meta:
+        cves = (am.get("ind") or {}).get("cves") or []
+        if cves:
+            cve = cves[0]
+            break
+    if not cve:
+        cve = "CVE"  # fallback search hint
+
+    # 2) Most referenced actor across recent articles.
+    actor = ""
+    actor_freq = {}
+    for am in articles_meta[:80]:  # cap walk for speed
+        for a in (am.get("actors") or []):
+            actor_freq[a] = actor_freq.get(a, 0) + 1
+    if actor_freq:
+        actor = sorted(actor_freq.items(), key=lambda kv: -kv[1])[0][0]
+    if not actor:
+        actor = "Lazarus Group"
+
+    # 3) Most referenced technique across recent articles.
+    tech = ""
+    tech_freq = {}
+    for am in articles_meta[:80]:
+        for tid, _n in (am.get("techs") or []):
+            tech_freq[tid] = tech_freq.get(tid, 0) + 1
+    if tech_freq:
+        tech = sorted(tech_freq.items(), key=lambda kv: -kv[1])[0][0]
+    if not tech:
+        tech = "T1059.001"
+
+    return [cve, actor, tech, "ransomware", "Defender"]
+
+
+def render_home_trust_strip(usecase_count: int, tech_count: int,
+                            article_count: int, generated_human: str) -> str:
+    """Two-row trust strip: big numeric stat tiles + qualitative chips,
+    plus a freshness pill below. Replaces the original .home-freshness
+    list — same data, more confident treatment."""
     fresh = _home_format_freshness(generated_human)
+    tiles = [
+        (f"{usecase_count:,}", "Detections"),
+        (f"{tech_count:,}",    "ATT&CK techniques"),
+        ("5",                  "Query languages"),
+        (f"{article_count:,}", "Threat-intel articles"),
+    ]
+    tile_html = "".join(
+        f'<div class="home-trust-tile">'
+        f'<div class="num">{n}</div>'
+        f'<div class="lbl">{html.escape(l)}</div>'
+        f'</div>'
+        for n, l in tiles
+    )
+    chips = [
+        "Continuously updated",
+        "Mapped to MITRE ATT&CK",
+        "Multi-platform queries",
+        "Automated detection pipeline",
+    ]
+    chip_html = "".join(
+        f'<span class="home-trust-chip">'
+        f'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        f'stroke-width="3" stroke-linecap="round" stroke-linejoin="round" '
+        f'aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>'
+        f'{html.escape(c)}'
+        f'</span>'
+        for c in chips
+    )
+    return (
+        f'      <div class="home-trust-strip" aria-label="Platform scale and signals">\n'
+        f'        <div class="home-trust-tiles">{tile_html}</div>\n'
+        f'        <div class="home-trust-chips">{chip_html}</div>\n'
+        f'        <div class="home-trust-pill" aria-live="polite">'
+        f'<span class="pulse" aria-hidden="true"></span>{html.escape(fresh)}</div>\n'
+        f'      </div>'
+    )
+
+
+def render_home_hero(usecase_count: int, tech_count: int,
+                     article_count: int, generated_human: str,
+                     chip_seeds: list[str]) -> str:
+    """Hero: eyebrow, headline, sub, big search input + sample chips,
+    secondary CTAs, then the trust strip. Refined from round 1 — search
+    is the primary action; the trust strip carries the proof."""
+    chips_html = "".join(
+        f'<button type="button" class="home-sample-chip" '
+        f'data-home-search="{html.escape(c, quote=True)}">'
+        f'{html.escape(c)}'
+        f'</button>'
+        for c in chip_seeds
+    )
+    trust = render_home_trust_strip(usecase_count, tech_count, article_count, generated_human)
     return f'''
   <section class="home-hero">
     <div class="home-hero-inner">
-      <p class="home-eyebrow"><span class="dot" aria-hidden="true"></span>Threat-led detection platform</p>
-      <h1 class="home-headline">Threat-led detections and hunts for modern SOC teams</h1>
-      <p class="home-sub">Clankerusecase turns current threat intelligence into practical, multi-platform detections and hunts — automatically and continuously. Every detection is tied to a real article, mapped to MITRE ATT&amp;CK, and expressed in the query language your SOC already runs.</p>
-      <div class="home-cta-row">
-        <button type="button" class="home-cta primary" data-home-action="search">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
-          Search detections
-        </button>
+      <p class="home-eyebrow home-rise" style="--rise-delay:0ms"><span class="dot" aria-hidden="true"></span>Threat-led detection platform</p>
+      <h1 class="home-headline home-rise" style="--rise-delay:60ms">Threat-led detections and hunts<br><span class="home-headline-2">built for modern SOC teams.</span></h1>
+      <p class="home-sub home-rise" style="--rise-delay:120ms">Continuously updated operational detections mapped to real attacker behaviour across Splunk, Sentinel, Defender, Sigma, Datadog, and more.</p>
+      <form class="home-search home-rise" id="homeSearchForm" role="search" autocomplete="off" style="--rise-delay:180ms">
+        <span class="home-search-glyph" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
+        </span>
+        <input type="text" id="homeSearch" class="home-search-input"
+               placeholder="Search {usecase_count:,} detections, actors, CVEs, techniques…"
+               autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"
+               aria-label="Search the detection library">
+        <span class="home-search-enter" aria-hidden="true">⏎</span>
+      </form>
+      <div class="home-sample-row home-rise" style="--rise-delay:240ms">
+        <span class="home-sample-label">Try</span>
+        {chips_html}
+      </div>
+      <p class="home-search-counts" id="homeSearchCounts" aria-live="polite" hidden></p>
+      <div class="home-cta-row home-rise" style="--rise-delay:300ms">
         <button type="button" class="home-cta primary" data-home-action="tour">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4 a3 3 0 1 1 4.4 2.6 c-1 0.7 -1.5 1 -1.5 2.4"/><circle cx="12" cy="16.8" r="0.7" fill="currentColor"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4 a3 3 0 1 1 4.4 2.6 c-1 0.7 -1.5 1 -1.5 2.4"/><circle cx="12" cy="16.8" r="0.7" fill="currentColor"/></svg>
           Take the tour
         </button>
         <button type="button" class="home-cta secondary" data-home-action="browse">
           Browse latest threats →
         </button>
       </div>
-      <ul class="home-freshness" aria-label="Library scale and freshness">
-        <li><strong>{usecase_count:,}</strong>use cases</li>
-        <li><strong>{tech_count:,}</strong>ATT&amp;CK techniques</li>
-        <li><strong>{article_count:,}</strong>threat-intel articles</li>
-        <li><strong>5</strong>query languages</li>
-        <li class="fresh"><strong>●</strong>{html.escape(fresh)}</li>
-      </ul>
+      <div class="home-rise" style="--rise-delay:360ms">
+{trust}
+      </div>
     </div>
   </section>'''
 
@@ -17075,13 +17264,21 @@ def render_home(articles_meta: list, usecase_count: int, tech_count: int,
     viewport-clamped #view-home container."""
     platform_counts = _home_platform_counts(articles_meta)
     featured = _home_pick_featured(articles_meta)
+    chip_seeds = _home_sample_chips(articles_meta)
+
+    def _reveal(html_block: str) -> str:
+        # Wrap each below-the-hero section in a one-shot reveal container
+        # so the IntersectionObserver can fade it up exactly once on first
+        # scroll past. The hero itself has its own staggered .home-rise.
+        return f'<div class="home-section-reveal">{html_block}</div>'
+
     parts = [
-        render_home_hero(usecase_count, tech_count, article_count, generated_human),
-        render_home_value(),
-        render_home_audience(),
-        render_home_featured(featured),
-        render_home_browse(platform_counts),
-        render_home_credibility(generated_human, article_count),
+        render_home_hero(usecase_count, tech_count, article_count, generated_human, chip_seeds),
+        _reveal(render_home_value()),
+        _reveal(render_home_audience()),
+        _reveal(render_home_featured(featured)),
+        _reveal(render_home_browse(platform_counts)),
+        _reveal(render_home_credibility(generated_human, article_count)),
         (
             '  <nav class="home-footer-strip" aria-label="Site shortcuts">\n'
             '    <a href="#" data-home-action="tour">Take the tour</a>\n'
