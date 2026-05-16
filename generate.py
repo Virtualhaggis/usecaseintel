@@ -6488,6 +6488,462 @@ details.uc.uc-platform-hidden{display:none !important;}
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after{animation:none !important;transition:none !important;}
 }
+
+/* =====================================================================
+   Home (front door) — hero, value, audience, featured, browse,
+   credibility. Designed for first-time SOC managers + analysts.
+   Reuses --bg / --panel / --accent / --good / --mono tokens so the
+   home view feels native to the rest of the app, not bolted on.
+   ===================================================================== */
+
+/* The welcome banner duplicates the hero's job — hide it when Home is
+   the active view. Still visible on Articles/Matrix/etc. for users who
+   deep-link past the front door. */
+body.view-home-active .first-visit-banner,
+body.view-home-active .whatsnew-banner{display:none !important;}
+
+/* Hide the article-tab top-bar stats while Home is active — the hero's
+   own freshness bar covers the same ground at larger type. */
+body.view-home-active .stats-articles{display:none !important;}
+
+#view-home{
+  max-width:1280px;
+  margin:0 auto;
+  padding:0 28px 96px;
+}
+
+/* ----- Hero ---------------------------------------------------------- */
+.home-hero{
+  position:relative;
+  padding:80px 0 56px;
+  isolation:isolate;
+  overflow:hidden;
+}
+.home-hero::before{
+  /* Soft indigo wash; no neon, no stock cyber imagery. Sits behind
+     content; clipped to the hero so it doesn't bleed into sections. */
+  content:"";
+  position:absolute; inset:0; z-index:-1;
+  background:
+    radial-gradient(900px 360px at 20% 0%, rgba(113,112,255,0.16), transparent 65%),
+    radial-gradient(700px 280px at 90% 30%, rgba(155,138,251,0.10), transparent 65%);
+  pointer-events:none;
+}
+.home-eyebrow{
+  margin:0 0 18px;
+  font-family:var(--mono);
+  font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--accent-2);
+}
+.home-eyebrow .dot{
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:var(--good); margin-right:8px; vertical-align:1px;
+  box-shadow:0 0 0 3px rgba(76,183,130,0.18);
+  animation:homePulse 2.4s ease-in-out infinite;
+}
+@keyframes homePulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(76,183,130,0.18);}
+  50%{box-shadow:0 0 0 6px rgba(76,183,130,0.06);}
+}
+.home-headline{
+  margin:0 0 18px;
+  font-size:clamp(34px, 4.6vw, 56px);
+  line-height:1.05; letter-spacing:-0.025em;
+  font-weight:700;
+  max-width:920px;
+  background:linear-gradient(180deg, #ffffff 0%, #c9cad0 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent; color:transparent;
+}
+.home-sub{
+  margin:0 0 32px;
+  font-size:18px; line-height:1.55; color:var(--muted);
+  max-width:720px;
+  letter-spacing:-0.005em;
+}
+.home-cta-row{
+  display:flex; flex-wrap:wrap; gap:12px;
+  margin-bottom:36px;
+}
+.home-cta{
+  appearance:none; cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:13px 22px;
+  font:600 14.5px/1 "Inter",sans-serif;
+  letter-spacing:-0.005em;
+  border-radius:var(--r-md);
+  border:1px solid transparent;
+  transition:transform 0.12s ease, background-color 0.16s, border-color 0.16s, box-shadow 0.16s;
+}
+.home-cta svg{width:14px;height:14px;flex:none;}
+.home-cta.primary{
+  color:#fff;
+  background:var(--accent);
+  border-color:rgba(113,112,255,0.55);
+  box-shadow:0 1px 0 rgba(255,255,255,0.10) inset, 0 6px 18px rgba(113,112,255,0.30);
+}
+.home-cta.primary:hover{
+  background:#7d7cff;
+  transform:translateY(-1px);
+}
+.home-cta.secondary{
+  color:var(--text);
+  background:var(--panel-elev);
+  border-color:var(--border-2);
+}
+.home-cta.secondary:hover{
+  background:var(--panel2);
+  border-color:rgba(255,255,255,0.20);
+}
+.home-cta:focus-visible{
+  outline:2px solid var(--accent); outline-offset:3px;
+}
+.home-freshness{
+  display:flex; flex-wrap:wrap; gap:0;
+  margin:0; padding:14px 18px;
+  list-style:none;
+  background:rgba(255,255,255,0.02);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  font-family:var(--mono);
+  font-size:12.5px; color:var(--muted);
+  max-width:fit-content;
+}
+.home-freshness li{
+  padding:0 16px;
+  border-right:1px solid var(--border);
+}
+.home-freshness li:first-child{padding-left:0;}
+.home-freshness li:last-child{border-right:0; padding-right:0;}
+.home-freshness li strong{
+  color:var(--text); font-weight:600;
+  margin-right:6px;
+}
+.home-freshness li.fresh{color:var(--good);}
+.home-freshness li.fresh strong{color:var(--good);}
+
+/* ----- Generic section chrome --------------------------------------- */
+.home-section{
+  padding:56px 0 8px;
+  border-top:1px solid var(--hairline);
+}
+.home-section:first-of-type{border-top:0;}
+.home-section-head{
+  margin-bottom:28px;
+}
+.home-section-head h2{
+  margin:0 0 6px;
+  font-size:24px; font-weight:600; letter-spacing:-0.018em;
+  color:var(--text);
+}
+.home-section-sub{
+  margin:0;
+  font-size:14px; color:var(--muted);
+  max-width:660px;
+}
+
+/* ----- Value grid (6 cards) ----------------------------------------- */
+.home-value-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+.home-value-card{
+  padding:22px 22px 20px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  transition:border-color 0.18s, background-color 0.18s, transform 0.12s;
+}
+.home-value-card:hover{
+  border-color:var(--border-2);
+  background:var(--panel-elev);
+  transform:translateY(-1px);
+}
+.home-value-glyph{
+  display:flex; align-items:center; justify-content:center;
+  width:34px; height:34px;
+  border-radius:8px;
+  background:rgba(113,112,255,0.12);
+  color:var(--accent-2);
+  margin-bottom:14px;
+  border:1px solid rgba(113,112,255,0.22);
+}
+.home-value-glyph svg{width:16px;height:16px;}
+.home-value-card h3{
+  margin:0 0 6px;
+  font-size:15px; font-weight:600; letter-spacing:-0.005em;
+  color:var(--text);
+}
+.home-value-card p{
+  margin:0;
+  font-size:13px; line-height:1.55; color:var(--muted);
+}
+
+/* ----- Audience strip (5 tiles) ------------------------------------- */
+.home-audience-row{
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  gap:10px;
+}
+.home-audience-tile{
+  padding:18px 16px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  display:flex; flex-direction:column; gap:6px;
+}
+.home-audience-tile .role{
+  font-size:13px; font-weight:600; letter-spacing:-0.005em;
+  color:var(--text);
+}
+.home-audience-tile .role::before{
+  content:""; display:inline-block;
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent); margin-right:8px; vertical-align:2px;
+}
+.home-audience-tile p{
+  margin:0;
+  font-size:12.5px; line-height:1.5; color:var(--muted);
+}
+
+/* ----- Featured detections (3 columns × 2 rows) --------------------- */
+.home-featured-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+.home-feat-col-head{
+  font-family:var(--mono);
+  font-size:11px; letter-spacing:0.12em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 10px;
+  grid-column:auto;
+}
+.home-feat-card{
+  display:flex; flex-direction:column;
+  padding:20px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  transition:border-color 0.18s, background-color 0.18s, transform 0.12s;
+  text-decoration:none; color:inherit;
+}
+.home-feat-card:hover{
+  border-color:var(--accent);
+  background:var(--panel-elev);
+  transform:translateY(-1px);
+}
+.home-feat-eyebrow{
+  display:inline-flex; align-items:center; gap:6px;
+  font-family:var(--mono); font-size:10.5px;
+  text-transform:uppercase; letter-spacing:0.10em;
+  color:var(--accent-2);
+  margin-bottom:10px;
+}
+.home-feat-eyebrow.sev-crit{color:var(--crit);}
+.home-feat-eyebrow.sev-high{color:var(--warn);}
+.home-feat-eyebrow.sev-med{color:var(--muted);}
+.home-feat-card h3{
+  margin:0 0 8px;
+  font-size:15px; font-weight:600; line-height:1.35;
+  letter-spacing:-0.005em;
+  color:var(--text);
+}
+.home-feat-card p{
+  margin:0 0 14px;
+  font-size:13px; line-height:1.55; color:var(--muted);
+  display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.home-feat-meta{
+  margin-top:auto;
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding-top:12px;
+  border-top:1px solid var(--hairline);
+}
+.home-feat-chip{
+  font-family:var(--mono);
+  font-size:10.5px; padding:3px 8px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--hairline);
+  color:var(--muted);
+}
+.home-feat-chip.mitre{color:var(--accent-2);border-color:rgba(155,138,251,0.20);background:rgba(155,138,251,0.06);}
+.home-feat-link{
+  margin-top:14px;
+  font-family:var(--mono); font-size:11.5px;
+  color:var(--accent-2);
+  letter-spacing:-0.005em;
+}
+
+/* ----- Browse ------------------------------------------------------- */
+.home-browse-group{margin-bottom:30px;}
+.home-browse-group:last-child{margin-bottom:0;}
+.home-browse-title{
+  margin:0 0 12px;
+  font-size:12px; font-weight:600;
+  text-transform:uppercase; letter-spacing:0.10em;
+  color:var(--muted);
+  font-family:var(--mono);
+}
+.home-browse-tiles{
+  display:grid;
+  gap:10px;
+}
+.home-browse-tiles.platform{grid-template-columns:repeat(5, 1fr);}
+.home-browse-tiles.environment{grid-template-columns:repeat(4, 1fr);}
+.home-platform-tile,
+.home-env-tile{
+  display:flex; flex-direction:column; justify-content:space-between;
+  min-height:96px;
+  padding:16px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  cursor:pointer;
+  color:var(--text); text-decoration:none;
+  font:600 14px/1.3 "Inter",sans-serif;
+  letter-spacing:-0.005em;
+  transition:border-color 0.18s, background-color 0.18s, transform 0.12s;
+}
+.home-platform-tile:hover,
+.home-env-tile:hover{
+  border-color:var(--accent);
+  background:var(--panel-elev);
+  transform:translateY(-1px);
+}
+.home-platform-tile .label,
+.home-env-tile .label{display:block;}
+.home-platform-tile .count,
+.home-env-tile .count{
+  font-family:var(--mono); font-size:12px; font-weight:500;
+  color:var(--muted);
+  letter-spacing:-0.005em;
+}
+.home-tactic-chips{
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.home-tactic-chip{
+  padding:7px 12px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:999px;
+  color:var(--text);
+  font:500 12px "Inter",sans-serif;
+  letter-spacing:-0.003em;
+  cursor:pointer;
+  transition:border-color 0.16s, background-color 0.16s, color 0.16s;
+}
+.home-tactic-chip:hover{
+  border-color:var(--accent);
+  color:var(--accent-2);
+  background:var(--panel-elev);
+}
+.home-browse-aside{
+  margin-top:18px;
+  font-size:13px; color:var(--muted);
+}
+.home-browse-aside a{
+  color:var(--accent-2); text-decoration:none;
+  border-bottom:1px solid transparent;
+}
+.home-browse-aside a:hover{border-bottom-color:var(--accent-2);}
+
+/* ----- Credibility -------------------------------------------------- */
+.home-cred-grid{
+  display:grid;
+  grid-template-columns:repeat(3, 1fr);
+  gap:14px;
+}
+.home-cred-card{
+  padding:22px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+}
+.home-cred-card h3{
+  margin:0 0 8px;
+  font-size:14px; font-weight:600; letter-spacing:-0.005em;
+  color:var(--text);
+  display:flex; align-items:center; gap:8px;
+}
+.home-cred-card h3 .pulse{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--good);
+  box-shadow:0 0 0 3px rgba(76,183,130,0.18);
+  animation:homePulse 2.4s ease-in-out infinite;
+}
+.home-cred-card p{
+  margin:0 0 12px;
+  font-size:13px; line-height:1.55; color:var(--muted);
+}
+.home-cred-card p:last-child{margin-bottom:0;}
+.home-cred-sources{
+  display:flex; flex-wrap:wrap; gap:6px;
+}
+.home-cred-source{
+  font-family:var(--mono);
+  font-size:11px;
+  padding:4px 8px;
+  border-radius:4px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--hairline);
+  color:var(--muted);
+}
+.home-cred-links{
+  display:flex; flex-direction:column; gap:8px;
+  font-size:13px;
+}
+.home-cred-links a{
+  color:var(--accent-2); text-decoration:none;
+  display:inline-flex; align-items:center; gap:6px;
+}
+.home-cred-links a:hover{text-decoration:underline;}
+
+/* ----- Footer strip ------------------------------------------------- */
+.home-footer-strip{
+  margin-top:48px; padding:18px 0 0;
+  border-top:1px solid var(--hairline);
+  display:flex; flex-wrap:wrap; gap:18px;
+  font-size:13px; color:var(--muted);
+}
+.home-footer-strip a{
+  color:var(--muted); text-decoration:none;
+  border-bottom:1px solid transparent;
+  cursor:pointer;
+}
+.home-footer-strip a:hover{
+  color:var(--text); border-bottom-color:var(--border-2);
+}
+
+/* ----- Responsive --------------------------------------------------- */
+@media (max-width: 1080px){
+  .home-value-grid{grid-template-columns:repeat(2, 1fr);}
+  .home-featured-grid{grid-template-columns:repeat(2, 1fr);}
+  .home-cred-grid{grid-template-columns:repeat(2, 1fr);}
+  .home-audience-row{grid-template-columns:repeat(3, 1fr);}
+  .home-browse-tiles.platform{grid-template-columns:repeat(3, 1fr);}
+}
+@media (max-width: 720px){
+  #view-home{padding:0 16px 64px;}
+  .home-hero{padding:48px 0 36px;}
+  .home-headline{font-size:32px;}
+  .home-sub{font-size:16px;}
+  .home-cta{width:100%; justify-content:center;}
+  .home-cta-row{flex-direction:column;}
+  .home-freshness{flex-direction:column; align-items:flex-start;}
+  .home-freshness li{padding:6px 0; border-right:0; border-bottom:1px solid var(--hairline); width:100%;}
+  .home-freshness li:last-child{border-bottom:0;}
+  .home-value-grid,
+  .home-featured-grid,
+  .home-cred-grid,
+  .home-audience-row,
+  .home-browse-tiles.platform,
+  .home-browse-tiles.environment{grid-template-columns:1fr;}
+}
+
 </style>
 </head>
 <body>
@@ -6547,7 +7003,8 @@ details.uc.uc-platform-hidden{display:none !important;}
   </div>
   <div class="topbar-inner" style="padding-top:0; gap:14px;">
     <div class="view-tabs" role="tablist">
-      <button class="view-tab active" data-view="articles" role="tab">Articles</button>
+      <button class="view-tab active" data-view="home" role="tab">Home</button>
+      <button class="view-tab" data-view="articles" role="tab">Articles</button>
       <button class="view-tab" data-view="library" role="tab">Detection Library</button>
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
@@ -6616,7 +7073,16 @@ details.uc.uc-platform-hidden{display:none !important;}
   <p class="tour-hint">Esc to skip · ← → to navigate</p>
 </div>
 
-<div id="view-articles" class="view active">
+<!-- =================================================================
+     view-home — the front door. Hero, value, audience, featured,
+     browse, credibility. Default landing view; non-technical visitors
+     get orientation; technical visitors get one-click into search.
+     ================================================================= -->
+<div id="view-home" class="view active">
+__HOME__
+</div>
+
+<div id="view-articles" class="view">
 <main class="width-wide">
   <nav class="toc">
     <h3>Articles</h3>
@@ -9456,6 +9922,7 @@ function showView(name) {
   }
   // Each tab has its own top-bar stats area. Body class drives the
   // CSS visibility transition; only the active tab's stats are shown.
+  document.body.classList.toggle('view-home-active',     name === 'home');
   document.body.classList.toggle('view-articles-active', name === 'articles');
   document.body.classList.toggle('view-matrix-active',   name === 'matrix');
   document.body.classList.toggle('view-intel-active',    name === 'intel');
@@ -9478,9 +9945,89 @@ function showView(name) {
     window._libraryRendered = true;
   }
 }
-// Apply default state on page load — Articles tab starts active.
-document.body.classList.add('view-articles-active');
+// Apply default state on page load — Home tab is the front door.
+document.body.classList.add('view-home-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+
+// =================================================================
+// Tab deeplinking — accept #tab-<view> on initial load and on hash
+// change so links like #tab-actors / #tab-attack-matrix from the
+// static technique/actor pages route to the right tab. The hash
+// router elsewhere in the file handles #uc-… and #article-… and
+// runs alongside; both are idempotent.
+// =================================================================
+(function tabHashRouter(){
+  var aliasMap = {
+    'attack-matrix': 'matrix',
+    'mitre': 'matrix',
+    'threat-intel': 'intel',
+    'threat-actors': 'actors',
+    'detection-library': 'library',
+  };
+  function applyTabHash(){
+    var h = (location.hash || '').replace(/^#/, '').toLowerCase();
+    var m = h.match(/^tab-([a-z0-9-]+)/);
+    if (!m) return;
+    var name = aliasMap[m[1]] || m[1];
+    var btn = document.querySelector('.view-tab[data-view="' + name + '"]');
+    if (btn) showView(name);
+  }
+  applyTabHash();
+  window.addEventListener('hashchange', applyTabHash);
+})();
+
+// =================================================================
+// Home (front-door) tab — wire the three primary CTAs in the hero
+// to the existing search / tour / articles-view systems. Buttons
+// only exist when the home view is rendered, so we delegate to
+// document.
+// =================================================================
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-home-action]');
+  if (!t) return;
+  e.preventDefault();
+  const action = t.dataset.homeAction;
+  if (action === 'search') {
+    // Jump to Articles, then open the existing search command palette.
+    showView('articles');
+    setTimeout(() => {
+      const trig = document.getElementById('searchTrigger');
+      if (trig) trig.click();
+    }, 40);
+  } else if (action === 'tour') {
+    if (typeof startTour === 'function') startTour();
+  } else if (action === 'browse') {
+    showView('articles');
+  } else if (action === 'library') {
+    showView('library');
+  } else if (action === 'matrix') {
+    showView('matrix');
+  } else if (action === 'actors') {
+    showView('actors');
+  } else if (action === 'intel') {
+    showView('intel');
+  } else if (action === 'workflow') {
+    showView('workflow');
+  } else if (action === 'about') {
+    showView('about');
+  } else if (action === 'view') {
+    // Generic "switch to view" + optional filter hint stored on the
+    // element as data-home-view / data-home-filter for chips.
+    const v = t.dataset.homeView;
+    if (v) showView(v);
+  } else if (action === 'platform-filter') {
+    // Switch to Articles and click the matching platform chip so the
+    // existing filter pipeline runs (counts update, cards filter).
+    showView('articles');
+    const plat = t.dataset.platform;
+    setTimeout(() => {
+      const chip = document.querySelector('.filter-toolbar .plat-chip[data-platform="' + plat + '"]');
+      if (chip) chip.click();
+      const articles = document.getElementById('view-articles');
+      if (articles) articles.scrollIntoView({behavior: 'smooth', block: 'start'});
+    }, 60);
+  }
+});
 
 // =================================================================
 // Welcome banner — permanent strapline. Only thing JS does here is
@@ -15600,6 +16147,546 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     return articles
 
 
+# =============================================================================
+# Home (front door) — hero, value, audience, featured, browse, credibility.
+# Built fresh each pipeline run from the same data structures the rest of the
+# page uses; no separate cache. Intentionally restrained: a SOC manager
+# should land here and understand the platform in 10 seconds.
+# =============================================================================
+
+# Glyphs — small, single-colour, monoline SVGs. No padlocks, no hooded
+# figures, no green binary rain. Each pairs with one value-prop card.
+_HOME_GLYPHS = {
+    "threat":   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L4 6 v6 c0 5 3.4 8.5 8 10 3.6-1.5 8-5 8-10 V6z"/><path d="M9.5 12 l2 2 4-4.5"/></svg>',
+    "hunt":     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="6.5"/><path d="M20.5 20.5 L16 16"/><path d="M11 8 v3 l2 2"/></svg>',
+    "platform": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="8" height="8" rx="1.4"/><rect x="13" y="4" width="8" height="8" rx="1.4"/><rect x="3" y="14" width="8" height="6" rx="1.4"/><rect x="13" y="14" width="8" height="6" rx="1.4"/></svg>',
+    "mitre":    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5 h18 M3 12 h18 M3 19 h18"/><circle cx="7" cy="5" r="1.3" fill="currentColor"/><circle cx="14" cy="12" r="1.3" fill="currentColor"/><circle cx="10" cy="19" r="1.3" fill="currentColor"/></svg>',
+    "context":  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5 h16 v10 H10 l-4 4 V5z"/><path d="M8 9 h8 M8 12 h5"/></svg>',
+    "pipeline": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2 v3 M12 19 v3 M2 12 h3 M19 12 h3 M5 5 l2 2 M17 17 l2 2 M5 19 l2-2 M17 7 l2-2"/></svg>',
+}
+
+# Audience tiles — five distinct roles, each with one short statement
+# of relevance. Practitioner tone; no marketing fluff.
+_HOME_AUDIENCE = [
+    ("SOC Analyst",       "Triage faster with detection logic tied to today's threat landscape, not last year's templates."),
+    ("Detection Engineer","Multi-platform queries — Splunk SPL, Defender KQL, Sentinel KQL, Sigma, Datadog — ready to lift, tune, deploy."),
+    ("Threat Hunter",     "Pivot from a fresh CTI article to a working hunt query in the same minute."),
+    ("SOC Manager",       "See coverage across MITRE ATT&CK, by platform, and against the campaigns hitting the wire this week."),
+    ("Security Leadership","An open, inspectable record of what the SOC is detecting and where the gaps still are."),
+]
+
+# Six value-prop cards — what the platform actually provides. Each is
+# tied to a specific, observable capability already shipped by the
+# pipeline, not aspirational marketing.
+_HOME_VALUE = [
+    ("threat",   "Threat-led, not template-led",
+                  "Detections are written against active campaigns, malware families, and CVEs — pulled from 11+ vendor and CTI feeds every two hours."),
+    ("hunt",     "SOC-ready hunting logic",
+                  "Each detection ships with a starting query, the IOCs it pivots on, and the kill-chain phase it covers."),
+    ("platform", "Multi-platform queries",
+                  "Splunk SPL (CIM), Microsoft Defender KQL, Microsoft Sentinel KQL, Sigma, and Datadog Cloud SIEM — generated side-by-side."),
+    ("mitre",    "Mapped to MITRE ATT&CK",
+                  "Every use case is tied to its technique and sub-technique — search the matrix, pivot to detections, see the gaps."),
+    ("context",  "Analyst-focused context",
+                  "Not generic compliance rules: each detection carries the article it came from, the actor, the IOCs, and a kill-chain trail."),
+    ("pipeline", "Automated detection pipeline",
+                  "Threat intel in, detections out — continuously, with caching and circuit breakers so nothing stalls when an upstream flaps."),
+]
+
+# MITRE ATT&CK enterprise tactics — 14 chips. Tactic IDs match the
+# matrix filter so the chip click handler can route directly.
+_HOME_TACTICS = [
+    ("TA0043", "Reconnaissance"),
+    ("TA0042", "Resource Development"),
+    ("TA0001", "Initial Access"),
+    ("TA0002", "Execution"),
+    ("TA0003", "Persistence"),
+    ("TA0004", "Privilege Escalation"),
+    ("TA0005", "Defense Evasion"),
+    ("TA0006", "Credential Access"),
+    ("TA0007", "Discovery"),
+    ("TA0008", "Lateral Movement"),
+    ("TA0009", "Collection"),
+    ("TA0011", "Command and Control"),
+    ("TA0010", "Exfiltration"),
+    ("TA0040", "Impact"),
+]
+
+# Browse-by-environment tiles. Targets pages already exist at
+# /targets/<platform>.html for each entry below.
+_HOME_ENVIRONMENTS = [
+    ("Cloud",    "AWS · Azure · GCP · Kubernetes",   "targets/aws.html"),
+    ("Endpoint", "Windows · macOS · Linux",          "targets/windows.html"),
+    ("Identity", "M365 · Entra ID · Okta",           "targets/m365.html"),
+    ("Web",      "Web apps · CDN · WAF",             "targets/web-app.html"),
+]
+
+
+def _home_format_freshness(generated_iso_human: str) -> str:
+    """Render a short relative-time string from the human ISO label
+    used elsewhere in the page (e.g. "2026-05-16 12:24 UTC").
+    Returns the label unchanged on parse failure — never raises."""
+    try:
+        # The generated_iso passed into HTML_HEAD is already formatted
+        # human-readable via dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+        gen = dt.datetime.strptime(generated_iso_human, "%Y-%m-%d %H:%M UTC")
+        gen = gen.replace(tzinfo=dt.timezone.utc)
+        now = dt.datetime.now(dt.timezone.utc)
+        delta = now - gen
+        secs = int(delta.total_seconds())
+        if secs < 60:
+            return "Updated just now"
+        if secs < 3600:
+            mins = secs // 60
+            return f"Updated {mins} min ago"
+        if secs < 86400:
+            hrs = secs // 3600
+            return f"Updated {hrs} h ago"
+        days = secs // 86400
+        return f"Updated {days} d ago"
+    except Exception:
+        return f"Updated {generated_iso_human}"
+
+
+def _home_platform_counts(articles_meta: list) -> dict:
+    """Dedupe UCs by Python object id across articles, then count those
+    that have a non-empty implementation per platform. Returns the dict
+    used by render_home_browse to render live tile counts."""
+    seen = {}
+    for am in articles_meta:
+        for _vname, uc in am.get("ucs") or []:
+            seen[id(uc)] = uc
+    counts = {"splunk": 0, "defender": 0, "sentinel": 0, "sigma": 0, "datadog": 0}
+    for uc in seen.values():
+        if (getattr(uc, "splunk_spl", "") or "").strip():
+            counts["splunk"] += 1
+        if (getattr(uc, "defender_kql", "") or "").strip():
+            counts["defender"] += 1
+        if (getattr(uc, "sentinel_kql", "") or "").strip():
+            counts["sentinel"] += 1
+        if (getattr(uc, "sigma_yaml", "") or "").strip():
+            counts["sigma"] += 1
+        if (getattr(uc, "datadog_query", "") or "").strip():
+            counts["datadog"] += 1
+    return counts
+
+
+def _home_pick_featured(articles_meta: list, n_each: int = 3) -> dict:
+    """Choose featured cards across three categories:
+      latest:   most recently published articles with UCs
+      trending: high-sev articles with the largest UC payload
+      high_conf: UCs whose UseCase.confidence == "High" with a real
+                 query body (so the card links to something useful).
+    Returns a dict of three lists of card-ready dicts."""
+    sev_rank = {"crit": 3, "high": 2, "med": 1, "low": 0}
+    with_ucs = [a for a in articles_meta if a.get("ucs")]
+
+    latest = sorted(
+        with_ucs,
+        key=lambda a: a.get("published") or "",
+        reverse=True,
+    )[:n_each]
+
+    trending = sorted(
+        with_ucs,
+        key=lambda a: (sev_rank.get(a.get("sev", "low"), 0),
+                       len(a.get("ucs") or []),
+                       a.get("published") or ""),
+        reverse=True,
+    )[:n_each]
+
+    high_conf = []
+    seen_titles = set()
+    for am in articles_meta:
+        for _v, uc in am.get("ucs") or []:
+            if (getattr(uc, "confidence", "") or "").lower() != "high":
+                continue
+            body_ok = ((getattr(uc, "defender_kql", "") or "").strip()
+                       or (getattr(uc, "splunk_spl", "") or "").strip()
+                       or (getattr(uc, "sentinel_kql", "") or "").strip())
+            if not body_ok:
+                continue
+            title = (uc.title or "").strip()
+            if not title or title in seen_titles:
+                continue
+            seen_titles.add(title)
+            high_conf.append({
+                "title": title,
+                "description": (uc.description or "").strip(),
+                "art_id": am["id"],
+                "techs": [t for t, _n in (uc.techniques or [])][:2],
+                "platforms": _home_uc_platforms(uc),
+            })
+            if len(high_conf) >= n_each:
+                break
+        if len(high_conf) >= n_each:
+            break
+
+    def _art_card(am):
+        plat_set = set()
+        for _v, uc in am.get("ucs") or []:
+            plat_set.update(_home_uc_platforms(uc))
+        techs = [t for t, _n in (am.get("techs") or [])][:2]
+        return {
+            "title": am["title"],
+            "description": "",  # rendered from a stable summary below
+            "art_id": am["id"],
+            "techs": techs,
+            "platforms": sorted(plat_set),
+            "sev": am.get("sev", "med"),
+            "published": am.get("published", ""),
+            "uc_count": len(am.get("ucs") or []),
+        }
+
+    return {
+        "latest":   [_art_card(a) for a in latest],
+        "trending": [_art_card(a) for a in trending],
+        "high_conf": high_conf,
+    }
+
+
+def _home_uc_platforms(uc) -> list[str]:
+    """Short labels for the platforms a UC implements. Order is the
+    one analysts see most often: Defender, Sentinel, Sigma, Splunk,
+    Datadog — matches the existing platform filter chip order."""
+    out = []
+    if (getattr(uc, "defender_kql", "") or "").strip():
+        out.append("Defender")
+    if (getattr(uc, "sentinel_kql", "") or "").strip():
+        out.append("Sentinel")
+    if (getattr(uc, "sigma_yaml", "") or "").strip():
+        out.append("Sigma")
+    if (getattr(uc, "splunk_spl", "") or "").strip():
+        out.append("Splunk")
+    if (getattr(uc, "datadog_query", "") or "").strip():
+        out.append("Datadog")
+    return out
+
+
+def _home_card_html(eyebrow: str, title: str, body: str,
+                     techs: list, platforms: list,
+                     href: str, sev: str = "") -> str:
+    """One featured card. Eyebrow tag at top (Latest threat / Trending /
+    High-confidence hunt), title, short body, then a meta row of
+    MITRE technique chips + platform chips. href is the in-app hash
+    deeplink (#article-… or #uc-…)."""
+    sev_cls = ""
+    if sev in ("crit", "high"):
+        sev_cls = f" sev-{sev}"
+    tech_chips = "".join(
+        f'<span class="home-feat-chip mitre">{html.escape(t)}</span>'
+        for t in (techs or [])[:2]
+    )
+    plat_chips = "".join(
+        f'<span class="home-feat-chip">{html.escape(p)}</span>'
+        for p in (platforms or [])[:4]
+    )
+    body_html = ""
+    if (body or "").strip():
+        body_html = f'<p>{html.escape(body.strip())}</p>'
+    return (
+        f'<a class="home-feat-card" href="{html.escape(href)}">'
+        f'<span class="home-feat-eyebrow{sev_cls}">{html.escape(eyebrow)}</span>'
+        f'<h3>{html.escape(title)}</h3>'
+        f'{body_html}'
+        f'<div class="home-feat-meta">{tech_chips}{plat_chips}</div>'
+        f'<span class="home-feat-link">View detection →</span>'
+        f'</a>'
+    )
+
+
+def render_home_hero(usecase_count: int, tech_count: int,
+                     article_count: int, generated_human: str) -> str:
+    fresh = _home_format_freshness(generated_human)
+    return f'''
+  <section class="home-hero">
+    <div class="home-hero-inner">
+      <p class="home-eyebrow"><span class="dot" aria-hidden="true"></span>Threat-led detection platform</p>
+      <h1 class="home-headline">Threat-led detections and hunts for modern SOC teams</h1>
+      <p class="home-sub">Clankerusecase turns current threat intelligence into practical, multi-platform detections and hunts — automatically and continuously. Every detection is tied to a real article, mapped to MITRE ATT&amp;CK, and expressed in the query language your SOC already runs.</p>
+      <div class="home-cta-row">
+        <button type="button" class="home-cta primary" data-home-action="search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
+          Search detections
+        </button>
+        <button type="button" class="home-cta primary" data-home-action="tour">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4 a3 3 0 1 1 4.4 2.6 c-1 0.7 -1.5 1 -1.5 2.4"/><circle cx="12" cy="16.8" r="0.7" fill="currentColor"/></svg>
+          Take the tour
+        </button>
+        <button type="button" class="home-cta secondary" data-home-action="browse">
+          Browse latest threats →
+        </button>
+      </div>
+      <ul class="home-freshness" aria-label="Library scale and freshness">
+        <li><strong>{usecase_count:,}</strong>use cases</li>
+        <li><strong>{tech_count:,}</strong>ATT&amp;CK techniques</li>
+        <li><strong>{article_count:,}</strong>threat-intel articles</li>
+        <li><strong>5</strong>query languages</li>
+        <li class="fresh"><strong>●</strong>{html.escape(fresh)}</li>
+      </ul>
+    </div>
+  </section>'''
+
+
+def render_home_value() -> str:
+    cards = []
+    for glyph_key, title, body in _HOME_VALUE:
+        cards.append(
+            f'    <article class="home-value-card">'
+            f'<span class="home-value-glyph">{_HOME_GLYPHS[glyph_key]}</span>'
+            f'<h3>{html.escape(title)}</h3>'
+            f'<p>{html.escape(body)}</p>'
+            f'</article>'
+        )
+    return (
+        '  <section class="home-section home-value" id="home-value">\n'
+        '    <header class="home-section-head">\n'
+        '      <h2>What Clankerusecase gives your SOC</h2>\n'
+        '      <p class="home-section-sub">Six things every detection on the site has, by default — written by practitioners, not generated to fill a compliance checklist.</p>\n'
+        '    </header>\n'
+        '    <div class="home-value-grid">\n'
+        + "\n".join(cards) +
+        '\n    </div>\n'
+        '  </section>'
+    )
+
+
+def render_home_audience() -> str:
+    tiles = []
+    for role, blurb in _HOME_AUDIENCE:
+        tiles.append(
+            f'    <article class="home-audience-tile">'
+            f'<span class="role">{html.escape(role)}</span>'
+            f'<p>{html.escape(blurb)}</p>'
+            f'</article>'
+        )
+    return (
+        '  <section class="home-section home-audience" id="home-audience">\n'
+        '    <header class="home-section-head">\n'
+        '      <h2>Built for the whole SOC</h2>\n'
+        '      <p class="home-section-sub">Useful at every level of a security operation — from first-hour triage to coverage reporting at the board level.</p>\n'
+        '    </header>\n'
+        '    <div class="home-audience-row">\n'
+        + "\n".join(tiles) +
+        '\n    </div>\n'
+        '  </section>'
+    )
+
+
+def render_home_featured(featured: dict) -> str:
+    def _stable_body_for_article(card: dict) -> str:
+        # A short, honest one-liner that doesn't require LLM. Pulls from
+        # severity and UC count so the card has something concrete to
+        # say without claiming an analysis we haven't done.
+        sev = (card.get("sev") or "").lower()
+        sev_label = {"crit": "Critical", "high": "High", "med": "Medium", "low": "Low"}.get(sev, "Notable")
+        n = card.get("uc_count", 0)
+        published = card.get("published") or ""
+        suffix = f" · Published {html.escape(published)}" if published else ""
+        return f"{sev_label}-severity threat · {n} detection{'s' if n != 1 else ''} mapped{suffix}"
+
+    cols = []
+
+    # Latest threats column
+    cards = []
+    for c in featured["latest"]:
+        href = f"#article-{c['art_id'].replace('art-', '')}"
+        body = _stable_body_for_article(c)
+        cards.append(_home_card_html(
+            "Latest threat", c["title"], body,
+            c.get("techs") or [], c.get("platforms") or [],
+            href, sev=c.get("sev", ""),
+        ))
+    if not cards:
+        cards = ['<div class="home-feat-card"><h3>No detections yet</h3><p>Run the pipeline to populate.</p></div>']
+    cols.append('<div>' +
+                '<p class="home-feat-col-head">Latest threats</p>' +
+                "\n".join(cards) + '</div>')
+
+    # Trending column
+    cards = []
+    for c in featured["trending"]:
+        href = f"#article-{c['art_id'].replace('art-', '')}"
+        body = _stable_body_for_article(c)
+        cards.append(_home_card_html(
+            "Trending", c["title"], body,
+            c.get("techs") or [], c.get("platforms") or [],
+            href, sev=c.get("sev", ""),
+        ))
+    if not cards:
+        cards = ['<div class="home-feat-card"><h3>—</h3></div>']
+    cols.append('<div>' +
+                '<p class="home-feat-col-head">High-severity right now</p>' +
+                "\n".join(cards) + '</div>')
+
+    # High-confidence hunts column — UC-level, not article-level
+    cards = []
+    for u in featured["high_conf"]:
+        href = "#" + (u.get("art_id") or "tab-articles")
+        body = (u.get("description") or "").strip() or "High-confidence detection — analyst-actionable on the listed platforms."
+        cards.append(_home_card_html(
+            "High-confidence hunt", u["title"], body,
+            u.get("techs") or [], u.get("platforms") or [],
+            href,
+        ))
+    if not cards:
+        cards = ['<div class="home-feat-card"><h3>—</h3></div>']
+    cols.append('<div>' +
+                '<p class="home-feat-col-head">High-confidence hunts</p>' +
+                "\n".join(cards) + '</div>')
+
+    return (
+        '  <section class="home-section home-featured" id="home-featured">\n'
+        '    <header class="home-section-head">\n'
+        '      <h2>Featured detections</h2>\n'
+        '      <p class="home-section-sub">Pulled directly from the most recent pipeline run — every card links to the full detection on the Articles tab.</p>\n'
+        '    </header>\n'
+        '    <div class="home-featured-grid">\n'
+        + "\n".join(cols) +
+        '\n    </div>\n'
+        '  </section>'
+    )
+
+
+def render_home_browse(platform_counts: dict) -> str:
+    plats = [
+        ("def",     "Microsoft Defender KQL", platform_counts.get("defender", 0)),
+        ("sent",    "Microsoft Sentinel KQL", platform_counts.get("sentinel", 0)),
+        ("sigma",   "Sigma rules",            platform_counts.get("sigma", 0)),
+        ("spl",     "Splunk SPL (CIM)",       platform_counts.get("splunk", 0)),
+        ("datadog", "Datadog Cloud SIEM",     platform_counts.get("datadog", 0)),
+    ]
+    plat_tiles = []
+    for code, label, count in plats:
+        plat_tiles.append(
+            f'<button type="button" class="home-platform-tile" '
+            f'data-home-action="platform-filter" data-platform="{code}">'
+            f'<span class="label">{html.escape(label)}</span>'
+            f'<span class="count">{count:,} detection{"" if count == 1 else "s"}</span>'
+            f'</button>'
+        )
+
+    env_tiles = []
+    for label, sub, href in _HOME_ENVIRONMENTS:
+        env_tiles.append(
+            f'<a class="home-env-tile" href="{html.escape(href)}">'
+            f'<span class="label">{html.escape(label)}</span>'
+            f'<span class="count">{html.escape(sub)}</span>'
+            f'</a>'
+        )
+
+    tactic_chips = []
+    for tid, name in _HOME_TACTICS:
+        tactic_chips.append(
+            f'<button type="button" class="home-tactic-chip" '
+            f'data-home-action="matrix">{html.escape(name)}</button>'
+        )
+
+    return (
+        '  <section class="home-section home-browse" id="home-browse">\n'
+        '    <header class="home-section-head">\n'
+        '      <h2>Browse the library</h2>\n'
+        '      <p class="home-section-sub">Find detections by the way your SOC works — the query language you run, the surface you defend, or the tactic you care about today.</p>\n'
+        '    </header>\n'
+        '    <div class="home-browse-group">\n'
+        '      <p class="home-browse-title">By query language</p>\n'
+        '      <div class="home-browse-tiles platform">\n'
+        '        ' + "\n        ".join(plat_tiles) + '\n'
+        '      </div>\n'
+        '    </div>\n'
+        '    <div class="home-browse-group">\n'
+        '      <p class="home-browse-title">By environment</p>\n'
+        '      <div class="home-browse-tiles environment">\n'
+        '        ' + "\n        ".join(env_tiles) + '\n'
+        '      </div>\n'
+        '    </div>\n'
+        '    <div class="home-browse-group">\n'
+        '      <p class="home-browse-title">By MITRE ATT&CK tactic</p>\n'
+        '      <div class="home-tactic-chips">\n'
+        '        ' + "\n        ".join(tactic_chips) + '\n'
+        '      </div>\n'
+        '    </div>\n'
+        '    <p class="home-browse-aside">'
+        '<a href="#" data-home-action="actors">Browse by threat actor →</a>'
+        '&nbsp; · &nbsp; '
+        '<a href="#" data-home-action="library">Open the Detection Library →</a>'
+        '&nbsp; · &nbsp; '
+        '<a href="#" data-home-action="intel">Browse IOCs →</a>'
+        '</p>\n'
+        '  </section>'
+    )
+
+
+def render_home_credibility(generated_human: str, article_count: int) -> str:
+    fresh = _home_format_freshness(generated_human)
+    sources = [
+        "The Hacker News", "BleepingComputer", "Microsoft Security Blog",
+        "CISA KEV", "Cisco Talos", "Securelist (Kaspersky)", "SentinelLabs",
+        "Unit 42", "ESET WeLiveSecurity", "Lab52", "Cyber Security News",
+    ]
+    source_chips = "".join(
+        f'<span class="home-cred-source">{html.escape(s)}</span>' for s in sources
+    )
+    return (
+        '  <section class="home-section home-credibility" id="home-credibility">\n'
+        '    <header class="home-section-head">\n'
+        '      <h2>Why this is a serious detection platform</h2>\n'
+        '      <p class="home-section-sub">Three signals that separate an operational detection library from a marketing page.</p>\n'
+        '    </header>\n'
+        '    <div class="home-cred-grid">\n'
+        f'      <article class="home-cred-card">'
+        f'<h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3>'
+        f'<p>{html.escape(fresh)} — the detection pipeline runs every two hours, '
+        f'pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p>'
+        f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across five platforms.</p>'
+        f'</article>\n'
+        '      <article class="home-cred-card">'
+        '<h3>Threat-intelligence-driven</h3>'
+        '<p>Every detection traces back to a public, citable source. No anonymous vendor templates, no generic compliance rules.</p>'
+        f'<div class="home-cred-sources">{source_chips}</div>'
+        '</article>\n'
+        '      <article class="home-cred-card">'
+        '<h3>Open &amp; inspectable</h3>'
+        '<p>The pipeline, the prompts, and the catalogue are all open source. Audit the logic, fork the repo, send a fix.</p>'
+        '<div class="home-cred-links">'
+        '<a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" rel="noopener">View source on GitHub →</a>'
+        '<a href="pipeline.html">Pipeline run history →</a>'
+        '<a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a>'
+        '</div>'
+        '</article>\n'
+        '    </div>\n'
+        '  </section>'
+    )
+
+
+def render_home(articles_meta: list, usecase_count: int, tech_count: int,
+                article_count: int, generated_human: str) -> str:
+    """Compose the full Home tab — hero, value, audience, featured,
+    browse, credibility, and a thin footer-strip of secondary links.
+    Wrapped in a `home-inner` so the section padding scales with the
+    viewport-clamped #view-home container."""
+    platform_counts = _home_platform_counts(articles_meta)
+    featured = _home_pick_featured(articles_meta)
+    parts = [
+        render_home_hero(usecase_count, tech_count, article_count, generated_human),
+        render_home_value(),
+        render_home_audience(),
+        render_home_featured(featured),
+        render_home_browse(platform_counts),
+        render_home_credibility(generated_human, article_count),
+        (
+            '  <nav class="home-footer-strip" aria-label="Site shortcuts">\n'
+            '    <a href="#" data-home-action="tour">Take the tour</a>\n'
+            '    <a href="#" data-home-action="about">About this project</a>\n'
+            '    <a href="#" data-home-action="workflow">How it works</a>\n'
+            '    <a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" rel="noopener">GitHub</a>\n'
+            '    <a href="pipeline.html">Pipeline status</a>\n'
+            '  </nav>'
+        ),
+    ]
+    return "\n".join(parts)
+
+
 def main():
     # Fresh circuit breaker per run — don't inherit a stuck-open state
     # from anything that imported this module earlier.
@@ -16234,9 +17321,21 @@ def main():
     else:
         write_actor_pages(actors_serialisable, {})
 
+    # Home (front-door) tab content. Built from the same data the
+    # Articles / Matrix / Actors tabs consume — no separate cache.
+    generated_human = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+    home_html = render_home(
+        articles_meta=articles_meta,
+        usecase_count=total_ucs,
+        tech_count=len(total_techs),
+        article_count=len(articles),
+        generated_human=generated_human,
+    )
+
     page = (
         HTML_HEAD
-        .replace("__GENERATED_AT__", dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
+        .replace("__HOME__", home_html)
+        .replace("__GENERATED_AT__", generated_human)
         .replace("__ARTICLE_COUNT__", str(len(articles)))
         .replace("__USECASE_COUNT__", str(total_ucs))
         .replace("__TECH_COUNT__", str(len(total_techs)))
