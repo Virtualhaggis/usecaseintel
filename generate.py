@@ -325,6 +325,160 @@ def extract_threat_actors(title: str, body: str) -> list:
     return seen
 
 
+# Software/version IOC extraction — heuristic but useful. Picks up the
+# common THN/BleepingComputer phrasing: "<Product> versions A.B.C and A.B.D
+# are vulnerable" / "fixed in <Product> 1.2.3" / "OpenClaw 1.2.3-rc1".
+# Restricted to sentences that contain a vulnerability keyword so generic
+# version mentions ("Python 3.11 was released") don't pollute the IOC feed.
+_SW_VERSION_NUM_RX = r'\d+\.\d+(?:\.\d+){0,2}(?:[-\.][A-Za-z0-9]+)?'
+_SW_VULN_CTX_RX   = re.compile(
+    r'\b(vulnerab|affect(?:ed|s|ing)?|prior\s+to|before|fixed\s+in|patched\s+in'
+    r'|exploit(?:s|ed|able|ing|ation)?|cve-\d|advisor(?:y|ies)'
+    r'|earlier\s+than|up\s+to\s+and\s+including|impacted)\b',
+    re.I)
+_SW_NAME_VER_RX = re.compile(
+    r'(?P<name>[A-Z][A-Za-z0-9][A-Za-z0-9.\-]{1,30}(?:\s+[A-Z][A-Za-z0-9.\-]{1,20}){0,2})'
+    r'\s+(?:[Vv]ersions?\s+)?'
+    r'(?P<ver>' + _SW_VERSION_NUM_RX + r')'
+)
+# Product names we never want to surface even when matched. Either common
+# words that happen to start with an uppercase, day/month names, or
+# generic terms like "Version 1.2.3 ...".
+_SW_NAME_BLOCKLIST = {
+    "cve", "patch", "version", "fix", "advisory", "advisories", "exploit",
+    "monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday",
+    "january", "february", "march", "april", "may", "june",
+    "july", "august", "september", "october", "november", "december",
+    "today", "yesterday", "tomorrow", "windows", "iphone", "android",
+    "linux", "macos", "the", "this", "that", "these", "those",
+    "release", "update", "build", "rev",
+}
+
+
+# An explicit "Indicators of Compromise" section in an article carries
+# IOCs the analyst CAN act on. Inside this region we accept plain-text
+# domains/IPs/hashes (not just defanged) — the author clearly listed
+# them to be hunted. Outside the region the defanged-only policy
+# remains, otherwise we'd ship the victim's own domain or the vendor's
+# blog URL as IOCs.
+_IOC_SECTION_HEAD_RX = re.compile(
+    r"(?:^|\n)[ \t#*>\-]{0,8}"
+    r"(?:indicators?\s+of\s+compromise|\bioc[s]?\b(?:\s+table)?"
+    r"|associated\s+(?:domain|ip|host|infrastructure)"
+    r"|network\s+(?:indicators?|infrastructure|c2)"
+    r"|c2\s+(?:server[s]?|domain[s]?|infrastructure)"
+    r"|observed\s+indicators?|malicious\s+(?:domain|ip|url|host))",
+    re.I)
+# End-of-section markers — next semantic block.
+_IOC_SECTION_END_RX = re.compile(
+    r"(?:^|\n)[ \t#*>\-]{0,8}"
+    r"(?:recommendations?|mitigations?|conclusion|references|about|"
+    r"further\s+reading|related\s+articles|"
+    r"comment|share\s+this|tags?\s*:)",
+    re.I)
+# Plain-text patterns used INSIDE an IOC section only. The downstream
+# `_ioc_is_known_safe` filter is *exclusion-only* (it drops google.com,
+# but it doesn't bless a candidate). Without a TLD allowlist, this regex
+# happily promotes `setup.mjs`, `claude.json`, `mcp.json`, and `.kiro` to
+# IOC domains. The allowlist below restricts to TLDs that actually exist
+# on the public DNS, sized to catch the long tail of attacker-favoured
+# ccTLDs without admitting filename extensions.
+_VALID_PUBLIC_TLDS = frozenset((
+    "com","net","org","info","biz","name","pro","mobi","asia","aero","jobs",
+    "io","ai","app","dev","sh","cloud","tech","page","blog","site","online",
+    "store","top","xyz","click","link","live","fun","today","world","work",
+    "zone","host","club","vip","win","loan","party","science","men","racing",
+    "ml","ga","cf","tk","gq","pw","email","center","systems","solutions",
+    "services","website","press","media","group","ltd","llc","company",
+    "fyi","ninja","run","express","international","global","review","cyou",
+    "best","art","one","monster","life","plus","quest","stream","trade",
+    "download","bid","date","faith","webcam","accountant",
+    "uk","de","ru","cn","jp","fr","it","es","nl","br","in","ca","au","us",
+    "kr","eu","mx","pl","se","no","dk","fi","ch","at","be","ie","nz","sg",
+    "hk","tw","ar","cl","co","ve","ec","pe","my","th","ph","vn","id","sa",
+    "ae","tr","il","eg","za","ng","ke","ma","lv","lt","ee","ua","by","kz",
+    "gr","pt","hr","cz","sk","hu","ro","bg","si","is","mt","lu","mc","li",
+    "im","je","gg","tv","fm","me","cc","ws","la","sx","st","gh","su","am",
+    "ge","az","kg","tj","tm","uz","md","mn","np","pk","bd","lk","iq","ir",
+    "sy","lb","jo","ye","om","qa","kw","bh",
+))
+_PLAIN_DOMAIN_RX = re.compile(
+    r"\b((?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.){1,5}"
+    r"[a-z]{2,24})\b", re.I)
+_PLAIN_IPV4_RX = re.compile(
+    r"\b((?:(?:25[0-5]|2[0-4]\d|[01]?\d?\d)\.){3}"
+    r"(?:25[0-5]|2[0-4]\d|[01]?\d?\d))\b")
+
+
+def _is_valid_public_domain(d: str) -> bool:
+    """Accept only candidates whose final label is a real public TLD,
+    so file paths and config keys can't masquerade as domain IOCs."""
+    if not d or " " in d or d.startswith(".") or d.endswith("."):
+        return False
+    parts = d.lower().rsplit(".", 2)
+    if len(parts) < 2:
+        return False
+    if parts[-1] in _VALID_PUBLIC_TLDS:
+        return True
+    if len(parts) >= 3 and f"{parts[-2]}.{parts[-1]}" in _VALID_PUBLIC_TLDS:
+        return True
+    return False
+
+
+def _ioc_section_text(text: str) -> str:
+    """Return the substring covering an explicit IOC list, or empty
+    string if no such section is present in the article."""
+    if not text:
+        return ""
+    head = _IOC_SECTION_HEAD_RX.search(text)
+    if not head:
+        return ""
+    start = head.end()
+    # Skip past the heading punctuation/whitespace
+    end_m = _IOC_SECTION_END_RX.search(text, pos=start + 30)
+    end = end_m.start() if end_m else min(start + 6000, len(text))
+    return text[start:end]
+
+
+def extract_software_versions(text: str) -> list:
+    """Return [{name, versions}] for software products mentioned alongside
+    vulnerability context. Conservative on purpose — better to miss a few
+    than spray the IOC feed with marketing-blurb version numbers.
+
+    Each entry: {"name": "OpenClaw", "versions": ["1.2.3", "1.2.4"]}.
+    Capped at 20 products / 10 versions each.
+    """
+    if not text or len(text) < 50:
+        return []
+    products: dict[str, set] = {}
+    # Split on sentence-ish boundaries, then only process the ones that
+    # discuss vulnerability.
+    for sentence in re.split(r'(?<=[.!?\n])\s+', text):
+        if not _SW_VULN_CTX_RX.search(sentence):
+            continue
+        for m in _SW_NAME_VER_RX.finditer(sentence):
+            name = (m.group("name") or "").strip()
+            ver  = (m.group("ver") or "").strip()
+            if not name or not ver:
+                continue
+            # First-token guard against junk like "Version 1.2.3" or
+            # "Patch Tuesday fixes 138 vulnerabilities ... 8.0.1".
+            first = name.split()[0].lower().rstrip(".")
+            if first in _SW_NAME_BLOCKLIST:
+                continue
+            if len(name) < 3 or len(name) > 40:
+                continue
+            # Strip trailing punctuation / "version" suffix.
+            name = re.sub(r"\s+version$", "", name, flags=re.I).rstrip(",.-")
+            products.setdefault(name, set()).add(ver)
+        if len(products) >= 20:
+            break
+    return [
+        {"name": n, "versions": sorted(products[n])[:10]}
+        for n in sorted(products.keys())
+    ][:20]
+
+
 def extract_indicators(title: str, body: str) -> dict:
     """
     SOC-grade IOC extraction. Quality bar:
@@ -336,6 +490,10 @@ def extract_indicators(title: str, body: str) -> dict:
         so they're rejected. This means article summaries that don't use
         defanged notation will produce zero domain/IP IOCs — which is the
         correct behaviour for a feed an analyst will block on.
+      - Software/version: heuristic — product name + version pattern
+        inside a sentence that also mentions vulnerability context.
+        Powers the Hunt-IOCs "Software" type so analysts can sweep their
+        CMDB / TVM inventory for the named vulnerable versions.
     """
     text = f"{title}\n{body}"
 
@@ -350,6 +508,24 @@ def extract_indicators(title: str, body: str) -> dict:
         url_host = _refang(m.group(1)).split("/", 1)[0].lower()
         domains.append(url_host)
     domains = dedupe(domains)
+
+    # ---- Plain-text IOCs from inside an explicit IOC section --------
+    # When the article has its own "Indicators of Compromise" heading or
+    # table, accept domains/IPs in plain form too — the author has flagged
+    # them as actionable. CSN/THN/BleepingComputer commonly list IOCs
+    # without defang inside their IOC tables. Defang-only continues to
+    # apply OUTSIDE the section so we don't capture victim/vendor infra.
+    ioc_region = _ioc_section_text(text)
+    if ioc_region:
+        domains.extend(
+            m.group(1).lower()
+            for m in _PLAIN_DOMAIN_RX.finditer(ioc_region)
+            if _is_valid_public_domain(m.group(1))
+        )
+        ips.extend(m.group(1)
+                   for m in _PLAIN_IPV4_RX.finditer(ioc_region))
+        domains = dedupe(domains)
+        ips = dedupe(ips)
 
     # ---- Quality filter: drop legitimate-platform / reserved IOCs ----
     # No SOC wants `google.com` or `8.8.8.8` blocked. These domains/IPs
@@ -368,6 +544,7 @@ def extract_indicators(title: str, body: str) -> dict:
         "sha1": dedupe(HASH_SHA1_RE.findall(text)),
         "sha256": dedupe(HASH_SHA256_RE.findall(text)),
         "explicit_ttps": dedupe(ATTACK_RE.findall(text)),
+        "software": extract_software_versions(text),
     }
 
 
@@ -7353,10 +7530,11 @@ const HUNT_PLATFORMS = [
   ["datadog",   "Datadog"],
 ];
 const HUNT_TYPES = [
-  ["hashes",  "Hashes",  (i) => (i.sha256 || []).length + (i.sha1 || []).length + (i.md5 || []).length],
-  ["domains", "Domains", (i) => (i.domains || []).length],
-  ["ips",     "IPs",     (i) => (i.ips || []).length],
-  ["cves",    "CVEs",    (i) => (i.cves || []).length],
+  ["hashes",   "Hashes",            (i) => (i.sha256 || []).length + (i.sha1 || []).length + (i.md5 || []).length],
+  ["domains",  "Domains",           (i) => (i.domains || []).length],
+  ["ips",      "IPs",               (i) => (i.ips || []).length],
+  ["cves",     "CVEs",              (i) => (i.cves || []).length],
+  ["software", "Software versions", (i) => (i.software || []).reduce((n, s) => n + ((s.versions || []).length), 0)],
 ];
 const _q = (arr) => arr.map(v => `"${String(v).replace(/"/g, '\\"')}"`).join(", ");
 const HUNT_TEMPLATES = {
@@ -7557,6 +7735,92 @@ level: medium`,
 | stats count by host, cve, severity
 | sort - count`,
     datadog: (ind) => `@cve.id:(${(ind.cves || []).map(v => `"${v}"`).join(" OR ")})`,
+  },
+  software: {
+    defender: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '// no software versions extracted for this article';
+      const clauses = sw.map(s => {
+        const versions = (s.versions || []).map(v => `"${v}"`).join(", ");
+        return `    (SoftwareName has "${s.name}" and SoftwareVersion in (${versions}))`;
+      }).join(" or\\n");
+      return `// Hunt for vulnerable software versions in your TVM inventory.
+// Requires Microsoft Defender Vulnerability Management or M365 Defender.
+DeviceTvmSoftwareInventory
+| where
+${clauses}
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
+| summarize Hosts = make_set(DeviceName) by SoftwareName, SoftwareVersion
+| order by array_length(Hosts) desc`;
+    },
+    sentinel: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '// no software versions extracted for this article';
+      const clauses = sw.map(s => {
+        const versions = (s.versions || []).map(v => `"${v}"`).join(", ");
+        return `    (SoftwareName has "${s.name}" and SoftwareVersion in (${versions}))`;
+      }).join(" or\\n");
+      return `// Hunt for vulnerable software versions — assumes Microsoft 365
+// Defender data connector is enabled, pulling DeviceTvmSoftwareInventory
+// into the Sentinel workspace.
+DeviceTvmSoftwareInventory
+| where TimeGenerated > ago(7d)
+| where
+${clauses}
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
+| summarize Hosts = make_set(DeviceName) by SoftwareName, SoftwareVersion`;
+    },
+    sigma: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '# no software versions extracted for this article';
+      const selectionBlocks = sw.map((s, i) => {
+        const versions = (s.versions || []).map(v => `      - '${v}'`).join('\\n');
+        return `  selection_${i}:
+    SoftwareName: '${s.name}'
+    SoftwareVersion:
+${versions}`;
+      }).join('\\n');
+      const cond = sw.map((_, i) => `selection_${i}`).join(' or ');
+      return `title: Vulnerable software present — auto-generated from article
+id: hunt-software-${Date.now()}
+description: Detection for installed software versions extracted from a
+             threat-intel article. Map SoftwareName/SoftwareVersion to your
+             inventory data source (Defender TVM, Qualys, Tenable, etc.).
+status: experimental
+logsource:
+  category: software_inventory
+detection:
+${selectionBlocks}
+  condition: ${cond}
+level: high`;
+    },
+    splunk: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '" no software versions extracted for this article"';
+      const clauses = sw.map(s => {
+        const versions = (s.versions || []).map(v => `"${v}"`).join(", ");
+        return `(software_name="${s.name}" software_version IN (${versions}))`;
+      }).join(" OR ");
+      return `\` Hunt for vulnerable software in your asset / vuln-scanner index.
+   Adjust the index list to match your environment — Qualys, Tenable,
+   Lansweeper, Defender TVM, etc. all use slightly different field
+   names; normalise via macros or eval if needed. \`
+search index=cmdb OR index=qualys OR index=tenable OR sourcetype=defender:tvm
+| eval software_name = coalesce(software_name, product, app_name)
+| eval software_version = coalesce(software_version, version, app_version)
+| search ${clauses}
+| stats values(host) AS hosts dc(host) AS host_count
+        by software_name, software_version
+| sort - host_count`;
+    },
+    datadog: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '// no software versions extracted for this article';
+      return sw.map(s => {
+        const versions = (s.versions || []).map(v => `"${v}"`).join(" OR ");
+        return `(@host.software.name:"${s.name}" @host.software.version:(${versions}))`;
+      }).join(" OR ");
+    },
   },
 };
 
@@ -11633,13 +11897,24 @@ def build_matrix_data(articles_meta):
         # three separate lists so the generated queries can target the
         # right schema fields (SHA256 vs SHA1 vs MD5).
         a_ind = a.get("ind") or {}
+        # `software` is a list of {name, versions} — preserve structure.
+        sw_raw = a_ind.get("software") or []
+        sw_payload = []
+        seen_sw = set()
+        for entry in sw_raw[:20]:
+            n = (entry.get("name") or "").strip()
+            vs = entry.get("versions") or []
+            if n and n.lower() not in seen_sw:
+                seen_sw.add(n.lower())
+                sw_payload.append({"name": n, "versions": list(vs)[:10]})
         ioc_payload = {
-            "cves":    list(dict.fromkeys(a_ind.get("cves") or []))[:50],
-            "ips":     list(dict.fromkeys(a_ind.get("ips") or []))[:50],
-            "domains": list(dict.fromkeys(a_ind.get("domains") or []))[:50],
-            "sha256":  list(dict.fromkeys(a_ind.get("sha256") or []))[:30],
-            "sha1":    list(dict.fromkeys(a_ind.get("sha1") or []))[:30],
-            "md5":     list(dict.fromkeys(a_ind.get("md5") or []))[:30],
+            "cves":     list(dict.fromkeys(a_ind.get("cves") or []))[:50],
+            "ips":      list(dict.fromkeys(a_ind.get("ips") or []))[:50],
+            "domains":  list(dict.fromkeys(a_ind.get("domains") or []))[:50],
+            "sha256":   list(dict.fromkeys(a_ind.get("sha256") or []))[:30],
+            "sha1":     list(dict.fromkeys(a_ind.get("sha1") or []))[:30],
+            "md5":      list(dict.fromkeys(a_ind.get("md5") or []))[:30],
+            "software": sw_payload,
         }
         art_records.append({
             "i": a_idx,
