@@ -19,11 +19,6 @@ Blog Vulnerabilities & Threats Gone Phishin': npm Packages Serving Custom Creden
 - **Domain (defanged):** `siemens-energy.com`
 - **Domain (defanged):** `cdn.jsdelivr.net`
 - **Domain (defanged):** `login.siemens-energy.icu`
-- **Domain (defanged):** `login.siemens`
-- **Domain (defanged):** `login.siemensergy`
-- **Domain (defanged):** `oprsys.deno`
-- **Domain (defanged):** `cdn.jsdelivr`
-- **Domain (defanged):** `template.min.js`
 - **SHA256:** `3ceb182fb32a8fb0f0fcf056d6ab8de1cf6e789053f1aadc98ba315ae9a96f0c`
 - **SHA256:** `fdb6c79a8d01b528698c53ebd5030f875242e6af93f6ae799dee7f66b452bf3e`
 - **SHA256:** `4631584783d84758ae58bc717b08ac67d99dee30985db18b9d2b08df8721348e`
@@ -520,7 +515,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `163.123.236.118`, `34.120.54.55`, `login.siemensergy.icu`, `siemensergy.icu`, `oprsys.deno.dev`, `siemens-energy.icu`, `siemens-energy.com`, `cdn.jsdelivr.net` _(+6 more)_
+  - IP / domain IOC(s): `163.123.236.118`, `34.120.54.55`, `login.siemensergy.icu`, `siemensergy.icu`, `oprsys.deno.dev`, `siemens-energy.icu`, `siemens-energy.com`, `cdn.jsdelivr.net` _(+1 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `3ceb182fb32a8fb0f0fcf056d6ab8de1cf6e789053f1aadc98ba315ae9a96f0c`, `fdb6c79a8d01b528698c53ebd5030f875242e6af93f6ae799dee7f66b452bf3e`, `4631584783d84758ae58bc717b08ac67d99dee30985db18b9d2b08df8721348e`, `211f88a55e8fe9254f75c358c42bb7e78e014b862de7ea6e8b80ed1f78d13add`, `7d7f795ac1fcb5623731a50999f518877fd423a5a98219d0f495c488564a1554`

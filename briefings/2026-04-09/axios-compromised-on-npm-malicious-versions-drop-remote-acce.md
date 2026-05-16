@@ -15,16 +15,8 @@ Table of Contents Loa…
 - **IPv4 (defanged):** `142.11.206.73`
 - **Domain (defanged):** `sfrclak.com`
 - **Domain (defanged):** `packages.npm.org`
-- **Domain (defanged):** `com.apple.act.mond`
-- **Domain (defanged):** `wt.exe`
-- **Domain (defanged):** `6202033.vbs`
-- **Domain (defanged):** `ld.py`
 - **Domain (defanged):** `proton.me`
-- **Domain (defanged):** `package.json`
-- **Domain (defanged):** `package-lock.json`
-- **Domain (defanged):** `setup.js`
 - **Domain (defanged):** `stepsecurity-dev-machine-guard.sh`
-- **Domain (defanged):** `node.js`
 - **SHA256:** `e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09`
 - **SHA256:** `37516a0a420b21ef3b68129f8d089be706974a597a821ec83e598cd180716f60`
 - **SHA1:** `2553649f2322049666871cea80a5d0d6adc700ca`
@@ -343,7 +335,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `142.11.206.73`, `sfrclak.com`, `packages.npm.org`, `com.apple.act.mond`, `wt.exe`, `6202033.vbs`, `ld.py`, `proton.me` _(+5 more)_
+  - IP / domain IOC(s): `142.11.206.73`, `sfrclak.com`, `packages.npm.org`, `proton.me`, `stepsecurity-dev-machine-guard.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `e10b1fa84f1d6481625f741b69892780140d4e0e7769e7491e5f4d894c2e0e09`, `37516a0a420b21ef3b68129f8d089be706974a597a821ec83e598cd180716f60`, `2553649f2322049666871cea80a5d0d6adc700ca`, `d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71`, `07d889e2dadce6f3910dcbc253317d28ca61c766`, `7c29f4cf2ea91ef05018d5aa5399bf23ed3120eb`

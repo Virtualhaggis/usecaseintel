@@ -18,8 +18,6 @@ New research reveals that what was once believed to be a custom-built threat is 
 - **IPv4 (defanged):** `109.95.212.253`
 - **IPv4 (defanged):** `109.95.211.141`
 - **Domain (defanged):** `cf0.pw`
-- **Domain (defanged):** `sshpass.txt`
-- **Domain (defanged):** `cron.hourly`
 - **SHA256:** `40b5127c8cf9d6bec4dbeb61ba766a95c7b2d0cafafcb82ede5a3a679a3e3020`
 - **SHA256:** `ec7462c3f4a87430eb19d16cfd775c173f4ba60d2f43697743db991c3d1c3067`
 - **SHA256:** `f1612924814ac73339f777b48b0de28b716d606e142d4d3f4308ec648e3f56c8`
@@ -84,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OrBit/Medusa rootkit fixed file artefacts on Linux (sshpass.txt, .logpam, .ports in /lib/lib*)
 
-`UC_14_11` · phase: **install** · confidence: **High**
+`UC_15_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +106,7 @@ DeviceFileEvents
 
 ### [LLM] OrBit dynamic-linker hijack — /etc/ld.so.preload modified by non-package-manager process
 
-`UC_14_12` · phase: **install** · confidence: **High**
+`UC_15_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +129,7 @@ DeviceFileEvents
 
 ### [LLM] OrBit cron-based payload fetch from cf0.pw / 109.95.212.253 / 109.95.211.141
 
-`UC_14_13` · phase: **c2** · confidence: **High**
+`UC_15_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -455,7 +453,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use OrBit Rootkit to Harvest SSH and Sudo Credentials From Linux Systems
 
-`UC_14_10` · phase: **install** · confidence: **High**
+`UC_15_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,7 +489,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `109.95.212.253`, `109.95.211.141`, `cf0.pw`, `sshpass.txt`, `cron.hourly`
+  - IP / domain IOC(s): `109.95.212.253`, `109.95.211.141`, `cf0.pw`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `40b5127c8cf9d6bec4dbeb61ba766a95c7b2d0cafafcb82ede5a3a679a3e3020`, `ec7462c3f4a87430eb19d16cfd775c173f4ba60d2f43697743db991c3d1c3067`, `f1612924814ac73339f777b48b0de28b716d606e142d4d3f4308ec648e3f56c8`, `d419a9b17f7b4c23fd4e80a9bce130d2a13c307fccc4bfbc4d49f6b770d06d3b`, `296d28eb7b66aa2cbea7d9c2e7dc1ad6ce6f97d44d34139760c38817aec083e7`, `3ba6c174a72e4bf5a10c8aaadab2c4b98702ee2308438e94a5512b69df998d5a`, `4203271c1a0c24443b7e85cbf066c9928fcc69934772a431d779017fb85c9d73`, `eea274eddd712fe0b4434dbef6a2a92810cb13b8be3deca0571410ee78d37c9f` _(+19 more)_

@@ -20,7 +20,6 @@ Kazuar, a sophisticated malware family attributed to the Russian state actor Sec
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `hpbprndiloc.dll`
 - **SHA256:** `69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4`
 - **SHA256:** `c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9`
 - **SHA256:** `6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d`
@@ -31,7 +30,6 @@ Kazuar, a sophisticated malware family attributed to the Russian state actor Sec
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -57,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kazuar (Secret Blizzard) Kernel Module IPC named pipe \\.\pipe\82760B84F1D703D596C79B88BA4FAC1E
 
-`UC_54_9` · phase: **c2** · confidence: **High**
+`UC_54_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +81,7 @@ DeviceEvents
 
 ### [LLM] Kazuar (Secret Blizzard) Pelmeni dropper / .NET loader sample hashes on disk or in-memory
 
-`UC_54_10` · phase: **install** · confidence: **High**
+`UC_54_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +122,7 @@ union isfuzzy=true
 
 ### [LLM] Kazuar `live_in_scrcons` — scrcons.exe (WMI Event Consumer) reaching public C2 or hosting unsigned modules
 
-`UC_54_11` · phase: **c2** · confidence: **High**
+`UC_54_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -401,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kazuar: Anatomy of a nation-state botnet
 
-`UC_54_8` · phase: **exploit** · confidence: **High**
+`UC_54_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -452,13 +450,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `hpbprndiloc.dll`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4`, `c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9`, `6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d`, `436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85`, `82760B84F1D703D596C79B88BA4FAC1E`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

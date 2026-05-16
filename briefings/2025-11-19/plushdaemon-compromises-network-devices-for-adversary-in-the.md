@@ -24,15 +24,6 @@ ESET researchers provide insights into how PlushDaemon performs adversary-in-the
 - **Domain (defanged):** `ds20221202.dsc.wcsset.com`
 - **Domain (defanged):** `test.dsc.wcsset.com`
 - **Domain (defanged):** `wcsset.com`
-- **Domain (defanged):** `agent.aep`
-- **Domain (defanged):** `bioset.conf`
-- **Domain (defanged):** `rozena.bxx`
-- **Domain (defanged):** `2246.dll`
-- **Domain (defanged):** `agent.agxk`
-- **Domain (defanged):** `agent.afdt`
-- **Domain (defanged):** `ds20221202.dsc`
-- **Domain (defanged):** `test.dsc.wcsset`
-- **Domain (defanged):** `360tray.exe`
 
 ## MITRE ATT&CK Techniques
 
@@ -288,7 +279,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `47.242.198.250`, `8.212.132.120`, `ds20221202.dsc.wcsset.com`, `test.dsc.wcsset.com`, `wcsset.com`, `agent.aep`, `bioset.conf`, `rozena.bxx` _(+6 more)_
+  - IP / domain IOC(s): `47.242.198.250`, `8.212.132.120`, `ds20221202.dsc.wcsset.com`, `test.dsc.wcsset.com`, `wcsset.com`
 
 
 ## Why this matters

@@ -17,12 +17,6 @@ The script uses the exact same ICP canister ( tdtqy-oyaaa-aaaae-af2dq-cai[.]raw[
 - **Domain (defanged):** `icp0.io`
 - **Domain (defanged):** `championships-peoples-point-cassette.trycloudflare.com`
 - **Domain (defanged):** `investigation-launches-hearings-copying.trycloudflare.com`
-- **Domain (defanged):** `investigation-launches-hearings-copying.trycloudflare`
-- **Domain (defanged):** `championships-peoples-point-cassette.trycloudflare`
-- **Domain (defanged):** `runner.py`
-- **Domain (defanged):** `internal-monitor.service`
-- **Domain (defanged):** `pgmon.py`
-- **Domain (defanged):** `pgmonitor.service`
 
 ## MITRE ATT&CK Techniques
 
@@ -268,7 +262,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `souls-entire-defined-routes.trycloudflare`, `souls-entire-defined-routes.trycloudflare.com`, `icp0.io`, `championships-peoples-point-cassette.trycloudflare.com`, `investigation-launches-hearings-copying.trycloudflare.com`, `investigation-launches-hearings-copying.trycloudflare`, `championships-peoples-point-cassette.trycloudflare` _(+4 more)_
+  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `souls-entire-defined-routes.trycloudflare`, `souls-entire-defined-routes.trycloudflare.com`, `icp0.io`, `championships-peoples-point-cassette.trycloudflare.com`, `investigation-launches-hearings-copying.trycloudflare.com`
 
 
 ## Why this matters

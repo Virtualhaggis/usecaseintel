@@ -17,11 +17,7 @@ fast16.sys selectively targets high-precision calculation software, patching cod
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `fast16.sys`
-- **Domain (defanged):** `connotify.dll`
-- **Domain (defanged):** `svcmgmt.exe`
 - **Domain (defanged):** `mcafee.com`
-- **Domain (defanged):** `fast16.pdb`
 - **SHA256:** `9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525`
 - **SHA256:** `07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529`
 - **SHA256:** `8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9`
@@ -372,7 +368,7 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `fast16.sys`, `connotify.dll`, `svcmgmt.exe`, `mcafee.com`, `fast16.pdb`
+  - IP / domain IOC(s): `mcafee.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `9a10e1faa86a5d39417cae44da5adf38824dfb9a16432e34df766aa1dc9e3525`, `07c69fc33271cf5a2ce03ac1fed7a3b16357aec093c5bf9ef61fbfa4348d0529`, `8fcb4d3d4df61719ee3da98241393779290e0efcd88a49e363e2a2dfbc04dae9`, `5966513a12a5601b262c4ee4d3e32091feb05b666951d06431c30a8cece83010`, `09ca719e06a526f70aadf34fb66b136ed20f923776e6b33a33a9059ef674da22`, `8b018452fdd64c346af4d97da420681e2e0b55b8c9ce2b8de75e330993b759a0`, `06361562cc53d759fb5a4c2b7aac348e4d23fe59be3b2871b14678365283ca47`, `bd04715c5c43c862c38a4ad6c2167ad082a352881e04a35117af9bbfad8e5613` _(+37 more)_

@@ -14,11 +14,7 @@ T…
 
 - **Domain (defanged):** `cloudflareguard.vercel.app`
 - **Domain (defanged):** `cloudflareinsights.vercel.app`
-- **Domain (defanged):** `big.js`
-- **Domain (defanged):** `bignumber.js`
 - **Domain (defanged):** `api.ipify.org`
-- **Domain (defanged):** `test.js`
-- **Domain (defanged):** `index.js`
 
 ## MITRE ATT&CK Techniques
 
@@ -283,7 +279,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `cloudflareguard.vercel.app`, `cloudflareinsights.vercel.app`, `big.js`, `bignumber.js`, `api.ipify.org`, `test.js`, `index.js`
+  - IP / domain IOC(s): `cloudflareguard.vercel.app`, `cloudflareinsights.vercel.app`, `api.ipify.org`
 
 
 ## Why this matters

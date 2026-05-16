@@ -17,13 +17,6 @@ Blog Vulnerabilities & Threats GlassWorm Hides a RAT Inside a Malicious Chrome E
 - **Domain (defanged):** `calendar.app.google`
 - **Domain (defanged):** `socket.io`
 - **Domain (defanged):** `calendar.app`
-- **Domain (defanged):** `assaac.exe`
-- **Domain (defanged):** `skuyzycdd.exe`
-- **Domain (defanged):** `w.node`
-- **Domain (defanged):** `init.json`
-- **Domain (defanged):** `index.js`
-- **Domain (defanged):** `node.exe`
-- **Domain (defanged):** `node.js`
 - **SHA256:** `06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d`
 - **SHA256:** `f171c383e21243ac85b5ee69821d16f10e8d718089a5c090c41efeaa42e81fca`
 - **SHA256:** `9df62cefd87784c7ee1ca8b4e6fc49737a90492fa6c23901e3b7981b18c6c988`
@@ -629,7 +622,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.32.150.251`, `217.69.3.152`, `45.150.34.158`, `217.69.0.159`, `calendar.app.google`, `socket.io`, `calendar.app`, `assaac.exe` _(+6 more)_
+  - IP / domain IOC(s): `45.32.150.251`, `217.69.3.152`, `45.150.34.158`, `217.69.0.159`, `calendar.app.google`, `socket.io`, `calendar.app`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d`, `f171c383e21243ac85b5ee69821d16f10e8d718089a5c090c41efeaa42e81fca`, `9df62cefd87784c7ee1ca8b4e6fc49737a90492fa6c23901e3b7981b18c6c988`, `43253a888417dfab034f781527e08fb58e929096cb4ef69456c3e13550cb4e9e`, `4a60afa085fe5a847aef164578537bc33b9b58954143381e0c65c6354e4501e3`, `de81eacd045a88598f16680ce01bf99837b1d8170c7fc38a18747ef10e930776`, `fdba5be3da2467e642bd8710f971e6b266b30ac15f5f413982fd719d7e0bffd9`, `ee3e4dd5c1e073b8805f4107ccc7bc7e6e3c209fe13ea04ff3f2173c8dbe74a6` _(+2 more)_

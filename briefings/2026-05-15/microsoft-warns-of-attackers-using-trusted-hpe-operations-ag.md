@@ -15,14 +15,7 @@ The threat actor gained access through a compromised third-party IT services pro
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `abc003.vbs`
-- **Domain (defanged):** `errors.aspx`
-- **Domain (defanged):** `signoff.aspx`
-- **Domain (defanged):** `ghost.inc`
-- **Domain (defanged):** `mslogon.dll`
-- **Domain (defanged):** `passms.dll`
-- **Domain (defanged):** `msupdate.dll`
-- **Domain (defanged):** `icon02.jpeg`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -41,7 +34,6 @@ The threat actor gained access through a compromised third-party IT services pro
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -331,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Warns of Attackers Using Trusted HPE Operations Agent for Malware-Free
 
-`UC_16_9` · phase: **exploit** · confidence: **High**
+`UC_17_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -378,14 +370,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `abc003.vbs`, `errors.aspx`, `signoff.aspx`, `ghost.inc`, `mslogon.dll`, `passms.dll`, `msupdate.dll`, `icon02.jpeg`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

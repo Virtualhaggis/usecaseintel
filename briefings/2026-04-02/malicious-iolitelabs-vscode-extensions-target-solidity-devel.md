@@ -10,20 +10,11 @@ Back to Blog Threat Intel Malicious IoliteLabs VSCode Extensions Target Solidity
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `iolitelabs.solidity`
-- **Domain (defanged):** `index.js`
 - **Domain (defanged):** `rraghh.com`
 - **Domain (defanged):** `cdn.rraghh.com`
 - **Domain (defanged):** `oortt.com`
-- **Domain (defanged):** `calc.bat`
 - **Domain (defanged):** `doc.sh`
-- **Domain (defanged):** `7whitesmoke.msi`
-- **Domain (defanged):** `com.apple.system.updater.plist`
-- **Domain (defanged):** `1.bat`
-- **Domain (defanged):** `regsvr32.exe`
 - **Domain (defanged):** `stepsecurity-dev-machine-guard.sh`
-- **Domain (defanged):** `extension.js`
-- **Domain (defanged):** `com.apple.quarantine`
 - **SHA256:** `e7ec4e35d94d01a2e4ee5dca62b8fb08ac7411596edb54b398651f4eb563561d`
 - **SHA256:** `fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508`
 - **SHA256:** `e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3`
@@ -359,7 +350,7 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `iolitelabs.solidity`, `index.js`, `rraghh.com`, `cdn.rraghh.com`, `oortt.com`, `calc.bat`, `doc.sh`, `7whitesmoke.msi` _(+6 more)_
+  - IP / domain IOC(s): `rraghh.com`, `cdn.rraghh.com`, `oortt.com`, `doc.sh`, `stepsecurity-dev-machine-guard.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `e7ec4e35d94d01a2e4ee5dca62b8fb08ac7411596edb54b398651f4eb563561d`, `fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508`, `e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3`, `5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c`, `e0f206aac2c3fa733b0c466d2ebb86ba038cf1fe2edeee21e94a4d943a27f63b`, `40a6bbc8260bc17faa583dd3c3954a0e3c4b0abb923baaecd2ad7901311d5d82`, `5886a9b659c05fb3e3077c80bb6a8be6acb1064683db542fae90e3bf9757f95f`, `38cb0e1209a721a565e71f9dc0593437723dc32c4d2fe2d23de141f4d306ccea` _(+2 more)_

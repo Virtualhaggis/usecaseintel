@@ -40,16 +40,6 @@ The toolset harvests credentials from cloud, container, developer, productivity,
 - **Domain (defanged):** `cdn.cloudfront-js.com`
 - **Domain (defanged):** `check.sh`
 - **Domain (defanged):** `bootstrap.sh`
-- **Domain (defanged):** `update.bin`
-- **Domain (defanged):** `worm.py`
-- **Domain (defanged):** `update-386.bin`
-- **Domain (defanged):** `update-arm.bin`
-- **Domain (defanged):** `utils.py`
-- **Domain (defanged):** `lateral.py`
-- **Domain (defanged):** `spm-worker.service`
-- **Domain (defanged):** `monitor.py`
-- **Domain (defanged):** `harvest.jsonl`
-- **Domain (defanged):** `next.js`
 - **SHA1:** `005587975a483876c1fa26b64b418931019be38f`
 - **SHA1:** `01cebc48016395e284ac76afc1816f143ee3e7b6`
 - **SHA1:** `0b86434ca5145636d745222f7e49c903ce6ef538`
@@ -521,7 +511,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `38.242.204.245`, `38.242.237.196`, `38.242.245.147`, `83.171.249.231`, `161.97.129.25`, `161.97.135.154`, `161.97.163.87`, `161.97.186.175` _(+20 more)_
+  - IP / domain IOC(s): `38.242.204.245`, `38.242.237.196`, `38.242.245.147`, `83.171.249.231`, `161.97.129.25`, `161.97.135.154`, `161.97.163.87`, `161.97.186.175` _(+10 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-29927`, `CVE-2025-55182`, `CVE-2026-1357`, `CVE-2025-9501`, `CVE-2025-48703`

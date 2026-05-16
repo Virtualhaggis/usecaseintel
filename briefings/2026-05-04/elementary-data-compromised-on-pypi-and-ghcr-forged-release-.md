@@ -11,10 +11,7 @@ Share on X Share on X Share o…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `elementary.pth`
 - **Domain (defanged):** `igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud`
-- **Domain (defanged):** `trin.tar.gz`
-- **Domain (defanged):** `litter.catbox.moe`
 - **Domain (defanged):** `iqesmbhukgd2c7hq.sh`
 - **SHA256:** `31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf634255`
 - **SHA256:** `b3bbfafde1a0db3a4d47e70eb0eb2ca19daef4a19410154a71abee567b35d3d9`
@@ -302,7 +299,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `elementary.pth`, `igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud`, `trin.tar.gz`, `litter.catbox.moe`, `iqesmbhukgd2c7hq.sh`
+  - IP / domain IOC(s): `igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud`, `iqesmbhukgd2c7hq.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf634255`, `b3bbfafde1a0db3a4d47e70eb0eb2ca19daef4a19410154a71abee567b35d3d9`, `b1e4b1f3aad0d489ab0e9208031c67402bbb8480`

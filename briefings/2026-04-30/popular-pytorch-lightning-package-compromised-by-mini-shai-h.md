@@ -11,7 +11,6 @@ Thi…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `start.py`
 - **SHA256:** `5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1`
 - **SHA256:** `8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2`
 
@@ -21,7 +20,6 @@ Thi…
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
@@ -40,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud: Python subprocess spawns `_runtime/start.py` from lightning site-packages
 
-`UC_228_6` · phase: **install** · confidence: **High**
+`UC_228_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud PyPI payload known SHA256 (start.py / router_runtime.js)
 
-`UC_228_7` · phase: **install** · confidence: **High**
+`UC_228_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +89,7 @@ union
 
 ### [LLM] Mini Shai-Hulud: Bun runtime executing `router_runtime.js` (2nd-stage stealer)
 
-`UC_228_8` · phase: **actions** · confidence: **High**
+`UC_228_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +186,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular PyTorch Lightning Package Compromised by Mini Shai-Hulud
 
-`UC_228_5` · phase: **exploit** · confidence: **High**
+`UC_228_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,13 +237,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `start.py`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1`, `8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

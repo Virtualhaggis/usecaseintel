@@ -17,10 +17,7 @@ Hundreds of malicious packages have already been tied to this campaign , maki…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `git-tanstack.com`
-- **Domain (defanged):** `tanstack.com`
-- **Domain (defanged):** `setup.mjs`
-- **Domain (defanged):** `claude.json`
-- **Domain (defanged):** `mcp.json`
+- **SHA1:** `d446803f4c3bc116263faa3499a1d3f95b2825d`
 
 ## MITRE ATT&CK Techniques
 
@@ -37,6 +34,7 @@ Hundreds of malicious packages have already been tied to this campaign , maki…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -280,7 +278,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud Worm Steals npm, GitHub, AWS, and Kubernetes Secrets From Developers
 
-`UC_9_7` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -332,9 +330,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `git-tanstack.com`, `tanstack.com`, `setup.mjs`, `claude.json`, `mcp.json`
+  - IP / domain IOC(s): `git-tanstack.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `d446803f4c3bc116263faa3499a1d3f95b2825d`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

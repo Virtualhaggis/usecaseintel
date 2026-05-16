@@ -15,11 +15,6 @@ On April 7,…
 
 - **IPv4 (defanged):** `89.36.224.5`
 - **Domain (defanged):** `install.sh`
-- **Domain (defanged):** `com.apple.terminal`
-- **Domain (defanged):** `zsh.profiler`
-- **Domain (defanged):** `package-lock.json`
-- **Domain (defanged):** `yarn.lock`
-- **Domain (defanged):** `pnpm-lock.yaml`
 
 ## MITRE ATT&CK Techniques
 
@@ -227,7 +222,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `89.36.224.5`, `install.sh`, `com.apple.terminal`, `zsh.profiler`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
+  - IP / domain IOC(s): `89.36.224.5`, `install.sh`
 
 
 ## Why this matters

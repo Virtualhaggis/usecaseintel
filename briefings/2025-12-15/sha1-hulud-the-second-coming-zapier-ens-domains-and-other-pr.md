@@ -14,11 +14,6 @@ The JavaScript ecosystem i…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `bun.sh`
-- **Domain (defanged):** `content.json`
-- **Domain (defanged):** `cloud.json`
-- **Domain (defanged):** `environment.json`
-- **Domain (defanged):** `trufflesecrets.json`
-- **Domain (defanged):** `package-lock.json`
 
 ## MITRE ATT&CK Techniques
 
@@ -324,7 +319,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `bun.sh`, `content.json`, `cloud.json`, `environment.json`, `trufflesecrets.json`, `package-lock.json`
+  - IP / domain IOC(s): `bun.sh`
 
 
 ## Why this matters

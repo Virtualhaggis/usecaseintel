@@ -10,11 +10,7 @@ Back to Blog Threat Intel Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `shai-hulud-workflow.yml`
-- **Domain (defanged):** `2fshai-hulud-workflow.yml`
-- **Domain (defanged):** `bundle.js`
 - **Domain (defanged):** `webhook.site`
-- **Domain (defanged):** `npmmodule.updatepackage`
 - **Domain (defanged):** `secretmanager.googleapis.com`
 - **SHA256:** `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
 
@@ -413,7 +409,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `shai-hulud-workflow.yml`, `2fshai-hulud-workflow.yml`, `bundle.js`, `webhook.site`, `npmmodule.updatepackage`, `secretmanager.googleapis.com`
+  - IP / domain IOC(s): `webhook.site`, `secretmanager.googleapis.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`

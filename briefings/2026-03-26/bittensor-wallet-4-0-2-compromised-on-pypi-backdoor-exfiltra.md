@@ -15,12 +15,9 @@ Back to Blog Threat Intel bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor 
 - **Domain (defanged):** `finney.subtensor-telemetry.com`
 - **Domain (defanged):** `opentensor-cdn.com`
 - **Domain (defanged):** `t.opentensor-cdn.com`
-- **Domain (defanged):** `keyfile.rs`
-- **Domain (defanged):** `setup.py`
 - **Domain (defanged):** `opentensor-metrics.com`
 - **Domain (defanged):** `metagraph-stats.com`
 - **Domain (defanged):** `subtensor-telemetry.com`
-- **Domain (defanged):** `requirements.txt`
 - **SHA256:** `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`
 - **SHA256:** `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`
 
@@ -305,7 +302,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `finney.opentensor-metrics.com`, `finney.metagraph-stats.com`, `finney.subtensor-telemetry.com`, `opentensor-cdn.com`, `t.opentensor-cdn.com`, `keyfile.rs`, `setup.py`, `opentensor-metrics.com` _(+3 more)_
+  - IP / domain IOC(s): `finney.opentensor-metrics.com`, `finney.metagraph-stats.com`, `finney.subtensor-telemetry.com`, `opentensor-cdn.com`, `t.opentensor-cdn.com`, `opentensor-metrics.com`, `metagraph-stats.com`, `subtensor-telemetry.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`, `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`

@@ -16,13 +16,6 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 - **Domain (defanged):** `decoraat.net`
 - **Domain (defanged):** `decoorat.net`
 - **Domain (defanged):** `onedow.gesecole.net`
-- **Domain (defanged):** `avktray.dat`
-- **Domain (defanged):** `avk.dll`
-- **Domain (defanged):** `avk.exe`
-- **Domain (defanged):** `kernel32.dll`
-- **Domain (defanged):** `ntdll.dll`
-- **Domain (defanged):** `kernelbase.dll`
-- **Domain (defanged):** `winhttp.dll`
 - **SHA256:** `e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17`
 - **SHA256:** `46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc`
 - **SHA256:** `8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99`
@@ -444,7 +437,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `onedown.gesecole.net`, `decoraat.net`, `decoorat.net`, `onedow.gesecole.net`, `avktray.dat`, `avk.dll`, `avk.exe`, `kernel32.dll` _(+3 more)_
+  - IP / domain IOC(s): `onedown.gesecole.net`, `decoraat.net`, `decoorat.net`, `onedow.gesecole.net`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17`, `46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc`, `8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99`, `29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad`, `de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1`, `5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc`, `d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e`, `6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7`

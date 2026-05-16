@@ -12,9 +12,6 @@ Back to Blog Threat Intel Trivy Compromised a Second Time - Malicious v0.69.4 Re
 
 - **IPv4 (defanged):** `45.148.10.212`
 - **Domain (defanged):** `scan.aquasecurtiy.org`
-- **Domain (defanged):** `runner.worker`
-- **Domain (defanged):** `system.github.token`
-- **Domain (defanged):** `patterns.go`
 - **Domain (defanged):** `scan.aquasecurity.org`
 - **SHA1:** `f77738448eec70113cf711656914b61905b3bd47`
 - **SHA1:** `b9faa60f85f6f780a34b8d0faaf45b3e3966fdda`
@@ -433,7 +430,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.148.10.212`, `scan.aquasecurtiy.org`, `runner.worker`, `system.github.token`, `patterns.go`, `scan.aquasecurity.org`
+  - IP / domain IOC(s): `45.148.10.212`, `scan.aquasecurtiy.org`, `scan.aquasecurity.org`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `f77738448eec70113cf711656914b61905b3bd47`, `b9faa60f85f6f780a34b8d0faaf45b3e3966fdda`, `3c615ac0f29e743eda8863377f9776619fd2db76`, `c19401b2f58dc6d2632cb473d44be98dd8292a93`, `4209dcadeaea6a7df69262fef1beeda940881d4d`, `61fbe20b7589e6b61eedcd5fe1e958e1a95fbd13`, `0d49ceb356f7d4735c63bd0d5c7e67665ec7f80c`, `2e7964d59cd24d1fd2aa4d6a5f93b7f09ea96947` _(+74 more)_

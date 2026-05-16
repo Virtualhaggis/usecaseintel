@@ -16,7 +16,6 @@ Packages like json-bigint-extend , jsonfx , and jsonfb were mimicking the popula
 - **Domain (defanged):** `gameland.21game.live`
 - **Domain (defanged):** `gameland.myapptest.top`
 - **Domain (defanged):** `gameland.nbzysp1.com`
-- **Domain (defanged):** `express.route.prototype.post`
 
 ## MITRE ATT&CK Techniques
 
@@ -253,7 +252,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`, `express.route.prototype.post`
+  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`
 
 
 ## Why this matters

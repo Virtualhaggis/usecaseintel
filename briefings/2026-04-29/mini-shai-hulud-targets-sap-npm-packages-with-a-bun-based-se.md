@@ -16,10 +16,6 @@ The pattern is familiar but also a bit different: a…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `setup.mjs`
-- **Domain (defanged):** `execution.js`
-- **Domain (defanged):** `tmp.987654321.lock`
-- **Domain (defanged):** `api.github`
 - **SHA256:** `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`
 - **SHA256:** `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`
 - **SHA256:** `29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7`
@@ -34,7 +30,6 @@ The pattern is familiar but also a bit different: a…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1546.016** — Installer Packages
 - **T1059.007** — JavaScript
@@ -51,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm preinstall hook executes 'node setup.mjs' / 'bun execution.js' (Mini Shai-Hulud SAP supply chain)
 
-`UC_235_8` · phase: **install** · confidence: **High**
+`UC_235_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +70,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud 'OhNoWhatsGoingOnWithGitHub' dead-drop keyword in outbound URL
 
-`UC_235_9` · phase: **c2** · confidence: **High**
+`UC_235_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +100,7 @@ union
 
 ### [LLM] Mini Shai-Hulud known SHA256 IOC match (setup.mjs / execution.js / runner-memory dumper)
 
-`UC_235_10` · phase: **install** · confidence: **High**
+`UC_235_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -285,7 +280,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Targets SAP npm Packages With a Bun-Based Secret Stealer
 
-`UC_235_7` · phase: **exploit** · confidence: **High**
+`UC_235_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -336,13 +331,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `setup.mjs`, `execution.js`, `tmp.987654321.lock`, `api.github`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`, `29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7`, `a959014aa7b7fc37a9b5730c951776e7db2920a6`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

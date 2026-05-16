@@ -16,14 +16,6 @@ Blog Vulnerabilities & Threats Fake Clawdbot VS Code Extension Installs ScreenCo
 - **Domain (defanged):** `meeting.bulletmailer.net`
 - **Domain (defanged):** `darkgptprivate.com`
 - **Domain (defanged):** `getintwopc.site`
-- **Domain (defanged):** `meeting.bulletmailer`
-- **Domain (defanged):** `clawdbot.getintwopc`
-- **Domain (defanged):** `www.dropbox`
-- **Domain (defanged):** `zoomupdate.msi`
-- **Domain (defanged):** `dwrite.dll`
-- **Domain (defanged):** `extension.js`
-- **Domain (defanged):** `run.bat`
-- **Domain (defanged):** `code.exe`
 - **SHA256:** `e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2`
 - **SHA256:** `d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea`
 - **SHA256:** `adbcdb613c04fd51936cb0863d2417604db0cd04792ab7cae02526d48944c77b`
@@ -581,7 +573,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `178.16.54.253`, `179.43.176.32`, `clawdbot.getintwopc.site`, `meeting.bulletmailer.net`, `darkgptprivate.com`, `getintwopc.site`, `meeting.bulletmailer`, `clawdbot.getintwopc` _(+6 more)_
+  - IP / domain IOC(s): `178.16.54.253`, `179.43.176.32`, `clawdbot.getintwopc.site`, `meeting.bulletmailer.net`, `darkgptprivate.com`, `getintwopc.site`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2`, `d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea`, `adbcdb613c04fd51936cb0863d2417604db0cd04792ab7cae02526d48944c77b`, `04ef48b104d6ebd05ad70f6685ade26c1905495456f52dfe0fb42f550bd43388`

@@ -28,19 +28,6 @@ This blogpost covers newly discovered activities attributed to FrostyNeighbor, t
 - **Domain (defanged):** `shinesafar.sardk.icu`
 - **Domain (defanged):** `e.buzz`
 - **Domain (defanged):** `trojandropper.fr`
-- **Domain (defanged):** `update.js`
-- **Domain (defanged):** `viberpc.dll`
-- **Domain (defanged):** `r.frostyneighbor`
-- **Domain (defanged):** `certificate.pdf`
-- **Domain (defanged):** `certificate.js`
-- **Domain (defanged):** `static.needbinding`
-- **Domain (defanged):** `book-happy.needbindin`
-- **Domain (defanged):** `nama-belakang.nebao`
-- **Domain (defanged):** `view.algsat`
-- **Domain (defanged):** `mickeymousegamesdealer.al`
-- **Domain (defanged):** `hinesafar.sardk`
-- **Domain (defanged):** `shinesafar.sardk`
-- **Domain (defanged):** `best-seller.lavanill`
 
 ## MITRE ATT&CK Techniques
 
@@ -413,7 +400,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `book-happy.needbinding.icu`, `nama-belakang.nebao.icu`, `static.needbinding.icu`, `g.icu`, `view.algsat.icu`, `exavegas.icu`, `hinesafar.sardk.icu`, `shinesafar.sardk.icu` _(+15 more)_
+  - IP / domain IOC(s): `book-happy.needbinding.icu`, `nama-belakang.nebao.icu`, `static.needbinding.icu`, `g.icu`, `view.algsat.icu`, `exavegas.icu`, `hinesafar.sardk.icu`, `shinesafar.sardk.icu` _(+2 more)_
 
 
 ## Why this matters

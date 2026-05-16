@@ -12,8 +12,6 @@ Blog Vulnerabilities & Threats JavaScript, MSBuild, and the Blockchain: Anatomy 
 
 - **IPv4 (defanged):** `80.78.22.206`
 - **Domain (defanged):** `metrics-flow.com`
-- **Domain (defanged):** `analytics.node`
-- **Domain (defanged):** `analytics.pdb`
 - **SHA256:** `012dfb89ebabcb8918efb0952f4a91515048fd3b87558e90fa45a7ded6656c07`
 
 ## MITRE ATT&CK Techniques
@@ -404,7 +402,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `80.78.22.206`, `metrics-flow.com`, `analytics.node`, `analytics.pdb`
+  - IP / domain IOC(s): `80.78.22.206`, `metrics-flow.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `012dfb89ebabcb8918efb0952f4a91515048fd3b87558e90fa45a7ded6656c07`

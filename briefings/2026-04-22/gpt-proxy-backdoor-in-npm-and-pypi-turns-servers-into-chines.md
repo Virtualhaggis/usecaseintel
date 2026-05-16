@@ -11,8 +11,6 @@ Blog Vulnerabilities & Threats GPT-Proxy Backdoor in npm and PyPI turns Servers 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `sync.geeker.indevs.in`
-- **Domain (defanged):** `linux-gnu.so`
-- **Domain (defanged):** `addon.node`
 - **SHA256:** `b3405b8456f4e82f192cdff6fdd5b290a58fafda01fbc08174105b922bd7b3cf`
 - **SHA256:** `5d58ce3119c37f2bd552f4d883a4f4896dfcb8fb04875f844f999497e4ca846d`
 - **SHA256:** `fb3ae78d09c119ec335c3b99a95c97d9bb6f92fd2c7c9b0d3e875347e2f25bb2`
@@ -315,7 +313,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `sync.geeker.indevs.in`, `linux-gnu.so`, `addon.node`
+  - IP / domain IOC(s): `sync.geeker.indevs.in`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `b3405b8456f4e82f192cdff6fdd5b290a58fafda01fbc08174105b922bd7b3cf`, `5d58ce3119c37f2bd552f4d883a4f4896dfcb8fb04875f844f999497e4ca846d`, `fb3ae78d09c119ec335c3b99a95c97d9bb6f92fd2c7c9b0d3e875347e2f25bb2`, `3a3d8f8636fa1db21871005a49ecd7fa59688fa763622fa737ce6b899558b300`, `e5c2b988f369d9e51f30985eb8c1c5ae`

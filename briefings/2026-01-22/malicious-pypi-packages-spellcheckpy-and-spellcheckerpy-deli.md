@@ -17,9 +17,6 @@ Hidden ins…
 - **Domain (defanged):** `updatenet.work`
 - **Domain (defanged):** `dothebest.store`
 - **Domain (defanged):** `cloudzy.com`
-- **Domain (defanged):** `history.php`
-- **Domain (defanged):** `update1.php`
-- **Domain (defanged):** `eu.json.gz`
 
 ## MITRE ATT&CK Techniques
 
@@ -421,7 +418,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `172.86.73.139`, `172.86.73.0`, `updatenet.work`, `dothebest.store`, `cloudzy.com`, `history.php`, `update1.php`, `eu.json.gz`
+  - IP / domain IOC(s): `172.86.73.139`, `172.86.73.0`, `updatenet.work`, `dothebest.store`, `cloudzy.com`
 
 
 ## Why this matters

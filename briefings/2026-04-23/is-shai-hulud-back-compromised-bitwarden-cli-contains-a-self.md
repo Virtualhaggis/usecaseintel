@@ -11,8 +11,6 @@ Blog Vulnerabilities & Threats Is Shai-Hulud Back? Compromised Bitwarden CLI Con
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `audit.checkmarx.cx`
-- **Domain (defanged):** `bw1.js`
-- **Domain (defanged):** `audit.checkmarx`
 - **SHA256:** `37f34aa3b86db6898065f3ca886031978580a15251f2576f6d24c3b778907336`
 - **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
 
@@ -378,7 +376,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `audit.checkmarx.cx`, `bw1.js`, `audit.checkmarx`
+  - IP / domain IOC(s): `audit.checkmarx.cx`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `37f34aa3b86db6898065f3ca886031978580a15251f2576f6d24c3b778907336`, `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`

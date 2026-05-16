@@ -30,13 +30,6 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 
 - **Domain (defanged):** `tutamail.com`
 - **Domain (defanged):** `proton.me`
-- **Domain (defanged):** `termncolor-3.1.0-py3-none-any.whl`
-- **Domain (defanged):** `terminate.dll`
-- **Domain (defanged):** `unicode.py`
-- **Domain (defanged):** `terminate.so`
-- **Domain (defanged):** `libcef.dll`
-- **Domain (defanged):** `vcpktsvr.exe`
-- **Domain (defanged):** `policy.dllcppage.dll`
 - **Domain (defanged):** `helper.zulipchat.com`
 - **MD5:** `48be833b0b0ca1ad3cf99c66dc89c3f4`
 - **MD5:** `5152410aeef667ffaf42d40746af4d84`
@@ -483,7 +476,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tutamail.com`, `proton.me`, `termncolor-3.1.0-py3-none-any.whl`, `terminate.dll`, `unicode.py`, `terminate.so`, `libcef.dll`, `vcpktsvr.exe` _(+2 more)_
+  - IP / domain IOC(s): `tutamail.com`, `proton.me`, `helper.zulipchat.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `48be833b0b0ca1ad3cf99c66dc89c3f4`, `5152410aeef667ffaf42d40746af4d84`, `0a5a06fa2e74a57fd5ed8e85f04a483a`, `e4a0ad38fd18a0e11199d1c52751908b`, `5598baa59c716590d8841c6312d8349e`, `968782b4feb4236858e3253f77ecf4b0`, `b55b6e364be44f27e3fecdce5ad69eca`, `02f4701559fc40067e69bb426776a54f` _(+10 more)_

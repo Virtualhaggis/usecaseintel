@@ -22,16 +22,6 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 
 - **IPv4 (defanged):** `31.172.71.5`
 - **Domain (defanged):** `progamevl.ru`
-- **Domain (defanged):** `tmp.exe`
-- **Domain (defanged):** `killfiles.nmj`
-- **Domain (defanged):** `killfiles.nmo`
-- **Domain (defanged):** `schtask.exe`
-- **Domain (defanged):** `schtask2.exe`
-- **Domain (defanged):** `rsocx.exe`
-- **Domain (defanged):** `hacktool.rsocx`
-- **Domain (defanged):** `rubeus.exe`
-- **Domain (defanged):** `riskware.rubeus`
-- **Domain (defanged):** `cmd.exe`
 
 ## MITRE ATT&CK Techniques
 
@@ -429,7 +419,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `31.172.71.5`, `progamevl.ru`, `tmp.exe`, `killfiles.nmj`, `killfiles.nmo`, `schtask.exe`, `schtask2.exe`, `rsocx.exe` _(+4 more)_
+  - IP / domain IOC(s): `31.172.71.5`, `progamevl.ru`
 
 
 ## Why this matters

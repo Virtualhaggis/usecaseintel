@@ -11,10 +11,7 @@ Back to Blog Threat Intel Malicious npm Releases Found in Popular React Native P
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `45.32.150.251`
-- **Domain (defanged):** `init.json`
 - **Domain (defanged):** `proton.me`
-- **Domain (defanged):** `init.js`
-- **Domain (defanged):** `child.js`
 
 ## MITRE ATT&CK Techniques
 
@@ -251,7 +248,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.32.150.251`, `init.json`, `proton.me`, `init.js`, `child.js`
+  - IP / domain IOC(s): `45.32.150.251`, `proton.me`
 
 
 ## Why this matters

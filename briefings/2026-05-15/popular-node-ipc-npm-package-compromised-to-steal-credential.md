@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc supply chain: DNS TXT exfil to azurestaticprovider.net / bt.node.js with xh/xd/xf labels
 
-`UC_4_8` · phase: **c2** · confidence: **High**
+`UC_5_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceEvents
 
 ### [LLM] node-ipc malicious version install via npm/yarn/pnpm (9.1.6, 9.2.3, 12.0.1)
 
-`UC_4_9` · phase: **delivery** · confidence: **High**
+`UC_5_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### [LLM] Node.js process stages credential archive: tar.gz in temp followed by DNS bursts
 
-`UC_4_10` · phase: **actions** · confidence: **Medium**
+`UC_5_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular node-ipc npm package compromised to steal credentials
 
-`UC_4_7` · phase: **exploit** · confidence: **High**
+`UC_5_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

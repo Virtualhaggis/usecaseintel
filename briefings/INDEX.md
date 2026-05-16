@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-16
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
+- [critical linux kernel flaw ssh keysign pwn exposes ssh keys ](./2026-05-16/critical-linux-kernel-flaw-ssh-keysign-pwn-exposes-ssh-keys-.md)
 - [google project zero discloses zero click exploit chain for p](./2026-05-16/google-project-zero-discloses-zero-click-exploit-chain-for-p.md)
 
 ## 2026-05-15
@@ -32,7 +33,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [shai hulud worm steals npm github aws and kubernetes secrets](./2026-05-15/shai-hulud-worm-steals-npm-github-aws-and-kubernetes-secrets.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
-- [tycoon 2fa operators adopt oauth device code phishing to byp](./2026-05-15/tycoon-2fa-operators-adopt-oauth-device-code-phishing-to-byp.md)
 
 ## 2026-05-14
 - [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
