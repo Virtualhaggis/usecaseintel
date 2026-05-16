@@ -34,11 +34,54 @@ Over the past few months, we have cond…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `female-disorder-beta-metropolitan.trycloudflare.com`
+- **Domain (defanged):** `file.bigcloud.n-e.kr`
+- **Domain (defanged):** `vscode.dev`
+- **Domain (defanged):** `www.yespp.co.kr`
+- **Domain (defanged):** `out.php`
+- **Domain (defanged):** `node896147.dwservice.net`
+- **Domain (defanged):** `node828765.dwservice.net`
+- **Domain (defanged):** `node484265.dwservice.net`
+- **Domain (defanged):** `www.dwservice.net`
+- **Domain (defanged):** `naedomain.hankook`
+- **Domain (defanged):** `opedromos1.r-e.kr`
+- **Domain (defanged):** `morames.r-e.kr`
+- **Domain (defanged):** `load.ssangyongcne.o-r.kr`
+- **Domain (defanged):** `load.yju.o-r.kr`
+- **Domain (defanged):** `attach.docucloud.o-r.kr`
+- **Domain (defanged):** `load.supershop.o-r.kr`
+- **Domain (defanged):** `load.erasecloud.n-e.kr`
+- **Domain (defanged):** `cms.spaceyou.o-r.kr`
+- **Domain (defanged):** `erp.spaceme.p-e.kr`
+- **Domain (defanged):** `load.auraria.org`
+- **Domain (defanged):** `www.pyrotech.co.kr`
+- **Domain (defanged):** `newjo-imd.com`
+- **Domain (defanged):** `www.yespp.co`
+- **Domain (defanged):** `p-e.kr`
+- **Domain (defanged):** `o-r.kr`
+- **Domain (defanged):** `n-e.kr`
+- **Domain (defanged):** `r-e.kr`
+- **Domain (defanged):** `kro.kr`
+- **SHA1:** `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`
+- **SHA1:** `1e3c50d64110be466c0b4a45222e81d2c9352888`
 - **MD5:** `995a0a49ae4b244928b3f67e2bfd7a6e`
 - **MD5:** `52f1ff082e981cbdfd1f045c6021c63f`
 - **MD5:** `65fc9f06de5603e2c1af9b4f288bb22c`
 - **MD5:** `8e15c4d4f71bdd9dbc48cd2cabc87806`
 - **MD5:** `8983ffa6da23e0b99ccc58c17b9788c7`
+- **MD5:** `9fe43e08c8f446554340f972dac8a68c`
+- **MD5:** `c19aeaedbbfc4e029f7e9bdface495b9`
+- **MD5:** `a7f0a18ac87e982d6f32f7a715e12532`
+- **MD5:** `f4465403f9693939fe9c439f0ab33610`
+- **MD5:** `5c373c2116ab4a615e622f577e22e9be`
+- **MD5:** `d1ec20144c83bba921243e72c517da5e`
+- **MD5:** `58ac2f65e335922be3f60e57099dc8a3`
+- **MD5:** `f73ba062116ea9f37d072aa41c7f5108`
+- **MD5:** `7e0825019d0de0c1c4a1673f94043ddb`
+- **MD5:** `08160acf08fccecde7b34090db18b321`
+- **MD5:** `94faed9af49c98a89c8acc55e97276c9`
+- **MD5:** `c42ae004badddd3017adadbdd1421e00`
+- **MD5:** `9ca5f93a732f404bbb2cee848f5bbda0`
+- **MD5:** `678fb1a87af525c33ba2492552d5c0e2`
 
 ## MITRE ATT&CK Techniques
 
@@ -62,118 +105,12 @@ Over the past few months, we have cond…
 - **T1569.002** — Service Execution
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1218.010** — System Binary Proxy Execution: Regsvr32
-- **T1543.003** — Create or Modify System Process: Windows Service
-- **T1218.011** — System Binary Proxy Execution: Rundll32
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1564.003** — Hide Artifacts: Hidden Window
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Kimsuky HelloDoor 'tdll' Run-key persistence with regsvr32 loader
-
-`UC_63_13` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\tdll" Registry.registry_value_data="*regsvr32*" Registry.registry_value_data="*/s*" by host Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process_path
-| `drop_dm_object_name(Registry)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
-| where RegistryValueName =~ "tdll"
-| where RegistryValueData has "regsvr32" and RegistryValueData has "/s"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
-| order by Timestamp desc
-```
-
-### [LLM] Kimsuky httpMalice persistence: 'Everything 1.9a-/1.8a-' Run-key or CacheDB service install
-
-`UC_63_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" (Registry.registry_value_name="Everything 1.9a-*" OR Registry.registry_value_name="Everything 1.8a-*") by host Registry.user Registry.registry_value_name Registry.registry_value_data
-| `drop_dm_object_name(Registry)`
-| eval signal="httpMalice Run key (Everything 1.9a-/1.8a-)"
-| append [
-    | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where Services.service_name="CacheDB" Services.service_path="*rundll32*,load*" by host Services.service_name Services.service_path Services.start_mode
-    | `drop_dm_object_name(Services)`
-    | eval signal="httpMalice CacheDB service install"
-  ]
-```
-
-**Defender KQL:**
-```kql
-union
-(DeviceRegistryEvents
-  | where Timestamp > ago(7d)
-  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-  | where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
-  | where RegistryValueName matches regex @"(?i)^Everything 1\.[89]a-\d+$"
-  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-            Signal = "httpMalice RunKey (Everything 1.9a-/1.8a-)",
-            Detail = strcat(RegistryValueName, " => ", RegistryValueData)),
-(DeviceEvents
-  | where Timestamp > ago(7d)
-  | where ActionType == "ServiceInstalled"
-  | extend AF = parse_json(AdditionalFields)
-  | extend SvcName = tostring(AF.ServiceName), SvcImage = tostring(AF.ServiceFileName)
-  | where SvcName =~ "CacheDB"
-  | where SvcImage has "rundll32" and SvcImage has ",load"
-  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-            Signal = "httpMalice CacheDB service install",
-            Detail = SvcImage)
-| order by Timestamp desc
-```
-
-### [LLM] Kimsuky JSE dropper: wscript -> powershell hidden + certutil -decode chain
-
-`UC_63_15` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="powershell.exe" Processes.process="*windowstyle*hidden*" Processes.process="*certutil*-decode*" by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| where match(parent_process_name, "(?i)wscript\.exe|cscript\.exe|explorer\.exe")
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "powershell.exe"
-| where ProcessCommandLine has "windowstyle" and ProcessCommandLine has "hidden"
-| where ProcessCommandLine has "certutil" and ProcessCommandLine has "-decode"
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","explorer.exe","cmd.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName in~ ("regsvr32.exe","rundll32.exe")
-    | where InitiatingProcessFileName =~ "powershell.exe"
-    | where FolderPath has @"C:\ProgramData" or ProcessCommandLine has @"C:\ProgramData"
-    | project FollowOnTime = Timestamp, DeviceName, FollowOnCmd = ProcessCommandLine, FollowOnFile = FileName
-  ) on DeviceName
-| where isnull(FollowOnTime) or FollowOnTime between (Timestamp .. Timestamp + 5m)
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -581,12 +518,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`
+  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`, `file.bigcloud.n-e.kr`, `vscode.dev`, `www.yespp.co.kr`, `out.php`, `node896147.dwservice.net`, `node828765.dwservice.net`, `node484265.dwservice.net` _(+20 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`
+  - file hash IOC(s): `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`, `1e3c50d64110be466c0b4a45222e81d2c9352888`, `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`, `9fe43e08c8f446554340f972dac8a68c` _(+13 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

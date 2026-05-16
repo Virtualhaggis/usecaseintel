@@ -9828,6 +9828,32 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill">CVE-2026-29431</span>' +
              '<span class="tour-preview-pill">lsass</span>' },
 
+  { section: "Articles", view: "articles",
+    target: "#articles article.card .btn-hunt",
+    fallback: "#articles article.card",
+    title: "Hunt IOCs — ready-to-paste queries",
+    body: "Every article card has a <b>Hunt IOCs</b> button. Pick the IOC types you care about (hashes, domains, IPs, CVEs, software versions), pick a platform per type, and the drawer builds a ready-to-paste query — Defender KQL, Sentinel KQL, Sigma, Splunk SPL, or Datadog — pre-loaded with that article's exact indicators.",
+    preview: '<span class="tour-preview-meta">e.g. hashes →</span>' +
+             '<span class="tour-preview-pill platform-d">Defender</span>' +
+             '<span class="tour-preview-meta">·</span>' +
+             '<span class="tour-preview-meta">domains →</span>' +
+             '<span class="tour-preview-pill platform-s">Sentinel</span>' +
+             '<span class="tour-preview-meta">·</span>' +
+             '<span class="tour-preview-meta">IPs →</span>' +
+             '<span class="tour-preview-pill platform-p">Splunk</span>',
+    onShow: (stepIndex) => {
+      // Find the first card that actually has IOCs to hunt — boring
+      // cards (RSS-only stubs with empty .btn-hunt counts) make the
+      // spotlight feel pointless. Falls back to first card if nothing
+      // matches.
+      const cards = Array.from(document.querySelectorAll('#articles article.card'));
+      const withIocs = cards.find(c => {
+        const b = c.querySelector('.btn-hunt');
+        return b && !b.classList.contains('btn-hunt-empty');
+      }) || cards[0];
+      if (withIocs) withIocs.scrollIntoView({behavior: 'smooth', block: 'center'});
+    } },
+
   { section: "ATT&CK Matrix", view: "matrix",
     // Spotlight the wrap, NOT #matrixGrid — the grid has overflow-x:auto
     // and a 14×150px = 2,100px min-width, so a position:relative spotlight
@@ -9889,6 +9915,29 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill">SHA256</span>' +
              '<span class="tour-preview-pill">URLs</span>' +
              '<span class="tour-preview-meta">→ CSV / JSON / Splunk lookup</span>' },
+
+  { section: "Threat Intel", view: "intel",
+    target: "#intelAbout .intel-urls",
+    fallback: "#intelAbout",
+    title: "Pull the feed into your SOC",
+    body: "Subscribe your TIP, SIEM, or analyst RSS reader directly — every URL refreshes automatically every two hours. CSV for Splunk lookups, JSON for OpenCTI / MISP, STIX 2.1 for Sentinel TAXII connectors, and an RSS feed for Slack / Feedly / Inoreader.",
+    preview: '<span class="tour-preview-pill">intel/iocs.csv</span>' +
+             '<span class="tour-preview-pill">intel/iocs.json</span>' +
+             '<span class="tour-preview-pill">intel/iocs.stix.json</span>' +
+             '<span class="tour-preview-pill">📡 iocs.rss.xml</span>',
+    onShow: () => {
+      // The "Pull the feed" block lives inside a <details> that's
+      // collapsed by default. Open it so the spotlight has something
+      // visible to land on; harmless if already open.
+      const det = document.getElementById('intelAbout');
+      if (det && !det.open) det.open = true;
+      // Scroll the explainer into view so the spotlight punch-hole
+      // matches what the user actually sees.
+      setTimeout(() => {
+        const el = document.querySelector('#intelAbout .intel-urls');
+        if (el) el.scrollIntoView({behavior: 'smooth', block: 'center'});
+      }, 80);
+    } },
 
   { section: "Threat Actors", view: "actors",
     target: "#actorsGlobe", fallback: ".actors-map-wrap",

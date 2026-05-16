@@ -45,110 +45,12 @@ In 2024, ESET researchers noticed previously undocumented malware in the netw…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
-- **T1574.014** — Hijack Execution Flow: AppDomainManager
-- **T1218** — System Binary Proxy Execution
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] NosyDoor AppDomainManager hijack: UevAppMonitor.exe executing from non-standard path
-
-`UC_519_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_name="UevAppMonitor.exe" AND Processes.process_path!="*\\Windows\\System32\\*" AND Processes.process_path!="*\\Windows\\SysWOW64\\*" BY Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | eval suspicious_path=if(match(process_path,"(?i)\\\\Microsoft\\.NET\\\\Framework(64)?\\\\"),"yes","no") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// LongNosedGoblin NosyDoor stage-2 — UevAppMonitor.exe is a legitimate Windows binary that *only* ships in System32. Execution from anywhere else (especially Microsoft.NET\Framework) means a copy was staged by the dropper to side-load SharedReg.dll via AppDomainManager.
-let UevExec =
-    DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "UevAppMonitor.exe"
-    | where not(FolderPath startswith @"C:\Windows\System32\")
-    | where not(FolderPath startswith @"C:\Windows\SysWOW64\")
-    | project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessFolderPath, SHA256;
-let SharedRegLoad =
-    DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where InitiatingProcessFileName =~ "UevAppMonitor.exe"
-    | where FileName =~ "SharedReg.dll"
-    | where not(FolderPath startswith @"C:\Windows\WinSxS\")
-    | project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-              InitiatingProcessFolderPath;
-UevExec
-| union SharedRegLoad
-| order by Timestamp desc
-```
-
-### [LLM] NosyDoor persistence: scheduled task 'OneDrive Reporting Task-S-1-5-21-' under Microsoft folder
-
-`UC_519_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE Filesystem.file_path="*\\Windows\\System32\\Tasks\\Microsoft\\OneDrive Reporting Task-S-1-5-21-*" BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// LongNosedGoblin NosyDoor persistence — scheduled task with literal prefix "OneDrive Reporting Task-S-1-5-21-" registered under \Microsoft\ task folder.
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated", "FileRenamed")
-| where FolderPath has @"\Windows\System32\Tasks\Microsoft\"
-| where FileName startswith "OneDrive Reporting Task-S-1-5-21-"
-| project Timestamp, DeviceName, FolderPath, FileName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessAccountSid, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] NosyDoor dropper file artefacts in C:\Windows\Microsoft.NET\Framework
-
-`UC_519_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files_seen FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_path="*\\Windows\\Microsoft.NET\\Framework\\*" OR Filesystem.file_path="*\\Windows\\Microsoft.NET\\Framework64\\*") AND (Filesystem.file_name="SharedReg.dll" OR Filesystem.file_name="log.cached" OR Filesystem.file_name="netfxsbs9.hkf" OR Filesystem.file_name="UevAppMonitor.exe.config" OR Filesystem.file_name="UevAppMonitor.exe" OR Filesystem.file_name="error.txt") BY Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where mvcount(files_seen) >= 2 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// LongNosedGoblin NosyDoor dropper — writes a known set of artefacts into C:\Windows\Microsoft.NET\Framework so the relocated UevAppMonitor.exe loads SharedReg.dll via .config-driven AppDomainManager injection.
-let NosyDoorFiles = dynamic([
-    "SharedReg.dll",
-    "log.cached",
-    "netfxsbs9.hkf",            // typo of legitimate netfxsbs12.hkf
-    "UevAppMonitor.exe.config",
-    "UevAppMonitor.exe",         // staged copy from System32
-    "error.txt"                  // dropped on stage-2 decryption errors
-]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where FolderPath in~ (@"C:\Windows\Microsoft.NET\Framework", @"C:\Windows\Microsoft.NET\Framework64")
-   or FolderPath endswith @"\Microsoft.NET\Framework"
-   or FolderPath endswith @"\Microsoft.NET\Framework64"
-| where FileName in~ (NosyDoorFiles)
-// Exclude legitimate .NET servicing — the genuine SharedReg DLL is named SharedReg12.dll, not SharedReg.dll
-| where not(InitiatingProcessFileName in~ ("TrustedInstaller.exe", "msiexec.exe", "setup.exe") and InitiatingProcessFolderPath startswith @"C:\Windows\")
-| summarize FileSet = make_set(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            Writers = make_set(InitiatingProcessFileName)
-  by DeviceName, FolderPath, InitiatingProcessAccountName
-| where array_length(FileSet) >= 2     // at least two of the four sibling artefacts
-| order by LastSeen desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -383,4 +285,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

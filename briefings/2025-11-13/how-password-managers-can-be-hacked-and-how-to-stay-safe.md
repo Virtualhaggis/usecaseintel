@@ -28,134 +28,12 @@ However, t…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1056.003** — Input Capture: Web Portal Capture
-- **T1555.005** — Credentials from Password Stores: Password Managers
-- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1102** — Web Service
-- **T1567** — Exfiltration Over Web Service
-- **T1071.002** — Application Layer Protocol: File Transfer Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Typosquat domains impersonating 1Password / Bitwarden (the1password.com, app1password.com, appbitwarden.com)
-
-`UC_578_6` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest from datamodel=Web where Web.url IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*") by Web.src host Web.action | `drop_dm_object_name(Web)` | append [| tstats `summariesonly` count values(Network_Traffic.dest) as dest values(Network_Traffic.app) as app from datamodel=Network_Traffic where Network_Traffic.dest IN ("*the1password.com*","*app1password.com*","*appbitwarden.com*") by Network_Traffic.src _time | `drop_dm_object_name(Network_Traffic)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _PMTyposquats = dynamic(["the1password.com","app1password.com","appbitwarden.com"]);
-union isfuzzy=true
-    ( DeviceNetworkEvents
-      | where Timestamp > ago(7d)
-      | where RemoteUrl has_any (_PMTyposquats)
-      | project Timestamp, Source="NetworkEvent", DeviceName, AccountName=InitiatingProcessAccountName,
-                Process=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
-                Indicator=RemoteUrl, RemoteIP ),
-    ( DeviceEvents
-      | where Timestamp > ago(7d)
-      | where ActionType == "DnsQueryResponse"
-      | extend QName = tostring(parse_json(AdditionalFields).QueryName)
-      | where QName has_any (_PMTyposquats)
-      | project Timestamp, Source="DnsQuery", DeviceName, AccountName=InitiatingProcessAccountName,
-                Process=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine,
-                Indicator=QName, RemoteIP="" ),
-    ( EmailUrlInfo
-      | where Timestamp > ago(7d)
-      | where UrlDomain has_any (_PMTyposquats)
-      | project Timestamp, Source="EmailUrl", DeviceName="", AccountName="",
-                Process="", ProcessCmd="", Indicator=Url, RemoteIP="" ),
-    ( UrlClickEvents
-      | where Timestamp > ago(7d)
-      | where Url has_any (_PMTyposquats)
-      | project Timestamp, Source="UrlClick", DeviceName="", AccountName=AccountUpn,
-                Process="", ProcessCmd="", Indicator=Url, RemoteIP=IPAddress )
-| order by Timestamp desc
-```
-
-### [LLM] InvisibleFerret 'ssh_zcp' module reads 1Password / Dashlane extension storage
-
-`UC_578_7` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","pythonw.exe","python3.exe") OR Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe")) AND (Processes.process IN ("*bow.py*","*pay.py*","*adc.py*","*ssh_zcp*","*aeblfdkhhhdcdjpifhhbdiojplfjncoa*","*fdjamakpfbbddfjaooikfcpapjohcfmg*","*dppgmdbiimibapkepcbdbmkaabgiofem*","*\\AppData\\Roaming\\1Password*","*\\AppData\\Roaming\\Dashlane*")) by Processes.dest Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// InvisibleFerret password-manager exfil — python interpreter touching 1Password / Dashlane stores
-let _PyInterpreters = dynamic(["python.exe","pythonw.exe","python3.exe","py.exe"]);
-let _IFModules     = dynamic(["bow.py","pay.py","adc.py","ssh_zcp"]);
-let _PMArtefacts   = dynamic([
-    @"\Local Extension Settings\aeblfdkhhhdcdjpifhhbdiojplfjncoa",   // 1Password 8 (Chrome)
-    @"\Local Extension Settings\dppgmdbiimibapkepcbdbmkaabgiofem",   // 1Password (Edge)
-    @"\Local Extension Settings\fdjamakpfbbddfjaooikfcpapjohcfmg",   // Dashlane (Chrome)
-    @"\AppData\Roaming\1Password",
-    @"\AppData\Roaming\Dashlane",
-    @"\AppData\Local\1Password",
-    @"\AppData\Local\Dashlane"
-]);
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where AccountName !endswith "$"
-| where (FileName in~ (_PyInterpreters)
-      or InitiatingProcessFileName in~ (_PyInterpreters))
-| where ProcessCommandLine has_any (_IFModules)
-      or ProcessCommandLine has_any (_PMArtefacts)
-| project Timestamp, DeviceName, AccountName,
-          Process       = FileName,
-          ProcessCmd    = ProcessCommandLine,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd     = InitiatingProcessCommandLine,
-          ParentFolder  = InitiatingProcessFolderPath,
-          SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Python interpreter egress to api.telegram.org / DeceptiveDevelopment C2 IPs
-
-`UC_578_8` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port values(All_Traffic.app) as app values(All_Traffic.process_name) as proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN ("python.exe","pythonw.exe","python3.exe","py.exe") AND (All_Traffic.dest IN ("api.telegram.org","95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194","147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56") OR All_Traffic.dest_port IN (21,990)) by All_Traffic.src host All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// InvisibleFerret exfil channels — python interpreter to Telegram API or DeceptiveDevelopment C2 IPs
-let _PyInterpreters = dynamic(["python.exe","pythonw.exe","python3.exe","py.exe"]);
-let _DDC2 = dynamic([
-    "95.164.17.24","185.235.241.208","147.124.214.129","23.106.253.194",
-    "147.124.214.237","67.203.7.171","45.61.131.218","135.125.248.56"
-]);
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ (_PyInterpreters)
-| where InitiatingProcessAccountName !endswith "$"
-| where RemoteIPType == "Public"
-| where RemoteUrl has "api.telegram.org"
-     or RemoteIP in (_DDC2)
-     or RemotePort in (21, 990)        // FTP / FTPS — the article's other named exfil channel
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-          Process=InitiatingProcessFileName,
-          ProcessCmd=InitiatingProcessCommandLine,
-          ProcessFolder=InitiatingProcessFolderPath,
-          RemoteUrl, RemoteIP, RemotePort, Protocol
-| order by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -369,4 +247,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

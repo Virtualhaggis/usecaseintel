@@ -57,111 +57,12 @@ ESET researchers uncovered a multiplatform supply-chain attack by North Korea-al
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1554** — Compromise Client Software Binary
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1102** — Web Service
-- **T1584.004** — Compromise Infrastructure: Server
-- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] ScarCruft sqgame supply-chain — download from xiazai.sqgame.com.cn / sqgame.com.cn
-
-`UC_216_7` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.http_user_agent) as user_agent values(Web.bytes_in) as bytes_in from datamodel=Web where (Web.url="*xiazai.sqgame.com.cn/dating/*.zip" OR Web.dest IN ("xiazai.sqgame.com.cn","sqgame.com.cn","www.sqgame.net","sqgame.net") OR Web.url="*sqgame.com.cn/ybht.apk*" OR Web.url="*sqgame.com.cn/sqybhs.apk*") by host, Web.src, Web.dest, Web.user | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-union
-(DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("xiazai.sqgame.com.cn","sqgame.com.cn","sqgame.net")
-    or RemoteUrl matches regex @"(?i)xiazai\.sqgame\.com\.cn/dating/\d+\.zip"
-    or RemoteUrl has_any ("/ybht.apk","/sqybhs.apk")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName, EventTable="Network"),
-(DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FileOriginUrl has_any ("xiazai.sqgame.com.cn","sqgame.com.cn","sqgame.net")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA1, SHA256,
-          FileOriginUrl, FileOriginIP,
-          InitiatingProcessFileName, InitiatingProcessAccountName,
-          RemoteUrl=FileOriginUrl, RemoteIP=tostring(FileOriginIP), RemotePort=int(null),
-          InitiatingProcessFolderPath, InitiatingProcessCommandLine, EventTable="File")
-| order by Timestamp desc
-```
-
-### [LLM] Trojanized sqgame mono.dll / BirdCall APK hash hit on Windows endpoint
-
-`UC_216_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("B06110E0FEB7592872E380B7E3B8F77D80DD1108","03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF","FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9") OR Filesystem.file_name IN ("mono.dll","ybht.apk","sqybhs.apk") by host, Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | where file_name!="mono.dll" OR (file_name="mono.dll" AND match(file_path,"(?i)sqgame"))
-```
-
-**Defender KQL:**
-```kql
-let scarcruft_sha1 = dynamic(["B06110E0FEB7592872E380B7E3B8F77D80DD1108","03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF","FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9"]);
-union
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (scarcruft_sha1)
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, SHA256,
-            FileOriginUrl, InitiatingProcessFileName, InitiatingProcessFolderPath,
-            InitiatingProcessCommandLine, InitiatingProcessAccountName, EvidenceTable="FileEvents" ),
-( DeviceImageLoadEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (scarcruft_sha1)
-     or (FileName =~ "mono.dll" and FolderPath has "sqgame" and SHA1 == "B06110E0FEB7592872E380B7E3B8F77D80DD1108")
-  | project Timestamp, DeviceName, ActionType="ImageLoaded", FileName, FolderPath, SHA1, SHA256,
-            FileOriginUrl="", InitiatingProcessFileName, InitiatingProcessFolderPath,
-            InitiatingProcessCommandLine, InitiatingProcessAccountName=InitiatingProcessAccountName,
-            EvidenceTable="ImageLoad" ),
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (scarcruft_sha1) or InitiatingProcessSHA1 in (scarcruft_sha1)
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, SHA256,
-            FileOriginUrl="", InitiatingProcessFileName, InitiatingProcessFolderPath,
-            InitiatingProcessCommandLine, InitiatingProcessAccountName, EvidenceTable="ProcessEvents" )
-| order by Timestamp desc
-```
-
-### [LLM] ScarCruft second-stage staging — connection to compromised KR sites or BirdCall C2 IPs
-
-`UC_216_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("1980food.co.kr","www.1980food.co.kr","inodea.com","www.inodea.com","lawwell.co.kr","www.lawwell.co.kr","39.106.249.68","211.239.117.117","114.108.128.157","221.143.43.214","222.231.2.20","222.231.2.23","222.231.2.41") by host, All_Traffic.src, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let scarcruft_hosts = dynamic(["1980food.co.kr","www.1980food.co.kr","inodea.com","www.inodea.com","lawwell.co.kr","www.lawwell.co.kr"]);
-let scarcruft_ips   = dynamic(["39.106.249.68","211.239.117.117","114.108.128.157","221.143.43.214","222.231.2.20","222.231.2.23","222.231.2.41"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (scarcruft_ips)
-   or RemoteUrl has_any (scarcruft_hosts)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessSHA1, InitiatingProcessSHA256,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
-| extend SqgameClientHit = iif(InitiatingProcessFolderPath has "sqgame" or InitiatingProcessFileName has "sqgame", "YES", "")
-| order by SqgameClientHit desc, Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -338,4 +239,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

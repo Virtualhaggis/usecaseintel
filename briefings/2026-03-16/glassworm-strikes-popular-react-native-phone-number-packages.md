@@ -34,105 +34,12 @@ On March 16, 2026, two React Native npm packages from the AstrOOnauta were backd
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
-- **T1105** — Ingress Tool Transfer
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Glassworm stage-2/stage-3 C2 callback to 45.32.150.251 or 217.69.3.152
-
-`UC_353_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.dest IN ("45.32.150.251","217.69.3.152") by All_Traffic.src, All_Traffic.user, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count from datamodel=Web where Web.dest IN ("45.32.150.251","217.69.3.152") OR match(Web.url,"(?i)get_arhive_npm|/wall$|3e4Tg8V") by Web.src, Web.user, Web.dest, Web.url | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let GlassWormIPs = dynamic(["45.32.150.251","217.69.3.152"]);
-let GlassWormUrlMarkers = dynamic(["get_arhive_npm","3e4Tg8V","/wall"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (GlassWormIPs)
-   or (isnotempty(RemoteUrl) and RemoteUrl has_any (GlassWormUrlMarkers))
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
-| order by Timestamp desc
-```
-
-### [LLM] Glassworm stage-3 persistence: schtasks UpdateApp + HKCU Run DPKCbbQ
-
-`UC_353_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*UpdateApp*" Processes.process="*onstart*" Processes.process="*Bypass*" by Processes.dest, Processes.user | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run\\*" Registry.registry_value_name="DPKCbbQ" by Registry.dest, Registry.user, Registry.registry_value_data, Registry.process_name | `drop_dm_object_name(Registry)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let TaskPersistence = DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has "UpdateApp"
-| where ProcessCommandLine has "onstart"
-| where ProcessCommandLine has_any ("Bypass","-rl highest")
-| project Timestamp, DeviceName, AccountName, FileName,
-          ProcessCommandLine, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, Indicator="schtasks_UpdateApp";
-let RegPersistence = DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\CurrentVersion\Run"
-| where RegistryValueName =~ "DPKCbbQ"
-   or RegistryValueData has @"powershell" and RegistryValueData has "WindowStyle Hidden" and RegistryValueData has "Bypass"
-| project Timestamp, DeviceName, RegistryKey, RegistryValueName,
-          RegistryValueData, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, Indicator="HKCU_Run_DPKCbbQ";
-union TaskPersistence, RegPersistence
-| order by Timestamp desc
-```
-
-### [LLM] Glassworm side-staged Node.js runtime under %APPDATA%\_node_x86 / _node_x64
-
-`UC_353_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\AppData\\Roaming\\_node_x86\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\_node_x64\\*" OR Filesystem.file_name="node-v22.9.0-win-x86.zip" OR Filesystem.file_name="node-v22.9.0-win-x64.zip") by Filesystem.dest, Filesystem.user | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Web where match(Web.url,"nodejs\.org/download/release/v22\.9\.0/node-v22\.9\.0-win-(x86|x64)\.zip") by Web.src, Web.user, Web.url, Web.user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let SideStageFolders = dynamic([@"\AppData\Roaming\_node_x86\", @"\AppData\Roaming\_node_x64\"]);
-let NodeZips = dynamic(["node-v22.9.0-win-x86.zip","node-v22.9.0-win-x64.zip"]);
-let FileSig = DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FolderPath has_any (SideStageFolders) or FileName in~ (NodeZips)
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, Indicator="appdata_node_runtime";
-let NetSig = DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "nodejs.org/download/release/v22.9.0/node-v22.9.0-win"
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe")
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, Indicator="nodejs_zip_download_nonbrowser";
-union FileSig, NetSig
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -396,4 +303,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

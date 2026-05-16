@@ -37,133 +37,12 @@ In recent years, EDR killers have become one of the most commonly seen tools in 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1543.003** — Persistence (article-specific)
-- **T1068** — Exploitation for Privilege Escalation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1014** — Rootkit
-- **T1562.004** — Impair Defenses: Disable or Modify System Firewall
-- **T1055** — Process Injection
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] BYOVD: Genshin Impact mhyprot.sys driver dropped/loaded outside legitimate game install (Embargo evil-mhyprot-cli)
-
-`UC_346_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_name IN ("mhyprot.sys","mhyprot2.sys") by host Filesystem.file_path Filesystem.file_name Filesystem.process_guid Filesystem.user | `drop_dm_object_name(Filesystem)` | search NOT (file_path="*\\Genshin Impact\\*" OR file_path="*\\miHoYo\\*" OR file_path="*\\HoYoPlay\\*") | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentControlSet\\Services\\mhyprot*" by host Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _legit_paths = dynamic([@"\Genshin Impact\", @"\miHoYo\", @"\HoYoPlay\"]);
-union
-(
-  DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "FileCreated"
-  | where FileName in~ ("mhyprot.sys","mhyprot2.sys")
-  | where not(FolderPath has_any (_legit_paths))
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-            InitiatingProcessFileName, InitiatingProcessCommandLine,
-            InitiatingProcessAccountName, Source="FileWrite"
-),
-(
-  DeviceRegistryEvents
-  | where Timestamp > ago(30d)
-  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-  | where RegistryKey has @"\CurrentControlSet\Services\mhyprot"
-      or (RegistryValueName =~ "ImagePath" and RegistryValueData has_any ("mhyprot.sys","mhyprot2.sys"))
-  | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData,
-            InitiatingProcessFileName, InitiatingProcessCommandLine,
-            InitiatingProcessAccountName, Source="ServiceReg"
-)
-| order by Timestamp desc
-```
-
-### [LLM] EDRSilencer-style WFP filter blocking outbound traffic from named EDR binaries
-
-`UC_346_10` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="EDRSilencer.exe" OR (Processes.process_name IN ("netsh.exe","powershell.exe","pwsh.exe") AND Processes.process IN ("*FwpmFilterAdd*","*Add-NetFirewallRule*MsSense*","*Add-NetFirewallRule*MsMpEng*","*New-NetFirewallRule*Block*Outbound*MsSense*","*FwpmEngineOpen*"))) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | append [search source="WinEventLog:Security" EventCode=5157 (Application="*\\MsMpEng.exe" OR Application="*\\MsSense.exe" OR Application="*\\SentinelAgent.exe" OR Application="*\\CSFalconService.exe" OR Application="*\\ekrn.exe" OR Application="*\\elastic-agent.exe" OR Application="*\\xagt.exe" OR Application="*\\CarbonBlack*" OR Application="*\\bdservicehost.exe") | bin _time span=10m | stats count dc(Application) as edr_binaries values(Application) as Apps by host _time | where count>20 OR edr_binaries>=2] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _edr_binaries = dynamic(["MsMpEng.exe","MsSense.exe","MsSenseS.exe","SenseIR.exe","SentinelAgent.exe","SentinelServiceHost.exe","CSFalconService.exe","CSFalconContainer.exe","ekrn.exe","egui.exe","elastic-agent.exe","xagt.exe","cb.exe","RepMgr.exe","bdservicehost.exe","cyserver.exe","cytray.exe","qualysagent.exe","TmListen.exe","PccNTMon.exe"]);
-let _edr_binaries_lower = _edr_binaries | mv-apply b=_edr_binaries to typeof(string) on (project tolower(b));
-union
-(
-  // Direct execution of the EDRSilencer tool / clones
-  DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where FileName =~ "EDRSilencer.exe"
-     or ProcessCommandLine has_any ("FwpmFilterAdd0","FwpmEngineOpen0")
-     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_all ("New-NetFirewallRule","Block","Outbound") and ProcessCommandLine has_any (_edr_binaries))
-     or (FileName =~ "netsh.exe" and ProcessCommandLine has "wfp" and ProcessCommandLine has "add")
-  | project Timestamp, DeviceName, AccountName, FileName,
-            ProcessCommandLine, InitiatingProcessFileName,
-            InitiatingProcessCommandLine, Source="ToolExec"
-),
-(
-  // Non-EDR processes loading the WFP user-mode client (FWPUCLNT.DLL) - rare outside Defender/firewall control panel
-  DeviceImageLoadEvents
-  | where Timestamp > ago(7d)
-  | where FileName =~ "FWPUCLNT.DLL"
-  | where InitiatingProcessFolderPath !startswith @"C:\Windows\"
-      and InitiatingProcessFolderPath !startswith @"C:\Program Files\"
-  | where InitiatingProcessFileName !in~ ("netsh.exe","MsMpEng.exe","svchost.exe","explorer.exe","mmc.exe","WerFault.exe")
-  | project Timestamp, DeviceName, InitiatingProcessFileName,
-            InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-            InitiatingProcessAccountName, Source="WfpDllLoad"
-)
-| order by Timestamp desc
-```
-
-### [LLM] EDR-Freeze: WerFaultSecure.exe abused to suspend AV/EDR processes via MiniDumpWriteDump race
-
-`UC_346_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="WerFaultSecure.exe" AND NOT Processes.parent_process_name IN ("svchost.exe","wermgr.exe","WerFault.exe","services.exe","smss.exe","csrss.exe","taskhostw.exe") by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | search (process="*/dump*" OR process="*-pid*" OR process="* /shared *" OR process="*MiniDumpWriteDump*") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _trusted_wer_parents = dynamic(["svchost.exe","wermgr.exe","werfault.exe","services.exe","smss.exe","csrss.exe","taskhostw.exe","sihost.exe"]);
-let WerFaultSpawn =
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "WerFaultSecure.exe"
-    | where InitiatingProcessFileName !in~ (_trusted_wer_parents)
-    | where AccountName !endswith "$"
-    | project Timestamp, DeviceName, AccountName,
-              ParentImage = InitiatingProcessFileName,
-              ParentCmd = InitiatingProcessCommandLine,
-              ParentFolder = InitiatingProcessFolderPath,
-              ChildCmd = ProcessCommandLine,
-              ChildPid = ProcessId, Signal="WerFaultSecure_unusual_parent";
-let SuspendOnWer =
-    DeviceEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("OpenProcessApiCall","SuspendThread","ProcessPrimaryTokenModified")
-    | where FileName =~ "WerFaultSecure.exe"      // target was WerFaultSecure
-    | where InitiatingProcessFileName !in~ (_trusted_wer_parents)
-    | where InitiatingProcessFolderPath !startswith @"C:\Windows\System32"
-    | project Timestamp, DeviceName, ActionType,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessFolderPath, InitiatingProcessAccountName,
-              Signal="Suspend_against_WerFaultSecure";
-union WerFaultSpawn, SuspendOnWer
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -506,4 +385,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

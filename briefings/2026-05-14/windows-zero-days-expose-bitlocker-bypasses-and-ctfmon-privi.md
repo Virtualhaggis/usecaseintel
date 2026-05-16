@@ -15,6 +15,7 @@ The security defects have been codenamed YellowKey and GreenPlasma , respectivel
 
 - **CVE:** `CVE-2026-33825`
 - **CVE:** `CVE-2025-48804`
+- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,99 +28,12 @@ The security defects have been codenamed YellowKey and GreenPlasma , respectivel
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1542.003** — Pre-OS Boot: Bootkit
-- **T1006** — Direct Volume Access
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1553** — Subvert Trust Controls
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] YellowKey BitLocker bypass — FsTx staging on USB/EFI partition
-
-`UC_64_5` · phase: **weapon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_path="*\\System Volume Information\\FsTx\\*" NOT Filesystem.file_path="C:\\*" NOT Filesystem.file_path="c:\\*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_id
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// YellowKey FsTx staging on non-system volume (USB / EFI partition)
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FolderPath has @"\System Volume Information\FsTx\"
-| where not(FolderPath startswith @"C:\")    // legit TxF lives on C:
-| where not(FolderPath startswith @"c:\")
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessAccountDomain, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] YellowKey post-exploitation — cmd.exe spawned from WinRE volume (X:)
-
-`UC_64_6` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=conhost.exe) (Processes.process_path="X:\\Windows\\System32\\*" OR Processes.process_path="x:\\Windows\\System32\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// YellowKey successful bypass — interactive shell launched from WinRE X: volume
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","conhost.exe")
-| where FolderPath startswith @"X:\Windows\System32\"
-   or FolderPath startswith @"x:\Windows\System32\"
-| project Timestamp, DeviceName, AccountName, AccountDomain,
-          FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, ProcessIntegrityLevel
-| order by Timestamp desc
-```
-
-### [LLM] BitLocker downgrade — anomalous bootmgfw.efi write outside Windows Update
-
-`UC_64_7` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=bootmgfw.efi OR Filesystem.file_name=BOOTMGFW.EFI) (Filesystem.action=created OR Filesystem.action=modified OR Filesystem.action=renamed) NOT (Filesystem.process_name IN (TrustedInstaller.exe,SetupHost.exe,DismHost.exe,msiexec.exe,WindowsUpdateBox.exe,WaaSMedicSvc.exe,wuauclt.exe,bcdedit.exe)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name Filesystem.process_id
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-// CVE-2025-48804 BitLocker downgrade — bootmgfw.efi replaced outside servicing
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileName =~ "bootmgfw.efi"
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ (
-    "TrustedInstaller.exe","SetupHost.exe","DismHost.exe",
-    "msiexec.exe","WindowsUpdateBox.exe","WaaSMedicSvc.exe",
-    "wuauclt.exe","bcdedit.exe","poqexec.exe")
-| where InitiatingProcessFolderPath !startswith @"C:\Windows\WinSxS\"
-| where InitiatingProcessFolderPath !startswith @"C:\Windows\servicing\"
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessIntegrityLevel, SHA256
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -298,9 +212,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33825`, `CVE-2025-48804`
+  - CVE(s): `CVE-2026-33825`, `CVE-2025-48804`, `CVE-2026-23918`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

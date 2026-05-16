@@ -29,79 +29,12 @@ The group behind it is not just encrypting data, but also running a business-lik
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1485** — Data Destruction
-- **T1490** — Inhibit System Recovery
-- **T1047** — Windows Management Instrumentation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Gunra ransomware encryption artefacts — .ENCRT extension and R3ADM3.txt note drop
-
-`UC_11_6` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.process_name) as process_names dc(Filesystem.file_name) as distinct_files from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="*.ENCRT" OR Filesystem.file_name="R3ADM3.txt" OR Filesystem.file_name="CONTI_LOG.txt") by Filesystem.dest Filesystem.user _time span=5m | `drop_dm_object_name(Filesystem)` | where distinct_files>=2 OR file_name="R3ADM3.txt" OR file_name="CONTI_LOG.txt" | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FileName endswith ".ENCRT"
-    or FileName =~ "R3ADM3.txt"
-    or FileName =~ "CONTI_LOG.txt"
-| summarize FileCount = count(),
-            DistinctNames = dcount(FileName),
-            EncryptedCount = countif(FileName endswith ".ENCRT"),
-            NoteDropped = countif(FileName =~ "R3ADM3.txt"),
-            ContiLogDropped = countif(FileName =~ "CONTI_LOG.txt"),
-            SampleEncrypted = take_any(FileName),
-            FolderPaths = make_set(FolderPath, 10),
-            InitiatingProcess = take_any(InitiatingProcessFileName),
-            InitiatingCmd = take_any(InitiatingProcessCommandLine),
-            InitiatingSHA256 = take_any(InitiatingProcessSHA256)
-    by DeviceId, DeviceName, bin(Timestamp, 5m)
-| where NoteDropped > 0 or ContiLogDropped > 0 or EncryptedCount >= 5
-| order by Timestamp desc
-```
-
-### [LLM] Gunra per-shadow-ID WMIC deletion — `WMIC shadowcopy where ID={GUID} delete` pattern
-
-`UC_11_7` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as commands values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name="wmic.exe" Processes.process="*shadowcopy*" Processes.process="*where*" Processes.process="*ID=*" Processes.process="*delete*" by Processes.dest Processes.user Processes.process_name _time span=5m | `drop_dm_object_name(Processes)` | where count>=2 | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "wmic.exe"
-| where ProcessCommandLine has "shadowcopy"
-    and ProcessCommandLine has "where"
-    and ProcessCommandLine has "delete"
-| where ProcessCommandLine matches regex @'(?i)shadowcopy\s+where\s+"?ID\s*=\s*\{[0-9A-Fa-f-]{30,}\}'
-| where AccountName !endswith "$"
-| summarize InvocationCount = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            DistinctGUIDs = dcount(ProcessCommandLine),
-            SampleCmd = take_any(ProcessCommandLine),
-            Parent = take_any(InitiatingProcessFileName),
-            ParentCmd = take_any(InitiatingProcessCommandLine),
-            GrandParent = take_any(InitiatingProcessParentFileName)
-    by DeviceId, DeviceName, AccountName, bin(Timestamp, 10m)
-| where InvocationCount >= 2 or DistinctGUIDs >= 2
-| order by FirstSeen desc
-```
 
 ### Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator
 
@@ -270,4 +203,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

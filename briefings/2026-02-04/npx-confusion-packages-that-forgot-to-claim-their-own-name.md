@@ -27,68 +27,12 @@ npm ERR! 404 Not Found - GET https: //registry.npmjs.org/mikro-orm-esm Package d
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1546.016** — Event Triggered Execution: Installer Packages
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] npx invocation of known phantom package names disclosed by Aikido
-
-`UC_449_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmdline values(Processes.parent_process_name) as parent_proc values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npx.exe","npx","npx.cmd","node.exe","node") OR Processes.parent_process_name IN ("npx.exe","npx.cmd")) AND (Processes.process="*openapi-generator-cli*" OR Processes.process="*cucumber-js*" OR Processes.process="*depcruise*" OR Processes.process="*jsdoc2md*" OR Processes.process="*grpc_tools_node_protoc*" OR Processes.process="*vue-demi-switch*" OR Processes.process="*styleguidist*" OR Processes.process="*mikro-orm-esm*" OR Processes.process="*pvbase64*" OR Processes.process="*cromwell*" OR Processes.process="*git-scripts-pre-push*" OR Processes.process="*fathym*" OR Processes.process="*aofl*" OR Processes.process="*flatjs-forge*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("npx.exe","npx.cmd","node.exe")
-    or InitiatingProcessFileName in~ ("npx.exe","npx.cmd")
-| where ProcessCommandLine has_any (
-    "openapi-generator-cli","cucumber-js","depcruise","jsdoc2md",
-    "grpc_tools_node_protoc","vue-demi-switch","styleguidist",
-    "mikro-orm-esm","pvbase64","cromwell","git-scripts-pre-push",
-    "fathym","aofl","flatjs-forge")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] File creation under npx cache for Aikido-claimed phantom package names
-
-`UC_449_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\_npx\\*" OR Filesystem.file_path="*/.npm/_npx/*" OR Filesystem.file_path="*\\npm-cache\\_npx\\*") AND (Filesystem.file_path="*openapi-generator-cli*" OR Filesystem.file_path="*cucumber-js*" OR Filesystem.file_path="*depcruise*" OR Filesystem.file_path="*jsdoc2md*" OR Filesystem.file_path="*grpc_tools_node_protoc*" OR Filesystem.file_path="*vue-demi-switch*" OR Filesystem.file_path="*styleguidist*" OR Filesystem.file_path="*mikro-orm-esm*" OR Filesystem.file_path="*pvbase64*" OR Filesystem.file_path="*cromwell*" OR Filesystem.file_path="*git-scripts-pre-push*" OR Filesystem.file_path="*fathym*" OR Filesystem.file_path="*aofl*" OR Filesystem.file_path="*flatjs-forge*") by Filesystem.dest Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FolderPath has_any (@"\_npx\", @"/.npm/_npx/", @"\npm-cache\_npx\")
-| where FolderPath has_any (
-    "openapi-generator-cli","cucumber-js","depcruise","jsdoc2md",
-    "grpc_tools_node_protoc","vue-demi-switch","styleguidist",
-    "mikro-orm-esm","pvbase64","cromwell","git-scripts-pre-push",
-    "fathym","aofl","flatjs-forge")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -324,4 +268,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

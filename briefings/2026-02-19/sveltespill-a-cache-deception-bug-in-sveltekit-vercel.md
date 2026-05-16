@@ -21,45 +21,12 @@ Well, it’s true. This attack vector, called …
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1606.001** — Forge Web Credentials: Web Cookies
-- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] SvelteKit Vercel Adapter Cache Deception via __pathname Override (CVE-2026-27118)
-
-`UC_400_5` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where (Web.uri_path="/_app/immutable/*" OR Web.url="*/_app/immutable/*") (Web.uri_query="*__pathname=*" OR Web.url="*__pathname=*") by Web.dest Web.src Web.uri_path Web.uri_query | `drop_dm_object_name(Web)` | rex field=uri_query "__pathname=(?<rewritten_path>[^&]+)" | where isnotnull(rewritten_path) | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// Defender XDR has no server-side web log table; this catches the
-// phished-link delivery path (Safe Links) where the attacker mails
-// the crafted URL to victims. Pair with web-tier rule above.
-UrlClickEvents
-| where Timestamp > ago(7d)
-| where Url has "/_app/immutable/" and Url has "__pathname="
-| extend RewrittenPath = extract(@"[?&]__pathname=([^&]+)", 1, Url)
-| project Timestamp, AccountUpn, Url, RewrittenPath, ActionType, IsClickedThrough, IPAddress, NetworkMessageId, Workload
-| order by Timestamp desc
-```
-
-### [LLM] Cache Deception Retrieval: Same /_app/immutable/ __pathname URL Hit by Multiple Distinct Clients
-
-`UC_400_6` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Web.src) as src_ips dc(Web.src) as distinct_clients values(Web.http_user_agent) as user_agents dc(Web.http_user_agent) as distinct_uas min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses from datamodel=Web.Web where (Web.uri_path="/_app/immutable/*" OR Web.url="*/_app/immutable/*") (Web.uri_query="*__pathname=*" OR Web.url="*__pathname=*") by Web.dest Web.uri_path Web.uri_query span=10m | `drop_dm_object_name` | where distinct_clients>=2 | rex field=uri_query "__pathname=(?<rewritten_path>[^&]+)" | convert ctime(firstTime) ctime(lastTime) | sort - distinct_clients
-```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -203,4 +170,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -38,102 +38,12 @@ Back to Blog Threat Intel Malicious IoliteLabs VSCode Extensions Target Solidity
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1105** — Ingress Tool Transfer
-- **T1218.010** — System Binary Proxy Execution: Regsvr32
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] IoliteLabs VSCode extension dropper: VS Code child process reaching rraghh.com / oortt.com C2
-
-`UC_310_8` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Code.exe","Code - Insiders.exe","Cursor.exe","Windsurf.exe","VSCodium.exe","Positron.exe") OR Processes.parent_process_path="*\\Microsoft VS Code\\Code.exe" OR Processes.parent_process_path="*\\Cursor\\Cursor.exe") AND (Processes.process="*rraghh.com*" OR Processes.process="*oortt.com*" OR Processes.process="*cdn.rraghh.com*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("Code.exe","Code - Insiders.exe","Cursor.exe","Windsurf.exe","VSCodium.exe","Positron.exe")
-   or InitiatingProcessFolderPath has_any (@"\Microsoft VS Code\", @"\Cursor\", @"\Windsurf\", @"\VSCodium\")
-| where ProcessCommandLine has_any ("rraghh.com","oortt.com","cdn.rraghh.com")
-   or (ProcessCommandLine has "curl" and ProcessCommandLine has_any (@"%TEMP%\1.bat", @"\Temp\1.bat"))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] IoliteLabs Stage-2 regsvr32 LOLbin loading ntuser DLL from fake Chrome\ChromeUpdate path
-
-`UC_310_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="regsvr32.exe" AND Processes.process="*ntuser*" AND (Processes.process="*\\Chrome\\ChromeUpdate*" OR Processes.process="* /i *") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process,"(?i)regsvr32.*\\s/(s|i)\\b.*ntuser") OR match(process,"(?i)Chrome\\\\ChromeUpdate\\\\ntuser") | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _knownHashes = dynamic(["5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3"]);
-let ProcSig = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "regsvr32.exe"
-    | where ProcessCommandLine has "ntuser"
-    | where ProcessCommandLine has @"\Chrome\ChromeUpdate"
-         or ProcessCommandLine matches regex @"(?i)regsvr32(\.exe)?\s+/s\s+/i\s+.*ntuser"
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="ProcessExec";
-let HashSig = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_knownHashes)
-       or (FileName =~ "ntuser" and FolderPath has @"\Chrome\ChromeUpdate")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine=tostring(SHA256), Source="FileWrite";
-union ProcSig, HashSig
-| order by Timestamp desc
-```
-
-### [LLM] IoliteLabs IOC sweep: rraghh.com / oortt.com hostnames + campaign file hashes
-
-`UC_310_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-(| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*rraghh.com*" OR Web.url="*oortt.com*" OR Web.dest="*rraghh.com*" OR Web.dest="*oortt.com*") by Web.src Web.user Web.url Web.dest | `drop_dm_object_name(Web)`) | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*rraghh.com" OR DNS.query="*oortt.com") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | rename src as Web_src query as Web_url] | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3","5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c") OR Filesystem.file_name IN ("7WhiteSmoke.msi","calc.bat") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _iocHashes = dynamic(["fcd398abc51fd16e8bc93ef8d88a23d7dec28081b6dfce4b933020322a610508","e903ae267bf7ed1d02b218c1dc7cf6d87257e87de9fbda411a13f9154716bfa3","5f9c09c2c432a6b94f2200455065bcfd1237f8a01b913a7c9e37f164ff99a84c"]);
-let _iocDomains = dynamic(["rraghh.com","oortt.com","cdn.rraghh.com"]);
-let Net = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (_iocDomains) or tostring(RemoteIP) in (_iocDomains)
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="Network";
-let Dns = DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
-    | where Q endswith "rraghh.com" or Q endswith "oortt.com"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=Q, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DNS";
-let Files = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (_iocHashes)
-       or (FileName =~ "7WhiteSmoke.msi")
-       or (FileName =~ "1.bat" and FolderPath has_any (@"\Temp\", @"\AppData\Local\Temp\"))
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Indicator=strcat(FileName," / ",SHA256), InitiatingProcessFileName, InitiatingProcessCommandLine, Source="File";
-union Net, Dns, Files
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -358,4 +268,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

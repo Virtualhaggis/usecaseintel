@@ -14,14 +14,12 @@ phpMyFAQ has unauthenticated SQL injection via User-Agent header in BuiltinCaptc
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **SHA1:** `b9f25109fddb38eee19987183798638d07943f92`
 
 ## MITRE ATT&CK Techniques
 
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1190** — Exploit Public-Facing Application
-- **T1059** — Command and Scripting Interpreter
-- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -29,36 +27,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] phpMyFAQ unauthenticated SQLi via User-Agent on /api/captcha (GHSA-289f-fq7w-6q2w)
-
-`UC_186_1` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.status) as statuses values(Web.http_method) as methods from datamodel=Web where Web.url="*/api/captcha*" (Web.http_user_agent="*SLEEP(*" OR Web.http_user_agent="*sleep(*" OR Web.http_user_agent="*BENCHMARK(*" OR Web.http_user_agent="*benchmark(*" OR Web.http_user_agent="*UNION SELECT*" OR Web.http_user_agent="*union select*" OR Web.http_user_agent="*' OR *" OR Web.http_user_agent="*\" OR *" OR Web.http_user_agent="*SUBSTR(*" OR Web.http_user_agent="*substr(*" OR Web.http_user_agent="*INFORMATION_SCHEMA*" OR Web.http_user_agent="*information_schema*" OR Web.http_user_agent="*WAITFOR DELAY*" OR Web.http_user_agent="* OR 1=1*" OR Web.http_user_agent="*/*!*" OR Web.http_user_agent="*pg_sleep(*") by Web.src Web.dest Web.url Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-### [LLM] phpMyFAQ /api/captcha anomalous response time (time-based blind SQLi extraction)
-
-`UC_186_2` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count avg(Web.response_time) as avg_resp_sec max(Web.response_time) as max_resp_sec values(Web.http_user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where Web.url="*/api/captcha*" by Web.src Web.dest Web.url _time span=1m
-| `drop_dm_object_name(Web)`
-| where max_resp_sec >= 1.5
-| eval baseline_ms=147, observed_ms=round(max_resp_sec*1000,0)
-| where observed_ms > (baseline_ms * 5)
-| sort - observed_ms
-```
-
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-289f-fq7w-6q2w: phpMyFAQ has unauthenticated SQL injectio
 
-`UC_186_0` · phase: **install** · confidence: **High**
+`UC_186_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +60,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `b9f25109fddb38eee19987183798638d07943f92`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

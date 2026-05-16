@@ -21,79 +21,12 @@ Table of Contents Loading …
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1546.016** — Installer Packages
-- **T1059** — Command and Scripting Interpreter
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1543** — Create or Modify System Process
-- **T1543.001** — Create or Modify System Process: Launch Agent
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1543.004** — Create or Modify System Process: Launch Daemon
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] cline@2.3.0 postinstall silently global-installs openclaw via npm
-
-`UC_302_4` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe") OR Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe")) AND (Processes.process="*openclaw*" OR Processes.process="*cline@2.3.0*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, "(?i)(install\\s+(-g|--global)?\\s*openclaw|cline@2\\.3\\.0)") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("npm","npm.exe","node","node.exe","npm-cli.js") or FileName in~ ("npm","npm.exe","node","node.exe")
-| where ProcessCommandLine has_any ("openclaw","cline@2.3.0")
-| where ProcessCommandLine has "install"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### [LLM] openclaw Gateway daemon listening on ws://127.0.0.1:18789
-
-`UC_302_5` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=18789 OR All_Traffic.src_port=18789) AND (All_Traffic.dest IN ("127.0.0.1","::1","localhost") OR All_Traffic.src IN ("127.0.0.1","::1","localhost")) by All_Traffic.dest All_Traffic.dest_port All_Traffic.transport host | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (LocalPort == 18789 and LocalIP in ("127.0.0.1","::1")) or (RemotePort == 18789 and RemoteIP in ("127.0.0.1","::1"))
-| where ActionType in ("ListeningConnectionCreated","InboundConnectionAccepted","ConnectionSuccess")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(), Processes=make_set(InitiatingProcessFileName,8), CmdLines=make_set(InitiatingProcessCommandLine,8) by DeviceName, LocalIP, LocalPort, ActionType
-| order by FirstSeen desc
-```
-
-### [LLM] openclaw persistence daemon written to launchd / systemd
-
-`UC_302_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/LaunchDaemons/*openclaw*" OR Filesystem.file_path="*/LaunchAgents/*openclaw*" OR Filesystem.file_path="*/systemd/system/*openclaw*" OR Filesystem.file_path="*/.config/systemd/user/*openclaw*" OR Filesystem.file_name="*openclaw*.plist" OR Filesystem.file_name="*openclaw*.service" OR Filesystem.file_path="*/.openclaw/credentials/*" OR Filesystem.file_path="*/.openclaw/config.json5") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (FolderPath has_any ("/LaunchDaemons/","/LaunchAgents/","/etc/systemd/system/","/.config/systemd/user/") and (FileName contains "openclaw" or FileName endswith ".plist" or FileName endswith ".service"))
-   or (FolderPath has ".openclaw/credentials")
-   or (FileName =~ "config.json5" and FolderPath has ".openclaw")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
 
 ### OAuth consent / suspicious app grant
 
@@ -205,4 +138,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

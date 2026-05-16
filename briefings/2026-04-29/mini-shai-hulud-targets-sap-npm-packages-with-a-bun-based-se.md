@@ -31,115 +31,12 @@ The pattern is familiar but also a bit different: a…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1546.016** — Installer Packages
-- **T1059.007** — JavaScript
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1567** — Exfiltration Over Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1552.001** — Credentials In Files
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] npm preinstall hook executes 'node setup.mjs' / 'bun execution.js' (Mini Shai-Hulud SAP supply chain)
-
-`UC_235_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents values(Processes.process_path) as paths from datamodel=Endpoint.Processes where ((Processes.process_name IN ("node.exe","node") AND Processes.process="*setup.mjs*") OR (Processes.process_name IN ("bun","bun.exe") AND Processes.process="*execution.js*")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where (
-    (FileName has_any ("node.exe","node") and ProcessCommandLine has "setup.mjs")
-    or (FileName has_any ("bun","bun.exe") and ProcessCommandLine has "execution.js")
-  )
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud 'OhNoWhatsGoingOnWithGitHub' dead-drop keyword in outbound URL
-
-`UC_235_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user) as users values(Web.http_user_agent) as ua from datamodel=Web.Web where (Web.url="*OhNoWhatsGoingOnWithGitHub*" OR Web.url="*search/commits?q=OhNoWhatsGoingOnWithGitHub*") by Web.dest Web.src Web.site | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-union
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemoteUrl has "OhNoWhatsGoingOnWithGitHub"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-              RemoteUrl, RemoteIP, RemotePort,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              Signal="network" ),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where ProcessCommandLine has "OhNoWhatsGoingOnWithGitHub"
-       or InitiatingProcessCommandLine has "OhNoWhatsGoingOnWithGitHub"
-    | project Timestamp, DeviceName, AccountName,
-              RemoteUrl="", RemoteIP="", RemotePort=0,
-              InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine,
-              Signal="process" )
-| order by Timestamp desc
-```
-
-### [LLM] Mini Shai-Hulud known SHA256 IOC match (setup.mjs / execution.js / runner-memory dumper)
-
-`UC_235_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_name) as files values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34","6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95","29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7") by Filesystem.dest Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let bad_hashes = dynamic([
-    "4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34",
-    "6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95",
-    "29ac906c8bd801dfe1cb39596197df49f80fff2270b3e7fbab52278c24e4f1a7"
-]);
-union
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (bad_hashes)
-    | project Timestamp, DeviceName,
-              Actor=InitiatingProcessAccountName,
-              FileName, FolderPath, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              EventClass="FileEvent" ),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (bad_hashes)
-       or InitiatingProcessSHA256 in (bad_hashes)
-    | project Timestamp, DeviceName, Actor=AccountName,
-              FileName, FolderPath, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              EventClass="ProcessEvent" ),
-  ( DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 in (bad_hashes)
-    | project Timestamp, DeviceName, Actor=InitiatingProcessAccountName,
-              FileName, FolderPath, SHA256,
-              InitiatingProcessFileName, InitiatingProcessCommandLine="",
-              EventClass="ImageLoad" )
-| order by Timestamp desc
-```
 
 ### Suspicious browser extension installation
 
@@ -337,4 +234,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

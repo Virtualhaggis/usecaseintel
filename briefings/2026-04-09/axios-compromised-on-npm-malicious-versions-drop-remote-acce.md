@@ -37,80 +37,12 @@ Table of Contents Loa…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Outbound connection to axios npm compromise C2 sfrclak.com
-
-`UC_299_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="sfrclak.com" OR All_Traffic.dest_host="sfrclak.com" OR All_Traffic.url="*sfrclak.com*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port host | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "sfrclak.com" or RemoteUrl =~ "sfrclak.com"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, ActionType
-| order by Timestamp asc
-```
-
-### [LLM] plain-crypto-js package directory or setup.js dropped on disk (axios compromise)
-
-`UC_299_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\plain-crypto-js\\*" OR Filesystem.file_path="*/node_modules/plain-crypto-js/*" OR (Filesystem.file_name="setup.js" AND Filesystem.file_path="*plain-crypto-js*") OR (Filesystem.file_name="package.md" AND Filesystem.file_path="*plain-crypto-js*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path host | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where (FolderPath has @"\node_modules\plain-crypto-js\" or FolderPath has "/node_modules/plain-crypto-js/")
-   or (FileName in~ ("setup.js","package.md") and FolderPath has "plain-crypto-js")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, InitiatingProcessAccountName
-| order by Timestamp asc
-```
-
-### [LLM] node.exe executes setup.js postinstall script under npm parent (RAT dropper)
-
-`UC_299_11` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="node.exe" OR Processes.process_name="node") AND (Processes.process="*setup.js*plain-crypto-js*" OR Processes.process="*plain-crypto-js*setup.js*" OR Processes.process="*\\plain-crypto-js\\setup.js*" OR Processes.process="*/plain-crypto-js/setup.js*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name host | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("node.exe","node")
-| where ProcessCommandLine has "plain-crypto-js" and ProcessCommandLine has "setup.js"
-| extend IsNpmParent = InitiatingProcessFileName in~ ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe","cmd.exe","sh","bash")
-   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","yarn add","pnpm install","pnpm add","postinstall")
-| project Timestamp, DeviceName, AccountName,
-          ProcessCommandLine, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName,
-          IsNpmParent
-| order by Timestamp asc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -343,4 +275,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

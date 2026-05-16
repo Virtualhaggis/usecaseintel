@@ -43,106 +43,12 @@ Blog Vulnerabilities & Threats Fake Clawdbot VS Code Extension Installs ScreenCo
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
-- **T1543.003** — Create or Modify System Process: Windows Service
-- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1564.003** — Hide Artifacts: Hidden Window
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Weaponised ScreenConnect install with ClawdBot attacker-tagged instance ID (083e4d30c7ea44f7)
-
-`UC_464_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.process_name) as parent_proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*ScreenConnect Client (083e4d30c7ea44f7)*") by Filesystem.dest Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent_proc from datamodel=Endpoint.Processes where (Processes.process_path="*ScreenConnect Client (083e4d30c7ea44f7)*" OR Processes.process="*083e4d30c7ea44f7*") by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)`] | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as reg_data from datamodel=Endpoint.Registry where Registry.registry_key_name="*ScreenConnect Client (083e4d30c7ea44f7)*" by Registry.dest Registry.user Registry.registry_key_name Registry.process_name | `drop_dm_object_name(Registry)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let attacker_tag = "083e4d30c7ea44f7";
-let bad_hashes = dynamic(["e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2","d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea"]);
-union
-( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has attacker_tag or SHA256 in (bad_hashes)
-    | project Timestamp, DeviceName, EventTbl="File", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName ),
-( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has attacker_tag or ProcessCommandLine has attacker_tag or SHA256 in (bad_hashes) or InitiatingProcessSHA256 in (bad_hashes)
-    | project Timestamp, DeviceName, EventTbl="Process", ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName ),
-( DeviceRegistryEvents
-    | where Timestamp > ago(30d)
-    | where RegistryKey has attacker_tag or RegistryValueData has attacker_tag
-    | project Timestamp, DeviceName, EventTbl="Registry", ActionType, FileName=RegistryValueName, FolderPath=RegistryKey, SHA256=tostring(""), InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName )
-| order by Timestamp desc
-```
-
-### [LLM] Process execution or file drop staged in %TEMP%\Lightshot (ClawdBot dropper folder)
-
-`UC_464_15` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_path="*\\Temp\\Lightshot\\*" OR Processes.parent_process_path="*\\Temp\\Lightshot\\*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as parent_proc values(Filesystem.file_hash) as hash from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Temp\\Lightshot\\*" AND (Filesystem.file_name IN ("Code.exe","DWrite.dll","Lightshot.exe","Lightshot.dll","ffmpeg.dll","libEGL.dll","v8_context_snapshot.bin")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let staging_dir = @"\Temp\Lightshot\";
-let dropped_files = dynamic(["Code.exe","DWrite.dll","Lightshot.exe","Lightshot.dll","ffmpeg.dll","libEGL.dll","v8_context_snapshot.bin","icudtl.dat","msvcp140.dll","vcruntime140.dll","vcruntime140_1.dll"]);
-union
-( DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FolderPath has staging_dir or InitiatingProcessFolderPath has staging_dir
-    | project Timestamp, DeviceName, EventTbl="Process", AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine ),
-( DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("FileCreated","FileRenamed")
-    | where FolderPath has staging_dir
-    | where FileName in~ (dropped_files)
-    | project Timestamp, DeviceName, EventTbl="FileDrop", AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, ProcessCommandLine=tostring(""), InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine )
-| order by Timestamp desc
-```
-
-### [LLM] ClawdBot ScreenConnect relay + Rust loader C2 network egress (port 8041, bulletmailer/getintwopc/darkgptprivate/Dropbox-zoomupdate)
-
-`UC_464_16` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("179.43.176.32","178.16.54.253") OR All_Traffic.dest IN ("meeting.bulletmailer.net","clawdbot.getintwopc.site","getintwopc.site","darkgptprivate.com") OR (All_Traffic.dest_port=8041 AND NOT cidrmatch("10.0.0.0/8",All_Traffic.dest_ip) AND NOT cidrmatch("172.16.0.0/12",All_Traffic.dest_ip) AND NOT cidrmatch("192.168.0.0/16",All_Traffic.dest_ip))) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query IN ("meeting.bulletmailer.net","clawdbot.getintwopc.site","getintwopc.site","darkgptprivate.com") OR DNS.query="*.bulletmailer.net" OR DNS.query="*.getintwopc.site" OR DNS.query="*.darkgptprivate.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let bad_ips = dynamic(["179.43.176.32","178.16.54.253"]);
-let bad_domains = dynamic(["bulletmailer.net","getintwopc.site","darkgptprivate.com"]);
-let dropbox_path = "tmwi4j86op04r9qo2xdgh/zoomupdate.msi";
-union
-( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP in (bad_ips)
-        or RemoteUrl has_any (bad_domains)
-        or RemoteUrl has dropbox_path
-        or (RemotePort == 8041 and RemoteIPType == "Public")
-    | project Timestamp, DeviceName, EventTbl="Net", ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256 ),
-( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend QName = tostring(parse_json(AdditionalFields).QueryName)
-    | where QName has_any (bad_domains)
-    | project Timestamp, DeviceName, EventTbl="DNS", ActionType, RemoteIP=tostring(""), RemotePort=toint(0), RemoteUrl=QName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256 )
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -581,4 +487,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

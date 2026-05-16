@@ -31,82 +31,12 @@ The pattern is consistent: steal credentials from a trusted security to…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1027.003** — Obfuscated Files or Information: Steganography
-- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] TeamPCP telnyx PyPI: msbuild.exe persistence in user Startup folder
-
-`UC_320_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="msbuild.exe" OR Filesystem.file_name="msbuild.exe.lock" OR Filesystem.file_name="MSBuild.exe") AND Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ ("msbuild.exe","msbuild.exe.lock")
-| where FolderPath has @"\Start Menu\Programs\Startup\"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName, FileOriginUrl, FileOriginIP
-| order by Timestamp desc
-```
-
-### [LLM] TeamPCP telnyx PyPI C2 beacon to 83.142.209.203:8080
-
-`UC_320_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.203" by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port All_Traffic.bytes_in All_Traffic.bytes_out | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "83.142.209.203"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessSHA256,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] TeamPCP WAV steganography drop URL paths (hangup.wav / ringtone.wav)
-
-`UC_320_11` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/hangup.wav" OR Web.url="*/ringtone.wav") AND NOT (Web.url="*akamai*" OR Web.url="*cloudfront*" OR Web.url="*microsoft.com*" OR Web.url="*windows.com*") by Web.src Web.user Web.dest Web.url Web.http_user_agent Web.http_method Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any ("/hangup.wav","/ringtone.wav")
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -320,4 +250,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

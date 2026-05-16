@@ -1,4 +1,4 @@
-# [HIGH] New TrickMo Variant Uses TON C2 and SOCKS5 to Create Android Network Pivots
+# [CRIT] New TrickMo Variant Uses TON C2 and SOCKS5 to Create Android Network Pivots
 
 **Source:** The Hacker News
 **Published:** 2026-05-12
@@ -14,12 +14,13 @@ The new variant, observed by ThreatFabric between January and February 2026, has
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -28,81 +29,12 @@ The new variant, observed by ThreatFabric between January and February 2026, has
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1090.003** — Proxy: Multi-hop Proxy
-- **T1568** — Dynamic Resolution
-- **T1660** — Phishing (Mobile)
-- **T1655.001** — Masquerading: Match Legitimate Name or Location
-- **T1407** — Download New Code at Runtime (Mobile)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] TrickMo C2 DNS resolution for TON overlay hostnames (.adnl / .bag / .ton)
-
-`UC_93_5` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries from datamodel=Network_Resolution where (DNS.query="*.adnl" OR DNS.query="*.adnl.*" OR DNS.query="*.bag" OR DNS.query="*.bag.*" OR DNS.query="*.ton" OR DNS.query="*.ton.*") by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | eval ton_overlay=case(match(query, "(?i)\.adnl(\.|$)"), "adnl", match(query, "(?i)\.bag(\.|$)"), "bag", match(query, "(?i)\.ton(\.|$)"), "ton") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType == "DnsQueryResponse"
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueryName endswith ".adnl" or QueryName endswith ".bag" or QueryName endswith ".ton"
-   or QueryName has ".adnl." or QueryName has ".bag."
-| extend TONSuffix = case(QueryName endswith ".adnl" or QueryName has ".adnl.", "adnl",
-                          QueryName endswith ".bag" or QueryName has ".bag.",  "bag",
-                                                                                 "ton")
-| project Timestamp, DeviceName, DeviceId, QueryName, TONSuffix,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] TrickMo C dropper / payload Android package identifiers observed in telemetry
-
-`UC_93_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*com.app16330.core20461*" OR Web.url="*com.app15318.core1173*" OR Web.url="*uncle.collop416.wifekin78*" OR Web.url="*nibong.lida531.butler836*" OR Web.http_user_agent="*com.app16330.core20461*" OR Web.http_user_agent="*com.app15318.core1173*" OR Web.http_user_agent="*uncle.collop416.wifekin78*" OR Web.http_user_agent="*nibong.lida531.butler836*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | append [ | tstats summariesonly=t count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*com.app16330.core20461*" OR Filesystem.file_path="*com.app15318.core1173*" OR Filesystem.file_path="*uncle.collop416.wifekin78*" OR Filesystem.file_path="*nibong.lida531.butler836*" OR Filesystem.file_name="dex.module") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let pkgs = dynamic(["com.app16330.core20461","com.app15318.core1173","uncle.collop416.wifekin78","nibong.lida531.butler836"]);
-union isfuzzy=true
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName has_any (pkgs) or FolderPath has_any (pkgs) or FileName =~ "dex.module"
-    | project Timestamp, Source="DeviceFileEvents", DeviceName, DeviceId, ItemName=FileName, ItemPath=FolderPath,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, FileOriginUrl ),
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (pkgs)
-    | project Timestamp, Source="DeviceNetworkEvents", DeviceName, DeviceId, ItemName=RemoteUrl, ItemPath="",
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256="", FileOriginUrl=RemoteUrl ),
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where AdditionalFields has_any (pkgs)
-    | project Timestamp, Source="DeviceEvents", DeviceName, DeviceId, ItemName=ActionType,
-              ItemPath=tostring(AdditionalFields),
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, FileOriginUrl=RemoteUrl ),
-  ( EmailUrlInfo
-    | where Timestamp > ago(30d)
-    | where Url has_any (pkgs)
-    | join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject) on NetworkMessageId
-    | project Timestamp, Source="EmailUrlInfo", DeviceName="", DeviceId="", ItemName=Url, ItemPath=UrlDomain,
-              InitiatingProcessFileName=SenderFromAddress, InitiatingProcessCommandLine=Subject, SHA256="", FileOriginUrl=Url )
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -311,7 +243,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-23918`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

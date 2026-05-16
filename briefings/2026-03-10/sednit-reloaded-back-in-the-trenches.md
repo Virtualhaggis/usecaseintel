@@ -36,96 +36,12 @@ Since April 2024, Sednit’s advanced development team has reemerged with a mode
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1546.015** — Event Triggered Execution: Component Object Model Hijacking
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
-- **T1027.010** — Obfuscated Files or Information: Command Obfuscation / Steganography
-- **T1113** — Screen Capture
-- **T1056.001** — Input Capture: Keylogging
-- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] APT28/Sednit BeardShell & Covenant C2 to Icedrive/Filen/Koofr cloud APIs from non-browser process
-
-`UC_364_9` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as process values(All_Traffic.user) as user values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where (All_Traffic.dest_host IN ("api.icedrive.net","gateway.filen.io","egest.filen.io","ingest.filen.io","app.koofr.net") OR All_Traffic.dest_host="*.filen.io") AND All_Traffic.app!="msedge.exe" AND All_Traffic.app!="chrome.exe" AND All_Traffic.app!="firefox.exe" AND All_Traffic.app!="brave.exe" AND All_Traffic.app!="iexplore.exe" AND All_Traffic.app!="opera.exe" AND All_Traffic.app!="icedrive.exe" AND All_Traffic.app!="filen.exe" AND All_Traffic.app!="koofr.exe" by host All_Traffic.dest_host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let SednitC2Hosts = dynamic(["api.icedrive.net","gateway.filen.io","egest.filen.io","ingest.filen.io","app.koofr.net"]);
-let LegitClients = dynamic(["msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","safari.exe","icedrive.exe","filen.exe","koofr.exe","onedrive.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where (RemoteUrl has_any (SednitC2Hosts)) or (RemoteUrl endswith ".filen.io") or (RemoteUrl endswith ".icedrive.net")
-| where InitiatingProcessFileName !in~ (LegitClients)
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RemoteUrl, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
-```
-
-### [LLM] APT28/Sednit COM hijack persistence via Shell.Explorer CLSID InProcServer32
-
-`UC_364_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as registry_value_data values(Registry.process_name) as process_name values(Registry.user) as user from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Classes\\CLSID\\{2227A280-3AEA-1069-A2DE-08002B30309D}\\InProcServer32*" AND Registry.action="modified" AND Registry.process_name!="msiexec.exe" AND Registry.process_name!="TrustedInstaller.exe" AND Registry.process_name!="explorer.exe" by host Registry.user Registry.process_name Registry.process_path Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\Software\Classes\CLSID\{2227A280-3AEA-1069-A2DE-08002B30309D}\InProcServer32"
-| where InitiatingProcessFileName !in~ ("msiexec.exe","TrustedInstaller.exe","explorer.exe","setup.exe","installer.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RegistryKey, RegistryValueName, RegistryValueData, ActionType
-| order by Timestamp desc
-```
-
-### [LLM] Sednit on-disk artifacts: prnfldr.dll in ProgramData, windows.png stego carrier, SlimAgent screenshot files
-
-`UC_364_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.action="created" AND ((Filesystem.file_path="C:\\ProgramData\\prnfldr.dll") OR (Filesystem.file_name="windows.png" AND Filesystem.file_path="*\\AppData\\Local\\windows.png") OR (Filesystem.file_name="Desktop_*.svc" AND Filesystem.file_path="*\\Temp\\Desktop_*.svc")) by host Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where (FolderPath =~ @"C:\ProgramData\prnfldr.dll")
-    or (FileName =~ "prnfldr.dll" and FolderPath =~ @"C:\ProgramData")
-    or (FileName =~ "windows.png" and FolderPath endswith @"\AppData\Local\windows.png")
-    or (FileName matches regex @"(?i)^Desktop_\d{2}-\d{2}-\d{4}_\d{2}-\d{2}-\d{2}\.svc$")
-| where InitiatingProcessFileName !in~ ("msiexec.exe","TrustedInstaller.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          FolderPath, FileName, SHA256, MD5, ActionType
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -429,4 +345,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
