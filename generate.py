@@ -1309,6 +1309,178 @@ _OAUTH_FAILURES = 0
 _OAUTH_CIRCUIT_OPEN = False
 
 
+# =============================================================================
+# Pipeline lock + review-pass interop.
+# Added to support the off-hour quality-review pass (quality_review.py)
+# which runs on the alternate xx:30 schedule and reads the same intel/
+# directory the pipeline writes to. The lock is a PID file at
+# `intel/.pipeline.lock` that both the pipeline and the review pass
+# check at startup; whoever finds a stale lock (owning PID is dead)
+# clears it and proceeds. Lock file is also written with kind=pipeline
+# vs kind=quality_review so log lines explain who holds it.
+# =============================================================================
+_PIPELINE_LOCK_PATH = Path(__file__).parent / "intel" / ".pipeline.lock"
+_REVIEW_SUGGESTIONS_PATH = Path(__file__).parent / "intel" / "quality_suggestions.jsonl"
+_LAST_RUN_ARTICLES_PATH = Path(__file__).parent / "intel" / "last_run_articles.json"
+
+
+def _pipeline_pid_alive(pid: int) -> bool:
+    """Return True if the given PID is still running. Used to decide
+    whether a stale lock file should be cleared."""
+    if pid <= 0:
+        return False
+    if os.name == "nt":
+        try:
+            import subprocess
+            out = subprocess.run(
+                ["tasklist", "/FI", f"PID eq {pid}", "/NH", "/FO", "CSV"],
+                capture_output=True, text=True, timeout=10,
+            )
+            return str(pid) in (out.stdout or "")
+        except Exception:
+            return True  # Conservative: assume alive if we can't check
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def acquire_pipeline_lock() -> bool:
+    """Acquire the pipeline lock for this run. Returns True if we own
+    it now, False if another live process holds it (caller should exit
+    cleanly without doing pipeline work). A stale lock from a crashed
+    previous run gets cleaned up automatically."""
+    if _PIPELINE_LOCK_PATH.exists():
+        try:
+            payload = __import__("json").loads(
+                _PIPELINE_LOCK_PATH.read_text(encoding="utf-8"))
+            other_pid = int(payload.get("pid") or 0)
+            other_kind = payload.get("kind") or "?"
+        except Exception:
+            other_pid = 0
+            other_kind = "?"
+        if other_pid > 0 and _pipeline_pid_alive(other_pid):
+            print(f"[!] pipeline lock held by PID {other_pid} ({other_kind}); "
+                  f"this run aborting")
+            return False
+        else:
+            print(f"[*] clearing stale pipeline lock from PID {other_pid} "
+                  f"({other_kind})")
+            try:
+                _PIPELINE_LOCK_PATH.unlink()
+            except Exception:
+                pass
+    try:
+        _PIPELINE_LOCK_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _PIPELINE_LOCK_PATH.write_text(__import__("json").dumps({
+            "pid": os.getpid(),
+            "started_at": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "kind": "pipeline",
+        }), encoding="utf-8")
+    except Exception as e:
+        print(f"[!] failed to write pipeline lock: {e}; proceeding without lock")
+    return True
+
+
+def release_pipeline_lock() -> None:
+    """Best-effort lock release — only deletes if we still own it."""
+    try:
+        if _PIPELINE_LOCK_PATH.exists():
+            payload = __import__("json").loads(
+                _PIPELINE_LOCK_PATH.read_text(encoding="utf-8"))
+            if int(payload.get("pid") or 0) == os.getpid():
+                _PIPELINE_LOCK_PATH.unlink()
+    except Exception:
+        pass
+
+
+def load_review_suggestions(max_age_days: int = 7) -> dict[str, list[dict]]:
+    """Load any pending UC suggestions emitted by the quality-review
+    pass. Returns {article_id: [suggestion, ...]}. Discards entries
+    older than max_age_days so the file doesn't grow forever.
+
+    Each line of the JSONL is:
+      {"article_id": "...", "article_url": "...",
+       "suggestion": {title, rationale, kill_chain_phase, ...},
+       "ts": "<iso8601>"}
+    """
+    if not _REVIEW_SUGGESTIONS_PATH.exists():
+        return {}
+    cutoff = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=max_age_days)
+    suggestions_by_url: dict[str, list[dict]] = {}
+    kept_lines: list[str] = []
+    try:
+        for line in _REVIEW_SUGGESTIONS_PATH.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                entry = __import__("json").loads(line)
+            except Exception:
+                continue
+            ts_str = entry.get("ts") or ""
+            try:
+                ts = dt.datetime.fromisoformat(ts_str.replace("Z", "+00:00"))
+            except Exception:
+                ts = cutoff  # if unparseable, treat as expired
+            if ts < cutoff:
+                continue
+            kept_lines.append(line)
+            # Group by URL (more stable than article_id which renumbers
+            # each run).
+            url = (entry.get("article_url") or "").strip()
+            if not url:
+                continue
+            sug = entry.get("suggestion") or {}
+            if not isinstance(sug, dict):
+                continue
+            suggestions_by_url.setdefault(url, []).append(sug)
+    except Exception as e:
+        print(f"[!] failed to read review suggestions log: {e}")
+        return {}
+    # Rewrite the log with only fresh entries, so it self-prunes.
+    if kept_lines:
+        try:
+            _REVIEW_SUGGESTIONS_PATH.write_text(
+                "\n".join(kept_lines) + "\n", encoding="utf-8")
+        except Exception:
+            pass
+    else:
+        try:
+            _REVIEW_SUGGESTIONS_PATH.unlink()
+        except Exception:
+            pass
+    return suggestions_by_url
+
+
+def write_last_run_articles(articles_meta: list) -> None:
+    """Emit intel/last_run_articles.json so the quality-review pass can
+    enumerate what this run rendered without parsing index.html or
+    walking the briefings/ directory tree."""
+    try:
+        payload = []
+        for m in articles_meta:
+            payload.append({
+                "id": m.get("id"),
+                "url": m.get("link") or "",
+                "title": (m.get("title") or "")[:240],
+                "sev": m.get("sev") or "med",
+                "published": m.get("published") or "",
+            })
+        payload_with_meta = {
+            "ts": dt.datetime.now(dt.timezone.utc).isoformat(),
+            "count": len(payload),
+            "articles": payload,
+        }
+        _LAST_RUN_ARTICLES_PATH.parent.mkdir(parents=True, exist_ok=True)
+        _LAST_RUN_ARTICLES_PATH.write_text(
+            __import__("json").dumps(payload_with_meta, ensure_ascii=False),
+            encoding="utf-8")
+    except Exception as e:
+        print(f"[!] last_run_articles.json write failed: {e}")
+
+
 def _reset_oauth_circuit_breaker():
     """Call at the start of every main() run so a fresh pipeline doesn't
     inherit a stuck-open breaker (or used-up budget) from a previous
@@ -17866,6 +18038,18 @@ def main():
     _KC_STATS["llm_cached"] = 0
     _KC_STATS["skipped"] = 0
 
+    # Load any UC suggestions emitted by the most-recent quality-review
+    # pass (off-hour task). Keyed by article URL. Self-prunes entries
+    # older than 7 days. Currently logged but not yet consumed by the
+    # per-article loop — that wiring is a follow-up commit once we've
+    # seen what the reviewer actually produces.
+    _review_suggestions = load_review_suggestions()
+    if _review_suggestions:
+        suggestion_count = sum(len(v) for v in _review_suggestions.values())
+        print(f"[*] Quality-review feedback: {suggestion_count} pending UC "
+              f"suggestion(s) for {len(_review_suggestions)} article(s) "
+              f"(consumer wiring is a follow-up; logged only for now)")
+
     articles = fetch_articles()
     if not articles:
         sys.exit("[!] No articles returned from any source.")
@@ -18098,6 +18282,10 @@ def main():
     generated_iso = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     write_intel_files(iocs, generated_iso)
     write_catalog_files(generated_iso)
+    # Snapshot of what THIS run rendered for the off-hour quality-review
+    # pass to enumerate. Path is gitignored; the file is regenerated
+    # each run.
+    write_last_run_articles(articles_meta)
     print(f"[*] IOCs aggregated: {len(iocs)} unique  ->  intel/")
     print(f"[*] Catalog exported: {len(_LOADED_UCS or {})} use cases  ->  catalog/")
 
@@ -18614,4 +18802,14 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # Pipeline lock — abort cleanly if the quality-review pass (or
+    # another generate.py instance) is already running. Lock is
+    # released in `finally` so a crashed run doesn't leave the file
+    # behind (and even if it does, the next caller detects the stale
+    # PID and clears it).
+    if not acquire_pipeline_lock():
+        sys.exit(0)
+    try:
+        main()
+    finally:
+        release_pipeline_lock()

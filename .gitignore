@@ -59,6 +59,14 @@ intel/ioc_drops.jsonl
 # body OR its IOC set changes (cache key includes both hashes).
 intel/.llm_kc_cache/
 
+# Off-hour quality-review pass artefacts. Per-article verdicts and the
+# article-list snapshot are local-only; the suggestions log
+# (intel/quality_suggestions.jsonl) IS committed so the next pipeline
+# run can read it across machines / restarts.
+intel/.pipeline.lock
+intel/quality_review/
+intel/last_run_articles.json
+
 # Cache backup files left behind by invalidate_problem_uc_cache.py.
 # The originals get renamed with a timestamp suffix; keep them locally
 # as a recovery option but don't pollute git status with them.
