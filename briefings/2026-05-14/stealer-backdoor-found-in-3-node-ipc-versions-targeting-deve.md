@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc supply-chain stealer C2 contact (sh.azurestaticprovider.net)
 
-`UC_39_10` · phase: **c2** · confidence: **High**
+`UC_40_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ union net_hits, dns_hits
 
 ### [LLM] node.exe initiating direct UDP/53 to public resolvers (DNS exfil resolver bypass)
 
-`UC_39_11` · phase: **c2** · confidence: **Medium**
+`UC_40_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### [LLM] Install or import of compromised node-ipc 9.1.6 / 9.2.3 / 12.0.1 versions
 
-`UC_39_12` · phase: **delivery** · confidence: **High**
+`UC_40_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -402,7 +402,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
-`UC_39_9` · phase: **exploit** · confidence: **High**
+`UC_40_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
