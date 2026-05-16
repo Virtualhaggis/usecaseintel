@@ -1195,71 +1195,123 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 # we stop dialling it and either fall back to ANTHROPIC_API_KEY or skip the
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
-_OAUTH_MAX_CONSECUTIVE_FAILURES = 3
+_OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
 _OAUTH_UC_CALL_TIMEOUT_SEC = 180         # _llm_call_via_oauth: max_turns=4 + search
 _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
 
-# Per-kind circuit breakers. The earlier single-counter design meant a
-# few cold-start failures on UC generation would also block the IOC and
-# relevance calls — `_extract_iocs` returned regex output for 959 / 970
-# articles in the first warm-up run because the breaker tripped on the
-# UC path before IOC extraction even started. Splitting by kind keeps a
-# flap localised: UC degradation doesn't kill IOC coverage and vice
-# versa. The legacy `_OAUTH_FAILURES` / `_OAUTH_CIRCUIT_OPEN` names are
-# preserved as module-level proxies for the "uc" entry so existing
-# read-sites (end-of-run summary print, log lines elsewhere) keep
-# working unchanged.
+# Per-kind circuit breakers with a rolling-window failure-rate trigger.
+# An earlier "3 consecutive failures" design never tripped on the IOC
+# path during the 2026-05-16 warm-up: timeouts cost 45s each, but every
+# intermittent success between failures reset the counter so the breaker
+# stayed closed and the pipeline burned ~6 hours hammering a flaky SDK.
+# Replacing the consecutive-count with "K failures in the last N calls"
+# means a 30%-failure regime trips fast without false-positive flips on
+# the first transient blip.
+#
+# Each kind also gets a hard per-run call budget so a run can never
+# spiral on LLM cost or wallclock even if the breaker logic gets fooled.
+# Once the budget is exhausted the kind silently short-circuits to its
+# fallback path (rules-only UCs, regex IOCs, default-keep relevance)
+# without printing per-article warnings.
+_OAUTH_WINDOW_SIZE = 12          # last N call outcomes to consider
+_OAUTH_FAIL_THRESHOLD = 6        # >= K failures in the window opens the breaker
 _OAUTH_BREAKERS: dict[str, dict] = {
-    "uc":        {"failures": 0, "open": False},
-    "relevance": {"failures": 0, "open": False},
-    "ioc":       {"failures": 0, "open": False},
+    # uc generation: heaviest call (Opus + WebSearch + 180s budget).
+    # Generous call budget — only ~50-100 fresh-uc calls per run anyway
+    # thanks to per-article UC cache.
+    "uc":        {"failures": 0, "open": False, "window": [],
+                  "budget": 250, "used": 0},
+    "relevance": {"failures": 0, "open": False, "window": [],
+                  "budget": 400, "used": 0},
+    # IOC extraction: bounded Haiku call, but runs on every kept
+    # article. 200 calls is enough to cover a typical day's new
+    # articles + warm the cache for older ones across runs.
+    "ioc":       {"failures": 0, "open": False, "window": [],
+                  "budget": 200, "used": 0},
 }
-# Backwards-compatible module aliases — kept in sync with the "uc" entry
-# at end of every note_* call so legacy reads of these names continue
-# to reflect the heaviest LLM path (which dominates per-run cost).
+# Backwards-compatible module aliases — kept in sync with the "uc"
+# entry at the end of every note_* call so legacy reads of these names
+# (e.g. existing end-of-run summary code) still reflect the heaviest
+# LLM path.
 _OAUTH_FAILURES = 0
 _OAUTH_CIRCUIT_OPEN = False
 
 
 def _reset_oauth_circuit_breaker():
     """Call at the start of every main() run so a fresh pipeline doesn't
-    inherit a stuck-open breaker from a previous in-process retry."""
+    inherit a stuck-open breaker (or used-up budget) from a previous
+    in-process retry."""
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
     for bk in _OAUTH_BREAKERS.values():
         bk["failures"] = 0
         bk["open"] = False
+        bk["window"] = []
+        bk["used"] = 0
     _OAUTH_FAILURES = 0
     _OAUTH_CIRCUIT_OPEN = False
 
 
-def _note_oauth_failure(reason: str, kind: str = "uc") -> None:
+def _record_oauth_outcome(kind: str, ok: bool, reason: str | None = None) -> None:
+    """Push a 0/1 onto the rolling window; trip the breaker if the
+    failure count in the window crosses the threshold. Single source of
+    truth for both success and failure paths so the legacy aliases stay
+    in sync without each caller having to remember to update them."""
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
-    bk = _OAUTH_BREAKERS.setdefault(kind, {"failures": 0, "open": False})
-    bk["failures"] += 1
-    safe = str(reason).encode("ascii", "replace").decode("ascii")[:120]
-    print(f"    [!] OAuth call failed ({kind} {bk['failures']}/"
-          f"{_OAUTH_MAX_CONSECUTIVE_FAILURES}): {safe}")
-    if bk["failures"] >= _OAUTH_MAX_CONSECUTIVE_FAILURES and not bk["open"]:
+    bk = _OAUTH_BREAKERS.setdefault(
+        kind, {"failures": 0, "open": False, "window": [],
+               "budget": 100, "used": 0})
+    bk["used"] += 1
+    bk["window"].append(0 if ok else 1)
+    if len(bk["window"]) > _OAUTH_WINDOW_SIZE:
+        bk["window"].pop(0)
+    bk["failures"] = sum(bk["window"])
+    if not ok:
+        safe = str(reason or "").encode("ascii", "replace").decode("ascii")[:120]
+        print(f"    [!] OAuth call failed ({kind} {bk['failures']}/{_OAUTH_WINDOW_SIZE} "
+              f"in window): {safe}")
+    # Trip on rate, only once we have a reasonable sample size.
+    if (not bk["open"]
+            and len(bk["window"]) >= _OAUTH_FAIL_THRESHOLD
+            and bk["failures"] >= _OAUTH_FAIL_THRESHOLD):
         bk["open"] = True
         print(f"    [!] OAuth circuit breaker OPEN for '{kind}' — "
-              f"falling back to regex/API-key path for the rest of this run")
+              f"{bk['failures']}/{len(bk['window'])} failures in window. "
+              f"Falling back to regex/rules for remainder of run.")
     if kind == "uc":
         _OAUTH_FAILURES = bk["failures"]
         _OAUTH_CIRCUIT_OPEN = bk["open"]
 
 
+def _note_oauth_failure(reason: str, kind: str = "uc") -> None:
+    _record_oauth_outcome(kind, ok=False, reason=reason)
+
+
 def _note_oauth_success(kind: str = "uc") -> None:
-    """A clean response resets the consecutive-failure count so transient
-    blips don't accumulate across hours of normal operation."""
-    global _OAUTH_FAILURES
-    bk = _OAUTH_BREAKERS.setdefault(kind, {"failures": 0, "open": False})
-    bk["failures"] = 0
-    if kind == "uc":
-        _OAUTH_FAILURES = 0
+    """A clean response gets pushed onto the rolling window. Unlike the
+    earlier design, a single success no longer wipes out the prior
+    failure history — the window decays the count naturally over the
+    next N calls, so an intermittently flaky SDK still trips."""
+    _record_oauth_outcome(kind, ok=True)
 
 
 def _oauth_circuit_open(kind: str = "uc") -> bool:
-    return _OAUTH_BREAKERS.get(kind, {}).get("open", False)
+    """Return True if the breaker is open OR the per-run call budget
+    for this kind is exhausted. Callers treat both the same way: no
+    OAuth call this article, use the fallback."""
+    bk = _OAUTH_BREAKERS.get(kind)
+    if not bk:
+        return False
+    if bk.get("open"):
+        return True
+    if bk.get("used", 0) >= bk.get("budget", 10**9):
+        # Print once per run when the budget first runs out.
+        if not bk.get("_budget_logged"):
+            bk["_budget_logged"] = True
+            print(f"    [*] OAuth call budget for '{kind}' "
+                  f"({bk['budget']} calls) exhausted; remaining articles "
+                  f"will use fallback path.")
+        return True
+    return False
 
 
 def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
