@@ -1216,6 +1216,44 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 
 
 # =============================================================================
+# claude-agent-sdk subprocess-close monkey patch.
+# Upstream bug — anthropics/claude-agent-sdk-python#890. When the SDK closes
+# the subprocess CLI transport, a BaseExceptionGroup[CancelledError] can
+# escape because the SDK's `suppress(Exception)` in subprocess_cli.close()
+# doesn't catch BaseException (which BaseExceptionGroup inherits from in
+# Python 3.11+, since CancelledError is a BaseException). The result is
+# that EVERY `query()` call appears to fail with "Fatal error in message
+# reader: Command failed with exit code 1" — even though Claude actually
+# answered correctly and the message chunks were collected.
+# This patch wraps the broken close path so the cleanup exception no
+# longer poisons the caller's exception handler. Without this, our IOC
+# and UC paths show ~100% failure rates on Windows even though the LLM
+# is responding fine. See investigation notes (issue #890 root cause).
+try:
+    from claude_agent_sdk._internal.transport import subprocess_cli as _sdk_subproc
+    _sdk_orig_close = _sdk_subproc.SubprocessCLITransport.close
+    async def _sdk_safe_close(self):
+        try:
+            await _sdk_orig_close(self)
+        except BaseExceptionGroup:
+            # SDK cleanup raised — chunks were already collected by the
+            # caller. Swallow so the caller's exception path doesn't
+            # treat a successful query as a failure.
+            pass
+        except BaseException:
+            # Defensive: any other exit-time exception from the SDK's
+            # async teardown gets dropped. The transport is closing
+            # anyway; nothing useful comes from re-raising.
+            pass
+    _sdk_subproc.SubprocessCLITransport.close = _sdk_safe_close
+except (ImportError, AttributeError):
+    # SDK version doesn't expose the internal transport module the way
+    # this patch expects. The pipeline will fall back to its existing
+    # BaseException handler — same behaviour as before this patch.
+    pass
+
+
+# =============================================================================
 # OAuth circuit breaker. claude-agent-sdk's subprocess (cli runner) occasionally
 # crashes mid-stream with "Fatal error in message reader: Command failed with
 # exit code 1". When that happens the pipeline can stall waiting for a dead
