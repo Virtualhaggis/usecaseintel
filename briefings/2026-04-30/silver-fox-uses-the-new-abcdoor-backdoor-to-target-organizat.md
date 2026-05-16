@@ -32,114 +32,9 @@ In December 2025, we detected …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `207.56.138.28`
-- **IPv4 (defanged):** `154.82.81.205`
-- **IPv4 (defanged):** `45.118.133.203`
-- **IPv4 (defanged):** `108.187.37.85`
-- **IPv4 (defanged):** `108.187.42.63`
-- **IPv4 (defanged):** `108.187.41.221`
-- **IPv4 (defanged):** `154.82.81.192`
-- **IPv4 (defanged):** `139.180.128.251`
-- **IPv4 (defanged):** `192.229.115.229`
-- **IPv4 (defanged):** `207.56.119.216`
-- **IPv4 (defanged):** `192.163.167.14`
-- **IPv4 (defanged):** `45.192.219.60`
-- **IPv4 (defanged):** `192.238.205.47`
-- **IPv4 (defanged):** `45.32.108.178`
-- **IPv4 (defanged):** `57.133.212.106`
 - **Domain (defanged):** `abc.haijing88.com`
-- **Domain (defanged):** `mcagov.cc`
-- **Domain (defanged):** `abc.fetish-friends.com`
-- **Domain (defanged):** `tinyurl.com`
-- **Domain (defanged):** `roldco.com`
-- **Domain (defanged):** `sudsmama.com`
-- **Domain (defanged):** `vnc.kcii2.com`
-- **Domain (defanged):** `abc.3mkorealtd.com`
-- **Domain (defanged):** `abc.sudsmama.com`
-- **Domain (defanged):** `abc.woopami.com`
-- **Domain (defanged):** `abc.ilptour.com`
-- **Domain (defanged):** `abc.petitechanson.com`
-- **Domain (defanged):** `abc.doublemobile.com`
-- **Domain (defanged):** `ip-api.com`
-- **Domain (defanged):** `ipwho.is`
-- **Domain (defanged):** `ipinfo.io`
-- **Domain (defanged):** `ipapi.co`
-- **Domain (defanged):** `www.geoplugin.net`
-- **Domain (defanged):** `geoplugin.net`
-- **Domain (defanged):** `socket.io`
-- **Domain (defanged):** `obfuscate.io`
 - **MD5:** `e6362a81991323e198a463a8ce255533`
 - **MD5:** `2c5a1dd4cb53287fe0ed14e0b7b7b1b7`
-- **MD5:** `fc546acf1735127db05fb5bc354093e0`
-- **MD5:** `4a5195a38a458cdd2c1b5ab13af3b393`
-- **MD5:** `e66bae6e8621db2a835fa6721c3e5bbe`
-- **MD5:** `2375193669e243e830ef5794226352e7`
-- **MD5:** `5b998a5bc5ad1c550564294034d4a62c`
-- **MD5:** `c50c980d3f4b7ed970f083b0d37a6a6a`
-- **MD5:** `de8f0008b15f2404f721f76fac34456a`
-- **MD5:** `9bf9f635019494c4b70fb0a7c0fb53e4`
-- **MD5:** `a543b96b0938de798dd4f683dd92a94a`
-- **MD5:** `fa08b243f12e31940b8b4b82d3498804`
-- **MD5:** `13669b8f2bd0af53a3fe9ac0490499e5`
-- **MD5:** `04194f8ddd0518fd8005f0e87ae96335`
-- **MD5:** `f15a67899cfe4decff76d4cd1677c254`
-- **MD5:** `11705121f64fa36f1e9d7e59867b0724`
-- **MD5:** `4d343515f4c87b9a2ffd2f46665d2d57`
-- **MD5:** `dfc64dd9d8f776ca5440c35fef5d406e`
-- **MD5:** `eefc28e9f2c0c0592af186be8e3570d2`
-- **MD5:** `6cf382d3a0eae57b8baaa263e4ed8d00`
-- **MD5:** `32407207e9e9a0948d167dca96c41d1a`
-- **MD5:** `d17caf6f5d6ba3393a3a865d1c43c3d2`
-- **MD5:** `6495c409b59deb72cfcb2b2da983b3bb`
-- **MD5:** `b500e0a8c87dffe6f20c6e067b51afbf`
-- **MD5:** `814032eec3bc31643f8faa4234d0e049`
-- **MD5:** `90257aa1e7c9118055c09d4a978d4bee`
-- **MD5:** `f8371097121549feb21e3bcc2eeea522`
-- **MD5:** `2b92e125184469a0c3740abcaa10350c`
-- **MD5:** `043e457726f1bbb6046cb0c9869dbd7d`
-- **MD5:** `1AA72CD19E37570E14D898DFF3F2E380`
-- **MD5:** `79CD56FC9ABF294B9BA8751E618EC642`
-- **MD5:** `0B9B420E3EDD2ADE5EDC44F60CA745A2`
-- **MD5:** `6611E902945E97A1B27F322A50566D48`
-- **MD5:** `84E54C3602D8240ED905B07217C451CD`
-- **MD5:** `B53E3CC11947E5645DFBB19934B69833`
-- **MD5:** `0C3B60FFC4EA9CCCE744BFA03B1A3556`
-- **MD5:** `039E93B98EF5E329F8666A424237AE73`
-- **MD5:** `B6DF7C59756AB655CA752B8A1B20CFFA`
-- **MD5:** `5390E8BF7131CAAAA98A5DD63E27B2BC`
-- **MD5:** `44299A368000AE1EE9E9E584377B8757`
-- **MD5:** `E5E8EF65B4D265BD5FB77FE165131C2F`
-- **MD5:** `3279307508F3E5FB3A2420DEC645F583`
-- **MD5:** `1020497BEF56F4181AEFB7A0A9873FB4`
-- **MD5:** `B23D302B7F23453C98C11CA7B2E4616E`
-- **MD5:** `A234850DFDFD7EE128F648F9750DD2C4`
-- **MD5:** `4FC5EC1DE89CE3FCDD3E70DB4A9C39D1`
-- **MD5:** `A0D1223CA4327AA5F7674BDA8779323F`
-- **MD5:** `70AE9CA2A285DA9005A8ACB32DD31ACE`
-- **MD5:** `DD0114FFACC6610B5A4A1CB0E79624CC`
-- **MD5:** `891DE2FF486A1824F2DB01C1BDF1D2E9`
-- **MD5:** `B0E06925DB5416DFC90BABF46402CD6F`
-- **MD5:** `AD39A5790B79178D02AC739099B8E1F4`
-- **MD5:** `D1D78CD1436991ADB9C005CC7C6B5B98`
-- **MD5:** `CB3D86E3EC2736EE1C883706FCA172F8`
-- **MD5:** `A083C546DC66B0F2A5E0E2E68032F62C`
-- **MD5:** `70016DDBCB8543BDB06E0F8C509EE980`
-- **MD5:** `8FC911CA37F9F451A213B967F016F1F8`
-- **MD5:** `202A5BCB87C34993318CFA3FA0C7ECB0`
-- **MD5:** `06130DC648621E93ACB9EFB9FABB9651`
-- **MD5:** `F7037CC9A5659D5A1F68E88582242375`
-- **MD5:** `8AC5BEE89436B29F9817E434507FEF55`
-- **MD5:** `5ED84B2099E220D645934E1FD552AE3A`
-- **MD5:** `27A3C439308F5C4956D77E23E1AAD1A9`
-- **MD5:** `53B68CA8D7A54C15700CF9500AE4A4E2`
-- **MD5:** `1D1F71936DB05F67765F442FEB95F3FD`
-- **MD5:** `3C6AEC25EBB2D51E1F16C2EEF181C82A`
-- **MD5:** `7F27818E4244310A645984CCC41EA818`
-- **MD5:** `A75713F0310E74FFD24D91E5731C4D31`
-- **MD5:** `4FC8C78516A8C2130286429686E200ED`
-- **MD5:** `3417B9CF7ACB22FAE9E24603D4DE1194`
-- **MD5:** `933F1CB8ED2CED5D0DD2877C5EA374E8`
-- **MD5:** `B5CA812843570DCF8E7F35CACAB36D4A`
 
 ## MITRE ATT&CK Techniques
 
@@ -591,10 +486,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `207.56.138.28`, `154.82.81.205`, `45.118.133.203`, `108.187.37.85`, `108.187.42.63`, `108.187.41.221`, `154.82.81.192`, `139.180.128.251` _(+28 more)_
+  - IP / domain IOC(s): `abc.haijing88.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `e6362a81991323e198a463a8ce255533`, `2c5a1dd4cb53287fe0ed14e0b7b7b1b7`, `fc546acf1735127db05fb5bc354093e0`, `4a5195a38a458cdd2c1b5ab13af3b393`, `e66bae6e8621db2a835fa6721c3e5bbe`, `2375193669e243e830ef5794226352e7`, `5b998a5bc5ad1c550564294034d4a62c`, `c50c980d3f4b7ed970f083b0d37a6a6a` _(+64 more)_
+  - file hash IOC(s): `e6362a81991323e198a463a8ce255533`, `2c5a1dd4cb53287fe0ed14e0b7b7b1b7`
 
 
 ## Why this matters

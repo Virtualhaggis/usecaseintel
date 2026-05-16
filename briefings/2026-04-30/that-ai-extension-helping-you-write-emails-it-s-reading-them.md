@@ -25,28 +25,9 @@ Threat Re…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2025-55182`
-- **IPv4 (defanged):** `158.160.66.115`
-- **IPv4 (defanged):** `199.80.55.27`
 - **Domain (defanged):** `mcp-browser.qubecare.ai`
-- **Domain (defanged):** `api.reverserecruiting.io`
-- **Domain (defanged):** `chatgptforchrome.com`
-- **Domain (defanged):** `xuix.top`
-- **Domain (defanged):** `newextensioninstallweb.com`
-- **Domain (defanged):** `huiyiai.net`
-- **Domain (defanged):** `yiban.io`
-- **Domain (defanged):** `browser.cash`
-- **Domain (defanged):** `banana.summarizer.one`
-- **Domain (defanged):** `notionapp.cn`
-- **Domain (defanged):** `vomet.ru`
-- **Domain (defanged):** `pic-editor-chromeextension.uno`
-- **Domain (defanged):** `gosupersonic.email`
 - **SHA256:** `0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5`
 - **SHA256:** `ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02`
-- **SHA256:** `604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3`
-- **SHA256:** `dfe307d957724ebe32331f92d53e366b7fa85968a9564c2285c5a0142ac9e1bb`
-- **SHA256:** `4e38bee33237a8c8b17a2504013e506ca7cbf667a7f68a2d94d75db505c2149f`
-- **SHA256:** `c9754454efede2dec2fcb856faa40424b8df378706b664a5ae4847fcd0336b53`
 
 ## MITRE ATT&CK Techniques
 
@@ -56,7 +37,6 @@ Threat Re…
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -77,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_226_11` · phase: **c2** · confidence: **High**
+`UC_226_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +80,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
 
-`UC_226_12` · phase: **install** · confidence: **High**
+`UC_226_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -380,7 +360,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_226_10` · phase: **exploit** · confidence: **High**
+`UC_226_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,15 +412,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `158.160.66.115`, `199.80.55.27`, `mcp-browser.qubecare.ai`, `api.reverserecruiting.io`, `chatgptforchrome.com`, `xuix.top`, `newextensioninstallweb.com`, `huiyiai.net` _(+7 more)_
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-55182`
+  - IP / domain IOC(s): `mcp-browser.qubecare.ai`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5`, `ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02`, `604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3`, `dfe307d957724ebe32331f92d53e366b7fa85968a9564c2285c5a0142ac9e1bb`, `4e38bee33237a8c8b17a2504013e506ca7cbf667a7f68a2d94d75db505c2149f`, `c9754454efede2dec2fcb856faa40424b8df378706b664a5ae4847fcd0336b53`
+  - file hash IOC(s): `0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5`, `ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

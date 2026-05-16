@@ -3417,7 +3417,7 @@ HTML_HEAD = r"""<!doctype html>
 <link rel="icon" type="image/png" href="https://clankerusecase.com/logo.png">
 <link rel="apple-touch-icon" href="https://clankerusecase.com/logo.png">
 <link rel="canonical" href="https://clankerusecase.com/">
-<meta name="description" content="Open-source threat-led detection library: 2,000+ use cases mapped to MITRE ATT&amp;CK, with Defender KQL, Sentinel KQL, Sigma, and Splunk SPL queries. Auto-pulled from 11+ threat-intel feeds (BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV) every 2 hours.">
+<meta name="description" content="Threat-led detection library for SOC teams: 2,000+ use cases mapped to MITRE ATT&amp;CK, with Defender KQL, Sentinel KQL, Sigma, and Splunk SPL queries. Built from 11+ threat-intel feeds (BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV) and refreshed every 2 hours.">
 <meta name="keywords" content="MITRE ATT&amp;CK, Defender KQL, Sentinel KQL, Sigma rules, Splunk SPL, threat hunting, SOC, threat intelligence, detection engineering, CTI, Microsoft Defender Advanced Hunting, Microsoft Sentinel, IOC, indicators of compromise, KQL queries, SPL queries, threat actors, APT, ransomware, phishing, BleepingComputer, Hacker News">
 <meta name="author" content="Virtualhaggis">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -3428,7 +3428,7 @@ HTML_HEAD = r"""<!doctype html>
 <meta property="og:site_name" content="Clankerusecase">
 <meta property="og:url" content="https://clankerusecase.com/">
 <meta property="og:title" content="Clankerusecase — Threat-led detection library for SOC teams">
-<meta property="og:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — auto-generated from daily threat-intel feeds. Free, open source, ready to deploy.">
+<meta property="og:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — generated continuously from current threat-intel feeds and ready to deploy.">
 <meta property="og:image" content="https://clankerusecase.com/logo.png">
 <meta property="og:image:alt" content="Clankerusecase — production-ready SOC detections from daily threat-intel">
 <meta property="og:locale" content="en_GB">
@@ -3452,7 +3452,7 @@ HTML_HEAD = r"""<!doctype html>
       "@id": "https://clankerusecase.com/#website",
       "url": "https://clankerusecase.com/",
       "name": "Clankerusecase",
-      "description": "Open-source threat-led detection library: 2,000+ MITRE-mapped use cases in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL.",
+      "description": "Threat-led detection library: 2,000+ MITRE-mapped use cases in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL.",
       "publisher": {"@id": "https://clankerusecase.com/#org"},
       "potentialAction": {
         "@type": "SearchAction",
@@ -3465,8 +3465,7 @@ HTML_HEAD = r"""<!doctype html>
       "@id": "https://clankerusecase.com/#org",
       "name": "Clankerusecase",
       "url": "https://clankerusecase.com/",
-      "logo": "https://clankerusecase.com/logo.png",
-      "sameAs": ["https://github.com/Virtualhaggis/usecaseintel"]
+      "logo": "https://clankerusecase.com/logo.png"
     },
     {
       "@type": "Dataset",
@@ -3474,7 +3473,6 @@ HTML_HEAD = r"""<!doctype html>
       "name": "Clankerusecase Detection Library",
       "description": "Daily-refreshed corpus of SOC detection use cases mapped to MITRE ATT&CK, expressed in Defender KQL, Microsoft Sentinel KQL, Sigma, and Splunk SPL. Each detection is tied to a public threat-intel article from BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV, or similar source.",
       "creator": {"@id": "https://clankerusecase.com/#org"},
-      "license": "https://opensource.org/licenses/MIT",
       "url": "https://clankerusecase.com/",
       "keywords": "MITRE ATT&CK, threat detection, Defender KQL, Sentinel KQL, Sigma, Splunk SPL, threat intelligence, SOC, threat hunting, IOC",
       "isAccessibleForFree": true
@@ -3485,7 +3483,7 @@ HTML_HEAD = r"""<!doctype html>
       "applicationCategory": "SecurityApplication",
       "operatingSystem": "Web",
       "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
-      "description": "Threat-led detection library for SOC teams, threat hunters, and CTI analysts. Free and open source.",
+      "description": "Threat-led detection library for SOC teams, threat hunters, and CTI analysts.",
       "url": "https://clankerusecase.com/"
     }
   ]
@@ -7061,8 +7059,6 @@ body.view-home-active .stats-articles{display:none !important;}
       <button class="view-tab" data-view="matrix" role="tab">ATT&amp;CK Matrix</button>
       <button class="view-tab" data-view="intel" role="tab">Threat Intel</button>
       <button class="view-tab" data-view="actors" role="tab">Threat Actors</button>
-      <button class="view-tab" data-view="workflow" role="tab">Workflow</button>
-      <button class="view-tab" data-view="about" role="tab">About</button>
     </div>
   </div>
 </header>
@@ -7356,11 +7352,11 @@ __HOME__
 
         <h4>Pull the feed (always current)</h4>
         <div class="intel-urls">
-          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.csv" target="_blank">intel/iocs.csv</a></code>
-          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.json" target="_blank">intel/iocs.json</a></code>
-          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.stix.json" target="_blank">intel/iocs.stix.json</a></code>
-          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/splunk_lookup_iocs.csv" target="_blank">splunk_lookup_iocs.csv</a></code>
-          <code><a href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml" target="_blank">📡 iocs.rss.xml (RSS 2.0)</a></code>
+          <code><a href="https://clankerusecase.com/intel/iocs.csv" target="_blank">intel/iocs.csv</a></code>
+          <code><a href="https://clankerusecase.com/intel/iocs.json" target="_blank">intel/iocs.json</a></code>
+          <code><a href="https://clankerusecase.com/intel/iocs.stix.json" target="_blank">intel/iocs.stix.json</a></code>
+          <code><a href="https://clankerusecase.com/intel/splunk_lookup_iocs.csv" target="_blank">splunk_lookup_iocs.csv</a></code>
+          <code><a href="https://clankerusecase.com/intel/iocs.rss.xml" target="_blank">📡 iocs.rss.xml (RSS 2.0)</a></code>
         </div>
         <p class="lg-note" style="margin-top:6px;">
           Drop the RSS URL into Feedly, Inoreader, Slack RSS, or your TIP's RSS connector to get
@@ -7409,8 +7405,7 @@ __HOME__
         </ul>
 
         <p class="lg-note" style="margin-top:14px;">
-          Full docs and integration examples (Splunk, Defender, MISP, OpenCTI, Sentinel TAXII): see
-          <a href="https://github.com/Virtualhaggis/usecaseintel/blob/main/intel/README.md" target="_blank" style="color:var(--accent);">intel/README.md on GitHub</a>.
+          Integration patterns covered: Splunk lookup, Defender Advanced Hunting, MISP, OpenCTI, Sentinel TAXII. Drop the CSV / JSON / STIX feed into your TIP and the schema is documented in each file's header.
         </p>
       </div>
     </details>
@@ -7436,7 +7431,7 @@ __HOME__
       <button class="src-chip" data-export="splunk">🔎 Splunk lookup</button>
       <button class="src-chip" data-export="copy">📋 Copy CSV</button>
       <a class="src-chip" target="_blank" rel="noopener"
-         href="https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml"
+         href="https://clankerusecase.com/intel/iocs.rss.xml"
          style="text-decoration:none;color:var(--warn);border-color:rgba(255,176,96,0.4);">
         📡 Subscribe via RSS
       </a>
@@ -7566,429 +7561,7 @@ __HOME__
   <div id="actorDrawerBody"></div>
 </aside>
 
-<div id="view-workflow" class="view">
-  <div class="workflow-wrap">
-    <h2 class="wf-title">From article to detection — the full pipeline</h2>
-    <p class="wf-lede">
-      How a fresh threat-intel article moves through this site: ingestion,
-      extraction, mapping, export. Diagram first, then the per-step detail —
-      including the actual prompts, regex, and heuristics behind each stage.
-    </p>
 
-    <!-- ============== DIAGRAM ============== -->
-    <div class="wf-diagram">
-      <svg viewBox="0 0 1280 480" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Pipeline workflow">
-        <defs>
-          <marker id="wfArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" fill="#5fb6ff"/>
-          </marker>
-          <linearGradient id="wfFill1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1a2840"/>
-            <stop offset="1" stop-color="#0f1a2c"/>
-          </linearGradient>
-          <linearGradient id="wfFill2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1f2a3f"/>
-            <stop offset="1" stop-color="#13202f"/>
-          </linearGradient>
-          <linearGradient id="wfFill3" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#1c2d2a"/>
-            <stop offset="1" stop-color="#0e1f1c"/>
-          </linearGradient>
-        </defs>
-
-        <!-- Stage 1: Sources -->
-        <g class="wf-stage">
-          <rect x="20" y="40" width="180" height="200" rx="12" fill="url(#wfFill1)" stroke="#2a3f5e" stroke-width="1.4"/>
-          <text x="110" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">1. SOURCES</text>
-          <text x="35" y="92" fill="#cfd6e3" font-size="11">• The Hacker News</text>
-          <text x="35" y="110" fill="#cfd6e3" font-size="11">• BleepingComputer</text>
-          <text x="35" y="128" fill="#cfd6e3" font-size="11">• Microsoft Security Blog</text>
-          <text x="35" y="146" fill="#cfd6e3" font-size="11">• Cyber Security News</text>
-          <text x="35" y="168" fill="#36e0c0" font-size="11">• Cisco Talos</text>
-          <text x="35" y="186" fill="#36e0c0" font-size="11">• Securelist (Kaspersky)</text>
-          <text x="35" y="204" fill="#36e0c0" font-size="11">• SentinelLabs</text>
-          <text x="35" y="222" fill="#36e0c0" font-size="11">• Unit 42 · ESET · Lab52</text>
-          <text x="35" y="240" fill="#9aa3b2" font-size="10.5">+ CISA KEV</text>
-        </g>
-
-        <!-- Stage 2: Ingest -->
-        <g class="wf-stage">
-          <rect x="240" y="40" width="200" height="200" rx="12" fill="url(#wfFill1)" stroke="#2a3f5e" stroke-width="1.4"/>
-          <text x="340" y="68" text-anchor="middle" fill="#5fb6ff" font-size="13" font-weight="700">2. INGEST</text>
-          <text x="255" y="100" fill="#cfd6e3" font-size="11" font-weight="600">RSS / KEV JSON</text>
-          <text x="255" y="120" fill="#9aa3b2" font-size="10.5">→ feedparser pulls entries</text>
-          <text x="255" y="138" fill="#9aa3b2" font-size="10.5">→ 365-day rolling window</text>
-          <text x="255" y="160" fill="#cfd6e3" font-size="11" font-weight="600">Full body fetch</text>
-          <text x="255" y="180" fill="#9aa3b2" font-size="10.5">→ HTTPS GET with cache</text>
-          <text x="255" y="198" fill="#9aa3b2" font-size="10.5">→ HTML→text + noise strip</text>
-          <text x="255" y="216" fill="#cfd6e3" font-size="11" font-weight="600">Cross-source dedupe</text>
-          <text x="255" y="234" fill="#9aa3b2" font-size="10.5">→ Jaccard ≥ 0.55 on titles</text>
-        </g>
-
-        <!-- Stage 3: Extraction -->
-        <g class="wf-stage">
-          <rect x="480" y="40" width="220" height="200" rx="12" fill="url(#wfFill2)" stroke="#3a2a5a" stroke-width="1.4"/>
-          <text x="590" y="68" text-anchor="middle" fill="#b48dff" font-size="13" font-weight="700">3. EXTRACT</text>
-          <text x="495" y="100" fill="#cfd6e3" font-size="11" font-weight="600">High-fidelity IOCs</text>
-          <text x="495" y="120" fill="#9aa3b2" font-size="10.5">CVEs (regex)</text>
-          <text x="495" y="138" fill="#9aa3b2" font-size="10.5">Hashes MD5/SHA1/SHA256</text>
-          <text x="495" y="156" fill="#9aa3b2" font-size="10.5">Defanged IPs / domains</text>
-          <text x="495" y="174" fill="#9aa3b2" font-size="10.5">hxxps:// URLs</text>
-          <text x="495" y="196" fill="#cfd6e3" font-size="11" font-weight="600">Article mechanics</text>
-          <text x="495" y="214" fill="#9aa3b2" font-size="10.5">Binaries / paths / cmd flags</text>
-          <text x="495" y="230" fill="#9aa3b2" font-size="10.5">Registry / persistence keys</text>
-        </g>
-
-        <!-- Stage 4: Use cases -->
-        <g class="wf-stage">
-          <rect x="740" y="40" width="240" height="200" rx="12" fill="url(#wfFill2)" stroke="#3a2a5a" stroke-width="1.4"/>
-          <text x="860" y="68" text-anchor="middle" fill="#b48dff" font-size="13" font-weight="700">4. USE CASES</text>
-          <text x="755" y="100" fill="#cfd6e3" font-size="11" font-weight="600">Rule matching</text>
-          <text x="755" y="120" fill="#9aa3b2" font-size="10.5">→ keyword triggers fire UC</text>
-          <text x="755" y="142" fill="#cfd6e3" font-size="11" font-weight="600">Bespoke generation</text>
-          <text x="755" y="162" fill="#9aa3b2" font-size="10.5">→ SPL/KQL hunts THIS</text>
-          <text x="755" y="180" fill="#9aa3b2" font-size="10.5">  attack's specific bins/paths</text>
-          <text x="755" y="200" fill="#cfd6e3" font-size="11" font-weight="600">IOC-driven hunts</text>
-          <text x="755" y="220" fill="#9aa3b2" font-size="10.5">→ shared template + IOC list</text>
-        </g>
-
-        <!-- Stage 5: Outputs -->
-        <g class="wf-stage">
-          <rect x="1020" y="40" width="240" height="200" rx="12" fill="url(#wfFill3)" stroke="#2a5a4f" stroke-width="1.4"/>
-          <text x="1140" y="68" text-anchor="middle" fill="#36e0c0" font-size="13" font-weight="700">5. OUTPUTS</text>
-          <text x="1035" y="100" fill="#cfd6e3" font-size="11" font-weight="600">Articles tab</text>
-          <text x="1035" y="118" fill="#9aa3b2" font-size="10.5">→ per-article cards + briefings</text>
-          <text x="1035" y="138" fill="#cfd6e3" font-size="11" font-weight="600">ATT&amp;CK Matrix</text>
-          <text x="1035" y="156" fill="#9aa3b2" font-size="10.5">→ 691 techniques × 2,236 UCs</text>
-          <text x="1035" y="176" fill="#cfd6e3" font-size="11" font-weight="600">Threat Intel</text>
-          <text x="1035" y="194" fill="#9aa3b2" font-size="10.5">→ CSV / JSON / STIX / RSS</text>
-          <text x="1035" y="214" fill="#cfd6e3" font-size="11" font-weight="600">Briefings (markdown)</text>
-          <text x="1035" y="232" fill="#9aa3b2" font-size="10.5">→ analyst-curated overlays</text>
-        </g>
-
-        <!-- Connectors -->
-        <line x1="200" y1="140" x2="240" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
-        <line x1="440" y1="140" x2="480" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
-        <line x1="700" y1="140" x2="740" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
-        <line x1="980" y1="140" x2="1020" y2="140" stroke="#5fb6ff" stroke-width="2" marker-end="url(#wfArrow)"/>
-
-        <!-- Bottom rail: analyst loop -->
-        <g class="wf-loop">
-          <rect x="20" y="320" width="1240" height="100" rx="12" fill="rgba(255,176,96,0.06)" stroke="#5a4a2a" stroke-width="1.4" stroke-dasharray="4 4"/>
-          <text x="640" y="350" text-anchor="middle" fill="#ffb060" font-size="13" font-weight="700">Analyst loop (continuous)</text>
-          <text x="100" y="378" fill="#cfd6e3" font-size="11">📖 Read article →</text>
-          <text x="280" y="378" fill="#cfd6e3" font-size="11">✏ Curate briefing &lt;!-- curated:true --&gt; →</text>
-          <text x="600" y="378" fill="#cfd6e3" font-size="11">🛠 Tune triggers / write new YAML UC →</text>
-          <text x="950" y="378" fill="#cfd6e3" font-size="11">💾 Commit → next pipeline run picks up</text>
-          <text x="640" y="402" text-anchor="middle" fill="#9aa3b2" font-size="10.5">Curated briefings get the &lt;!-- curated:true --&gt; marker and are preserved across runs.</text>
-        </g>
-
-        <line x1="640" y1="240" x2="640" y2="320" stroke="#ffb060" stroke-width="2" stroke-dasharray="4 4" marker-end="url(#wfArrow)"/>
-      </svg>
-    </div>
-
-    <!-- ============== DETAILED STEPS ============== -->
-    <h3 class="wf-section-title">1. Sources</h3>
-    <div class="wf-step">
-      <p>The pipeline pulls from <strong>11 feeds</strong> on every run:</p>
-      <ul>
-        <li><strong>News</strong> — The Hacker News, BleepingComputer, Microsoft Security Blog, Cyber Security News. Broad coverage, light on technical IOC tables.</li>
-        <li><strong>IOC-rich vendor research</strong> — Cisco Talos, Securelist (Kaspersky), SentinelLabs, Unit 42 (Palo Alto), ESET WeLiveSecurity, Lab52 (S2 Grupo). Where the hash / IP / domain tables and APT write-ups live.</li>
-        <li><strong>CISA KEV</strong> — authoritative exploited-vulnerability feed (JSON, not RSS).</li>
-      </ul>
-      <p>Adding a source is a 3-line entry in <code>SOURCES</code>. The fetcher detects RSS vs JSON automatically.</p>
-    </div>
-
-    <h3 class="wf-section-title">2. Ingest</h3>
-    <div class="wf-step">
-      <p>For each entry in the rolling <strong>365-day window</strong>:</p>
-      <ol>
-        <li><code>feedparser.parse()</code> reads the RSS preview.</li>
-        <li><code>_fetch_full_body(url)</code> issues an HTTPS GET with a polite <code>User-Agent</code>, caches the HTML to <code>intel/.article_cache/</code>, and converts to plain text. <strong>Without this step the IOC feed only has CVEs</strong> — RSS previews don't include hash tables.</li>
-        <li>Cross-source <strong>Jaccard dedupe</strong> on title token sets (threshold 0.55) merges "Chinese Silk Typhoon hacker extradited" (THN) with "Alleged Silk Typhoon hacker extradited" (BleepingComputer) into a single entry with two source attributions.</li>
-      </ol>
-    </div>
-
-    <h3 class="wf-section-title">3. Extract</h3>
-    <div class="wf-step">
-      <p>Two parallel extractors run on every article body:</p>
-      <p><strong>High-fidelity IOCs</strong> (<code>extract_indicators</code>):</p>
-      <ul>
-        <li>CVE — <code>CVE-\d{4}-\d{4,7}</code> regex.</li>
-        <li>SHA256 / SHA1 / MD5 — fixed-width hex regexes.</li>
-        <li>IPs / domains — <strong>defanged-only</strong>: <code>1[.]2[.]3[.]4</code>, <code>evil[.]com</code>, <code>hxxps://...</code>. Plain-text mentions are rejected because they're almost always the victim or platform, not the attacker.</li>
-      </ul>
-      <p><strong>Article mechanics</strong> (<code>extract_mechanics</code>):</p>
-      <ul>
-        <li>Binaries: regex on <code>*.exe / .dll / .sys / .ps1 / .vbs / ...</code> filtered through a noise list (chrome.exe, cmd.exe, etc.).</li>
-        <li>Windows paths: <code>C:\</code> / <code>%APPDATA%</code> / <code>\Users\</code> / <code>\System32\</code> patterns, generic top-level paths filtered out.</li>
-        <li>Unix paths: <code>/tmp</code>, <code>/var</code>, <code>/Library</code>, <code>/etc</code> patterns.</li>
-        <li>Registry keys: <code>HK[LCU][MR]?\...</code> patterns.</li>
-        <li>Persistence keywords ("scheduled task", "launchagent", "run key", etc.) → linked to MITRE technique IDs.</li>
-        <li>Command-line fragments — <code>-EncodedCommand</code>, <code>FromBase64String</code>, <code>vssadmin delete shadows</code>, etc.</li>
-      </ul>
-    </div>
-
-    <h3 class="wf-section-title">4. Use cases</h3>
-    <div class="wf-step">
-      <p>Three classes of use case fire per article:</p>
-      <p><strong>(a) Rule-fired generic UCs</strong> — <code>rules/*.yml</code> contain trigger keyword lists. If the article body matches any trigger, the rule's pre-built use case (in <code>use_cases/*.yml</code>) is added to the briefing. Example: any article mentioning "psexec" fires <code>UC_LATERAL_PSEXEC</code>.</p>
-      <p><strong>(b) Bespoke article-specific UCs</strong> — <em>new this session</em>. <code>extract_mechanics</code> output drives <code>_make_bespoke_uc</code>, which assembles a per-article SPL+KQL searching for the <strong>actual binaries / paths / commandline fragments</strong> named in the article. Threshold: at least one mechanic anchor must be present, otherwise no bespoke UC is emitted (silence beats noise).</p>
-      <p><strong>(c) IOC-substitution UCs</strong> — when the article has a CVE / IP / domain / hash, the matching boilerplate UC fires with the actual IOC list substituted in. Canonical SPL/KQL bodies live once in <a href="briefings/_TEMPLATES.md">briefings/_TEMPLATES.md</a>; the briefing inlines only the IOC values.</p>
-    </div>
-
-    <h3 class="wf-section-title">5. Outputs</h3>
-    <div class="wf-step">
-      <ul>
-        <li><strong>Articles tab</strong> — per-article cards (this <code>index.html</code>) + per-article markdown briefings under <code>briefings/&lt;date&gt;/</code>.</li>
-        <li><strong>ATT&amp;CK Matrix tab</strong> — 14 tactics × 691 techniques. Coverage drawn from 23 internal UCs + <strong>2,213 synced Splunk ESCU detections</strong>. Click any technique cell, then any UC card to expand it inline with full SPL/KQL — backed by <code>catalog/use_cases_full.js</code>.</li>
-        <li><strong>Threat Intel tab</strong> — IOC feed exports: CSV, JSON, STIX 2.1, RSS, Splunk lookup. Aggregated across every article in the window with source attribution.</li>
-      </ul>
-      <p>All outputs commit to <a href="https://github.com/Virtualhaggis/usecaseintel">github.com/Virtualhaggis/usecaseintel</a>; <code>run_daily.bat</code> runs validate → generate → digest → auto-commit on a schedule.</p>
-    </div>
-
-    <h3 class="wf-section-title">LLM-driven UC generation (opt-in)</h3>
-    <div class="wf-step">
-      <p>When <code>ANTHROPIC_API_KEY</code> is set in the environment, the pipeline sends each article body to an LLM with a structured detection-engineer prompt, parses the response as JSON, validates the techniques (<code>T####.###</code> format) + tier (alerting/hunting) + KQL/SPL fields, and emits the resulting UseCase objects alongside the regex bespoke UCs.</p>
-      <p>The LLM is told: use the actual binaries/paths/cmdlines named in the article, not invented ones; if the article describes the attack only narratively, return no UCs. Output is cached per article URL hash so repeat runs cost nothing.</p>
-      <p>Model: <code>claude-opus-4-7</code> by default for top-shelf detection quality (configurable via <code>USECASEINTEL_LLM_MODEL</code> — set to <code>claude-haiku-4-5-20251001</code> for a budget run). The first comprehensive run hits the LLM for every article that passes the attack-content filter; subsequent runs only re-analyse articles whose body has changed in the last 24 hours or that have new similar peers, so steady-state cost is small.</p>
-      <p>Each LLM-emitted UC is title-prefixed <code>[LLM]</code> and shows up in the matrix drawer alongside the rule-fired and regex-bespoke variants. Failures (no API key, parse error, network timeout) are logged but never fail the pipeline.</p>
-    </div>
-
-    <h3 class="wf-section-title">IOC enrichment (opt-in)</h3>
-    <div class="wf-step">
-      <p>When <code>ABUSECH_API_KEY</code> is set, every IOC in <code>intel/iocs.csv</code> is cross-referenced against:</p>
-      <ul>
-        <li><strong>ThreatFox (abuse.ch)</strong> — malware family attribution + first-seen + reporter for IPs / domains / hashes / CVEs / URLs.</li>
-        <li><strong>URLhaus (abuse.ch)</strong> — URL counts + blacklist memberships for hosts.</li>
-      </ul>
-      <p>Free auth keys at <a href="https://auth.abuse.ch/" target="_blank" rel="noopener">auth.abuse.ch</a> — abuse.ch added auth in 2024-2025 to control abuse. New CSV columns: <code>threatfox_malware</code>, <code>threatfox_threat_type</code>, <code>urlhaus_url_count</code>, <code>urlhaus_blacklists</code>, <code>enrichment_url</code>. Cache lives in <code>intel/.enrich_cache/</code>; if no key is set the columns stay blank and the pipeline runs unchanged.</p>
-      <p>Practical impact when enabled: an IOC the SOC sees in our feed is flanked by "is this on abuse.ch's known-bad list and what malware family is it linked to?" — turning a list of values into intel with attribution.</p>
-    </div>
-
-    <h3 class="wf-section-title">Per-platform rule packs</h3>
-    <div class="wf-step">
-      <p>Every internal UC is now exported to multiple SIEM-native formats under <code>rule_packs/</code>:</p>
-      <ul>
-        <li><code>splunk/savedsearches.conf</code> — drop-in Splunk app config. Each saved search is <code>enableSched = 0</code> by default — review-then-enable.</li>
-        <li><code>sentinel/&lt;uc&gt;.json</code> — Microsoft Sentinel ARM analytics rule template.</li>
-        <li><code>elastic/&lt;uc&gt;.json</code> — Elastic detection rule (KQL embedded in note for analyst port-over to ECS/EQL).</li>
-        <li><code>sigma/&lt;uc&gt;.yml</code> — Sigma format. Convert with <code>sigma-cli</code> to your SIEM dialect.</li>
-      </ul>
-      <p>All exports tier-aware: alerting runs hourly, hunting runs daily; severity high vs low; tier + fp_rate + MITRE attached to custom-details.</p>
-    </div>
-
-    <h3 class="wf-section-title">Quality gates — tier &amp; IOC allowlist</h3>
-    <div class="wf-step">
-      <p>Two filters keep the output honest:</p>
-      <p><strong>UC tier — alerting vs hunting.</strong> Every use case is tagged:</p>
-      <ul>
-        <li><strong style="color:var(--good);">ALERTING</strong> — high-fidelity. Specific IOCs, threshold or temporal correlation (<code>between (T .. T+60s)</code>), named-binary hunt, anomaly logic. Safe to wire to a SIEM rule with normal triage SLA.</li>
-        <li><strong style="color:var(--warn);">HUNTING</strong> — starter content. Returns rows that need analyst review; will produce false positives without environment tuning. Use as a hunt query first; promote to alerting after baselining + adding suppression for legitimate use.</li>
-      </ul>
-      <p>How it's set: explicit <code>tier:</code> field in the UC YAML wins. Otherwise <code>_infer_tier_from_query()</code> looks for alerting signals (temporal joins, thresholds, named-binary <code>IN</code>-lists, anomaly stats) and defaults to hunting if none are present. Splunk ESCU detections inherit tier from the upstream <code>type</code> — TTP/Correlation → alerting, Anomaly/Hunting → hunting. Bespoke article-generated UCs default to hunting.</p>
-      <p>Filter the drawer by tier (Alerting / Hunting) using the dropdown in the Use cases mapped section.</p>
-
-      <p style="margin-top:14px;"><strong>IOC allowlist — drop platform / reserved infrastructure.</strong> No SOC wants <code>google.com</code> or <code>192.168.0.1</code> in their block list. <code>_ioc_is_known_safe()</code> drops:</p>
-      <ul>
-        <li>Mainstream platform domains (Google, Microsoft, Apple, Amazon, Cloudflare, GitHub, npm, PyPI, Docker Hub, Wikipedia, Stack Overflow, social platforms).</li>
-        <li>Security-vendor self-references (THN, BleepingComputer, Talos, Securelist, etc.).</li>
-        <li>Common dead-drop dispensers (pastebin, ghostbin) — which CAN be abused but should be hunted manually rather than block-listed.</li>
-        <li>Reserved IPv4 ranges: RFC1918 (<code>10/8</code>, <code>172.16/12</code>, <code>192.168/16</code>), loopback (<code>127/8</code>), link-local (<code>169.254/16</code>), TEST-NETs, multicast.</li>
-        <li>Public DNS providers (<code>8.8.8.8</code>, <code>1.1.1.1</code>, etc.).</li>
-      </ul>
-      <p>Internal IPs aren't useless — they're just useless <em>standalone</em>. A bespoke UC describing lateral movement <em>can</em> reference them as part of a broader chain, but they don't belong in the IOC feed where the value is "block this on the perimeter".</p>
-    </div>
-
-    <h3 class="wf-section-title">Analyst loop</h3>
-    <div class="wf-step">
-      <p>Curated briefings get a <code>&lt;!-- curated:true --&gt;</code> HTML comment as line 1. The briefing writer skips any file with that marker so analyst overlays are preserved across pipeline runs. The pattern:</p>
-      <ol>
-        <li>Pipeline emits an auto-generated briefing.</li>
-        <li>Analyst reads the article, rewrites the briefing with attribution / actor context / sector implications / bespoke detection logic, adds <code>&lt;!-- curated:true --&gt;</code>.</li>
-        <li>Commits. Future pipeline runs see the marker and leave the file alone.</li>
-      </ol>
-      <p>For new use cases the analyst writes a YAML file under <code>use_cases/&lt;phase&gt;/UC_X.yml</code>; the loader at module-load time auto-registers it and the matrix builder picks it up on the next run.</p>
-    </div>
-
-    <h3 class="wf-section-title">Commands cheat-sheet</h3>
-    <div class="wf-step">
-      <pre style="background:var(--panel-elev);border:1px solid var(--border);border-radius:6px;padding:14px;font-size:12px;overflow:auto;">
-# Daily run (Windows)
-run_daily.bat                                   # validate → generate → digest → auto-commit
-
-# Manual one-shot
-python validate.py                              # YAML schema + SPL/KQL field checks
-python generate.py                              # rebuild index.html + intel/ + briefings/
-python digest.py                                # daily_digest.md summary
-
-# Disable body fetch (offline / debug)
-THN_FETCH_FULL_BODY=0 python generate.py        # IOC feed loses hash/IP/domain coverage
-THN_FETCH_DELAY=0.1 python generate.py          # speed up (less polite to sources)
-      </pre>
-    </div>
-  </div>
-</div>
-
-<div id="view-about" class="view">
-  <div class="workflow-wrap" style="max-width:1180px;">
-    <h2 class="wf-title" style="font-size:28px;">About Clankerusecase</h2>
-    <p class="wf-lede" style="font-size:15px;max-width:760px;">
-      Detection content for SOC analysts, generated from threat-intel articles
-      the day they break. Free, open-source, and community-shaped.
-    </p>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">What this is</h3>
-      <p>
-        Clankerusecase reads recent threat-intel articles (The Hacker News,
-        BleepingComputer, Microsoft Security Blog, Cisco Talos, Securelist,
-        SentinelLabs, Unit 42, ESET, Lab52, Cyber Security News, CISA KEV) and produces detection use
-        cases an analyst can drop into their SIEM. Every use case is mapped
-        to MITRE ATT&amp;CK, tagged with a tier (alerting vs hunting) and
-        a false-positive estimate, and — for the article-bespoke ones —
-        written by an LLM that's actually <em>read</em> the article rather
-        than spat out a generic technique template.
-      </p>
-    </div>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">The goal</h3>
-      <ul style="line-height:1.6;">
-        <li><strong>Hand analysts ready-to-run detection content</strong> the
-            day a campaign breaks — not three weeks later when the vendor
-            blog post has been turned into a "rule pack" behind a paywall.</li>
-        <li><strong>Cover the platforms analysts actually use.</strong>
-            Pick a vendor, get the same detection rendered for it.</li>
-        <li><strong>Be community-driven.</strong> The platforms covered, the
-            tier thresholds, the FP estimates, the per-source filters — all
-            decided by people doing detection engineering and threat hunting
-            day-to-day, not by a marketing team.</li>
-      </ul>
-    </div>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">Platform coverage today</h3>
-      <table class="wf-table">
-        <thead><tr><th>Platform</th><th>Status</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Microsoft Defender</strong> (Advanced Hunting / KQL)</td>
-            <td><span class="pill tier-alerting" style="background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Working well</span></td>
-            <td>Every use case has a hand-checked KQL query against the
-                <code>DeviceProcessEvents</code> / <code>EmailEvents</code> /
-                <code>UrlClickEvents</code> / <code>AADSignInEventsBeta</code>
-                tables. Pre-deployed table validation against the Defender
-                schema. This is the most mature path on the site today.</td>
-          </tr>
-          <tr>
-            <td><strong>Splunk</strong> (CIM / ESCU)</td>
-            <td><span class="pill" style="background:rgba(234,179,8,.15);color:#fde047;border:1px solid rgba(234,179,8,.4);padding:2px 8px;border-radius:4px;font-size:11px;">In progress</span></td>
-            <td>SPL queries emitted against <code>Endpoint</code>,
-                <code>Network_Traffic</code>, <code>Email</code>,
-                <code>Vulnerabilities</code>, <code>Web</code> data models;
-                CIM-validated. 2,200+ Splunk ESCU detections synced into the
-                ATT&amp;CK matrix. Field-level tuning for production deployment
-                is the next focus area.</td>
-          </tr>
-          <tr>
-            <td><strong>Sentinel ARM / Elastic / Sigma</strong></td>
-            <td><span class="pill" style="background:rgba(148,163,184,.15);color:#cbd5e1;border:1px solid rgba(148,163,184,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Rule-pack export</span></td>
-            <td>Rule packs are emitted to <code>rule_packs/</code> on every
-                build (all <code>enabled=false</code> by default — read,
-                review, then enable). Validation against each platform's
-                native schema is on the roadmap.</td>
-          </tr>
-          <tr>
-            <td><strong>Anything else?</strong></td>
-            <td><span class="pill" style="background:rgba(125,211,252,.15);color:#7dd3fc;border:1px solid rgba(125,211,252,.4);padding:2px 8px;border-radius:4px;font-size:11px;">Tell us</span></td>
-            <td>CrowdStrike NG-SIEM? Chronicle / Google SecOps? Sumo? OpenSearch?
-                Drop a request in Discord (link below) and if there's interest
-                from the community we'll wire it in.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">Community &amp; Discord</h3>
-      <p>
-        We're spinning up a Discord for analysts and detection engineers
-        using the site. The space is for:
-      </p>
-      <ul style="line-height:1.6;">
-        <li>Suggesting new platforms to add (KQL → SPL is done; what's next?).</li>
-        <li>Sharing tuning notes for the FP rate on specific use cases in
-            your environment.</li>
-        <li>Flagging articles you'd like covered (the feed-fetcher is fast
-            but not exhaustive — analyst-curated tips help).</li>
-        <li>Posting your own detection ideas — if they fit the site's
-            criteria they'll get added with attribution.</li>
-      </ul>
-      <div id="discord-cta" style="margin-top:14px;padding:14px 16px;background:rgba(88,101,242,.08);border:1px solid rgba(88,101,242,.3);border-radius:8px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
-        <div style="font-size:24px;">💬</div>
-        <div style="flex:1;min-width:200px;">
-          <div style="font-weight:600;color:var(--text);margin-bottom:2px;">Join the Clankerusecase Discord</div>
-          <div style="color:var(--muted);font-size:13px;">Detection engineers, threat hunters, SOC analysts — all welcome.</div>
-        </div>
-        <a id="discord-link" href="https://discord.gg/6KSXVrC3Kr" target="_blank" rel="noopener"
-           style="padding:8px 16px;background:#5865f2;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;font-size:13px;">
-          Open Discord →
-        </a>
-      </div>
-      <p style="font-size:12px;color:var(--muted-2);margin-top:8px;">
-        <em>Permanent invite:</em>
-        <a href="https://discord.gg/6KSXVrC3Kr" target="_blank" rel="noopener"
-           style="color:var(--accent);font-family:var(--mono);">https://discord.gg/6KSXVrC3Kr</a>
-        — never expires, no member cap. Channels: <code>#welcome</code>,
-        <code>#use-case-requests</code>, <code>#platform-requests</code>,
-        <code>#detection-engineering</code>, <code>#threat-hunting</code>,
-        <code>#site-feedback</code>. Verified-email + AutoMod spam protection
-        on by default.
-      </p>
-    </div>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">How a use case lands here</h3>
-      <ol style="line-height:1.7;">
-        <li>Article published by a covered intel source.</li>
-        <li>Pipeline fetches the full body (not just the RSS preview), pulls
-            IOCs (defanged-aware, with allowlists for legitimate platforms),
-            and infers MITRE techniques from narrative keywords.</li>
-        <li>Rule-fired generic UCs from <code>use_cases/*.yml</code> attach
-            based on trigger keywords.</li>
-        <li>An LLM (your Claude Code OAuth session, or an
-            <code>ANTHROPIC_API_KEY</code>) reads the article body and
-            generates 1–3 <em>article-specific</em> bespoke UCs with their
-            own SPL/KQL — these get the <code>[LLM]</code> prefix and sort
-            to the top of every list because they're the highest-fidelity
-            detection content on the page.</li>
-        <li>WebSearch corroboration: the LLM cross-checks vendor advisories
-            (Microsoft Threat Intel, Mandiant, CrowdStrike, MITRE, abuse.ch)
-            and links them in the briefing as <em>"Cross-checked against:"</em>.</li>
-        <li>Validation pass: every SPL field is checked against the CIM spec
-            and ESCU production references; every KQL table/column against
-            the Defender schema. Fail validation → don't ship.</li>
-      </ol>
-      <p style="font-size:12.5px;color:var(--muted);margin-top:8px;">
-        See the <strong>Workflow</strong> tab for the full diagram and
-        per-stage prompt detail.
-      </p>
-    </div>
-
-    <div class="wf-card" style="margin-bottom:14px;">
-      <h3 style="margin-top:0;">Repo &amp; licence</h3>
-      <p>
-        Source:
-        <a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" style="color:var(--accent);">github.com/Virtualhaggis/usecaseintel</a>.
-        MIT-licensed. Contributions welcome — open an issue or PR. The site
-        is rebuilt by <code>generate.py</code> on every run; the catalog
-        lives in <code>catalog/use_cases_full.json</code> for non-browser
-        consumers (TIPs, scripts, your SIEM's API).
-      </p>
-    </div>
-  </div>
-</div>
 
 <footer>
   Splunk SPL conforms to the <a href="https://help.splunk.com/en/data-management/common-information-model/8.5/introduction/overview-of-the-splunk-common-information-model" style="color:var(--accent);" target="_blank">Splunk Common Information Model (CIM)</a> — uses
@@ -10058,10 +9631,6 @@ document.addEventListener('click', e => {
     showView('actors');
   } else if (action === 'intel') {
     showView('intel');
-  } else if (action === 'workflow') {
-    showView('workflow');
-  } else if (action === 'about') {
-    showView('about');
   } else if (action === 'view') {
     // Generic "switch to view" + optional filter hint stored on the
     // element as data-home-view / data-home-filter for chips.
@@ -10230,10 +9799,10 @@ const TOUR_STEPS = [
              '<span class="tour-preview-pill platform-s">56 Sentinel</span>' +
              '<span class="tour-preview-pill platform-z">15 Sigma</span>' },
 
-  { section: "All set", view: "articles", target: null,
+  { section: "All set", view: "home", target: null,
     title: "That's the tour.",
-    body: "Everything you saw is open source — repo at <b>github.com/Virtualhaggis/usecaseintel</b>. Click the <b>Tour</b> button in the topbar any time to replay.",
-    preview: '<span class="tour-preview-meta">★ Star the repo · share the site · ship better detections</span>' }
+    body: "You're ready to dig in. Click the <b>Tour</b> button in the topbar any time to replay, or use <b>Home</b> to jump back to the front door.",
+    preview: '<span class="tour-preview-meta">★ Share the site · ship better detections</span>' }
 ];
 
 let _tourIndex = 0;
@@ -11370,7 +10939,7 @@ function renderActorView(name) {
         if (innerBody) {
           panel.appendChild(innerBody.cloneNode(true));
           panel.insertAdjacentHTML('beforeend',
-            '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ Open source article</a></div>');
+            '<div class="actor-uc-foot"><a href="#" class="actor-uc-srcart" data-jump="'+artId+'">→ View source article</a></div>');
           panel.querySelector('.actor-uc-srcart')?.addEventListener('click', e => {
             e.preventDefault();
             window._actorDrawerStack.push({type:'actor', name:a.name});
@@ -12895,7 +12464,7 @@ def _xml_escape(s):
                   .replace('"', "&quot;").replace("'", "&apos;"))
 
 
-def _iocs_to_rss(iocs, generated_iso, repo_url="https://github.com/Virtualhaggis/usecaseintel"):
+def _iocs_to_rss(iocs, generated_iso, repo_url="https://clankerusecase.com/"):
     """RSS 2.0 feed of IOCs — newest-first, last 100 items."""
     sorted_iocs = sorted(
         iocs,
@@ -12947,7 +12516,7 @@ def _iocs_to_rss(iocs, generated_iso, repo_url="https://github.com/Virtualhaggis
         ).strftime("%a, %d %b %Y %H:%M:%S +0000")
     except Exception:
         pass
-    self_url = f"https://raw.githubusercontent.com/Virtualhaggis/usecaseintel/main/intel/iocs.rss.xml"
+    self_url = f"https://clankerusecase.com/intel/iocs.rss.xml"
     return (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">\n'
@@ -13068,7 +12637,7 @@ def write_catalog_files(generated_iso):
                 "splunk_spl": uc.splunk_spl or "",
                 "defender_kql": uc.defender_kql or "",
                 "source": "internal",
-                "source_url": f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+                "source_url": f"https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
             }
     # ESCU detections (Splunk Security Content)
     try:
@@ -13207,7 +12776,7 @@ def _write_rule_packs(generated_iso):
                         "customDetails": {
                             "tier": tier,
                             "fp_rate_estimate": getattr(uc, "fp_rate_estimate", "unknown"),
-                            "source_url": f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+                            "source_url": f"https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
                         },
                     },
                 }],
@@ -13248,7 +12817,7 @@ def _write_rule_packs(generated_iso):
                     f"### Source query (Defender KQL)\n```\n{uc.defender_kql or '(none)'}\n```"
                 ),
                 "references": [
-                    f"https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+                    f"https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
                 ],
                 "meta": {
                     "tier": tier,
@@ -13311,7 +12880,7 @@ def _emit_sigma(uc_id, uc, tier):
         f"status: experimental",
         f"description: {(uc.description or uc.title).splitlines()[0]}",
         f"references:",
-        f"  - https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/{uc.kill_chain}/{uc_id}.yml",
+        f"  - https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
         f"author: usecaseintel auto-generator",
         f"tags:",
         f"  - usecaseintel.tier.{tier}",
@@ -14879,7 +14448,7 @@ FETCH_DELAY_SEC = float(os.environ.get("THN_FETCH_DELAY", "1.2"))
 FETCH_TIMEOUT_SEC = 25
 FETCH_USER_AGENT = (
     "Mozilla/5.0 (compatible; usecaseintel-bot/1.0; "
-    "+https://github.com/Virtualhaggis/usecaseintel) IOC-extractor"
+    "+https://clankerusecase.com/) IOC-extractor"
 )
 
 # Tags whose content is noise for IOC extraction. Stripped before regex matching.
@@ -16698,12 +16267,12 @@ def render_home_credibility(generated_human: str, article_count: int) -> str:
         f'<div class="home-cred-sources">{source_chips}</div>'
         '</article>\n'
         '      <article class="home-cred-card">'
-        '<h3>Open &amp; inspectable</h3>'
-        '<p>The pipeline, the prompts, and the catalogue are all open source. Audit the logic, fork the repo, send a fix.</p>'
+        '<h3>Built for operational use</h3>'
+        '<p>Each detection ships with its source article, MITRE technique mapping, kill-chain phase, and IOC pivot — so an analyst can take the query, the context, and the rationale together.</p>'
         '<div class="home-cred-links">'
-        '<a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" rel="noopener">View source on GitHub →</a>'
         '<a href="pipeline.html">Pipeline run history →</a>'
         '<a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a>'
+        '<a href="#" data-home-action="intel">Live IOC feeds →</a>'
         '</div>'
         '</article>\n'
         '    </div>\n'
@@ -16729,9 +16298,9 @@ def render_home(articles_meta: list, usecase_count: int, tech_count: int,
         (
             '  <nav class="home-footer-strip" aria-label="Site shortcuts">\n'
             '    <a href="#" data-home-action="tour">Take the tour</a>\n'
-            '    <a href="#" data-home-action="about">About this project</a>\n'
-            '    <a href="#" data-home-action="workflow">How it works</a>\n'
-            '    <a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" rel="noopener">GitHub</a>\n'
+            '    <a href="#" data-home-action="library">Detection library</a>\n'
+            '    <a href="#" data-home-action="matrix">ATT&amp;CK coverage</a>\n'
+            '    <a href="#" data-home-action="intel">Threat intel feeds</a>\n'
             '    <a href="pipeline.html">Pipeline status</a>\n'
             '  </nav>'
         ),
@@ -17428,7 +16997,7 @@ def main():
                 for md in sorted(date_dir.glob("*.md")):
                     rel = md.relative_to(_Path(__file__).parent).as_posix()
                     sitemap_urls.append(
-                        (f"https://github.com/Virtualhaggis/usecaseintel/blob/main/{rel}",
+                        (f"https://clankerusecase.com/{rel}",
                          "0.6", "monthly")
                     )
         # Per-technique landing pages. One indexable URL per MITRE T-ID

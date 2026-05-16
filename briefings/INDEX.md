@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_778 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -193,7 +193,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
 - [ghsa critical cve 2026 42864 firefighter has unauthenticated](./2026-05-05/ghsa-critical-cve-2026-42864-firefighter-has-unauthenticated.md)
 - [ghsa critical cve 2026 42882 s3 proxy has security issues in](./2026-05-05/ghsa-critical-cve-2026-42882-s3-proxy-has-security-issues-in.md)
-- [ghsa critical cve 2026 44221 arcadedb vulnerable to cross da](./2026-05-05/ghsa-critical-cve-2026-44221-arcadedb-vulnerable-to-cross-da.md)
 - [ghsa critical cve 2026 7411 eclipse basyx java server sdk vu](./2026-05-05/ghsa-critical-cve-2026-7411-eclipse-basyx-java-server-sdk-vu.md)
 - [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)

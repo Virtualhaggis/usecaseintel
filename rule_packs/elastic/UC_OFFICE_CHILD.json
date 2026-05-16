@@ -48,7 +48,7 @@
   ],
   "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\",\"mspub.exe\",\"visio.exe\")\n| where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wmic.exe\",\"bitsadmin.exe\",\"certutil.exe\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine\n```",
   "references": [
-    "https://github.com/Virtualhaggis/usecaseintel/blob/main/use_cases/exploit/UC_OFFICE_CHILD.yml"
+    "https://clankerusecase.com/use_cases/exploit/UC_OFFICE_CHILD.yml"
   ],
   "meta": {
     "tier": "alerting",

@@ -14,11 +14,6 @@ Table of Contents Loadi…
 
 - **SHA256:** `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`
 - **SHA256:** `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`
-- **SHA256:** `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`
-- **SHA256:** `fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d`
-- **SHA256:** `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`
-- **SHA1:** `de0fac2e4500dabe0009e67214ff5f5447ce83dd`
-- **SHA1:** `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
 
 ## MITRE ATT&CK Techniques
 
@@ -467,7 +462,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`, `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`, `fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d`, `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`, `de0fac2e4500dabe0009e67214ff5f5447ce83dd`, `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
+  - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`
 
 
 ## Why this matters

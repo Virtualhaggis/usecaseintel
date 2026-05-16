@@ -30,18 +30,6 @@ On April 29, 2026, res…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-31431`
-- **CVE:** `CVE-2026-314331`
-- **CVE:** `CVE-2023-33538`
-- **CVE:** `CVE-2026-1731`
-- **CVE:** `CVE-2026-1281`
-- **CVE:** `CVE-2026-1340`
-- **CVE:** `CVE-2025-0921`
-- **CVE:** `CVE-2025-14847`
-- **CVE:** `CVE-2025-23304`
-- **CVE:** `CVE-2026-22584`
-- **CVE:** `CVE-2025-55182`
-- **CVE:** `CVE-2025-66478`
-- **CVE:** `CVE-2025-21042`
 
 ## MITRE ATT&CK Techniques
 
@@ -250,7 +238,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-31431`, `CVE-2026-314331`, `CVE-2023-33538`, `CVE-2026-1731`, `CVE-2026-1281`, `CVE-2026-1340`, `CVE-2025-0921`, `CVE-2025-14847` _(+5 more)_
+  - CVE(s): `CVE-2026-31431`
 
 
 ## Why this matters

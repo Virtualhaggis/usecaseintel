@@ -19,10 +19,8 @@ According to the functionalities of the CloudZ RAT and Pheno plugin, this wa
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `185.196.10.136`
-- **Domain (defanged):** `update.txt`
 - **Domain (defanged):** `calm-wildflower-1349.hellohiall.workers.dev`
 - **Domain (defanged):** `round-cherry-4418.hellohiall.workers.dev`
-- **Domain (defanged):** `orange-cell-1353.hellohiall.workers.dev`
 
 ## MITRE ATT&CK Techniques
 
@@ -310,7 +308,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.196.10.136`, `update.txt`, `calm-wildflower-1349.hellohiall.workers.dev`, `round-cherry-4418.hellohiall.workers.dev`, `orange-cell-1353.hellohiall.workers.dev`
+  - IP / domain IOC(s): `185.196.10.136`, `calm-wildflower-1349.hellohiall.workers.dev`, `round-cherry-4418.hellohiall.workers.dev`
 
 
 ## Why this matters

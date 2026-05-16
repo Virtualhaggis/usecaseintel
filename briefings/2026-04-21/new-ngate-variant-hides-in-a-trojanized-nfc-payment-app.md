@@ -18,16 +18,12 @@ ESET Research has discovered a new variant of the NGate malware family that abus
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `104.21.91.170`
-- **IPv4 (defanged):** `108.165.230.223`
-- **Domain (defanged):** `ao.online`
-- **Domain (defanged):** `spy.ngate.cc`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -49,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_264_5` · phase: **actions** · confidence: **High**
+`UC_264_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +65,7 @@ DeviceNetworkEvents
 
 ### [LLM] Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
-`UC_264_6` · phase: **delivery** · confidence: **High**
+`UC_264_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +97,7 @@ union isfuzzy=true
 
 ### [LLM] Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
 
-`UC_264_7` · phase: **install** · confidence: **High**
+`UC_264_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -308,14 +304,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `104.21.91.170`, `108.165.230.223`, `ao.online`, `spy.ngate.cc`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

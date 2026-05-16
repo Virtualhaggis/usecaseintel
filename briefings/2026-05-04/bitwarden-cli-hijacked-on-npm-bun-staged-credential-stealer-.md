@@ -11,6 +11,7 @@ Back to Blog Threat Intel Bitwarden CLI Hijacked on npm: Bun-Staged Credential S
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `94.154.172.43`
+- **Domain (defanged):** `audit.checkmarx.cx`
 - **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
 - **SHA256:** `8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14`
 
@@ -395,7 +396,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `94.154.172.43`
+  - IP / domain IOC(s): `94.154.172.43`, `audit.checkmarx.cx`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`, `8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14`

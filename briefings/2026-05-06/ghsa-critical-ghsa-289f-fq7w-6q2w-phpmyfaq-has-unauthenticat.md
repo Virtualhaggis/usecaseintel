@@ -14,11 +14,10 @@ phpMyFAQ has unauthenticated SQL injection via User-Agent header in BuiltinCaptc
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `b9f25109fddb38eee19987183798638d07943f92`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
 - **T1059** — Command and Scripting Interpreter
@@ -32,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ unauthenticated SQLi via User-Agent on /api/captcha (GHSA-289f-fq7w-6q2w)
 
-`UC_186_2` · phase: **exploit** · confidence: **High**
+`UC_186_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ /api/captcha anomalous response time (time-based blind SQLi extraction)
 
-`UC_186_3` · phase: **exploit** · confidence: **Medium**
+`UC_186_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-289f-fq7w-6q2w: phpMyFAQ has unauthenticated SQL injectio
 
-`UC_186_1` · phase: **install** · confidence: **High**
+`UC_186_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,14 +89,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `b9f25109fddb38eee19987183798638d07943f92`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
