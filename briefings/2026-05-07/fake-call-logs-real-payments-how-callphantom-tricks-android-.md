@@ -23,6 +23,68 @@ There’s an app for everything nowadays… right? Well, looking up call records
 - **Domain (defanged):** `lt-rtdb.firebaseio.com`
 - **Domain (defanged):** `ebaseio.com`
 - **Domain (defanged):** `firebaseio.com`
+- **Domain (defanged):** `all.callhistory.deta`
+- **Domain (defanged):** `il.apk`
+- **Domain (defanged):** `calldetaila.ndcallhi`
+- **Domain (defanged):** `sto.rytogetan.ynumbe`
+- **Domain (defanged):** `r.apk`
+- **Domain (defanged):** `callhistoryeditor.ca`
+- **Domain (defanged):** `llhistory.numberdeta`
+- **Domain (defanged):** `ils.calleridlocator`
+- **Domain (defanged):** `oad.anynumber.callhi`
+- **Domain (defanged):** `storybackup.apk`
+- **Domain (defanged):** `com.any.numbers.call`
+- **Domain (defanged):** `s.history.apk`
+- **Domain (defanged):** `com.anycallinformati`
+- **Domain (defanged):** `on.datadetailswho.ca`
+- **Domain (defanged):** `llinfo.numberfinder`
+- **Domain (defanged):** `com.app.call.detail`
+- **Domain (defanged):** `history.apk`
+- **Domain (defanged):** `com.basehistory.hist`
+- **Domain (defanged):** `orydownloading.xapk`
+- **Domain (defanged):** `com.call.detail.call`
+- **Domain (defanged):** `er.history.xapk`
+- **Domain (defanged):** `com.call.of.any.numb`
+- **Domain (defanged):** `er.apk`
+- **Domain (defanged):** `com.callapp.historye`
+- **Domain (defanged):** `ro.apk`
+- **Domain (defanged):** `com.calldetails.smsh`
+- **Domain (defanged):** `istory.callhistoryof`
+- **Domain (defanged):** `anynumber.apk`
+- **Domain (defanged):** `com.callhistory.anyn`
+- **Domain (defanged):** `umber.chapfvor.histo`
+- **Domain (defanged):** `ry.xapk`
+- **Domain (defanged):** `com.callhistory.call`
+- **Domain (defanged):** `details.callerids.ca`
+- **Domain (defanged):** `llerhistory.callhost`
+- **Domain (defanged):** `oryanynumber.getcall`
+- **Domain (defanged):** `history.callhistory`
+- **Domain (defanged):** `manager.apk`
+- **Domain (defanged):** `historyany.call.apk`
+- **Domain (defanged):** `historyyourgf.apk`
+- **Domain (defanged):** `com.callinformative`
+- **Domain (defanged):** `allinfo.xapk`
+- **Domain (defanged):** `com.cddhaduk.calleri`
+- **Domain (defanged):** `d.block.contact.xapk`
+- **Domain (defanged):** `com.easyranktools.ca`
+- **Domain (defanged):** `com.getanynumberofca`
+- **Domain (defanged):** `llhistory.callhistor`
+- **Domain (defanged):** `yofanynumber.findcal`
+- **Domain (defanged):** `com.chdev.callhistor`
+- **Domain (defanged):** `y.xapk`
+- **Domain (defanged):** `com.name.factor.apk`
+- **Domain (defanged):** `com.pdf.maker.pdfrea`
+- **Domain (defanged):** `der.pdfscanner.apk`
+- **Domain (defanged):** `com.phone.call.histo`
+- **Domain (defanged):** `ry.tracker.apk`
+- **Domain (defanged):** `com.pixelxinnovation`
+- **Domain (defanged):** `com.rajni.callhistor`
+- **Domain (defanged):** `y.apk`
+- **Domain (defanged):** `com.sbpinfotech.find`
+- **Domain (defanged):** `sc.call.ofany.mobile`
+- **Domain (defanged):** `detail.apk`
+- **Domain (defanged):** `lt-rtdb.firebaseio`
+- **Domain (defanged):** `ch-ap-4-default-rtdb.fir`
 
 ## MITRE ATT&CK Techniques
 
@@ -101,7 +163,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `34.120.160.131`, `34.120.206.254`, `lt-rtdb.firebaseio.com`, `ebaseio.com`, `firebaseio.com`
+  - IP / domain IOC(s): `34.120.160.131`, `34.120.206.254`, `lt-rtdb.firebaseio.com`, `ebaseio.com`, `firebaseio.com`, `all.callhistory.deta`, `il.apk`, `calldetaila.ndcallhi` _(+59 more)_
 
 
 ## Why this matters

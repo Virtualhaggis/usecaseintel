@@ -22,6 +22,16 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 
 - **IPv4 (defanged):** `31.172.71.5`
 - **Domain (defanged):** `progamevl.ru`
+- **Domain (defanged):** `tmp.exe`
+- **Domain (defanged):** `killfiles.nmj`
+- **Domain (defanged):** `killfiles.nmo`
+- **Domain (defanged):** `schtask.exe`
+- **Domain (defanged):** `schtask2.exe`
+- **Domain (defanged):** `rsocx.exe`
+- **Domain (defanged):** `hacktool.rsocx`
+- **Domain (defanged):** `rubeus.exe`
+- **Domain (defanged):** `riskware.rubeus`
+- **Domain (defanged):** `cmd.exe`
 
 ## MITRE ATT&CK Techniques
 
@@ -56,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper drop in C:\inetpub\pub\ — schtask.exe / *_update.exe execution
 
-`UC_458_9` · phase: **install** · confidence: **High**
+`UC_459_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +99,7 @@ let WindowDays = 30d;
 
 ### [LLM] rsocx reverse SOCKS5 to 31.172.71.5:8008 (Sandworm Polish energy intrusion)
 
-`UC_458_10` · phase: **c2** · confidence: **High**
+`UC_459_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +139,7 @@ let WindowDays = 30d;
 
 ### [LLM] ZOV wiper post-wipe shell command + LocWall.jpg wallpaper drop (Sandworm)
 
-`UC_458_11` · phase: **actions** · confidence: **High**
+`UC_459_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -367,7 +377,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_458_8` · phase: **exploit** · confidence: **High**
+`UC_459_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -419,7 +429,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `31.172.71.5`, `progamevl.ru`
+  - IP / domain IOC(s): `31.172.71.5`, `progamevl.ru`, `tmp.exe`, `killfiles.nmj`, `killfiles.nmo`, `schtask.exe`, `schtask2.exe`, `rsocx.exe` _(+4 more)_
 
 
 ## Why this matters

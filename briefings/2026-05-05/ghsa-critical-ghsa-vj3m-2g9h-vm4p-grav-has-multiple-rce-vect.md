@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Grav CMS git clone command injection via InstallCommand (GHSA-vj3m-2g9h-vm4p)
 
-`UC_201_0` · phase: **exploit** · confidence: **High**
+`UC_202_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### [LLM] Grav Twig SSTI blocklist-bypass payload (twig_array_reduce / file_get_contents)
 
-`UC_201_1` · phase: **exploit** · confidence: **Medium**
+`UC_202_1` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

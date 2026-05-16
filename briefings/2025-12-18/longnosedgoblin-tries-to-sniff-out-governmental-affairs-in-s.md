@@ -29,6 +29,55 @@ In 2024, ESET researchers noticed previously undocumented malware in the netw…
 - **Domain (defanged):** `stub.com`
 - **Domain (defanged):** `newso.com`
 - **Domain (defanged):** `policy-my.com`
+- **Domain (defanged):** `history.ini`
+- **Domain (defanged):** `spy.agent.euu`
+- **Domain (defanged):** `registry.plo`
+- **Domain (defanged):** `agent.gbq`
+- **Domain (defanged):** `registry.pol`
+- **Domain (defanged):** `sharedreg.dll`
+- **Domain (defanged):** `kryptik.ajba`
+- **Domain (defanged):** `agent.esf`
+- **Domain (defanged):** `pmp.exe`
+- **Domain (defanged):** `agent.dny`
+- **Domain (defanged):** `serv.dll`
+- **Domain (defanged):** `agent.dnx`
+- **Domain (defanged):** `loader.agent.jjo`
+- **Domain (defanged):** `rtlwvern.exe`
+- **Domain (defanged):** `agent.bdr`
+- **Domain (defanged):** `hpsmartadapter.exe`
+- **Domain (defanged):** `agent.agij`
+- **Domain (defanged):** `hputils.exe`
+- **Domain (defanged):** `agent.agii`
+- **Domain (defanged):** `igccsvc.exe`
+- **Domain (defanged):** `spy.key`
+- **Domain (defanged):** `logger.fvw`
+- **Domain (defanged):** `adobehelper.exe`
+- **Domain (defanged):** `reverseshell.dx`
+- **Domain (defanged):** `msi.dll`
+- **Domain (defanged):** `agent.dot`
+- **Domain (defanged):** `tcocertified.exe`
+- **Domain (defanged):** `runner.bw`
+- **Domain (defanged):** `psw.agent.fz`
+- **Domain (defanged):** `agent.aghb`
+- **Domain (defanged):** `hpndfinterface.exe`
+- **Domain (defanged):** `bemsvc.exe`
+- **Domain (defanged):** `hpdevicecheck.exe`
+- **Domain (defanged):** `agent.agwu`
+- **Domain (defanged):** `hp.ocf.exe`
+- **Domain (defanged):** `patched.nll`
+- **Domain (defanged):** `btdevmanager.exe`
+- **Domain (defanged):** `spy.keylogger`
+- **Domain (defanged):** `info.txt`
+- **Domain (defanged):** `ntrtscan.exe`
+- **Domain (defanged):** `oci.dll`
+- **Domain (defanged):** `gen.uw`
+- **Domain (defanged):** `mscorsvc.dll`
+- **Domain (defanged):** `kryptik.ehp`
+- **Domain (defanged):** `www.sslvpn`
+- **Domain (defanged):** `www.thread`
+- **Domain (defanged):** `www.blaze`
+- **Domain (defanged):** `www.privacy`
+- **Domain (defanged):** `cmd.exe`
 - **SHA256:** `D53FCC01038E20193FBD51B7400075CF7C9C4402B73DA7B0DB836B000EBD8B1C`
 
 ## MITRE ATT&CK Techniques
@@ -58,7 +107,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NosyDoor AppDomainManager hijack: UevAppMonitor.exe executing from non-standard path
 
-`UC_518_9` · phase: **install** · confidence: **High**
+`UC_519_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +141,7 @@ UevExec
 
 ### [LLM] NosyDoor persistence: scheduled task 'OneDrive Reporting Task-S-1-5-21-' under Microsoft folder
 
-`UC_518_10` · phase: **install** · confidence: **High**
+`UC_519_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +165,7 @@ DeviceFileEvents
 
 ### [LLM] NosyDoor dropper file artefacts in C:\Windows\Microsoft.NET\Framework
 
-`UC_518_11` · phase: **install** · confidence: **High**
+`UC_519_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -323,7 +372,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — LongNosedGoblin tries to sniff out governmental affairs in Southeast Asia and Ja
 
-`UC_518_8` · phase: **exploit** · confidence: **High**
+`UC_519_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,7 +424,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `118.107.234.29`, `118.107.234.26`, `103.159.132.30`, `101.99.88.113`, `101.99.88.188`, `38.54.17.131`, `server.com`, `stub.com` _(+2 more)_
+  - IP / domain IOC(s): `118.107.234.29`, `118.107.234.26`, `103.159.132.30`, `101.99.88.113`, `101.99.88.188`, `38.54.17.131`, `server.com`, `stub.com` _(+51 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `D53FCC01038E20193FBD51B7400075CF7C9C4402B73DA7B0DB836B000EBD8B1C`

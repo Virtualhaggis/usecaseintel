@@ -12,6 +12,12 @@ Table of Contents Loadi…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `setup.mjs`
+- **Domain (defanged):** `tasks.json`
+- **Domain (defanged):** `settings.json`
+- **Domain (defanged):** `execution.js`
+- **Domain (defanged):** `format-check.yml`
+- **Domain (defanged):** `package-lock.json`
 - **SHA256:** `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`
 - **SHA256:** `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`
 - **SHA256:** `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`
@@ -24,6 +30,7 @@ Table of Contents Loadi…
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1528** — Steal Application Access Token
@@ -48,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud npm preinstall: node spawns Bun runtime from bun-dl-* tmpdir
 
-`UC_216_9` · phase: **install** · confidence: **High**
+`UC_217_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +88,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud AI coding-agent persistence: .claude/settings.json + .vscode/tasks.json drops
 
-`UC_216_10` · phase: **install** · confidence: **High**
+`UC_217_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +125,7 @@ _suspect_files
 
 ### [LLM] Shai-Hulud known-bad setup.mjs / execution.js SHA256 hash match
 
-`UC_216_11` · phase: **install** · confidence: **High**
+`UC_217_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -415,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud Worm Pivots to Multi-Cloud: intercom-client@7.0.4 Hijacked — 361,000
 
-`UC_216_8` · phase: **exploit** · confidence: **High**
+`UC_217_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,10 +473,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `setup.mjs`, `tasks.json`, `settings.json`, `execution.js`, `format-check.yml`, `package-lock.json`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `4066781fa830224c8bbcc3aa005a396657f9c8f9016f9a64ad44a9d7f5f45e34`, `80a3d2877813968ef847ae73b5eeeb70b9435254e74d7f07d8cf4057f0a710ac`, `5012caa5847ae9261dfa16f91417042f367d6bed149c3b8af7a50b203a093007`, `fd4b0f07b27e8f41bc70b8e2b79d168fb3fe80d7e0b37f43c506136a3418b44d`, `6f933d00b7d05678eb43c90963a80b8947c4ae6830182f89df31da9f568fea95`, `de0fac2e4500dabe0009e67214ff5f5447ce83dd`, `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -13,6 +13,12 @@ Anyone who installed either version before the takedown should assume their syst
 
 - **IPv4 (defanged):** `142.11.206.73`
 - **Domain (defanged):** `sfrclak.com`
+- **Domain (defanged):** `com.apple.act.mond`
+- **Domain (defanged):** `wt.exe`
+- **Domain (defanged):** `6202033.vbs`
+- **Domain (defanged):** `ld.py`
+- **Domain (defanged):** `proton.me`
+- **Domain (defanged):** `install-safe-chain.sh`
 - **SHA256:** `92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a`
 - **SHA256:** `617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101`
 - **SHA256:** `fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf`
@@ -46,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] axios npm RAT C2 beacon to sfrclak.com / 142.11.206.73:8000
 
-`UC_315_7` · phase: **c2** · confidence: **High**
+`UC_316_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +85,7 @@ union isfuzzy=true
 
 ### [LLM] axios RAT artifact dropped: com.apple.act.mond / wt.exe / ld.py with known SHA256
 
-`UC_315_8` · phase: **install** · confidence: **High**
+`UC_316_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +117,7 @@ DeviceFileEvents
 
 ### [LLM] PowerShell copy masqueraded as Windows Terminal in %PROGRAMDATA% running 6202033.ps1
 
-`UC_315_9` · phase: **install** · confidence: **High**
+`UC_316_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -254,7 +260,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios compromised on npm: maintainer account hijacked, RAT deployed
 
-`UC_315_6` · phase: **exploit** · confidence: **High**
+`UC_316_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -306,7 +312,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `142.11.206.73`, `sfrclak.com`
+  - IP / domain IOC(s): `142.11.206.73`, `sfrclak.com`, `com.apple.act.mond`, `wt.exe`, `6202033.vbs`, `ld.py`, `proton.me`, `install-safe-chain.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `92ff08773995ebc8d55ec4b8e1a225d0d1e51efa4ef88b8849d0071230c9645a`, `617b67a8e1210e4fc87c92d1d1da45a2f311c08d26e89b12307cf583c900d101`, `fcb81618bb15edfdedfb638b4c08a2af9cac9ecfa551af135a8402bf980375cf`, `2553649f2322049666871cea80a5d0d6adc700ca`, `d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71`, `07d889e2dadce6f3910dcbc253317d28ca61c766`

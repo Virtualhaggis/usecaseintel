@@ -13,12 +13,19 @@ On April 7,…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `89.36.224.5`
+- **Domain (defanged):** `install.sh`
+- **Domain (defanged):** `com.apple.terminal`
+- **Domain (defanged):** `zsh.profiler`
+- **Domain (defanged):** `package-lock.json`
+- **Domain (defanged):** `yarn.lock`
+- **Domain (defanged):** `pnpm-lock.yaml`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1543.004** — Create or Modify System Process: Launch Daemon
@@ -37,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] macOS launchctl persistence registering 'zsh.profiler' from @velora-dex/sdk backdoor
 
-`UC_296_3` · phase: **install** · confidence: **High**
+`UC_297_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +67,7 @@ DeviceProcessEvents
 
 ### [LLM] Node.js child spawns shell with base64 payload or curl to velora-dex C2 89.36.224.5
 
-`UC_296_4` · phase: **delivery** · confidence: **High**
+`UC_297_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +95,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound network connection to velora-dex C2 IP 89.36.224.5
 
-`UC_296_5` · phase: **c2** · confidence: **High**
+`UC_297_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +175,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — @velora-dex/sdk Compromised on npm: Malicious Version Drops macOS Backdoor via l
 
-`UC_296_2` · phase: **exploit** · confidence: **High**
+`UC_297_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -215,7 +222,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `89.36.224.5`, `install.sh`, `com.apple.terminal`, `zsh.profiler`, `package-lock.json`, `yarn.lock`, `pnpm-lock.yaml`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

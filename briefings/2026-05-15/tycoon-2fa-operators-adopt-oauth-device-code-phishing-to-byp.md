@@ -16,10 +16,13 @@ The Tycoon 2FA phishing kit first gained attention as a Phishing-as-a-Service (P
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `47.90.180.205`
+- **IPv4 (defanged):** `47.252.11.99`
 - **Domain (defanged):** `events.trustifi.com`
 - **Domain (defanged):** `cookies.28gholland.workers.dev`
 - **Domain (defanged):** `shivacrio.com`
 - **Domain (defanged):** `fijothi.com`
+- **Domain (defanged):** `node.js`
 
 ## MITRE ATT&CK Techniques
 
@@ -306,7 +309,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `events.trustifi.com`, `cookies.28gholland.workers.dev`, `shivacrio.com`, `fijothi.com`
+  - IP / domain IOC(s): `47.90.180.205`, `47.252.11.99`, `events.trustifi.com`, `cookies.28gholland.workers.dev`, `shivacrio.com`, `fijothi.com`, `node.js`
 
 
 ## Why this matters

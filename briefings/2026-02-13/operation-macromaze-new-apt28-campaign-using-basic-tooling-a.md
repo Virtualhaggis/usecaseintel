@@ -13,6 +13,13 @@ Multiple documents associated…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `webhook.site`
+- **Domain (defanged):** `4zjwj81sp.exe`
+- **Domain (defanged):** `informatii.doc`
+- **Domain (defanged):** `attachment.docm`
+- **Domain (defanged):** `6p8wwn4ja.exe`
+- **Domain (defanged):** `program.doc`
+- **Domain (defanged):** `negro.docm`
+- **Domain (defanged):** `docopened.jpg`
 - **SHA256:** `b0f9f0a34ccab1337fbcca24b4f894de8d6d3a6f5db2e0463e2320215e4262e4`
 - **SHA256:** `c3b617e0c6b8f01cf628a2b3db40e8d06ef20a3c71365ccc1799787119246010`
 - **SHA256:** `df60fa6008b1a0b79c394b42d3ada6bab18b798f3c2ca1530a3e0cb4fbbbe9f6`
@@ -56,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] APT28 MacroMaze: Edge launched off-screen or headless to webhook.site by non-browser parent
 
-`UC_419_10` · phase: **c2** · confidence: **High**
+`UC_420_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] APT28 MacroMaze: schtasks creating wscript-launched persistence with 20/30/61-minute repeat
 
-`UC_419_11` · phase: **install** · confidence: **High**
+`UC_420_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +120,7 @@ DeviceProcessEvents
 
 ### [LLM] APT28 MacroMaze: Office or Edge HTTP traffic to webhook.site (INCLUDEPICTURE tracker + exfil)
 
-`UC_419_12` · phase: **c2** · confidence: **Medium**
+`UC_420_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -411,7 +418,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Operation MacroMaze: new APT28  campaign using basic tooling and legit infrastru
 
-`UC_419_9` · phase: **exploit** · confidence: **High**
+`UC_420_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -463,7 +470,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `webhook.site`
+  - IP / domain IOC(s): `webhook.site`, `4zjwj81sp.exe`, `informatii.doc`, `attachment.docm`, `6p8wwn4ja.exe`, `program.doc`, `negro.docm`, `docopened.jpg`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `b0f9f0a34ccab1337fbcca24b4f894de8d6d3a6f5db2e0463e2320215e4262e4`, `c3b617e0c6b8f01cf628a2b3db40e8d06ef20a3c71365ccc1799787119246010`, `df60fa6008b1a0b79c394b42d3ada6bab18b798f3c2ca1530a3e0cb4fbbbe9f6`, `58cfb8b9fee1caa94813c259901dc1baa96bae7d30d79b79a7d441d0ee4e577e`, `9097d9cf5e6659e869bf2edf766741b687e3d8570036d853c0ca59ae72f9e9fc`, `5486107244ecaa3a0824895fa432827cc12df69620ca94aaa4ad75f39ac79588`, `ed8f20bbab18b39a67e4db9a03090e5af8dc8ec24fe1ddf3521b3f340a8318c1`

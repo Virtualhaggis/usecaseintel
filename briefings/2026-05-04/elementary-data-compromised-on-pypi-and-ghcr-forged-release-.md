@@ -11,6 +11,11 @@ Share on X Share on X Share o…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `elementary.pth`
+- **Domain (defanged):** `igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud`
+- **Domain (defanged):** `trin.tar.gz`
+- **Domain (defanged):** `litter.catbox.moe`
+- **Domain (defanged):** `iqesmbhukgd2c7hq.sh`
 - **SHA256:** `31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf634255`
 - **SHA256:** `b3bbfafde1a0db3a4d47e70eb0eb2ca19daef4a19410154a71abee567b35d3d9`
 - **SHA1:** `b1e4b1f3aad0d489ab0e9208031c67402bbb8480`
@@ -19,6 +24,7 @@ Share on X Share on X Share o…
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1005** — Data from Local System
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -42,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] elementary-data malicious release C2 callback to skyhanni.cloud
 
-`UC_217_6` · phase: **c2** · confidence: **High**
+`UC_218_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +82,7 @@ let C2Parent = "skyhanni.cloud";
 
 ### [LLM] Trojaned elementary-data 0.23.3 wheel / GHCR image inventory
 
-`UC_217_7` · phase: **install** · confidence: **High**
+`UC_218_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +122,7 @@ let BadImageDigest = "31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf
 
 ### [LLM] elementary-data stealer host-side artefacts: trin.tar.gz, .trinny-security-update marker
 
-`UC_217_8` · phase: **actions** · confidence: **High**
+`UC_218_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -260,7 +266,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
 
-`UC_217_5` · phase: **install** · confidence: **High**
+`UC_218_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -295,10 +301,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `elementary.pth`, `igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud`, `trin.tar.gz`, `litter.catbox.moe`, `iqesmbhukgd2c7hq.sh`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf634255`, `b3bbfafde1a0db3a4d47e70eb0eb2ca19daef4a19410154a71abee567b35d3d9`, `b1e4b1f3aad0d489ab0e9208031c67402bbb8480`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

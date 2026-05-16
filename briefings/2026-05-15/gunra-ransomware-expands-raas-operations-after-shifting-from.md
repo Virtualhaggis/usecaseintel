@@ -15,7 +15,7 @@ The group behind it is not just encrypting data, but also running a business-lik
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `s2w.inc`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,6 +29,7 @@ The group behind it is not just encrypting data, but also running a business-lik
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
 - **T1485** — Data Destruction
 - **T1490** — Inhibit System Recovery
 - **T1047** — Windows Management Instrumentation
@@ -41,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gunra ransomware encryption artefacts — .ENCRT extension and R3ADM3.txt note drop
 
-`UC_7_6` · phase: **actions** · confidence: **High**
+`UC_7_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +74,7 @@ DeviceFileEvents
 
 ### [LLM] Gunra per-shadow-ID WMIC deletion — `WMIC shadowcopy where ID={GUID} delete` pattern
 
-`UC_7_7` · phase: **actions** · confidence: **High**
+`UC_7_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -267,7 +268,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `s2w.inc`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

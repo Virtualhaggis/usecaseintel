@@ -12,6 +12,7 @@ Blog Vulnerabilities & Threats fast-draft Open VSX Extension Compromised by Blok
 
 - **IPv4 (defanged):** `195.201.104.53`
 - **Domain (defanged):** `raw.githubusercontent`
+- **Domain (defanged):** `khangnghiem.fast`
 
 ## MITRE ATT&CK Techniques
 
@@ -43,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BlokTrooper Stage-1 downloader: VS Code-family child fetches raw.githubusercontent.com/BlokTrooper/extension
 
-`UC_348_7` · phase: **delivery** · confidence: **High**
+`UC_349_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +67,7 @@ DeviceProcessEvents
 
 ### [LLM] BlokTrooper C2 callback to 195.201.104.53 on Socket.IO RAT / upload / clipboard ports (6931/6936/6939)
 
-`UC_348_8` · phase: **c2** · confidence: **High**
+`UC_349_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +93,7 @@ DeviceNetworkEvents
 
 ### [LLM] BlokTrooper clipboard surveillance: node.exe spawning powershell -NoProfile -NonInteractive Get-Clipboard
 
-`UC_348_9` · phase: **actions** · confidence: **High**
+`UC_349_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -267,7 +268,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_348_6` · phase: **install** · confidence: **High**
+`UC_349_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -303,7 +304,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `195.201.104.53`, `raw.githubusercontent`
+  - IP / domain IOC(s): `195.201.104.53`, `raw.githubusercontent`, `khangnghiem.fast`
 
 
 ## Why this matters

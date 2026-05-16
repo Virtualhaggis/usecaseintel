@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Accelerating detection engineering using AI-assisted synthetic attack logs gener
 
-`UC_80_2` · phase: **exploit** · confidence: **High**
+`UC_81_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -12,7 +12,12 @@ Table of Contents Loading nav.…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `inventory.txt`
+- **Domain (defanged):** `inventory.txt.bak`
+- **Domain (defanged):** `pr-message.txt`
+- **Domain (defanged):** `github.event`
+- **Domain (defanged):** `publish.yml`
+- **Domain (defanged):** `package-lock.json`
 
 ## MITRE ATT&CK Techniques
 
@@ -22,6 +27,7 @@ Table of Contents Loading nav.…
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1552.001** — Unsecured Credentials: Credentials In Files
@@ -39,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] s1ngularity nx: AI CLI assistant invoked with permission-bypass flags (Claude/Gemini/Q)
 
-`UC_648_5` · phase: **actions** · confidence: **High**
+`UC_648_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] s1ngularity nx: /tmp/inventory.txt staging file created on host
 
-`UC_648_6` · phase: **actions** · confidence: **High**
+`UC_648_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +100,7 @@ DeviceFileEvents
 
 ### [LLM] s1ngularity nx: node modifies ~/.bashrc or ~/.zshrc to inject `sudo shutdown -h 0`
 
-`UC_648_7` · phase: **install** · confidence: **High**
+`UC_648_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -237,7 +243,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malw
 
-`UC_648_4` · phase: **exploit** · confidence: **High**
+`UC_648_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -284,7 +290,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `inventory.txt`, `inventory.txt.bak`, `pr-message.txt`, `github.event`, `publish.yml`, `package-lock.json`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

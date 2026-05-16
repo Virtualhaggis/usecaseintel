@@ -49,6 +49,48 @@ ESET researchers have recently observed a new instance of Operation DreamJob –
 - **Domain (defanged):** `mediostresbarbas.com.ar`
 - **Domain (defanged):** `www.bandarpowder.com`
 - **Domain (defanged):** `spaincaramoon.com`
+- **Domain (defanged):** `tsmsisrv.dll`
+- **Domain (defanged):** `nukesped.tl`
+- **Domain (defanged):** `libmupdf.dll`
+- **Domain (defanged):** `nukesped.te`
+- **Domain (defanged):** `radcui.dll`
+- **Domain (defanged):** `nukesped.to`
+- **Domain (defanged):** `libpcre.dll`
+- **Domain (defanged):** `nukesped.tp`
+- **Domain (defanged):** `webservices.dll`
+- **Domain (defanged):** `nukesped.rn`
+- **Domain (defanged):** `nukesped.rw`
+- **Domain (defanged):** `nukesped.tf`
+- **Domain (defanged):** `rcx1a07.tmp`
+- **Domain (defanged):** `nukesped.th`
+- **Domain (defanged):** `cache.dat`
+- **Domain (defanged):** `nukesped.qk`
+- **Domain (defanged):** `msadomr.dll`
+- **Domain (defanged):** `nukesped.sp`
+- **Domain (defanged):** `compareplus.dll`
+- **Domain (defanged):** `nukesped.sj`
+- **Domain (defanged):** `tzautosync.dat`
+- **Domain (defanged):** `nukesped.sn`
+- **Domain (defanged):** `function-hand.php`
+- **Domain (defanged):** `customizer-hand.php`
+- **Domain (defanged):** `index.php`
+- **Domain (defanged):** `www.mnmathleague`
+- **Domain (defanged):** `js-hand.php`
+- **Domain (defanged):** `www.scgestor.com`
+- **Domain (defanged):** `template-headers.php`
+- **Domain (defanged):** `functions.php`
+- **Domain (defanged):** `usercomp.php`
+- **Domain (defanged):** `www.anvil.org`
+- **Domain (defanged):** `nazwa.pl`
+- **Domain (defanged):** `webdock.io`
+- **Domain (defanged):** `trainingpharmacist.co.uk`
+- **Domain (defanged):** `bootstrap.php`
+- **Domain (defanged):** `deft.com`
+- **Domain (defanged):** `mediostresbarbas.com`
+- **Domain (defanged):** `www.bandarpowder`
+- **Domain (defanged):** `forward.php`
+- **Domain (defanged):** `wksprt.exe`
+- **Domain (defanged):** `wkspbroker.exe`
 - **SHA1:** `03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4`
 
 ## MITRE ATT&CK Techniques
@@ -75,7 +117,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Lazarus Operation DreamJob: wksprt.exe / wkspbroker.exe side-loading webservices.dll or radcui.dll outside System32
 
-`UC_601_6` · phase: **install** · confidence: **High**
+`UC_602_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +150,7 @@ union isfuzzy=true ProcLeg, ImgLoad
 
 ### [LLM] ScoringMathTea / BinMergeLoader C2 callouts to ESET-published Lazarus DreamJob 2025 infrastructure
 
-`UC_601_7` · phase: **c2** · confidence: **High**
+`UC_602_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +175,7 @@ DeviceNetworkEvents
 
 ### [LLM] DroneEXEHijackingLoader DLL hash / internal-name observation
 
-`UC_601_8` · phase: **delivery** · confidence: **High**
+`UC_602_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +300,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gotta fly: Lazarus targets the UAV sector
 
-`UC_601_5` · phase: **exploit** · confidence: **High**
+`UC_602_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +352,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `23.111.133.162`, `104.21.80.1`, `70.32.24.131`, `185.148.129.24`, `66.29.144.75`, `108.181.92.71`, `104.247.162.67`, `193.39.187.165` _(+22 more)_
+  - IP / domain IOC(s): `23.111.133.162`, `104.21.80.1`, `70.32.24.131`, `185.148.129.24`, `66.29.144.75`, `108.181.92.71`, `104.247.162.67`, `193.39.187.165` _(+64 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4`

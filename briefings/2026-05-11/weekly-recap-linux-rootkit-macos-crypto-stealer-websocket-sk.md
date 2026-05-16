@@ -555,7 +555,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ⚡ Weekly Recap: Linux Rootkit, macOS Crypto Stealer, WebSocket Skimmers and More
 
-`UC_112_16` · phase: **exploit** · confidence: **High**
+`UC_113_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

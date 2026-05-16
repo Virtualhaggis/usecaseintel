@@ -19,10 +19,12 @@ In late 2025, Poland’s energy sy…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `killfiles.nmo`
 - **SHA1:** `4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6`
 
 ## MITRE ATT&CK Techniques
 
+- **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1485** — Data Destruction
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
@@ -40,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper deployment from shared inetpub\pub directory (Sandworm, Poland Dec 2025)
 
-`UC_471_1` · phase: **install** · confidence: **High**
+`UC_472_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +75,7 @@ union isfuzzy=true
 
 ### [LLM] rsocx SOCKS5 reverse proxy beacon to 31.172.71.5:8008 (Sandworm Poland C2)
 
-`UC_471_2` · phase: **c2** · confidence: **High**
+`UC_472_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +109,7 @@ union isfuzzy=true
 
 ### [LLM] DynoWiper PDB-string + vagrant build artefact in loaded modules
 
-`UC_471_3` · phase: **install** · confidence: **Medium**
+`UC_472_4` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,10 +145,13 @@ DeviceImageLoadEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `killfiles.nmo`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

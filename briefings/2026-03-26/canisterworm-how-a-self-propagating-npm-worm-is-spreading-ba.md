@@ -10,12 +10,17 @@ Back to Blog Threat Intel CanisterWorm: How a Self-Propagating npm Worm Is Sprea
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`
+- **Domain (defanged):** `scan.aquasecurtiy.org`
+- **Domain (defanged):** `aquasecurity.org`
+- **Domain (defanged):** `service.py`
+- **Domain (defanged):** `pgmon.service`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -233,7 +238,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterWorm: How a Self-Propagating npm Worm Is Spreading Backdoors Across the
 
-`UC_323_5` · phase: **exploit** · confidence: **High**
+`UC_324_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -280,7 +285,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `scan.aquasecurtiy.org`, `aquasecurity.org`, `service.py`, `pgmon.service`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

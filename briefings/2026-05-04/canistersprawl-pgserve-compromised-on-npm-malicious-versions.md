@@ -10,7 +10,10 @@ Back to Blog Threat Intel CanisterSprawl: pgserve Compromised on npm: Malicious 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io`
+- **Domain (defanged):** `telemetry.api-monitor.com`
+- **Domain (defanged):** `check-env.js`
+- **Domain (defanged):** `public.pem`
 
 ## MITRE ATT&CK Techniques
 
@@ -20,6 +23,7 @@ Back to Blog Threat Intel CanisterSprawl: pgserve Compromised on npm: Malicious 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -142,7 +146,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterSprawl: pgserve Compromised on npm: Malicious Versions Harvest Credentia
 
-`UC_219_4` · phase: **exploit** · confidence: **High**
+`UC_220_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +193,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `cjn37-uyaaa-aaaac-qgnva-cai.raw.icp0.io`, `telemetry.api-monitor.com`, `check-env.js`, `public.pem`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

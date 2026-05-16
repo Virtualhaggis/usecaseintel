@@ -11,6 +11,7 @@ Blog Vulnerabilities & Threats Someone published four versions of a fake "tansta
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `api.svix.com`
+- **Domain (defanged):** `api.svix`
 - **SHA256:** `72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90`
 - **SHA256:** `04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566`
 - **SHA256:** `abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9`
@@ -47,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious tanstack npm package (2.0.4–2.0.7) hashes written to node_modules
 
-`UC_236_11` · phase: **delivery** · confidence: **High**
+`UC_237_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +75,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound exfiltration to attacker Svix Ingest source ID from Node/npm initiator
 
-`UC_236_12` · phase: **c2** · confidence: **High**
+`UC_237_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +103,7 @@ DeviceNetworkEvents
 
 ### [LLM] npm/pnpm/yarn install of malicious unscoped tanstack@2.0.4-2.0.7
 
-`UC_236_13` · phase: **install** · confidence: **High**
+`UC_237_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -416,7 +417,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_236_10` · phase: **exploit** · confidence: **High**
+`UC_237_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -468,7 +469,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `api.svix.com`
+  - IP / domain IOC(s): `api.svix.com`, `api.svix`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90`, `04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566`, `abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9`, `7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f`

@@ -10,6 +10,9 @@ Blog Vulnerabilities & Threats GlassWorm goes native: New Zig dropper infects ev
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `win.node`
+- **Domain (defanged):** `mac.node`
+- **Domain (defanged):** `autoimport-2.7.9.vsix`
 - **SHA256:** `2819ea44e22b9c47049e86894e544f3fd0de1d8afc7b545314bd3bc718bf2e02`
 - **SHA256:** `112d1b33dd9b0244525f51e59e6a79ac5ae452bf6e98c310e7b4fa7902e4db44`
 
@@ -17,6 +20,7 @@ Blog Vulnerabilities & Threats GlassWorm goes native: New Zig dropper infects ev
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -39,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GlassWorm Zig dropper native node addon (win.node/mac.node) written to IDE extension bin/ folder
 
-`UC_303_7` · phase: **install** · confidence: **High**
+`UC_304_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +73,7 @@ DeviceFileEvents
 
 ### [LLM] Force-install of IDE extension via cmd.exe with --install-extension flag spawned by node host
 
-`UC_303_8` · phase: **install** · confidence: **High**
+`UC_304_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound fetch of attacker-controlled autoimport VSIX from ColossusQuailPray GitHub release
 
-`UC_303_9` · phase: **delivery** · confidence: **High**
+`UC_304_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -262,7 +266,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm goes native: New Zig dropper infects every IDE on your machine
 
-`UC_303_6` · phase: **exploit** · confidence: **High**
+`UC_304_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -313,10 +317,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `win.node`, `mac.node`, `autoimport-2.7.9.vsix`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `2819ea44e22b9c47049e86894e544f3fd0de1d8afc7b545314bd3bc718bf2e02`, `112d1b33dd9b0244525f51e59e6a79ac5ae452bf6e98c310e7b4fa7902e4db44`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -16,6 +16,7 @@ Packages like json-bigint-extend , jsonfx , and jsonfb were mimicking the popula
 - **Domain (defanged):** `gameland.21game.live`
 - **Domain (defanged):** `gameland.myapptest.top`
 - **Domain (defanged):** `gameland.nbzysp1.com`
+- **Domain (defanged):** `express.route.prototype.post`
 
 ## MITRE ATT&CK Techniques
 
@@ -39,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Egress to sidoraress json-bigint-extend gambling backdoor C2 infrastructure
 
-`UC_412_5` · phase: **c2** · confidence: **High**
+`UC_413_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +75,7 @@ union isfuzzy=true
 
 ### [LLM] Installation of sidoraress malicious npm packages (json-bigint-extend/jsonfb/jsonfx)
 
-`UC_412_6` · phase: **install** · confidence: **High**
+`UC_413_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Inbound HTTP request bearing sidoraress backdoor x-operation operator tokens
 
-`UC_412_7` · phase: **c2** · confidence: **High**
+`UC_413_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm backdoor lets hackers hijack gambling outcomes
 
-`UC_412_4` · phase: **exploit** · confidence: **High**
+`UC_413_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -252,7 +253,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`
+  - IP / domain IOC(s): `payment.y1pay.vip`, `payment.snip-site.cc`, `gameland.21game.live`, `gameland.myapptest.top`, `gameland.nbzysp1.com`, `express.route.prototype.post`
 
 
 ## Why this matters

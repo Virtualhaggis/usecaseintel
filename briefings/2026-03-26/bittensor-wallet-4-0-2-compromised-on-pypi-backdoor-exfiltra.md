@@ -10,6 +10,17 @@ Back to Blog Threat Intel bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor 
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `finney.opentensor-metrics.com`
+- **Domain (defanged):** `finney.metagraph-stats.com`
+- **Domain (defanged):** `finney.subtensor-telemetry.com`
+- **Domain (defanged):** `opentensor-cdn.com`
+- **Domain (defanged):** `t.opentensor-cdn.com`
+- **Domain (defanged):** `keyfile.rs`
+- **Domain (defanged):** `setup.py`
+- **Domain (defanged):** `opentensor-metrics.com`
+- **Domain (defanged):** `metagraph-stats.com`
+- **Domain (defanged):** `subtensor-telemetry.com`
+- **Domain (defanged):** `requirements.txt`
 - **SHA256:** `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`
 - **SHA256:** `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`
 
@@ -17,6 +28,7 @@ Back to Blog Threat Intel bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor 
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
@@ -38,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes)
 
-`UC_325_6` · phase: **c2** · confidence: **High**
+`UC_326_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +76,7 @@ union isfuzzy=true
 
 ### [LLM] DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session)
 
-`UC_325_7` · phase: **c2** · confidence: **High**
+`UC_326_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +106,7 @@ DeviceEvents
 
 ### [LLM] Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk
 
-`UC_325_8` · phase: **delivery** · confidence: **High**
+`UC_326_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -241,7 +253,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys
 
-`UC_325_5` · phase: **exploit** · confidence: **High**
+`UC_326_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -292,10 +304,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `finney.opentensor-metrics.com`, `finney.metagraph-stats.com`, `finney.subtensor-telemetry.com`, `opentensor-cdn.com`, `t.opentensor-cdn.com`, `keyfile.rs`, `setup.py`, `opentensor-metrics.com` _(+3 more)_
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e`, `edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

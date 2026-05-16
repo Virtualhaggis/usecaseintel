@@ -35,6 +35,21 @@ The security of…
 - **Domain (defanged):** `audit.checkmarx.cx`
 - **Domain (defanged):** `checkmarx.cx`
 - **Domain (defanged):** `proton.me`
+- **Domain (defanged):** `audit.checkmarx`
+- **Domain (defanged):** `package.json`
+- **Domain (defanged):** `node.js`
+- **Domain (defanged):** `bw1.js`
+- **Domain (defanged):** `setup.mjs`
+- **Domain (defanged):** `mcp.json`
+- **Domain (defanged):** `claude.json`
+- **Domain (defanged):** `config.ini`
+- **Domain (defanged):** `process.env`
+- **Domain (defanged):** `format-check.yml`
+- **Domain (defanged):** `registry.npmjs`
+- **Domain (defanged):** `intl.datetimeformat`
+- **Domain (defanged):** `process.exit`
+- **Domain (defanged):** `process.pid`
+- **Domain (defanged):** `process.kill`
 - **SHA256:** `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`
 - **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
 - **SHA256:** `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`
@@ -72,7 +87,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud 'Third Coming' C2 beacon to audit.checkmarx[.]cx /v1/telemetry
 
-`UC_221_10` · phase: **c2** · confidence: **High**
+`UC_222_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +129,7 @@ DeviceNetworkEvents
 
 ### [LLM] Shai-Hulud preinstall: node spawning Bun runtime to execute bw1.js / setup.mjs
 
-`UC_221_11` · phase: **install** · confidence: **High**
+`UC_222_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +169,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud GitHub dead-drop fallback: api.github.com search for 'beautifulcastle'
 
-`UC_221_12` · phase: **c2** · confidence: **High**
+`UC_222_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,7 +447,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_221_9` · phase: **exploit** · confidence: **High**
+`UC_222_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -484,7 +499,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `94.154.172.43`, `91.195.240.123`, `audit.checkmarx.cx`, `checkmarx.cx`, `proton.me`
+  - IP / domain IOC(s): `94.154.172.43`, `91.195.240.123`, `audit.checkmarx.cx`, `checkmarx.cx`, `proton.me`, `audit.checkmarx`, `package.json`, `node.js` _(+12 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`

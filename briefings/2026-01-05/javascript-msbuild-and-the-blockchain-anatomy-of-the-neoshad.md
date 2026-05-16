@@ -12,6 +12,8 @@ Blog Vulnerabilities & Threats JavaScript, MSBuild, and the Blockchain: Anatomy 
 
 - **IPv4 (defanged):** `80.78.22.206`
 - **Domain (defanged):** `metrics-flow.com`
+- **Domain (defanged):** `analytics.node`
+- **Domain (defanged):** `analytics.pdb`
 - **SHA256:** `012dfb89ebabcb8918efb0952f4a91515048fd3b87558e90fa45a7ded6656c07`
 
 ## MITRE ATT&CK Techniques
@@ -46,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NeoShadow npm loader: node.exe spawning MSBuild with a .proj from %TEMP%
 
-`UC_506_11` · phase: **install** · confidence: **High**
+`UC_507_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] NeoShadow persistence: config.proj written to %APPDATA%\Microsoft\CLR
 
-`UC_506_12` · phase: **install** · confidence: **High**
+`UC_507_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +91,7 @@ DeviceFileEvents
 
 ### [LLM] NeoShadow C2 / Etherscan blockchain C2-resolution traffic
 
-`UC_506_13` · phase: **c2** · confidence: **High**
+`UC_507_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -350,7 +352,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JavaScript, MSBuild, and the Blockchain: Anatomy of the NeoShadow npm Supply-Cha
 
-`UC_506_10` · phase: **exploit** · confidence: **High**
+`UC_507_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -402,7 +404,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `80.78.22.206`, `metrics-flow.com`
+  - IP / domain IOC(s): `80.78.22.206`, `metrics-flow.com`, `analytics.node`, `analytics.pdb`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `012dfb89ebabcb8918efb0952f4a91515048fd3b87558e90fa45a7ded6656c07`

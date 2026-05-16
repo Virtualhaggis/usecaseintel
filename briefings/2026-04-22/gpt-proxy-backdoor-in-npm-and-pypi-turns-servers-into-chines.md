@@ -11,6 +11,8 @@ Blog Vulnerabilities & Threats GPT-Proxy Backdoor in npm and PyPI turns Servers 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `sync.geeker.indevs.in`
+- **Domain (defanged):** `linux-gnu.so`
+- **Domain (defanged):** `addon.node`
 - **SHA256:** `b3405b8456f4e82f192cdff6fdd5b290a58fafda01fbc08174105b922bd7b3cf`
 - **SHA256:** `5d58ce3119c37f2bd552f4d883a4f4896dfcb8fb04875f844f999497e4ca846d`
 - **SHA256:** `fb3ae78d09c119ec335c3b99a95c97d9bb6f92fd2c7c9b0d3e875347e2f25bb2`
@@ -47,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GPT-Proxy backdoor C2 / Stage-2 download (sync.geeker.indevs.in, gibunxi4201/kube-node-diag)
 
-`UC_261_8` · phase: **c2** · confidence: **High**
+`UC_262_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] Stage-2 implant masquerading as node-health-check daemon (/tmp/.kh, /tmp/.ns)
 
-`UC_261_9` · phase: **install** · confidence: **High**
+`UC_262_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +99,7 @@ DeviceProcessEvents
 
 ### [LLM] npm/PyPI dropper self-cleanup: find rm -rf of kube-health-tools in node_modules
 
-`UC_261_10` · phase: **install** · confidence: **High**
+`UC_262_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -261,7 +263,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GPT-Proxy Backdoor in npm and PyPI turns Servers into Chinese LLM Relays
 
-`UC_261_7` · phase: **exploit** · confidence: **High**
+`UC_262_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -313,7 +315,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `sync.geeker.indevs.in`
+  - IP / domain IOC(s): `sync.geeker.indevs.in`, `linux-gnu.so`, `addon.node`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `b3405b8456f4e82f192cdff6fdd5b290a58fafda01fbc08174105b922bd7b3cf`, `5d58ce3119c37f2bd552f4d883a4f4896dfcb8fb04875f844f999497e4ca846d`, `fb3ae78d09c119ec335c3b99a95c97d9bb6f92fd2c7c9b0d3e875347e2f25bb2`, `3a3d8f8636fa1db21871005a49ecd7fa59688fa763622fa737ce6b899558b300`, `e5c2b988f369d9e51f30985eb8c1c5ae`

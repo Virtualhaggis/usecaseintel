@@ -15,6 +15,11 @@ LAB52, the intelligence team at S2 Group, has identified a new campaign targetin
 - **Domain (defanged):** `pastefy.app`
 - **Domain (defanged):** `short-link.net`
 - **Domain (defanged):** `iili.io`
+- **Domain (defanged):** `fphpr3b.jpg`
+- **Domain (defanged):** `q995yyu.jpg`
+- **Domain (defanged):** `q995zhl.jpg`
+- **Domain (defanged):** `q995iq2.jpg`
+- **Domain (defanged):** `qkofge4.jpg`
 - **SHA256:** `5b978cdc46afa28d83e532cd19622d9097bebedf87efc4c87bd35d8ffad9e672`
 - **SHA256:** `6178b1af51057c0bac75a842afff500a8fa3ed957d79a712a6ef089bec7e7a8b`
 - **SHA256:** `ac60eefc2607216f8126c0b22b6243f3862ef2bb265c585deee0d00a20a436b3`
@@ -67,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Edge/Chromium launched with DRILLAPP headless media-capture & sandbox-disable flag combo
 
-`UC_356_4` · phase: **install** · confidence: **High**
+`UC_357_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Edge/Chromium fetch of pastefy.app/raw or DRILLAPP C2 IPs (dead-drop WebSocket resolver)
 
-`UC_356_5` · phase: **c2** · confidence: **High**
+`UC_357_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +141,7 @@ DeviceNetworkEvents
 
 ### [LLM] DRILLAPP variant 1 persistence: bulk .lnk drop into user Startup folder
 
-`UC_356_6` · phase: **install** · confidence: **Medium**
+`UC_357_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +203,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_356_3` · phase: **install** · confidence: **High**
+`UC_357_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -250,7 +255,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `80.89.224.13`, `188.137.228.162`, `pastefy.app`, `short-link.net`, `iili.io`
+  - IP / domain IOC(s): `80.89.224.13`, `188.137.228.162`, `pastefy.app`, `short-link.net`, `iili.io`, `fphpr3b.jpg`, `q995yyu.jpg`, `q995zhl.jpg` _(+2 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `5b978cdc46afa28d83e532cd19622d9097bebedf87efc4c87bd35d8ffad9e672`, `6178b1af51057c0bac75a842afff500a8fa3ed957d79a712a6ef089bec7e7a8b`, `ac60eefc2607216f8126c0b22b6243f3862ef2bb265c585deee0d00a20a436b3`, `e20831cecd763d0dc91fb39f3bd61d17002608c5a40a6cf0bd16111f4e50d341`, `ee90b01b16099e0bb23d4653607a3a559590fc8d0c43120b8456fb1860d2e630`, `32973ef02e10a585a4a0196b013265e29fc57d8e1c50752f7b39e43b9f388715`, `107b2badfc93fcdd3ffda7d3999477ced3f39f43f458dd0f6a424c9ab52681c3`, `a545908c931ec47884b5ccfb1f112435f5d0cdac140e664673672c9df9016672` _(+18 more)_

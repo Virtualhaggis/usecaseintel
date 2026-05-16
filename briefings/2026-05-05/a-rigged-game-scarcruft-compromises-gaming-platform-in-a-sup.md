@@ -37,6 +37,19 @@ ESET researchers uncovered a multiplatform supply-chain attack by North Korea-al
 - **Domain (defanged):** `swr.co.kr`
 - **Domain (defanged):** `sejonghaeun.com`
 - **Domain (defanged):** `cndsoft.co.kr`
+- **Domain (defanged):** `sqybhs.apk`
+- **Domain (defanged):** `spy.agent.exm`
+- **Domain (defanged):** `ybht.apk`
+- **Domain (defanged):** `spy.agent.ege`
+- **Domain (defanged):** `mono.dll`
+- **Domain (defanged):** `agent.ilq`
+- **Domain (defanged):** `agent.egn`
+- **Domain (defanged):** `sqgame.com`
+- **Domain (defanged):** `1980food.co`
+- **Domain (defanged):** `www.lawwell.co`
+- **Domain (defanged):** `colorncopy.co`
+- **Domain (defanged):** `swr.co`
+- **Domain (defanged):** `cndsoft.co`
 - **SHA1:** `B06110E0FEB7592872E380B7E3B8F77D80DD1108`
 - **MD5:** `A8FE823D451D636D0A0366C0629EF5C3`
 
@@ -66,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ScarCruft sqgame supply-chain — download from xiazai.sqgame.com.cn / sqgame.com.cn
 
-`UC_215_7` · phase: **delivery** · confidence: **High**
+`UC_216_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +110,7 @@ union
 
 ### [LLM] Trojanized sqgame mono.dll / BirdCall APK hash hit on Windows endpoint
 
-`UC_215_8` · phase: **install** · confidence: **High**
+`UC_216_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +146,7 @@ union
 
 ### [LLM] ScarCruft second-stage staging — connection to compromised KR sites or BirdCall C2 IPs
 
-`UC_215_9` · phase: **c2** · confidence: **High**
+`UC_216_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -272,7 +285,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A rigged game: ScarCruft compromises gaming platform in a supply-chain attack
 
-`UC_215_6` · phase: **exploit** · confidence: **High**
+`UC_216_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -324,7 +337,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `39.106.249.68`, `211.239.117.117`, `114.108.128.157`, `221.143.43.214`, `222.231.2.20`, `222.231.2.23`, `222.231.2.41`, `www.sqgame.net` _(+11 more)_
+  - IP / domain IOC(s): `39.106.249.68`, `211.239.117.117`, `114.108.128.157`, `221.143.43.214`, `222.231.2.20`, `222.231.2.23`, `222.231.2.41`, `www.sqgame.net` _(+24 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `B06110E0FEB7592872E380B7E3B8F77D80DD1108`, `A8FE823D451D636D0A0366C0629EF5C3`

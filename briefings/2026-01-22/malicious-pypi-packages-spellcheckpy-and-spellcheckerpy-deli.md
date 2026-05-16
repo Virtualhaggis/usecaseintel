@@ -13,8 +13,13 @@ Hidden ins…
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `172.86.73.139`
+- **IPv4 (defanged):** `172.86.73.0`
 - **Domain (defanged):** `updatenet.work`
 - **Domain (defanged):** `dothebest.store`
+- **Domain (defanged):** `cloudzy.com`
+- **Domain (defanged):** `history.php`
+- **Domain (defanged):** `update1.php`
+- **Domain (defanged):** `eu.json.gz`
 
 ## MITRE ATT&CK Techniques
 
@@ -46,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] spellcheckpy/spellcheckerpy RAT C2 callback to updatenet.work (172.86.73.139)
 
-`UC_476_10` · phase: **c2** · confidence: **High**
+`UC_477_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +75,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation footprint of malicious PyPI packages spellcheckpy / spellcheckerpy
 
-`UC_476_11` · phase: **install** · confidence: **High**
+`UC_477_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +107,7 @@ union isfuzzy=true
 
 ### [LLM] Python spawning python with stdin payload (-) and detached session - spellcheckpy RAT stage-2
 
-`UC_476_12` · phase: **exploit** · confidence: **Medium**
+`UC_477_12` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -364,7 +369,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious PyPI Packages spellcheckpy and spellcheckerpy Deliver Python RAT
 
-`UC_476_9` · phase: **exploit** · confidence: **High**
+`UC_477_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -416,7 +421,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `172.86.73.139`, `updatenet.work`, `dothebest.store`
+  - IP / domain IOC(s): `172.86.73.139`, `172.86.73.0`, `updatenet.work`, `dothebest.store`, `cloudzy.com`, `history.php`, `update1.php`, `eu.json.gz`
 
 
 ## Why this matters

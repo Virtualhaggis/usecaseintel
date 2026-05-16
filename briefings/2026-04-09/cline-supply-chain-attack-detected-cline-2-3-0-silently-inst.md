@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] cline@2.3.0 postinstall silently global-installs openclaw via npm
 
-`UC_301_4` · phase: **install** · confidence: **High**
+`UC_302_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### [LLM] openclaw Gateway daemon listening on ws://127.0.0.1:18789
 
-`UC_301_5` · phase: **c2** · confidence: **High**
+`UC_302_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] openclaw persistence daemon written to launchd / systemd
 
-`UC_301_6` · phase: **install** · confidence: **High**
+`UC_302_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cline Supply Chain Attack Detected: cline@2.3.0 Silently Installs OpenClaw
 
-`UC_301_3` · phase: **exploit** · confidence: **High**
+`UC_302_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

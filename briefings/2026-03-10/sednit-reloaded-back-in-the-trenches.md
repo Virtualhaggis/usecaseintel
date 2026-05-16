@@ -19,6 +19,12 @@ Since April 2024, Sednit’s advanced development team has reemerged with a mode
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-21509`
+- **Domain (defanged):** `eapphost.dll`
+- **Domain (defanged):** `spy.keylogger.ls`
+- **Domain (defanged):** `tcpiphlpsvc.dll`
+- **Domain (defanged):** `taskhost.exe`
+- **Domain (defanged):** `taskhostw.exe`
+- **Domain (defanged):** `explorer.exe`
 - **SHA1:** `D0DB619A7A160949528D46D20FC0151BF9775C32`
 - **SHA1:** `99B454262DC26B081600E844371982A49D334E5E`
 
@@ -26,6 +32,7 @@ Since April 2024, Sednit’s advanced development team has reemerged with a mode
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
@@ -54,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] APT28/Sednit BeardShell & Covenant C2 to Icedrive/Filen/Koofr cloud APIs from non-browser process
 
-`UC_363_9` · phase: **c2** · confidence: **High**
+`UC_364_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] APT28/Sednit COM hijack persistence via Shell.Explorer CLSID InProcServer32
 
-`UC_363_10` · phase: **install** · confidence: **High**
+`UC_364_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +110,7 @@ DeviceRegistryEvents
 
 ### [LLM] Sednit on-disk artifacts: prnfldr.dll in ProgramData, windows.png stego carrier, SlimAgent screenshot files
 
-`UC_363_11` · phase: **install** · confidence: **High**
+`UC_364_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,7 +376,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_363_8` · phase: **exploit** · confidence: **High**
+`UC_364_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,6 +427,9 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `eapphost.dll`, `spy.keylogger.ls`, `tcpiphlpsvc.dll`, `taskhost.exe`, `taskhostw.exe`, `explorer.exe`
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-21509`
 
@@ -429,4 +439,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

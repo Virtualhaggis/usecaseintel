@@ -18,7 +18,69 @@ In recent years, EDR killers have become one of the most commonly seen tools in 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `2gk8.exe`
+- **Domain (defanged):** `loader.ly`
+- **Domain (defanged):** `caon.y.gen`
+- **Domain (defanged):** `smuot.sys`
+- **Domain (defanged):** `agent.dx`
+- **Domain (defanged):** `edr-freeze.exe`
+- **Domain (defanged):** `killer.exe`
+- **Domain (defanged):** `killav.dq`
+- **Domain (defanged):** `edrgay.exe`
+- **Domain (defanged):** `killav.nvj`
+- **Domain (defanged):** `susanoo.exe`
+- **Domain (defanged):** `killav.cq`
+- **Domain (defanged):** `vmtools.exe`
+- **Domain (defanged):** `killav.nvl`
+- **Domain (defanged):** `test.exe`
+- **Domain (defanged):** `tfsysmon-killer.exe`
+- **Domain (defanged):** `killav.dp`
+- **Domain (defanged):** `deadav.exe`
+- **Domain (defanged):** `qwe.exe`
+- **Domain (defanged):** `pip.exe`
+- **Domain (defanged):** `killav.nvq`
+- **Domain (defanged):** `kill-floor.exe`
+- **Domain (defanged):** `killav.av`
+- **Domain (defanged):** `demor.exe`
+- **Domain (defanged):** `agent.gaj`
+- **Domain (defanged):** `demo.exe`
+- **Domain (defanged):** `killav.dr`
+- **Domain (defanged):** `bdapiutil64.sys`
+- **Domain (defanged):** `drivergay.sys`
+- **Domain (defanged):** `gosling.sys`
+- **Domain (defanged):** `kihost.sys`
+- **Domain (defanged):** `k7rkscan.sys`
+- **Domain (defanged):** `wamsdk.sys`
+- **Domain (defanged):** `elliot.sys`
+- **Domain (defanged):** `kill.sys`
+- **Domain (defanged):** `tfsysmon.sys`
+- **Domain (defanged):** `watchmgrs.sys`
+- **Domain (defanged):** `riskware.pc`
+- **Domain (defanged):** `1721894530.sys`
+- **Domain (defanged):** `rentdrv2.sys`
+- **Domain (defanged):** `data.sys`
+- **Domain (defanged):** `nitrogenk.sys`
+- **Domain (defanged):** `rwdrv.sys`
+- **Domain (defanged):** `throttleblood.sys`
+- **Domain (defanged):** `throttlestop.sys`
+- **Domain (defanged):** `hlpdrv.sys`
+- **Domain (defanged):** `agent.grl`
+- **Domain (defanged):** `aswarpot.sys`
+- **Domain (defanged):** `kallmekris.sys`
+- **Domain (defanged):** `probmon.sys`
+- **Domain (defanged):** `sysprox.sys`
+- **Domain (defanged):** `kl.sys`
+- **Domain (defanged):** `rspot.sys`
+- **Domain (defanged):** `msupdate.sys`
+- **Domain (defanged):** `thelper.sys`
+- **Domain (defanged):** `praxisbackup.exe`
+- **Domain (defanged):** `agent.ecw`
+- **Domain (defanged):** `version.dll`
+- **Domain (defanged):** `killav.card`
+- **Domain (defanged):** `e25c5df65a3a.exe`
+- **Domain (defanged):** `kryptik.fbc`
+- **Domain (defanged):** `hwrwdrv.sys`
+- **Domain (defanged):** `megadrov.sys`
 
 ## MITRE ATT&CK Techniques
 
@@ -36,6 +98,7 @@ In recent years, EDR killers have become one of the most commonly seen tools in 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
 - **T1543.003** — Persistence (article-specific)
 - **T1068** — Exploitation for Privilege Escalation
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
@@ -51,7 +114,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BYOVD: Genshin Impact mhyprot.sys driver dropped/loaded outside legitimate game install (Embargo evil-mhyprot-cli)
 
-`UC_345_9` · phase: **install** · confidence: **High**
+`UC_346_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +150,7 @@ union
 
 ### [LLM] EDRSilencer-style WFP filter blocking outbound traffic from named EDR binaries
 
-`UC_345_10` · phase: **install** · confidence: **Medium**
+`UC_346_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +191,7 @@ union
 
 ### [LLM] EDR-Freeze: WerFaultSecure.exe abused to suspend AV/EDR processes via MiniDumpWriteDump race
 
-`UC_345_11` · phase: **install** · confidence: **High**
+`UC_346_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,7 +519,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_345_8` · phase: **exploit** · confidence: **High**
+`UC_346_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -503,7 +566,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `2gk8.exe`, `loader.ly`, `caon.y.gen`, `smuot.sys`, `agent.dx`, `edr-freeze.exe`, `killer.exe`, `killav.dq` _(+55 more)_
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

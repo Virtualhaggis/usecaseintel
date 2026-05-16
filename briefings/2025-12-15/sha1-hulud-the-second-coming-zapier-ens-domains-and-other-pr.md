@@ -13,7 +13,12 @@ The JavaScript ecosystem i…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `bun.sh`
+- **Domain (defanged):** `content.json`
+- **Domain (defanged):** `cloud.json`
+- **Domain (defanged):** `environment.json`
+- **Domain (defanged):** `trufflesecrets.json`
+- **Domain (defanged):** `package-lock.json`
 
 ## MITRE ATT&CK Techniques
 
@@ -25,6 +30,7 @@ The JavaScript ecosystem i…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
@@ -44,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sha1-Hulud: npm preinstall hook spawns bun.sh installer via curl/PowerShell
 
-`UC_530_6` · phase: **install** · confidence: **High**
+`UC_531_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +75,7 @@ DeviceProcessEvents
 
 ### [LLM] Sha1-Hulud: self-hosted GitHub Actions runner registered with name "SHA1HULUD"
 
-`UC_530_7` · phase: **install** · confidence: **High**
+`UC_531_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +108,7 @@ union runner_proc, runner_file
 
 ### [LLM] Sha1-Hulud Stage-5 destructive home-directory shred via find | xargs shred -uvz
 
-`UC_530_8` · phase: **actions** · confidence: **High**
+`UC_531_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -266,7 +272,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_530_5` · phase: **exploit** · confidence: **High**
+`UC_531_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -313,7 +319,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `bun.sh`, `content.json`, `cloud.json`, `environment.json`, `trufflesecrets.json`, `package-lock.json`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

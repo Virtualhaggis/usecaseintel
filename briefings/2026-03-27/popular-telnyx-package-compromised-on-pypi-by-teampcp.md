@@ -15,6 +15,11 @@ The pattern is consistent: steal credentials from a trusted security to…
 - **IPv4 (defanged):** `83.142.209.203`
 - **Domain (defanged):** `checkmarx.zone`
 - **Domain (defanged):** `models.litellm.cloud`
+- **Domain (defanged):** `hangup.wav`
+- **Domain (defanged):** `ringtone.wav`
+- **Domain (defanged):** `tpcp.tar.gz`
+- **Domain (defanged):** `msbuild.exe`
+- **Domain (defanged):** `msbuild.exe.lock`
 - **SHA256:** `7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9`
 - **SHA256:** `cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3`
 
@@ -45,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP telnyx PyPI: msbuild.exe persistence in user Startup folder
 
-`UC_319_9` · phase: **install** · confidence: **High**
+`UC_320_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +73,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP telnyx PyPI C2 beacon to 83.142.209.203:8080
 
-`UC_319_10` · phase: **c2** · confidence: **High**
+`UC_320_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +94,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP WAV steganography drop URL paths (hangup.wav / ringtone.wav)
 
-`UC_319_11` · phase: **delivery** · confidence: **Medium**
+`UC_320_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -257,7 +262,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular telnyx package compromised on PyPI by TeamPCP
 
-`UC_319_8` · phase: **exploit** · confidence: **High**
+`UC_320_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +314,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `83.142.209.203`, `checkmarx.zone`, `models.litellm.cloud`
+  - IP / domain IOC(s): `83.142.209.203`, `checkmarx.zone`, `models.litellm.cloud`, `hangup.wav`, `ringtone.wav`, `tpcp.tar.gz`, `msbuild.exe`, `msbuild.exe.lock`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-33634`

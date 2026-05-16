@@ -43,6 +43,20 @@ ESET researchers have uncovered two Android spyware campaigns targeting individu
 - **Domain (defanged):** `sgnlapp.info`
 - **Domain (defanged):** `ae.net`
 - **Domain (defanged):** `totokapp.info`
+- **Domain (defanged):** `cd1c1e326a.apk`
+- **Domain (defanged):** `spy.tospy`
+- **Domain (defanged):** `411.apk`
+- **Domain (defanged):** `10113.apk`
+- **Domain (defanged):** `ae.totok.chat`
+- **Domain (defanged):** `spy.prospy`
+- **Domain (defanged):** `on-plugin.apk`
+- **Domain (defanged):** `plugin.apk`
+- **Domain (defanged):** `toktok.apk`
+- **Domain (defanged):** `totok.apk`
+- **Domain (defanged):** `store.latestver`
+- **Domain (defanged):** `store.appupdate`
+- **Domain (defanged):** `signal.ct`
+- **Domain (defanged):** `in-signal.com`
 - **SHA1:** `DE90F6899EEC315F4ED05C2AA052D4FE8B71125A`
 
 ## MITRE ATT&CK Techniques
@@ -75,7 +89,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ProSpy/ToSpy Android spyware C2 callback to ESET-named UAE infrastructure
 
-`UC_633_7` · phase: **c2** · confidence: **High**
+`UC_634_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +112,7 @@ DeviceNetworkEvents
 
 ### [LLM] ToSpy in-app update path: HTTP request to spiralkey.co /totok_update/ APK or version check
 
-`UC_633_8` · phase: **install** · confidence: **High**
+`UC_634_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +137,7 @@ DeviceNetworkEvents
 
 ### [LLM] DNS resolution for ProSpy/ToSpy lure & C2 domains from internal resolvers
 
-`UC_633_9` · phase: **delivery** · confidence: **Medium**
+`UC_634_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -359,7 +373,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `86.105.18.13`, `185.7.219.77`, `152.89.29.73`, `5.42.221.106`, `152.89.29.78`, `185.140.210.66`, `176.123.7.83`, `185.27.134.222` _(+17 more)_
+  - IP / domain IOC(s): `86.105.18.13`, `185.7.219.77`, `152.89.29.73`, `5.42.221.106`, `152.89.29.78`, `185.140.210.66`, `176.123.7.83`, `185.27.134.222` _(+31 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `DE90F6899EEC315F4ED05C2AA052D4FE8B71125A`

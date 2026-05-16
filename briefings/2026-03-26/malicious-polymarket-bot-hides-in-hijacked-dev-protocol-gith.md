@@ -12,12 +12,19 @@ T…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `cloudflareguard.vercel.app`
+- **Domain (defanged):** `cloudflareinsights.vercel.app`
+- **Domain (defanged):** `big.js`
+- **Domain (defanged):** `bignumber.js`
+- **Domain (defanged):** `api.ipify.org`
+- **Domain (defanged):** `test.js`
+- **Domain (defanged):** `index.js`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
@@ -40,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] C2 beaconing to Vercel-hosted Cloudflare-impersonating domains (cloudflareguard / cloudflareinsights)
 
-`UC_327_4` · phase: **c2** · confidence: **High**
+`UC_328_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +79,7 @@ union isfuzzy=true
 
 ### [LLM] npm postinstall SSH-backdoor chain: node spawning sudo ufw allow 22/tcp + chown ~/.ssh
 
-`UC_327_5` · phase: **install** · confidence: **High**
+`UC_328_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +111,7 @@ DeviceProcessEvents
 
 ### [LLM] Malicious typosquat npm packages installed on disk (ts-bign / big-nunber / levex-refa / lint-builder)
 
-`UC_327_6` · phase: **delivery** · confidence: **High**
+`UC_328_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -224,7 +231,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Polymarket Bot Hides in Hijacked dev-protocol GitHub Org and Steals Wa
 
-`UC_327_3` · phase: **exploit** · confidence: **High**
+`UC_328_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -271,7 +278,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `cloudflareguard.vercel.app`, `cloudflareinsights.vercel.app`, `big.js`, `bignumber.js`, `api.ipify.org`, `test.js`, `index.js`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

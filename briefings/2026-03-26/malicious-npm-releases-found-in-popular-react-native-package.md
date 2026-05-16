@@ -10,12 +10,17 @@ Back to Blog Threat Intel Malicious npm Releases Found in Popular React Native P
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `45.32.150.251`
+- **Domain (defanged):** `init.json`
+- **Domain (defanged):** `proton.me`
+- **Domain (defanged):** `init.js`
+- **Domain (defanged):** `child.js`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
@@ -34,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm postinstall hook executes node init.js/child.js from GlassWorm React Native compromised packages
 
-`UC_326_4` · phase: **install** · confidence: **High**
+`UC_327_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] Malicious launcher file (init.js / child.js / install.js) written under compromised React Native npm package paths
 
-`UC_326_5` · phase: **delivery** · confidence: **High**
+`UC_327_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +91,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound connection to GlassWorm npm-supply-chain payload server 45.32.150.251 (Vultr AS20473)
 
-`UC_326_6` · phase: **c2** · confidence: **High**
+`UC_327_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +199,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_326_3` · phase: **exploit** · confidence: **High**
+`UC_327_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -241,7 +246,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.32.150.251`, `init.json`, `proton.me`, `init.js`, `child.js`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

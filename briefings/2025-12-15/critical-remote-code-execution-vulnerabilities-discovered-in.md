@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Next.js/Node.js Server Spawning Recon or Shell Utilities (React2Shell Post-RCE)
 
-`UC_528_3` · phase: **exploit** · confidence: **High**
+`UC_529_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### [LLM] React2Shell C2 Infrastructure Egress from Node.js / Web Tier
 
-`UC_528_4` · phase: **c2** · confidence: **High**
+`UC_529_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] React2Shell Web Shell Artifact Drop (filemanager-standalone.js / segawon.txt)
 
-`UC_528_5` · phase: **install** · confidence: **High**
+`UC_529_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Remote Code Execution Vulnerabilities Discovered in React Server Compon
 
-`UC_528_2` · phase: **exploit** · confidence: **High**
+`UC_529_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

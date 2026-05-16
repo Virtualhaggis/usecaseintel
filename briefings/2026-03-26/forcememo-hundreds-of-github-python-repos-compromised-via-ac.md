@@ -10,12 +10,32 @@ Back to Blog Threat Intel ForceMemo: Hundreds of GitHub Python Repos Compromised
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `45.32.151.157`
+- **IPv4 (defanged):** `45.32.150.97`
+- **IPv4 (defanged):** `217.69.11.57`
+- **IPv4 (defanged):** `217.69.11.99`
+- **IPv4 (defanged):** `217.69.0.159`
+- **IPv4 (defanged):** `45.76.44.240`
+- **Domain (defanged):** `node.js`
+- **Domain (defanged):** `init.json`
+- **Domain (defanged):** `i.js`
+- **Domain (defanged):** `api.mainnet-beta.solana.com`
+- **Domain (defanged):** `solana-mainnet.gateway.tatum.io`
+- **Domain (defanged):** `go.getblock.us`
+- **Domain (defanged):** `solana-rpc.publicnode.com`
+- **Domain (defanged):** `api.blockeden.xyz`
+- **Domain (defanged):** `solana.drpc.org`
+- **Domain (defanged):** `solana.leorpc.com`
+- **Domain (defanged):** `solana.api.onfinality.io`
+- **Domain (defanged):** `solana.api.pocket.network`
+- **Domain (defanged):** `setup.py`
+- **Domain (defanged):** `nodejs.org`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
@@ -39,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ForceMemo: Node.js v22.9.0 spawned by Python from user home directory
 
-`UC_328_7` · phase: **install** · confidence: **High**
+`UC_329_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +80,7 @@ DeviceProcessEvents
 
 ### [LLM] ForceMemo: Python process queries Solana mainnet RPC endpoint (blockchain dead-drop C2)
 
-`UC_328_8` · phase: **c2** · confidence: **High**
+`UC_329_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +108,7 @@ union
 
 ### [LLM] ForceMemo: init.json persistence file or i.js loader dropped by Python in user home root
 
-`UC_328_9` · phase: **install** · confidence: **Medium**
+`UC_329_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -282,7 +302,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ForceMemo: Hundreds of GitHub Python Repos Compromised via Account Takeover and
 
-`UC_328_6` · phase: **exploit** · confidence: **High**
+`UC_329_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -329,7 +349,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.32.151.157`, `45.32.150.97`, `217.69.11.57`, `217.69.11.99`, `217.69.0.159`, `45.76.44.240`, `node.js`, `init.json` _(+12 more)_
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -28,6 +28,16 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `tutamail.com`
+- **Domain (defanged):** `proton.me`
+- **Domain (defanged):** `termncolor-3.1.0-py3-none-any.whl`
+- **Domain (defanged):** `terminate.dll`
+- **Domain (defanged):** `unicode.py`
+- **Domain (defanged):** `terminate.so`
+- **Domain (defanged):** `libcef.dll`
+- **Domain (defanged):** `vcpktsvr.exe`
+- **Domain (defanged):** `policy.dllcppage.dll`
+- **Domain (defanged):** `helper.zulipchat.com`
 - **MD5:** `48be833b0b0ca1ad3cf99c66dc89c3f4`
 - **MD5:** `5152410aeef667ffaf42d40746af4d84`
 - **MD5:** `0a5a06fa2e74a57fd5ed8e85f04a483a`
@@ -51,6 +61,7 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -77,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OceanLotus ZiChatBot persistence: 'pkt-update' Run key → vcpacket\vcpktsvr.exe
 
-`UC_191_8` · phase: **install** · confidence: **High**
+`UC_192_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +111,7 @@ DeviceRegistryEvents
 
 ### [LLM] ZiChatBot C2 to helper.zulipchat.com via Zulip REST API
 
-`UC_191_9` · phase: **c2** · confidence: **High**
+`UC_192_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +148,7 @@ let zulip_auth_b64 = "TW9yaWFuLWJvdEBoZWxwZXIuenVsaXBjaGF0LmNvbTpVOFJFWGxJNktmOH
 
 ### [LLM] Malicious PyPI wheel (colorinal/uuid32-utils/termncolor) drops terminate.dll loaded by python.exe
 
-`UC_191_10` · phase: **delivery** · confidence: **High**
+`UC_192_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus suspected of using PyPI to deliver ZiChatBot malware
 
-`UC_191_7` · phase: **exploit** · confidence: **High**
+`UC_192_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -471,10 +482,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `tutamail.com`, `proton.me`, `termncolor-3.1.0-py3-none-any.whl`, `terminate.dll`, `unicode.py`, `terminate.so`, `libcef.dll`, `vcpktsvr.exe` _(+2 more)_
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `48be833b0b0ca1ad3cf99c66dc89c3f4`, `5152410aeef667ffaf42d40746af4d84`, `0a5a06fa2e74a57fd5ed8e85f04a483a`, `e4a0ad38fd18a0e11199d1c52751908b`, `5598baa59c716590d8841c6312d8349e`, `968782b4feb4236858e3253f77ecf4b0`, `b55b6e364be44f27e3fecdce5ad69eca`, `02f4701559fc40067e69bb426776a54f` _(+10 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

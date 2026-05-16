@@ -10,6 +10,14 @@ Back to Blog Threat Intel TeamPCP Plants WAV Steganography Credential Stealer in
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `83.142.209.203`
+- **Domain (defanged):** `ringtone.wav`
+- **Domain (defanged):** `hangup.wav`
+- **Domain (defanged):** `tpcp.tar.gz`
+- **Domain (defanged):** `msbuild.exe`
+- **Domain (defanged):** `msbuild.exe.lock`
+- **Domain (defanged):** `telnyx-4.87.1.tar.gz`
+- **Domain (defanged):** `telnyx-4.87.2.tar.gz`
 - **SHA256:** `f66c1ea3b25ec95d0c6a07be92c761551e543a7b256f9c78a2ff781c77df7093`
 - **SHA256:** `a9235c0eb74a8e92e5a0150e055ee9dcdc6252a07785b6677a9ca831157833a5`
 
@@ -17,6 +25,7 @@ Back to Blog Threat Intel TeamPCP Plants WAV Steganography Credential Stealer in
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -42,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP C2 beacon to 83.142.209.203:8080 (telnyx/litellm WAV stego campaign)
 
-`UC_310_7` · phase: **c2** · confidence: **High**
+`UC_311_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +72,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP msbuild.exe LOLBin masquerade dropped to user Startup folder
 
-`UC_310_8` · phase: **install** · confidence: **High**
+`UC_311_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP exfiltration signature: tpcp.tar.gz / X-Filename header / openssl OAEP chain
 
-`UC_310_9` · phase: **actions** · confidence: **High**
+`UC_311_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_310_6` · phase: **exploit** · confidence: **High**
+`UC_311_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,10 +382,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `83.142.209.203`, `ringtone.wav`, `hangup.wav`, `tpcp.tar.gz`, `msbuild.exe`, `msbuild.exe.lock`, `telnyx-4.87.1.tar.gz`, `telnyx-4.87.2.tar.gz`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `f66c1ea3b25ec95d0c6a07be92c761551e543a7b256f9c78a2ff781c77df7093`, `a9235c0eb74a8e92e5a0150e055ee9dcdc6252a07785b6677a9ca831157833a5`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

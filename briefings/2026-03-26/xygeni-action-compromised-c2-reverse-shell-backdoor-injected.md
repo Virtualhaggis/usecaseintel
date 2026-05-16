@@ -12,6 +12,12 @@ Back to Blog Threat Intel xygeni-action Compromised: C2 Reverse Shell Backdoor I
 
 - **IPv4 (defanged):** `91.214.78.178`
 - **Domain (defanged):** `security-verify.91.214.78.178.nip`
+- **Domain (defanged):** `nip.io`
+- **Domain (defanged):** `sys.stdout.write`
+- **Domain (defanged):** `zlib.compress`
+- **Domain (defanged):** `sys.stdin.buffer.read`
+- **Domain (defanged):** `felix.carnicero`
+- **Domain (defanged):** `xygeni.io`
 - **SHA1:** `13c6ed2797df7d85749864e2cbcf09c893f43b23`
 - **SHA1:** `ea66a5ad3128270e853f46013be382e761d930b9`
 - **SHA1:** `4bf1d4e19ad81a3e8d4063755ae0f482dd3baf12`
@@ -40,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] xygeni-action C2 callback to 91.214.78.178 (incl. nip.io wildcard)
 
-`UC_329_6` · phase: **c2** · confidence: **High**
+`UC_330_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +79,7 @@ union isfuzzy=true
 
 ### [LLM] xygeni-action backdoor process pattern — curl with X-B auth header to /b/in|/b/q|/b/r
 
-`UC_329_7` · phase: **c2** · confidence: **High**
+`UC_330_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +114,7 @@ DeviceProcessEvents
 
 ### [LLM] Repository workflow reference to compromised xygeni-action@v5 tag
 
-`UC_329_8` · phase: **delivery** · confidence: **Medium**
+`UC_330_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +233,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — xygeni-action Compromised: C2 Reverse Shell Backdoor Injected via Tag Poisoning
 
-`UC_329_5` · phase: **install** · confidence: **High**
+`UC_330_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -263,7 +269,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `91.214.78.178`, `security-verify.91.214.78.178.nip`
+  - IP / domain IOC(s): `91.214.78.178`, `security-verify.91.214.78.178.nip`, `nip.io`, `sys.stdout.write`, `zlib.compress`, `sys.stdin.buffer.read`, `felix.carnicero`, `xygeni.io`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `13c6ed2797df7d85749864e2cbcf09c893f43b23`, `ea66a5ad3128270e853f46013be382e761d930b9`, `4bf1d4e19ad81a3e8d4063755ae0f482dd3baf12`

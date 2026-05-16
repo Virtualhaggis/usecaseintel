@@ -41,6 +41,10 @@ Threat Re…
 - **Domain (defanged):** `vomet.ru`
 - **Domain (defanged):** `pic-editor-chromeextension.uno`
 - **Domain (defanged):** `gosupersonic.email`
+- **Domain (defanged):** `mcp-browser.qubecare`
+- **Domain (defanged):** `banana.summarizer`
+- **Domain (defanged):** `api.reverserecruiting`
+- **Domain (defanged):** `b.seetharam`
 - **SHA256:** `0cbf101e96f6d5c4146812f07105f8b89bd76dd994f540470cd1c4bc37df37d5`
 - **SHA256:** `ac0a312398b3bf6b3d7c5169687ca72f361838bc5a90f2c0dbce2dc8e2094a02`
 - **SHA256:** `604c7aef72892b56ac23ad54744376574239c8f0651e95dd5b6cf540eb70f7c3`
@@ -77,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_225_11` · phase: **c2** · confidence: **High**
+`UC_226_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +104,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
 
-`UC_225_12` · phase: **install** · confidence: **High**
+`UC_226_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -380,7 +384,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_225_10` · phase: **exploit** · confidence: **High**
+`UC_226_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,7 +436,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `158.160.66.115`, `199.80.55.27`, `mcp-browser.qubecare.ai`, `api.reverserecruiting.io`, `chatgptforchrome.com`, `xuix.top`, `newextensioninstallweb.com`, `huiyiai.net` _(+7 more)_
+  - IP / domain IOC(s): `158.160.66.115`, `199.80.55.27`, `mcp-browser.qubecare.ai`, `api.reverserecruiting.io`, `chatgptforchrome.com`, `xuix.top`, `newextensioninstallweb.com`, `huiyiai.net` _(+11 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2025-55182`

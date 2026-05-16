@@ -21,6 +21,9 @@ ESET Research has discovered a new variant of the NGate malware family that abus
 - **IPv4 (defanged):** `104.21.91.170`
 - **IPv4 (defanged):** `108.165.230.223`
 - **Domain (defanged):** `ao.online`
+- **Domain (defanged):** `ao.apk`
+- **Domain (defanged):** `spy.ngate.cc`
+- **Domain (defanged):** `spy.ngate.cb`
 
 ## MITRE ATT&CK Techniques
 
@@ -48,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_263_5` · phase: **actions** · confidence: **High**
+`UC_264_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
-`UC_263_6` · phase: **delivery** · confidence: **High**
+`UC_264_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +103,7 @@ union isfuzzy=true
 
 ### [LLM] Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
 
-`UC_263_7` · phase: **install** · confidence: **High**
+`UC_264_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -312,7 +315,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `104.21.91.170`, `108.165.230.223`, `ao.online`
+  - IP / domain IOC(s): `104.21.91.170`, `108.165.230.223`, `ao.online`, `ao.apk`, `spy.ngate.cc`, `spy.ngate.cb`
 
 
 ## Why this matters

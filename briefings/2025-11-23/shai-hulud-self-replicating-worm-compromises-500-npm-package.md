@@ -10,12 +10,19 @@ Back to Blog Threat Intel Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `shai-hulud-workflow.yml`
+- **Domain (defanged):** `2fshai-hulud-workflow.yml`
+- **Domain (defanged):** `bundle.js`
+- **Domain (defanged):** `webhook.site`
+- **Domain (defanged):** `npmmodule.updatepackage`
+- **Domain (defanged):** `secretmanager.googleapis.com`
 - **SHA256:** `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1566.002** — Spearphishing Link
@@ -41,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound exfiltration to Shai-Hulud webhook.site/bb8ca5f6 C2 endpoint
 
-`UC_569_8` · phase: **c2** · confidence: **High**
+`UC_570_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] TruffleHog spawned by node/npm as postinstall — Shai-Hulud credential sweep
 
-`UC_569_9` · phase: **actions** · confidence: **High**
+`UC_570_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud bundle.js dropped on disk (SHA256 + filename hunt)
 
-`UC_569_10` · phase: **install** · confidence: **High**
+`UC_570_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -354,7 +361,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
 
-`UC_569_7` · phase: **exploit** · confidence: **High**
+`UC_570_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -405,10 +412,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `shai-hulud-workflow.yml`, `2fshai-hulud-workflow.yml`, `bundle.js`, `webhook.site`, `npmmodule.updatepackage`, `secretmanager.googleapis.com`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -55,6 +55,37 @@ Over the past few months, we have cond…
 - **Domain (defanged):** `load.auraria.org`
 - **Domain (defanged):** `www.pyrotech.co.kr`
 - **Domain (defanged):** `newjo-imd.com`
+- **Domain (defanged):** `hwp.jse`
+- **Domain (defanged):** `hwpx.jse`
+- **Domain (defanged):** `pdf.jse`
+- **Domain (defanged):** `hyun-jung.pdf.jse`
+- **Domain (defanged):** `powershell.exe`
+- **Domain (defanged):** `regsvr32.exe`
+- **Domain (defanged):** `rundll32.exe`
+- **Domain (defanged):** `female-disorder-beta-metropolitan.trycloudflare`
+- **Domain (defanged):** `index.php`
+- **Domain (defanged):** `cmd.exe`
+- **Domain (defanged):** `memloader.dll`
+- **Domain (defanged):** `dat.cfg`
+- **Domain (defanged):** `file.bigcloud`
+- **Domain (defanged):** `out.txt`
+- **Domain (defanged):** `www.yespp.co`
+- **Domain (defanged):** `vscode.download.prss.microsoft`
+- **Domain (defanged):** `code.exe`
+- **Domain (defanged):** `unrar.exe`
+- **Domain (defanged):** `1.zip`
+- **Domain (defanged):** `dwagsvc.exe`
+- **Domain (defanged):** `config.json`
+- **Domain (defanged):** `node896147.dwservice`
+- **Domain (defanged):** `node828765.dwservice`
+- **Domain (defanged):** `node484265.dwservice`
+- **Domain (defanged):** `www.dwservice`
+- **Domain (defanged):** `p-e.kr`
+- **Domain (defanged):** `o-r.kr`
+- **Domain (defanged):** `n-e.kr`
+- **Domain (defanged):** `r-e.kr`
+- **Domain (defanged):** `kro.kr`
+- **Domain (defanged):** `user.txt`
 - **SHA1:** `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`
 - **SHA1:** `1e3c50d64110be466c0b4a45222e81d2c9352888`
 - **MD5:** `995a0a49ae4b244928b3f67e2bfd7a6e`
@@ -116,7 +147,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kimsuky HelloDoor 'tdll' Run-key persistence with regsvr32 loader
 
-`UC_62_13` · phase: **install** · confidence: **High**
+`UC_63_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +171,7 @@ DeviceRegistryEvents
 
 ### [LLM] Kimsuky httpMalice persistence: 'Everything 1.9a-/1.8a-' Run-key or CacheDB service install
 
-`UC_62_14` · phase: **install** · confidence: **High**
+`UC_63_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +211,7 @@ union
 
 ### [LLM] Kimsuky JSE dropper: wscript -> powershell hidden + certutil -decode chain
 
-`UC_62_15` · phase: **delivery** · confidence: **High**
+`UC_63_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -566,7 +597,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kimsuky targets organizations with PebbleDash-based tools
 
-`UC_62_12` · phase: **exploit** · confidence: **High**
+`UC_63_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -618,7 +649,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`, `file.bigcloud.n-e.kr`, `vscode.dev`, `www.yespp.co.kr`, `out.php`, `node896147.dwservice.net`, `node828765.dwservice.net`, `node484265.dwservice.net` _(+14 more)_
+  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`, `file.bigcloud.n-e.kr`, `vscode.dev`, `www.yespp.co.kr`, `out.php`, `node896147.dwservice.net`, `node828765.dwservice.net`, `node484265.dwservice.net` _(+45 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `bf9252a2fb45be6893dd8870c0bf37e2e1766d61`, `1e3c50d64110be466c0b4a45222e81d2c9352888`, `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`, `9fe43e08c8f446554340f972dac8a68c` _(+13 more)_

@@ -24,6 +24,15 @@ ESET researchers provide insights into how PlushDaemon performs adversary-in-the
 - **Domain (defanged):** `ds20221202.dsc.wcsset.com`
 - **Domain (defanged):** `test.dsc.wcsset.com`
 - **Domain (defanged):** `wcsset.com`
+- **Domain (defanged):** `agent.aep`
+- **Domain (defanged):** `bioset.conf`
+- **Domain (defanged):** `rozena.bxx`
+- **Domain (defanged):** `2246.dll`
+- **Domain (defanged):** `agent.agxk`
+- **Domain (defanged):** `agent.afdt`
+- **Domain (defanged):** `ds20221202.dsc`
+- **Domain (defanged):** `test.dsc.wcsset`
+- **Domain (defanged):** `360tray.exe`
 
 ## MITRE ATT&CK Techniques
 
@@ -51,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PlushDaemon EdgeStepper hijacking infrastructure (wcsset.com / 47.242.198.250 / 8.212.132.120) contact
 
-`UC_572_5` · phase: **c2** · confidence: **High**
+`UC_573_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +87,7 @@ union isfuzzy=true
 
 ### [LLM] LittleDaemon / DaemonicLogistics update-hijack URL pattern (popup_4.2.0.2246.dll, /update/updateInfo.bzp, /update/file6.bdat, /update/file2.
 
-`UC_572_6` · phase: **delivery** · confidence: **High**
+`UC_573_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +113,7 @@ DeviceNetworkEvents
 
 ### [LLM] DaemonicLogistics fake-Tencent payload drop (logo.gif at %PROGRAMDATA%\Tencent\QQUpdateMgr\UpdateFiles)
 
-`UC_572_7` · phase: **install** · confidence: **High**
+`UC_573_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +236,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlushDaemon compromises network devices for adversary-in-the-middle attacks
 
-`UC_572_4` · phase: **exploit** · confidence: **High**
+`UC_573_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -279,7 +288,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `47.242.198.250`, `8.212.132.120`, `ds20221202.dsc.wcsset.com`, `test.dsc.wcsset.com`, `wcsset.com`
+  - IP / domain IOC(s): `47.242.198.250`, `8.212.132.120`, `ds20221202.dsc.wcsset.com`, `test.dsc.wcsset.com`, `wcsset.com`, `agent.aep`, `bioset.conf`, `rozena.bxx` _(+6 more)_
 
 
 ## Why this matters
