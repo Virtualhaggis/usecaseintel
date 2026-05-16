@@ -1,4 +1,4 @@
-# [CRIT] Turla Turns Kazuar Backdoor Into Modular P2P Botnet for Persistent Access
+# [HIGH] Turla Turns Kazuar Backdoor Into Modular P2P Botnet for Persistent Access
 
 **Source:** The Hacker News
 **Published:** 2026-05-15
@@ -15,13 +15,15 @@ Turla, per the U.S. Cybersecurity and Infrastructure Security Agency (CISA), is 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-23918`
+- **SHA256:** `69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4`
+- **SHA256:** `c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9`
+- **SHA256:** `6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d`
+- **SHA256:** `436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,6 +32,7 @@ Turla, per the U.S. Cybersecurity and Infrastructure Security Agency (CISA), is 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -248,10 +251,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-23918`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4`, `c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9`, `6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d`, `436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
