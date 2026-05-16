@@ -9009,9 +9009,28 @@ function _navigate(item) {
 }
 
 function _switchToTab(name) {
-  // Click the matching nav-tab so existing tab-switch logic runs
-  const tabBtn = document.querySelector('[data-tab="' + name + '"], button[data-target="view-' + name + '"]');
-  if (tabBtn && !tabBtn.classList.contains('active')) tabBtn.click();
+  // Normalise legacy aliases used by older _navigate calls (e.g. the
+  // search palette's fallback "detection-library" -> the real "library"
+  // view). Anything that doesn't map stays as-is so future view names
+  // work without a code change here.
+  const ALIAS = {
+    'detection-library': 'library',
+    'attack-matrix':     'matrix',
+    'threat-intel':      'intel',
+    'threat-actors':     'actors',
+  };
+  const target = ALIAS[name] || name;
+  // The site uses showView() to switch tabs; the previous
+  // [data-tab] / [data-target=view-…] selectors don't exist on the
+  // current chrome, so the old click() fell on the floor and the
+  // Articles/Library/Matrix card never came into view after a search
+  // result click. Route through showView directly.
+  if (typeof showView === 'function') {
+    showView(target);
+  } else {
+    const btn = document.querySelector('.view-tab[data-view="' + target + '"]');
+    if (btn) btn.click();
+  }
 }
 
 input.addEventListener('input', () => _renderResults(input.value));

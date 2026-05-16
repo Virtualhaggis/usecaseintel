@@ -11,12 +11,8 @@ By Bill Toulas
 May 16, 2026
 10:15 AM
 0 
-
-
 The Russian hacker group Secret Blizzard has developed its long-running Kazuar backdoor into a modular peer-to-peer (P2P) botnet designed for long-term persistence, stealth, and data collection.
-
-
-Secret Blizzard, whose activity overlaps that of Turla, Uroburos, and Venomous Bear, has been associated with the Russian intelligence service (FSB) and is known for targeting government and dip…
+Secret Blizzard, whose activity overlaps that of Turla, Uroburos, and Venomous Bear, has been associated with the Russian intelligence service (FSB) and is known for targeting government and diplomatic …
 
 ## Indicators of Compromise (high-fidelity only)
 
