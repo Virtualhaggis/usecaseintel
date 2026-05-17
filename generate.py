@@ -1058,7 +1058,7 @@ def _attach_sigma_issues(uc_dict: dict, sigma_key: str = "sigma_yaml") -> int:
     return len(issues)
 
 
-_LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce 1-3 high-quality detection use cases that hunt the SPECIFIC attack described — NOT a generic technique template.
+_LLM_UC_PROMPT = """You are a senior detection engineer at a SOC. You will be given a recent threat-intel article. Read it carefully and produce as many high-quality detection use cases as the article genuinely warrants (zero to ten, your call based on content depth — see the count guidance in Hard Rules). Hunt the SPECIFIC attack described — NOT a generic technique template.
 
 You have WebSearch and WebFetch tools available. Before finalising your output, you SHOULD search the web for additional context that can corroborate or enrich the article's claims:
   - Vendor advisories (MSRC, Cisco PSIRT, Fortinet PSIRT) for any CVE mentioned
@@ -1122,7 +1122,12 @@ Hard rules:
 - Splunk SPL must be CIM-conformant (tstats from datamodel=...).
 - Defender KQL must be Advanced Hunting (real table + column names).
 - Don't generate the same logic that would already be matched by these existing rules: phishing-link click+exec, LSASS access, PsExec lateral movement, Office spawning scripts, encoded PowerShell. Add ONLY genuinely article-specific detections.
-- Maximum 3 UCs per article.
+- UC COUNT IS YOUR JUDGMENT CALL — output the number the article actually justifies, never pad to hit a target. Hard ceiling is 10. Suggested calibration:
+    * 0 UCs   — article is narrative / opinion / awareness piece with no specific detectable strings (return {"ucs":[]})
+    * 1-2 UCs — single attack step or single CVE with clean detection logic; no separate phases worth their own UC
+    * 3-5 UCs — typical campaign with distinct delivery + execution + persistence + C2 phases each warranting their own pivot
+    * 6-10 UCs — only for richly-detailed articles describing multiple distinct attack surfaces (Pwn2Own with 4+ different CVEs in different products, supply-chain attacks hitting npm + GitHub + AWS + Kubernetes, big actor write-ups covering several malware families). Each extra UC over 5 should target a CLEARLY different pivot — different log source, different process tree, different network shape. If you find yourself rephrasing the same detection, stop at fewer.
+  Quality > quantity. Two sharp, article-specific UCs are far more valuable than ten generic ones. The reader is a SOC engineer who'll deploy these; their patience for "yet another LSASS access query" is zero.
 - If the kill-chain block below is non-empty, AT LEAST ONE UC must target each of the top 2 phases the attacker walked through (so a stealer article gets initial_access + credential_access coverage, a ransomware article gets execution + impact coverage). The kill-chain block carries the article-specific log_sources you should be pivoting on.
 
 Article title: <<TITLE>>
