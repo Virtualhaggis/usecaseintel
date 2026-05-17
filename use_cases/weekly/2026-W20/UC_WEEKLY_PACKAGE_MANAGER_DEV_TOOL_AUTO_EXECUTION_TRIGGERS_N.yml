@@ -1,0 +1,121 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_DEV_TOOL_AUTO_EXECUTION_TRIGGERS_N
+title: "[WEEKLY] Package Manager / Dev-Tool Auto-Execution Triggers Non-Registry Egress or Credential-Store Access"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1204.002
+  name: "User Execution: Malicious File"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1555.003
+  name: Credentials from Web Browsers
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+  - Endpoint.Filesystem
+description: |-
+  Detects the supply-chain TTP that dominated this fortnight: a package manager or build tool (npm, node, cargo, pip, yarn, pnpm, ruby/gem) — or a freshly-dropped trojanized installer — spawns a child process or initiates outbound traffic to a non-registry public destination within a short window of install/test execution, often paired with reads of browser credential stores, SSH keys, AWS/npm/git config, or cloud token files. Driven by the node-ipc 9.1.6/9.2.3/12.0.1 compromise (StepSecurity + Snyk, 2026-05-15) exfiltrating to sh.azurestaticprovider.net/37.16.75.69, the pgserve 1.1.11–1.1.13 postinstall script harvesting creds to an ICP canister (StepSecurity 2026-05-04), DeepSeek-TUI CVE-2026-45311 auto-approved cargo test execution (GHSA 2026-05-14), and the JDownloader site compromise distributing trojanized installers signed as 'Zipline LLC'/'The Water Team' (CyberSecurityNews 2026-05-16). It spans Delivery (compromised package/installer pulled) → Execution (postinstall/require/cargo-test/installer run) → Credential Access (T1555.003/T1552.001) → C2/Exfil (T1041/T1071) and fires only when both the dev-tool process start and the off-registry public connection (or credential-store read) occur on the same host within ≤5 minutes. It will NOT fire for routine `npm install` traffic to npmjs.org/PyPI/crates.io/github.com (allowlisted) or for dev-tools talking only to internal mirrors.
+  
+  Rationale: All four headline campaigns this fortnight (node-ipc 9.1.6/9.2.3/12.0.1 → 37.16.75.69; pgserve 1.1.11–1.1.13 → ICP canister; DeepSeek-TUI CVE-2026-45311 cargo-test auto-exec; JDownloader trojanized installer) share the same observable joint pattern: a trusted local dev-tool/package-manager process spawns a script interpreter or directly initiates an unexpected outbound connection that bypasses the known package-registry allowlist, within seconds of install/test execution. Correlating dev-tool process start with non-registry public egress (and optionally credential-store reads) inside a 5-minute window catches the technique without depending on any single rotating IOC, and the registry-domain allowlist suppresses the legitimate `npm install` baseline that would otherwise drown the signal.
+defender_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindow = 5m;
+  let DevTools = dynamic(["npm.exe","npm","node.exe","node","cargo.exe","cargo","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3","python.exe","python","python3","ruby.exe","ruby","gem.exe","gem","go.exe","go"]);
+  let Interpreters = dynamic(["powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","pypi.org","files.pythonhosted.org","crates.io","static.crates.io","rubygems.org","proxy.golang.org","github.com","raw.githubusercontent.com","codeload.github.com","objects.githubusercontent.com","nodejs.org","npmmirror.com"]);
+  let CredPaths = dynamic([@"\Google\Chrome\User Data",@"\Microsoft\Edge\User Data",@"\Mozilla\Firefox\Profiles",@"\.aws\credentials",@"\.ssh\id_",@"\.npmrc",@"\.docker\config.json",@"\.gitconfig",@".config/gh/hosts.yml"]);
+  let InstallSpawns = DeviceProcessEvents
+      | where Timestamp > ago(LookbackHours)
+      | where InitiatingProcessFileName in~ (DevTools)
+      | where FileName in~ (Interpreters) or ProcessCommandLine has_any ("Login Data","cookies.sqlite","logins.json",".aws/credentials",".ssh/id_",".npmrc")
+      | where AccountName !endswith "$"
+      | project DeviceId, DeviceName, AccountName,
+                InstallTime = Timestamp,
+                ParentFile = InitiatingProcessFileName,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildFile = FileName,
+                ChildCmd = ProcessCommandLine,
+                ChildPid = ProcessId;
+  let NetEgress = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where isempty(RemoteUrl) or not(RemoteUrl has_any (RegistryHosts))
+      | where InitiatingProcessAccountName !endswith "$"
+      | project DeviceId, NetTime = Timestamp,
+                EgressProcess = InitiatingProcessFileName,
+                EgressCmd = InitiatingProcessCommandLine,
+                RemoteIP, RemoteUrl, RemotePort;
+  let CredAccess = DeviceFileEvents
+      | where Timestamp > ago(LookbackHours)
+      | where FolderPath has_any (CredPaths)
+      | where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+      | project DeviceId, FileTime = Timestamp,
+                AccessProcess = InitiatingProcessFileName,
+                AccessFile = FolderPath;
+  InstallSpawns
+  | join kind=inner NetEgress on DeviceId
+  | where NetTime between (InstallTime .. InstallTime + CorrelationWindow)
+  | join kind=leftouter CredAccess on DeviceId
+  | extend CredHit = iif(isnotempty(AccessFile) and FileTime between (InstallTime .. InstallTime + CorrelationWindow), AccessFile, "")
+  | extend DelaySec = datetime_diff('second', NetTime, InstallTime)
+  | project InstallTime, DeviceName, AccountName,
+            ParentFile, ChildFile, ChildCmd,
+            NetTime, DelaySec, RemoteIP, RemoteUrl, EgressProcess,
+            CredHit
+  | summarize arg_min(InstallTime, *) by DeviceName, AccountName, ParentFile, RemoteUrl, RemoteIP
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindow = 5m;
+  let DevTools = dynamic(["npm.exe","npm","node.exe","node","cargo.exe","cargo","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3","python.exe","python","python3","ruby.exe","ruby","gem.exe","gem","go.exe","go"]);
+  let Interpreters = dynamic(["powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","pypi.org","files.pythonhosted.org","crates.io","static.crates.io","rubygems.org","proxy.golang.org","github.com","raw.githubusercontent.com","codeload.github.com","objects.githubusercontent.com","nodejs.org"]);
+  let InstallSpawns = ImProcessCreate
+      | where TimeGenerated > ago(LookbackHours)
+      | extend ParentBin = tolower(tostring(split(ParentProcessName, "\\")[-1]))
+      | extend ChildBin = tolower(tostring(split(TargetProcessName, "\\")[-1]))
+      | where ParentBin in (DevTools)
+      | where ChildBin in (Interpreters) or TargetProcessCommandLine has_any ("Login Data","cookies.sqlite","logins.json",".aws/credentials",".ssh/id_",".npmrc")
+      | where ActorUsername !endswith "$"
+      | project DvcHostname, ActorUsername,
+                InstallTime = TimeGenerated,
+                ParentBin, ChildBin,
+                TargetProcessCommandLine;
+  let NetEgress = ImNetworkSession
+      | where TimeGenerated > ago(LookbackHours)
+      | where ipv4_is_private(DstIpAddr) == false
+      | where isempty(Url) or not(Url has_any (RegistryHosts))
+      | project DvcHostname, NetTime = TimeGenerated,
+                EgressProcess = ActingProcessName,
+                DstIpAddr, Url, DstPortNumber;
+  InstallSpawns
+  | join kind=inner NetEgress on DvcHostname
+  | where NetTime between (InstallTime .. InstallTime + CorrelationWindow)
+  | extend DelaySec = datetime_diff('second', NetTime, InstallTime)
+  | project InstallTime, DvcHostname, ActorUsername,
+            ParentBin, ChildBin, TargetProcessCommandLine,
+            NetTime, DelaySec, DstIpAddr, Url, DstPortNumber, EgressProcess
+  | summarize arg_min(InstallTime, *) by DvcHostname, ActorUsername, ParentBin, Url, DstIpAddr
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as install_time max(_time) as install_last values(Processes.process) as install_cmd values(Processes.process_name) as child_proc values(Processes.parent_process_name) as parent_proc from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm","npm.exe","node","node.exe","npm-cli.js","cargo","cargo.exe","yarn","yarn.exe","pnpm","pnpm.exe","pip","pip.exe","pip3","python","python.exe","python3","ruby","ruby.exe","gem","gem.exe","go","go.exe") AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe") OR Processes.process IN ("*Login Data*","*cookies.sqlite*","*logins.json*","*\\.aws\\credentials*","*/.aws/credentials*","*\\.ssh\\id_*","*/.ssh/id_*","*\\.npmrc*","*/.npmrc*","*\\.docker\\config.json*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_guid | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count min(_time) as net_time values(All_Traffic.dest) as remote_dest values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.app) as net_app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!="internal" NOT (All_Traffic.dest IN ("*registry.npmjs.org","*registry.yarnpkg.com","*pypi.org","*files.pythonhosted.org","*crates.io","*static.crates.io","*rubygems.org","*proxy.golang.org","*github.com","*githubusercontent.com","*codeload.github.com","*objects.githubusercontent.com","*nodejs.org","*npmmirror.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)`] | where net_time >= install_time AND net_time <= (install_time + 300) | eval delay_seconds = net_time - install_time | eval risk_message="Dev-tool (".parent_proc.") spawned ".child_proc." then non-registry public egress to ".remote_dest." within ".delay_seconds."s — supply-chain payload pattern (node-ipc/pgserve/DeepSeek-TUI/JDownloader fortnight)" | table install_time, net_time, delay_seconds, dest, user, parent_proc, child_proc, install_cmd, remote_dest, remote_ip, remote_port, net_app | sort - install_time
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\npm.exe OR *\\npm OR *\\node.exe OR *\\node OR *\\cargo.exe OR *\\cargo OR *\\yarn.exe OR *\\pnpm.exe OR *\\pip.exe OR *\\pip3 OR *\\python.exe OR *\\python3 OR *\\ruby.exe OR *\\gem.exe OR *\\go.exe) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\mshta.exe OR *\\curl.exe OR *\\wget.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR */bin/sh OR */bin/bash OR */bin/zsh) -@CommandLine:(*registry.npmjs.org* OR *registry.yarnpkg.com* OR *pypi.org* OR *crates.io* OR *github.com* OR *githubusercontent.com*)

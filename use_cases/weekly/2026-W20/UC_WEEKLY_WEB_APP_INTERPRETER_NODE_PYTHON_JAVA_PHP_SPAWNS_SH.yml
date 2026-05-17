@@ -1,0 +1,100 @@
+id: UC_WEEKLY_WEB_APP_INTERPRETER_NODE_PYTHON_JAVA_PHP_SPAWNS_SH
+title: "[WEEKLY] Web App Interpreter (Node/Python/Java/PHP) Spawns Shell or Net-Download LOLBin on Internet-Facing Host"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1059.004
+  name: Unix Shell
+- id: T1059.001
+  name: PowerShell
+- id: T1059.006
+  name: Python
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1068
+  name: Exploitation for Privilege Escalation
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Web.Web
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the post-exploitation execution tail of the May 11-16 2026 wave of authentication/authorization bypass disclosures in internet-facing application runtimes — Node.js, Python (uvicorn/gunicorn), Java, PHP-FPM, Ruby, .NET — where the application's own interpreter process unexpectedly spawns a shell (sh/bash/cmd/pwsh) or a network-staging LOLBin (curl/wget/nc/python -c). This fortnight the pattern is being driven by CVE-2026-44791 (n8n XML-node prototype pollution → RCE), CVE-2026-44338 (PraisonAI missing-auth, exploited within 4 hours of disclosure), CVE-2026-42074 (OpenClaude `dangerouslyDisableSandbox` model-controlled escape), CVE-2026-44849 (Portainer Swarm endpoint-security bypass to privileged container), and the Obot `/mcp-connect/{id}` ACR bypass — together with the Cisco SD-WAN CVE-2026-20182 and Burst Statistics CVE-2026-8181 auth bypasses whose follow-on stages share the same interpreter-spawns-shell shape. Kill-chain stages spanned: exploit → execution → ingress tool transfer / discovery, correlated to recent inbound public traffic on the same host. The rule fires when a baseline-rare interpreter→shell-or-LOLBin parent-child pair lands on a host that has received external inbound HTTP traffic in the same window; it does NOT fire on CI/CD runners, build agents, or developer workstations where node/python legitimately spawn shells as part of routine workflow — those parents should be added to the per-environment allowlist.
+  
+  Rationale: Across all 12 fortnight articles the common observable tail of the auth/authz-bypass exploit is the same: the vulnerable application's own runtime — node, python, java, php-fpm, .net, n8n's node, OpenClaude's node, PraisonAI's python, Portainer's golang-into-container — spawns a shell or staging LOLBin shortly after unauthenticated external traffic hits the listening port. Anchoring on the interpreter→shell/LOLBin parent-child pair AND requiring co-temporal public inbound to the same host catches the joint chain while suppressing the legitimate CI/CD case where the same parent-child pair occurs without external probing.
+defender_kql: |-
+  let Lookback = 24h;
+  let WindowMin = 5m;
+  let InterpreterParents = dynamic(["node.exe","node","python.exe","python","python3","python3.exe","java.exe","java","php-fpm.exe","php-fpm","ruby.exe","ruby","gunicorn","uvicorn","n8n.exe","n8n","dotnet.exe","dotnet","w3wp.exe"]);
+  let ShellLolBinChildren = dynamic(["sh","bash","zsh","dash","ash","cmd.exe","powershell.exe","pwsh.exe","pwsh","curl.exe","curl","wget.exe","wget","nc","ncat","ncat.exe","python.exe","python","python3","perl","socat"]);
+  let _ci_hosts = dynamic([]);
+  let InboundProbed = DeviceNetworkEvents
+      | where Timestamp > ago(Lookback)
+      | where ActionType in ("InboundConnectionAccepted","ConnectionAccepted","HttpConnectionInspected","ListeningConnectionCreated")
+      | where RemoteIPType == "Public"
+      | where LocalPort in (80, 443, 8000, 8080, 8443, 5678, 9000, 9443, 3000)
+      | summarize ProbeTime = min(Timestamp), Probers = make_set(RemoteIP, 25) by DeviceId, DeviceName;
+  DeviceProcessEvents
+  | where Timestamp > ago(Lookback)
+  | where InitiatingProcessFileName in~ (InterpreterParents)
+  | where FileName in~ (ShellLolBinChildren)
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service")
+  | where DeviceName !in~ (_ci_hosts)
+  | where isnotempty(ProcessCommandLine)
+  | join kind=inner InboundProbed on DeviceId
+  | where Timestamp between (ProbeTime .. ProbeTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', Timestamp, ProbeTime)
+  | project Timestamp, DelaySec, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFileName,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FileName,
+            ChildCmd    = ProcessCommandLine,
+            ChildSHA256 = SHA256,
+            Probers
+  | order by Timestamp desc
+sentinel_kql: |-
+  let Lookback = 24h;
+  let WindowMin = 5m;
+  let InterpreterParents = dynamic(["node.exe","node","python.exe","python","python3","python3.exe","java.exe","java","php-fpm.exe","php-fpm","ruby","gunicorn","uvicorn","n8n.exe","n8n","dotnet.exe","dotnet","w3wp.exe"]);
+  let ShellLolBinChildren = dynamic(["sh","bash","zsh","dash","ash","cmd.exe","powershell.exe","pwsh.exe","pwsh","curl.exe","curl","wget.exe","wget","nc","ncat","ncat.exe","python.exe","python","python3","perl","socat"]);
+  let InboundProbed = CommonSecurityLog
+      | where TimeGenerated > ago(Lookback)
+      | where DeviceAction in~ ("allow","accept","allowed","permit")
+      | where DestinationPort in (80, 443, 8000, 8080, 8443, 5678, 9000, 9443, 3000)
+      | where ipv4_is_private(SourceIP) == false
+      | summarize ProbeTime = min(TimeGenerated), Probers = make_set(SourceIP, 25) by DestinationIP
+      | extend Computer = tostring(DestinationIP);
+  let Children = ImProcessCreate
+      | where TimeGenerated > ago(Lookback)
+      | extend pParent = tolower(tostring(split(ParentProcessName, "/")[-1]))
+      | extend pParent = tolower(tostring(split(pParent, "\\")[-1]))
+      | extend pChild = tolower(tostring(split(TargetProcessName, "/")[-1]))
+      | extend pChild = tolower(tostring(split(pChild, "\\")[-1]))
+      | where pParent in (InterpreterParents)
+      | where pChild in (ShellLolBinChildren)
+      | where ActorUsername !endswith "$"
+      | where isnotempty(TargetProcessCommandLine);
+  Children
+  | join kind=inner (InboundProbed | project Computer, ProbeTime, Probers) on $left.DvcHostname == $right.Computer
+  | where TimeGenerated between (ProbeTime .. ProbeTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', TimeGenerated, ProbeTime)
+  | project TimeGenerated, DelaySec, DvcHostname, ActorUsername,
+            ParentProcessName, ParentProcessCommandLine,
+            TargetProcessName, TargetProcessCommandLine, Probers
+  | order by TimeGenerated desc
+splunk_spl: |-
+  | tstats `summariesonly` count as exec_count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process) as command_lines, values(Processes.user) as users, values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node","node.exe","python","python.exe","python3","java","java.exe","php-fpm","php-fpm7","php-fpm8","ruby","gunicorn","uvicorn","n8n","n8n.exe","dotnet","dotnet.exe","w3wp.exe","httpd","nginx") Processes.process_name IN ("sh","bash","zsh","dash","ash","cmd.exe","powershell.exe","pwsh","pwsh.exe","curl","curl.exe","wget","wget.exe","nc","ncat","ncat.exe","python","python3","perl","socat") (NOT Processes.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE")) (NOT (Processes.user="*$")) by host, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner host [ | tstats `summariesonly` dc(Web.src) as inbound_public_sources, values(Web.src) as inbound_ips, values(Web.url) as inbound_urls from datamodel=Web where Web.http_method IN ("POST","GET","PUT","PATCH") Web.status<500 NOT (Web.src="10.0.0.0/8" OR Web.src="172.16.0.0/12" OR Web.src="192.168.0.0/16" OR Web.src="127.0.0.0/8") by Web.dest | `drop_dm_object_name(Web)` | rename dest as host | where inbound_public_sources>=1 ] | search NOT [| inputlookup ci_build_hosts.csv | fields host] | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | table firstTime lastTime host parent_process_name process_name exec_count command_lines users inbound_ips inbound_urls | sort - lastTime
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 @ParentImage:(*\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\java.exe OR *\\Java.exe OR *\\php-fpm.exe OR *\\ruby.exe OR *\\n8n.exe OR *\\dotnet.exe OR *\\w3wp.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe OR *\\nc.exe OR *\\ncat.exe OR *\\python.exe OR *\\python3.exe) -@User:(*\\SYSTEM OR *\\$ OR "NT AUTHORITY\\SYSTEM")) OR (source:linux.auditd @auditd.type:EXECVE @process.parent.executable.name:(node OR python OR python3 OR java OR php-fpm OR php-fpm7 OR php-fpm8 OR gunicorn OR uvicorn OR ruby OR n8n OR dotnet) @process.executable.name:(sh OR bash OR zsh OR dash OR ash OR curl OR wget OR nc OR ncat OR python OR python3 OR perl OR socat) -@user.name:(root OR jenkins OR github-actions OR gitlab-runner))

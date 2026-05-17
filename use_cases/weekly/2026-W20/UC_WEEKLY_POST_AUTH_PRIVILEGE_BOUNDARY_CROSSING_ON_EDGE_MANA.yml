@@ -1,0 +1,93 @@
+id: UC_WEEKLY_POST_AUTH_PRIVILEGE_BOUNDARY_CROSSING_ON_EDGE_MANA
+title: "[WEEKLY] Post-Auth Privilege Boundary Crossing on Edge/Management Appliances (low-priv -> admin within 10m)"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1068
+  name: Exploitation for Privilege Escalation
+- id: T1078
+  name: Valid Accounts
+- id: T1136.001
+  name: "Create Account: Local Account"
+- id: T1098.004
+  name: "Account Manipulation: SSH Authorized Keys"
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+data_models:
+  defender:
+  - Web
+  - Network_Traffic.All_Traffic
+  - Authentication
+description: |-
+  Detects a single source IP + user-agent that, within a ~10 minute window, transitions from hitting a low-privilege authenticated endpoint (registration, onboard-customer, login, peering, auth API) to executing admin-only HTTP verbs (POST/PUT/PATCH/DELETE) against admin paths (/admin*, /api/admin*, /configuration*, /vmanage*, authorized_keys, or the Grav-style data[access][admin]/data[groups] injection markers) on the same management plane. This is the joint TTP across this fortnight's wave of post-auth privilege-escalation flaws: CVE-2026-42613 (Grav Login plugin missing server-side validation of groups/access), CVE-2026-6973 (Ivanti EPMM remotely-authenticated admin RCE), CVE-2026-20127/20182 (Cisco Catalyst SD-WAN Controller auth bypass — added to CISA KEV with confirmed in-the-wild exploitation), and GHSA-9h64-2846-7x7f (Axonflow multi-tenant isolation / access-control bypass). It spans the exploit phase between initial low-privilege authentication and the install phase (web shell drop, account creation, SSH key write); firing here catches the attacker before the persistence handoff. Will fire on the rapid low-priv->admin pivot pattern characteristic of these CVEs; will NOT fire when an admin session is preceded by an admin-tier authentication event from an allowlisted jump host, when only one stage is present, or on background management traffic that lacks the admin verb on a sensitive path.
+  
+  Rationale: All four post-auth privilege-escalation vulns this fortnight (Grav data[groups] injection, Ivanti EPMM auth'd-to-admin, Cisco SD-WAN auth bypass, Axonflow tenant-isolation) share the same wire signature: a single client transitions from a low-privilege authenticated request to an admin-tier write within minutes. Detecting the temporal pivot — not any specific CVE's URL — survives IOC rotation and catches the un-patched variants likely to follow.
+defender_kql: |-
+  // Best-effort hunt — DeviceNetworkEvents only sees URLs on inspected HTTP traffic; HTTPS surfaces SNI only. Pair with web-access logs in Sentinel for full coverage.
+  let WindowMin = 10m;
+  let LowPrivPatterns = dynamic(["user_register","/register","onboard-customer","/peering","/auth/login","/login.action","/api/v1/auth","/sessions/new"]);
+  let AdminPatterns   = dynamic(["/admin","/api/admin","data[access][admin]","data%5Baccess%5D%5Badmin%5D","data[groups]","data%5Bgroups%5D","/configuration","authorized_keys","/installer","/vmanage","/system/setting"]);
+  DeviceNetworkEvents
+  | where Timestamp > ago(7d)
+  | where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
+  | where isnotempty(RemoteUrl)
+  | extend stage = case(
+      RemoteUrl has_any (LowPrivPatterns), "low_priv",
+      RemoteUrl has_any (AdminPatterns),   "admin",
+      "other")
+  | where stage in ("low_priv","admin")
+  | project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, stage
+  | order by RemoteIP asc, Timestamp asc
+  | serialize
+  | extend PrevStage=prev(stage), PrevTime=prev(Timestamp), PrevUrl=prev(RemoteUrl), PrevIP=prev(RemoteIP)
+  | where stage == "admin" and PrevStage == "low_priv" and RemoteIP == PrevIP
+  | where datetime_diff('minute', Timestamp, PrevTime) <= 10
+  | project AdminEventTime=Timestamp, LowPrivEventTime=PrevTime,
+            DeltaMinutes=datetime_diff('minute', Timestamp, PrevTime),
+            DeviceName, RemoteIP, RemotePort, LowPrivUrl=PrevUrl, AdminUrl=RemoteUrl, InitiatingProcessFileName
+  | order by AdminEventTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let WindowMin = 10m;
+  let LowPrivPatterns = dynamic(["user_register","/register","onboard-customer","/peering","/auth/login","/login.action","/api/v1/auth","/sessions/new"]);
+  let AdminPatterns   = dynamic(["/admin","/api/admin","data[access][admin]","data%5Baccess%5D%5Badmin%5D","data[groups]","data%5Bgroups%5D","/configuration","authorized_keys","/installer","/vmanage","/system/setting"]);
+  let IisEvents = W3CIISLog
+      | where TimeGenerated > ago(LookbackDays)
+      | where csMethod in~ ("POST","PUT","PATCH","DELETE")
+      | where scStatus < 400
+      | extend full_request = strcat(csUriStem, iff(isnotempty(csUriQuery), strcat("?", csUriQuery), ""))
+      | project TimeGenerated, Computer, SrcIp=cIP, UA=csUserAgent, Request=full_request, Method=csMethod, Status=scStatus;
+  let CefEvents = CommonSecurityLog
+      | where TimeGenerated > ago(LookbackDays)
+      | where RequestMethod in~ ("POST","PUT","PATCH","DELETE")
+      | where isnotempty(RequestURL)
+      | project TimeGenerated, Computer=DeviceName, SrcIp=SourceIP, UA=RequestClientApplication, Request=RequestURL, Method=RequestMethod, Status=toint(EventOutcome);
+  union isfuzzy=true IisEvents, CefEvents
+  | extend stage = case(
+      Request has_any (LowPrivPatterns), "low_priv",
+      Request has_any (AdminPatterns),   "admin",
+      "other")
+  | where stage in ("low_priv","admin")
+  | where isnotempty(SrcIp)
+  | order by SrcIp asc, UA asc, TimeGenerated asc
+  | serialize
+  | extend PrevStage=prev(stage), PrevTime=prev(TimeGenerated), PrevReq=prev(Request), PrevIp=prev(SrcIp), PrevUA=prev(UA)
+  | where stage == "admin" and PrevStage == "low_priv" and SrcIp == PrevIp and UA == PrevUA
+  | where datetime_diff('minute', TimeGenerated, PrevTime) <= 10
+  | project AdminEventTime=TimeGenerated, LowPrivEventTime=PrevTime,
+            DeltaMinutes=datetime_diff('minute', TimeGenerated, PrevTime),
+            Computer, SrcIp, UA, LowPrivRequest=PrevReq, AdminRequest=Request, Method, Status
+  | order by AdminEventTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count from datamodel=Web where Web.http_method IN ("POST","PUT","PATCH","DELETE") AND Web.status<400 by Web.src Web.dest Web.http_user_agent Web.uri_path Web.url _time | `drop_dm_object_name(Web)` | eval req=coalesce(url,uri_path) | eval stage=case(match(req,"(?i)(user_register|/register|onboard-customer|/peering|/auth/login|/login\.action|/api/v1/auth|/sessions/new)"),"low_priv", match(req,"(?i)(/admin|/api/admin|data(\[|%5B)access(\]|%5D)(\[|%5B)admin|data(\[|%5B)groups|/configuration|authorized_keys|/installer|/vmanage|/system/setting|/users/[0-9]+/roles)"),"admin", 1=1,"other") | where stage IN ("low_priv","admin") | sort 0 src dest http_user_agent _time | streamstats current=t window=500 time_window=10m latest(eval(if(stage="low_priv",req,null))) as lowpriv_req latest(eval(if(stage="low_priv",_time,null))) as lowpriv_ts by src dest http_user_agent | where stage="admin" AND isnotnull(lowpriv_ts) AND _time>lowpriv_ts | eval delta_sec=_time-lowpriv_ts | where delta_sec<=600 | stats min(lowpriv_ts) as firstLowPriv max(_time) as adminEventTime values(lowpriv_req) as lowpriv_paths values(req) as admin_paths max(delta_sec) as maxDeltaSec count by src dest http_user_agent | convert ctime(firstLowPriv) ctime(adminEventTime) | search NOT [| inputlookup mgmt_admin_jumphosts.csv | fields src]
+datadog_query: |-
+  source:(nginx OR apache OR iis OR cloudflare OR aws.elb OR aws.alb OR aws.cloudfront OR envoy) @http.method:(POST OR PUT OR PATCH OR DELETE) @http.status_code:<400 (@http.url_details.path:(*/admin* OR */api/admin* OR */configuration* OR */vmanage* OR *authorized_keys* OR *data\[access\]\[admin\]* OR *data%5Baccess%5D%5Badmin%5D* OR *data\[groups\]* OR *data%5Bgroups%5D*) OR @http.url_details.path:(*user_register* OR */register* OR *onboard-customer* OR */peering* OR */auth/login* OR */login.action* OR */api/v1/auth* OR */sessions/new*)) -CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)

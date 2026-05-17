@@ -1,0 +1,228 @@
+id: UC_WEEKLY_SERVER_AI_AGENT_PROCESS_SPAWNS_SHELL_OR_LOLBIN_WIT
+title: "[WEEKLY] Server / AI-agent process spawns shell or LOLBIN with public egress — post-RCE behavioural chain"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.003
+  name: "Command and Scripting Interpreter: Windows Command Shell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1218
+  name: System Binary Proxy Execution
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects long-running server or agent processes (node, java, python, dotnet, nginx workers, xrdp, portainer, deepseek-tui, n8n, flowise, ruby, perl, php-fpm) spawning interactive shells (cmd/powershell/sh/bash) or network LOLBINs (curl/wget/certutil/bitsadmin/nc/ncat/socat), correlated with public-internet egress from the same host within 5 minutes — or with shell-decode / download-cradle markers in the child command line. This fortnight produced 12 disparate RCE disclosures whose post-exploit fingerprint collapses to the same behaviour: n8n HTTP-Request prototype pollution (CVE-2026-44789), NGINX rewrite heap overflow exploited in the wild (CVE-2026-42945 / 42946 / 40701 / 42934), Portainer plugin auth bypass to host RCE (CVE-2026-44848), FlowiseAI NodeVM sandbox escape (CVE-2026-46442), DeepSeek-TUI run_tests + task_create insecure defaults (CVE-2026-45311 / 45374), Mapfish Print dynamic-table injection (CVE-2026-44672), esm.sh path traversal (CVE-2026-44593), xrdp pre-auth RCE (CVE-2025-68670), Ivanti EPMM (CVE-2026-6973), and Microsoft's AI-agent frameworks advisory (CVE-2026-26030 / 25592). The kill chain spans exploit through install / c2 — it fires when an RCE primitive lands and the operator pivots from in-process code execution to a real shell or a second-stage downloader. Fires when a watched server parent spawns a shell/LOLBIN AND the child either reaches a public IP within 5 minutes OR carries decode/download cradles in its command line; does NOT fire on routine CI/build activity (npm/cargo/gradle/mvn/pip/go-test/jest/pytest/eslint/prettier/webpack) suppressed via parent and child command-line regex, nor on benign shell spawns that never egress and lack cradle markers.
+  
+  Rationale: Every one of the 12 articles ends the same way regardless of the exploit primitive: a trusted long-running server / AI-agent / workflow process gains the ability to run code and the operator immediately reaches for a shell or a network-staging LOLBIN. Anchoring on the parent-child pair (server-host → shell/LOLBIN) plus a 5-minute time-windowed correlation to public egress on the same PID promotes a hunch into an alert without depending on the rotating CVE-, hash-, or IP-level IOCs in any individual article.
+defender_kql: |-
+  let _server_parents = dynamic(["node.exe","node","java.exe","java","javaw.exe","python.exe","python","python3","pythonw.exe","dotnet.exe","dotnet","nginx.exe","nginx","xrdp","xrdp-sesman","portainer.exe","portainer","deepseek-tui.exe","deepseek-tui","n8n.exe","n8n","flowise","ruby.exe","ruby","perl","go","php-fpm"]);
+  let _shells_lolbins = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","dash","ksh","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat"]);
+  let _build_noise = @"(?i)(npm\s+(test|install|run|ci)|cargo\s+(test|build|run)|gradle\s|mvn\s+(install|test|package)|pip\s+install|go\s+test|jest|pytest|eslint|prettier|webpack)";
+  let _cradle = @"(?i)(base64\s+-d|/dev/tcp/|bash\s+-i|powershell\s+-(e|enc)|FromBase64String|IEX |Invoke-Expression|DownloadString|certutil\s+-urlcache|wget\s+http|curl\s+-s\s+http)";
+  let _spawn = DeviceProcessEvents
+      | where Timestamp > ago(1h)
+      | where InitiatingProcessFileName in~ (_server_parents)
+      | where FileName in~ (_shells_lolbins)
+      | where AccountName !endswith "$"
+      | where not(ProcessCommandLine matches regex _build_noise)
+      | where not(InitiatingProcessCommandLine matches regex _build_noise)
+      | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FileName,
+                ChildCmd = ProcessCommandLine,
+                ChildPid = ProcessId,
+                SHA256;
+  let _egress = DeviceNetworkEvents
+      | where Timestamp > ago(1h)
+      | where ActionType in ("ConnectionSuccess","HttpConnectionInspected","ConnectionAttempt")
+      | where RemoteIPType == "Public"
+      | project NetTime = Timestamp, DeviceId,
+                NetProc = InitiatingProcessFileName,
+                NetPid = InitiatingProcessId,
+                RemoteIP, RemotePort, RemoteUrl;
+  _spawn
+  | join kind=leftouter _egress on DeviceId, $left.ChildPid == $right.NetPid
+  | extend EgressWithinWindow = iif(isnotnull(NetTime) and datetime_diff('second', NetTime, SpawnTime) between (0 .. 300), true, false)
+  | extend SuspiciousCmd = ChildCmd matches regex _cradle
+  | where EgressWithinWindow or SuspiciousCmd
+  | project SpawnTime, DeviceName, AccountName, ParentImage, ParentCmd, ChildImage, ChildCmd, ChildPid, RemoteIP, RemotePort, RemoteUrl, NetTime, EgressWithinWindow, SuspiciousCmd
+  | order by SpawnTime desc
+sentinel_kql: |-
+  let _server_parents = dynamic(["node.exe","node","java.exe","java","javaw.exe","python.exe","python","python3","pythonw.exe","dotnet.exe","dotnet","nginx.exe","nginx","xrdp","xrdp-sesman","portainer.exe","portainer","deepseek-tui.exe","deepseek-tui","n8n.exe","n8n","flowise","ruby.exe","ruby","perl","go","php-fpm"]);
+  let _shells_lolbins = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","dash","ksh","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat"]);
+  let _build_noise = @"(?i)(npm\s+(test|install|run|ci)|cargo\s+(test|build|run)|gradle\s|mvn\s+(install|test|package)|pip\s+install|go\s+test|jest|pytest|eslint|prettier|webpack)";
+  let _cradle = @"(?i)(base64\s+-d|/dev/tcp/|bash\s+-i|powershell\s+-(e|enc)|FromBase64String|IEX |Invoke-Expression|DownloadString|certutil\s+-urlcache|wget\s+http|curl\s+-s\s+http)";
+  let _spawn = ImProcessCreate
+      | where TimeGenerated > ago(1h)
+      | extend ParentLeaf = tostring(split(ParentProcessName, "\\")[-1])
+      | extend ParentLeaf = iif(ParentLeaf == "", tostring(split(ParentProcessName, "/")[-1]), ParentLeaf)
+      | extend ChildLeaf = tostring(split(TargetProcessName, "\\")[-1])
+      | extend ChildLeaf = iif(ChildLeaf == "", tostring(split(TargetProcessName, "/")[-1]), ChildLeaf)
+      | where ParentLeaf in~ (_server_parents)
+      | where ChildLeaf in~ (_shells_lolbins)
+      | where ActorUsername !endswith "$"
+      | where not(TargetProcessCommandLine matches regex _build_noise)
+      | where not(ParentProcessCommandLine matches regex _build_noise)
+      | project SpawnTime = TimeGenerated, DvcHostname, ActorUsername,
+                ParentLeaf, ParentCmd = ParentProcessCommandLine,
+                ChildLeaf, ChildCmd = TargetProcessCommandLine, ChildPid = TargetProcessId;
+  let _egress = ImNetworkSession
+      | where TimeGenerated > ago(1h)
+      | where EventResult in ("Success","") or isempty(EventResult)
+      | where isnotempty(DstIpAddr) and not(ipv4_is_private(DstIpAddr))
+      | project NetTime = TimeGenerated, DvcHostname, NetProc = ActingProcessName, NetPid = ActingProcessId, DstIpAddr, DstPortNumber, Url;
+  _spawn
+  | join kind=leftouter _egress on DvcHostname, $left.ChildPid == $right.NetPid
+  | extend EgressWithinWindow = iif(isnotnull(NetTime) and datetime_diff('second', NetTime, SpawnTime) between (0 .. 300), true, false)
+  | extend SuspiciousCmd = ChildCmd matches regex _cradle
+  | where EgressWithinWindow or SuspiciousCmd
+  | project SpawnTime, DvcHostname, ActorUsername, ParentLeaf, ParentCmd, ChildLeaf, ChildCmd, ChildPid, DstIpAddr, DstPortNumber, Url, NetTime, EgressWithinWindow, SuspiciousCmd
+  | order by SpawnTime desc
+sigma_yaml: |-
+  title: Server or AI-Agent Process Spawns Shell or Network LOLBIN (Post-Exploit RCE Indicator)
+  id: 4f2c8a91-7b30-4d12-9c8a-fortnight-rce-2026-05
+  status: experimental
+  description: Detects long-running server, AI-agent, or workflow-host processes (node, java, python, dotnet, nginx, xrdp, portainer, deepseek-tui, n8n, flowise, ruby, perl, php-fpm) spawning interactive shells or network-egress LOLBINs. Joint behavioural fingerprint of the fortnight's RCE disclosures (n8n CVE-2026-44789, NGINX CVE-2026-42945/42946/40701/42934, Portainer CVE-2026-44848, FlowiseAI CVE-2026-46442, DeepSeek-TUI CVE-2026-45311/45374, Mapfish Print CVE-2026-44672, esm.sh CVE-2026-44593, xrdp CVE-2025-68670, Ivanti EPMM CVE-2026-6973, Microsoft AI-agent advisory CVE-2026-26030/25592).
+  references:
+    - https://github.com/advisories/GHSA-c8xv-5998-g76h
+    - https://thehackernews.com/2026/05/nginx-cve-2026-42945-exploited-in-wild.html
+    - https://thehackernews.com/2026/05/18-year-old-nginx-rewrite-module-flaw.html
+    - https://github.com/advisories/GHSA-rrmm-9v76-h3p4
+    - https://github.com/advisories/GHSA-9rvc-vf7m-pgm2
+    - https://github.com/advisories/GHSA-wx44-2q6h-j6p8
+    - https://github.com/advisories/GHSA-72w5-pf8h-xfp4
+    - https://github.com/advisories/GHSA-q7m6-wpvf-mvwx
+    - https://github.com/advisories/GHSA-3636-h3vx-6465
+    - https://securelist.com/cve-2025-68670/119742/
+    - https://thehackernews.com/2026/05/ivanti-epmm-cve-2026-6973-rce-under.html
+    - https://www.microsoft.com/en-us/security/blog/2026/05/07/prompts-become-shells-rce-vulnerabilities-ai-agent-frameworks/
+  tags:
+    - attack.initial_access
+    - attack.execution
+    - attack.t1190
+    - attack.t1059
+    - attack.t1059.001
+    - attack.t1059.003
+    - attack.t1059.004
+    - attack.t1059.006
+    - attack.t1059.007
+    - attack.t1105
+    - attack.t1218
+  logsource:
+    category: process_creation
+  detection:
+    parent_server:
+      ParentImage|endswith:
+        - '\node.exe'
+        - '/node'
+        - '\java.exe'
+        - '\javaw.exe'
+        - '/java'
+        - '\python.exe'
+        - '\pythonw.exe'
+        - '/python'
+        - '/python3'
+        - '\dotnet.exe'
+        - '/dotnet'
+        - '\nginx.exe'
+        - '/nginx'
+        - '/xrdp'
+        - '/xrdp-sesman'
+        - '\portainer.exe'
+        - '/portainer'
+        - '\deepseek-tui.exe'
+        - '/deepseek-tui'
+        - '\n8n.exe'
+        - '/n8n'
+        - '/flowise'
+        - '\ruby.exe'
+        - '/ruby'
+        - '/perl'
+        - '/php-fpm'
+    child_shell_or_lolbin:
+      Image|endswith:
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '/sh'
+        - '/bash'
+        - '/zsh'
+        - '/dash'
+        - '/ksh'
+        - '\mshta.exe'
+        - '\wscript.exe'
+        - '\cscript.exe'
+        - '\rundll32.exe'
+        - '\regsvr32.exe'
+        - '\bitsadmin.exe'
+        - '\certutil.exe'
+        - '/curl'
+        - '\curl.exe'
+        - '/wget'
+        - '\wget.exe'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+    build_tooling_noise:
+      ParentCommandLine|contains:
+        - 'npm test'
+        - 'npm install'
+        - 'npm run'
+        - 'npm ci'
+        - 'cargo test'
+        - 'cargo build'
+        - 'cargo run'
+        - 'gradle '
+        - 'mvn install'
+        - 'mvn test'
+        - 'mvn package'
+        - 'pip install'
+        - 'go test'
+        - 'jest'
+        - 'pytest'
+        - 'eslint'
+        - 'prettier'
+        - 'webpack'
+    condition: parent_server and child_shell_or_lolbin and not build_tooling_noise
+  fields:
+    - User
+    - ParentImage
+    - ParentCommandLine
+    - Image
+    - CommandLine
+    - ProcessId
+  falsepositives:
+    - CI/CD runners or developer workstations executing tests, builds, or package installs (partially suppressed via ParentCommandLine)
+    - Portainer / n8n / Flowise legitimately invoking user-defined scripts that spawn shells
+    - Ops tooling embedded in containers that uses curl/wget from within app processes
+  level: high
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as spawnTime values(Processes.process) as child_cmd values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node","node.exe","java","java.exe","javaw.exe","python","python.exe","python3","pythonw.exe","dotnet","dotnet.exe","nginx","nginx.exe","xrdp","xrdp-sesman","portainer","portainer.exe","deepseek-tui","deepseek-tui.exe","n8n","n8n.exe","flowise","ruby","ruby.exe","perl","go","php-fpm") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","dash","ksh","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_id _time span=1s | `drop_dm_object_name(Processes)` | search NOT user="*$" | where NOT match(parent_cmd, "(?i)(npm\s+(test|install|run|ci)|cargo\s+(test|build|run)|gradle|mvn\s+(install|test|package)|pip\s+install|go\s+test|jest|pytest|eslint|prettier|webpack)") | eval suspicious_cmd=if(match(child_cmd, "(?i)(base64\s+-d|/dev/tcp/|bash\s+-i|powershell\s+-(e|enc)|FromBase64String|IEX\s|Invoke-Expression|DownloadString|certutil\s+-urlcache|wget\s+http|curl\s+-s\s+http)"), "yes", "no") | join type=left dest [ | tstats `summariesonly` min(_time) as netTime values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.app) as netproc from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!="internal" AND (All_Traffic.app IN ("node","java","python","python3","dotnet","nginx","xrdp","portainer","deepseek-tui","n8n","flowise","ruby","perl","cmd.exe","powershell.exe","pwsh.exe","sh","bash","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl","wget","nc","ncat","socat")) by All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)` ] | eval egress_window=if(isnotnull(netTime) AND (netTime-spawnTime)>=0 AND (netTime-spawnTime)<=300, "yes", "no") | where egress_window="yes" OR suspicious_cmd="yes" | convert ctime(spawnTime) ctime(netTime) | table spawnTime dest user parent_process_name parent_cmd process_name child_cmd process_id remote_ip remote_port netproc netTime egress_window suspicious_cmd | sort - spawnTime
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) ((@EventID:1 @ParentImage:(*\\node.exe OR *\\NODE.EXE OR *\\java.exe OR *\\Java.exe OR *\\javaw.exe OR *\\python.exe OR *\\Python.exe OR *\\pythonw.exe OR *\\dotnet.exe OR *\\nginx.exe OR *\\portainer.exe OR *\\deepseek-tui.exe OR *\\n8n.exe OR *\\ruby.exe) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\mshta.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\bitsadmin.exe OR *\\certutil.exe OR *\\curl.exe OR *\\wget.exe)) OR (@auditd.type:EXECVE @process.parent.executable.path:(*/node OR */java OR */python OR */python3 OR */dotnet OR */nginx OR */xrdp OR */xrdp-sesman OR */portainer OR */deepseek-tui OR */n8n OR */flowise OR */ruby OR */perl OR */php-fpm) @process.executable.path:(*/sh OR */bash OR */zsh OR */dash OR */ksh OR */curl OR */wget OR */nc OR */ncat OR */socat))) -@CommandLine:(*"npm test"* OR *"npm install"* OR *"npm run"* OR *"cargo test"* OR *"cargo build"* OR *"gradle"* OR *"mvn install"* OR *"mvn test"* OR *"pip install"* OR *"go test"* OR *jest* OR *pytest* OR *eslint* OR *prettier* OR *webpack*) -@process.command_line:(*"npm test"* OR *"cargo test"* OR *"go test"* OR *"pip install"* OR *jest* OR *pytest*) -@user.name:(*$) -@User:(*$)

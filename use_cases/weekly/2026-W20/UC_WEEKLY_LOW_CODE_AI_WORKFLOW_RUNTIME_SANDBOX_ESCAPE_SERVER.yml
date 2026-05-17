@@ -1,0 +1,229 @@
+id: UC_WEEKLY_LOW_CODE_AI_WORKFLOW_RUNTIME_SANDBOX_ESCAPE_SERVER
+title: "[WEEKLY] Low-Code / AI Workflow Runtime Sandbox-Escape — Server Process Spawns Shell + Public Egress"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1211
+  name: Exploitation for Defense Evasion
+- id: T1105
+  name: Ingress Tool Transfer
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the post-exploitation pivot common to this fortnight's cluster of GHSA-published RCEs in Node.js, Python and Rust application runtimes: an embedded code-execution feature that is *supposed* to be sandboxed (n8n HTTP Request / XML nodes — CVE-2026-44789, CVE-2026-44791; FlowiseAI NodeVM Custom JS — CVE-2026-46442; vm2 async-generator sandbox breakout — CVE-2026-45411; DeepSeek-TUI run_tests / task_create auto-approved exec — CVE-2026-45311, CVE-2026-45374; utcp-cli unsanitized arg substitution — CVE-2026-45369; Portainer Docker plugin auth bypass — CVE-2026-44848) causes the runtime parent (node, python, dotnet, cargo, portainer, deepseek-tui, n8n, flowise) to fork a real OS shell, LOLBin, or download tool, optionally followed by outbound egress to a public destination from the same parent. It spans exploit -> install (T1190 -> T1059 / T1105). It fires when the runtime spawns a child it has no business spawning AND the child cmdline carries an injection / staging marker (base64, /dev/tcp/, IEX, bash -i, child_process, getBuiltinModule, constructor.constructor, `etc/passwd`, backticked subshells) AND the parent runtime made an outbound public connection in the surrounding 5 minutes; it will NOT fire on normal developer scaffolding (npm/yarn/pip/poetry/cargo build|test|run) because those cmdline patterns are explicitly suppressed.
+  
+  Rationale: Every one of these 12 GHSAs reaches RCE through a sandboxed code-execution surface inside a long-running app runtime — vm2 / NodeVM (Flowise, n8n), Python interpreter (utcp-cli), Rust cargo test under deepseek-tui, or the Portainer/Docker-engine plugin path. The single behavioural invariant the catalog doesn't already cover is: the runtime parent itself spawns an OS shell or LOLBin whose cmdline contains exploit-staging tokens AND that runtime egresses to a public destination within five minutes — a join that survives IOC rotation because it keys on the parent-process / child-binary / behaviour triple, not on any one CVE's payload.
+defender_kql: |-
+  let WindowMin = 5m;
+  let RuntimeParents = dynamic(["node.exe","node","n8n","n8n.exe","flowise","flowise.exe","deepseek-tui","deepseek-tui.exe","deepseek","deepseek.exe","python.exe","python","python3","python3.exe","pythonw.exe","dotnet.exe","dotnet","portainer","portainer.exe","cargo.exe","cargo","ts-node","tsx","nodemon"]);
+  let ShellOrLolbin = dynamic(["sh","bash","zsh","dash","ksh","fish","cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","curl","curl.exe","wget","wget.exe","nc","ncat","ncat.exe","socat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","whoami.exe","whoami","id","hostname","uname"]);
+  let BenignDevPatterns = @"(?i)(npm\s+(install|run|test|build|ci)|yarn\s+(install|run|test|build)|pnpm\s+(install|run|test)|pip\s+install|poetry\s+install|conda\s+install|cargo\s+(build|check|fmt|clippy)|webpack|tsc\s|eslint|prettier|jest)";
+  let InjectionMarker = @"(?i)(https?://|/dev/tcp/|base64\s+-d|-enc(odedcommand)?\s|IEX\s|Invoke-Expression|nc\s+-e|bash\s+-i|/etc/(passwd|shadow|hosts)|child_process|exec[sS]ync|spawn[sS]ync|getBuiltinModule|constructor\.constructor|;\s*(curl|wget|nc|bash|sh|python|perl)|`[^`]+`|\$\([^)]+\)|chmod\s+\+x\s+/tmp|CMD_\d+_OUTPUT=)";
+  let RuntimeShells = DeviceProcessEvents
+      | where Timestamp > ago(1h)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessFileName in~ (RuntimeParents)
+      | where FileName in~ (ShellOrLolbin)
+      | where not(InitiatingProcessCommandLine matches regex BenignDevPatterns)
+      | where ProcessCommandLine matches regex InjectionMarker
+      | project ShellTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ParentCmd   = InitiatingProcessCommandLine,
+                ChildImage  = FileName,
+                ChildCmd    = ProcessCommandLine,
+                ChildHash   = SHA256,
+                ChildPath   = FolderPath;
+  let RuntimeEgress = DeviceNetworkEvents
+      | where Timestamp > ago(2h)
+      | where InitiatingProcessFileName in~ (RuntimeParents)
+      | where RemoteIPType == "Public"
+      | where ActionType in ("ConnectionSuccess", "HttpConnectionInspected")
+      | project EgressTime = Timestamp, DeviceId,
+                EgressParent = InitiatingProcessFileName,
+                RemoteIP, RemotePort, RemoteUrl;
+  RuntimeShells
+  | join kind=inner RuntimeEgress on DeviceId
+  | where EgressTime between (ShellTime - WindowMin .. ShellTime + WindowMin)
+  | summarize EgressIPs = make_set(RemoteIP, 25),
+              EgressUrls = make_set(RemoteUrl, 25),
+              FirstEgress = min(EgressTime),
+              LastEgress  = max(EgressTime)
+              by ShellTime, DeviceName, AccountName, ParentImage, ParentCmd, ChildImage, ChildCmd, ChildHash, ChildPath
+  | order by ShellTime desc
+sentinel_kql: |-
+  let WindowMin = 5m;
+  let RuntimeParents = dynamic(["node.exe","node","n8n","n8n.exe","flowise","flowise.exe","deepseek-tui","deepseek-tui.exe","deepseek","deepseek.exe","python.exe","python","python3","python3.exe","pythonw.exe","dotnet.exe","dotnet","portainer","portainer.exe","cargo.exe","cargo","ts-node","tsx","nodemon"]);
+  let ShellOrLolbin = dynamic(["sh","bash","zsh","dash","ksh","fish","cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","curl","curl.exe","wget","wget.exe","nc","ncat","ncat.exe","socat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","whoami.exe","whoami","id","hostname","uname"]);
+  let BenignDevPatterns = @"(?i)(npm\s+(install|run|test|build|ci)|yarn\s+(install|run|test|build)|pnpm\s+(install|run|test)|pip\s+install|poetry\s+install|conda\s+install|cargo\s+(build|check|fmt|clippy)|webpack|tsc\s|eslint|prettier|jest)";
+  let InjectionMarker = @"(?i)(https?://|/dev/tcp/|base64\s+-d|-enc(odedcommand)?\s|IEX\s|Invoke-Expression|nc\s+-e|bash\s+-i|/etc/(passwd|shadow|hosts)|child_process|exec[sS]ync|spawn[sS]ync|getBuiltinModule|constructor\.constructor|;\s*(curl|wget|nc|bash|sh|python|perl)|`[^`]+`|\$\([^)]+\)|chmod\s+\+x\s+/tmp|CMD_\d+_OUTPUT=)";
+  let RuntimeShells = ImProcessCreate
+      | where TimeGenerated > ago(1h)
+      | where ActorUsername !endswith "$"
+      | where ParentProcessName in~ (RuntimeParents)
+      | where TargetProcessName in~ (ShellOrLolbin)
+      | where not(ParentProcessCommandLine matches regex BenignDevPatterns)
+      | where TargetProcessCommandLine matches regex InjectionMarker
+      | project ShellTime = TimeGenerated, DvcHostname, ActorUsername,
+                ParentProcessName, ParentProcessCommandLine,
+                TargetProcessName, TargetProcessCommandLine,
+                TargetProcessSHA256;
+  let RuntimeEgress = ImNetworkSession
+      | where TimeGenerated > ago(2h)
+      | where ActingProcessName in~ (RuntimeParents)
+      | where not(ipv4_is_private(DstIpAddr))
+      | where EventResult == "Success"
+      | project EgressTime = TimeGenerated, DvcHostname,
+                ActingProcessName, DstIpAddr, DstPortNumber, Url;
+  RuntimeShells
+  | join kind=inner RuntimeEgress on DvcHostname
+  | where EgressTime between (ShellTime - WindowMin .. ShellTime + WindowMin)
+  | summarize EgressIPs = make_set(DstIpAddr, 25),
+              EgressUrls = make_set(Url, 25),
+              FirstEgress = min(EgressTime),
+              LastEgress  = max(EgressTime)
+              by ShellTime, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine, TargetProcessSHA256
+  | order by ShellTime desc
+sigma_yaml: |-
+  title: Application Runtime Spawns Shell or LOLBin With Injection Markers (n8n / Flowise / vm2 / DeepSeek-TUI / utcp-cli / Portainer)
+  id: 5f3b8a14-2d6e-4b03-9c7d-ab44e1f0517c
+  status: experimental
+  description: Detects Node.js, Python, .NET, Rust (cargo) and AI workflow runtimes spawning an OS shell or LOLBin whose command line carries command-injection / sandbox-escape staging markers. Covers the May 2026 GHSA cluster (CVE-2026-44789, CVE-2026-44791, CVE-2026-46442, CVE-2026-45411, CVE-2026-45311, CVE-2026-45374, CVE-2026-45369, CVE-2026-44848).
+  references:
+    - https://github.com/advisories/GHSA-c8xv-5998-g76h
+    - https://github.com/advisories/GHSA-wrwr-h859-xh2r
+    - https://github.com/advisories/GHSA-9rvc-vf7m-pgm2
+    - https://github.com/advisories/GHSA-248r-7h7q-cr24
+    - https://github.com/advisories/GHSA-wx44-2q6h-j6p8
+    - https://github.com/advisories/GHSA-72w5-pf8h-xfp4
+    - https://github.com/advisories/GHSA-33p6-5jxp-p3x4
+    - https://github.com/advisories/GHSA-rrmm-9v76-h3p4
+  author: detection-engineering
+  date: 2026/05/17
+  tags:
+    - attack.execution
+    - attack.initial_access
+    - attack.t1190
+    - attack.t1059.004
+    - attack.t1059.001
+    - attack.t1059.006
+    - attack.t1211
+  logsource:
+    category: process_creation
+  detection:
+    parent_runtime:
+      ParentImage|endswith:
+        - '\node.exe'
+        - '/node'
+        - '\n8n.exe'
+        - '/n8n'
+        - '\flowise.exe'
+        - '/flowise'
+        - '\deepseek-tui.exe'
+        - '/deepseek-tui'
+        - '\python.exe'
+        - '\python3.exe'
+        - '/python3'
+        - '/python'
+        - '\dotnet.exe'
+        - '/dotnet'
+        - '\portainer.exe'
+        - '/portainer'
+        - '\cargo.exe'
+        - '/cargo'
+    child_shell_or_lolbin:
+      Image|endswith:
+        - '/sh'
+        - '/bash'
+        - '/zsh'
+        - '/dash'
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\cscript.exe'
+        - '\wscript.exe'
+        - '/curl'
+        - '\curl.exe'
+        - '/wget'
+        - '\wget.exe'
+        - '/nc'
+        - '/ncat'
+        - '\ncat.exe'
+        - '/socat'
+        - '\certutil.exe'
+        - '\bitsadmin.exe'
+        - '\mshta.exe'
+        - '\rundll32.exe'
+        - '\regsvr32.exe'
+    injection_markers:
+      CommandLine|contains:
+        - 'http://'
+        - 'https://'
+        - '/dev/tcp/'
+        - 'base64 -d'
+        - '-EncodedCommand'
+        - 'Invoke-Expression'
+        - 'bash -i'
+        - 'nc -e'
+        - '/etc/passwd'
+        - 'child_process'
+        - 'execSync'
+        - 'getBuiltinModule'
+        - 'constructor.constructor'
+        - 'CMD_'
+    filter_benign_dev:
+      ParentCommandLine|contains:
+        - 'npm install'
+        - 'npm run'
+        - 'yarn install'
+        - 'pip install'
+        - 'poetry install'
+        - 'cargo build'
+        - 'cargo check'
+        - 'webpack'
+    condition: parent_runtime and child_shell_or_lolbin and injection_markers and not filter_benign_dev
+  fields:
+    - ParentImage
+    - ParentCommandLine
+    - Image
+    - CommandLine
+    - User
+    - ComputerName
+  falsepositives:
+    - Developer workflows that invoke shell tooling from within a Node/Python REPL (rare in production hosts)
+    - CI agents running ad-hoc shell tasks (suppress by host group)
+  level: high
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmdline values(Processes.process_path) as child_path values(Processes.process_hash) as child_hash values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node","n8n","n8n.exe","flowise","flowise.exe","deepseek-tui","deepseek-tui.exe","deepseek","deepseek.exe","python.exe","python","python3","python3.exe","pythonw.exe","dotnet.exe","dotnet","portainer","portainer.exe","cargo.exe","cargo","ts-node","tsx","nodemon") AND Processes.process_name IN ("sh","bash","zsh","dash","ksh","fish","cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","curl","curl.exe","wget","wget.exe","nc","ncat","ncat.exe","socat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","whoami.exe","whoami","id","hostname","uname") by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash
+  | `drop_dm_object_name(Processes)`
+  | eval injection_marker=if(match(child_cmdline,"(?i)(https?://|/dev/tcp/|base64\\s+-d|-enc(odedcommand)?\\s|IEX\\s|Invoke-Expression|nc\\s+-e|bash\\s+-i|/etc/(passwd|shadow|hosts)|child_process|exec[sS]ync|spawn[sS]ync|getBuiltinModule|constructor\\.constructor|;\\s*(curl|wget|nc|bash|sh|python|perl)|`[^`]+`|\\$\\([^)]+\\)|chmod\\s+\\+x\\s+/tmp|CMD_\\d+_OUTPUT=)"),1,0)
+  | eval benign_dev=if(match(parent_process,"(?i)(npm\\s+(install|run|test|build|ci)|yarn\\s+(install|run|test|build)|pnpm\\s+(install|run|test)|pip\\s+install|poetry\\s+install|conda\\s+install|cargo\\s+(build|check|fmt|clippy)|webpack|tsc\\s|eslint|prettier|jest)"),1,0)
+  | where injection_marker=1 AND benign_dev=0
+  | join type=left host max=0 [
+      | tstats `summariesonly` count as egress_count values(All_Traffic.dest) as egress_dest values(All_Traffic.dest_port) as egress_port from datamodel=Network_Traffic where All_Traffic.dest_category!="internal" AND All_Traffic.app IN ("node.exe","node","python.exe","python","python3","dotnet.exe","dotnet","portainer.exe","portainer","n8n","flowise","deepseek-tui","cargo.exe","cargo") earliest=-5m@m by All_Traffic.src
+      | rename All_Traffic.src as host
+    ]
+  | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+  | table firstTime, lastTime, host, user, parent_process_name, parent_process, process_name, child_cmdline, child_path, child_hash, egress_dest, egress_port, egress_count
+  | sort - firstTime
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE OR *\\n8n.exe OR *\\flowise.exe OR *\\deepseek-tui.exe OR *\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\dotnet.exe OR *\\portainer.exe OR *\\cargo.exe) OR @process.parent.executable.path:(*/node OR */python OR */python3 OR */dotnet OR */portainer OR */cargo OR */n8n OR */flowise OR */deepseek-tui)) (@Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\CMD.EXE OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\wget.exe OR *\\ncat.exe) OR @process.executable.path:(*/sh OR */bash OR */zsh OR */dash OR */curl OR */wget OR */nc OR */ncat OR */socat)) (@CommandLine:(*http\://* OR *https\://* OR *\/dev\/tcp\/* OR *"base64 -d"* OR *"-EncodedCommand"* OR *"Invoke-Expression"* OR *"bash -i"* OR *"nc -e"* OR *"/etc/passwd"* OR *child_process* OR *execSync* OR *getBuiltinModule* OR *constructor.constructor* OR *CMD_*_OUTPUT*) OR @process.command_line:(*http\://* OR *https\://* OR *\/dev\/tcp\/* OR *"base64 -d"* OR *"bash -i"* OR *"nc -e"* OR *"/etc/passwd"* OR *child_process* OR *execSync*)) -@ParentCommandLine:(*"npm install"* OR *"npm run"* OR *"yarn install"* OR *"pip install"* OR *"poetry install"* OR *"cargo build"* OR *"cargo check"* OR *webpack*) -@process.parent.command_line:(*"npm install"* OR *"npm run"* OR *"yarn install"* OR *"pip install"* OR *"poetry install"* OR *"cargo build"*)
