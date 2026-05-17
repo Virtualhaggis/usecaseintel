@@ -1263,7 +1263,7 @@ except (ImportError, AttributeError):
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
-_OAUTH_UC_CALL_TIMEOUT_SEC = 900         # UC call with WebSearch + WebFetch: 15 min
+_OAUTH_UC_CALL_TIMEOUT_SEC = 1200        # UC call with WebSearch + WebFetch: 20 min
                                           # ceiling. This is a MAX not a fixed wait —
                                           # successful calls return when the subprocess
                                           # exits (typical 60-240s). Bumped 300->600
