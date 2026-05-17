@@ -1352,6 +1352,13 @@ _OAUTH_BREAKERS: dict[str, dict] = {
     # every kept article. 150 budget covers ~150 fresh articles.
     "kc":        {"failures": 0, "open": False, "window": [],
                   "budget": 150, "used": 0},
+    # Image-OCR vision pass: Haiku + Read tool on up to N downloaded
+    # screenshots per fresh article. Only fires when the article has
+    # content images. Budget sized for ~150 fresh image-bearing
+    # articles per run — enough for the typical fresh-article batch
+    # without burning the whole pipeline on long-tail vision calls.
+    "vision":    {"failures": 0, "open": False, "window": [],
+                  "budget": 150, "used": 0},
 }
 # Backwards-compatible module aliases — kept in sync with the "uc"
 # entry at the end of every note_* call so legacy reads of these names
@@ -17415,8 +17422,178 @@ def _llm_extract_iocs_pass2(article: dict, pass1: dict) -> list:
     return out[:20]
 
 
+_IMAGE_OCR_MAX_PER_ARTICLE = int(os.environ.get("USECASEINTEL_IMAGE_OCR_MAX", "3"))
+_IMAGE_OCR_BYTES_CAP = 5 * 1024 * 1024  # 5 MB per image, defensive
+
+_VISION_PROMPT_SYSTEM = (
+    "You are a SOC analyst extracting indicators of compromise from "
+    "SCREENSHOTS embedded in a threat-intel article. Threat-intel "
+    "screenshots routinely show: literal command lines, process trees, "
+    "phishing-page URLs / decoys, C2 panel URLs, network diagrams, "
+    "code snippets, registry edits, configuration files, ransom-note "
+    "text, malware UI strings. Read every image you're given carefully "
+    "and extract any IOCs visible in the pixel content (the body text "
+    "of the surrounding article was already extracted separately — "
+    "your job is to surface what the prose-strip missed). Return "
+    "strict JSON only. No prose, no fences, no commentary."
+)
+
+_VISION_PROMPT_USER = (
+    "Article title: <<TITLE>>\n"
+    "Article URL:   <<URL>>\n"
+    "\n"
+    "Image files saved locally for you to read (use the Read tool on each):\n"
+    "<<IMAGE_LIST>>\n"
+    "\n"
+    "For each image, examine its visual content and extract any IOCs "
+    "visible:\n"
+    "  - Domains, URLs, IPs visible in screenshots (C2 servers,\n"
+    "    phishing lures, redirect chains)\n"
+    "  - Command-line strings, process names, file paths, registry\n"
+    "    keys shown in terminal / cmd / regedit screenshots\n"
+    "  - Hash values shown in IOC tables / strings windows\n"
+    "  - Ransom-note text (filename pattern, contact email/onion)\n"
+    "  - CVE identifiers, KB numbers, version strings in advisory\n"
+    "    screenshots\n"
+    "  - Named campaigns, repository titles, wallet addresses\n"
+    "    visible in attack graphics\n"
+    "\n"
+    "Output JSON ONLY:\n"
+    "{\n"
+    "  \"cves\":     [\"CVE-XXXX-XXXX\", ...],\n"
+    "  \"ips\":      [\"1.2.3.4\", ...],\n"
+    "  \"domains\":  [\"evil.com\", ...],\n"
+    "  \"sha256\":   [\"<64hex>\", ...],\n"
+    "  \"sha1\":     [\"<40hex>\", ...],\n"
+    "  \"md5\":      [\"<32hex>\", ...],\n"
+    "  \"image_notes\": [\"<short note about what the image showed>\", ...]\n"
+    "}\n"
+    "\n"
+    "Skip thumbnails / hero banners / logos / author headshots / "
+    "stock photography. Empty arrays if no IOCs are visible. Be "
+    "honest — pad-with-guesses degrades the IOC feed faster than "
+    "missing-a-screenshot does."
+)
+
+
+def _llm_extract_vision_iocs(article: dict) -> dict | None:
+    """Vision pass: download up to N article images, hand them to
+    Haiku via `claude -p --allowedTools Read`, extract any IOCs that
+    only appear visually (screenshots / diagrams / C2 panels / phishing
+    lures). Returns a dict with cves/ips/domains/sha256/sha1/md5
+    arrays + image_notes list, or None if no images, vision call
+    failed, or the article is too short to bother.
+
+    Confirmed feasible: WebFetch can NOT expose pixels (the LLM only
+    sees HTML/binary), but the `Read` tool on a local image path DOES
+    expose pixels to vision-capable models. We download to a temp
+    dir, call claude -p, then clean up.
+    """
+    image_urls = (article.get("image_urls") or [])[:_IMAGE_OCR_MAX_PER_ARTICLE]
+    if not image_urls:
+        return None
+    if _oauth_circuit_open("vision"):
+        return None
+
+    # Pull each image to a temp file.
+    import tempfile
+    import shutil
+    tmp_dir = tempfile.mkdtemp(prefix="usecaseintel_vision_")
+    local_paths = []
+    try:
+        import requests
+        for i, url in enumerate(image_urls):
+            try:
+                r = requests.get(url, timeout=15, stream=True,
+                                 headers={"User-Agent": FETCH_USER_AGENT})
+                if r.status_code != 200:
+                    continue
+                ct = (r.headers.get("content-type") or "").lower()
+                if not any(t in ct for t in ("image/png", "image/jpeg",
+                                              "image/jpg", "image/webp",
+                                              "image/gif")):
+                    continue
+                # Pick extension from content type; default png.
+                ext = (".png" if "png" in ct else ".jpg" if "jpeg" in ct or "jpg" in ct
+                       else ".webp" if "webp" in ct else ".gif" if "gif" in ct else ".png")
+                size = 0
+                local = Path(tmp_dir) / f"img_{i:02d}{ext}"
+                with open(local, "wb") as fh:
+                    for chunk in r.iter_content(chunk_size=65536):
+                        if not chunk:
+                            break
+                        size += len(chunk)
+                        if size > _IMAGE_OCR_BYTES_CAP:
+                            break
+                        fh.write(chunk)
+                if size > 1000:  # > 1KB minimum (skip tracking pixels)
+                    local_paths.append((str(local), url))
+            except Exception:
+                continue
+        if not local_paths:
+            return None
+
+        # Build image-list block for the prompt.
+        image_list = "\n".join(
+            f"  [{i+1}] file: {path}\n      source URL: {url}"
+            for i, (path, url) in enumerate(local_paths)
+        )
+        prompt = (_VISION_PROMPT_USER
+                  .replace("<<TITLE>>", (article.get("title") or "")[:240])
+                  .replace("<<URL>>", (article.get("link") or "")[:240])
+                  .replace("<<IMAGE_LIST>>", image_list))
+        raw = _call_claude_cli(
+            prompt,
+            model=LLM_RELEVANCE_MODEL,  # Haiku — vision-capable, cheap
+            allowed_tools=["Read"],
+            system_prompt=_VISION_PROMPT_SYSTEM,
+            timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 3,  # ~135s for N images
+        )
+        if not raw:
+            _note_oauth_failure("vision CLI no result", kind="vision")
+            return None
+        _note_oauth_success("vision")
+        # Parse JSON envelope.
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```(?:json)?\s*", "", raw)
+            raw = re.sub(r"\s*```\s*$", "", raw)
+        m = re.search(r"\{[\s\S]*\}", raw)
+        if not m:
+            return None
+        import json as _json
+        try:
+            parsed = _json.loads(m.group(0))
+        except Exception:
+            return None
+        if not isinstance(parsed, dict):
+            return None
+        out = {}
+        for k in ("cves", "ips", "domains", "sha256", "sha1", "md5"):
+            v = parsed.get(k) or []
+            if isinstance(v, str):
+                v = [v]
+            if not isinstance(v, list):
+                v = []
+            out[k] = [str(x).strip() for x in v
+                      if x and isinstance(x, (str, int, float))][:15]
+        notes = parsed.get("image_notes") or []
+        if isinstance(notes, str):
+            notes = [notes]
+        if not isinstance(notes, list):
+            notes = []
+        out["image_notes"] = [str(n).strip()[:200] for n in notes
+                              if n and isinstance(n, str)][:5]
+        return out
+    finally:
+        try:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
+        except Exception:
+            pass
+
+
 def _llm_extract_iocs(article: dict) -> dict | None:
-    """Phase 1 v3 entry-point: two-pass corroborated IOC extraction.
+    """Phase 1 v3 entry-point: three-pass corroborated IOC extraction.
 
     Pass 1: Opus + WebSearch reads the article, runs cross-vendor
     searches, returns IOCs with `sources_by_ioc`, `confidence_by_ioc`,
@@ -17425,6 +17602,12 @@ def _llm_extract_iocs(article: dict) -> dict | None:
     Pass 2: Opus no-tools gap-fill — given Pass 1 output, infer the
     IOCs a SOC analyst would expect (mutex names, registry keys,
     ransom-note filenames, etc.) and flag them as `inferred`.
+
+    Pass 3 (vision): Haiku with the Read tool on up to N downloaded
+    article images. Extracts IOCs visible only in screenshots
+    (command lines, C2 panel URLs, phishing lures, etc.) that the
+    prose-strip missed entirely. Merged into the core IOC arrays
+    with source attribution to the image URL.
 
     Returns the merged canonical dict on success, None on any failure
     so the caller falls back to regex.
@@ -17450,6 +17633,31 @@ def _llm_extract_iocs(article: dict) -> dict | None:
                 seen.add(v)
                 existing.append(e)
         p1["inferred_iocs"] = existing[:30]
+    # Pass 3 (vision). Only fires when the article actually carries
+    # content images. Cheap on articles with no images (early return).
+    vision = _llm_extract_vision_iocs(article)
+    if vision:
+        # Merge vision-extracted IOCs into the core arrays. Vision
+        # output is high-confidence by definition (pixel-visible
+        # strings) — sources_by_ioc attributes them to the image URLs.
+        image_urls = (article.get("image_urls") or [])[:_IMAGE_OCR_MAX_PER_ARTICLE]
+        for k in ("cves", "ips", "domains", "sha256", "sha1", "md5"):
+            existing_vals = {v.lower() for v in (p1.get(k) or [])}
+            new_vals = [v for v in (vision.get(k) or [])
+                        if v and v.lower() not in existing_vals]
+            if new_vals:
+                p1[k] = ((p1.get(k) or []) + new_vals)[:30]
+                # Tag the new IOCs with image-URL sources so the UI
+                # badge shows "found in screenshot".
+                src_map = p1.setdefault("sources_by_ioc", {})
+                conf_map = p1.setdefault("confidence_by_ioc", {})
+                for v in new_vals:
+                    src_map.setdefault(v, []).extend(image_urls[:2])
+                    conf_map.setdefault(v, "high")
+        # Stash the image_notes on the IOC payload so the Hunt
+        # drawer / future UI can show "the vision pass saw: X" notes.
+        if vision.get("image_notes"):
+            p1["vision_notes"] = vision["image_notes"]
     return p1
 
 
