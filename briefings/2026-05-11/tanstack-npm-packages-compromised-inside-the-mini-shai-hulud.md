@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud Wave 4 (TanStack/TeamPCP) worm payload file created in node_modules
 
-`UC_119_10` · phase: **install** · confidence: **High**
+`UC_120_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### [LLM] Session/Oxen P2P exfil DNS or TCP to getsession.org from build/CI host
 
-`UC_119_11` · phase: **c2** · confidence: **High**
+`UC_120_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -399,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack
 
-`UC_119_9` · phase: **exploit** · confidence: **High**
+`UC_120_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

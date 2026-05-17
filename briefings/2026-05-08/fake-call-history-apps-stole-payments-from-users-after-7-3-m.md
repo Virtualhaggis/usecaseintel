@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Managed Android device has an ESET CallPhantom fake call-history Play Store app installed
 
-`UC_140_4` · phase: **delivery** · confidence: **High**
+`UC_141_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceTvmSoftwareInventory
 
 ### [LLM] CallPhantom APK SHA-1 hash observed in file telemetry (sideload / download)
 
-`UC_140_5` · phase: **install** · confidence: **High**
+`UC_141_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

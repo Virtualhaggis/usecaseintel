@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Ghostwriter PDF→RAR→JS chain: wscript spawned by archiver executing .js from user-download paths
 
-`UC_59_7` · phase: **delivery** · confidence: **High**
+`UC_60_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### [LLM] PicassoLoader 10-minute HTTP POST fingerprint beacon from wscript/cscript
 
-`UC_59_8` · phase: **c2** · confidence: **High**
+`UC_60_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceNetworkEvents
 
 ### [LLM] CVE-2025-8088 WinRAR ADS path-traversal writes to Startup or Tasks folder
 
-`UC_59_9` · phase: **install** · confidence: **High**
+`UC_60_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

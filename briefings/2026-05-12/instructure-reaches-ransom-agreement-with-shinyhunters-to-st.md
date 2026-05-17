@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound phishing impersonating Canvas/Instructure post-ShinyHunters breach
 
-`UC_100_7` · phase: **delivery** · confidence: **Medium**
+`UC_101_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ EmailEvents
 
 ### [LLM] Anomalous Entra ID sign-in to Canvas/Instructure SP from unseen country
 
-`UC_100_8` · phase: **c2** · confidence: **Medium**
+`UC_101_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

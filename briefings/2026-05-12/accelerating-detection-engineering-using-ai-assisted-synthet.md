@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] forfiles.exe spawning Python or shell interpreter (T1202 indirect execution)
 
-`UC_83_3` · phase: **exploit** · confidence: **High**
+`UC_84_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### [LLM] forfiles.exe command line with hex escapes or %PROGRAMFILES% expansion + extraction verbs
 
-`UC_83_4` · phase: **exploit** · confidence: **Medium**
+`UC_84_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Accelerating detection engineering using AI-assisted synthetic attack logs gener
 
-`UC_83_2` · phase: **exploit** · confidence: **High**
+`UC_84_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

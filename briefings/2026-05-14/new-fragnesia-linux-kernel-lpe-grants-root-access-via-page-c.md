@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Defender AV signature for DirtyFrag/Fragnesia kernel exploit family
 
-`UC_68_6` · phase: **exploit** · confidence: **High**
+`UC_69_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ HitAlerts
 
 ### [LLM] Linux /usr/bin/su invoked by exploit binary in /tmp or /dev/shm (Fragnesia page-cache PoC pattern)
 
-`UC_68_7` · phase: **install** · confidence: **High**
+`UC_69_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### [LLM] Fragnesia/Dirty Frag attack-surface activation: esp4, esp6, or rxrpc kernel module loaded from non-init context
 
-`UC_68_8` · phase: **weapon** · confidence: **Medium**
+`UC_69_8` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -318,7 +318,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_68_5` · phase: **install** · confidence: **High**
+`UC_69_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

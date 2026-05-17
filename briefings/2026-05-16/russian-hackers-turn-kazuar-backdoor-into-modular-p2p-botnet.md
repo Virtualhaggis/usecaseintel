@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kazuar Kernel/Bridge/Worker module hash execution (Secret Blizzard 2026 variant)
 
-`UC_5_2` · phase: **install** · confidence: **High**
+`UC_7_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ union isfuzzy=true
 
 ### [LLM] Kazuar Bridge module Exchange Web Services C2 from non-mail-client process
 
-`UC_5_3` · phase: **c2** · confidence: **High**
+`UC_7_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] Kazuar Kernel leader–peer IPC via mailslots and named pipes between non-server endpoints
 
-`UC_5_4` · phase: **actions** · confidence: **Medium**
+`UC_7_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

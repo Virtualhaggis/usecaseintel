@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_776 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-17
 - [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
+- [nginx cve 2026 42945 exploited in the wild causing worker cr](./2026-05-17/nginx-cve-2026-42945-exploited-in-the-wild-causing-worker-cr.md)
+- [tycoon2fa hijacks microsoft 365 accounts via device code phi](./2026-05-17/tycoon2fa-hijacks-microsoft-365-accounts-via-device-code-phi.md)
 
 ## 2026-05-16
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
@@ -161,7 +163,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa cwfq rfcr 8hmp zebra s transparent sighas](./2026-05-07/ghsa-critical-ghsa-cwfq-rfcr-8hmp-zebra-s-transparent-sighas.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
-- [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)

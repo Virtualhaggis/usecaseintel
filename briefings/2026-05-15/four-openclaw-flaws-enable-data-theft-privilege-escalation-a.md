@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OpenShell sandbox heredoc env-var leak (Claw Chain CVE-2026-44115)
 
-`UC_18_9` · phase: **exploit** · confidence: **High**
+`UC_20_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] OpenClaw sandbox-escape read of credential files (Claw Chain CVE-2026-44113)
 
-`UC_18_10` · phase: **actions** · confidence: **Medium**
+`UC_20_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### [LLM] OpenClaw write-side TOCTOU planting persistence outside sandbox (Claw Chain CVE-2026-44112)
 
-`UC_18_11` · phase: **install** · confidence: **High**
+`UC_20_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

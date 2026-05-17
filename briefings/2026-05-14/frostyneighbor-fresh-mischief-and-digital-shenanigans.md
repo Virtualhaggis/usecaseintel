@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FrostyNeighbor masqueraded rundll32 (ViberPC.exe) loading DLL via SettingTimeAPI export from %ProgramData%
 
-`UC_67_12` · phase: **install** · confidence: **High**
+`UC_68_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union
 
 ### [LLM] PicassoLoader JS dropper writes %AppData%\WinDataScope\Update.js and schedules .icu-fetched XML task
 
-`UC_67_13` · phase: **install** · confidence: **High**
+`UC_68_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ union ProcDrops, TaskFromIcu, RegRun
 
 ### [LLM] FrostyNeighbor PicassoLoader / Cobalt Strike C2 beacon to needbinding.icu / nebao.icu families
 
-`UC_67_14` · phase: **c2** · confidence: **High**
+`UC_68_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -476,7 +476,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_67_11` · phase: **exploit** · confidence: **High**
+`UC_68_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

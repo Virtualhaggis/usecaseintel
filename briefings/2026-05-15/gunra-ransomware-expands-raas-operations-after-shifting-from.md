@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gunra ransomware encryption artefacts — .ENCRT extension and R3ADM3.txt note drop
 
-`UC_17_6` · phase: **actions** · confidence: **High**
+`UC_19_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### [LLM] Gunra per-shadow-ID WMIC deletion — `WMIC shadowcopy where ID={GUID} delete` pattern
 
-`UC_17_7` · phase: **actions** · confidence: **High**
+`UC_19_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
