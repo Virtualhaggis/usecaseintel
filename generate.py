@@ -1754,6 +1754,83 @@ def _call_claude_cli(
     return _parse_stream_json_buffer(stdout_buf or "", timed_out=timed_out)
 
 
+# =============================================================================
+# Parallel UC generation pool.
+#
+# Smoke-tested up to N=8 concurrent `claude -p` subprocesses cleanly on
+# this machine + OAuth session, including with WebSearch+WebFetch
+# tools enabled. Default N=5 for production: a comfortable margin under
+# the tested ceiling, gives ~5x speedup on the heavy threat-intel batch
+# at the start of each pipeline run (those articles take 3-5 min each
+# of UC + WebSearch + multi-platform query gen — sequentially that's
+# 15-25 min of wallclock for the first 5 articles alone).
+#
+# How it's used: the main per-article loop submits THIS article's UC
+# gen to the pool, plus pre-submits the next N-1 articles (after a
+# fast IOC pre-extract so their `ind` is ready). By the time the
+# loop reaches article i+1, its UC gen has been running concurrently
+# for several seconds, so the await is much shorter than a fresh
+# sequential call.
+#
+# Override via USECASEINTEL_UC_PARALLELISM (set to 1 to fall back to
+# sequential).
+# =============================================================================
+_UC_PARALLELISM = max(1, int(os.environ.get("USECASEINTEL_UC_PARALLELISM", "5")))
+_uc_executor = None  # ThreadPoolExecutor, lazily created
+_uc_futures: dict = {}  # article URL -> Future from _llm_generate_ucs
+
+
+def _ensure_uc_executor():
+    global _uc_executor
+    if _uc_executor is None and _UC_PARALLELISM > 1:
+        from concurrent.futures import ThreadPoolExecutor
+        _uc_executor = ThreadPoolExecutor(
+            max_workers=_UC_PARALLELISM,
+            thread_name_prefix="uc-gen",
+        )
+
+
+def _submit_uc_gen(article: dict, ind: dict) -> None:
+    """Fire-and-forget submit an article's UC generation to the
+    background pool. Idempotent — second call for the same URL is a
+    no-op. Safe to call for articles that turn out to be relevance-
+    dropped; their cached future just gets discarded in _await_uc_gen
+    (no one awaits it). Worst case: a wasted LLM call on a drop, which
+    is bounded by the relevance dropping at the top of the loop AFTER
+    this submit fires (so most drops never reach the LLM submit at
+    all)."""
+    if _UC_PARALLELISM <= 1:
+        return  # parallel disabled — caller will call _llm_generate_ucs sync
+    _ensure_uc_executor()
+    url = (article.get("link") or "").strip()
+    if not url or url in _uc_futures:
+        return
+    _uc_futures[url] = _uc_executor.submit(_llm_generate_ucs, article, ind)
+
+
+def _await_uc_gen(article: dict, ind: dict) -> list:
+    """Block until this article's UC generation completes; return the
+    UC list. If parallelism is disabled or the article wasn't pre-
+    submitted, falls back to a synchronous _llm_generate_ucs call so
+    the caller's contract stays identical regardless of pool state.
+
+    Returns [] on any exception inside the future — the same shape the
+    sync path returns on failure."""
+    if _UC_PARALLELISM <= 1:
+        return _llm_generate_ucs(article, ind)
+    url = (article.get("link") or "").strip()
+    fut = _uc_futures.pop(url, None)
+    if fut is None:
+        # Wasn't pre-submitted (e.g. a new article that appeared after
+        # the lookahead window passed it). Sync call.
+        return _llm_generate_ucs(article, ind)
+    try:
+        return fut.result()
+    except Exception as e:
+        print(f"    [!] parallel UC gen raised: {str(e)[:120]}")
+        return []
+
+
 def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
     """Call Claude through the user's Claude Code OAuth session.
 
@@ -18116,6 +18193,9 @@ def main():
     _IOC_STATS["llm"] = 0
     _IOC_STATS["llm_cached"] = 0
     _IOC_STATS["regex"] = 0
+    # Reset the parallel UC pool's pending-future dict so a re-invocation
+    # of main() in the same process doesn't pick up leftovers.
+    _uc_futures.clear()
     # Phase 1B — kill-chain reconstruction counters.
     _KC_STATS["llm"] = 0
     _KC_STATS["llm_cached"] = 0
@@ -18241,12 +18321,36 @@ def main():
         except Exception as _e:
             print(f"    [!] kill-chain reconstruction failed for article {i}: {_e}")
             a["kill_chain"] = {"phases": [], "overall_summary": ""}
-        # LLM-driven bespoke UCs — opt-in via ANTHROPIC_API_KEY env var.
-        # Reads the article and emits per-attack SPL/KQL targeting the
-        # specific binaries / domains / chain described, qualitatively
-        # better than regex extraction. Cached per article URL.
+        # LLM-driven bespoke UCs. Parallelised across the next
+        # _UC_PARALLELISM articles via a background ThreadPoolExecutor
+        # so the heavy threat-intel batch at the top of each run (5
+        # min/article on a sequential call) completes in roughly the
+        # wallclock of one call instead of N. Submit THIS article's
+        # UC gen + pre-submit the next N-1 articles so their work is
+        # already in flight by the time the loop reaches them.
         try:
-            llm_ucs = _llm_generate_ucs(a, ind)
+            _submit_uc_gen(a, ind)
+            # Lookahead prefetch: pre-extract IOCs for the next
+            # _UC_PARALLELISM-1 articles in the queue and submit their
+            # UC gen to the pool. _extract_iocs is cache-hit-cheap for
+            # most articles; the few that miss pay the IOC cost early
+            # rather than blocking the per-article loop later. Worst
+            # case: we pre-IOC a relevance-drop article (wasted IOC
+            # work + a UC future that nobody awaits). The savings on
+            # the kept articles far outweigh that.
+            for look in articles[i+1 : i+_UC_PARALLELISM]:
+                look_link = (look.get("link") or "").strip()
+                if not look_link or look_link in _uc_futures:
+                    continue
+                try:
+                    look_ind = _extract_iocs(look)
+                except Exception:
+                    continue
+                _submit_uc_gen(look, look_ind)
+            # Wait for THIS article's UC gen. If the pool was warm
+            # from prior lookahead, the wait is short; otherwise this
+            # is a sync call same as before.
+            llm_ucs = _await_uc_gen(a, ind)
             for u in llm_ucs:
                 if u is None: continue
                 ucs.append(u)
@@ -18896,3 +19000,14 @@ if __name__ == "__main__":
         main()
     finally:
         release_pipeline_lock()
+        # Graceful shutdown of the parallel UC pool. Wait briefly for
+        # any in-flight pre-fetched UC gens to complete so their cache
+        # writes land; cancel anything still queued (its result won't
+        # be consumed anyway).
+        if _uc_executor is not None:
+            try:
+                _uc_executor.shutdown(wait=True, cancel_futures=True)
+            except TypeError:
+                # cancel_futures requires Python 3.9+. Older runtimes
+                # fall back to plain shutdown.
+                _uc_executor.shutdown(wait=False)
