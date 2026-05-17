@@ -15963,6 +15963,110 @@ def _extract_html_tables(html_doc: str, max_tables: int = 10,
     return out
 
 
+def _extract_kb_numbers(html_doc: str, max_kbs: int = 20) -> list:
+    """Pull Microsoft KB / patch identifiers from article body. SOC
+    needs these for remediation correlation — "KB5034466 patches the
+    described vulnerability" is critical context the IOC schema never
+    surfaced. Deduped, capped, no version filtering (a single article
+    can legitimately reference both KB-on-the-CVE and KB-on-the-patch)."""
+    if not html_doc:
+        return []
+    main = _extract_main_html(html_doc)
+    text = re.sub(r"<[^>]+>", " ", main)
+    out = []
+    seen = set()
+    for m in re.finditer(r"\bKB\d{6,7}\b", text):
+        kb = m.group(0).upper()
+        if kb not in seen:
+            seen.add(kb)
+            out.append(kb)
+            if len(out) >= max_kbs:
+                break
+    return out
+
+
+def _extract_cvss_scores(html_doc: str, max_scores: int = 10) -> list:
+    """Pull CVSS scores mentioned in article body. Format varies wildly
+    in practice: "CVSS 9.8", "CVSS v3.1: 9.8", "CVSS:3.1/AV:N/...",
+    "scoring 9.8 on the CVSS scale". We capture the score + optional
+    severity tag so the LLM can use it for prioritisation."""
+    if not html_doc:
+        return []
+    main = _extract_main_html(html_doc)
+    text = re.sub(r"<[^>]+>", " ", main)
+    text = re.sub(r"\s+", " ", text)
+    out = []
+    seen = set()
+    # Match CVSS context near a 1-2 digit . 1 digit score
+    for m in re.finditer(
+        r"\bCVSS(?:[\s:]*v?[23](?:\.[01])?)?[\s:]*(?:score[\s:]+)?(\d{1,2}\.\d)\b",
+        text, re.IGNORECASE):
+        score = m.group(1)
+        try:
+            sv = float(score)
+        except ValueError:
+            continue
+        if sv > 10:
+            continue
+        severity = ("critical" if sv >= 9 else "high" if sv >= 7
+                    else "medium" if sv >= 4 else "low")
+        entry = f"{score} ({severity})"
+        if entry not in seen:
+            seen.add(entry)
+            out.append(entry)
+            if len(out) >= max_scores:
+                break
+    return out
+
+
+def _extract_references_section(html_doc: str, base_url: str,
+                                max_refs: int = 15) -> list:
+    """Pull author-curated reference URLs from an article's bibliography /
+    References section. Articles often link to vendor advisories,
+    MITRE pages, CVE databases at the bottom — the LLM corroborates
+    via WebSearch but the explicit citations are higher-confidence
+    starting points.
+
+    Heuristic: find a heading containing "References" / "Sources" /
+    "Further reading", then collect <a href> URLs that follow until
+    the next heading or section break.
+    """
+    if not html_doc:
+        return []
+    from urllib.parse import urljoin
+    main = _extract_main_html(html_doc)
+    # Find the heading region — match the heading tag + everything up
+    # to the next heading of equal or higher rank.
+    pattern = (
+        r"<h\d[^>]*>\s*(?:references|sources|further\s+reading"
+        r"|external\s+links|citations)\s*</h\d>([\s\S]{0,8000}?)"
+        r"(?=<h\d|</article|</main|</body|<footer)"
+    )
+    out = []
+    seen = set()
+    for region_match in re.finditer(pattern, main, re.IGNORECASE):
+        region = region_match.group(1)
+        for a in re.finditer(r'<a\b[^>]*href=["\']([^"\']+)["\'][^>]*>([\s\S]*?)</a>',
+                             region, re.IGNORECASE):
+            href = a.group(1).strip()
+            label = re.sub(r"<[^>]+>", "", a.group(2)).strip()
+            label = _html_entity_decode(label)[:160]
+            if not href:
+                continue
+            absolute = urljoin(base_url, href)
+            if not absolute.lower().startswith(("http://", "https://")):
+                continue
+            if absolute in seen:
+                continue
+            seen.add(absolute)
+            out.append({"url": absolute, "label": label or absolute})
+            if len(out) >= max_refs:
+                break
+        if len(out) >= max_refs:
+            break
+    return out
+
+
 def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 5) -> list:
     """Pull the <img src> URLs out of the article body, filter junk
     (logos, avatars, tracking pixels, sprites, share-button icons), and
@@ -16015,22 +16119,30 @@ def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 
     return out
 
 
+_EMPTY_FETCH_EXTRAS = ([], [], [], [], [], [])  # (images, code, tables, kbs, cvss, refs)
+
+
 def _fetch_full_body(url: str, fallback: str = "") -> tuple:
     """Fetch and clean an article body. Cached to disk; falls back on error.
 
-    Returns a 4-tuple `(text, image_urls, code_blocks, tables)`:
+    Returns a 7-tuple `(text, image_urls, code_blocks, tables, kb_numbers,
+    cvss_scores, references)`:
       - text: HTML-to-text body for IOC extraction + LLM context
       - image_urls: up to 5 content-image URLs the LLM can WebFetch
-        (screenshots / flow diagrams / IOC-tables-as-images that pure
-        text strip misses)
-      - code_blocks: verbatim `<pre>` / `<code>` contents from the
-        article — PowerShell, bash, YAML, registry edits, etc. fed
-        into the LLM IOC + UC prompts as ground-truth payload syntax
+        (screenshots / flow diagrams / IOC-tables-as-images)
+      - code_blocks: verbatim `<pre>` / `<code>` contents — PowerShell,
+        bash, YAML, registry edits etc. fed into the LLM prompts as
+        ground-truth payload syntax
       - tables: structured `<table>` rows + headers for IOC matrices
         and affected-version tables that prose-strip flattens
+      - kb_numbers: Microsoft KB / patch identifiers (e.g. KB5034466)
+        — SOC remediation correlation context
+      - cvss_scores: CVSS-score mentions with derived severity tag
+      - references: author-curated bibliography URLs + labels from
+        the article's References / Sources / Further reading section
     """
     if not FETCH_FULL_BODY or not url or not url.lower().startswith(("http://", "https://")):
-        return (fallback, [], [], [])
+        return (fallback,) + _EMPTY_FETCH_EXTRAS
     cache = _cache_path_for(url)
     html_doc = ""
     if cache.exists():
@@ -16056,19 +16168,22 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
                 except Exception:
                     pass
             else:
-                return (fallback, [], [], [])
+                return (fallback,) + _EMPTY_FETCH_EXTRAS
         except Exception as e:
             safe_err = str(e).encode("ascii", "replace").decode("ascii")
             print(f"    [!] body fetch failed for {url[:80]}: {safe_err}")
-            return (fallback, [], [], [])
+            return (fallback,) + _EMPTY_FETCH_EXTRAS
     text = _html_to_text_for_iocs(html_doc)
     if len(text) < 200:
         # extraction looks broken — better to keep the RSS summary than ship rubbish
-        return (fallback, [], [], [])
-    images = _extract_article_image_urls(html_doc, url)
+        return (fallback,) + _EMPTY_FETCH_EXTRAS
+    images      = _extract_article_image_urls(html_doc, url)
     code_blocks = _extract_code_blocks(html_doc)
-    tables = _extract_html_tables(html_doc)
-    return (text, images, code_blocks, tables)
+    tables      = _extract_html_tables(html_doc)
+    kb_numbers  = _extract_kb_numbers(html_doc)
+    cvss_scores = _extract_cvss_scores(html_doc)
+    references  = _extract_references_section(html_doc, url)
+    return (text, images, code_blocks, tables, kb_numbers, cvss_scores, references)
 
 
 def _fetch_rss(source, since):
@@ -16087,7 +16202,8 @@ def _fetch_rss(source, since):
         # IPs / domains that live below the RSS preview. Also harvest the
         # in-article image URLs — they get forwarded to the LLM so it can
         # WebFetch screenshots / flow diagrams that pure text strip misses.
-        full_body, image_urls, code_blocks, tables = _fetch_full_body(link, fallback=rss_summary)
+        (full_body, image_urls, code_blocks, tables,
+         kb_numbers, cvss_scores, references) = _fetch_full_body(link, fallback=rss_summary)
         if full_body and full_body != rss_summary:
             fetched += 1
 
@@ -16107,6 +16223,13 @@ def _fetch_rss(source, since):
             # tened into the body text.
             "code_blocks": code_blocks,
             "tables": tables,
+            # Polish-pass extractions: KB / patch identifiers for SOC
+            # remediation correlation, CVSS scores for prioritisation,
+            # and the author-curated References section for higher-
+            # confidence starting points than blind WebSearch.
+            "kb_numbers": kb_numbers,
+            "cvss_scores": cvss_scores,
+            "references": references,
         })
     if fetched:
         print(f"    -> fetched {fetched} full article bodies")
@@ -16880,16 +17003,23 @@ _IOC_REQUIRED_KEYS = ("cves", "ips", "domains", "sha256", "sha1",
 
 
 def _format_extra_context(article: dict, max_code_blocks: int = 6,
-                          max_tables: int = 3) -> str:
+                          max_tables: int = 3, max_refs: int = 10,
+                          max_kbs: int = 12, max_cvss: int = 5) -> str:
     """Build the `<<EXTRA_CONTEXT>>` block injected into the IOC/UC/KC
-    prompts. Surfaces the code-blocks and tables extracted at fetch
-    time so the LLM sees verbatim payload syntax and structured IOC
-    cells alongside the prose body. Returns empty string when the
-    article has neither — keeps the prompt clean.
+    prompts. Surfaces the structured artefacts the HTML fetcher
+    extracted at parse time so the LLM sees them alongside the prose
+    body. Returns empty string when the article has nothing extra —
+    keeps the prompt clean.
+
+    Includes: code blocks, HTML tables, KB / patch numbers, CVSS
+    scores, and the author-curated References section.
     """
     code_blocks = (article.get("code_blocks") or [])[:max_code_blocks]
-    tables = (article.get("tables") or [])[:max_tables]
-    if not code_blocks and not tables:
+    tables      = (article.get("tables") or [])[:max_tables]
+    kb_numbers  = (article.get("kb_numbers") or [])[:max_kbs]
+    cvss_scores = (article.get("cvss_scores") or [])[:max_cvss]
+    references  = (article.get("references") or [])[:max_refs]
+    if not (code_blocks or tables or kb_numbers or cvss_scores or references):
         return ""
     parts = []
     if code_blocks:
@@ -16916,6 +17046,27 @@ def _format_extra_context(article: dict, max_code_blocks: int = 6,
             for r_idx, row in enumerate(rows[:12], 1):
                 parts.append(f"    Row {r_idx}: {' | '.join(str(c)[:120] for c in row[:8])}\n")
             parts.append("\n")
+    if kb_numbers:
+        parts.append(
+            "Microsoft KB / patch identifiers mentioned in the article "
+            "(remediation correlation):\n"
+        )
+        parts.append("  " + ", ".join(kb_numbers) + "\n\n")
+    if cvss_scores:
+        parts.append("CVSS scores mentioned in the article:\n")
+        parts.append("  " + ", ".join(cvss_scores) + "\n\n")
+    if references:
+        parts.append(
+            "Author-curated references / citations from the article "
+            "(higher-confidence starting points for corroboration than "
+            "blind WebSearch):\n"
+        )
+        for r in references:
+            url = r.get("url", "")[:200]
+            label = (r.get("label") or "")[:120]
+            parts.append(f"  - {label}\n    {url}\n" if label and label != url
+                         else f"  - {url}\n")
+        parts.append("\n")
     return "".join(parts) + "\n"
 
 
