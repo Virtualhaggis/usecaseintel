@@ -948,6 +948,23 @@ def _load_datadog_knowledge() -> str:
 _DATADOG_KNOWLEDGE_BLOCK = _load_datadog_knowledge()
 
 
+def _load_falcon_knowledge() -> str:
+    """Load knowledge/falcon_logscale_fundamentals.md — CrowdStrike
+    Falcon LogScale (NG-SIEM / Humio-style) query syntax and the
+    common event_simpleName schemas. Same pattern as the Datadog
+    loader; degrades gracefully when the file is missing."""
+    p = KNOWLEDGE_DIR / "falcon_logscale_fundamentals.md"
+    if p.exists():
+        try:
+            return p.read_text(encoding="utf-8")
+        except Exception:
+            return ""
+    return ""
+
+
+_FALCON_KNOWLEDGE_BLOCK = _load_falcon_knowledge()
+
+
 def _load_schema_block(filename: str) -> str:
     """Render a data_sources/*.json schema into a compact text block —
     one line per table, columns comma-separated. Injected into the LLM
@@ -1106,6 +1123,7 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the SAME detection but on Sentinel's schema. Use SecurityEvent / SigninLogs / AuditLogs / AzureActivity / OfficeActivity / CommonSecurityLog / Syslog / ASIM Im* tables. Use `TimeGenerated` (NOT Timestamp) — Sentinel column is TimeGenerated. If the detection genuinely cannot be expressed on Sentinel telemetry available in this tenant, leave as empty string and explain in `rationale`.>",
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule (https://sigmahq.io). Emit ONLY when the detection is single-event-shape (one selection block + condition). Skip Sigma — leave empty string — for: counts/thresholds, time-window correlation, cross-table joins, statistical anomaly, multi-stage chains. Required fields: title, id (UUID), description, references, author, date (YYYY/MM/DD), tags (`attack.t####`), logsource (category + product), detection (selection blocks + condition), level. Use logsource categories: process_creation, file_event, file_access, network_connection, registry_event, dns, image_load, process_access; or product+service for cloud (azure auditlogs / signinlogs / etc.).>",
       "datadog_query": "<Datadog Cloud SIEM logs query string (the bare query, not the full rule wrapper — we wrap it at export time). Use Datadog syntax: `source:<source>` to scope (cloudtrail, windows.security, windows.sysmon, windows.defender, azure.activity_logs, azure.activeDirectory, gcp.audit, kubernetes.audit, okta, linux.auditd, linux.syslog), `@field.path:value` for structured-log attributes, AND/OR/NOT and parentheses, wildcards `*`, CIDR for IPs (`@network.client.ip:81.171.16.0/24`), numeric ranges (`@status:>=400`). Reference the Datadog schema below — only use field paths that actually exist on Datadog's standard log format for the source you're querying. Leave empty string if the detection cannot be expressed on Datadog telemetry (e.g. detection that depends on Defender XDR signals not shipped to Datadog).>",
+      "falcon_logscale_query": "<CrowdStrike Falcon LogScale (NG-SIEM / Humio-style) query targeting the same detection on Falcon Data Replicator (FDR) telemetry. Lead with `#event_simpleName=X` (tagged-field lookup is the fast path; X is one of ProcessRollup2, SyntheticProcessRollup2, DnsRequest, NetworkConnectIP4, NetworkConnectIP6, FileWritten, FileOpenInfo, AsepValueUpdate, ScriptControlScanInfo, UserLogon, DllInjection — see Falcon LogScale schema reference at end of prompt). Pipe filters chain via `|`. Use regex `/pattern/i` for case-insensitive matches (e.g. `ImageFileName=/winrar\\.exe$/i`). Use `groupBy([fields], function=count())` for aggregations. Always reference SPECIFIC binaries/paths/cmdline strings from the article. Leave empty string if the detection genuinely cannot be expressed on Falcon EDR telemetry (e.g. depends solely on Azure SignInLogs or Office 365 EmailEvents the FDR doesn't ship).>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
       "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"],
       "kill_chain_phase": "<MITRE-style phase name from the kill-chain block below this article body — one of: initial_access, execution, persistence, privilege_escalation, defense_evasion, credential_access, discovery, lateral_movement, collection, command_and_control, exfiltration, impact. Pick the phase this UC's primary detection logic targets. Distinct from the existing legacy `kill_chain` field which uses Lockheed-Martin terminology — both fields MUST be present; this new one maps to MITRE phases for grounding.>",
@@ -1218,6 +1236,22 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 *\\dthelper.exe)`. A single-case match WILL miss legitimate hits.
 
 <<DATADOG_SCHEMA>>
+================================================================
+CROWDSTRIKE FALCON LOGSCALE SCHEMA REFERENCE
+================================================================
+Below is the Falcon LogScale (NG-SIEM / Humio) syntax + event-type
+schema. When you write `falcon_logscale_query`:
+
+  • Lead with `#event_simpleName=X` (tagged-field lookup, fast path).
+  • ONLY use event_simpleName values + fields listed in this reference.
+    Unknown event types and fields silently return zero rows.
+  • Case-insensitive regex via `/pattern/i` is the idiomatic way to
+    match binary names / paths. Glob wildcards (`*`) work inside
+    quoted strings but regex is preferred.
+  • Pipe filters chain via `|`. Use `groupBy([fields], function=...)`
+    for aggregations — never bare `groupBy` without a function.
+
+<<FALCON_SCHEMA>>
 ================================================================
 """
 
@@ -2075,7 +2109,8 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
-              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK))
+              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK)
+              .replace("<<FALCON_SCHEMA>>", _FALCON_KNOWLEDGE_BLOCK))
     raw = None
     if use_oauth:
         raw = _llm_call_via_oauth(prompt)
@@ -2263,6 +2298,7 @@ Reply with JSON only, no commentary, this exact shape:
       "sentinel_kql": "<full Microsoft Sentinel KQL targeting the same detection — uses `TimeGenerated`. Empty string if not expressible on Sentinel telemetry.>",
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule. Emit only for single-event-shape detections; empty string otherwise. See article-prompt guidance for the field schema.>",
       "datadog_query": "<Datadog Cloud SIEM logs query string targeting the same detection. Use `source:<source>` + `@field.path:value` syntax — see Datadog schema reference at the end of this prompt. Empty string if not expressible on Datadog telemetry.>",
+      "falcon_logscale_query": "<CrowdStrike Falcon LogScale query targeting the same detection on Falcon Data Replicator telemetry. Lead with `#event_simpleName=X` (ProcessRollup2 / DnsRequest / NetworkConnectIP4 / FileWritten / AsepValueUpdate / etc.). Pipe filters via `|`. Use regex `/pattern/i` for case-insensitive matches. See Falcon LogScale schema reference at the end of this prompt. Empty string if the detection isn't expressible on Falcon FDR telemetry.>",
       "confidence": "high | medium | low",
       "tier": "alerting | hunting",
       "fp_rate_estimate": "low | medium | high",
@@ -2358,6 +2394,20 @@ casings in an OR group, e.g. `@Image:(*\\DTHelper.exe OR
 
 <<DATADOG_SCHEMA>>
 ================================================================
+CROWDSTRIKE FALCON LOGSCALE SCHEMA REFERENCE
+================================================================
+Below is the Falcon LogScale (NG-SIEM / Humio) syntax + event-type
+schema. When you write `falcon_logscale_query`:
+
+  • Lead with `#event_simpleName=X` (tagged-field lookup, fast path).
+  • ONLY use event_simpleName values + fields listed in this reference.
+  • Case-insensitive regex via `/pattern/i` is the idiomatic way to
+    match binary names / paths.
+  • Pipe filters chain via `|`. Use `groupBy([fields], function=...)`
+    for aggregations.
+
+<<FALCON_SCHEMA>>
+================================================================
 """
 
 
@@ -2403,7 +2453,8 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
-              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK))
+              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK)
+              .replace("<<FALCON_SCHEMA>>", _FALCON_KNOWLEDGE_BLOCK))
     raw = None
     try:
         if use_oauth:
@@ -2457,6 +2508,8 @@ def _llm_generate_actor_ucs(actor: dict):
             "kql": d.get("defender_kql") or "",
             "sentinel_kql": d.get("sentinel_kql") or "",
             "sigma_yaml": d.get("sigma_yaml") or "",
+            "datadog_query": d.get("datadog_query") or "",
+            "falcon_logscale_query": d.get("falcon_logscale_query") or "",
             "rationale": (d.get("rationale") or "")[:400],
         })
     # Schema-field + Sigma validation per platform. Actor cache stores
@@ -2542,6 +2595,7 @@ def _uc_from_llm_dict(d: dict):
         sentinel_kql=(d.get("sentinel_kql") or ""),
         sigma_yaml=(d.get("sigma_yaml") or ""),
         datadog_query=(d.get("datadog_query") or ""),
+        falcon_logscale_query=(d.get("falcon_logscale_query") or ""),
         confidence=(d.get("confidence") or "Medium"),
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -2792,6 +2846,14 @@ class UseCase:
                                       # detection isn't expressible on Datadog
                                       # telemetry (e.g. only Microsoft-Defender-
                                       # specific tables are available).
+    falcon_logscale_query: str = ""   # CrowdStrike Falcon LogScale (NG-SIEM /
+                                      # Humio-style) query. Targets the FDR
+                                      # event_simpleName schemas (ProcessRollup2
+                                      # / DnsRequest / NetworkConnectIP4 /
+                                      # FileWritten / AsepValueUpdate / etc.).
+                                      # Empty when the detection isn't
+                                      # expressible on Falcon FDR telemetry
+                                      # (e.g. depends on Azure SignInLogs only).
     confidence: str = "Medium"
     # Tier classification:
     #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
@@ -2921,6 +2983,10 @@ def _load_uc_from_yaml(path):
     datadog_query = (doc.get("datadog_query") or "")
     if datadog_query and "datadog" not in impls:
         impls.add("datadog")
+    # CrowdStrike Falcon LogScale — same back-compat shape.
+    falcon_logscale_query = (doc.get("falcon_logscale_query") or "")
+    if falcon_logscale_query and "falcon" not in impls:
+        impls.add("falcon")
     confidence = doc.get("confidence", "Medium")
     # Tier: explicit field wins; otherwise infer from query shape.
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
@@ -2943,6 +3009,7 @@ def _load_uc_from_yaml(path):
         sentinel_kql=sentinel_kql,
         sigma_yaml=sigma_yaml,
         datadog_query=datadog_query,
+        falcon_logscale_query=falcon_logscale_query,
         confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -8125,6 +8192,10 @@ __HOME__
                   title="Show only articles whose UCs have a Datadog Cloud SIEM query">
             Datadog <span class="cnt" id="platCntDatadog"></span>
           </button>
+          <button class="src-chip plat-chip" data-platform="falcon"
+                  title="Show only articles whose UCs have a CrowdStrike Falcon LogScale query">
+            Falcon <span class="cnt" id="platCntFalcon"></span>
+          </button>
         </div>
       </div>
       <div class="ft-group ft-target">
@@ -8195,6 +8266,7 @@ __HOME__
         <button data-pl="sigma" title="Platform-neutral Sigma">Sigma</button>
         <button data-pl="spl" title="Splunk SPL">SPL</button>
         <button data-pl="datadog" title="Datadog Cloud SIEM logs query">Datadog</button>
+        <button data-pl="falcon" title="CrowdStrike Falcon LogScale query">Falcon</button>
       </div>
       <div class="matrix-stats" id="matrixStats"></div>
     </div>
@@ -8577,6 +8649,7 @@ const HUNT_PLATFORMS = [
   ["sigma",     "Sigma"],
   ["splunk",    "Splunk SPL"],
   ["datadog",   "Datadog"],
+  ["falcon",    "Falcon LogScale"],
 ];
 const HUNT_TYPES = [
   ["hashes",   "Hashes",            (i) => (i.sha256 || []).length + (i.sha1 || []).length + (i.md5 || []).length],
@@ -8664,6 +8737,23 @@ level: critical`;
 OR @file.hash.sha1:(${(ind.sha1 || []).map(v => `"${v}"`).join(" OR ") || '""'})
 OR @file.hash.md5:(${(ind.md5 || []).map(v => `"${v}"`).join(" OR ") || '""'})`;
     },
+    falcon: (ind) => {
+      const sha256 = ind.sha256 || [];
+      const sha1   = ind.sha1   || [];
+      const md5    = ind.md5    || [];
+      if (!sha256.length && !sha1.length && !md5.length) {
+        return '// no hashes extracted for this article';
+      }
+      const parts = [];
+      if (sha256.length) parts.push(`SHA256HashData=/^(${sha256.join('|')})$/i`);
+      if (sha1.length)   parts.push(`SHA1HashData=/^(${sha1.join('|')})$/i`);
+      if (md5.length)    parts.push(`MD5HashData=/^(${md5.join('|')})$/i`);
+      return `// Falcon LogScale hash hunt across process + file-write events.
+#event_simpleName=ProcessRollup2 OR #event_simpleName=FileWritten
+| (${parts.join(' OR ')})
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())
+| sort(_count, order=desc)`;
+    },
   },
   domains: {
     defender: (ind) => `let badDomains = dynamic([${_q(ind.domains || [])}]);
@@ -8716,6 +8806,17 @@ level: high`,
 ]`,
     datadog: (ind) => `@dns.question.name:(${(ind.domains || []).map(v => `"${v}"`).join(" OR ")})
 OR @http.url:(${(ind.domains || []).map(v => `"*${v}*"`).join(" OR ")})`,
+    falcon: (ind) => {
+      const domains = ind.domains || [];
+      if (!domains.length) return '// no domains extracted for this article';
+      // Escape regex meta in domain names (mostly dots).
+      const esc = domains.map(d => d.replace(/[.+?^${}()|[\]\\]/g, '\\$&'));
+      return `// Falcon LogScale DNS-request hunt for article domains.
+#event_simpleName=DnsRequest
+| DomainName=/(${esc.join('|')})/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=count())
+| sort(_count, order=desc)`;
+    },
   },
   ips: {
     defender: (ind) => `let badIps = dynamic([${_q(ind.ips || [])}]);
@@ -8752,6 +8853,17 @@ level: high`,
 | sort - count`,
     datadog: (ind) => `(@network.destination.ip:(${(ind.ips || []).map(v => `"${v}"`).join(" OR ")})
 OR @http.url_details.host:(${(ind.ips || []).map(v => `"${v}"`).join(" OR ")}))`,
+    falcon: (ind) => {
+      const ips = ind.ips || [];
+      if (!ips.length) return '// no IPs extracted for this article';
+      // Escape dots in IPs for regex anchors.
+      const esc = ips.map(ip => ip.replace(/\./g, '\\.'));
+      return `// Falcon LogScale outbound-connection hunt for article IPs.
+#event_simpleName=NetworkConnectIP4 OR #event_simpleName=NetworkConnectIP6
+| (RemoteAddressIP4=/^(${esc.join('|')})$/ OR RemoteAddressIP6=/^(${esc.join('|')})$/)
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())
+| sort(_count, order=desc)`;
+    },
   },
   cves: {
     defender: (ind) => `let cves = dynamic([${_q(ind.cves || [])}]);
@@ -8784,6 +8896,18 @@ level: medium`,
 | stats count by host, cve, severity
 | sort - count`,
     datadog: (ind) => `@cve.id:(${(ind.cves || []).map(v => `"${v}"`).join(" OR ")})`,
+    falcon: (ind) => {
+      const cves = ind.cves || [];
+      if (!cves.length) return '// no CVEs extracted for this article';
+      return `// Falcon FDR doesn't index CVE metadata directly. This hunts CVE
+// strings referenced in process command-lines or AMSI-captured scripts.
+// For full vulnerability inventory coverage use Falcon Spotlight, which
+// has the installed-software + KB mapping the FDR event stream lacks.
+#event_simpleName=ProcessRollup2 OR #event_simpleName=ScriptControlScanInfo
+| (CommandLine=/(${cves.join('|')})/i OR ScriptContent=/(${cves.join('|')})/i)
+| groupBy([aid, ComputerName, ImageFileName], function=count())
+| sort(_count, order=desc)`;
+    },
   },
   software: {
     defender: (ind) => {
@@ -8869,6 +8993,22 @@ search index=cmdb OR index=qualys OR index=tenable OR sourcetype=defender:tvm
         const versions = (s.versions || []).map(v => `"${v}"`).join(" OR ");
         return `(@host.software.name:"${s.name}" @host.software.version:(${versions}))`;
       }).join(" OR ");
+    },
+    falcon: (ind) => {
+      const sw = ind.software || [];
+      if (!sw.length) return '// no software versions extracted for this article';
+      // Falcon FDR's ProcessRollup2 carries the executed binary name +
+      // hash, but not the installed-product version directly (that
+      // lives in Falcon Spotlight). This hunt approximates by matching
+      // the product name against the binary path or command-line.
+      const names = sw.map(s => s.name.replace(/[.+?^${}()|[\]\\]/g, '\\$&')).join('|');
+      return `// Falcon LogScale process hunt for the named software.
+// Use Falcon Spotlight for full installed-software + version
+// inventory; FDR's process events carry the binary name at runtime.
+#event_simpleName=ProcessRollup2
+| (ImageFileName=/(${names})/i OR CommandLine=/(${names})/i)
+| groupBy([aid, ComputerName, ImageFileName, SHA256HashData], function=count())
+| sort(_count, order=desc)`;
     },
   },
 };
@@ -12670,6 +12810,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     skql = parameterize(uc.sentinel_kql, ind) if uc.sentinel_kql else ""
     sigma = uc.sigma_yaml or ""        # Sigma rules don't take parameter substitution
     ddog = parameterize(uc.datadog_query, ind) if uc.datadog_query else ""
+    falcon = parameterize(getattr(uc, "falcon_logscale_query", "") or "", ind) if getattr(uc, "falcon_logscale_query", "") else ""
     techs = " ".join(
         f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
         for tid, name in uc.techniques
@@ -12691,6 +12832,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         ("sentinel", "Sentinel KQL",     skql),
         ("sigma",    "Sigma",            sigma),
         ("datadog",  "Datadog",          ddog),
+        ("falcon",   "Falcon LogScale",  falcon),
         ("spl",      "Splunk SPL (CIM)", spl),
     ]
     populated = [(suffix, label, body) for suffix, label, body in platforms if body]
@@ -12751,6 +12893,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
             ("sigma" if getattr(uc, "sigma_yaml", "") else None),
             ("spl" if uc.splunk_spl else None),
             ("datadog" if getattr(uc, "datadog_query", "") else None),
+            ("falcon" if getattr(uc, "falcon_logscale_query", "") else None),
         ] if p
     }))
     # Target-surface tags (windows/linux/aws/...) — drives the Articles-tab
@@ -17808,7 +17951,7 @@ def _home_platform_counts(articles_meta: list) -> dict:
     for am in articles_meta:
         for _vname, uc in am.get("ucs") or []:
             seen[id(uc)] = uc
-    counts = {"splunk": 0, "defender": 0, "sentinel": 0, "sigma": 0, "datadog": 0}
+    counts = {"splunk": 0, "defender": 0, "sentinel": 0, "sigma": 0, "datadog": 0, "falcon": 0}
     for uc in seen.values():
         if (getattr(uc, "splunk_spl", "") or "").strip():
             counts["splunk"] += 1
@@ -17820,6 +17963,8 @@ def _home_platform_counts(articles_meta: list) -> dict:
             counts["sigma"] += 1
         if (getattr(uc, "datadog_query", "") or "").strip():
             counts["datadog"] += 1
+        if (getattr(uc, "falcon_logscale_query", "") or "").strip():
+            counts["falcon"] += 1
     return counts
 
 
@@ -18209,6 +18354,7 @@ def render_home_browse(platform_counts: dict) -> str:
         ("sigma",   "Sigma rules",            platform_counts.get("sigma", 0)),
         ("spl",     "Splunk SPL (CIM)",       platform_counts.get("splunk", 0)),
         ("datadog", "Datadog Cloud SIEM",     platform_counts.get("datadog", 0)),
+        ("falcon",  "CrowdStrike Falcon LogScale", platform_counts.get("falcon", 0)),
     ]
     plat_tiles = []
     for code, label, count in plats:
