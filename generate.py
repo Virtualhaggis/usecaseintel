@@ -1263,7 +1263,15 @@ except (ImportError, AttributeError):
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
-_OAUTH_UC_CALL_TIMEOUT_SEC = 180         # _llm_call_via_oauth: max_turns=4 + search
+_OAUTH_UC_CALL_TIMEOUT_SEC = 300         # UC call with WebSearch + WebFetch: bumped
+                                          # 180->300 on 2026-05-17 after the subprocess
+                                          # refactor confirmed legitimate calls were
+                                          # exceeding 180s on WebSearch-heavy articles.
+                                          # The SDK never got far enough for timeout to
+                                          # matter; under `claude -p` the wallclock for
+                                          # successful WebSearch + UC gen is 60-240s
+                                          # with a long tail. 300s catches the tail
+                                          # without blocking the breaker forever.
 _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
 
 # Per-kind circuit breakers with a rolling-window failure-rate trigger.
