@@ -14,10 +14,23 @@ The attack exploits CVE-2026-41940 , a vulnerability impacting cPanel and WebHos
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-41940`
-- **CVE:** `CVE-2026-23918`
-- **Domain (defanged):** `de.com`
+- **IPv4 (defanged):** `178.249.209.182`
+- **IPv4 (defanged):** `149.102.229.146`
 - **Domain (defanged):** `wrned.com`
+- **Domain (defanged):** `cp.dene.de.com`
 - **Domain (defanged):** `wpsock.com`
+- **MD5:** `2286f126ab4740ccf2595ad1fa0c615c`
+- **MD5:** `2de27ca8d97124adaf604b18161a441e`
+- **MD5:** `29222f5e73dd10088fcf1204aa21f87f`
+- **MD5:** `fb1bc3f935fdeb3555465070ba2db33c`
+- **MD5:** `45fc93426cf08f91c9f9de5f04a12263`
+- **MD5:** `711afb014f64c97d7b31685709c34ce7`
+- **MD5:** `22613c952459e65ce09fb6b5c1c03d47`
+- **MD5:** `9305b4ebbb4d39907cf36b62989a6af3`
+- **MD5:** `e49f68a363c867608972680799389daf`
+- **MD5:** `e1ec6ebb96cf87c785ee6a7da677c059`
+- **MD5:** `02a5990b11293236e01f174f5999df20`
+- **MD5:** `bae1f1bce7c82fa86f05b12e2e254cfc`
 
 ## MITRE ATT&CK Techniques
 
@@ -38,6 +51,7 @@ The attack exploits CVE-2026-41940 , a vulnerability impacting cPanel and WebHos
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1546** — Event Triggered Execution
 - **T1105** — Ingress Tool Transfer
@@ -54,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm Worm — Bun executes tanstack_runner.js / router_init.js via npm lifecycle hook
 
-`UC_106_10` · phase: **install** · confidence: **High**
+`UC_107_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +94,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud worm payload file written to disk (router_init.js / tanstack_runner.js by SHA-256 or name)
 
-`UC_106_11` · phase: **delivery** · confidence: **High**
+`UC_107_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +121,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud — Bun-spawned process touches AWS IMDS / K8s Vault / getsession.org during npm install
 
-`UC_106_12` · phase: **actions** · confidence: **Medium**
+`UC_107_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -431,12 +445,15 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `de.com`, `wrned.com`, `wpsock.com`
+  - IP / domain IOC(s): `178.249.209.182`, `149.102.229.146`, `wrned.com`, `cp.dene.de.com`, `wpsock.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-41940`, `CVE-2026-23918`
+  - CVE(s): `CVE-2026-41940`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `2286f126ab4740ccf2595ad1fa0c615c`, `2de27ca8d97124adaf604b18161a441e`, `29222f5e73dd10088fcf1204aa21f87f`, `fb1bc3f935fdeb3555465070ba2db33c`, `45fc93426cf08f91c9f9de5f04a12263`, `711afb014f64c97d7b31685709c34ce7`, `22613c952459e65ce09fb6b5c1c03d47`, `9305b4ebbb4d39907cf36b62989a6af3` _(+4 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

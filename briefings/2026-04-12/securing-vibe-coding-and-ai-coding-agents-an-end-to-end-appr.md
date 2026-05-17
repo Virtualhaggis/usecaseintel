@@ -13,7 +13,16 @@ Developer machines hold your most sensitive credentials such as GitHub crede…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `metrics-trustwallet.com`
+- **Domain (defanged):** `api.metrics-trustwallet.com`
+- **SHA256:** `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
+- **SHA256:** `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`
+- **SHA256:** `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`
+- **SHA256:** `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db`
+- **SHA256:** `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`
+- **SHA256:** `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`
+- **SHA256:** `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`
+- **SHA256:** `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`
 
 ## MITRE ATT&CK Techniques
 
@@ -24,12 +33,142 @@ Developer machines hold your most sensitive credentials such as GitHub crede…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1567** — Exfiltration Over Web Service
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1204.003** — User Execution: Malicious Image
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Trust Wallet Shai-Hulud C2 beacon to metrics-trustwallet.com
+
+`UC_294_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("metrics-trustwallet.com","api.metrics-trustwallet.com","*.metrics-trustwallet.com") OR All_Traffic.dest_ip="138.124.70.40") by All_Traffic.src host_dest=All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=t count from datamodel=Web.Web where (Web.url="*metrics-trustwallet.com*" OR Web.dest="138.124.70.40") by Web.src Web.url Web.user | `drop_dm_object_name(Web)` ] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+// Trust Wallet Shai-Hulud C2 — metrics-trustwallet.com / 138.124.70.40
+let c2_domains = dynamic(["metrics-trustwallet.com","api.metrics-trustwallet.com"]);
+let c2_ips = dynamic(["138.124.70.40"]);
+union isfuzzy=true
+  ( DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (c2_domains)
+       or RemoteIP in (c2_ips)
+    | project Timestamp, DeviceName, AccountName, RemoteUrl, RemoteIP, RemotePort,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, ReportId, Source = "DeviceNetworkEvents" ),
+  ( DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+    | where QueryName has_any (c2_domains)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              RemoteUrl = QueryName, RemoteIP = "", RemotePort = int(null),
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, ReportId, Source = "DeviceEvents-DNS" )
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud campaign malware SHA256 present on developer endpoint
+
+`UC_294_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | append [ | tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` ] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+// Shai-Hulud / Trust Wallet npm worm — known-malicious SHA256 sweep
+let ShaiHulud_SHA256 = dynamic([
+  "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09",
+  "b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777",
+  "dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c",
+  "4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db",
+  "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
+  "f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068",
+  "cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd",
+  "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a"
+]);
+union isfuzzy=true
+  ( DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (ShaiHulud_SHA256) or InitiatingProcessSHA256 in (ShaiHulud_SHA256)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256,
+              ProcessCommandLine, Source = "DeviceProcessEvents" ),
+  ( DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (ShaiHulud_SHA256)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessSHA256 = "", ProcessCommandLine = "", Source = "DeviceFileEvents" ),
+  ( DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA256 in (ShaiHulud_SHA256)
+    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
+              FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessSHA256 = "", ProcessCommandLine = "", Source = "DeviceImageLoadEvents" )
+| order by Timestamp desc
+```
+
+### [LLM] npm/node postinstall harvests developer credentials via trufflehog or direct secret-file read
+
+`UC_294_9` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node","npm.cmd","npm","yarn.cmd","yarn","pnpm.cmd","pnpm","npx.cmd","npx") AND ( Processes.process_name IN ("trufflehog","trufflehog.exe","trufflehog3") OR Processes.process IN ("*\\.ssh\\id_rsa*","*/.ssh/id_rsa*","*\\.aws\\credentials*","*/.aws/credentials*","*\\.npmrc*","*/.npmrc*","*\\.git-credentials*","*/.git-credentials*","*\\hosts.yml*","*/hosts.yml*") OR Processes.process IN ("*GITHUB_TOKEN*","*GH_TOKEN*","*NPM_TOKEN*","*AWS_SECRET*","*printenv*","*env | grep*","*Get-ChildItem Env:*") ) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+// Shai-Hulud-style npm postinstall credential harvest — child of node/npm/yarn reading developer secrets or running trufflehog
+let pkg_parents = dynamic(["node.exe","node","npm.cmd","npm","npm-cli.js","yarn.cmd","yarn","pnpm.cmd","pnpm","npx.cmd","npx","bun.exe","bun"]);
+let trufflehog = dynamic(["trufflehog.exe","trufflehog","trufflehog3","gitleaks.exe","gitleaks"]);
+let secret_path_tokens = dynamic([@"\.ssh\id_rsa","/.ssh/id_rsa",@"\.ssh\id_ed25519","/.ssh/id_ed25519",@"\.aws\credentials","/.aws/credentials",@"\.npmrc","/.npmrc",@"\.git-credentials","/.git-credentials",@"\gh\hosts.yml","/gh/hosts.yml",@"\Google\Chrome\User Data\Default\Login Data",@"\AppData\Roaming\npm\etc\npmrc"]);
+let env_tokens = dynamic(["GITHUB_TOKEN","GH_TOKEN","NPM_TOKEN","NODE_AUTH_TOKEN","AWS_SECRET_ACCESS_KEY","AWS_SESSION_TOKEN","OPENAI_API_KEY","CLOUDFLARE_API_TOKEN"]);
+let env_dumpers = dynamic(["printenv","env | grep","Get-ChildItem Env:","Get-ChildItem env:","$env:","set | findstr"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ (pkg_parents)
+   or InitiatingProcessParentFileName in~ (pkg_parents)
+| where FileName in~ (trufflehog)
+   or ProcessCommandLine has_any (secret_path_tokens)
+   or ProcessCommandLine has_any (env_tokens)
+   or ProcessCommandLine has_any (env_dumpers)
+| extend SignalReason = case(
+    FileName in~ (trufflehog), "trufflehog spawned by npm/node",
+    ProcessCommandLine has_any (secret_path_tokens), "secret file read from npm/node child",
+    ProcessCommandLine has_any (env_tokens), "credential env-var referenced from npm/node child",
+    ProcessCommandLine has_any (env_dumpers), "env dump from npm/node child",
+    "unknown")
+| project Timestamp, DeviceName, AccountName, SignalReason,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandparentImage = InitiatingProcessParentFileName,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256, ReportId
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -161,7 +300,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `metrics-trustwallet.com`, `api.metrics-trustwallet.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`, `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`, `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`, `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db`, `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`, `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`, `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`, `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

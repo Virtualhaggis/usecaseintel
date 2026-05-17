@@ -10,21 +10,7 @@ Back to Blog Threat Intel ForceMemo: Hundreds of GitHub Python Repos Compromised
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `45.32.151.157`
-- **IPv4 (defanged):** `45.32.150.97`
-- **IPv4 (defanged):** `217.69.11.57`
-- **IPv4 (defanged):** `217.69.11.99`
 - **IPv4 (defanged):** `217.69.0.159`
-- **IPv4 (defanged):** `45.76.44.240`
-- **Domain (defanged):** `api.mainnet-beta.solana.com`
-- **Domain (defanged):** `solana-mainnet.gateway.tatum.io`
-- **Domain (defanged):** `go.getblock.us`
-- **Domain (defanged):** `solana-rpc.publicnode.com`
-- **Domain (defanged):** `api.blockeden.xyz`
-- **Domain (defanged):** `solana.drpc.org`
-- **Domain (defanged):** `solana.leorpc.com`
-- **Domain (defanged):** `solana.api.onfinality.io`
-- **Domain (defanged):** `nodejs.org`
 
 ## MITRE ATT&CK Techniques
 
@@ -349,7 +335,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `45.32.151.157`, `45.32.150.97`, `217.69.11.57`, `217.69.11.99`, `217.69.0.159`, `45.76.44.240`, `api.mainnet-beta.solana.com`, `solana-mainnet.gateway.tatum.io` _(+7 more)_
+  - IP / domain IOC(s): `217.69.0.159`
 
 
 ## Why this matters

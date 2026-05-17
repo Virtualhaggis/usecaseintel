@@ -12,10 +12,11 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `onedown.gesecole.net`
 - **Domain (defanged):** `decoraat.net`
 - **Domain (defanged):** `decoorat.net`
+- **Domain (defanged):** `onedown.gesecole.net`
 - **Domain (defanged):** `onedow.gesecole.net`
+- **Domain (defanged):** `gesecole.net`
 - **SHA256:** `e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17`
 - **SHA256:** `46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc`
 - **SHA256:** `8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99`
@@ -24,6 +25,16 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 - **SHA256:** `5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc`
 - **SHA256:** `d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e`
 - **SHA256:** `6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7`
+- **SHA1:** `1151100a0aa1ed88f7897709444fd3b3b1044c10`
+- **SHA1:** `2336c9a20ecd53ec1be468282bae94c8160eb93a`
+- **SHA1:** `ad833604d230b241e180950980ea462b3812f82a`
+- **SHA1:** `d1a86ed06b18efef5ce724d2129cf1583b779b44`
+- **SHA1:** `f06da8e29c3f0fafabfc3a524ae8b21730b57ed3`
+- **MD5:** `381247c1d4c68a406237d7d3aa030930`
+- **MD5:** `769687f93869a70511aac1ef7c752455`
+- **MD5:** `7a75e713db41c28378e823322fdea0fd`
+- **MD5:** `9f331a11a054f33664fe86543fc34cf0`
+- **MD5:** `e7cb954f4bbdbadbd2c0206577621683`
 
 ## MITRE ATT&CK Techniques
 
@@ -437,10 +448,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `onedown.gesecole.net`, `decoraat.net`, `decoorat.net`, `onedow.gesecole.net`
+  - IP / domain IOC(s): `decoraat.net`, `decoorat.net`, `onedown.gesecole.net`, `onedow.gesecole.net`, `gesecole.net`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17`, `46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc`, `8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99`, `29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad`, `de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1`, `5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc`, `d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e`, `6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7`
+  - file hash IOC(s): `e7ed0cd4115f3ff35c38d36cc50c6a13eba2d845554439a36108789cd1e05b17`, `46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc`, `8421e7995778faf1f2a902fb2c51d85ae39481f443b7b3186068d5c33c472d99`, `29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad`, `de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1`, `5f9af68db10b029453264cfc9b8eee4265549a2855bb79668ccfc571fb11f5fc`, `d293ded5a63679b81556d2c622c78be6253f500b6751d4eeb271e6500a23b21e`, `6df8649bf4e233ee86a896ee8e5a3b3179c168ef927ac9283b945186f8629ee7` _(+10 more)_
 
 
 ## Why this matters

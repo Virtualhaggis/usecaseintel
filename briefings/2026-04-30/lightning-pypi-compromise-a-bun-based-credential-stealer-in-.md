@@ -13,9 +13,12 @@ April 30, 2026
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `22evxpggnkyrxpluewqsrv5j4jtde6hut2peq3w44d6ase676qlkoead.onion`
 - **SHA256:** `8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2`
 - **SHA256:** `5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1`
 - **SHA256:** `56070a9d8de0c0ffb1ec5c309953cf4679432df5a78df9aeb020fbb73d2be9fb`
+- **SHA1:** `f1b3e7b3eec3294c4d6b5f87854a52471f03997f`
+- **MD5:** `40d0f21b64ec8fb3a7a1959897252e09`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,6 +30,7 @@ April 30, 2026
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1105** — Ingress Tool Transfer
@@ -42,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] lightning PyPI compromise artifacts: start.py / router_runtime.js write
 
-`UC_233_7` · phase: **install** · confidence: **High**
+`UC_233_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +72,7 @@ DeviceFileEvents
 
 ### [LLM] Python child process executing lightning _runtime/start.py bootstrapper
 
-`UC_233_8` · phase: **install** · confidence: **High**
+`UC_233_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud style repository poisoning — .claude/router_runtime.js drop
 
-`UC_233_9` · phase: **actions** · confidence: **High**
+`UC_233_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +314,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — lightning PyPI Compromise: A Bun-Based Credential Stealer in Python
 
-`UC_233_6` · phase: **exploit** · confidence: **High**
+`UC_233_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -361,10 +365,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `22evxpggnkyrxpluewqsrv5j4jtde6hut2peq3w44d6ase676qlkoead.onion`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2`, `5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1`, `56070a9d8de0c0ffb1ec5c309953cf4679432df5a78df9aeb020fbb73d2be9fb`
+  - file hash IOC(s): `8046a11187c135da6959862ff3846e99ad15462d2ec8a2f77a30ad53ebd5dcf2`, `5f5852b5f604369945118937b058e49064612ac69826e0adadca39a357dfb5b1`, `56070a9d8de0c0ffb1ec5c309953cf4679432df5a78df9aeb020fbb73d2be9fb`, `f1b3e7b3eec3294c4d6b5f87854a52471f03997f`, `40d0f21b64ec8fb3a7a1959897252e09`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

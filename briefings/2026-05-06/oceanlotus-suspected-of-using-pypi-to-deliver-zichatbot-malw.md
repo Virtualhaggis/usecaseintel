@@ -28,27 +28,8 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `tutamail.com`
-- **Domain (defanged):** `proton.me`
 - **Domain (defanged):** `helper.zulipchat.com`
 - **MD5:** `48be833b0b0ca1ad3cf99c66dc89c3f4`
-- **MD5:** `5152410aeef667ffaf42d40746af4d84`
-- **MD5:** `0a5a06fa2e74a57fd5ed8e85f04a483a`
-- **MD5:** `e4a0ad38fd18a0e11199d1c52751908b`
-- **MD5:** `5598baa59c716590d8841c6312d8349e`
-- **MD5:** `968782b4feb4236858e3253f77ecf4b0`
-- **MD5:** `b55b6e364be44f27e3fecdce5ad69eca`
-- **MD5:** `02f4701559fc40067e69bb426776a54f`
-- **MD5:** `e200f2f6a2120286f9056743bc94a49d`
-- **MD5:** `22538214a3c917ff3b13a9e2035ca521`
-- **MD5:** `ba2f1868f2af9e191ebf47a5fab5cbab`
-- **MD5:** `c33782c94c29dd268a42cbe03542bca5`
-- **MD5:** `454b85dc32dc8023cd2be04e4501f16a`
-- **MD5:** `fce65c540d8186d9506e2f84c38a57c4`
-- **MD5:** `652f4da6c467838957de19eed40d39da`
-- **MD5:** `1995682d600e329b7833003a01609252`
-- **MD5:** `38b75af6cbdb60127decd59140d10640`
-- **MD5:** `a26019b68ef060e593b8651262cbd0f6`
 
 ## MITRE ATT&CK Techniques
 
@@ -476,10 +457,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tutamail.com`, `proton.me`, `helper.zulipchat.com`
+  - IP / domain IOC(s): `helper.zulipchat.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `48be833b0b0ca1ad3cf99c66dc89c3f4`, `5152410aeef667ffaf42d40746af4d84`, `0a5a06fa2e74a57fd5ed8e85f04a483a`, `e4a0ad38fd18a0e11199d1c52751908b`, `5598baa59c716590d8841c6312d8349e`, `968782b4feb4236858e3253f77ecf4b0`, `b55b6e364be44f27e3fecdce5ad69eca`, `02f4701559fc40067e69bb426776a54f` _(+10 more)_
+  - file hash IOC(s): `48be833b0b0ca1ad3cf99c66dc89c3f4`
 
 
 ## Why this matters

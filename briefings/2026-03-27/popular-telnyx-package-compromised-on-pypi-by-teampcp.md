@@ -14,7 +14,6 @@ The pattern is consistent: steal credentials from a trusted security to…
 - **CVE:** `CVE-2026-33634`
 - **IPv4 (defanged):** `83.142.209.203`
 - **Domain (defanged):** `checkmarx.zone`
-- **Domain (defanged):** `models.litellm.cloud`
 - **SHA256:** `7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9`
 - **SHA256:** `cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3`
 
@@ -309,7 +308,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `83.142.209.203`, `checkmarx.zone`, `models.litellm.cloud`
+  - IP / domain IOC(s): `83.142.209.203`, `checkmarx.zone`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-33634`

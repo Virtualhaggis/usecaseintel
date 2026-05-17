@@ -8,6 +8,9 @@ _775 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-17
+- [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
+
 ## 2026-05-16
 - [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
 - [critical linux kernel flaw ssh keysign pwn exposes ssh keys ](./2026-05-16/critical-linux-kernel-flaw-ssh-keysign-pwn-exposes-ssh-keys-.md)
@@ -31,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 - [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)
-- [shai hulud worm steals npm github aws and kubernetes secrets](./2026-05-15/shai-hulud-worm-steals-npm-github-aws-and-kubernetes-secrets.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
 
@@ -158,7 +160,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 54pg 9963 v8vg compromised version of int](./2026-05-07/ghsa-critical-ghsa-54pg-9963-v8vg-compromised-version-of-int.md)
 - [ghsa critical ghsa cwfq rfcr 8hmp zebra s transparent sighas](./2026-05-07/ghsa-critical-ghsa-cwfq-rfcr-8hmp-zebra-s-transparent-sighas.md)
 - [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
-- [pan os rce exploit under active use enabling root access and](./2026-05-07/pan-os-rce-exploit-under-active-use-enabling-root-access-and.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [pcpjack credential stealer exploits 5 cves to spread worm li](./2026-05-07/pcpjack-credential-stealer-exploits-5-cves-to-spread-worm-li.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
@@ -460,6 +461,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-02-15
 - [10 000 open source projects now secured by harden runner com](./2026-02-15/10-000-open-source-projects-now-secured-by-harden-runner-com.md)
 - [20 popular npm packages compromised chalk debug strip ansi c](./2026-02-15/20-popular-npm-packages-compromised-chalk-debug-strip-ansi-c.md)
+- [2024 in review the evolution of ci cd security what s next](./2026-02-15/2024-in-review-the-evolution-of-ci-cd-security-what-s-next.md)
 
 ## 2026-02-13
 - [cisa kev cve 2026 1731 beyondtrust remote support rs and pri](./2026-02-13/cisa-kev-cve-2026-1731-beyondtrust-remote-support-rs-and-pri.md)

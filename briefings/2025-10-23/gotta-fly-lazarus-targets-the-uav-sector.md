@@ -33,31 +33,42 @@ ESET researchers have recently observed a new instance of Operation DreamJob –
 - **IPv4 (defanged):** `75.102.23.3`
 - **IPv4 (defanged):** `152.42.239.211`
 - **IPv4 (defanged):** `95.217.119.214`
-- **Domain (defanged):** `www.scoringmnmathleague.org`
 - **Domain (defanged):** `coralsunmarine.com`
 - **Domain (defanged):** `kazitradebd.com`
 - **Domain (defanged):** `oldlinewoodwork.com`
-- **Domain (defanged):** `www.mnmathleague.org`
+- **Domain (defanged):** `mnmathleague.org`
 - **Domain (defanged):** `pierregems.com`
-- **Domain (defanged):** `www.scgestor.com.br`
+- **Domain (defanged):** `scgestor.com.br`
 - **Domain (defanged):** `galaterrace.com`
 - **Domain (defanged):** `ecudecode.mx`
-- **Domain (defanged):** `www.anvil.org.ph`
+- **Domain (defanged):** `anvil.org.ph`
 - **Domain (defanged):** `partnerls.pl`
-- **Domain (defanged):** `co.uk`
-- **Domain (defanged):** `com.ar`
-- **Domain (defanged):** `mediostresbarbas.com.ar`
-- **Domain (defanged):** `www.bandarpowder.com`
-- **Domain (defanged):** `spaincaramoon.com`
-- **Domain (defanged):** `nukesped.th`
-- **Domain (defanged):** `www.scgestor.com`
-- **Domain (defanged):** `www.anvil.org`
-- **Domain (defanged):** `nazwa.pl`
-- **Domain (defanged):** `webdock.io`
 - **Domain (defanged):** `trainingpharmacist.co.uk`
-- **Domain (defanged):** `deft.com`
-- **Domain (defanged):** `mediostresbarbas.com`
+- **Domain (defanged):** `mediostresbarbas.com.ar`
+- **Domain (defanged):** `bandarpowder.com`
+- **Domain (defanged):** `spaincaramoon.com`
+- **SHA256:** `c39ecc7d9f1e225a37304345731fffe72cdb95b21aeb06aa6022f6d338777012`
+- **SHA256:** `083d4a4ef6267c9a0ab57f1e5a2ed45ff67a0b4db83bbd43563458a223781120`
+- **SHA256:** `503b3ece42f540409bcb2f0abc7584e557a0d120b7ba9854b4548496b2546d34`
+- **SHA256:** `98d1a10521a4dd968d75e2860e523311b5851737795c84943c380870794c851a`
+- **SHA256:** `f9a9c1a13ed74aebca0652b102755833fc084e221d731b5e7ae76ff136f85864`
+- **SHA1:** `28978E987BC59E75CA22562924EAB93355CF679E`
+- **SHA1:** `5E5BBA521F0034D342CC26DB8BCFECE57DBD4616`
+- **SHA1:** `B12EEB595FEEC2CFBF9A60E1CC21A14CE8873539`
+- **SHA1:** `26AA2643B07C48CB6943150ADE541580279E8E0E`
+- **SHA1:** `0CB73D70FD4132A4FF5493DAA84AAE839F6329D5`
 - **SHA1:** `03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4`
+- **SHA1:** `71D0DDB7C6CAC4BA2BDE679941FA92A31FBEC1FF`
+- **SHA1:** `87B2DF764455164C6982BA9700F27EA34D3565DF`
+- **SHA1:** `E670C4275EC24D403E0D4DE7135CBCF1D54FF09C`
+- **SHA1:** `5B85DD485FD516AA1F4412801897A40A9BE31837`
+- **SHA1:** `B68C49841DC48E3672031795D85ED24F9F619782`
+- **SHA1:** `AC16B1BAEDE349E4824335E0993533BF4FC116B3`
+- **SHA1:** `2AA341B03FAC3054C57640122EA849BC0C2B6AF6`
+- **SHA1:** `CB7834BE7DE07F89352080654F7FEB574B42A2B8`
+- **SHA1:** `262B4ED6AC6A977135DECA5B0872B7D6D676083A`
+- **SHA1:** `086816466D9D9C12FCADA1C872B8C0FF0A5FC611`
+- **SHA1:** `2A2B20FDDD65BA28E7C57AC97A158C15B61A7B05`
 
 ## MITRE ATT&CK Techniques
 
@@ -318,10 +329,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `23.111.133.162`, `104.21.80.1`, `70.32.24.131`, `185.148.129.24`, `66.29.144.75`, `108.181.92.71`, `104.247.162.67`, `193.39.187.165` _(+30 more)_
+  - IP / domain IOC(s): `23.111.133.162`, `104.21.80.1`, `70.32.24.131`, `185.148.129.24`, `66.29.144.75`, `108.181.92.71`, `104.247.162.67`, `193.39.187.165` _(+20 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `03D9B8F0FCF9173D2964CE7173D21E681DFA8DA4`
+  - file hash IOC(s): `c39ecc7d9f1e225a37304345731fffe72cdb95b21aeb06aa6022f6d338777012`, `083d4a4ef6267c9a0ab57f1e5a2ed45ff67a0b4db83bbd43563458a223781120`, `503b3ece42f540409bcb2f0abc7584e557a0d120b7ba9854b4548496b2546d34`, `98d1a10521a4dd968d75e2860e523311b5851737795c84943c380870794c851a`, `f9a9c1a13ed74aebca0652b102755833fc084e221d731b5e7ae76ff136f85864`, `28978E987BC59E75CA22562924EAB93355CF679E`, `5E5BBA521F0034D342CC26DB8BCFECE57DBD4616`, `B12EEB595FEEC2CFBF9A60E1CC21A14CE8873539` _(+14 more)_
 
 
 ## Why this matters

@@ -28,12 +28,106 @@ OpenAI has disclosed that two of its employee devices in its corporate environme
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1008** — Fallback Channels
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1552.007** — Unsecured Credentials: Container API
+- **T1105** — Ingress Tool Transfer
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mini Shai-Hulud Worm C2 Beacon to 83.142.209.194 (TanStack/Mistral AI Supply Chain)
+
+`UC_23_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest_url) as dest_url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="83.142.209.194" OR All_Traffic.dest_ip="83.142.209.194") by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.194"
+   or RemoteUrl has_any ("83.142.209.194/v1/weights", "83.142.209.194/v1/models", "83.142.209.194/audio.mp3", "//83.142.209.194")
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessSHA256, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] FIRESCALE Fallback C2 Discovery via GitHub Commit-Search API
+
+`UC_23_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.http_user_agent) as user_agent values(Web.process) as process from datamodel=Web.Web where Web.url="*api.github.com/search/commits*" AND (Web.url="*FIRESCALE*" OR Web.url="*q=FIRESCALE*" OR Web.url="*q%3DFIRESCALE*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _developer_clients = dynamic(["code.exe","devenv.exe","webstorm64.exe","webstorm.exe","idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","sublime_text.exe","atom.exe","gh.exe","git.exe","github desktop.exe","code-insiders.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "api.github.com"
+| where RemoteUrl has "search/commits"
+| where RemoteUrl has "FIRESCALE"
+    or InitiatingProcessFileName in~ ("python.exe","python3.exe","python","python3","node.exe","node","curl.exe","curl","wget.exe","wget","powershell.exe","pwsh.exe","npm","yarn","pip","pip3")
+| where InitiatingProcessFileName !in~ (_developer_clients)
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteIP, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] Mini Shai-Hulud Worm Credential-Harvest Drop (/tmp/transformers.pyz + Post-Install AWS/SSH/Docker Read)
+
+`UC_23_8` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path="/tmp/transformers.pyz" OR Filesystem.file_name="transformers.pyz" OR Filesystem.file_name="pgmonitor.py" OR Filesystem.file_name="pgsql-monitor.service" OR Filesystem.file_path="*/etc/systemd/system/pgsql-monitor.service") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let FileIOCs = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified")
+    | where FolderPath =~ "/tmp/transformers.pyz"
+        or FileName in~ ("transformers.pyz", "pgmonitor.py", "pgsql-monitor.service")
+    | project Timestamp, DeviceName, DeviceId, EvidenceType="FileArtifact",
+              FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath, InitiatingProcessAccountName,
+              InitiatingProcessParentFileName;
+let PostInstallCredRead = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("npm","pip","pip3","yarn","pnpm","node","python","python3")
+        or InitiatingProcessParentFileName in~ ("npm","pip","pip3","yarn","pnpm","node")
+    | where FileName in~ ("python","python3","node","sh","bash","cat","curl","wget")
+        or ProcessCommandLine has_any ("/.aws/credentials","/.aws/config","/.ssh/id_","/.ssh/config","/var/run/docker.sock","transformers.pyz")
+    | where ProcessCommandLine has_any ("/.aws/credentials","/.aws/config","/.ssh/id_","/.ssh/config","/var/run/docker.sock","transformers.pyz",".env","environ")
+    | project Timestamp, DeviceName, DeviceId, EvidenceType="PostInstallCredRead",
+              FileName=FileName, FolderPath, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessFolderPath=InitiatingProcessFolderPath,
+              InitiatingProcessAccountName=AccountName,
+              InitiatingProcessParentFileName=InitiatingProcessParentFileName,
+              SHA256=SHA256;
+union FileIOCs, PostInstallCredRead
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -252,4 +346,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

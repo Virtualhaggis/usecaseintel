@@ -26,12 +26,123 @@ Codenamed Fragnesia , the security vulnerability is tracked as CVE-2026-46300 (C
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1068** — Exploitation for Privilege Escalation
+- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
+- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Microsoft Defender AV signature for DirtyFrag/Fragnesia kernel exploit family
+
+`UC_68_6` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Alerts.signature) as signatures values(Alerts.severity) as severity from datamodel=Alerts.Alerts where (Alerts.signature="*DirtyFrag*" OR Alerts.signature="*Fragnesia*" OR Alerts.signature="Trojan:Linux/DirtyFrag*") by Alerts.dest Alerts.user Alerts.vendor | `drop_dm_object_name(Alerts)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let DirtyFragSigs = dynamic(["DirtyFrag","Fragnesia","Trojan:Linux/DirtyFrag.Z!MTB","Trojan:Linux/DirtyFrag.DA!MTB"]);
+let HitAlerts = AlertInfo
+| where Timestamp > ago(14d)
+| where Title has_any (DirtyFragSigs) or Category in ("Execution","PrivilegeEscalation")
+| where ServiceSource =~ "Microsoft Defender for Endpoint"
+| project AlertId, AlertTitle = Title, Severity, Category;
+HitAlerts
+| join kind=inner (
+    AlertEvidence
+    | where Timestamp > ago(14d)
+  ) on AlertId
+| where AlertTitle has_any (DirtyFragSigs) or ThreatFamily has_any (DirtyFragSigs)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            Devices = make_set_if(DeviceName, EntityType == "Machine"),
+            Users = make_set_if(strcat(AccountDomain, "\\", AccountName), EntityType == "User"),
+            Files = make_set_if(FileName, EntityType == "File"),
+            CmdLines = make_set_if(ProcessCommandLine, EntityType == "Process"),
+            ThreatFamilies = make_set(ThreatFamily)
+            by AlertId, AlertTitle, Severity
+| order by LastSeen desc
+```
+
+### [LLM] Linux /usr/bin/su invoked by exploit binary in /tmp or /dev/shm (Fragnesia page-cache PoC pattern)
+
+`UC_68_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process) as parent_cmds values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where Processes.os="Linux" AND Processes.process_path="/usr/bin/su" AND Processes.user!="root" AND Processes.user!="" AND (Processes.parent_process_path="/tmp/*" OR Processes.parent_process_path="/dev/shm/*" OR Processes.parent_process_path="/var/tmp/*" OR Processes.parent_process_path="/home/*") AND Processes.parent_process_name!="bash" AND Processes.parent_process_name!="sh" AND Processes.parent_process_name!="zsh" AND Processes.parent_process_name!="dash" AND Processes.parent_process_name!="fish" AND Processes.parent_process_name!="ksh" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LinuxHosts = DeviceInfo
+| where Timestamp > ago(1d)
+| where OSPlatform =~ "Linux"
+| distinct DeviceId;
+let ShellNames = dynamic(["bash","sh","zsh","dash","fish","ksh","ash","tcsh","csh"]);
+let SuspectParents = dynamic(["/tmp/","/dev/shm/","/var/tmp/","/home/"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where DeviceId in (LinuxHosts)
+| where FolderPath =~ "/usr/bin/su" or (FileName =~ "su" and FolderPath endswith "/bin/su")
+| where InitiatingProcessAccountName !in ("root","","systemd","systemd-network")
+| where InitiatingProcessFolderPath has_any (SuspectParents)
+| where InitiatingProcessFileName !in~ (ShellNames)
+| where InitiatingProcessFileName !in~ ("sudo","login","sshd","systemd","cron","crond","at","atd","runuser","machinectl","docker","podman","containerd-shim","runc")
+| project Timestamp, DeviceName, DeviceId,
+          ExploitingUser = InitiatingProcessAccountName,
+          ParentBinary = InitiatingProcessFolderPath,
+          ParentName = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentSHA256 = InitiatingProcessSHA256,
+          SuCmd = ProcessCommandLine,
+          SuAccount = AccountName
+| order by Timestamp desc
+```
+
+### [LLM] Fragnesia/Dirty Frag attack-surface activation: esp4, esp6, or rxrpc kernel module loaded from non-init context
+
+`UC_68_8` · phase: **weapon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents values(Processes.user) as users from datamodel=Endpoint.Processes where Processes.os="Linux" AND (Processes.process_name="modprobe" OR Processes.process_name="insmod" OR Processes.process_name="kmod") AND (Processes.process="*esp4*" OR Processes.process="*esp6*" OR Processes.process="*rxrpc*") AND Processes.parent_process_name!="systemd" AND Processes.parent_process_name!="udevd" AND Processes.parent_process_name!="systemd-udevd" AND Processes.parent_process_name!="NetworkManager" AND Processes.parent_process_name!="ipsec" AND Processes.parent_process_name!="charon" AND Processes.parent_process_name!="pluto" AND Processes.parent_process_name!="swanctl" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LinuxHosts = DeviceInfo
+| where Timestamp > ago(1d)
+| where OSPlatform =~ "Linux"
+| distinct DeviceId;
+let IPsecParents = dynamic(["systemd","systemd-udevd","udevd","NetworkManager","ipsec","charon","pluto","swanctl","strongswan","libreswan","wg-quick","openafs","cron","crond"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where DeviceId in (LinuxHosts)
+| where FileName in~ ("modprobe","insmod","kmod")
+| where ProcessCommandLine has_any ("esp4","esp6","rxrpc")
+| where InitiatingProcessFileName !in~ (IPsecParents)
+| where InitiatingProcessParentFileName !in~ (IPsecParents)
+| extend ModuleLoaded = case(
+    ProcessCommandLine has "esp4", "esp4",
+    ProcessCommandLine has "esp6", "esp6",
+    ProcessCommandLine has "rxrpc", "rxrpc",
+    "unknown")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          LoaderTool = FileName,
+          LoaderCmd = ProcessCommandLine,
+          ParentName = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentPath = InitiatingProcessFolderPath,
+          Grandparent = InitiatingProcessParentFileName,
+          ModuleLoaded
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -207,7 +318,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_67_5` · phase: **install** · confidence: **High**
+`UC_68_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -248,4 +359,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -17,7 +17,6 @@ Somebody poisoned a trusted download again, somebody else turned cloud servers i
 - **CVE:** `CVE-2026-0300`
 - **CVE:** `CVE-2026-29014`
 - **CVE:** `CVE-2026-22679`
-- **CVE:** `CVE-2026-4670`
 - **CVE:** `CVE-2026-5174`
 - **CVE:** `CVE-2026-43284`
 - **CVE:** `CVE-2026-43500`
@@ -30,42 +29,25 @@ Somebody poisoned a trusted download again, somebody else turned cloud servers i
 - **CVE:** `CVE-2026-23918`
 - **CVE:** `CVE-2026-42778`
 - **CVE:** `CVE-2026-42779`
-- **CVE:** `CVE-2026-2005`
-- **CVE:** `CVE-2026-2006`
 - **CVE:** `CVE-2026-32710`
-- **CVE:** `CVE-2026-23863`
-- **CVE:** `CVE-2026-23866`
 - **CVE:** `CVE-2026-29146`
 - **CVE:** `CVE-2026-1046`
 - **CVE:** `CVE-2026-0073`
 - **CVE:** `CVE-2026-20188`
-- **CVE:** `CVE-2026-20185`
 - **CVE:** `CVE-2026-20034`
 - **CVE:** `CVE-2026-20035`
-- **CVE:** `CVE-2026-7896`
-- **CVE:** `CVE-2026-7897`
-- **CVE:** `CVE-2026-7898`
 - **CVE:** `CVE-2026-5865`
 - **CVE:** `CVE-2025-68670`
 - **CVE:** `CVE-2026-23864`
-- **CVE:** `CVE-2026-23870`
-- **CVE:** `CVE-2026-44575`
-- **CVE:** `CVE-2026-44579`
-- **CVE:** `CVE-2026-44574`
-- **CVE:** `CVE-2026-44578`
-- **CVE:** `CVE-2026-44573`
 - **CVE:** `CVE-2026-26129`
-- **CVE:** `CVE-2026-26164`
 - **CVE:** `CVE-2026-33111`
 - **CVE:** `CVE-2026-44843`
 - **CVE:** `CVE-2026-33309`
-- **Domain (defanged):** `claude-pro.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
@@ -555,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ⚡ Weekly Recap: Linux Rootkit, macOS Crypto Stealer, WebSocket Skimmers and More
 
-`UC_114_16` · phase: **exploit** · confidence: **High**
+`UC_115_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -606,13 +588,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `claude-pro.com`
-
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-6973`, `CVE-2026-0300`, `CVE-2026-29014`, `CVE-2026-22679`, `CVE-2026-4670`, `CVE-2026-5174`, `CVE-2026-43284`, `CVE-2026-43500` _(+38 more)_
+  - CVE(s): `CVE-2026-6973`, `CVE-2026-0300`, `CVE-2026-29014`, `CVE-2026-22679`, `CVE-2026-5174`, `CVE-2026-43284`, `CVE-2026-43500`, `CVE-2026-7482` _(+22 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

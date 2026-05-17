@@ -18,33 +18,11 @@ ESET researchers uncovered a multiplatform supply-chain attack by North Korea-al
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `39.106.249.68`
-- **IPv4 (defanged):** `211.239.117.117`
-- **IPv4 (defanged):** `114.108.128.157`
-- **IPv4 (defanged):** `221.143.43.214`
-- **IPv4 (defanged):** `222.231.2.20`
-- **IPv4 (defanged):** `222.231.2.23`
-- **IPv4 (defanged):** `222.231.2.41`
-- **Domain (defanged):** `www.sqgame.net`
-- **Domain (defanged):** `xiazai.sqgame.com.cn`
-- **Domain (defanged):** `zohomail.com`
-- **Domain (defanged):** `ipinfo.io`
+- **Domain (defanged):** `sqgame.net`
 - **Domain (defanged):** `sqgame.com.cn`
-- **Domain (defanged):** `1980food.co.kr`
-- **Domain (defanged):** `inodea.com`
-- **Domain (defanged):** `www.lawwell.co.kr`
-- **Domain (defanged):** `colorncopy.co.kr`
-- **Domain (defanged):** `swr.co.kr`
-- **Domain (defanged):** `sejonghaeun.com`
-- **Domain (defanged):** `cndsoft.co.kr`
-- **Domain (defanged):** `sqgame.com`
-- **Domain (defanged):** `1980food.co`
-- **Domain (defanged):** `www.lawwell.co`
-- **Domain (defanged):** `colorncopy.co`
-- **Domain (defanged):** `swr.co`
-- **Domain (defanged):** `cndsoft.co`
-- **SHA1:** `B06110E0FEB7592872E380B7E3B8F77D80DD1108`
-- **MD5:** `A8FE823D451D636D0A0366C0629EF5C3`
+- **Domain (defanged):** `xiazai.sqgame.com.cn`
+- **SHA1:** `03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF`
+- **SHA1:** `FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9`
 
 ## MITRE ATT&CK Techniques
 
@@ -330,10 +308,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `39.106.249.68`, `211.239.117.117`, `114.108.128.157`, `221.143.43.214`, `222.231.2.20`, `222.231.2.23`, `222.231.2.41`, `www.sqgame.net` _(+17 more)_
+  - IP / domain IOC(s): `sqgame.net`, `sqgame.com.cn`, `xiazai.sqgame.com.cn`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `B06110E0FEB7592872E380B7E3B8F77D80DD1108`, `A8FE823D451D636D0A0366C0629EF5C3`
+  - file hash IOC(s): `03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF`, `FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9`
 
 
 ## Why this matters

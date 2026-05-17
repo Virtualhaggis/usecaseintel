@@ -38,12 +38,99 @@ Originally launched as “Clawdbot” in late 2025, OpenClaw connects la…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1083** — File and Directory Discovery
+- **T1006** — Direct Volume Access
+- **T1547** — Boot or Logon Autostart Execution
+- **T1546** — Event Triggered Execution
+- **T1554** — Compromise Host Software Binary
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] OpenShell sandbox heredoc env-var leak (Claw Chain CVE-2026-44115)
+
+`UC_18_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("openclaw","openshell","clawdbot") OR Processes.parent_process_path="/opt/openclaw/*" OR Processes.parent_process_path="/usr/lib/openclaw/*" OR Processes.parent_process_path="/var/lib/openclaw/*") AND Processes.process_name IN ("sh","bash","dash","zsh","ash") AND Processes.process="*<<*" AND (Processes.process="*$AWS_*" OR Processes.process="*$AZURE_*" OR Processes.process="*$OPENAI_*" OR Processes.process="*$ANTHROPIC_*" OR Processes.process="*$TOKEN*" OR Processes.process="*$API_KEY*" OR Processes.process="*$SECRET*" OR Processes.process="*$BEARER*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.kube/config*" OR Processes.process="*/.env*" OR Processes.process="*printenv*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
+    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
+| where FileName in~ ("sh","bash","dash","zsh","ash")
+| where ProcessCommandLine has "<<"
+| where ProcessCommandLine has_any ("$AWS_","$AZURE_","$GCP_","$OPENAI_","$ANTHROPIC_","$TOKEN","$API_KEY","$SECRET","$BEARER","/proc/self/environ",".aws/credentials",".kube/config","/.env","printenv")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          ParentProc = InitiatingProcessFileName,
+          ParentPath = InitiatingProcessFolderPath,
+          ParentCmd  = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] OpenClaw sandbox-escape read of credential files (Claw Chain CVE-2026-44113)
+
+`UC_18_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("openclaw","openshell","clawdbot") OR Processes.parent_process_path="/opt/openclaw/*" OR Processes.parent_process_path="/usr/lib/openclaw/*") AND Processes.process_name IN ("cat","head","tail","cp","dd","openssl","base64","xxd","strings","tar","scp","curl","wget") AND (Processes.process="*/proc/self/environ*" OR Processes.process="*/proc/1/environ*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.aws/config*" OR Processes.process="*.kube/config*" OR Processes.process="*/.ssh/id_*" OR Processes.process="*/.ssh/authorized_keys*" OR Processes.process="*/.docker/config*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/.env*" OR Processes.process="*secrets/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process _time | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+let SecretPaths = dynamic(["/proc/self/environ","/proc/1/environ",".aws/credentials",".aws/config",".kube/config","/.ssh/id_","/.ssh/authorized_keys","/.docker/config","/etc/shadow","/etc/passwd-","/.env","/secrets/","vault-token"]);
+let Readers = dynamic(["cat","head","tail","cp","dd","openssl","base64","xxd","strings","grep","awk","sed","tar","scp","curl","wget"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
+    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
+| where FileName in~ (Readers)
+| where ProcessCommandLine has_any (SecretPaths)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          ParentProc = InitiatingProcessFileName,
+          ParentPath = InitiatingProcessFolderPath,
+          ParentCmd  = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] OpenClaw write-side TOCTOU planting persistence outside sandbox (Claw Chain CVE-2026-44112)
+
+`UC_18_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("openclaw","openshell","clawdbot") OR Filesystem.process_path="/opt/openclaw/*" OR Filesystem.process_path="/usr/lib/openclaw/*") AND Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="/etc/cron*" OR Filesystem.file_path="/var/spool/cron/*" OR Filesystem.file_path="/etc/systemd/*" OR Filesystem.file_path="/etc/init.d/*" OR Filesystem.file_path="/root/.ssh/*" OR Filesystem.file_path="/home/*/.ssh/authorized_keys" OR Filesystem.file_path="/etc/profile*" OR Filesystem.file_path="/etc/bash*" OR Filesystem.file_path="/etc/ld.so.preload" OR Filesystem.file_path="/etc/sudoers*" OR Filesystem.file_path="/usr/local/bin/*" OR Filesystem.file_path="/usr/local/sbin/*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let PersistencePaths = dynamic([@"/etc/cron",@"/var/spool/cron",@"/etc/systemd",@"/etc/init.d",@"/root/.ssh",@"/etc/profile",@"/etc/bash",@"/etc/ld.so.preload",@"/etc/sudoers",@"/usr/local/bin",@"/usr/local/sbin"]);
+let PersistenceFiles = dynamic(["authorized_keys","crontab","rc.local","bashrc","profile","ld.so.preload","sudoers"]);
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
+    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
+| where FolderPath has_any (PersistencePaths) or FileName in~ (PersistenceFiles) or FolderPath endswith "/.ssh/"
+| where not(FolderPath startswith "/opt/openclaw")
+| where not(FolderPath startswith "/var/lib/openclaw")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -338,4 +425,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

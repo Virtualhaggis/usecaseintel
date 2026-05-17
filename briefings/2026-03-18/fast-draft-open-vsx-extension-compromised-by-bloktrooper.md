@@ -11,7 +11,7 @@ Blog Vulnerabilities & Threats fast-draft Open VSX Extension Compromised by Blok
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `195.201.104.53`
-- **Domain (defanged):** `raw.githubusercontent`
+- **Domain (defanged):** `raw.githubusercontent.com/BlokTrooper/extension`
 
 ## MITRE ATT&CK Techniques
 
@@ -303,7 +303,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `195.201.104.53`, `raw.githubusercontent`
+  - IP / domain IOC(s): `195.201.104.53`, `raw.githubusercontent.com/BlokTrooper/extension`
 
 
 ## Why this matters

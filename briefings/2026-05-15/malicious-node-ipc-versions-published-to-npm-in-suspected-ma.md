@@ -24,12 +24,124 @@ May 15, 2026
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568** — Dynamic Resolution
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1555** — Credentials from Password Stores
+- **T1083** — File and Directory Discovery
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1480** — Execution Guardrails
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1074.001** — Local Data Staging
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] node-ipc stealer C2/exfil to azurestaticprovider[.]net or 37.16.75.69
+
+`UC_30_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.app) as process values(All_Traffic.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="37.16.75.69" OR All_Traffic.dest IN ("*azurestaticprovider.net","sh.azurestaticprovider.net") OR All_Traffic.url IN ("*azurestaticprovider.net*")) by All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where DNS.query IN ("*azurestaticprovider.net","sh.azurestaticprovider.net") by DNS.query DNS.record_type | `drop_dm_object_name(DNS)`]
+```
+
+**Defender KQL:**
+```kql
+let _c2_domains = dynamic(["azurestaticprovider.net","sh.azurestaticprovider.net"]);
+let _c2_ips = dynamic(["37.16.75.69"]);
+union isfuzzy=true
+  (DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (_c2_ips)
+       or RemoteUrl has_any (_c2_domains)
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort, Protocol,
+              Signal="NetworkEvent"),
+  (DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
+    | where Query has "azurestaticprovider.net"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, RemoteIP="", RemoteUrl=Query, RemotePort=int(53), Protocol="Udp",
+              Signal="DnsQuery")
+| order by Timestamp desc
+```
+
+### [LLM] Node process bulk read of developer credential files (90+ category stealer harvest)
+
+`UC_30_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(Filesystem.file_path) as cred_files_touched values(Filesystem.file_path) as files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node") AND (Filesystem.file_path IN ("*\\.ssh\\id_rsa*","*\\.ssh\\id_ed25519*","*\\.aws\\credentials*","*\\.aws\\config*","*\\.kube\\config*","*\\.config\\gh\\hosts.yml*","*\\.config\\gcloud\\*","*terraform.tfstate*","*\\.docker\\config.json*","*\\.npmrc*","*\\.netrc*","*\\.env","*\\.bash_history","*\\.zsh_history","*\\.cursor*","*\\.claude*","*\\.aider*") OR Filesystem.file_name IN ("id_rsa","id_ed25519","credentials","kubeconfig","config.json","terraform.tfstate","hosts.yml",".bash_history",".zsh_history",".env",".npmrc",".netrc")) by Filesystem.dest Filesystem.process_id Filesystem.user _time span=5m | `drop_dm_object_name(Filesystem)` | where cred_files_touched >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let _cred_paths = dynamic([
+  @"\.ssh\id_rsa", @"\.ssh\id_ed25519", @"\.aws\credentials", @"\.aws\config",
+  @"\.kube\config", @"\.config\gh\hosts.yml", @"\.config\gcloud",
+  @"terraform.tfstate", @"\.docker\config.json", @"\.npmrc", @"\.netrc",
+  @"\.bash_history", @"\.zsh_history", @"\.cursor", @"\.claude", @"\.aider"]);
+let _cred_names = dynamic([
+  "id_rsa","id_ed25519","credentials","kubeconfig","config.json",
+  "terraform.tfstate","hosts.yml",".bash_history",".zsh_history",
+  ".env",".npmrc",".netrc"]);
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where ActionType in ("FileAccessed","FileCreated","FileModified","FileRenamed")
+| where FolderPath has_any (_cred_paths)
+   or FileName in~ (_cred_names)
+   or FileName endswith ".pem" or FileName endswith ".env"
+| summarize CredFileCount = dcount(strcat(FolderPath, "\\", FileName)),
+            SampleFiles = make_set(strcat(FolderPath, "\\", FileName), 25),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceName, InitiatingProcessId, InitiatingProcessCommandLine,
+               InitiatingProcessAccountName, bin(Timestamp, 5m)
+| where CredFileCount >= 5     // 5+ distinct credential files touched by one node PID in 5m = stealer fan-out
+| order by LastSeen desc
+```
+
+### [LLM] node-ipc stealer execution markers: __ntw=1 env flag and $TMPDIR/nt-* staging directory
+
+`UC_30_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where ((Processes.process_name IN ("node.exe","node") OR Processes.parent_process_name IN ("node.exe","node")) AND (Processes.process="*__ntw=1*" OR Processes.parent_process="*__ntw=1*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=true count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node") AND (Filesystem.file_path IN ("*/nt-*","*\\nt-*") OR Filesystem.file_name="nt-*") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+  (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("node.exe","node")
+       or InitiatingProcessFileName in~ ("node.exe","node")
+    | where ProcessCommandLine has "__ntw=1" or InitiatingProcessCommandLine has "__ntw=1"
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, Signal="ntw_env_marker"),
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("node.exe","node")
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where FolderPath matches regex @"(?i)(?:[\\/])nt-[a-z0-9]{4,}(?:[\\/])"
+       or FileName startswith "nt-"
+    | project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessAccountName, AccountName="", ProcessCommandLine="",
+              Signal="nt_staging_dir")
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -86,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_29_3` · phase: **exploit** · confidence: **High**
+`UC_30_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,4 +255,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

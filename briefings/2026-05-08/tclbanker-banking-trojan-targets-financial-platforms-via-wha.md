@@ -13,17 +13,27 @@ The activity is being tracked by Elastic Security Labs under the moniker REF3076
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33626`
-- **CVE:** `CVE-2026-32202`
-- **CVE:** `CVE-2026-3854`
+- **IPv4 (defanged):** `191.96.224.96`
+- **Domain (defanged):** `campagna1-api.ef971a42.workers.dev`
+- **Domain (defanged):** `documents.ef971a42.workers.dev`
+- **Domain (defanged):** `mxtestacionamentos.com`
+- **Domain (defanged):** `arquivos-omie.com`
+- **Domain (defanged):** `documentos-online.com`
+- **Domain (defanged):** `afonsoferragista.com`
+- **Domain (defanged):** `doccompartilhe.com`
+- **Domain (defanged):** `recebamais.com`
+- **SHA256:** `701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626`
+- **SHA256:** `8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059`
+- **SHA256:** `668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40`
+- **SHA256:** `63beb7372098c03baab77e0dfc8e5dca5e0a7420f382708a4df79bed2d900394`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -34,6 +44,7 @@ The activity is being tracked by Elastic Security Labs under the moniker REF3076
 - **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 - **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 - **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
@@ -49,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TCLBANKER side-load: screen_retriever_plugin.dll loaded by LogiAiPromptBuilder.exe outside Program Files
 
-`UC_133_10` · phase: **install** · confidence: **High**
+`UC_134_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +86,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Logi AI Prompt Builder spawned from user-writable path by msiexec.exe (TCLBANKER ZIP-MSI delivery)
 
-`UC_133_11` · phase: **delivery** · confidence: **High**
+`UC_134_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +118,7 @@ DeviceProcessEvents
 
 ### [LLM] TCLBANKER developer-named loader binary tclloader.exe execution
 
-`UC_133_12` · phase: **install** · confidence: **High**
+`UC_134_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -421,7 +432,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TCLBANKER Banking Trojan Targets Financial Platforms via WhatsApp and Outlook Wo
 
-`UC_133_9` · phase: **exploit** · confidence: **High**
+`UC_134_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,10 +483,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33626`, `CVE-2026-32202`, `CVE-2026-3854`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `191.96.224.96`, `campagna1-api.ef971a42.workers.dev`, `documents.ef971a42.workers.dev`, `mxtestacionamentos.com`, `arquivos-omie.com`, `documentos-online.com`, `afonsoferragista.com`, `doccompartilhe.com` _(+1 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `701d51b7be8b034c860bf97847bd59a87dca8481c4625328813746964995b626`, `8a174aa70a4396547045aef6c69eb0259bae1706880f4375af71085eeb537059`, `668f932433a24bbae89d60b24eee4a24808fc741f62c5a3043bb7c9152342f40`, `63beb7372098c03baab77e0dfc8e5dca5e0a7420f382708a4df79bed2d900394`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

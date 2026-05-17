@@ -11,12 +11,28 @@ Back to Blog Product 10 Layers Deep: How StepSecurity Stops TeamPCP's Trivy Supp
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-33634`
-- **SHA1:** `7b7aa264d83dc58691451798b4d117d47fc3ab44`
+- **IPv4 (defanged):** `45.148.10.212`
+- **Domain (defanged):** `scan.aquasecurtiy.org`
+- **Domain (defanged):** `models.litellm.cloud`
+- **Domain (defanged):** `checkmarx.zone`
+- **Domain (defanged):** `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`
+- **Domain (defanged):** `plug-tab-protective-relay.trycloudflare.com`
+- **SHA256:** `887e1f5b5b50162a60bd03b66269e0ae545d0aef0583c1c5b00972152ad7e073`
+- **SHA256:** `f7084b0229dce605ccc5506b14acd4d954a496da4b6134a294844ca8d601970d`
+- **SHA256:** `822dd269ec10459572dfaaefe163dae693c344249a0161953f0d5cdd110bd2a0`
+- **SHA256:** `bef7e2c5a92c4fa4af17791efc1e46311c0f304796f1172fce192f5efc40f5d7`
+- **SHA256:** `e64e152afe2c722d750f10259626f357cdea40420c5eedab37969fbf13abbecf`
+- **SHA256:** `ecce7ae5ffc9f57bb70efd3ea136a2923f701334a8cd47d4fbf01a97fd22859c`
+- **SHA256:** `d5edd791021b966fb6af0ace09319ace7b97d6642363ef27b3d5056ca654a94c`
+- **SHA256:** `e6310d8a003d7ac101a6b1cd39ff6c6a88ee454b767c1bdce143e04bc1111343`
+- **SHA256:** `6328a34b26a63423b555a61f89a6a0525a534e9c88584c815d937910f1ddd538`
+- **SHA256:** `0880819ef821cff918960a39c1c1aada55a5593c61c608ea9215da858a86e349`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
@@ -37,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
 
-`UC_298_4` · phase: **c2** · confidence: **High**
+`UC_298_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +81,7 @@ union isfuzzy=true
 
 ### [LLM] Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
 
-`UC_298_5` · phase: **actions** · confidence: **High**
+`UC_298_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +114,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP sysmon.py systemd-user persistence on developer host
 
-`UC_298_6` · phase: **install** · confidence: **High**
+`UC_298_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,13 +205,16 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `45.148.10.212`, `scan.aquasecurtiy.org`, `models.litellm.cloud`, `checkmarx.zone`, `tdtqy-oyaaa-aaaae-af2dq-cai.raw.icp0.io`, `plug-tab-protective-relay.trycloudflare.com`
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-33634`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `7b7aa264d83dc58691451798b4d117d47fc3ab44`
+  - file hash IOC(s): `887e1f5b5b50162a60bd03b66269e0ae545d0aef0583c1c5b00972152ad7e073`, `f7084b0229dce605ccc5506b14acd4d954a496da4b6134a294844ca8d601970d`, `822dd269ec10459572dfaaefe163dae693c344249a0161953f0d5cdd110bd2a0`, `bef7e2c5a92c4fa4af17791efc1e46311c0f304796f1172fce192f5efc40f5d7`, `e64e152afe2c722d750f10259626f357cdea40420c5eedab37969fbf13abbecf`, `ecce7ae5ffc9f57bb70efd3ea136a2923f701334a8cd47d4fbf01a97fd22859c`, `d5edd791021b966fb6af0ace09319ace7b97d6642363ef27b3d5056ca654a94c`, `e6310d8a003d7ac101a6b1cd39ff6c6a88ee454b767c1bdce143e04bc1111343` _(+2 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

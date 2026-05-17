@@ -18,12 +18,67 @@ Supply chain security stories often focus on confirmed compromises. But man…
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Retrospective hunt: @kilocode/cli npm install during unverified-binary release window (Jan 29 – Feb 9 2026)
+
+`UC_428_1` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm","node.exe","node","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm") AND Processes.process="*kilocode/cli*") by Processes.dest Processes.user Processes.process_name _time span=1d | `drop_dm_object_name(Processes)` | where _time >= relative_time(now(), "@d-2026-01-29") AND _time <= relative_time(now(), "@d-2026-02-15") | appendpipe [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules*kilocode*cli*" OR Filesystem.file_path="*kilocode-cli-darwin*" OR Filesystem.file_path="*kilocode-cli-linux*" OR Filesystem.file_path="*kilocode-cli-win*") by Filesystem.dest Filesystem.user _time span=1d | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let RiskWindowStart = datetime(2026-01-29T00:00:00Z);
+let RiskWindowEnd   = datetime(2026-02-15T00:00:00Z);
+let NodeBins = dynamic(["npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe"]);
+union isfuzzy=true
+( DeviceProcessEvents
+  | where Timestamp between (RiskWindowStart .. RiskWindowEnd)
+  | where FileName in~ (NodeBins) or InitiatingProcessFileName in~ (NodeBins)
+  | where ProcessCommandLine has "kilocode/cli"
+       or ProcessCommandLine has "kilocode-cli-darwin"
+       or ProcessCommandLine has "kilocode-cli-linux"
+       or ProcessCommandLine has "kilocode-cli-win"
+       or InitiatingProcessCommandLine has "kilocode/cli"
+  | project Timestamp, DeviceName, AccountName,
+            Source = "Process",
+            BinName = FileName,
+            CmdLine = ProcessCommandLine,
+            Parent = InitiatingProcessFileName,
+            ParentCmd = InitiatingProcessCommandLine,
+            SHA256),
+( DeviceFileEvents
+  | where Timestamp between (RiskWindowStart .. RiskWindowEnd)
+  | where ActionType in ("FileCreated","FileModified","FileRenamed")
+  | where FolderPath has "kilocode" and (FolderPath has "node_modules" or FolderPath has @"\@kilocode\")
+       or FileName startswith "kilocode-cli-"
+  | project Timestamp, DeviceName,
+            AccountName = InitiatingProcessAccountName,
+            Source = "File",
+            BinName = FileName,
+            CmdLine = strcat(FolderPath, "\\", FileName),
+            Parent = InitiatingProcessFileName,
+            ParentCmd = InitiatingProcessCommandLine,
+            SHA256)
+| order by Timestamp asc
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            EventCount = count(),
+            SampleCmd = any(CmdLine),
+            SourcesSeen = make_set(Source),
+            ParentSet = make_set(Parent)
+            by DeviceName, AccountName
+| order by FirstSeen asc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -52,4 +107,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

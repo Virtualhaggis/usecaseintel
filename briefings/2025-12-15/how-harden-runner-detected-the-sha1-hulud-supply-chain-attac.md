@@ -13,13 +13,28 @@ Introduction On November 23-24, 2025, the npm ecosystem experienced one of its l
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `bun.sh`
+- **Domain (defanged):** `oss.trufflehog.org`
+- **Domain (defanged):** `keychecker.trufflesecurity.com`
+- **Domain (defanged):** `webhook.site`
+- **SHA256:** `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
+- **SHA256:** `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`
+- **SHA256:** `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`
+- **SHA256:** `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`
+- **SHA256:** `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`
+- **SHA256:** `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`
+- **SHA256:** `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`
+- **SHA256:** `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db`
+- **SHA1:** `d1829b4708126dcc7bea7437c04d1f10eacd4a16`
+- **SHA1:** `d60ec97eea19fffb4809bc35b91033b52490ca11`
+- **SHA1:** `3d7570d14d34b0ba137d502f042b27b0f37a59fa`
 
 ## MITRE ATT&CK Techniques
 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1105** — Ingress Tool Transfer
@@ -37,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sha1-Hulud npm Worm — Egress to bun.sh / oss.trufflehog.org / keychecker.trufflesecurity.com from npm/node context
 
-`UC_530_3` · phase: **install** · confidence: **High**
+`UC_530_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] Sha1-Hulud npm Worm — Self-Hosted GitHub Actions Runner Registration with Name 'SHA1HULUD'
 
-`UC_530_4` · phase: **install** · confidence: **High**
+`UC_530_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] Sha1-Hulud npm Worm — Drop of setup_bun.js / bun_environment.js / discussion.yaml by node or shell
 
-`UC_530_5` · phase: **install** · confidence: **Medium**
+`UC_530_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +191,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How Harden Runner Detected the Sha1-Hulud Supply Chain Attack in CNCF's Backstag
 
-`UC_530_2` · phase: **exploit** · confidence: **High**
+`UC_530_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -223,7 +238,17 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `bun.sh`, `oss.trufflehog.org`, `keychecker.trufflesecurity.com`, `webhook.site`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`, `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`, `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`, `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`, `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`, `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`, `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`, `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db` _(+3 more)_
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

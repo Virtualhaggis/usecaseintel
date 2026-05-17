@@ -12,15 +12,6 @@ Blog Vulnerabilities & Threats G_Wagon: npm Package Deploys Python Stealer Targe
 
 - **Domain (defanged):** `nyc.cloud.appwrite.io`
 - **Domain (defanged):** `fra.cloud.appwrite.io`
-- **SHA256:** `7de334b0530e168fcf70335aa73a26a0b483e864c415d02980fe5e6b07f6af85`
-- **SHA256:** `00f1e82321a400fa097fc47edc1993203747223567a2a147ed458208376e39a1`
-- **SHA256:** `1979bf6ff76d2adbd394e1288d75ab04abfb963109e81294a28d0629f90b77c7`
-- **SHA256:** `ecde55186231f1220218880db30d704904dd3ff6b3096c745a1e15885d6e99cc`
-- **SHA256:** `eb19a25480916520aecc30c54afdf6a0ce465db39910a5c7a01b1b3d1f693c4c`
-- **SHA256:** `ff514331b93a76c9bbf1f16cdd04e79c576d8efd0d3587cb3665620c9bf49432`
-- **SHA256:** `a576844e131ed6b51ebdfa7cd509233723b441a340529441fb9612f226fafe52`
-- **SHA256:** `e25f5d5b46368ed03562625b53efd24533e20cd1d42bc64b1ebf041cacab8941`
-- **SHA1:** `3639363865613536303033313663313238663232`
 
 ## MITRE ATT&CK Techniques
 
@@ -53,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] G_Wagon npm stealer C2 egress to specific Appwrite project/bucket IDs
 
-`UC_473_10` · phase: **c2** · confidence: **High**
+`UC_473_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] G_Wagon stealer execution-counter file (.gwagon_status) created in user home
 
-`UC_473_11` · phase: **install** · confidence: **High**
+`UC_473_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +81,7 @@ DeviceFileEvents
 
 ### [LLM] node.exe spawning Python interpreter with stdin pipe (G_Wagon in-memory dropper chain)
 
-`UC_473_12` · phase: **exploit** · confidence: **Medium**
+`UC_473_11` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -312,7 +303,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — G_Wagon: npm Package Deploys Python Stealer Targeting 100+ Crypto Wallets
 
-`UC_473_9` · phase: **exploit** · confidence: **High**
+`UC_473_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -366,10 +357,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `nyc.cloud.appwrite.io`, `fra.cloud.appwrite.io`
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `7de334b0530e168fcf70335aa73a26a0b483e864c415d02980fe5e6b07f6af85`, `00f1e82321a400fa097fc47edc1993203747223567a2a147ed458208376e39a1`, `1979bf6ff76d2adbd394e1288d75ab04abfb963109e81294a28d0629f90b77c7`, `ecde55186231f1220218880db30d704904dd3ff6b3096c745a1e15885d6e99cc`, `eb19a25480916520aecc30c54afdf6a0ce465db39910a5c7a01b1b3d1f693c4c`, `ff514331b93a76c9bbf1f16cdd04e79c576d8efd0d3587cb3665620c9bf49432`, `a576844e131ed6b51ebdfa7cd509233723b441a340529441fb9612f226fafe52`, `e25f5d5b46368ed03562625b53efd24533e20cd1d42bc64b1ebf041cacab8941` _(+1 more)_
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
