@@ -17,7 +17,6 @@ The vulnerability, discovered by depthfirst, is a heap buffer overflow issue imp
 - **CVE:** `CVE-2026-42946`
 - **CVE:** `CVE-2026-40701`
 - **CVE:** `CVE-2026-42934`
-- **CVE:** `CVE-2026-23918`
 
 ## MITRE ATT&CK Techniques
 
@@ -290,7 +289,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42945`, `CVE-2026-42946`, `CVE-2026-40701`, `CVE-2026-42934`, `CVE-2026-23918`
+  - CVE(s): `CVE-2026-42945`, `CVE-2026-42946`, `CVE-2026-40701`, `CVE-2026-42934`
 
 
 ## Why this matters

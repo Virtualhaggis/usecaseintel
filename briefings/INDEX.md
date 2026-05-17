@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_776 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_775 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -27,7 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [funnel builder wordpress plugin bug exploited to steal credi](./2026-05-15/funnel-builder-wordpress-plugin-bug-exploited-to-steal-credi.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [gunra ransomware expands raas operations after shifting from](./2026-05-15/gunra-ransomware-expands-raas-operations-after-shifting-from.md)
-- [hackers abuse oauth device authorization flow to steal micro](./2026-05-15/hackers-abuse-oauth-device-authorization-flow-to-steal-micro.md)
 - [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)

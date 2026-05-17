@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PHP php:// wrapper abuse in HTTP requests targeting getimagesize endpoints (CVE-2025-14177)
 
-`UC_5_5` · phase: **exploit** · confidence: **High**
+`UC_6_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### [LLM] Estate exposure: PHP versions vulnerable to CVE-2025-14177 / iptcembed overflow
 
-`UC_5_6` · phase: **recon** · confidence: **High**
+`UC_6_6` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] PHP-FPM/php-cgi worker SIGSEGV or abort coincident with image-processing endpoint traffic
 
-`UC_5_7` · phase: **exploit** · confidence: **Medium**
+`UC_6_7` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JDownloader trojanized installer — process signed/branded as 'Zipline LLC' or 'The Water Team' instead of AppWork GmbH
 
-`UC_4_6` · phase: **install** · confidence: **High**
+`UC_5_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### [LLM] JDownloader installer spawning Python interpreter or PyInstaller _MEI temp dir (Python RAT execution)
 
-`UC_4_7` · phase: **install** · confidence: **High**
+`UC_5_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

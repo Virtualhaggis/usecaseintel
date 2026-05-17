@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Burst execution of ssh-keysign / chage by non-root user (CVE-2026-46333 race exploitation)
 
-`UC_6_9` · phase: **exploit** · confidence: **High**
+`UC_7_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] Unprivileged pidfd_getfd() syscall targeting ssh-keysign / chage process (auditd)
 
-`UC_6_10` · phase: **exploit** · confidence: **Medium**
+`UC_7_10` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -318,7 +318,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — Critical Linux Kernel Flaw ‘ssh-keysign-pwn’ Exposes SSH Keys and Shadow Passwor
 
-`UC_6_8` · phase: **install** · confidence: **High**
+`UC_7_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
