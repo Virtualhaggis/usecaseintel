@@ -1146,6 +1146,8 @@ Kill-chain reconstruction (Phase 1B output — if non-empty, this is the analyst
 In-article image URLs (WebFetch the screenshots/diagrams; skip banner/hero/ads):
 <<IMAGE_URLS>>
 
+<<EXTRA_CONTEXT>>
+
 ================================================================
 CANONICAL DEFENDER ADVANCED HUNTING SCHEMA
 ================================================================
@@ -2069,6 +2071,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<IOC_SUMMARY>>", "\n".join(ioc_summary) or "  (none)")
               .replace("<<KILL_CHAIN>>",  kc_block)
               .replace("<<IMAGE_URLS>>",  image_block)
+              .replace("<<EXTRA_CONTEXT>>", _format_extra_context(article))
               .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
               .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
               .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
@@ -15722,6 +15725,92 @@ def _html_to_text_for_iocs(html_doc: str) -> str:
     return body.strip()
 
 
+def _html_entity_decode(s: str) -> str:
+    """Decode the half-dozen HTML entities that show up in article
+    bodies. Cheap and good-enough for our purposes — full html.unescape
+    is more complete but pulls in the html module unnecessarily."""
+    return (s.replace("&lt;", "<").replace("&gt;", ">")
+             .replace("&quot;", '"').replace("&#39;", "'")
+             .replace("&apos;", "'").replace("&nbsp;", " ")
+             .replace("&amp;", "&"))
+
+
+def _extract_code_blocks(html_doc: str, max_blocks: int = 20,
+                         max_chars_each: int = 800) -> list:
+    """Pull verbatim `<pre>` / `<code>` contents from the article HTML.
+    These are the goldmine for detection writing — PowerShell encoded
+    commands, registry edits, bash one-liners, YAML configs, malicious
+    JSON payloads, regex IOC dumps. Pure HTML-to-text strip flattens
+    them into prose where the LLM can't tell command from commentary.
+
+    Returns a list of cleaned strings, deduped by leading 80 chars,
+    each capped at `max_chars_each`.
+    """
+    if not html_doc:
+        return []
+    main = _extract_main_html(html_doc)
+    blocks = []
+    seen = set()
+    pattern = r"<(pre|code)\b[^>]*>([\s\S]*?)</\1>"
+    for match in re.finditer(pattern, main, re.IGNORECASE):
+        inner = match.group(2)
+        # Strip nested tags (highlight spans, links inside code, etc.).
+        text = re.sub(r"<[^>]+>", "", inner)
+        text = _html_entity_decode(text).strip()
+        if len(text) < 5:
+            continue
+        text = text[:max_chars_each]
+        key = text[:80]
+        if key in seen:
+            continue
+        seen.add(key)
+        blocks.append(text)
+        if len(blocks) >= max_blocks:
+            break
+    return blocks
+
+
+def _extract_html_tables(html_doc: str, max_tables: int = 10,
+                        max_rows_each: int = 30,
+                        max_cols_each: int = 10) -> list:
+    """Pull structured row/column data out of `<table>` elements in the
+    article HTML. Threat-intel articles routinely render IOC lists,
+    affected-version matrices, and hash-column tables this way.
+
+    Returns a list of `{headers: [...], rows: [[...], ...]}` dicts —
+    headers from `<th>` elements, rows from `<td>` rows. Skips
+    empty / decorative tables.
+    """
+    if not html_doc:
+        return []
+    main = _extract_main_html(html_doc)
+    out = []
+
+    def _clean(s: str) -> str:
+        s = re.sub(r"<[^>]+>", " ", s)
+        return re.sub(r"\s+", " ", _html_entity_decode(s)).strip()
+
+    for tm in re.finditer(r"<table\b[^>]*>([\s\S]*?)</table>", main, re.IGNORECASE):
+        table_html = tm.group(1)
+        headers = [_clean(h.group(1))
+                   for h in re.finditer(r"<th\b[^>]*>([\s\S]*?)</th>",
+                                        table_html, re.IGNORECASE)][:max_cols_each]
+        rows = []
+        for tr in re.finditer(r"<tr\b[^>]*>([\s\S]*?)</tr>", table_html, re.IGNORECASE):
+            cells = [_clean(td.group(1))
+                     for td in re.finditer(r"<td\b[^>]*>([\s\S]*?)</td>",
+                                           tr.group(1), re.IGNORECASE)][:max_cols_each]
+            if cells and any(c for c in cells):
+                rows.append(cells)
+            if len(rows) >= max_rows_each:
+                break
+        if headers or rows:
+            out.append({"headers": headers, "rows": rows})
+        if len(out) >= max_tables:
+            break
+    return out
+
+
 def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 5) -> list:
     """Pull the <img src> URLs out of the article body, filter junk
     (logos, avatars, tracking pixels, sprites, share-button icons), and
@@ -15777,13 +15866,19 @@ def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 
 def _fetch_full_body(url: str, fallback: str = "") -> tuple:
     """Fetch and clean an article body. Cached to disk; falls back on error.
 
-    Returns a (text, image_urls) tuple. `image_urls` is a list of up to
-    five content-image URLs harvested from the article HTML — they're
-    forwarded to the LLM so it can WebFetch and analyse screenshots /
-    flow diagrams / IOC-tables-as-images that pure text strip misses.
+    Returns a 4-tuple `(text, image_urls, code_blocks, tables)`:
+      - text: HTML-to-text body for IOC extraction + LLM context
+      - image_urls: up to 5 content-image URLs the LLM can WebFetch
+        (screenshots / flow diagrams / IOC-tables-as-images that pure
+        text strip misses)
+      - code_blocks: verbatim `<pre>` / `<code>` contents from the
+        article — PowerShell, bash, YAML, registry edits, etc. fed
+        into the LLM IOC + UC prompts as ground-truth payload syntax
+      - tables: structured `<table>` rows + headers for IOC matrices
+        and affected-version tables that prose-strip flattens
     """
     if not FETCH_FULL_BODY or not url or not url.lower().startswith(("http://", "https://")):
-        return (fallback, [])
+        return (fallback, [], [], [])
     cache = _cache_path_for(url)
     html_doc = ""
     if cache.exists():
@@ -15809,17 +15904,19 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
                 except Exception:
                     pass
             else:
-                return (fallback, [])
+                return (fallback, [], [], [])
         except Exception as e:
             safe_err = str(e).encode("ascii", "replace").decode("ascii")
             print(f"    [!] body fetch failed for {url[:80]}: {safe_err}")
-            return (fallback, [])
+            return (fallback, [], [], [])
     text = _html_to_text_for_iocs(html_doc)
     if len(text) < 200:
         # extraction looks broken — better to keep the RSS summary than ship rubbish
-        return (fallback, [])
+        return (fallback, [], [], [])
     images = _extract_article_image_urls(html_doc, url)
-    return (text, images)
+    code_blocks = _extract_code_blocks(html_doc)
+    tables = _extract_html_tables(html_doc)
+    return (text, images, code_blocks, tables)
 
 
 def _fetch_rss(source, since):
@@ -15838,7 +15935,7 @@ def _fetch_rss(source, since):
         # IPs / domains that live below the RSS preview. Also harvest the
         # in-article image URLs — they get forwarded to the LLM so it can
         # WebFetch screenshots / flow diagrams that pure text strip misses.
-        full_body, image_urls = _fetch_full_body(link, fallback=rss_summary)
+        full_body, image_urls, code_blocks, tables = _fetch_full_body(link, fallback=rss_summary)
         if full_body and full_body != rss_summary:
             fetched += 1
 
@@ -15852,6 +15949,12 @@ def _fetch_rss(source, since):
             "summary": (rss_summary[:600] + "…") if len(rss_summary) > 600 else rss_summary,
             "raw_body": full_body or rss_summary,
             "image_urls": image_urls,
+            # Verbatim payload syntax + structured tables — fed to the
+            # LLM IOC + UC + KC prompts so detections anchor on exact
+            # command lines and IOC-table cells instead of prose flat-
+            # tened into the body text.
+            "code_blocks": code_blocks,
+            "tables": tables,
         })
     if fetched:
         print(f"    -> fetched {fetched} full article bodies")
@@ -16529,6 +16632,7 @@ _IOC_PROMPT_USER = (
     "Body (truncated):\n"
     "<<BODY>>\n"
     "\n"
+    "<<EXTRA_CONTEXT>>"
     "Read the article carefully. Then run 1-2 targeted WebSearches to "
     "find independent coverage of the SAME incident (search by CVE ID, "
     "campaign name, named threat actor, malware family, or unique "
@@ -16621,6 +16725,46 @@ _IOC_PROMPT_USER = (
 
 _IOC_REQUIRED_KEYS = ("cves", "ips", "domains", "sha256", "sha1",
                       "md5", "software")
+
+
+def _format_extra_context(article: dict, max_code_blocks: int = 6,
+                          max_tables: int = 3) -> str:
+    """Build the `<<EXTRA_CONTEXT>>` block injected into the IOC/UC/KC
+    prompts. Surfaces the code-blocks and tables extracted at fetch
+    time so the LLM sees verbatim payload syntax and structured IOC
+    cells alongside the prose body. Returns empty string when the
+    article has neither — keeps the prompt clean.
+    """
+    code_blocks = (article.get("code_blocks") or [])[:max_code_blocks]
+    tables = (article.get("tables") or [])[:max_tables]
+    if not code_blocks and not tables:
+        return ""
+    parts = []
+    if code_blocks:
+        parts.append(
+            "Verbatim code blocks extracted from the article body (literal "
+            "command-lines, config snippets, IOC dumps — anchor detections "
+            "on the EXACT strings shown):\n"
+        )
+        for i, block in enumerate(code_blocks, 1):
+            # Cap each block defensively in the prompt too (extractor
+            # already capped at 800 chars but multi-block prompts add up).
+            parts.append(f"  [Block {i}]\n{block[:600]}\n\n")
+    if tables:
+        parts.append(
+            "Structured tables extracted from the article body (IOC matrices, "
+            "affected-version tables, hash columns — read row by row):\n"
+        )
+        for i, tbl in enumerate(tables, 1):
+            headers = tbl.get("headers") or []
+            rows = tbl.get("rows") or []
+            parts.append(f"  [Table {i}]")
+            if headers:
+                parts.append(f"    Headers: {' | '.join(headers[:8])}\n")
+            for r_idx, row in enumerate(rows[:12], 1):
+                parts.append(f"    Row {r_idx}: {' | '.join(str(c)[:120] for c in row[:8])}\n")
+            parts.append("\n")
+    return "".join(parts) + "\n"
 
 
 def _ioc_normalise_llm_dict(d: dict) -> dict | None:
@@ -16748,6 +16892,7 @@ _IOC_GAPFILL_PROMPT_USER = (
     "Body (truncated):\n"
     "<<BODY>>\n"
     "\n"
+    "<<EXTRA_CONTEXT>>"
     "You are now doing a gap-fill pass. Given the article and the IOCs "
     "already extracted, what IOCs are MISSING that a SOC analyst would "
     "expect for this kind of attack? Examples:\n"
@@ -16805,7 +16950,8 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
               .replace("<<TITLE>>", title)
               .replace("<<URL>>", url)
               .replace("<<SOURCE>>", source)
-              .replace("<<BODY>>", body))
+              .replace("<<BODY>>", body)
+              .replace("<<EXTRA_CONTEXT>>", _format_extra_context(article)))
 
     # Direct `claude -p` subprocess — see _call_claude_cli for the
     # rationale. The WebSearch-enabled path is now reliable because
@@ -16900,7 +17046,8 @@ def _llm_extract_iocs_pass2(article: dict, pass1: dict) -> list:
               .replace("<<TITLE>>", title)
               .replace("<<URL>>", url)
               .replace("<<PASS1_JSON>>", _json.dumps(slim, ensure_ascii=False))
-              .replace("<<BODY>>", body))
+              .replace("<<BODY>>", body)
+              .replace("<<EXTRA_CONTEXT>>", _format_extra_context(article)))
 
     raw = None
     if use_oauth and not _oauth_circuit_open("ioc"):
@@ -17179,6 +17326,7 @@ _KC_PROMPT_USER = (
     "Body (truncated):\n"
     "<<BODY>>\n"
     "\n"
+    "<<EXTRA_CONTEXT>>"
     "Reconstruct the kill chain. Only emit phases the article actually "
     "describes (not the full 12-phase template). Order phases the way "
     "the attacker executed them. For each phase, cite the exact phrase "
@@ -17311,7 +17459,8 @@ def _llm_kill_chain_call(article: dict, ind: dict) -> dict | None:
               .replace("<<URL>>", url)
               .replace("<<SOURCE>>", source)
               .replace("<<IND_JSON>>", _json.dumps(slim, ensure_ascii=False))
-              .replace("<<BODY>>", body))
+              .replace("<<BODY>>", body)
+              .replace("<<EXTRA_CONTEXT>>", _format_extra_context(article)))
 
     raw = None
     if use_oauth and not _oauth_circuit_open("kc"):
