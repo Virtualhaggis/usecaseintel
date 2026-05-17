@@ -1,4 +1,4 @@
-# [HIGH] When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the tj-actions Supply Chain Breach
+# [CRIT] When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the tj-actions Supply Chain Breach
 
 **Source:** StepSecurity
 **Published:** 2025-08-15
@@ -12,11 +12,22 @@ Table of Contents Loading nav..…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2025-30066`
+- **CVE:** `CVE-2025-30154`
+- **SHA1:** `0e58ed8671d6b60d0890c21b07f8835ace038e67`
+- **SHA1:** `6e6023c01918b353229af0881232f601a4cc8365`
+- **SHA1:** `fbc2c5ebe64389f297a7808025379f77133f1292`
+- **SHA1:** `e1e36574b3af1ddaab74f5e69505d8836bf12f52`
+- **SHA1:** `ce4a123414f9fffa959d1f329c4749da83c4bf10`
+- **SHA1:** `c17ac4b5c1cb901a7ccddf00ac9722b8e2725345`
+- **SHA1:** `3f401fe1d58fe77e10d665ab713057375e39b887`
+- **SHA1:** `f5434e31b6259b4e08684618a305bae127b6d784`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1003** — OS Credential Dumping
@@ -33,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] tj-actions/changed-files supply chain: memdump.py fetched from attacker gist on CI runner (CVE-2025-30066)
 
-`UC_674_2` · phase: **actions** · confidence: **High**
+`UC_674_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] CI/CD runner outbound to attacker gist (gist.githubusercontent.com/nikitastupin/30e525b776...)
 
-`UC_674_3` · phase: **c2** · confidence: **High**
+`UC_674_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +126,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the
 
-`UC_674_1` · phase: **exploit** · confidence: **High**
+`UC_674_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +173,17 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-30066`, `CVE-2025-30154`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `0e58ed8671d6b60d0890c21b07f8835ace038e67`, `6e6023c01918b353229af0881232f601a4cc8365`, `fbc2c5ebe64389f297a7808025379f77133f1292`, `e1e36574b3af1ddaab74f5e69505d8836bf12f52`, `ce4a123414f9fffa959d1f329c4749da83c4bf10`, `c17ac4b5c1cb901a7ccddf00ac9722b8e2725345`, `3f401fe1d58fe77e10d665ab713057375e39b887`, `f5434e31b6259b4e08684618a305bae127b6d784`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

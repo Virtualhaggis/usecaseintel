@@ -1,4 +1,4 @@
-# [HIGH] s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malware
+# [CRIT] s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malware
 
 **Source:** StepSecurity
 **Published:** 2025-09-23
@@ -12,16 +12,19 @@ Table of Contents Loading nav.…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2025-10894`
+- **SHA1:** `3905475cfd0e0ea670e20c6a9eaeb768169dc33d`
 
 ## MITRE ATT&CK Techniques
 
 - **T1005** — Data from Local System
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1552.001** — Unsecured Credentials: Credentials In Files
@@ -39,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] s1ngularity nx: AI CLI assistant invoked with permission-bypass flags (Claude/Gemini/Q)
 
-`UC_648_5` · phase: **actions** · confidence: **High**
+`UC_648_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +71,7 @@ DeviceProcessEvents
 
 ### [LLM] s1ngularity nx: /tmp/inventory.txt staging file created on host
 
-`UC_648_6` · phase: **actions** · confidence: **High**
+`UC_648_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] s1ngularity nx: node modifies ~/.bashrc or ~/.zshrc to inject `sudo shutdown -h 0`
 
-`UC_648_7` · phase: **install** · confidence: **High**
+`UC_648_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -237,7 +240,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — s1ngularity: Popular Nx Build System Package Compromised with Data-Stealing Malw
 
-`UC_648_4` · phase: **exploit** · confidence: **High**
+`UC_648_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -284,7 +287,17 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-10894`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `3905475cfd0e0ea670e20c6a9eaeb768169dc33d`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

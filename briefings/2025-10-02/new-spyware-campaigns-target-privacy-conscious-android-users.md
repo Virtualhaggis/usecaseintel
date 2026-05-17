@@ -33,17 +33,28 @@ ESET researchers have uncovered two Android spyware campaigns targeting individu
 - **Domain (defanged):** `signal.ct.ws`
 - **Domain (defanged):** `encryption-plug-in-signal.com-ae.net`
 - **Domain (defanged):** `totok-pro.io`
-- **Domain (defanged):** `store.appupdate.ai`
-- **Domain (defanged):** `spiralkey.co`
 - **Domain (defanged):** `noblico.net`
 - **Domain (defanged):** `ai-messenger.co`
-- **Domain (defanged):** `sion.ai`
+- **Domain (defanged):** `spiralkey.co`
+- **Domain (defanged):** `store.latestversion.ai`
+- **Domain (defanged):** `store.appupdate.ai`
 - **Domain (defanged):** `totokupdate.ai`
 - **Domain (defanged):** `app-totok.io`
 - **Domain (defanged):** `sgnlapp.info`
-- **Domain (defanged):** `ae.net`
 - **Domain (defanged):** `totokapp.info`
-- **Domain (defanged):** `in-signal.com`
+- **SHA256:** `e18683bc061e888f158c9a3a7478615df2d7daae1952a072d7f549cd1c1e326a`
+- **SHA1:** `03FE2FCF66F86A75242F6112155134E66BC586CB`
+- **SHA1:** `B22D58561BB64748F0D2E57B06282D6DAF33CC68`
+- **SHA1:** `BDC16A05BF6B771E6EDB79634483C59FE041D59B`
+- **SHA1:** `DB9FE6CC777C68215BB0361139119DAFEE3B3194`
+- **SHA1:** `DE148DDFBF879AB2C12537ECCCDD0541A38A8231`
+- **SHA1:** `CE378AE427E4BD70EAAED204C51811CD74F9A294`
+- **SHA1:** `7EFEFF53AAEBF4B31BFCC093F2332944C3A6C0F6`
+- **SHA1:** `154D67F871FFA19DCE1A7646D5AE4FF00C509EE4`
+- **SHA1:** `43F4DC193503947CB9449FE1CCA8D3FEB413A52D`
+- **SHA1:** `579F9E5DB2BEFCCB61C833B355733C24524457AB`
+- **SHA1:** `80CA4C48FA831CD52041BB1E353149C052C17481`
+- **SHA1:** `FFAAC2FDD9B6F5340D4202227B0B13E09F6ED031`
 - **SHA1:** `DE90F6899EEC315F4ED05C2AA052D4FE8B71125A`
 
 ## MITRE ATT&CK Techniques
@@ -360,10 +371,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `86.105.18.13`, `185.7.219.77`, `152.89.29.73`, `5.42.221.106`, `152.89.29.78`, `185.140.210.66`, `176.123.7.83`, `185.27.134.222` _(+18 more)_
+  - IP / domain IOC(s): `86.105.18.13`, `185.7.219.77`, `152.89.29.73`, `5.42.221.106`, `152.89.29.78`, `185.140.210.66`, `176.123.7.83`, `185.27.134.222` _(+16 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `DE90F6899EEC315F4ED05C2AA052D4FE8B71125A`
+  - file hash IOC(s): `e18683bc061e888f158c9a3a7478615df2d7daae1952a072d7f549cd1c1e326a`, `03FE2FCF66F86A75242F6112155134E66BC586CB`, `B22D58561BB64748F0D2E57B06282D6DAF33CC68`, `BDC16A05BF6B771E6EDB79634483C59FE041D59B`, `DB9FE6CC777C68215BB0361139119DAFEE3B3194`, `DE148DDFBF879AB2C12537ECCCDD0541A38A8231`, `CE378AE427E4BD70EAAED204C51811CD74F9A294`, `7EFEFF53AAEBF4B31BFCC093F2332944C3A6C0F6` _(+6 more)_
 
 
 ## Why this matters

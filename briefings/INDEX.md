@@ -790,6 +790,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 54948 trend micro apex one os command inje](./2025-08-18/cisa-kev-cve-2025-54948-trend-micro-apex-one-os-command-inje.md)
 
 ## 2025-08-15
+- [suspicious tag movement in aws s github action what happened](./2025-08-15/suspicious-tag-movement-in-aws-s-github-action-what-happened.md)
 - [when changed files changed everything our black hat 2025 pre](./2025-08-15/when-changed-files-changed-everything-our-black-hat-2025-pre.md)
 
 ## 2025-08-13
@@ -834,7 +835,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-08
 - [evolving harden runner s disable sudo policy for improved ru](./2025-07-08/evolving-harden-runner-s-disable-sudo-policy-for-improved-ru.md)
-- [harden runner flags anomalous outbound call leading to docke](./2025-07-08/harden-runner-flags-anomalous-outbound-call-leading-to-docke.md)
 - [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
 
 ## 2025-07-07

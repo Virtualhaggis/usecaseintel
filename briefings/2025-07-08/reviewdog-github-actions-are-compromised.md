@@ -13,11 +13,32 @@ Introduction We have concluded our investigation into the supply chain attack af
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2025-30154`
+- **CVE:** `CVE-2025-30066`
 - **SHA1:** `f0d342d24037bb11d26b9bd8496e0808ba32e9ec`
-- **SHA1:** `fab6de28ae8bc2a032c9e655d990afa450edb995`
+- **SHA1:** `b833eecdf13c615cd60d5dede6f6593a4b3b4376`
+- **SHA1:** `0e58ed8671d6b60d0890c21b07f8835ace038e67`
+- **SHA1:** `6e6023c01918b353229af0881232f601a4cc8365`
+- **SHA1:** `f5434e31b6259b4e08684618a305bae127b6d784`
+- **SHA1:** `0f176b316e1d41a945e574fc2ba76b0dc752d585`
+- **SHA1:** `96be5a72d8adac89200e08658f69273912fe4783`
+- **SHA1:** `61902a2b3c982d3551ad219bb0ff22f3663e44de`
+- **SHA1:** `f966d8d897bc8033657b8e77da56a988029ce8c7`
+- **SHA1:** `909ace6b17fc4045030e55f5ac27ca99f276ae80`
+- **SHA1:** `454c8a19a12cde77505464d7e4549500c8ac68d0`
+- **SHA1:** `04d5b6d4c18c06d7df6edabf914d0ded986c3a87`
+- **SHA1:** `81796e43b6348d628e3e739a910d50704a5292c1`
+- **SHA1:** `8d73381aa1c2ccd12c8ddcfefa47aeb1443e67e3`
+- **SHA1:** `c27af8180030e1f3d0434473731f030dc1849edf`
+- **SHA1:** `efa6ce46bcaa8751ad223e44be7977798c909304`
+- **SHA1:** `143a52c0d919c1a69bdeafeab564650f6939a2b3`
+- **SHA1:** `31b1df0e735ad8511fd7df3be8cf9351d8cb4de7`
+- **SHA1:** `26f36301be817815fbcb896d2c85e89f04b17df4`
+- **SHA1:** `9bb460e92befdbb6506d2e643ae06c8b50205f97`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1554** — Compromise Host Software Binary
@@ -34,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised reviewdog/action-setup commit SHA referenced in GitHub Actions workflow (CVE-2025-30154)
 
-`UC_697_2` · phase: **delivery** · confidence: **High**
+`UC_697_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GitHub Actions Runner.Worker memory dumped via /proc on Linux runner (reviewdog payload)
 
-`UC_697_3` · phase: **actions** · confidence: **High**
+`UC_697_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,10 +119,13 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-30154`, `CVE-2025-30066`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `f0d342d24037bb11d26b9bd8496e0808ba32e9ec`, `fab6de28ae8bc2a032c9e655d990afa450edb995`
+  - file hash IOC(s): `f0d342d24037bb11d26b9bd8496e0808ba32e9ec`, `b833eecdf13c615cd60d5dede6f6593a4b3b4376`, `0e58ed8671d6b60d0890c21b07f8835ace038e67`, `6e6023c01918b353229af0881232f601a4cc8365`, `f5434e31b6259b4e08684618a305bae127b6d784`, `0f176b316e1d41a945e574fc2ba76b0dc752d585`, `96be5a72d8adac89200e08658f69273912fe4783`, `61902a2b3c982d3551ad219bb0ff22f3663e44de` _(+12 more)_
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

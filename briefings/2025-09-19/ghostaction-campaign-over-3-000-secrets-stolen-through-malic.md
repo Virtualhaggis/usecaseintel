@@ -12,7 +12,11 @@ Table of Contents Loading …
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `45.139.104.115`
 - **Domain (defanged):** `bold-dhawan.45-139-104-115.plesk.page`
+- **Domain (defanged):** `objective-hopper.45-139-104-115.plesk.page`
+- **Domain (defanged):** `carte-avantage.com`
+- **Domain (defanged):** `493networking.cc`
 
 ## MITRE ATT&CK Techniques
 
@@ -122,7 +126,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `bold-dhawan.45-139-104-115.plesk.page`
+  - IP / domain IOC(s): `45.139.104.115`, `bold-dhawan.45-139-104-115.plesk.page`, `objective-hopper.45-139-104-115.plesk.page`, `carte-avantage.com`, `493networking.cc`
 
 
 ## Why this matters

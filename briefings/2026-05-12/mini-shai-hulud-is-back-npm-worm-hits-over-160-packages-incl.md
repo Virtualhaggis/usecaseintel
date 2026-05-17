@@ -11,11 +11,19 @@ The npm campaign we covered in April, when it targeted SAP packages, has now tur
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2026-45321`
+- **IPv4 (defanged):** `83.142.209.194`
+- **Domain (defanged):** `git-tanstack.com`
 - **Domain (defanged):** `filev2.getsession.org`
-- **Domain (defanged):** `vault.svc.cluster.local`
 - **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
 - **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
-- **SHA1:** `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
+- **SHA256:** `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`
+- **SHA1:** `e7d582b98ca80690883175470e96f703ef6dc497`
+- **SHA1:** `12ed9a3c1f73617aefdb740480695c04405d7b4b`
+- **SHA1:** `12f35b1081b17d21815b35feb57ab03d02482116`
+- **SHA1:** `820fa07a7328b6cf2b417078e103721d4d8f2e79`
+- **MD5:** `833fd59ebe66a4449982c6d18db656b4`
+- **MD5:** `b82e54923f7e440664d2d75bd31588ca`
 
 ## MITRE ATT&CK Techniques
 
@@ -23,6 +31,7 @@ The npm campaign we covered in April, when it targeted SAP packages, has now tur
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1005** — Data from Local System
+- **T1190** — Exploit Public-Facing Application
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
@@ -41,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm payload dropped under node_modules (router_init.js / tanstack_runner.js / known SHA256)
 
-`UC_105_8` · phase: **delivery** · confidence: **High**
+`UC_105_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +72,7 @@ DeviceFileEvents
 
 ### [LLM] Bun spawned with tanstack_runner.js via npm prepare lifecycle (Mini Shai-Hulud)
 
-`UC_105_9` · phase: **install** · confidence: **High**
+`UC_105_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud persistence to ~/.claude/hooks and .vscode/tasks.json by node/npm/bun
 
-`UC_105_10` · phase: **install** · confidence: **High**
+`UC_105_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and
 
-`UC_105_7` · phase: **exploit** · confidence: **High**
+`UC_105_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -293,13 +302,16 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-45321`
+
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `filev2.getsession.org`, `vault.svc.cluster.local`
+  - IP / domain IOC(s): `83.142.209.194`, `git-tanstack.com`, `filev2.getsession.org`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
+  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`, `e7d582b98ca80690883175470e96f703ef6dc497`, `12ed9a3c1f73617aefdb740480695c04405d7b4b`, `12f35b1081b17d21815b35feb57ab03d02482116`, `820fa07a7328b6cf2b417078e103721d4d8f2e79`, `833fd59ebe66a4449982c6d18db656b4` _(+1 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

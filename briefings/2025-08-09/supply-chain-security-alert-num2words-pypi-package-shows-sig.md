@@ -13,11 +13,18 @@ Key Takeaways The Python package num2words version 0.5.15 was published to PyPI 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `ifyouseethisyouareultragay.com`
+- **Domain (defanged):** `pokerainteasy.su`
+- **SHA256:** `be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2`
+- **SHA256:** `c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2`
+- **SHA256:** `439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616`
+- **SHA256:** `c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b`
 
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1059.006** — Command and Scripting Interpreter: Python
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
@@ -33,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)
 
-`UC_681_1` · phase: **delivery** · confidence: **High**
+`UC_681_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +67,7 @@ union
 
 ### [LLM] Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su
 
-`UC_681_2` · phase: **c2** · confidence: **High**
+`UC_681_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +92,7 @@ union
 
 ### [LLM] Scavenger loader/stealer SHA256 execution or drop on endpoint
 
-`UC_681_3` · phase: **install** · confidence: **High**
+`UC_681_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +147,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `ifyouseethisyouareultragay.com`, `pokerainteasy.su`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2`, `c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2`, `439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616`, `c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
