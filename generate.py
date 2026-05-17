@@ -1263,15 +1263,18 @@ except (ImportError, AttributeError):
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
-_OAUTH_UC_CALL_TIMEOUT_SEC = 300         # UC call with WebSearch + WebFetch: bumped
-                                          # 180->300 on 2026-05-17 after the subprocess
-                                          # refactor confirmed legitimate calls were
-                                          # exceeding 180s on WebSearch-heavy articles.
-                                          # The SDK never got far enough for timeout to
-                                          # matter; under `claude -p` the wallclock for
-                                          # successful WebSearch + UC gen is 60-240s
-                                          # with a long tail. 300s catches the tail
-                                          # without blocking the breaker forever.
+_OAUTH_UC_CALL_TIMEOUT_SEC = 600         # UC call with WebSearch + WebFetch: 10 min
+                                          # ceiling. This is a MAX not a fixed wait —
+                                          # successful calls return when the subprocess
+                                          # exits (typical 60-240s). Bumped 300->600
+                                          # so the long-tail of heavy WebSearch articles
+                                          # (multiple round-trips + complex Splunk/KQL
+                                          # generation) reliably complete instead of
+                                          # tripping the breaker. The worst-case
+                                          # wallclock for a degenerate run hitting the
+                                          # 6/12 breaker trip is 60 min, but only when
+                                          # six consecutive UC calls genuinely hang —
+                                          # not for the typical successful pipeline.
 _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
 
 # Per-kind circuit breakers with a rolling-window failure-rate trigger.
