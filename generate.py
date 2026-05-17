@@ -5004,6 +5004,7 @@ body:not(.view-library-active)  .stats-library{
 .lib-tag.platform-z{background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a;}
 .lib-tag.platform-p{background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8;}
 .lib-tag.platform-dd{background:rgba(120,90,200,0.14); border-color:rgba(120,90,200,0.36); color:#c5b0ff;}
+.lib-tag.platform-cs{background:rgba(225,90,90,0.14); border-color:rgba(225,90,90,0.36); color:#ff9a9a;}
 .lib-card-footer{
   display:flex; align-items:center; gap:10px; justify-content:space-between;
   padding-top:8px; border-top:1px solid rgba(255,255,255,0.05);
@@ -5503,6 +5504,7 @@ body.tour-on .tour-card.tour-card-top{
 .tour-preview-pill.platform-z{ background:rgba(255,170,90,0.12); border-color:rgba(255,170,90,0.32); color:#ffc78a; }
 .tour-preview-pill.platform-p{ background:rgba(220,120,200,0.12); border-color:rgba(220,120,200,0.32); color:#ecaad8; }
 .tour-preview-pill.platform-dd{ background:rgba(120,90,200,0.14); border-color:rgba(120,90,200,0.36); color:#c5b0ff; }
+.tour-preview-pill.platform-cs{ background:rgba(225,90,90,0.14); border-color:rgba(225,90,90,0.36); color:#ff9a9a; }
 .tour-preview-key{
   font-family:var(--mono); font-size:11px; font-weight:600;
   padding:3px 7px; border-radius:4px;
@@ -6872,6 +6874,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-sigma{ background:rgba(155,138,251,0.18); color:#cbb6ff; border-color:rgba(155,138,251,0.40); font-size:9.5px; }
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
 .pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
+.pl-badge.pl-falcon{ background:rgba(225,90,90,0.18);   color:#ff9a9a; border-color:rgba(225,90,90,0.42); font-size:9.5px; }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -9759,13 +9762,13 @@ function applySourceFilter() {
   if (a) a.textContent = hasUc;
   if (b) b.textContent = hasLlm;
   // Platform counts — how many articles have at least one UC for each platform
-  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0};
+  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0};
   for (const c of cards) {
     const p = (c.dataset.platforms || '').split(',').filter(Boolean);
     for (const k of p) if (k in platCounts) platCounts[k]++;
   }
   const idMap = {def:'platCntDef', sent:'platCntSent', sigma:'platCntSigma',
-                 spl:'platCntSpl', datadog:'platCntDatadog'};
+                 spl:'platCntSpl', datadog:'platCntDatadog', falcon:'platCntFalcon'};
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
@@ -10007,13 +10010,13 @@ function _libPrepare() {
   // canonical `pl` field below; this map is used only by the drawer
   // to display the actual query body when a UC is opened.
   const ucDom = new Map();
-  const KIND_BY_SUFFIX = {kql:'def', sentinel:'sent', sigma:'sigma', datadog:'datadog', spl:'spl'};
+  const KIND_BY_SUFFIX = {kql:'def', sentinel:'sent', sigma:'sigma', datadog:'datadog', falcon:'falcon', spl:'spl'};
   document.querySelectorAll('#view-articles article.card details.uc').forEach(d => {
     const title = (d.querySelector('summary .uc-title')?.textContent || d.querySelector('summary')?.textContent || '').trim();
     if (!title) return;
     const queries = {};
     d.querySelectorAll('.tab-content').forEach(tc => {
-      const m = (tc.id || '').match(/-(kql|sentinel|sigma|datadog|spl)$/);
+      const m = (tc.id || '').match(/-(kql|sentinel|sigma|datadog|falcon|spl)$/);
       if (!m) return;
       const codeEl = tc.querySelector('pre code');
       const txt = (codeEl ? codeEl.textContent : '').trim();
@@ -10042,6 +10045,7 @@ function _libPrepare() {
       sigma:   pl.charAt(2) === 'g',
       spl:     pl.charAt(3) === 'p',
       datadog: pl.charAt(4) === 'D',
+      falcon:  pl.charAt(5) === 'F',
     };
     const queries = ucDom.get(uc.t)?.queries || {};
     const apps = _libExtractApps(uc.t + ' ' + (uc.n || ''));
@@ -10058,8 +10062,8 @@ function _libPrepare() {
 
     const probability   = Math.min(100, Math.round(Math.log2(1 + ucArts.length) * 22));
     const impact        = ({0:20, 1:35, 2:55, 3:80, 4:100})[maxSev] ?? 30;
-    const platformCount = ['def','sent','sigma','spl','datadog'].filter(k => plats[k]).length;
-    const detectability = Math.round((platformCount / 5) * 100);
+    const platformCount = ['def','sent','sigma','spl','datadog','falcon'].filter(k => plats[k]).length;
+    const detectability = Math.round((platformCount / 6) * 100);
     const queryLines = Object.values(queries).reduce((s, q) => s + q.split('\\n').length, 0) || 18;
     const effort = Math.max(20, Math.min(100, 110 - Math.round(queryLines * 1.6)));
     const score  = Math.round(0.30 * probability + 0.30 * impact + 0.25 * detectability + 0.15 * effort);
@@ -10134,6 +10138,7 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-z" data-pl="sigma">Σ · Sigma</button>
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
     <button class="lib-pill platform-dd" data-pl="datadog">DD · Datadog</button>
+    <button class="lib-pill platform-cs" data-pl="falcon">CS · Falcon</button>
   </div>`;
   // Kind pills — Normal / LLM / WKC. Counts come from the prepared set so
   // the analyst sees how many UCs are in each bucket. Hover-title explains
@@ -10169,9 +10174,9 @@ function _libCardHtml(p) {
   const tacticTag = tacticLabel ? `<span class="lib-tag tactic">${escapeHtml(tacticLabel)}</span>` : '';
   const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
   const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
-  const platTags = ['def','sent','sigma','spl','datadog'].filter(k => p.plats[k]).map(k => {
-    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd'}[k];
-    const label = {def:'D', sent:'S', sigma:'Σ', spl:'P', datadog:'DD'}[k];
+  const platTags = ['def','sent','sigma','spl','datadog','falcon'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd', falcon:'platform-cs'}[k];
+    const label = {def:'D', sent:'S', sigma:'Σ', spl:'P', datadog:'DD', falcon:'CS'}[k];
     return `<span class="lib-tag ${cls}" title="${k}">${label}</span>`;
   }).join('');
   const techPills = (p.uc.techs || []).slice(0, 4).map(t => `<span class="lib-tag">${escapeHtml(t)}</span>`).join('');
@@ -10453,9 +10458,9 @@ function _libDetailHtml(p) {
   const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
   const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
   const phaseTag = p.uc.ph ? `<span class="lib-tag">${escapeHtml(p.uc.ph)}</span>` : '';
-  const platTags = ['def','sent','sigma','spl','datadog'].filter(k => p.plats[k]).map(k => {
-    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd'}[k];
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog'}[k];
+  const platTags = ['def','sent','sigma','spl','datadog','falcon'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd', falcon:'platform-cs'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale'}[k];
     return `<span class="lib-tag ${cls}">${escapeHtml(lbl)}</span>`;
   }).join('');
 
@@ -10487,14 +10492,14 @@ function _libDetailHtml(p) {
     return `Detects activity matching ${escapeHtml(descLine)}. Maps to ${tCount} MITRE technique${tCount === 1 ? '' : 's'} across ${phaseLabel}; tuned for ${p.uc.tier === 'alerting' ? 'alert-grade fidelity' : 'analyst hunting'}.`;
   })();
 
-  const platOrder = ['def','sent','sigma','spl','datadog'];
+  const platOrder = ['def','sent','sigma','spl','datadog','falcon'];
   const havePlats = platOrder.filter(k => p.queries[k]);
   const queryTabs = havePlats.length ? havePlats.map((k, i) => {
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale'}[k];
     return `<button class="lib-query-tab ${i === 0 ? 'on' : ''}" data-platform="${k}">${lbl}</button>`;
   }).join('') : '';
   const queryPanes = havePlats.length ? havePlats.map((k, i) => {
-    const meta = ({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query'}[k]);
+    const meta = ({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query', falcon:'CrowdStrike Falcon LogScale · NG-SIEM / Humio'}[k]);
     const body = p.queries[k] || '';
     // Splunk gets the same Summarised / Non-summarised toggle the article
     // cards have when the query has a tstats acceleration form. Computed
@@ -11303,7 +11308,7 @@ function tidCellHtml(tid, isSub) {
   // s=Sentinel, g=Sigma, p=SPL, D=Datadog. A position is `-` if that
   // UC lacks that platform body. The matrix shows a small badge for
   // each platform that at least one UC on this technique covers.
-  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false;
+  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false, plFalcon=false;
   for (let u of ucs) {
     const rec = MATRIX.ucs[u];
     if (!rec || !rec.pl) continue;
@@ -11312,14 +11317,16 @@ function tidCellHtml(tid, isSub) {
     if (rec.pl[2] === 'g') plSigma = true;
     if (rec.pl[3] === 'p') plSpl = true;
     if (rec.pl[4] === 'D') plDdog = true;
+    if (rec.pl[5] === 'F') plFalcon = true;
   }
   const platforms = [];
-  if (plDef)   platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
-  if (plSent)  platforms.push('<span class="pl-badge pl-sent" title="Sentinel KQL">S</span>');
-  if (plSigma) platforms.push('<span class="pl-badge pl-sigma" title="Sigma rule">Σ</span>');
-  if (plSpl)   platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
-  if (plDdog)  platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
-  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" tabindex="0">
+  if (plDef)    platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
+  if (plSent)   platforms.push('<span class="pl-badge pl-sent" title="Sentinel KQL">S</span>');
+  if (plSigma)  platforms.push('<span class="pl-badge pl-sigma" title="Sigma rule">Σ</span>');
+  if (plSpl)    platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
+  if (plDdog)   platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
+  if (plFalcon) platforms.push('<span class="pl-badge pl-falcon" title="CrowdStrike Falcon LogScale">CS</span>');
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" data-pl-falcon="${plFalcon?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
@@ -13335,6 +13342,7 @@ def build_matrix_data(articles_meta):
             "g" if getattr(uc, "sigma_yaml", "") else "-",
             "p" if uc.splunk_spl else "-",
             "D" if getattr(uc, "datadog_query", "") else "-",
+            "F" if getattr(uc, "falcon_logscale_query", "") else "-",
         ])
         uc_records.append({
             "i": idx,
@@ -13344,7 +13352,7 @@ def build_matrix_data(articles_meta):
             "ph": uc.kill_chain,
             "src": "internal",
             "tier": getattr(uc, "tier", "hunting"),
-            "pl": pl,                    # platform coverage d/s/g/p/D
+            "pl": pl,                    # platform coverage d/s/g/p/D/F
             "tg": _infer_uc_targets(uc), # target surfaces (windows/linux/aws/...)
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
@@ -13401,7 +13409,7 @@ def build_matrix_data(articles_meta):
             "ph": ph_short,
             "src": "escu",
             "tier": tier,
-            "pl": "---p-",               # ESCU = Splunk SPL-only (5 positions)
+            "pl": "---p--",              # ESCU = Splunk SPL-only (6 positions, F=falcon)
             "tg": escu_tg,
             "techs": tech_ids,
             "arts": [],
@@ -13489,6 +13497,7 @@ def build_matrix_data(articles_meta):
                 "g" if getattr(uc, "sigma_yaml", "") else "-",
                 "p" if uc.splunk_spl else "-",
                 "D" if getattr(uc, "datadog_query", "") else "-",
+                "F" if getattr(uc, "falcon_logscale_query", "") else "-",
             ])
             uc_records.append({
                 "i": idx,
