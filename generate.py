@@ -1263,7 +1263,7 @@ except (ImportError, AttributeError):
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
-_OAUTH_UC_CALL_TIMEOUT_SEC = 600         # UC call with WebSearch + WebFetch: 10 min
+_OAUTH_UC_CALL_TIMEOUT_SEC = 900         # UC call with WebSearch + WebFetch: 15 min
                                           # ceiling. This is a MAX not a fixed wait —
                                           # successful calls return when the subprocess
                                           # exits (typical 60-240s). Bumped 300->600
@@ -1596,6 +1596,71 @@ def _oauth_circuit_open(kind: str = "uc") -> bool:
 _CLAUDE_CLI_PATH = os.environ.get("USECASEINTEL_CLAUDE_CLI", "claude")
 
 
+def _parse_stream_json_buffer(raw: str, *, timed_out: bool) -> str | None:
+    """Parse line-delimited JSON output from `claude -p --output-format
+    stream-json`. Returns the response text (or partial text on timeout)
+    or None if nothing usable was captured.
+
+    Event shapes we care about:
+      {"type":"assistant","message":{"content":[{"type":"text","text":"..."}]}}
+      {"type":"result","result":"<final assembled text>", ...}
+
+    Prefer the final `result` event when present — that's the fully
+    assembled response. Fall back to concatenating text blocks from
+    `assistant` events otherwise. Truncated last lines (timeout cut us
+    mid-JSON) are silently dropped.
+    """
+    if not raw:
+        return None
+    import json as _json
+    final_result = None
+    text_chunks: list[str] = []
+    saw_error = False
+    error_note = ""
+    for line in raw.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            obj = _json.loads(line)
+        except Exception:
+            # Truncated final line from a kill mid-stream — skip.
+            continue
+        if not isinstance(obj, dict):
+            continue
+        ev_type = obj.get("type")
+        if ev_type == "result":
+            if obj.get("is_error"):
+                saw_error = True
+                error_note = (obj.get("subtype")
+                              or obj.get("error")
+                              or obj.get("api_error_status")
+                              or "")
+                continue
+            res = obj.get("result")
+            if isinstance(res, str) and res:
+                final_result = res
+        elif ev_type == "assistant":
+            msg = obj.get("message") or {}
+            content = msg.get("content") or []
+            if isinstance(content, list):
+                for block in content:
+                    if isinstance(block, dict) and block.get("type") == "text":
+                        t = block.get("text", "")
+                        if t:
+                            text_chunks.append(t)
+    if final_result:
+        return final_result
+    if text_chunks:
+        if timed_out:
+            print(f"    [*] claude CLI timed out, salvaged "
+                  f"{len(text_chunks)} text chunk(s) from partial stream")
+        return "\n".join(text_chunks)
+    if saw_error:
+        print(f"    [!] claude CLI returned is_error event: {error_note}")
+    return None
+
+
 def _call_claude_cli(
     prompt: str,
     *,
@@ -1604,8 +1669,15 @@ def _call_claude_cli(
     system_prompt: str | None = None,
     timeout: int = 180,
 ) -> str | None:
-    """Run `claude -p --output-format json` as a subprocess, pipe the
-    prompt via stdin, return the LLM's response text or None.
+    """Run `claude -p --output-format stream-json` as a subprocess.
+
+    Pipes the prompt via stdin and streams the assistant events into a
+    line buffer as they arrive. On natural completion: parses the full
+    stream and returns the final `result` event's text (or concatenated
+    `assistant` text blocks if the result event didn't land). On
+    timeout: kills the subprocess, drains the buffer, and **salvages
+    whatever assistant text already arrived** — so a 10-minute-and-1-
+    second run still produces something usable instead of zero.
 
     Replaces every previous `from claude_agent_sdk import query` call
     in the pipeline. The CLI honours the user's OAuth session (same
@@ -1613,12 +1685,14 @@ def _call_claude_cli(
     one-process-per-call lifecycle — no async cleanup, no zombie
     accumulation, no cancel-scope crashes on the second invocation.
 
-    Returns None on timeout, non-zero exit, malformed JSON, or empty
-    response. Caller is responsible for the per-kind breaker.
+    Returns None on launch failure, non-zero exit with empty stream,
+    or genuinely-empty output. Caller is responsible for the per-kind
+    breaker.
     """
     cmd = [
         _CLAUDE_CLI_PATH, "-p",
-        "--output-format", "json",
+        "--output-format", "stream-json",
+        "--verbose",  # required for stream-json output mode
         "--model", model,
     ]
     if allowed_tools:
@@ -1636,69 +1710,48 @@ def _call_claude_cli(
     env.pop("CLAUDE_CODE_ENTRYPOINT", None)
     env.pop("CLAUDE_CODE_SSE_PORT", None)
 
+    import subprocess
     try:
-        import subprocess
-        proc = subprocess.run(
+        proc = subprocess.Popen(
             cmd,
-            input=prompt,
-            capture_output=True,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             text=True,
             encoding="utf-8",
             errors="replace",
-            timeout=timeout,
             env=env,
         )
-    except subprocess.TimeoutExpired:
-        return None
     except OSError as e:
         print(f"    [!] claude CLI launch failed: {e}")
         return None
 
-    if proc.returncode != 0:
-        err = (proc.stderr or "").strip().splitlines()
+    timed_out = False
+    stdout_buf = ""
+    stderr_buf = ""
+    try:
+        stdout_buf, stderr_buf = proc.communicate(input=prompt, timeout=timeout)
+    except subprocess.TimeoutExpired as exc:
+        timed_out = True
+        # The exception carries the partial stdout/stderr captured up
+        # to the timeout point. Kill the subprocess and grab anything
+        # that buffered between the kill and exit.
+        proc.kill()
+        try:
+            tail_stdout, tail_stderr = proc.communicate(timeout=10)
+        except Exception:
+            tail_stdout, tail_stderr = ("", "")
+        stdout_buf = (exc.stdout or "") + (tail_stdout or "")
+        stderr_buf = (exc.stderr or "") + (tail_stderr or "")
+
+    # Non-zero exit on a non-timeout run: surface the stderr tail.
+    if not timed_out and proc.returncode != 0:
+        err = (stderr_buf or "").strip().splitlines()
         tail = err[-1][:200] if err else "(no stderr)"
         print(f"    [!] claude CLI rc={proc.returncode}: {tail}")
-        return None
+        # Fall through anyway in case partial stream-json text landed.
 
-    raw = (proc.stdout or "").strip()
-    if not raw:
-        return None
-    # `--output-format json` returns a single JSON object with a
-    # `result` field holding the text response. Parse defensively —
-    # the CLI sometimes emits the response wrapped or as text.
-    import json as _json
-    try:
-        parsed = _json.loads(raw)
-    except Exception:
-        # Not JSON — assume it's plain text response.
-        return raw
-    if not isinstance(parsed, dict):
-        return None
-    # Did the CLI report an error inside the JSON envelope?
-    if parsed.get("is_error"):
-        sub = (parsed.get("subtype") or "").strip()
-        err = (parsed.get("error") or parsed.get("api_error_status") or "")
-        print(f"    [!] claude CLI returned is_error=true subtype={sub} err={err}")
-        return None
-    text = parsed.get("result")
-    if isinstance(text, str) and text:
-        return text
-    # Some shapes nest under "messages" — handle them defensively so a
-    # CLI version bump that changes envelope doesn't break the pipeline.
-    msgs = parsed.get("messages") or []
-    if isinstance(msgs, list):
-        chunks = []
-        for m in msgs:
-            content = (m or {}).get("content") or []
-            if isinstance(content, str):
-                chunks.append(content)
-            elif isinstance(content, list):
-                for block in content:
-                    if isinstance(block, dict) and block.get("type") == "text":
-                        chunks.append(block.get("text", ""))
-        if chunks:
-            return "\n".join(chunks)
-    return None
+    return _parse_stream_json_buffer(stdout_buf or "", timed_out=timed_out)
 
 
 def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
