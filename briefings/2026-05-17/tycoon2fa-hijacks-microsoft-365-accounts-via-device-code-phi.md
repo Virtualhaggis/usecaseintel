@@ -11,15 +11,9 @@ By Bill Toulas
 May 17, 2026
 10:43 AM
 0 
-
-
 The Tycoon2FA phishing kit now supports device-code phishing attacks and abuses Trustifi click-tracking URLs to hijack Microsoft 365 accounts.
-
-
 Despite an international law enforcement operation disrupting the Tycoon2FA phishing platform in March, the malicious operation was rebuilt on new infrastructure and quickly returned to regular activity levels.
-
-
-Earlier this month, Abnorm…
+Earlier this month, Abnormal Security …
 
 ## Indicators of Compromise (high-fidelity only)
 
