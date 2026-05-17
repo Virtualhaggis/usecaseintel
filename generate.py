@@ -7551,11 +7551,17 @@ body.view-home-active .stats-articles{display:none !important;}
   color:var(--text);
   display:flex; align-items:center; gap:8px;
 }
+.home-cred-card h3{
+  /* Leave breathing room on the left so the pulse-dot's box-shadow
+     halo isn't clipped by the card's flush-left content area. */
+  padding-left:3px;
+}
 .home-cred-card h3 .pulse{
   width:8px; height:8px; border-radius:50%;
   background:var(--good);
   box-shadow:0 0 0 3px rgba(76,183,130,0.18);
   animation:homePulse 2.4s ease-in-out infinite;
+  flex:none;
 }
 .home-cred-card p{
   margin:0 0 12px;
@@ -7804,6 +7810,11 @@ body.view-home-active .stats-articles{display:none !important;}
 .home-trust-pill{
   display:inline-flex; align-items:center; gap:8px;
   margin-top:18px;
+  /* Left+right padding gives the pulse-dot's 3px box-shadow halo room
+     to render without getting clipped by the container edge. Without
+     it the green dot reads as "slightly cut off" against the left
+     boundary of the pill. */
+  padding:2px 6px 2px 6px;
   font-family:var(--mono);
   font-size:11.5px;
   color:var(--muted);
@@ -7813,6 +7824,7 @@ body.view-home-active .stats-articles{display:none !important;}
   width:8px; height:8px; border-radius:50%;
   background:var(--good);
   box-shadow:0 0 0 3px rgba(76,183,130,0.18);
+  flex:none;
 }
 @media (prefers-reduced-motion: no-preference){
   .home-trust-pill .pulse{animation:homePulse 2.4s ease-in-out infinite;}
