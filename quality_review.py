@@ -433,32 +433,18 @@ def _llm_review_call(prompt: str) -> dict | None:
 
     raw = None
     if use_oauth:
-        try:
-            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-            import asyncio
-            async def _run():
-                chunks = []
-                opts = ClaudeAgentOptions(
-                    model=gen.LLM_RELEVANCE_MODEL,
-                    max_turns=1,
-                    allowed_tools=[],
-                    system_prompt=_REVIEW_PROMPT_SYSTEM,
-                )
-                async for msg in query(prompt=prompt, options=opts):
-                    if isinstance(msg, AssistantMessage):
-                        for block in msg.content:
-                            if isinstance(block, TextBlock):
-                                chunks.append(block.text)
-                return "".join(chunks)
-            async def _run_with_timeout():
-                return await asyncio.wait_for(_run(), timeout=gen._OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2)
-            raw = asyncio.run(_run_with_timeout())
-            if raw:
-                gen._note_oauth_success("review")
-        except TimeoutError:
-            gen._note_oauth_failure("review timeout", kind="review")
-        except BaseException as e:
-            gen._note_oauth_failure(e, kind="review")
+        # Direct `claude -p` subprocess via the shared helper in generate.
+        raw = gen._call_claude_cli(
+            prompt,
+            model=gen.LLM_RELEVANCE_MODEL,
+            allowed_tools=None,
+            system_prompt=_REVIEW_PROMPT_SYSTEM,
+            timeout=gen._OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+        )
+        if raw:
+            gen._note_oauth_success("review")
+        else:
+            gen._note_oauth_failure("review CLI no result", kind="review")
     if raw is None and api_key:
         try:
             import anthropic

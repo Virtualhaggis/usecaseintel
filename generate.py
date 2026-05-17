@@ -1558,73 +1558,161 @@ def _oauth_circuit_open(kind: str = "uc") -> bool:
     return False
 
 
-def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
-    """Call Claude through the user's Claude Code OAuth session via
-    claude-agent-sdk. Returns the raw response text or None if the SDK
-    isn't installed / the user isn't authenticated.
+# =============================================================================
+# Direct `claude -p` CLI invocation.
+#
+# Why this exists: claude-agent-sdk has multiple Windows-specific bugs
+# that hit our long-running pipeline workload:
+#   - BaseExceptionGroup at subprocess close (#890) — patched at import
+#     time, see SubprocessCLITransport.close monkey-patch above
+#   - anyio cancel-scope crash on sequential query() calls (#208, family)
+#   - Zombie processes after init timeout (#18666, closed "not planned")
+#   - Default cp1252 encoding crashes on emoji/non-ASCII output
+#   - Long-prompt subprocess hangs (#238, #282)
+#
+# The community workaround is unanimous: on Windows, call `claude -p`
+# directly via subprocess. Same Claude Code OAuth session, same Opus /
+# Sonnet / Haiku models, same WebSearch + WebFetch tools. None of the
+# anyio + Windows asyncio interop bugs because there's no async / no
+# anyio in the call path — just stdin/stdout pipes and a process exit.
+#
+# Sources:
+#   - https://github.com/anthropics/claude-agent-sdk-python/issues/890
+#   - https://github.com/anthropics/claude-agent-sdk-python/issues/208
+#   - https://github.com/anthropics/claude-code/issues/18666
+#   - https://dstreefkerk.github.io/2026-01-running-claude-code-from-windows-cli/
+# =============================================================================
+_CLAUDE_CLI_PATH = os.environ.get("USECASEINTEL_CLAUDE_CLI", "claude")
 
-    Wrapped in the OAuth circuit breaker (see above): once the SDK has
-    failed `_OAUTH_MAX_CONSECUTIVE_FAILURES` times in a row this returns
-    None immediately so the pipeline doesn't waste minutes per article.
 
-    When enable_search=True (default), Claude can use the WebSearch tool
-    to cross-reference the article against other public sources before
-    answering. This is what lets the LLM-emitted UCs reach genuinely
-    high fidelity — multiple article sources confirm the IOCs / TTPs."""
-    if _OAUTH_CIRCUIT_OPEN:
-        return None
+def _call_claude_cli(
+    prompt: str,
+    *,
+    model: str,
+    allowed_tools: list[str] | None = None,
+    system_prompt: str | None = None,
+    timeout: int = 180,
+) -> str | None:
+    """Run `claude -p --output-format json` as a subprocess, pipe the
+    prompt via stdin, return the LLM's response text or None.
+
+    Replaces every previous `from claude_agent_sdk import query` call
+    in the pipeline. The CLI honours the user's OAuth session (same
+    auth flow), supports the same models and tools, and uses a clean
+    one-process-per-call lifecycle — no async cleanup, no zombie
+    accumulation, no cancel-scope crashes on the second invocation.
+
+    Returns None on timeout, non-zero exit, malformed JSON, or empty
+    response. Caller is responsible for the per-kind breaker.
+    """
+    cmd = [
+        _CLAUDE_CLI_PATH, "-p",
+        "--output-format", "json",
+        "--model", model,
+    ]
+    if allowed_tools:
+        cmd += ["--allowedTools", ",".join(allowed_tools)]
+    if system_prompt:
+        cmd += ["--system-prompt", system_prompt]
+
+    # Strip Claude Code's own session markers from the child env. When
+    # this script runs from inside a Claude Code session (manual
+    # debugging) the spawned `claude -p` subprocess inherits CLAUDECODE=1
+    # and refuses to start a new session. Stripping is no-op when the
+    # vars aren't set (the normal scheduled-task case).
+    env = os.environ.copy()
+    env.pop("CLAUDECODE", None)
+    env.pop("CLAUDE_CODE_ENTRYPOINT", None)
+    env.pop("CLAUDE_CODE_SSE_PORT", None)
+
     try:
-        from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-    except ImportError:
+        import subprocess
+        proc = subprocess.run(
+            cmd,
+            input=prompt,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+            timeout=timeout,
+            env=env,
+        )
+    except subprocess.TimeoutExpired:
         return None
-    import asyncio
+    except OSError as e:
+        print(f"    [!] claude CLI launch failed: {e}")
+        return None
 
-    def _attempt(use_tools: bool) -> str | None:
-        """Single SDK call. Returns the raw text on success, None on any
-        failure (timeout / subprocess crash / exception). Doesn't touch
-        the breaker — the caller decides whether to count the outcome."""
-        async def _run():
-            chunks = []
-            if use_tools:
-                options = ClaudeAgentOptions(
-                    model=LLM_UC_MODEL,
-                    max_turns=3,
-                    allowed_tools=["WebSearch", "WebFetch"],
-                )
-            else:
-                options = ClaudeAgentOptions(model=LLM_UC_MODEL, max_turns=1, allowed_tools=[])
-            async for msg in query(prompt=prompt, options=options):
-                if isinstance(msg, AssistantMessage):
-                    for block in msg.content:
-                        if isinstance(block, TextBlock):
-                            chunks.append(block.text)
-            return "".join(chunks)
-        async def _run_with_timeout():
-            # No-tool retry doesn't need the full 180s — it's just a
-            # generate. Tool-enabled call gets the full budget.
-            budget = _OAUTH_UC_CALL_TIMEOUT_SEC if use_tools else _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2
-            return await asyncio.wait_for(_run(), timeout=budget)
-        try:
-            return asyncio.run(_run_with_timeout())
-        except TimeoutError:
-            return None
-        except BaseException:
-            return None
+    if proc.returncode != 0:
+        err = (proc.stderr or "").strip().splitlines()
+        tail = err[-1][:200] if err else "(no stderr)"
+        print(f"    [!] claude CLI rc={proc.returncode}: {tail}")
+        return None
 
-    # Attempt 1: tools enabled (when requested by caller). The SDK
-    # subprocess flaps badly on WebSearch round-trips — observed ~50%
-    # crash rate vs 0% on no-tool calls (relevance + KC both run clean
-    # at the same load). When attempt 1 returns None we retry the SAME
-    # OAuth path WITHOUT tools so the article stays on Opus + OAuth
-    # rather than degrading to regex/rules. The retry loses live
-    # corroboration but keeps the prompt-and-model quality.
-    out = _attempt(use_tools=enable_search)
-    if not out and enable_search:
-        out = _attempt(use_tools=False)
+    raw = (proc.stdout or "").strip()
+    if not raw:
+        return None
+    # `--output-format json` returns a single JSON object with a
+    # `result` field holding the text response. Parse defensively —
+    # the CLI sometimes emits the response wrapped or as text.
+    import json as _json
+    try:
+        parsed = _json.loads(raw)
+    except Exception:
+        # Not JSON — assume it's plain text response.
+        return raw
+    if not isinstance(parsed, dict):
+        return None
+    # Did the CLI report an error inside the JSON envelope?
+    if parsed.get("is_error"):
+        sub = (parsed.get("subtype") or "").strip()
+        err = (parsed.get("error") or parsed.get("api_error_status") or "")
+        print(f"    [!] claude CLI returned is_error=true subtype={sub} err={err}")
+        return None
+    text = parsed.get("result")
+    if isinstance(text, str) and text:
+        return text
+    # Some shapes nest under "messages" — handle them defensively so a
+    # CLI version bump that changes envelope doesn't break the pipeline.
+    msgs = parsed.get("messages") or []
+    if isinstance(msgs, list):
+        chunks = []
+        for m in msgs:
+            content = (m or {}).get("content") or []
+            if isinstance(content, str):
+                chunks.append(content)
+            elif isinstance(content, list):
+                for block in content:
+                    if isinstance(block, dict) and block.get("type") == "text":
+                        chunks.append(block.get("text", ""))
+        if chunks:
+            return "\n".join(chunks)
+    return None
+
+
+def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
+    """Call Claude through the user's Claude Code OAuth session.
+
+    Now uses `claude -p` directly as a subprocess (see
+    `_call_claude_cli` above). Previously used `claude_agent_sdk.query()`
+    but that path has multiple unfixable Windows bugs — replaced
+    wholesale. Caller-visible contract unchanged: returns raw response
+    text or None on failure, honours `enable_search` toggle, increments
+    the "uc" breaker on failure.
+    """
+    if _oauth_circuit_open("uc"):
+        return None
+    tools = ["WebSearch", "WebFetch"] if enable_search else None
+    out = _call_claude_cli(
+        prompt,
+        model=LLM_UC_MODEL,
+        allowed_tools=tools,
+        timeout=_OAUTH_UC_CALL_TIMEOUT_SEC,
+    )
     if out:
-        _note_oauth_success()
+        _note_oauth_success("uc")
         return out
-    _note_oauth_failure(f"both attempts failed (timeout {_OAUTH_UC_CALL_TIMEOUT_SEC}s)")
+    _note_oauth_failure(f"claude CLI returned no result (timeout {_OAUTH_UC_CALL_TIMEOUT_SEC}s)", kind="uc")
     return None
 
 
@@ -16125,30 +16213,20 @@ def _llm_relevance_call(prompt: str) -> dict | None:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     raw = None
     if use_oauth and not _oauth_circuit_open("relevance"):
-        try:
-            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-            import asyncio
-            async def _run():
-                chunks = []
-                opts = ClaudeAgentOptions(model=LLM_RELEVANCE_MODEL, max_turns=1, allowed_tools=[])
-                async for msg in query(prompt=prompt, options=opts):
-                    if isinstance(msg, AssistantMessage):
-                        for block in msg.content:
-                            if isinstance(block, TextBlock):
-                                chunks.append(block.text)
-                return "".join(chunks)
-            async def _run_with_timeout():
-                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
-            raw = asyncio.run(_run_with_timeout())
-            if raw:
-                _note_oauth_success("relevance")
-        except TimeoutError:  # builtin alias for asyncio.TimeoutError py3.11+
-            _note_oauth_failure(f"relevance timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
-                                kind="relevance")
-            raw = None
-        except BaseException as e:
-            _note_oauth_failure(e, kind="relevance")
-            raw = None
+        # Direct `claude -p` subprocess — see _call_claude_cli for why
+        # we no longer use claude_agent_sdk on this path.
+        raw = _call_claude_cli(
+            prompt,
+            model=LLM_RELEVANCE_MODEL,
+            allowed_tools=None,
+            timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC,
+        )
+        if raw:
+            _note_oauth_success("relevance")
+        else:
+            _note_oauth_failure(
+                f"claude CLI no result (timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s)",
+                kind="relevance")
     if raw is None and api_key:
         try:
             import anthropic
@@ -16571,64 +16649,34 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
               .replace("<<SOURCE>>", source)
               .replace("<<BODY>>", body))
 
-    # OAuth pass — try WebSearch-enabled first, then retry SAME OAuth path
-    # without tools if the subprocess flapped. claude-agent-sdk's
-    # subprocess is markedly more reliable on no-tool calls (KC + relevance
-    # both run with 0 failures at the same load that crashes the
-    # WebSearch-enabled IOC pass at ~50% rate). The retry keeps every
-    # article on Opus + OAuth (user's preference) at the cost of losing
-    # live web corroboration on the retry attempt — Opus's intrinsic
-    # knowledge still produces the v3 schema fields.
-    def _try_oauth_ioc(allow_tools: bool) -> str | None:
-        try:
-            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-            import asyncio
-            async def _run():
-                chunks = []
-                opts = ClaudeAgentOptions(
-                    model=LLM_IOC_MODEL,
-                    max_turns=3 if allow_tools else 1,
-                    allowed_tools=["WebSearch", "WebFetch"] if allow_tools else [],
-                    system_prompt=_IOC_PROMPT_SYSTEM,
-                )
-                async for msg in query(prompt=prompt, options=opts):
-                    if isinstance(msg, AssistantMessage):
-                        for block in msg.content:
-                            if isinstance(block, TextBlock):
-                                chunks.append(block.text)
-                return "".join(chunks)
-            async def _run_with_timeout():
-                # WebSearch path needs the full UC budget; no-tool retry
-                # needs much less.
-                budget = _OAUTH_UC_CALL_TIMEOUT_SEC if allow_tools else _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2
-                return await asyncio.wait_for(_run(), timeout=budget)
-            return asyncio.run(_run_with_timeout())
-        except TimeoutError:
-            return None
-        except BaseException:
-            return None
-
+    # Direct `claude -p` subprocess — see _call_claude_cli for the
+    # rationale. The WebSearch-enabled path is now reliable because
+    # there's no SDK async cleanup involved. We keep a no-tool retry
+    # only for the timeout case (SDK-style failures are gone).
     raw = None
     if use_oauth and not _oauth_circuit_open("ioc"):
-        # Attempt 1: full WebSearch corroboration.
-        raw = _try_oauth_ioc(allow_tools=True)
+        raw = _call_claude_cli(
+            prompt,
+            model=LLM_IOC_MODEL,
+            allowed_tools=["WebSearch", "WebFetch"],
+            system_prompt=_IOC_PROMPT_SYSTEM,
+            timeout=_OAUTH_UC_CALL_TIMEOUT_SEC,
+        )
         if not raw:
-            # Attempt 2: same OAuth path, no tools. Saves the article from
-            # falling back to regex when the SDK subprocess crashes on the
-            # WebSearch round-trip — we still emit v3 schema, just from
-            # Opus's intrinsic knowledge rather than live vendor lookups.
-            raw = _try_oauth_ioc(allow_tools=False)
-            if raw:
-                # Only ATTEMPT 2 succeeded — note this as a degraded but
-                # successful call (no breaker increment, no api_key
-                # fallback). The cached output is still useful.
-                _note_oauth_success("ioc")
-            else:
-                # Both attempts failed: this is a real failure for the
-                # breaker. Caller falls back to regex.
-                _note_oauth_failure("ioc pass1 both attempts failed", kind="ioc")
-        else:
+            # Retry once without tools — saves the article when the
+            # WebSearch corroboration overran the budget but a plain
+            # extraction would still complete in time.
+            raw = _call_claude_cli(
+                prompt,
+                model=LLM_IOC_MODEL,
+                allowed_tools=None,
+                system_prompt=_IOC_PROMPT_SYSTEM,
+                timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+            )
+        if raw:
             _note_oauth_success("ioc")
+        else:
+            _note_oauth_failure("ioc pass1 both attempts failed", kind="ioc")
     if raw is None and api_key:
         # API-key fallback has no WebSearch — degrades gracefully to a
         # single-pass extraction without corroboration, but still
@@ -16698,35 +16746,20 @@ def _llm_extract_iocs_pass2(article: dict, pass1: dict) -> list:
 
     raw = None
     if use_oauth and not _oauth_circuit_open("ioc"):
-        try:
-            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-            import asyncio
-            async def _run():
-                chunks = []
-                opts = ClaudeAgentOptions(
-                    model=LLM_IOC_MODEL,
-                    max_turns=1,
-                    allowed_tools=[],
-                    system_prompt=_IOC_PROMPT_SYSTEM,
-                )
-                async for msg in query(prompt=prompt, options=opts):
-                    if isinstance(msg, AssistantMessage):
-                        for block in msg.content:
-                            if isinstance(block, TextBlock):
-                                chunks.append(block.text)
-                return "".join(chunks)
-            async def _run_with_timeout():
-                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC)
-            raw = asyncio.run(_run_with_timeout())
-            if raw:
-                _note_oauth_success("ioc")
-        except TimeoutError:
-            _note_oauth_failure(f"ioc pass2 timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
-                                kind="ioc")
-            raw = None
-        except BaseException as e:
-            _note_oauth_failure(e, kind="ioc")
-            raw = None
+        # Direct `claude -p` subprocess. Pass 2 is no-tool by design.
+        raw = _call_claude_cli(
+            prompt,
+            model=LLM_IOC_MODEL,
+            allowed_tools=None,
+            system_prompt=_IOC_PROMPT_SYSTEM,
+            timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC,
+        )
+        if raw:
+            _note_oauth_success("ioc")
+        else:
+            _note_oauth_failure(
+                f"ioc pass2 timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC}s",
+                kind="ioc")
     if raw is None and api_key:
         try:
             import anthropic
@@ -17124,35 +17157,21 @@ def _llm_kill_chain_call(article: dict, ind: dict) -> dict | None:
 
     raw = None
     if use_oauth and not _oauth_circuit_open("kc"):
-        try:
-            from claude_agent_sdk import query, ClaudeAgentOptions, AssistantMessage, TextBlock
-            import asyncio
-            async def _run():
-                chunks = []
-                opts = ClaudeAgentOptions(
-                    model=LLM_IOC_MODEL,
-                    max_turns=1,
-                    allowed_tools=[],
-                    system_prompt=_KC_PROMPT_SYSTEM,
-                )
-                async for msg in query(prompt=prompt, options=opts):
-                    if isinstance(msg, AssistantMessage):
-                        for block in msg.content:
-                            if isinstance(block, TextBlock):
-                                chunks.append(block.text)
-                return "".join(chunks)
-            async def _run_with_timeout():
-                return await asyncio.wait_for(_run(), timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2)
-            raw = asyncio.run(_run_with_timeout())
-            if raw:
-                _note_oauth_success("kc")
-        except TimeoutError:
-            _note_oauth_failure(f"kc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC*2}s",
-                                kind="kc")
-            raw = None
-        except BaseException as e:
-            _note_oauth_failure(e, kind="kc")
-            raw = None
+        # Direct `claude -p` subprocess. KC is a single bounded JSON
+        # call — no tools needed.
+        raw = _call_claude_cli(
+            prompt,
+            model=LLM_IOC_MODEL,
+            allowed_tools=None,
+            system_prompt=_KC_PROMPT_SYSTEM,
+            timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+        )
+        if raw:
+            _note_oauth_success("kc")
+        else:
+            _note_oauth_failure(
+                f"kc timeout {_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC*2}s",
+                kind="kc")
     if raw is None and api_key:
         try:
             import anthropic
