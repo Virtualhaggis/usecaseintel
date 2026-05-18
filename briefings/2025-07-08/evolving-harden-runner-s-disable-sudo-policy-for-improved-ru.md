@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Privileged or host-mounting container launch by GitHub Actions runner user (CVE-2025-32955)
 
-`UC_704_2` · phase: **exploit** · confidence: **High**
+`UC_703_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### [LLM] Direct Docker/containerd socket abuse by runner workflow (CLI-less CVE-2025-32955 exploitation)
 
-`UC_704_3` · phase: **exploit** · confidence: **Medium**
+`UC_703_3` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

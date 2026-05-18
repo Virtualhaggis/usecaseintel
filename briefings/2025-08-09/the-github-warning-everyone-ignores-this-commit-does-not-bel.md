@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The GitHub Warning Everyone Ignores: 'This Commit Does Not Belong to Any Branch'
 
-`UC_683_2` · phase: **exploit** · confidence: **High**
+`UC_682_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

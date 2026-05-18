@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_773 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,6 +13,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [claude code rce flaw lets attackers execute commands via mal](./2026-05-18/claude-code-rce-flaw-lets-attackers-execute-commands-via-mal.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
+- [linus torvalds says ai bug reports have made linux security ](./2026-05-18/linus-torvalds-says-ai-bug-reports-have-made-linux-security-.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
 - [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
@@ -25,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-16
 - [funnel builder flaw under active exploitation enables woocom](./2026-05-16/funnel-builder-flaw-under-active-exploitation-enables-woocom.md)
-- [microsoft exchange windows 11 and cursor zero days exploited](./2026-05-16/microsoft-exchange-windows-11-and-cursor-zero-days-exploited.md)
 - [russian hackers turn kazuar backdoor into modular p2p botnet](./2026-05-16/russian-hackers-turn-kazuar-backdoor-into-modular-p2p-botnet.md)
 
 ## 2026-05-15
@@ -135,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44588 siyuan electron renderer rce vi](./2026-05-08/ghsa-critical-cve-2026-44588-siyuan-electron-renderer-rce-vi.md)
 - [ghsa critical cve 2026 44670 siyuan affected by stored xss v](./2026-05-08/ghsa-critical-cve-2026-44670-siyuan-affected-by-stored-xss-v.md)
 - [ghsa critical ghsa pvmv cwg8 v6c8 zebra v4 4 0 still accepts](./2026-05-08/ghsa-critical-ghsa-pvmv-cwg8-v6c8-zebra-v4-4-0-still-accepts.md)
-- [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
 - [quasar linux rat steals developer credentials for software s](./2026-05-08/quasar-linux-rat-steals-developer-credentials-for-software-s.md)

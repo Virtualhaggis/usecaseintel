@@ -10,13 +10,9 @@ Home Cyber Security News
 1 Million WordPress Sites Affected by Avada Builder File Read and SQL Injection Flaws 
 By Abinaya 
 May 18, 2026 
-
-
-
-
 A widely used WordPress plugin powering over one million websites has been hit by two serious vulnerabilities that could allow attackers to  steal sensitive data and access server files.
 Security researchers warn that the flaws in the Avada Builder plugin could be actively exploited if sites remain unpatched.
-The issues, discovered by researcher Rafie…
+The issues, discovered by researcher Rafie Muhamma…
 
 ## Indicators of Compromise (high-fidelity only)
 

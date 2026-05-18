@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Claude Code launched with injected --settings hooks/SessionStart payload (deeplink RCE)
 
-`UC_9_2` · phase: **exploit** · confidence: **High**
+`UC_11_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] Claude Code parent spawns shell with PoC-style recon/file-write at session startup
 
-`UC_9_3` · phase: **install** · confidence: **Medium**
+`UC_11_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Claude Code RCE Flaw Lets Attackers Execute Commands via Malicious Deeplinks
 
-`UC_9_1` · phase: **install** · confidence: **High**
+`UC_11_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

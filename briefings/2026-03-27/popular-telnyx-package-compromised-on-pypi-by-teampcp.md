@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP telnyx PyPI: msbuild.exe persistence in user Startup folder
 
-`UC_320_9` · phase: **install** · confidence: **High**
+`UC_319_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP telnyx PyPI C2 beacon to 83.142.209.203:8080
 
-`UC_320_10` · phase: **c2** · confidence: **High**
+`UC_319_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP WAV steganography drop URL paths (hangup.wav / ringtone.wav)
 
-`UC_320_11` · phase: **delivery** · confidence: **Medium**
+`UC_319_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -256,7 +256,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular telnyx package compromised on PyPI by TeamPCP
 
-`UC_320_8` · phase: **exploit** · confidence: **High**
+`UC_319_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
