@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BlokTrooper Stage-1 downloader: VS Code-family child fetches raw.githubusercontent.com/BlokTrooper/extension
 
-`UC_345_7` · phase: **delivery** · confidence: **High**
+`UC_346_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### [LLM] BlokTrooper C2 callback to 195.201.104.53 on Socket.IO RAT / upload / clipboard ports (6931/6936/6939)
 
-`UC_345_8` · phase: **c2** · confidence: **High**
+`UC_346_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] BlokTrooper clipboard surveillance: node.exe spawning powershell -NoProfile -NonInteractive Get-Clipboard
 
-`UC_345_9` · phase: **actions** · confidence: **High**
+`UC_346_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -267,7 +267,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_345_6` · phase: **install** · confidence: **High**
+`UC_346_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

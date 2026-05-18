@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ unauthenticated SQLi via User-Agent on /api/captcha (GHSA-289f-fq7w-6q2w)
 
-`UC_187_1` · phase: **exploit** · confidence: **High**
+`UC_189_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] phpMyFAQ /api/captcha anomalous response time (time-based blind SQLi extraction)
 
-`UC_187_2` · phase: **exploit** · confidence: **Medium**
+`UC_189_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-289f-fq7w-6q2w: phpMyFAQ has unauthenticated SQL injectio
 
-`UC_187_0` · phase: **install** · confidence: **High**
+`UC_189_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

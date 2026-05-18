@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_769 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_771 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,18 +10,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
+- [5 steps to managing shadow ai tools without slowing down emp](./2026-05-18/5-steps-to-managing-shadow-ai-tools-without-slowing-down-emp.md)
 - [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
 - [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
 - [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
+- [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
 - [grafana says stolen github token let hackers steal codebase](./2026-05-18/grafana-says-stolen-github-token-let-hackers-steal-codebase.md)
 - [hackers actively exploiting critical nginx rce vulnerability](./2026-05-18/hackers-actively-exploiting-critical-nginx-rce-vulnerability.md)
+- [interpol operation ramz disrupts mena cybercrime networks wi](./2026-05-18/interpol-operation-ramz-disrupts-mena-cybercrime-networks-wi.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
 - [linus torvalds says ai bug reports have made linux security ](./2026-05-18/linus-torvalds-says-ai-bug-reports-have-made-linux-security-.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
 - [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
+- [nx console vs code extension compromised](./2026-05-18/nx-console-vs-code-extension-compromised.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
 - [weekly recap exchange 0 day npm worm fake ai repo cisco expl](./2026-05-18/weekly-recap-exchange-0-day-npm-worm-fake-ai-repo-cisco-expl.md)
 
@@ -141,7 +145,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44588 siyuan electron renderer rce vi](./2026-05-08/ghsa-critical-cve-2026-44588-siyuan-electron-renderer-rce-vi.md)
 - [ghsa critical cve 2026 44670 siyuan affected by stored xss v](./2026-05-08/ghsa-critical-cve-2026-44670-siyuan-affected-by-stored-xss-v.md)
 - [ghsa critical ghsa pvmv cwg8 v6c8 zebra v4 4 0 still accepts](./2026-05-08/ghsa-critical-ghsa-pvmv-cwg8-v6c8-zebra-v4-4-0-still-accepts.md)
-- [tclbanker banking trojan targets financial platforms via wha](./2026-05-08/tclbanker-banking-trojan-targets-financial-platforms-via-wha.md)
 
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
@@ -192,7 +195,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 42300 devguard has an unauthenticated](./2026-05-05/ghsa-critical-cve-2026-42300-devguard-has-an-unauthenticated.md)
 - [ghsa critical cve 2026 42607 grav vulnerable to remote code ](./2026-05-05/ghsa-critical-cve-2026-42607-grav-vulnerable-to-remote-code-.md)
 - [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
-- [ghsa critical cve 2026 42882 s3 proxy has security issues in](./2026-05-05/ghsa-critical-cve-2026-42882-s3-proxy-has-security-issues-in.md)
 - [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)

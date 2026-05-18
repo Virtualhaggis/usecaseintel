@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Semantic Kernel agent RCE: shell/LOLBIN spawned by Python/.NET host that loaded semantic_kernel (CVE-2026-26030)
 
-`UC_156_8` · phase: **exploit** · confidence: **High**
+`UC_158_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Arbitrary file write to Windows Startup folder by Python/.NET agent host (CVE-2026-25592 sandbox escape)
 
-`UC_156_9` · phase: **install** · confidence: **High**
+`UC_158_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -341,7 +341,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — When prompts become shells: RCE vulnerabilities in AI agent frameworks
 
-`UC_156_7` · phase: **exploit** · confidence: **High**
+`UC_158_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
