@@ -7564,7 +7564,7 @@ body.view-home-active .stats-articles{display:none !important;}
   display:grid;
   gap:10px;
 }
-.home-browse-tiles.platform{grid-template-columns:repeat(5, 1fr);}
+.home-browse-tiles.platform{grid-template-columns:repeat(6, 1fr);}
 .home-browse-tiles.environment{grid-template-columns:repeat(4, 1fr);}
 .home-platform-tile,
 .home-env-tile{
@@ -18573,7 +18573,7 @@ def render_home_hero(usecase_count: int, tech_count: int,
     <div class="home-hero-inner">
       <p class="home-eyebrow home-rise" style="--rise-delay:0ms"><span class="dot" aria-hidden="true"></span>Threat-led detection platform</p>
       <h1 class="home-headline home-rise" style="--rise-delay:60ms">Threat-led detections and hunts<br><span class="home-headline-2">built for modern SOC teams.</span></h1>
-      <p class="home-sub home-rise" style="--rise-delay:120ms">Continuously updated operational detections mapped to real attacker behaviour across Splunk, Sentinel, Defender, Sigma, Datadog, and more.</p>
+      <p class="home-sub home-rise" style="--rise-delay:120ms">Continuously updated operational detections mapped to real attacker behaviour across Splunk, Sentinel, Defender, Sigma, Datadog, and CrowdStrike Falcon LogScale.</p>
       <form class="home-search home-rise" id="homeSearchForm" role="search" autocomplete="off" style="--rise-delay:180ms">
         <span class="home-search-glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
@@ -18816,7 +18816,7 @@ def render_home_credibility(generated_human: str, article_count: int) -> str:
         f'<h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3>'
         f'<p>{html.escape(fresh)} — the detection pipeline runs every two hours, '
         f'pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p>'
-        f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across five platforms.</p>'
+        f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p>'
         f'</article>\n'
         '      <article class="home-cred-card">'
         '<h3>Threat-intelligence-driven</h3>'
