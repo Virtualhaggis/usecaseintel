@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] XZ Utils Backdoor (CVE-2024-3094) — Known liblzma 5.6.0/5.6.1 Hash on Linux Host
 
-`UC_416_3` · phase: **install** · confidence: **High**
+`UC_417_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ union isfuzzy=true
 
 ### [LLM] CVE-2024-3094 Vulnerable xz-utils 5.6.0/5.6.1 Present in Linux Software Inventory
 
-`UC_416_4` · phase: **weapon** · confidence: **High**
+`UC_417_4` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

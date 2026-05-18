@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] REMUS-style password manager IndexedDB access by non-browser process (1P/LastPass/Bitwarden)
 
-`UC_22_4` · phase: **actions** · confidence: **High**
+`UC_23_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceFileEvents
 
 ### [LLM] Browser credential store read followed by Telegram API egress within 5 min (REMUS exfil chain)
 
-`UC_22_5` · phase: **c2** · confidence: **High**
+`UC_23_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### [LLM] Post-stealer cookie-satisfied Entra ID sign-in from new ASN/anonymizer (REMUS session replay)
 
-`UC_22_6` · phase: **actions** · confidence: **Medium**
+`UC_23_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

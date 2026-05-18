@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cisco Talos weekly top-prevalent malware hash sweep (coinminer / injector / dropper, week of 2026-04-30)
 
-`UC_227_10` · phase: **install** · confidence: **High**
+`UC_228_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,7 +365,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Great responsibility, without great power
 
-`UC_227_9` · phase: **exploit** · confidence: **High**
+`UC_228_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

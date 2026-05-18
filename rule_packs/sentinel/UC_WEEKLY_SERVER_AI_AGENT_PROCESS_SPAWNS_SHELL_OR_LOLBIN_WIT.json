@@ -1,0 +1,47 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_SERVER_AI_AGENT_PROCESS_SPAWNS_SHELL_OR_LOLBIN_WIT')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Server / AI-agent process spawns shell or LOLBIN with public egress \u2014 post-RCE behavioural chain",
+        "description": "Detects long-running server or agent processes (node, java, python, dotnet, nginx workers, xrdp, portainer, deepseek-tui, n8n, flowise, ruby, perl, php-fpm) spawning interactive shells (cmd/powershell/sh/bash) or network LOLBINs (curl/wget/certutil/bitsadmin/nc/ncat/socat), correlated with public-internet egress from the same host within 5 minutes \u2014 or with shell-decode / download-cradle markers in the child command line. This fortnight produced 12 disparate RCE disclosures whose post-exploit fingerprint collapses to the same behaviour: n8n HTTP-Request prototype pollution (CVE-2026-44789), NGINX rewrite heap overflow exploited in the wild (CVE-2026-42945 / 42946 / 40701 / 42934), Portainer plugin auth bypass to host RCE (CVE-2026-44848), FlowiseAI NodeVM sandbox escape (CVE-2026-46442), DeepSeek-TUI run_tests + task_create insecure defaults (CVE-2026-45311 / 45374), Mapfish Print dynamic-table injection (CVE-2026-44672), esm.sh path traversal (CVE-2026-44593), xrdp pre-auth RCE (CVE-2025-68670), Ivanti EPMM (CVE-2026-6973), and Microsoft's AI-agent frameworks advisory (CVE-2026-26030 / 25592). The kill chain spans exploit through install / c2 \u2014 it fires when an RCE primitive lands and the operator pivots from in-process code execution to a real shell or a second-stage downloader. Fires when a watched server parent spawns a shell/LOLBIN AND the child either reaches a public IP within 5 minutes OR carries decode/download cradles in its command line; does NOT fire on routine CI/build activity (npm/cargo/gradle/mvn/pip/go-test/jest/pytest/eslint/prettier/webpack) suppressed via parent and child command-line regex, nor on benign shell spawns that never egress and lack cradle markers.\n\nRationale: Every one of the 12 articles ends the same way regardless of the exploit primitive: a trusted long-running server / AI-agent / workflow process gains the ability to run code and the operator immediately reaches for a shell or a network-staging LOLBIN. Anchoring on the parent-child pair (server-host \u2192 shell/LOLBIN) plus a 5-minute time-windowed correlation to public egress on the same PID promotes a hunch into an alert without depending on the rotating CVE-, hash-, or IP-level IOCs in any individual article.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let _server_parents = dynamic([\"node.exe\",\"node\",\"java.exe\",\"java\",\"javaw.exe\",\"python.exe\",\"python\",\"python3\",\"pythonw.exe\",\"dotnet.exe\",\"dotnet\",\"nginx.exe\",\"nginx\",\"xrdp\",\"xrdp-sesman\",\"portainer.exe\",\"portainer\",\"deepseek-tui.exe\",\"deepseek-tui\",\"n8n.exe\",\"n8n\",\"flowise\",\"ruby.exe\",\"ruby\",\"perl\",\"go\",\"php-fpm\"]);\nlet _shells_lolbins = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\",\"zsh\",\"dash\",\"ksh\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"socat\"]);\nlet _build_noise = @\"(?i)(npm\\s+(test|install|run|ci)|cargo\\s+(test|build|run)|gradle\\s|mvn\\s+(install|test|package)|pip\\s+install|go\\s+test|jest|pytest|eslint|prettier|webpack)\";\nlet _cradle = @\"(?i)(base64\\s+-d|/dev/tcp/|bash\\s+-i|powershell\\s+-(e|enc)|FromBase64String|IEX |Invoke-Expression|DownloadString|certutil\\s+-urlcache|wget\\s+http|curl\\s+-s\\s+http)\";\nlet _spawn = ImProcessCreate\n    | where TimeGenerated > ago(1h)\n    | extend ParentLeaf = tostring(split(ParentProcessName, \"\\\\\")[-1])\n    | extend ParentLeaf = iif(ParentLeaf == \"\", tostring(split(ParentProcessName, \"/\")[-1]), ParentLeaf)\n    | extend ChildLeaf = tostring(split(TargetProcessName, \"\\\\\")[-1])\n    | extend ChildLeaf = iif(ChildLeaf == \"\", tostring(split(TargetProcessName, \"/\")[-1]), ChildLeaf)\n    | where ParentLeaf in~ (_server_parents)\n    | where ChildLeaf in~ (_shells_lolbins)\n    | where ActorUsername !endswith \"$\"\n    | where not(TargetProcessCommandLine matches regex _build_noise)\n    | where not(ParentProcessCommandLine matches regex _build_noise)\n    | project SpawnTime = TimeGenerated, DvcHostname, ActorUsername,\n              ParentLeaf, ParentCmd = ParentProcessCommandLine,\n              ChildLeaf, ChildCmd = TargetProcessCommandLine, ChildPid = TargetProcessId;\nlet _egress = ImNetworkSession\n    | where TimeGenerated > ago(1h)\n    | where EventResult in (\"Success\",\"\") or isempty(EventResult)\n    | where isnotempty(DstIpAddr) and not(ipv4_is_private(DstIpAddr))\n    | project NetTime = TimeGenerated, DvcHostname, NetProc = ActingProcessName, NetPid = ActingProcessId, DstIpAddr, DstPortNumber, Url;\n_spawn\n| join kind=leftouter _egress on DvcHostname, $left.ChildPid == $right.NetPid\n| extend EgressWithinWindow = iif(isnotnull(NetTime) and datetime_diff('second', NetTime, SpawnTime) between (0 .. 300), true, false)\n| extend SuspiciousCmd = ChildCmd matches regex _cradle\n| where EgressWithinWindow or SuspiciousCmd\n| project SpawnTime, DvcHostname, ActorUsername, ParentLeaf, ParentCmd, ChildLeaf, ChildCmd, ChildPid, DstIpAddr, DstPortNumber, Url, NetTime, EgressWithinWindow, SuspiciousCmd\n| order by SpawnTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1059.001",
+          "T1059.003",
+          "T1059.004",
+          "T1059.006",
+          "T1059.007",
+          "T1105",
+          "T1218",
+          "T1071.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_SERVER_AI_AGENT_PROCESS_SPAWNS_SHELL_OR_LOLBIN_WIT",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SERVER_AI_AGENT_PROCESS_SPAWNS_SHELL_OR_LOLBIN_WIT.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Turla Kazuar / Pelmeni / ShadowLoader Known SHA256 Execution
 
-`UC_17_6` · phase: **install** · confidence: **High**
+`UC_18_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ union isfuzzy=true
 
 ### [LLM] Kazuar Bridge C2: Exchange Web Services Calls from Non-Mail-Client .NET Binary
 
-`UC_17_7` · phase: **c2** · confidence: **Medium**
+`UC_18_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceNetworkEvents
 
 ### [LLM] Kazuar Worker MAPI / Outlook Profile Harvesting from Non-Office Binary
 
-`UC_17_8` · phase: **actions** · confidence: **Medium**
+`UC_18_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

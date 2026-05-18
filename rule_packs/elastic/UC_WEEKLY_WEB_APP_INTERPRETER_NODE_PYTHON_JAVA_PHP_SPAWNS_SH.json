@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Web App Interpreter (Node/Python/Java/PHP) Spawns Shell or Net-Download LOLBin on Internet-Facing Host",
+  "description": "Detects the post-exploitation execution tail of the May 11-16 2026 wave of authentication/authorization bypass disclosures in internet-facing application runtimes \u2014 Node.js, Python (uvicorn/gunicorn), Java, PHP-FPM, Ruby, .NET \u2014 where the application's own interpreter process unexpectedly spawns a shell (sh/bash/cmd/pwsh) or a network-staging LOLBin (curl/wget/nc/python -c). This fortnight the pattern is being driven by CVE-2026-44791 (n8n XML-node prototype pollution \u2192 RCE), CVE-2026-44338 (PraisonAI missing-auth, exploited within 4 hours of disclosure), CVE-2026-42074 (OpenClaude `dangerouslyDisableSandbox` model-controlled escape), CVE-2026-44849 (Portainer Swarm endpoint-security bypass to privileged container), and the Obot `/mcp-connect/{id}` ACR bypass \u2014 together with the Cisco SD-WAN CVE-2026-20182 and Burst Statistics CVE-2026-8181 auth bypasses whose follow-on stages share the same interpreter-spawns-shell shape. Kill-chain stages spanned: exploit \u2192 execution \u2192 ingress tool transfer / discovery, correlated to recent inbound public traffic on the same host. The rule fires when a baseline-rare interpreter\u2192shell-or-LOLBin parent-child pair lands on a host that has received external inbound HTTP traffic in the same window; it does NOT fire on CI/CD runners, build agents, or developer workstations where node/python legitimately spawn shells as part of routine workflow \u2014 those parents should be added to the per-environment allowlist.\n\nRationale: Across all 12 fortnight articles the common observable tail of the auth/authz-bypass exploit is the same: the vulnerable application's own runtime \u2014 node, python, java, php-fpm, .net, n8n's node, OpenClaude's node, PraisonAI's python, Portainer's golang-into-container \u2014 spawns a shell or staging LOLBin shortly after unauthenticated external traffic hits the listening port. Anchoring on the interpreter\u2192shell/LOLBin parent-child pair AND requiring co-temporal public inbound to the same host catches the joint chain while suppressing the legitimate CI/CD case where the same parent-child pair occurs without external probing.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "exploit",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application",
+          "reference": "https://attack.mitre.org/techniques/T1190/"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter",
+          "reference": "https://attack.mitre.org/techniques/T1059/"
+        },
+        {
+          "id": "T1059.004",
+          "name": "Unix Shell",
+          "reference": "https://attack.mitre.org/techniques/T1059.004/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "exploit"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet Lookback = 24h;\nlet WindowMin = 5m;\nlet InterpreterParents = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"python3.exe\",\"java.exe\",\"java\",\"php-fpm.exe\",\"php-fpm\",\"ruby.exe\",\"ruby\",\"gunicorn\",\"uvicorn\",\"n8n.exe\",\"n8n\",\"dotnet.exe\",\"dotnet\",\"w3wp.exe\"]);\nlet ShellLolBinChildren = dynamic([\"sh\",\"bash\",\"zsh\",\"dash\",\"ash\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"nc\",\"ncat\",\"ncat.exe\",\"python.exe\",\"python\",\"python3\",\"perl\",\"socat\"]);\nlet _ci_hosts = dynamic([]);\nlet InboundProbed = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where ActionType in (\"InboundConnectionAccepted\",\"ConnectionAccepted\",\"HttpConnectionInspected\",\"ListeningConnectionCreated\")\n    | where RemoteIPType == \"Public\"\n    | where LocalPort in (80, 443, 8000, 8080, 8443, 5678, 9000, 9443, 3000)\n    | summarize ProbeTime = min(Timestamp), Probers = make_set(RemoteIP, 25) by DeviceId, DeviceName;\nDeviceProcessEvents\n| where Timestamp > ago(Lookback)\n| where InitiatingProcessFileName in~ (InterpreterParents)\n| where FileName in~ (ShellLolBinChildren)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where DeviceName !in~ (_ci_hosts)\n| where isnotempty(ProcessCommandLine)\n| join kind=inner InboundProbed on DeviceId\n| where Timestamp between (ProbeTime .. ProbeTime + WindowMin)\n| extend DelaySec = datetime_diff('second', Timestamp, ProbeTime)\n| project Timestamp, DelaySec, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FileName,\n          ChildCmd    = ProcessCommandLine,\n          ChildSHA256 = SHA256,\n          Probers\n| order by Timestamp desc\n```",
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_WEB_APP_INTERPRETER_NODE_PYTHON_JAVA_PHP_SPAWNS_SH.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
+  }
+}

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Anomalous GitHub authentication from new ASN/anonymizer — CoinbaseCartel stolen-token access
 
-`UC_3_7` · phase: **delivery** · confidence: **Medium**
+`UC_4_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ CloudAppEvents
 
 ### [LLM] Bulk GitHub repository download/clone burst from single identity
 
-`UC_3_8` · phase: **actions** · confidence: **High**
+`UC_4_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ CloudAppEvents
 
 ### [LLM] Helpdesk MFA reset on engineering account followed by GitHub access — ShinyHunters/Scattered Spider playbook
 
-`UC_3_9` · phase: **delivery** · confidence: **High**
+`UC_4_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

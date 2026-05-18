@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mobile-subnet UDP egress to attacker port 3131 (Android 'Tiny UDP Cannon' VPN bypass)
 
-`UC_13_2` · phase: **actions** · confidence: **High**
+`UC_14_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### [LLM] Plaintext 'EXFIL{src=' marker in UDP payload via L7 DPI (Tiny UDP Cannon payload pattern)
 
-`UC_13_3` · phase: **actions** · confidence: **High**
+`UC_14_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### [LLM] Android 16 device fleet vulnerable to Tiny UDP Cannon without ADB mitigation applied
 
-`UC_13_4` · phase: **recon** · confidence: **Medium**
+`UC_14_4` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

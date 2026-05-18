@@ -6,21 +6,33 @@
 
 ## Threat Profile
 
-OpenAI confirms security breach in TanStack supply chain attack 
-By Lawrence Abrams 
+TeamPCP hackers advertise Mistral AI code repos for sale 
+By Ionut Ilascu 
 May 14, 2026
-03:07 PM
+06:50 PM
 0 
-OpenAI says two employees' devices were breached in the recent TanStack supply chain attack that impacted hundreds of npm and PyPI packages, causing the company to rotate code-signing certificates for its applications as a precaution.
-In a security advisory published today, the company said the incident did not impact customer data, production systems, intellectual property, or deployed …
+The TeamPCP hacker group is threatening to leak source code from the Mistral AI project unless a buyer is found for the data.
+In a post on a hacker forum, the threat actor is asking $25,000 for a set of nearly 450 repositories.
+Mistral AI is a French artificial intelligence company founded by former researchers from Google's DeepMind and Meta, which provides open-weight large language models (LLMs…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2026-45321`
+- **IPv4 (defanged):** `83.142.209.194`
+- **Domain (defanged):** `git-tanstack.com`
+- **Domain (defanged):** `filev2.getsession.org`
+- **Domain (defanged):** `api.masscan.cloud`
+- **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
+- **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
+- **SHA256:** `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`
+- **SHA1:** `820fa07a7328b6cf2b417078e103721d4d8f2e79`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1546** — Event Triggered Execution
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
@@ -38,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm persistence via .claude/ payload drop (router_runtime.js / setup.mjs)
 
-`UC_34_1` · phase: **install** · confidence: **High**
+`UC_35_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +73,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP gh-token-monitor persistence daemon (macOS LaunchAgent / Linux systemd user unit)
 
-`UC_34_2` · phase: **install** · confidence: **High**
+`UC_35_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +96,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud C2 callout to git-tanstack[.]com / *.getsession.org / api.masscan.cloud / 83.142.209.194
 
-`UC_34_3` · phase: **c2** · confidence: **High**
+`UC_35_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +151,20 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-45321`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `83.142.209.194`, `git-tanstack.com`, `filev2.getsession.org`, `api.masscan.cloud`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`, `820fa07a7328b6cf2b417078e103721d4d8f2e79`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

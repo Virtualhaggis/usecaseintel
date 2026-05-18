@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Retrospective hunt: @kilocode/cli npm install during unverified-binary release window (Jan 29 – Feb 9 2026)
 
-`UC_428_1` · phase: **install** · confidence: **Medium**
+`UC_429_1` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

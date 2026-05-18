@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud Worm C2 Beacon to 83.142.209.194 (TanStack/Mistral AI Supply Chain)
 
-`UC_25_6` · phase: **c2** · confidence: **High**
+`UC_26_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### [LLM] FIRESCALE Fallback C2 Discovery via GitHub Commit-Search API
 
-`UC_25_7` · phase: **c2** · confidence: **High**
+`UC_26_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud Worm Credential-Harvest Drop (/tmp/transformers.pyz + Post-Install AWS/SSH/Docker Read)
 
-`UC_25_8` · phase: **actions** · confidence: **High**
+`UC_26_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

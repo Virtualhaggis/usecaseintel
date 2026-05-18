@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_776 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-17
 - [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
+- [new windows miniplasma zero day exploit gives system access ](./2026-05-17/new-windows-miniplasma-zero-day-exploit-gives-system-access-.md)
 - [nginx cve 2026 42945 exploited in the wild causing worker cr](./2026-05-17/nginx-cve-2026-42945-exploited-in-the-wild-causing-worker-cr.md)
 - [tycoon2fa hijacks microsoft 365 accounts via device code phi](./2026-05-17/tycoon2fa-hijacks-microsoft-365-accounts-via-device-code-phi.md)
 

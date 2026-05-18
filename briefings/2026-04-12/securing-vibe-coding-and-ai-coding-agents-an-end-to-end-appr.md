@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Trust Wallet Shai-Hulud C2 beacon to metrics-trustwallet.com
 
-`UC_294_7` · phase: **c2** · confidence: **High**
+`UC_295_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ union isfuzzy=true
 
 ### [LLM] Shai-Hulud campaign malware SHA256 present on developer endpoint
 
-`UC_294_8` · phase: **install** · confidence: **High**
+`UC_295_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ union isfuzzy=true
 
 ### [LLM] npm/node postinstall harvests developer credentials via trufflehog or direct secret-file read
 
-`UC_294_9` · phase: **actions** · confidence: **High**
+`UC_295_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

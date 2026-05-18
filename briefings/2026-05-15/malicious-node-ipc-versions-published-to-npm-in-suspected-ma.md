@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc stealer C2/exfil to azurestaticprovider[.]net or 37.16.75.69
 
-`UC_32_4` · phase: **c2** · confidence: **High**
+`UC_33_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ union isfuzzy=true
 
 ### [LLM] Node process bulk read of developer credential files (90+ category stealer harvest)
 
-`UC_32_5` · phase: **actions** · confidence: **High**
+`UC_33_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceFileEvents
 
 ### [LLM] node-ipc stealer execution markers: __ntw=1 env flag and $TMPDIR/nt-* staging directory
 
-`UC_32_6` · phase: **install** · confidence: **High**
+`UC_33_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_32_3` · phase: **exploit** · confidence: **High**
+`UC_33_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

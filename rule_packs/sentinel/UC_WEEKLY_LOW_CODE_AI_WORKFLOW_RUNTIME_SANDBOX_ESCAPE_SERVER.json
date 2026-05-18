@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_LOW_CODE_AI_WORKFLOW_RUNTIME_SANDBOX_ESCAPE_SERVER')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Low-Code / AI Workflow Runtime Sandbox-Escape \u2014 Server Process Spawns Shell + Public Egress",
+        "description": "Detects the post-exploitation pivot common to this fortnight's cluster of GHSA-published RCEs in Node.js, Python and Rust application runtimes: an embedded code-execution feature that is *supposed* to be sandboxed (n8n HTTP Request / XML nodes \u2014 CVE-2026-44789, CVE-2026-44791; FlowiseAI NodeVM Custom JS \u2014 CVE-2026-46442; vm2 async-generator sandbox breakout \u2014 CVE-2026-45411; DeepSeek-TUI run_tests / task_create auto-approved exec \u2014 CVE-2026-45311, CVE-2026-45374; utcp-cli unsanitized arg substitution \u2014 CVE-2026-45369; Portainer Docker plugin auth bypass \u2014 CVE-2026-44848) causes the runtime parent (node, python, dotnet, cargo, portainer, deepseek-tui, n8n, flowise) to fork a real OS shell, LOLBin, or download tool, optionally followed by outbound egress to a public destination from the same parent. It spans exploit -> install (T1190 -> T1059 / T1105). It fires when the runtime spawns a child it has no business spawning AND the child cmdline carries an injection / staging marker (base64, /dev/tcp/, IEX, bash -i, child_process, getBuiltinModule, constructor.constructor, `etc/passwd`, backticked subshells) AND the parent runtime made an outbound public connection in the surrounding 5 minutes; it will NOT fire on normal developer scaffolding (npm/yarn/pip/poetry/cargo build|test|run) because those cmdline patterns are explicitly suppressed.\n\nRationale: Every one of these 12 GHSAs reaches RCE through a sandboxed code-execution surface inside a long-running app runtime \u2014 vm2 / NodeVM (Flowise, n8n), Python interpreter (utcp-cli), Rust cargo test under deepseek-tui, or the Portainer/Docker-engine plugin path. The single behavioural invariant the catalog doesn't already cover is: the runtime parent itself spawns an OS shell or LOLBin whose cmdline contains exploit-staging tokens AND that runtime egresses to a public destination within five minutes \u2014 a join that survives IOC rotation because it keys on the parent-process / child-binary / behaviour triple, not on any one CVE's payload.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let WindowMin = 5m;\nlet RuntimeParents = dynamic([\"node.exe\",\"node\",\"n8n\",\"n8n.exe\",\"flowise\",\"flowise.exe\",\"deepseek-tui\",\"deepseek-tui.exe\",\"deepseek\",\"deepseek.exe\",\"python.exe\",\"python\",\"python3\",\"python3.exe\",\"pythonw.exe\",\"dotnet.exe\",\"dotnet\",\"portainer\",\"portainer.exe\",\"cargo.exe\",\"cargo\",\"ts-node\",\"tsx\",\"nodemon\"]);\nlet ShellOrLolbin = dynamic([\"sh\",\"bash\",\"zsh\",\"dash\",\"ksh\",\"fish\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"cscript.exe\",\"wscript.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"ncat.exe\",\"socat\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"whoami.exe\",\"whoami\",\"id\",\"hostname\",\"uname\"]);\nlet BenignDevPatterns = @\"(?i)(npm\\s+(install|run|test|build|ci)|yarn\\s+(install|run|test|build)|pnpm\\s+(install|run|test)|pip\\s+install|poetry\\s+install|conda\\s+install|cargo\\s+(build|check|fmt|clippy)|webpack|tsc\\s|eslint|prettier|jest)\";\nlet InjectionMarker = @\"(?i)(https?://|/dev/tcp/|base64\\s+-d|-enc(odedcommand)?\\s|IEX\\s|Invoke-Expression|nc\\s+-e|bash\\s+-i|/etc/(passwd|shadow|hosts)|child_process|exec[sS]ync|spawn[sS]ync|getBuiltinModule|constructor\\.constructor|;\\s*(curl|wget|nc|bash|sh|python|perl)|`[^`]+`|\\$\\([^)]+\\)|chmod\\s+\\+x\\s+/tmp|CMD_\\d+_OUTPUT=)\";\nlet RuntimeShells = ImProcessCreate\n    | where TimeGenerated > ago(1h)\n    | where ActorUsername !endswith \"$\"\n    | where ParentProcessName in~ (RuntimeParents)\n    | where TargetProcessName in~ (ShellOrLolbin)\n    | where not(ParentProcessCommandLine matches regex BenignDevPatterns)\n    | where TargetProcessCommandLine matches regex InjectionMarker\n    | project ShellTime = TimeGenerated, DvcHostname, ActorUsername,\n              ParentProcessName, ParentProcessCommandLine,\n              TargetProcessName, TargetProcessCommandLine,\n              TargetProcessSHA256;\nlet RuntimeEgress = ImNetworkSession\n    | where TimeGenerated > ago(2h)\n    | where ActingProcessName in~ (RuntimeParents)\n    | where not(ipv4_is_private(DstIpAddr))\n    | where EventResult == \"Success\"\n    | project EgressTime = TimeGenerated, DvcHostname,\n              ActingProcessName, DstIpAddr, DstPortNumber, Url;\nRuntimeShells\n| join kind=inner RuntimeEgress on DvcHostname\n| where EgressTime between (ShellTime - WindowMin .. ShellTime + WindowMin)\n| summarize EgressIPs = make_set(DstIpAddr, 25),\n            EgressUrls = make_set(Url, 25),\n            FirstEgress = min(EgressTime),\n            LastEgress  = max(EgressTime)\n            by ShellTime, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine, TargetProcessSHA256\n| order by ShellTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.001",
+          "T1059.006",
+          "T1059.007",
+          "T1211",
+          "T1105"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_LOW_CODE_AI_WORKFLOW_RUNTIME_SANDBOX_ESCAPE_SERVER",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_LOW_CODE_AI_WORKFLOW_RUNTIME_SANDBOX_ESCAPE_SERVER.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

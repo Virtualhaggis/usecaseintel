@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CVE-2025-8088 WinRAR ADS path traversal — file written to Startup folder by WinRAR
 
-`UC_585_3` · phase: **exploit** · confidence: **High**
+`UC_586_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceFileEvents
 
 ### [LLM] InedibleOchotense lure — host contacts spoofed ESET domains (esetsmart/esetscanner/esetremover.com)
 
-`UC_585_4` · phase: **delivery** · confidence: **High**
+`UC_586_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ union isfuzzy=true
 
 ### [LLM] ESET-confirmed APT IOC SHA256 sweep across file / process / image-load telemetry
 
-`UC_585_5` · phase: **install** · confidence: **High**
+`UC_586_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

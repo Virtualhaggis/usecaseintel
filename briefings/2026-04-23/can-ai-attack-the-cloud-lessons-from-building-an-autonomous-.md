@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Linux/GCE web-app process contacts GCP metadata service (SSRF→token theft)
 
-`UC_256_6` · phase: **exploit** · confidence: **High**
+`UC_257_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### [LLM] GCP IAM service-account impersonation via GenerateAccessToken/SignBlob (post-metadata-theft pivot)
 
-`UC_256_7` · phase: **install** · confidence: **High**
+`UC_257_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] First-time BigQuery extract/export job by GCE service account (data exfiltration)
 
-`UC_256_8` · phase: **actions** · confidence: **High**
+`UC_257_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

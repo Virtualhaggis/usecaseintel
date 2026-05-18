@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_DEV_TOOL_AUTO_EXECUTION_TRIGGERS_N')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package Manager / Dev-Tool Auto-Execution Triggers Non-Registry Egress or Credential-Store Access",
+        "description": "Detects the supply-chain TTP that dominated this fortnight: a package manager or build tool (npm, node, cargo, pip, yarn, pnpm, ruby/gem) \u2014 or a freshly-dropped trojanized installer \u2014 spawns a child process or initiates outbound traffic to a non-registry public destination within a short window of install/test execution, often paired with reads of browser credential stores, SSH keys, AWS/npm/git config, or cloud token files. Driven by the node-ipc 9.1.6/9.2.3/12.0.1 compromise (StepSecurity + Snyk, 2026-05-15) exfiltrating to sh.azurestaticprovider.net/37.16.75.69, the pgserve 1.1.11\u20131.1.13 postinstall script harvesting creds to an ICP canister (StepSecurity 2026-05-04), DeepSeek-TUI CVE-2026-45311 auto-approved cargo test execution (GHSA 2026-05-14), and the JDownloader site compromise distributing trojanized installers signed as 'Zipline LLC'/'The Water Team' (CyberSecurityNews 2026-05-16). It spans Delivery (compromised package/installer pulled) \u2192 Execution (postinstall/require/cargo-test/installer run) \u2192 Credential Access (T1555.003/T1552.001) \u2192 C2/Exfil (T1041/T1071) and fires only when both the dev-tool process start and the off-registry public connection (or credential-store read) occur on the same host within \u22645 minutes. It will NOT fire for routine `npm install` traffic to npmjs.org/PyPI/crates.io/github.com (allowlisted) or for dev-tools talking only to internal mirrors.\n\nRationale: All four headline campaigns this fortnight (node-ipc 9.1.6/9.2.3/12.0.1 \u2192 37.16.75.69; pgserve 1.1.11\u20131.1.13 \u2192 ICP canister; DeepSeek-TUI CVE-2026-45311 cargo-test auto-exec; JDownloader trojanized installer) share the same observable joint pattern: a trusted local dev-tool/package-manager process spawns a script interpreter or directly initiates an unexpected outbound connection that bypasses the known package-registry allowlist, within seconds of install/test execution. Correlating dev-tool process start with non-registry public egress (and optionally credential-store reads) inside a 5-minute window catches the technique without depending on any single rotating IOC, and the registry-domain allowlist suppresses the legitimate `npm install` baseline that would otherwise drown the signal.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackHours = 24h;\nlet CorrelationWindow = 5m;\nlet DevTools = dynamic([\"npm.exe\",\"npm\",\"node.exe\",\"node\",\"cargo.exe\",\"cargo\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"pip.exe\",\"pip\",\"pip3\",\"python.exe\",\"python\",\"python3\",\"ruby.exe\",\"ruby\",\"gem.exe\",\"gem\",\"go.exe\",\"go\"]);\nlet Interpreters = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"sh\",\"bash\",\"zsh\",\"dash\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"curl.exe\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet RegistryHosts = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"pypi.org\",\"files.pythonhosted.org\",\"crates.io\",\"static.crates.io\",\"rubygems.org\",\"proxy.golang.org\",\"github.com\",\"raw.githubusercontent.com\",\"codeload.github.com\",\"objects.githubusercontent.com\",\"nodejs.org\"]);\nlet InstallSpawns = ImProcessCreate\n    | where TimeGenerated > ago(LookbackHours)\n    | extend ParentBin = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n    | extend ChildBin = tolower(tostring(split(TargetProcessName, \"\\\\\")[-1]))\n    | where ParentBin in (DevTools)\n    | where ChildBin in (Interpreters) or TargetProcessCommandLine has_any (\"Login Data\",\"cookies.sqlite\",\"logins.json\",\".aws/credentials\",\".ssh/id_\",\".npmrc\")\n    | where ActorUsername !endswith \"$\"\n    | project DvcHostname, ActorUsername,\n              InstallTime = TimeGenerated,\n              ParentBin, ChildBin,\n              TargetProcessCommandLine;\nlet NetEgress = ImNetworkSession\n    | where TimeGenerated > ago(LookbackHours)\n    | where ipv4_is_private(DstIpAddr) == false\n    | where isempty(Url) or not(Url has_any (RegistryHosts))\n    | project DvcHostname, NetTime = TimeGenerated,\n              EgressProcess = ActingProcessName,\n              DstIpAddr, Url, DstPortNumber;\nInstallSpawns\n| join kind=inner NetEgress on DvcHostname\n| where NetTime between (InstallTime .. InstallTime + CorrelationWindow)\n| extend DelaySec = datetime_diff('second', NetTime, InstallTime)\n| project InstallTime, DvcHostname, ActorUsername,\n          ParentBin, ChildBin, TargetProcessCommandLine,\n          NetTime, DelaySec, DstIpAddr, Url, DstPortNumber, EgressProcess\n| summarize arg_min(InstallTime, *) by DvcHostname, ActorUsername, ParentBin, Url, DstIpAddr\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1204.002",
+          "T1059.001",
+          "T1059.004",
+          "T1552.001",
+          "T1555.003",
+          "T1071.001",
+          "T1041"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_DEV_TOOL_AUTO_EXECUTION_TRIGGERS_N",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_DEV_TOOL_AUTO_EXECUTION_TRIGGERS_N.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

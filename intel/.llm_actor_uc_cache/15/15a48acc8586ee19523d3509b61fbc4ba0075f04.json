@@ -1,0 +1,99 @@
+{
+  "name": "Sandworm",
+  "ucs": [
+    {
+      "title": "[LLM] Sandworm wiper staging \u2014 disk-management vendor driver registered as a service by a non-vendor process (HermeticWiper / IsaacWiper / CaddyWi",
+      "description": "Hunts the distinctive Sandworm wiper kill-chain in which a signed kernel driver from a partition/disk-management vendor (EaseUS empntdrv.sys / epmntdrv.sys / EUME.sys, Paragon, MiniTool) is dropped to disk and registered as a service by a process that is NOT the legitimate vendor installer \u2014 Sandworm reuses these drivers to obtain raw disk I/O for MFT/MBR corruption.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1485",
+        "T1561.002",
+        "T1543.003",
+        "T1014"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count values(Registry.process_name) as writer_process values(Registry.user) as writer_user values(Registry.registry_value_data) as image_path min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\SYSTEM\\\\CurrentControlSet\\\\Services\\\\*\\\\ImagePath\" AND (Registry.registry_value_data=\"*empntdrv.sys*\" OR Registry.registry_value_data=\"*epmntdrv.sys*\" OR Registry.registry_value_data=\"*EUME.sys*\" OR Registry.registry_value_data=\"*partitionmaster*\" OR Registry.registry_value_data=\"*paragon*.sys\" OR Registry.registry_value_data=\"*minitool*.sys\") by host Registry.process_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | where NOT match(process_name, \"(?i)\\\\\\\\(MsiExec|services|installer|setup|EaseUS|Paragon|MiniTool|epm)\\\\.exe$\") | join type=left host image_path [| tstats summariesonly=true min(_time) as driverWritten values(Filesystem.process_name) as driverWriter values(Filesystem.file_hash) as driverHash from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name=\"empntdrv.sys\" OR Filesystem.file_name=\"epmntdrv.sys\" OR Filesystem.file_name=\"EUME.sys\" OR Filesystem.file_name=\"*partitionmaster*.sys\" OR Filesystem.file_name=\"*paragon*.sys\" OR Filesystem.file_name=\"*minitool*.sys\") by host Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename file_path as image_path] | where (firstSeen - driverWritten) < 600 | table firstSeen host writer_process writer_user image_path driverWriter driverHash",
+      "kql": "let _driver_re = @\"(?i)\\\\(empntdrv|epmntdrv|EUME|partitionmaster|paragon\\w*|minitool\\w*|kerneldriver)\\.sys\";\nlet _legit_writers = dynamic([\"MsiExec.exe\",\"services.exe\",\"setup.exe\",\"epm.exe\",\"EaseUS_PartitionMaster.exe\",\"ParagonPartitionManager.exe\",\"MiniToolPartitionWizard.exe\"]);\nlet ServiceReg = DeviceRegistryEvents\n    | where Timestamp > ago(7d)\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where RegistryKey has @\"\\SYSTEM\\CurrentControlSet\\Services\\\"\n    | where RegistryValueName =~ \"ImagePath\"\n    | where RegistryValueData matches regex _driver_re\n    | where InitiatingProcessFileName !in~ (_legit_writers)\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | project SvcTime = Timestamp, DeviceId, DeviceName, RegistryKey, ImagePath = RegistryValueData,\n              SvcWriter = InitiatingProcessFileName, SvcWriterCmd = InitiatingProcessCommandLine,\n              SvcWriterFolder = InitiatingProcessFolderPath, SvcWriterAcct = InitiatingProcessAccountName;\nlet DriverDrop = DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where ActionType == \"FileCreated\"\n    | where FileName matches regex _driver_re\n    | project DropTime = Timestamp, DeviceId, DriverPath = FolderPath, DriverFile = FileName,\n              DriverSHA256 = SHA256, DriverWriter = InitiatingProcessFileName;\nServiceReg\n| join kind=inner DriverDrop on DeviceId\n| where DropTime between (SvcTime - 10m .. SvcTime + 2m)\n| project SvcTime, DeviceName, SvcWriter, SvcWriterCmd, SvcWriterAcct,\n          ImagePath, DriverFile, DriverPath, DriverSHA256, DriverWriter\n| order by SvcTime desc",
+      "sentinel_kql": "let _driver_re = @\"(?i)\\\\(empntdrv|epmntdrv|EUME|partitionmaster|paragon\\w*|minitool\\w*|kerneldriver)\\.sys\";\nlet _legit_writers = dynamic([\"MsiExec.exe\",\"services.exe\",\"setup.exe\",\"EaseUS_PartitionMaster.exe\",\"ParagonPartitionManager.exe\",\"MiniToolPartitionWizard.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4697                                  // service installed\n| where ServiceFileName matches regex _driver_re\n| where SubjectUserName !endswith \"$\"\n| extend WriterImage = tostring(split(ServiceFileName, \"\\\\\")[-1])\n| where WriterImage !in~ (_legit_writers)\n| project TimeGenerated, Computer, Account, SubjectUserName, ServiceName, ServiceFileName, ServiceType, ServiceStartType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Sandworm Wiper \u2014 Disk-Management Vendor Driver Registered as a Service by Non-Vendor Process\nid: 8f4a2d18-9a7d-4f3b-9ad5-aa3b1c2e7e21\nstatus: experimental\ndescription: Detects service registration whose ImagePath references signed disk-management vendor kernel drivers (EaseUS empntdrv.sys / epmntdrv.sys / EUME.sys, Paragon, MiniTool) by a process that is NOT the legitimate vendor installer. This is the loader pattern for the Sandworm wiper family (HermeticWiper, IsaacWiper, CaddyWiper) which embeds these drivers to obtain raw disk I/O for MFT/MBR corruption.\nreferences:\n    - https://www.welivesecurity.com/2022/03/01/isaacwiper-hermeticwizard-wiper-worm-targeting-ukraine/\n    - https://www.welivesecurity.com/2022/04/12/industroyer2-industroyer-reloaded/\n    - https://attack.mitre.org/groups/G0034/\nauthor: Detection Engineering\ndate: 2026/05/18\ntags:\n    - attack.impact\n    - attack.t1485\n    - attack.t1561.002\n    - attack.t1543.003\n    - attack.g0034\nlogsource:\n    category: registry_set\n    product: windows\ndetection:\n    selection_service_imagepath:\n        TargetObject|contains: '\\SYSTEM\\CurrentControlSet\\Services\\'\n        TargetObject|endswith: '\\ImagePath'\n    selection_driver_name:\n        Details|re: '(?i)\\\\(empntdrv|epmntdrv|EUME|partitionmaster|paragon\\w*|minitool\\w*|kerneldriver)\\.sys'\n    filter_legit_writers:\n        Image|endswith:\n            - '\\MsiExec.exe'\n            - '\\services.exe'\n            - '\\setup.exe'\n            - '\\EaseUS_PartitionMaster.exe'\n            - '\\ParagonPartitionManager.exe'\n            - '\\MiniToolPartitionWizard.exe'\n    condition: selection_service_imagepath and selection_driver_name and not filter_legit_writers\nfalsepositives:\n    - Genuine installation of EaseUS Partition Master, Paragon Hard Disk Manager or MiniTool Partition Wizard \u2014 confirm the writer is the vendor installer running from Program Files\n    - Vendor upgrade routines re-registering their own service\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\\\CurrentControlSet\\\\Services\\\\*\\\\ImagePath OR *\\\\currentcontrolset\\\\services\\\\*\\\\imagepath) @Details:(*empntdrv.sys* OR *EMPNTDRV.SYS* OR *epmntdrv.sys* OR *EPMNTDRV.SYS* OR *EUME.sys* OR *partitionmaster* OR *PartitionMaster* OR *paragon*.sys OR *Paragon*.sys OR *minitool*.sys OR *MiniTool*.sys) -@Image:(*\\\\MsiExec.exe OR *\\\\msiexec.exe OR *\\\\services.exe OR *\\\\setup.exe OR *\\\\EaseUS_PartitionMaster.exe OR *\\\\ParagonPartitionManager.exe OR *\\\\MiniToolPartitionWizard.exe)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate\n| RegObjectName=/\\\\Services\\\\/i\n| RegValueName=/^ImagePath$/i\n| regex(\"(?i)\\\\\\\\(empntdrv|epmntdrv|EUME|partitionmaster|paragon\\\\w*|minitool\\\\w*|kerneldriver)\\\\.sys\", field=RegStringValue)\n| NOT ContextImageFileName=/\\\\(MsiExec|services|setup|EaseUS_PartitionMaster|ParagonPartitionManager|MiniToolPartitionWizard)\\.exe$/i\n| groupBy([aid, ComputerName, ContextImageFileName, RegStringValue], function={count() | min(@timestamp) | max(@timestamp)})",
+      "rationale": "This is Sandworm's signature wiper-loader fingerprint: ESET's HermeticWiper analysis, Symantec's IsaacWiper teardown and CERT-UA's CaddyWiper IRs all show the same chain \u2014 the wiper embeds an EaseUS Partition Master kernel driver (empntdrv.sys / epmntdrv.sys / EUME.sys) or equivalent Paragon/MiniTool driver, drops it to disk, and registers it as a Windows service so it can issue raw IOCTL_DISK_* c"
+    },
+    {
+      "title": "[LLM] Sandworm mass intra-org binary push from a domain controller (NotPetya / HermeticWiper distribution pattern)",
+      "description": "Detects the Sandworm mass-deployment fingerprint observed in NotPetya (2017) and the 2022 Ukraine wiper wave: after compromising a domain controller, the same payload SHA256 is written via SMB to admin shares on many endpoints in a tight window, then executed via SCM/scheduled task. The detection fires on hash + cross-host fan-out within a short window, which Sandworm uses to maximise blast radius before defenders react.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1021.002",
+        "T1570",
+        "T1543.003",
+        "T1485",
+        "T1072"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true dc(Filesystem.dest) as victim_hosts values(Filesystem.dest) as victims values(Filesystem.user) as writers values(Filesystem.process_name) as writer_processes min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_path=\"*\\\\ADMIN$\\\\*\" OR Filesystem.file_path=\"*\\\\admin$\\\\*\" OR Filesystem.file_path=\"*\\\\C$\\\\Windows\\\\Temp\\\\*\" OR Filesystem.file_path=\"*\\\\C$\\\\Windows\\\\System32\\\\*\" OR Filesystem.file_path=\"*\\\\C$\\\\PerfLogs\\\\*\" OR Filesystem.file_path=\"*\\\\C$\\\\Users\\\\Public\\\\*\") AND (Filesystem.file_name=\"*.exe\" OR Filesystem.file_name=\"*.dll\") by Filesystem.file_hash Filesystem.file_name | `drop_dm_object_name(Filesystem)` | eval window_min=(lastSeen-firstSeen)/60 | where victim_hosts>=5 AND window_min<=30 | sort - victim_hosts",
+      "kql": "let _windowMin = 30m;\nlet _minVictims = 5;\nlet _smb_paths = dynamic([@\"\\ADMIN$\\\", @\"\\C$\\Windows\\Temp\\\", @\"\\C$\\Windows\\System32\\\", @\"\\C$\\PerfLogs\\\", @\"\\C$\\Users\\Public\\\"]);\nlet PushedBinaries = DeviceFileEvents\n    | where Timestamp > ago(1d)\n    | where ActionType == \"FileCreated\"\n    | where FileName endswith \".exe\" or FileName endswith \".dll\"\n    | where FolderPath has_any (_smb_paths)\n    | where isnotempty(RequestSourceIP) or (RequestProtocol startswith \"SMB\")\n    | summarize VictimHosts = dcount(DeviceId),\n                Victims = make_set(DeviceName, 25),\n                SourceIPs = make_set(RequestSourceIP, 10),\n                SourceAccts = make_set(RequestAccountName, 10),\n                FirstSeen = min(Timestamp),\n                LastSeen = max(Timestamp),\n                SamplePath = any(FolderPath)\n                by SHA256, FileName\n    | where VictimHosts >= _minVictims\n    | where (LastSeen - FirstSeen) <= _windowMin;\nPushedBinaries\n| join kind=leftouter (\n    DeviceProcessEvents\n    | where Timestamp > ago(1d)\n    | where InitiatingProcessFileName =~ \"services.exe\" or FileName =~ \"schtasks.exe\" or InitiatingProcessParentFileName =~ \"services.exe\"\n    | summarize ExecHosts = dcount(DeviceId), SampleCmd = any(ProcessCommandLine) by SHA256\n  ) on SHA256\n| project FirstSeen, LastSeen, FileName, SHA256, VictimHosts, ExecHosts,\n          Victims, SourceIPs, SourceAccts, SamplePath, SampleCmd\n| order by VictimHosts desc",
+      "sentinel_kql": "let _windowMin = 30m;\nlet _minVictims = 5;\nlet _smb_paths = dynamic([@\"\\ADMIN$\\\", @\"\\C$\\Windows\\Temp\\\", @\"\\C$\\Windows\\System32\\\", @\"\\C$\\PerfLogs\\\", @\"\\C$\\Users\\Public\\\"]);\nDeviceFileEvents\n| where TimeGenerated > ago(1d)\n| where ActionType == \"FileCreated\"\n| where FileName endswith \".exe\" or FileName endswith \".dll\"\n| where FolderPath has_any (_smb_paths)\n| where isnotempty(RequestSourceIP) or (RequestProtocol startswith \"SMB\")\n| summarize VictimHosts = dcount(DeviceId),\n            Victims = make_set(DeviceName, 25),\n            SourceIPs = make_set(RequestSourceIP, 10),\n            SourceAccts = make_set(RequestAccountName, 10),\n            FirstSeen = min(TimeGenerated),\n            LastSeen = max(TimeGenerated),\n            SamplePath = any(FolderPath)\n            by SHA256, FileName\n| where VictimHosts >= _minVictims\n| where (LastSeen - FirstSeen) <= _windowMin\n| order by VictimHosts desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:11 (@TargetFilename:*\\\\ADMIN$\\\\* OR @TargetFilename:*\\\\admin$\\\\* OR @TargetFilename:*\\\\C$\\\\Windows\\\\Temp\\\\* OR @TargetFilename:*\\\\C$\\\\Windows\\\\System32\\\\* OR @TargetFilename:*\\\\C$\\\\PerfLogs\\\\* OR @TargetFilename:*\\\\C$\\\\Users\\\\Public\\\\*) (@TargetFilename:*.exe OR @TargetFilename:*.EXE OR @TargetFilename:*.dll OR @TargetFilename:*.DLL)",
+      "falcon_logscale_query": "#event_simpleName=FileWritten\n| regex(\"(?i)\\\\\\\\(ADMIN\\\\$|C\\\\$\\\\\\\\(Windows\\\\\\\\(Temp|System32)|PerfLogs|Users\\\\\\\\Public))\\\\\\\\\", field=TargetFileName)\n| TargetFileName=/\\.(exe|dll)$/i\n| groupBy([SHA256HashData, TargetFileName], function={count(field=aid, distinct=true, as=victim_hosts) | min(@timestamp, as=firstSeen) | max(@timestamp, as=lastSeen)})\n| windowSec := (lastSeen - firstSeen) / 1000\n| victim_hosts >= 5\n| windowSec <= 1800",
+      "rationale": "The single-hash-across-many-hosts-within-minutes-via-SMB-admin-shares signal is the signature distribution method Sandworm has reused across NotPetya (2017, MEDoc supply-chain \u2192 mass SMB push from finance servers), HermeticWiper (Feb 2022 Ukraine wiper, pushed via Active Directory after DC compromise) and CaddyWiper (March 2022, distributed by GPO Group Policy from compromised DCs). Other Russian ",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceFileEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceFileEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        }
+      ]
+    }
+  ]
+}

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Authentication Broker device-code sign-in from Node.js user agent (Tycoon2FA)
 
-`UC_0_8` · phase: **c2** · confidence: **High**
+`UC_1_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta
 
 ### [LLM] Trustifi click-tracking URL chained into Cloudflare Workers Tycoon2FA landing
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_1_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceNetworkEvents
 
 ### [LLM] Entra sign-in from Tycoon2FA Alibaba Cloud C2 IPs (47.90.180.205 / 47.252.11.99)
 
-`UC_0_10` · phase: **c2** · confidence: **High**
+`UC_1_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ union isfuzzy=true
 
 ### [LLM] Newly-registered Entra device followed by token-based access from unfamiliar ASN (Tycoon2FA token theft pivot)
 
-`UC_0_11` · phase: **install** · confidence: **Medium**
+`UC_1_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ _new_device_regs
 
 ### [LLM] Browser request to microsoft.com/devicelogin immediately preceded by Tycoon2FA landing-page traffic
 
-`UC_0_12` · phase: **exploit** · confidence: **High**
+`UC_1_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tycoon2FA hijacks Microsoft 365 accounts via device-code phishing
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_1_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GitHub Actions workflow run referencing compromised tj-actions/reviewdog commit SHAs
 
-`UC_683_3` · phase: **delivery** · confidence: **High**
+`UC_684_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ CloudAppEvents
 
 ### [LLM] CI runner process scrapes another process's memory via /proc/<pid>/maps or /proc/<pid>/mem
 
-`UC_683_4` · phase: **actions** · confidence: **High**
+`UC_684_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions Linux runner pulls payload from gist.githubusercontent.com / raw.githubusercontent.com
 
-`UC_683_5` · phase: **c2** · confidence: **Medium**
+`UC_684_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — The GitHub Warning Everyone Ignores: 'This Commit Does Not Belong to Any Branch'
 
-`UC_683_2` · phase: **exploit** · confidence: **High**
+`UC_684_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
