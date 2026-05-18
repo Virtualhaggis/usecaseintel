@@ -10,12 +10,8 @@ Home Cyber Security News
 Claude Code RCE Flaw Lets Attackers Execute Commands via Malicious Deeplinks 
 By Guru Baran 
 May 18, 2026 
-
-
-
-
 A critical remote code execution (RCE) vulnerability has been discovered in Anthropic’s Claude Code CLI tool , allowing attackers to execute arbitrary commands on a victim’s machine by tricking them into clicking a specially crafted deeplink.
-The flaw, now patched in Claude Code version 2.1.118, was rooted in a naive command-line argument parser that could …
+The flaw, now patched in Claude Code version 2.1.118, was rooted in a naive command-line argument parser that could be weapo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Claude Code launched with injected --settings hooks/SessionStart payload (deeplink RCE)
 
-`UC_6_2` · phase: **exploit** · confidence: **High**
+`UC_9_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] Claude Code parent spawns shell with PoC-style recon/file-write at session startup
 
-`UC_6_3` · phase: **install** · confidence: **Medium**
+`UC_9_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +118,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Claude Code RCE Flaw Lets Attackers Execute Commands via Malicious Deeplinks
 
-`UC_6_1` · phase: **install** · confidence: **High**
+`UC_9_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

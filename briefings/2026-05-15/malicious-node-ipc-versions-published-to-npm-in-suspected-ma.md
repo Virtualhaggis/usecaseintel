@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] node-ipc stealer C2 beacon — DNS/HTTPS to azurestaticprovider[.]net
 
-`UC_36_4` · phase: **c2** · confidence: **High**
+`UC_37_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ union isfuzzy=true
 
 ### [LLM] node-ipc stealer C2 — outbound connection to 37.16.75.69
 
-`UC_36_5` · phase: **c2** · confidence: **High**
+`UC_37_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### [LLM] node-ipc stealer staging — files written to $TMPDIR/nt-* by node process
 
-`UC_36_6` · phase: **actions** · confidence: **High**
+`UC_37_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### [LLM] node-ipc malicious payload marker — process or child launched with __ntw=1 environment flag
 
-`UC_36_7` · phase: **exploit** · confidence: **High**
+`UC_37_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### [LLM] node-ipc stealer DNS-port exfil — UDP/53 traffic originating from node process
 
-`UC_36_8` · phase: **actions** · confidence: **Medium**
+`UC_37_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_36_3` · phase: **exploit** · confidence: **High**
+`UC_37_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

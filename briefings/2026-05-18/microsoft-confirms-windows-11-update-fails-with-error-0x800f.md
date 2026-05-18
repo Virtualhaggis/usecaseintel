@@ -10,12 +10,8 @@ Home Cyber Security News
 Microsoft Confirms Windows 11 Update Fails With Error 0x800f0922 
 By Guru Baran 
 May 18, 2026 
-
-
-
-
 Microsoft has officially acknowledged a critical installation failure affecting its May 2026 Patch Tuesday cumulative update for Windows 11, KB5089549, leaving users stranded with error code 0x800f0922 and, in some cases, additional errors 0x80240069 and 0x80240031.
-The known issue was formally added to the update’s change log on May 15, 2026, just three days after the…
+The known issue was formally added to the update’s change log on May 15, 2026, just three days after the patch’s…
 
 ## Indicators of Compromise (high-fidelity only)
 

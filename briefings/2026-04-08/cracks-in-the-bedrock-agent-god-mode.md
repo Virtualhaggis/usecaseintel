@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Bedrock AgentCore execution role pulls ECR image of a different agent
 
-`UC_305_8` · phase: **actions** · confidence: **High**
+`UC_303_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ CloudAppEvents
 
 ### [LLM] Cross-agent Bedrock AgentCore memory access (GetMemory / RetrieveMemoryRecords)
 
-`UC_305_9` · phase: **actions** · confidence: **High**
+`UC_303_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ CloudAppEvents
 
 ### [LLM] Bedrock AgentCore lateral pivot via InvokeAgentRuntime / InvokeCodeInterpreter
 
-`UC_305_10` · phase: **actions** · confidence: **Medium**
+`UC_303_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

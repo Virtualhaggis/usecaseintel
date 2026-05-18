@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ForceMemo: Node.js v22.9.0 spawned by Python from user home directory
 
-`UC_331_8` · phase: **install** · confidence: **High**
+`UC_329_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### [LLM] ForceMemo: Python process queries Solana mainnet RPC endpoint (blockchain dead-drop C2)
 
-`UC_331_9` · phase: **c2** · confidence: **High**
+`UC_329_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union
 
 ### [LLM] ForceMemo: init.json persistence file or i.js loader dropped by Python in user home root
 
-`UC_331_10` · phase: **install** · confidence: **Medium**
+`UC_329_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -283,7 +283,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ForceMemo: Hundreds of GitHub Python Repos Compromised via Account Takeover and
 
-`UC_331_7` · phase: **exploit** · confidence: **High**
+`UC_329_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

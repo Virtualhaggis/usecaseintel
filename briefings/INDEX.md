@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_777 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_773 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-18
+- [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
 - [claude code rce flaw lets attackers execute commands via mal](./2026-05-18/claude-code-rce-flaw-lets-attackers-execute-commands-via-mal.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
-- [fast16 malware manipulated nuclear weapons simulation data t](./2026-05-18/fast16-malware-manipulated-nuclear-weapons-simulation-data-t.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
-- [new windows miniplasma zero day let attackers gain system ac](./2026-05-18/new-windows-miniplasma-zero-day-let-attackers-gain-system-ac.md)
+- [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
+- [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
 
 ## 2026-05-17
 - [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
@@ -24,8 +25,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-16
 - [funnel builder flaw under active exploitation enables woocom](./2026-05-16/funnel-builder-flaw-under-active-exploitation-enables-woocom.md)
-- [jdownloader website compromised to distribute malicious wind](./2026-05-16/jdownloader-website-compromised-to-distribute-malicious-wind.md)
-- [malicious jpeg images could trigger php memory safety vulner](./2026-05-16/malicious-jpeg-images-could-trigger-php-memory-safety-vulner.md)
 - [microsoft exchange windows 11 and cursor zero days exploited](./2026-05-16/microsoft-exchange-windows-11-and-cursor-zero-days-exploited.md)
 - [russian hackers turn kazuar backdoor into modular p2p botnet](./2026-05-16/russian-hackers-turn-kazuar-backdoor-into-modular-p2p-botnet.md)
 
@@ -70,7 +69,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
-- [teampcp hackers advertise mistral ai code repos for sale](./2026-05-14/teampcp-hackers-advertise-mistral-ai-code-repos-for-sale.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 - [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
 - [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
@@ -137,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44588 siyuan electron renderer rce vi](./2026-05-08/ghsa-critical-cve-2026-44588-siyuan-electron-renderer-rce-vi.md)
 - [ghsa critical cve 2026 44670 siyuan affected by stored xss v](./2026-05-08/ghsa-critical-cve-2026-44670-siyuan-affected-by-stored-xss-v.md)
 - [ghsa critical ghsa pvmv cwg8 v6c8 zebra v4 4 0 still accepts](./2026-05-08/ghsa-critical-ghsa-pvmv-cwg8-v6c8-zebra-v4-4-0-still-accepts.md)
-- [linux kernel dirty frag lpe exploit enables root access acro](./2026-05-08/linux-kernel-dirty-frag-lpe-exploit-enables-root-access-acro.md)
 - [new linux pamdoora backdoor uses pam modules to steal ssh cr](./2026-05-08/new-linux-pamdoora-backdoor-uses-pam-modules-to-steal-ssh-cr.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
 - [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
@@ -164,7 +161,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44542 filebrowser public share delete](./2026-05-07/ghsa-critical-cve-2026-44542-filebrowser-public-share-delete.md)
 - [ghsa critical ghsa 54pg 9963 v8vg compromised version of int](./2026-05-07/ghsa-critical-ghsa-54pg-9963-v8vg-compromised-version-of-int.md)
 - [ghsa critical ghsa cwfq rfcr 8hmp zebra s transparent sighas](./2026-05-07/ghsa-critical-ghsa-cwfq-rfcr-8hmp-zebra-s-transparent-sighas.md)
-- [ivanti epmm cve 2026 6973 rce under active exploitation gran](./2026-05-07/ivanti-epmm-cve-2026-6973-rce-under-active-exploitation-gran.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)

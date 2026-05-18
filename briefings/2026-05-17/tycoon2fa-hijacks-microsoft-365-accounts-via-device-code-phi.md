@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Successful OAuth deviceCode grant via Microsoft Authentication Broker (Tycoon2FA device-code phishing)
 
-`UC_8_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ AADSignInEventsBeta
 
 ### [LLM] Tycoon2FA device-code phishing infrastructure callouts (eSentire IOC set)
 
-`UC_8_9` · phase: **c2** · confidence: **High**
+`UC_11_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union NetHits, DnsHits
 
 ### [LLM] Trustifi click-tracker click followed by microsoft.com/devicelogin navigation
 
-`UC_8_10` · phase: **delivery** · confidence: **Medium**
+`UC_11_10` · phase: **delivery** · confidence: **Medium**
 
 **Defender KQL:**
 ```kql
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### [LLM] Entra ID sign-in from Node.js / non-browser user agent
 
-`UC_8_11` · phase: **c2** · confidence: **Medium**
+`UC_11_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -386,7 +386,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tycoon2FA hijacks Microsoft 365 accounts via device-code phishing
 
-`UC_8_7` · phase: **exploit** · confidence: **High**
+`UC_11_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
