@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hugging Face Open-OSS/privacy-filter C2 egress (api.eth-fastscan.org, recargapopular.com, welovechinatown.info)
 
-`UC_121_11` · phase: **c2** · confidence: **High**
+`UC_124_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ union isfuzzy=true
 
 ### [LLM] Python loader.py spawning PowerShell/cmd referencing JSON Keeper dead drop or eth-fastscan stager
 
-`UC_121_12` · phase: **delivery** · confidence: **High**
+`UC_124_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Self-deleting one-shot SYSTEM scheduled task running PowerShell from %TEMP% (HiddenLayer 'one-shot launcher')
 
-`UC_121_13` · phase: **install** · confidence: **Medium**
+`UC_124_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -470,7 +470,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake OpenAI Privacy Filter Repo Hits #1 on Hugging Face, Draws 244K Downloads
 
-`UC_121_10` · phase: **exploit** · confidence: **High**
+`UC_124_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] macOS launchctl persistence registering 'zsh.profiler' from @velora-dex/sdk backdoor
 
-`UC_296_4` · phase: **install** · confidence: **High**
+`UC_295_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### [LLM] Node.js child spawns shell with base64 payload or curl to velora-dex C2 89.36.224.5
 
-`UC_296_5` · phase: **delivery** · confidence: **High**
+`UC_295_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound network connection to velora-dex C2 IP 89.36.224.5
 
-`UC_296_6` · phase: **c2** · confidence: **High**
+`UC_295_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — @velora-dex/sdk Compromised on npm: Malicious Version Drops macOS Backdoor via l
 
-`UC_296_3` · phase: **exploit** · confidence: **High**
+`UC_295_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

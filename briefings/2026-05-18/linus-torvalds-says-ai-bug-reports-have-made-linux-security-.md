@@ -10,12 +10,8 @@ Home Cyber Security News
 Linus Torvalds Says AI Bug Reports Have Made Linux Security Mailing List Unmanageable 
 By Abinaya 
 May 18, 2026 
-
-
-
-
 Linus Torvalds has warned that a “continued flood” of AI‑generated bug reports is making the  Linux security mailing list “almost entirely unmanageable.” The project is now tightening rules on how AI‑found issues should be reported and handled.
-In the Linux 7.1‑rc4 announcement, Torvalds noted that the security list is being overwhelmed by AI‑assisted…
+In the Linux 7.1‑rc4 announcement, Torvalds noted that the security list is being overwhelmed by AI‑assisted reports…
 
 ## Indicators of Compromise (high-fidelity only)
 

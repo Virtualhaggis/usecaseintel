@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_771 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,10 +12,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
 - [claude code rce flaw lets attackers execute commands via mal](./2026-05-18/claude-code-rce-flaw-lets-attackers-execute-commands-via-mal.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
+- [developer workstations are now part of the software supply c](./2026-05-18/developer-workstations-are-now-part-of-the-software-supply-c.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
+- [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
+- [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
 - [linus torvalds says ai bug reports have made linux security ](./2026-05-18/linus-torvalds-says-ai-bug-reports-have-made-linux-security-.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
-- [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
+- [new windows miniplasma zero day let attackers gain system ac](./2026-05-18/new-windows-miniplasma-zero-day-let-attackers-gain-system-ac.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
 
 ## 2026-05-17
@@ -136,8 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44670 siyuan affected by stored xss v](./2026-05-08/ghsa-critical-cve-2026-44670-siyuan-affected-by-stored-xss-v.md)
 - [ghsa critical ghsa pvmv cwg8 v6c8 zebra v4 4 0 still accepts](./2026-05-08/ghsa-critical-ghsa-pvmv-cwg8-v6c8-zebra-v4-4-0-still-accepts.md)
 - [one click total shutdown the patient zero webinar on killing](./2026-05-08/one-click-total-shutdown-the-patient-zero-webinar-on-killing.md)
-- [one missed threat per week what 25m alerts reveal about low ](./2026-05-08/one-missed-threat-per-week-what-25m-alerts-reveal-about-low-.md)
-- [quasar linux rat steals developer credentials for software s](./2026-05-08/quasar-linux-rat-steals-developer-credentials-for-software-s.md)
 - [tclbanker banking trojan targets financial platforms via wha](./2026-05-08/tclbanker-banking-trojan-targets-financial-platforms-via-wha.md)
 
 ## 2026-05-07
@@ -238,7 +239,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 7399 samsung magicinfo 9 server path trave](./2026-04-24/cisa-kev-cve-2024-7399-samsung-magicinfo-9-server-path-trave.md)
 - [cisa kev cve 2025 29635 d link dir 823x command injection vu](./2026-04-24/cisa-kev-cve-2025-29635-d-link-dir-823x-command-injection-vu.md)
 - [it s time to treat browser extensions like supply chain atta](./2026-04-24/it-s-time-to-treat-browser-extensions-like-supply-chain-atta.md)
-- [phantomrpc a new privilege escalation technique in windows r](./2026-04-24/phantomrpc-a-new-privilege-escalation-technique-in-windows-r.md)
 - [tgr sta 1030 new activity in central and south america](./2026-04-24/tgr-sta-1030-new-activity-in-central-and-south-america.md)
 
 ## 2026-04-23
@@ -269,7 +269,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20122 cisco catalyst sd wan manager incorr](./2026-04-20/cisa-kev-cve-2026-20122-cisco-catalyst-sd-wan-manager-incorr.md)
 - [cisa kev cve 2026 20128 cisco catalyst sd wan manager storin](./2026-04-20/cisa-kev-cve-2026-20128-cisco-catalyst-sd-wan-manager-storin.md)
 - [cisa kev cve 2026 20133 cisco catalyst sd wan manager exposu](./2026-04-20/cisa-kev-cve-2026-20133-cisco-catalyst-sd-wan-manager-exposu.md)
-- [fakewallet crypto stealer spreading through ios apps in the ](./2026-04-20/fakewallet-crypto-stealer-spreading-through-ios-apps-in-the-.md)
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
 
