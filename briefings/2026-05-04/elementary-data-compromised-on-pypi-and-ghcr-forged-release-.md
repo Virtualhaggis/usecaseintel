@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] elementary-data malicious release C2 callback to skyhanni.cloud
 
-`UC_218_6` · phase: **c2** · confidence: **High**
+`UC_217_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ let C2Parent = "skyhanni.cloud";
 
 ### [LLM] Trojaned elementary-data 0.23.3 wheel / GHCR image inventory
 
-`UC_218_7` · phase: **install** · confidence: **High**
+`UC_217_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ let BadImageDigest = "31ecc5939de6d24cf60c50d4ca26cf7a8c322db82a8ce4bd122ebd89cf
 
 ### [LLM] elementary-data stealer host-side artefacts: trin.tar.gz, .trinny-security-update marker
 
-`UC_218_8` · phase: **actions** · confidence: **High**
+`UC_217_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
 
-`UC_218_5` · phase: **install** · confidence: **High**
+`UC_217_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] REMUS infostealer known sample SHA256 hash hunt
 
-`UC_29_4` · phase: **install** · confidence: **High**
+`UC_32_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union isfuzzy=true
 
 ### [LLM] Ethereum JSON-RPC blockchain C2 resolution by non-wallet process (REMUS dead-drop)
 
-`UC_29_5` · phase: **c2** · confidence: **Medium**
+`UC_32_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### [LLM] Password-manager browser-extension IndexedDB access by non-browser process (REMUS PWM collection)
 
-`UC_29_6` · phase: **actions** · confidence: **High**
+`UC_32_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ union isfuzzy=true
 
 ### [LLM] Browser session cookie / Login Data / Discord / Telegram token read by non-application process (REMUS session theft)
 
-`UC_29_7` · phase: **actions** · confidence: **Medium**
+`UC_32_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
