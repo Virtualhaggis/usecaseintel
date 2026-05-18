@@ -898,7 +898,17 @@ KC_VERSION = "v1"
 # on disk but no longer match the cache key, so fresh articles get the
 # upgraded prompt. UC cache cost is significant (Opus + WebSearch);
 # bump conservatively.
-UC_VERSION = "v2"
+# v3 (2026-05-18): bumped to invalidate the 1167 v2 cached UCs that
+# predate the Falcon LogScale platform + the polish-pass extractions
+# (code blocks / tables / KB / CVSS / references / image-OCR vision
+# pass). Without this bump only ~0.2% of rendered UC cards carried a
+# Falcon tab because most articles hit the cache instead of the
+# updated prompt. Legacy v2 fallback (commit 1057d344) still serves
+# orphaned UCs during the regen window so the live site never
+# regresses while the cache re-warms. Expect ~$200-300 LLM cost
+# across the next 4-5 pipeline runs as ~1100 UCs regenerate; then
+# every UC card shows the 6th Falcon tab alongside the existing five.
+UC_VERSION = "v3"
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
