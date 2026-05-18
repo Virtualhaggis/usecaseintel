@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_771 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -93,7 +93,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
+- [ghsa critical cve 2026 31220 pysyft server side arbitrary py](./2026-05-12/ghsa-critical-cve-2026-31220-pysyft-server-side-arbitrary-py.md)
+- [ghsa critical cve 2026 41293 apache tomcat http 2 request he](./2026-05-12/ghsa-critical-cve-2026-41293-apache-tomcat-http-2-request-he.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
+- [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
@@ -190,8 +193,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
-- [ghsa critical cve 2026 42155 magento lts has weak api sessio](./2026-05-05/ghsa-critical-cve-2026-42155-magento-lts-has-weak-api-sessio.md)
-- [ghsa critical cve 2026 42281 magicmirror vulnerable to unaut](./2026-05-05/ghsa-critical-cve-2026-42281-magicmirror-vulnerable-to-unaut.md)
 - [ghsa critical cve 2026 42300 devguard has an unauthenticated](./2026-05-05/ghsa-critical-cve-2026-42300-devguard-has-an-unauthenticated.md)
 - [ghsa critical cve 2026 42607 grav vulnerable to remote code ](./2026-05-05/ghsa-critical-cve-2026-42607-grav-vulnerable-to-remote-code-.md)
 - [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
