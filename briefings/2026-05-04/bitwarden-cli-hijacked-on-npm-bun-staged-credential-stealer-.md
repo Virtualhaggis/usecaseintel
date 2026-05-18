@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Bitwarden CLI npm hijack: malicious bw_setup.js / bw1.js dropped under node_modules
 
-`UC_218_9` · phase: **install** · confidence: **High**
+`UC_217_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound C2 to spoofed Checkmarx domain (audit.checkmarx.cx / 94.154.172.43)
 
-`UC_218_10` · phase: **c2** · confidence: **High**
+`UC_217_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union isfuzzy=true
 
 ### [LLM] npm preinstall chain: node executing bw_setup.js spawns Bun runtime (bw1.js)
 
-`UC_218_11` · phase: **install** · confidence: **High**
+`UC_217_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -344,7 +344,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Bitwarden CLI Hijacked on npm: Bun-Staged Credential Stealer Targets Developers,
 
-`UC_218_8` · phase: **exploit** · confidence: **High**
+`UC_217_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

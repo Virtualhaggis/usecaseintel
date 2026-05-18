@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kazuar / Pelmeni / ShadowLoader module SHA256 hash hit (Turla, Secret Blizzard)
 
-`UC_29_6` · phase: **install** · confidence: **High**
+`UC_31_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ union
 
 ### [LLM] Kazuar Kernel↔Worker inter-module named pipe (MD5-hash pipe-name pattern)
 
-`UC_29_7` · phase: **c2** · confidence: **Medium**
+`UC_31_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceEvents
 
 ### [LLM] Kazuar Worker working-directory artifacts: Peeps / Autos / Keylogger subdirectory writes
 
-`UC_29_8` · phase: **actions** · confidence: **Medium**
+`UC_31_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceFileEvents
 
 ### [LLM] Kazuar EWS C2 channel: Exchange Web Services calls from non-mail-client process
 
-`UC_29_9` · phase: **c2** · confidence: **Medium**
+`UC_31_9` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

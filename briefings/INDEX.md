@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_771 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_769 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,12 +10,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
-- [claude code rce flaw lets attackers execute commands via mal](./2026-05-18/claude-code-rce-flaw-lets-attackers-execute-commands-via-mal.md)
 - [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
 - [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
+- [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
 - [grafana says stolen github token let hackers steal codebase](./2026-05-18/grafana-says-stolen-github-token-let-hackers-steal-codebase.md)
+- [hackers actively exploiting critical nginx rce vulnerability](./2026-05-18/hackers-actively-exploiting-critical-nginx-rce-vulnerability.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
 - [linus torvalds says ai bug reports have made linux security ](./2026-05-18/linus-torvalds-says-ai-bug-reports-have-made-linux-security-.md)
@@ -42,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [funnel builder wordpress plugin bug exploited to steal credi](./2026-05-15/funnel-builder-wordpress-plugin-bug-exploited-to-steal-credi.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
-- [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
 - [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)
@@ -167,7 +167,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 - [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
-- [world passkey day advancing passwordless authentication](./2026-05-07/world-passkey-day-advancing-passwordless-authentication.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
@@ -194,7 +193,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 42607 grav vulnerable to remote code ](./2026-05-05/ghsa-critical-cve-2026-42607-grav-vulnerable-to-remote-code-.md)
 - [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
 - [ghsa critical cve 2026 42882 s3 proxy has security issues in](./2026-05-05/ghsa-critical-cve-2026-42882-s3-proxy-has-security-issues-in.md)
-- [ghsa critical cve 2026 7411 eclipse basyx java server sdk vu](./2026-05-05/ghsa-critical-cve-2026-7411-eclipse-basyx-java-server-sdk-vu.md)
 - [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)

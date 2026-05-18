@@ -349,7 +349,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_75_11` · phase: **exploit** · confidence: **High**
+`UC_76_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

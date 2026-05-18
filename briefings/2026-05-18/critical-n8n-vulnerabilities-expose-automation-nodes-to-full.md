@@ -10,12 +10,8 @@ Home Cyber Security News
 Critical n8n Vulnerabilities Expose Automation Nodes to Full RCE 
 By Abinaya 
 May 18, 2026 
-
-
-
-
 A fresh set of critical vulnerabilities in the popular workflow automation platform n8n is raising serious security concerns, as researchers warn that attackers could chain multiple flaws to achieve full remote code execution (RCE) on affected systems.
-The vulnerabilities, disclosed via GitHub Security Advisories and tracked as CVE-2026-44789, CVE-2026-44790, and CVE-2026…
+The vulnerabilities, disclosed via GitHub Security Advisories and tracked as CVE-2026-44789, CVE-2026-44790, and CVE-2026-44791, …
 
 ## Indicators of Compromise (high-fidelity only)
 

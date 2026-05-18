@@ -1,6 +1,6 @@
 # [CRIT] ⚡ Weekly Recap: Exchange 0-Day, npm Worm, Fake AI Repo, Cisco Exploit and More
 
-**Source:** The Hacker News, Cyber Security News, StepSecurity
+**Source:** The Hacker News, BleepingComputer, StepSecurity
 **Published:** 2026-05-18
 **Article:** https://thehackernews.com/2026/05/weekly-recap-exchange-0-day-npm-worm.html
 

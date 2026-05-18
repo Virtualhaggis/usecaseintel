@@ -11,15 +11,9 @@ By Bill Toulas
 May 18, 2026
 09:46 AM
 0 
-
-
 Grafana Labs disclosed that hackers have downloaded its source code after breaching its GitHub environment using a stolen access token.
-
-
 A relatively new extortion gang known as CoinbaseCartel has claimed the attack by adding Grafana to their data leak site (DLS), although no data has been leaked yet.
-
-
-Grafana Labs is the company behind Grafana, the popular open-source platform for ana…
+Grafana Labs is the company behind Grafana, the popular open-source platform for analytics, moni…
 
 ## Indicators of Compromise (high-fidelity only)
 

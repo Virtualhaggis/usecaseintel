@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RDWeb portal brute-force / password-spray success against IIS (ransomware IAB precursor)
 
-`UC_109_9` · phase: **delivery** · confidence: **High**
+`UC_110_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceLogonEvents
 
 ### [LLM] The Gentlemen RaaS — Fortinet/SonicWall/Cisco ASA SSL-VPN brute-force success from public source
 
-`UC_109_10` · phase: **delivery** · confidence: **High**
+`UC_110_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
