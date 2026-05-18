@@ -27,73 +27,12 @@ Real‑world security teleme…
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1202** — Indirect Command Execution
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1140** — Deobfuscate/Decode Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] forfiles.exe spawning Python or shell interpreter (T1202 indirect execution)
-
-`UC_85_3` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="forfiles.exe" AND Processes.process_name IN ("python.exe","pythonw.exe","cmd.exe","powershell.exe","pwsh.exe") AND NOT Processes.user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "forfiles.exe"
-| where FileName in~ ("python.exe","pythonw.exe","cmd.exe","powershell.exe","pwsh.exe")
-| where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| project Timestamp, DeviceName, AccountName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentImage = InitiatingProcessFolderPath,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ChildSHA256 = SHA256,
-          IsInitiatingProcessRemoteSession
-| order by Timestamp desc
-```
-
-### [LLM] forfiles.exe command line with hex escapes or %PROGRAMFILES% expansion + extraction verbs
-
-`UC_85_4` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="forfiles.exe" AND NOT Processes.user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | where match(process, "(?i)0x[0-9a-f]{2}") OR match(process, "%PROGRAMFILES%") | where match(process, "(?i)\b(echo|open|read|find|exec)\b") | where match(process, "(?i)(python|cmd|powershell|pwsh)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "forfiles.exe"
-| where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| extend CmdLower = tolower(ProcessCommandLine)
-| where CmdLower matches regex @"0x[0-9a-f]{2}"
-    or CmdLower has "%programfiles%"
-| where CmdLower has_any ("echo","open","read","find","exec")
-| where CmdLower has_any ("python","cmd","powershell","pwsh")
-| project Timestamp, DeviceName, AccountName,
-          ProcessCommandLine,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          SHA256,
-          IsInitiatingProcessRemoteSession
-| order by Timestamp desc
-```
 
 ### LSASS process access / dump (credential theft)
 
@@ -158,7 +97,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Accelerating detection engineering using AI-assisted synthetic attack logs gener
 
-`UC_85_2` · phase: **exploit** · confidence: **High**
+`UC_86_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -208,4 +147,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

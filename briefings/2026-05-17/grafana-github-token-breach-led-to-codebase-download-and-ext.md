@@ -30,122 +30,12 @@ Grafana has disclosed that an "unauthorized party" obtained a token that granted
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1528** — Steal Application Access Token
-- **T1199** — Trusted Relationship
-- **T1213.003** — Data from Information Repositories: Code Repositories
-- **T1119** — Automated Collection
-- **T1530** — Data from Cloud Storage
-- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
-- **T1098.005** — Account Manipulation: Device Registration
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Anomalous GitHub authentication from new ASN/anonymizer — CoinbaseCartel stolen-token access
-
-`UC_4_7` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as user_agent from datamodel=Authentication where Authentication.app IN ("github","github_enterprise","GitHub*") Authentication.action=success by Authentication.user Authentication.src_ip Authentication.src_geo Authentication.signature | `drop_dm_object_name(Authentication)` | iplocation src_ip | search (NOT src_geo IN ("United States","Germany","United Kingdom","Ireland") OR match(signature,"(?i)tor|hosting|datacenter|vpn|proxy")) | join type=outer user [| tstats `summariesonly` values(Authentication.src_geo) as historical_geo earliest=-30d@d latest=-1d@d from datamodel=Authentication where Authentication.app IN ("github","github_enterprise") Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)`] | where NOT (src_geo IN historical_geo) | table firstTime user src_ip src_geo user_agent signature historical_geo
-```
-
-**Defender KQL:**
-```kql
-let lookback = 30d;
-let recent = 1h;
-let baseline = CloudAppEvents
-    | where Timestamp between (ago(lookback) .. ago(recent))
-    | where Application has "GitHub"
-    | where ActionType in~ ("Login attempt","Authenticated","User logged in","Successful login")
-    | summarize KnownCountries = make_set(CountryCode), KnownISPs = make_set(ISP) by AccountObjectId;
-CloudAppEvents
-| where Timestamp > ago(recent)
-| where Application has "GitHub"
-| where ActionType in~ ("Login attempt","Authenticated","User logged in","Successful login")
-| join kind=leftouter baseline on AccountObjectId
-| where IsAnonymousProxy == true
-   or CountryCode !in (KnownCountries)
-   or (isnotempty(ISP) and ISP !in (KnownISPs) and ISP has_any ("DigitalOcean","Hetzner","OVH","Mullvad","NordVPN","Surfshark","M247","Choopa","Tor","Vultr"))
-| project Timestamp, AccountDisplayName, AccountObjectId, Application, ActionType,
-          IPAddress, CountryCode, City, ISP, IsAnonymousProxy, UserAgent,
-          KnownCountries, KnownISPs, AdditionalFields
-| order by Timestamp desc
-```
-
-### [LLM] Bulk GitHub repository download/clone burst from single identity
-
-`UC_4_8` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count as cloneCount dc(Web.url) as repoCount values(Web.url) as repos values(Web.src) as src_ips values(Web.http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.dest_domain IN ("api.github.com","codeload.github.com","github.com") AND (Web.url="*git-upload-pack*" OR Web.url="*/archive/*.zip" OR Web.url="*/archive/refs/heads/*" OR Web.url="*/zipball/*" OR Web.url="*/tarball/*")) by Web.user Web.src span=1h | `drop_dm_object_name(Web)` | where repoCount >= 20 | eval bytesEstimate=cloneCount*"50MB" | table firstTime lastTime user src repoCount cloneCount user_agents src_ips repos
-```
-
-**Defender KQL:**
-```kql
-let window = 1h;
-let bulk_threshold = 20;
-CloudAppEvents
-| where Timestamp > ago(24h)
-| where Application has "GitHub"
-| where ActionType in~ ("git.clone","git.fetch","repo.download_zip","repo.download_tarball","repo.access")
-   or ActivityType in~ ("git.clone","repo.download_zip")
-| extend Repo = coalesce(ObjectName, tostring(parse_json(tostring(RawEventData)).repository))
-| where isnotempty(Repo)
-| summarize RepoCount = dcount(Repo),
-            Repos = make_set(Repo, 50),
-            ActionCount = count(),
-            SrcIPs = make_set(IPAddress, 20),
-            Countries = make_set(CountryCode, 10),
-            UserAgents = make_set(UserAgent, 10),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-            by AccountObjectId, AccountDisplayName, bin(Timestamp, window)
-| where RepoCount >= bulk_threshold
-| extend BurstWindowMin = datetime_diff('minute', LastSeen, FirstSeen)
-| project FirstSeen, LastSeen, BurstWindowMin, AccountDisplayName, AccountObjectId,
-          RepoCount, ActionCount, Repos, SrcIPs, Countries, UserAgents
-| order by RepoCount desc
-```
-
-### [LLM] Helpdesk MFA reset on engineering account followed by GitHub access — ShinyHunters/Scattered Spider playbook
-
-`UC_4_9` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as resetTime values(Change.src) as resetSrc values(Change.result) as result from datamodel=Change where Change.action=modified Change.object_category=user (Change.change_type="AuthMethod*" OR Change.command IN ("Reset user password","Update authentication method","User registered security info","Admin registered security info")) by Change.user Change.src_user | `drop_dm_object_name(Change)` | rename user as target_user, src_user as helpdesk_actor | join type=inner target_user [| tstats `summariesonly` min(_time) as ghTime values(Authentication.src) as ghSrc from datamodel=Authentication where Authentication.app IN ("github","github_enterprise") Authentication.action=success earliest=-1d by Authentication.user | rename Authentication.user as target_user | `drop_dm_object_name(Authentication)`] | eval delaySec=ghTime-resetTime | where delaySec>=0 AND delaySec<=14400 | table resetTime ghTime delaySec helpdesk_actor target_user resetSrc ghSrc
-```
-
-**Defender KQL:**
-```kql
-let window = 4h;
-let mfa_resets = IdentityDirectoryEvents
-    | where Timestamp > ago(24h)
-    | where ActionType in~ ("Password reset","Forced password reset","User registered security info","Admin registered security info","Update user","Authentication method registered","Authentication method removed")
-    | extend TargetUpn = tolower(TargetAccountUpn),
-             InitiatorUpn = tolower(AccountUpn)
-    | where TargetUpn != InitiatorUpn
-    | project ResetTime = Timestamp, TargetUpn, InitiatorUpn, ResetAction = ActionType, ResetIp = IPAddress, AdditionalFields;
-AADSignInEventsBeta
-| where Timestamp > ago(24h)
-| where Application has "GitHub" or ResourceDisplayName has "GitHub"
-| where ErrorCode == 0
-| extend TargetUpn = tolower(AccountUpn)
-| join kind=inner mfa_resets on TargetUpn
-| where Timestamp between (ResetTime .. ResetTime + window)
-| extend DelayMin = datetime_diff('minute', Timestamp, ResetTime)
-| project ResetTime, GitHubAuthTime = Timestamp, DelayMin,
-          TargetUpn, InitiatorUpn, ResetAction, ResetIp,
-          GitHubIp = IPAddress, GitHubCountry = Country, GitHubCity = City,
-          GitHubUA = UserAgent, GitHubApp = Application
-| order by GitHubAuthTime desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -406,4 +296,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

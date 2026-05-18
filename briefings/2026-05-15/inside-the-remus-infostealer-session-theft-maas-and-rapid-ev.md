@@ -27,13 +27,12 @@ In recent months, a new infostealer malware known as REMUS has emerged across th
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1204.002** — User Execution: Malicious File
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
 - **T1555.005** — Credentials from Password Stores: Password Managers
-- **T1083** — File and Directory Discovery
-- **T1567** — Exfiltration Over Web Service
-- **T1102** — Web Service
-- **T1550.004** — Use Alternate Authentication Material: Web Session Cookie
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1090.002** — External Proxy
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -41,99 +40,146 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] REMUS-style password manager IndexedDB access by non-browser process (1P/LastPass/Bitwarden)
+### [LLM] REMUS infostealer known sample SHA256 hash hunt
 
-`UC_23_4` · phase: **actions** · confidence: **High**
+`UC_25_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.file_name) as file_names values(Filesystem.action) as actions from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*aeblfdkhhhdcdjpifhhbdiojplfjncoa*" OR Filesystem.file_path="*aomjjhallfgjeglblehebfpbcfeobpgk*" OR Filesystem.file_path="*nngceckbapebfimnlniiiahkandclblb*" OR Filesystem.file_path="*jbkfoedolllekgbhcbcoahefnbanhhlh*" OR Filesystem.file_path="*hdokiejnpimakedhajhdlcegeplioahd*") AND (Filesystem.file_path="*\\Local Extension Settings\\*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_*" OR Filesystem.file_path="*\\Local Storage\\leveldb\\*") AND Filesystem.process_name!="chrome.exe" AND Filesystem.process_name!="msedge.exe" AND Filesystem.process_name!="firefox.exe" AND Filesystem.process_name!="brave.exe" AND Filesystem.process_name!="opera.exe" AND Filesystem.process_name!="vivaldi.exe" AND Filesystem.process_name!="arc.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("cfcb21d8df942918f7a74b99f2cccf7e54e2a6dd1ea6de60897ff0026a26b5c4","352721b32ec1c8349985ceccfec8d1ca6e3e6cc12f83350c4ae1a75477588bc2") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("cfcb21d8df942918f7a74b99f2cccf7e54e2a6dd1ea6de60897ff0026a26b5c4","352721b32ec1c8349985ceccfec8d1ca6e3e6cc12f83350c4ae1a75477588bc2") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime), ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let pm_ext_ids = dynamic(["aeblfdkhhhdcdjpifhhbdiojplfjncoa","aomjjhallfgjeglblehebfpbcfeobpgk","nngceckbapebfimnlniiiahkandclblb","jbkfoedolllekgbhcbcoahefnbanhhlh","hdokiejnpimakedhajhdlcegeplioahd"]);
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe","arc.exe","iexplore.exe"]);
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where InitiatingProcessFileName !in~ (browsers)
-| where FolderPath has_any (pm_ext_ids)
-| where FolderPath has_any (@"\Local Extension Settings\", @"\IndexedDB\chrome-extension_", @"\Local Storage\leveldb\")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, ActionType, FileName, FolderPath
+let RemusHashes = dynamic(["cfcb21d8df942918f7a74b99f2cccf7e54e2a6dd1ea6de60897ff0026a26b5c4","352721b32ec1c8349985ceccfec8d1ca6e3e6cc12f83350c4ae1a75477588bc2"]);
+union isfuzzy=true
+(DeviceProcessEvents
+ | where Timestamp > ago(30d)
+ | where SHA256 in~ (RemusHashes)
+ | project Timestamp, DeviceName, AccountName, Source="ProcessExec", FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceFileEvents
+ | where Timestamp > ago(30d)
+ | where SHA256 in~ (RemusHashes)
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceImageLoadEvents
+ | where Timestamp > ago(30d)
+ | where SHA256 in~ (RemusHashes)
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="ImageLoad", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine="")
 | order by Timestamp desc
 ```
 
-### [LLM] Browser credential store read followed by Telegram API egress within 5 min (REMUS exfil chain)
+### [LLM] Ethereum JSON-RPC blockchain C2 resolution by non-wallet process (REMUS dead-drop)
 
-`UC_23_5` · phase: **c2** · confidence: **High**
+`UC_25_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as cred_time values(Filesystem.file_path) as cred_paths values(Filesystem.process_name) as cred_process from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Login Data","Cookies","Local State","Web Data","key4.db","cookies.sqlite","logins.json","formhistory.sqlite") OR Filesystem.file_path="*\\Local Extension Settings\\*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_*") AND (Filesystem.file_path="*\\Chrome\\User Data\\*" OR Filesystem.file_path="*\\Edge\\User Data\\*" OR Filesystem.file_path="*\\Firefox\\Profiles\\*" OR Filesystem.file_path="*\\Mozilla\\Firefox\\Profiles\\*" OR Filesystem.file_path="*\\BraveSoftware\\Brave-Browser\\User Data\\*") AND Filesystem.process_name!="chrome.exe" AND Filesystem.process_name!="msedge.exe" AND Filesystem.process_name!="firefox.exe" AND Filesystem.process_name!="brave.exe" AND Filesystem.process_name!="opera.exe" AND Filesystem.process_name!="vivaldi.exe" by Filesystem.dest Filesystem.user Filesystem.process_guid | `drop_dm_object_name(Filesystem)` | join type=inner dest [ | tstats summariesonly=t count min(_time) as net_time values(All_Traffic.dest) as remote_host values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.app) as net_process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="api.telegram.org" OR All_Traffic.dest="t.me" OR All_Traffic.dest="*telegram.org") AND All_Traffic.app!="telegram.exe" AND All_Traffic.app!="tdesktop.exe" AND All_Traffic.app!="chrome.exe" AND All_Traffic.app!="msedge.exe" AND All_Traffic.app!="firefox.exe" AND All_Traffic.app!="brave.exe" by All_Traffic.src | rename All_Traffic.src as dest ] | where net_time >= cred_time AND (net_time - cred_time) <= 300 | eval delay_sec = net_time - cred_time | table dest user cred_process cred_paths net_process remote_host remote_ip delay_sec
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("*.cloudflare-eth.com","*.infura.io","*.g.alchemy.com","*.ankr.com","*.publicnode.com","*.llamarpc.com","*.pokt.network","*.flashbots.net","*.builder0x69.io","*.mycryptoapi.com") OR All_Traffic.url="*eth_call*" OR All_Traffic.url="*eth_getStorageAt*") AND NOT (All_Traffic.app IN ("chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","vivaldi.exe","arc.exe","yandex.exe","metamask.exe","exodus.exe","atomic.exe","phantom.exe","ledger live.exe","trezor suite.exe")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime), ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 7d;
-let WindowSec = 300;
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe","arc.exe"]);
-let CredAccess = DeviceFileEvents
-    | where Timestamp > ago(LookbackDays)
-    | where InitiatingProcessFileName !in~ (browsers)
-    | where InitiatingProcessAccountName !endswith "$"
-    | where FolderPath has_any (@"\Chrome\User Data\", @"\Edge\User Data\", @"\Firefox\Profiles\", @"\Mozilla\Firefox\Profiles\", @"\BraveSoftware\Brave-Browser\User Data\")
-    | where FileName in~ ("Login Data","Cookies","Web Data","Local State","key4.db","cookies.sqlite","logins.json","formhistory.sqlite")
-        or FolderPath has_any (@"\Local Extension Settings\", @"\IndexedDB\chrome-extension_")
-    | project CredTime = Timestamp, DeviceId, DeviceName, AccountName = InitiatingProcessAccountName, StealerProcess = InitiatingProcessFileName, StealerCmd = InitiatingProcessCommandLine, StealerHash = InitiatingProcessSHA256, StealerPid = InitiatingProcessId, AccessedFile = strcat(FolderPath, FileName);
+let EthRpcHosts = dynamic(["cloudflare-eth.com","infura.io","g.alchemy.com","rpc.ankr.com","publicnode.com","llamarpc.com","pokt.network","flashbots.net","builder0x69.io","mycryptoapi.com","chainnodes.org","blastapi.io","nodereal.io","quiknode.pro"]);
+let KnownEthClients = dynamic(["chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","operagx.exe","vivaldi.exe","arc.exe","yandex.exe","msedgewebview2.exe","metamask.exe","exodus.exe","atomic.exe","phantom.exe","ledger live.exe","trezor suite.exe","frame.exe","rabby.exe","node.exe","hardhat.exe","geth.exe","foundry.exe"]);
 DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where RemoteUrl has_any ("api.telegram.org","t.me","telegram.org")
-| where InitiatingProcessFileName !in~ ("telegram.exe","tdesktop.exe","updater.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
-| join kind=inner CredAccess on DeviceId
-| where Timestamp between (CredTime .. CredTime + WindowSec * 1s)
-| extend DelaySec = datetime_diff('second', Timestamp, CredTime)
-| project CredTime, NetworkTime = Timestamp, DelaySec, DeviceName, AccountName, StealerProcess, StealerCmd, StealerHash, AccessedFile, RemoteUrl, RemoteIP, RemotePort, NetProcess = InitiatingProcessFileName, NetProcessHash = InitiatingProcessSHA256, NetProcessCmd = InitiatingProcessCommandLine
-| order by NetworkTime desc
+| where Timestamp > ago(7d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
+| where RemoteIPType == "Public"
+| where isnotempty(RemoteUrl)
+| extend HostLower = tolower(RemoteUrl)
+| where HostLower has_any (EthRpcHosts)
+| where InitiatingProcessFileName !in~ (KnownEthClients)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
-### [LLM] Post-stealer cookie-satisfied Entra ID sign-in from new ASN/anonymizer (REMUS session replay)
+### [LLM] Password-manager browser-extension IndexedDB access by non-browser process (REMUS PWM collection)
 
-`UC_23_6` · phase: **actions** · confidence: **Medium**
+`UC_25_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as stealer_time values(Filesystem.process_name) as stealer_process values(Filesystem.file_name) as stealer_files from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Login Data","Cookies","Local State","key4.db","cookies.sqlite") OR Filesystem.file_path="*\\Local Extension Settings\\*") AND (Filesystem.file_path="*\\Chrome\\User Data\\*" OR Filesystem.file_path="*\\Edge\\User Data\\*" OR Filesystem.file_path="*\\Firefox\\Profiles\\*") AND Filesystem.process_name!="chrome.exe" AND Filesystem.process_name!="msedge.exe" AND Filesystem.process_name!="firefox.exe" AND Filesystem.process_name!="brave.exe" by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | rename user as src_user dest as victim_host | join type=inner src_user [ | tstats summariesonly=t count min(_time) as signin_time values(Authentication.src) as signin_ip values(Authentication.app) as signin_app values(Authentication.signature) as signature from datamodel=Authentication where Authentication.action="success" AND (Authentication.signature="*previously satisfied*" OR Authentication.signature="*satisfied by claim*" OR Authentication.signature="*satisfied by token*") by Authentication.user | rename Authentication.user as src_user ] | where signin_time >= stealer_time AND (signin_time - stealer_time) <= 14400 | eval delay_min = round((signin_time - stealer_time)/60, 1) | table src_user victim_host stealer_process stealer_files signin_ip signin_app signature delay_min
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\IndexedDB\\chrome-extension_aeblfdkhhhdcdjpifhhbdiojplfjncoa_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_gejiddohjgogedgjnonbofjigllpkmbf_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_dppgmdbiimibapkepcbdbmkaabgiofem_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_hdokiejnpimakedhajhdlcegeplioahd_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_bbcinlkgjjkejfdpemiealijmmooekmp_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_nngceckbapebfimnlniiiahkandclblb_*" OR Filesystem.file_path="*\\IndexedDB\\chrome-extension_jbkfoedolllekgbhcbcoahefnbanhhlh_*") AND NOT (Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","opera.exe","operagx.exe","vivaldi.exe","arc.exe","yandex.exe","msedgewebview2.exe","1Password.exe","Bitwarden.exe","LastPass.exe")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime), ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 7d;
-let WindowMin = 240;
-let browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe","arc.exe"]);
-let Stealer = DeviceFileEvents
-    | where Timestamp > ago(LookbackDays)
-    | where InitiatingProcessFileName !in~ (browsers)
-    | where InitiatingProcessAccountName !endswith "$"
-    | where FolderPath has_any (@"\Chrome\User Data\", @"\Edge\User Data\", @"\Firefox\Profiles\")
-    | where FileName in~ ("Login Data","Cookies","Local State","key4.db","cookies.sqlite")
-        or FolderPath has_any (@"\Local Extension Settings\", @"\IndexedDB\chrome-extension_")
-    | summarize StealerTime = min(Timestamp), StealerProcess = any(InitiatingProcessFileName), StealerHash = any(InitiatingProcessSHA256) by DeviceName, AccountUpn = InitiatingProcessAccountUpn
-    | where isnotempty(AccountUpn);
-AADSignInEventsBeta
-| where Timestamp > ago(LookbackDays)
-| where ErrorCode == 0
-| where ClientAppUsed in ("Browser","Mobile Apps and Desktop clients")
-| extend AuthDetails = tostring(AuthenticationDetails)
-| where AuthDetails has_any ("Previously satisfied","satisfied by claim","satisfied by token")
-    or AuthenticationRequirement =~ "singleFactorAuthentication"
-| join kind=inner Stealer on AccountUpn
-| where Timestamp between (StealerTime .. StealerTime + WindowMin * 1m)
-| where IsAnonymousProxy == true
-    or Country !in ("US","GB","CA","IE","AU","NL","DE","FR")
-| extend DelayMin = datetime_diff('minute', Timestamp, StealerTime)
-| project StealerTime, SignInTime = Timestamp, DelayMin, AccountUpn, VictimHost = DeviceName, StealerProcess, StealerHash, SignInIP = IPAddress, Country, City, Application, ApplicationId, IsAnonymousProxy, RiskLevelDuringSignIn, AuthDetails
-| order by SignInTime desc
+let PwmExtensionIds = dynamic([
+  "aeblfdkhhhdcdjpifhhbdiojplfjncoa",  // 1Password legacy Chrome
+  "gejiddohjgogedgjnonbofjigllpkmbf",  // 1Password 7/8 Chrome
+  "dppgmdbiimibapkepcbdbmkaabgiofem",  // 1Password Edge
+  "hdokiejnpimakedhajhdlcegeplioahd",  // LastPass Chrome
+  "bbcinlkgjjkejfdpemiealijmmooekmp",  // LastPass Edge
+  "nngceckbapebfimnlniiiahkandclblb",  // Bitwarden Chrome
+  "jbkfoedolllekgbhcbcoahefnbanhhlh"   // Bitwarden Edge
+]);
+let LegitProcesses = dynamic(["chrome.exe","msedge.exe","brave.exe","opera.exe","operagx.exe","vivaldi.exe","arc.exe","yandex.exe","msedgewebview2.exe","1password.exe","bitwarden.exe","lastpass.exe","msmpeng.exe","mssense.exe","sense.exe"]);
+union isfuzzy=true
+(DeviceFileEvents
+ | where Timestamp > ago(7d)
+ | where ActionType in ("FileCreated","FileModified","FileRenamed")
+ | where FolderPath has_any (PwmExtensionIds)
+     or PreviousFolderPath has_any (PwmExtensionIds)
+     or FileName has_any (PwmExtensionIds)
+ | where InitiatingProcessFileName !in~ (LegitProcesses)
+ | where InitiatingProcessAccountName !endswith "$"
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+           Source="FileEvent", ActionType, FolderPath, FileName, PreviousFolderPath,
+           BadProcess=InitiatingProcessFileName, BadProcessPath=InitiatingProcessFolderPath,
+           BadProcessCmd=InitiatingProcessCommandLine, BadProcessSHA256=InitiatingProcessSHA256),
+(DeviceProcessEvents
+ | where Timestamp > ago(7d)
+ | where ProcessCommandLine has "IndexedDB" and ProcessCommandLine has "chrome-extension_"
+ | where ProcessCommandLine has_any (PwmExtensionIds)
+ | where FileName !in~ (LegitProcesses)
+ | where AccountName !endswith "$"
+ | project Timestamp, DeviceName, AccountName,
+           Source="ProcessCmdLine", ActionType="ProcessCreated", FolderPath, FileName="", PreviousFolderPath="",
+           BadProcess=FileName, BadProcessPath=FolderPath,
+           BadProcessCmd=ProcessCommandLine, BadProcessSHA256=SHA256)
+| order by Timestamp desc
+```
+
+### [LLM] Browser session cookie / Login Data / Discord / Telegram token read by non-application process (REMUS session theft)
+
+`UC_25_7` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\User Data\\Default\\Login Data*" OR Filesystem.file_path="*\\User Data\\Default\\Network\\Cookies*" OR Filesystem.file_path="*\\User Data\\Local State*" OR Filesystem.file_path="*\\User Data\\Default\\Web Data*" OR Filesystem.file_name="cookies.sqlite" OR Filesystem.file_name="logins.json" OR Filesystem.file_name="key4.db" OR Filesystem.file_path="*\\discord\\Local Storage\\leveldb\\*" OR Filesystem.file_path="*\\discordcanary\\Local Storage\\leveldb\\*" OR Filesystem.file_path="*\\discordptb\\Local Storage\\leveldb\\*" OR Filesystem.file_path="*\\Telegram Desktop\\tdata\\*" OR Filesystem.file_name="loginusers.vdf" OR Filesystem.file_name="ssfn*") AND NOT (Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","vivaldi.exe","arc.exe","msedgewebview2.exe","discord.exe","discordcanary.exe","discordptb.exe","update.exe","telegram.exe","telegramdesktop.exe","steam.exe","steamservice.exe","steamwebhelper.exe","riotclientservices.exe","riotclientux.exe","msmpeng.exe","mssense.exe")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime), ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CredFiles = dynamic(["\\User Data\\Default\\Login Data","\\User Data\\Default\\Network\\Cookies","\\User Data\\Default\\Cookies","\\User Data\\Local State","\\User Data\\Default\\Web Data","cookies.sqlite","logins.json","key4.db","key3.db","\\discord\\Local Storage\\leveldb\\","\\discordcanary\\Local Storage\\leveldb\\","\\discordptb\\Local Storage\\leveldb\\","\\Telegram Desktop\\tdata\\","loginusers.vdf","config.vdf","ssfn"]);
+let LegitOwners = dynamic(["chrome.exe","msedge.exe","brave.exe","firefox.exe","opera.exe","operagx.exe","vivaldi.exe","arc.exe","yandex.exe","msedgewebview2.exe","discord.exe","discordcanary.exe","discordptb.exe","update.exe","squirrel.exe","telegram.exe","telegramdesktop.exe","steam.exe","steamservice.exe","steamwebhelper.exe","riotclientservices.exe","riotclientux.exe","msmpeng.exe","mssense.exe","sense.exe","sensendr.exe","sentinelagent.exe","csfalconservice.exe","csfalcon.exe"]);
+union isfuzzy=true
+(DeviceFileEvents
+ | where Timestamp > ago(7d)
+ | where ActionType in ("FileCreated","FileModified","FileRenamed")
+ | where FolderPath has_any (CredFiles) or FileName has_any (CredFiles)
+     or PreviousFolderPath has_any (CredFiles) or PreviousFileName has_any (CredFiles)
+ | where InitiatingProcessFileName !in~ (LegitOwners)
+ | where InitiatingProcessAccountName !endswith "$"
+ | where InitiatingProcessIntegrityLevel !in~ ("System")
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+           Source="FileEvent", ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName,
+           BadProcess=InitiatingProcessFileName, BadProcessPath=InitiatingProcessFolderPath,
+           BadProcessCmd=InitiatingProcessCommandLine, BadProcessSHA256=InitiatingProcessSHA256),
+(DeviceProcessEvents
+ | where Timestamp > ago(7d)
+ | where ProcessCommandLine has_any (CredFiles)
+ | where FileName !in~ (LegitOwners)
+ | where AccountName !endswith "$"
+ | project Timestamp, DeviceName, AccountName,
+           Source="ProcessCmdLine", ActionType="ProcessCreated", FolderPath, FileName="", PreviousFolderPath="", PreviousFileName="",
+           BadProcess=FileName, BadProcessPath=FolderPath,
+           BadProcessCmd=ProcessCommandLine, BadProcessSHA256=SHA256)
+| order by Timestamp desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -308,4 +354,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

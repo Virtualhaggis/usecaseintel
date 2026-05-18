@@ -28,11 +28,16 @@ The incident, confirmed by developers and security researchers, occurred between
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
 - **T1036.001** — Masquerading: Invalid Code Signature
-- **T1553.002** — Subvert Trust Controls: Code Signing
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1027.002** — Software Packing
+- **T1027.002** — Obfuscated Files or Information: Software Packing
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1548.001** — Abuse Elevation Control Mechanism: Setuid and Setgid
+- **T1547** — Boot or Logon Autostart Execution
 
 ## Kill chain phases observed
 
@@ -40,52 +45,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] JDownloader trojanized installer — process signed/branded as 'Zipline LLC' or 'The Water Team' instead of AppWork GmbH
+### [LLM] JDownloader Python RAT C2 callback to parkspringshotel/auraguest/checkinnhotels
 
-`UC_10_6` · phase: **install** · confidence: **High**
+`UC_17_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_company="Zipline LLC" OR Processes.process_company="The Water Team" OR Processes.process_publisher="Zipline LLC" OR Processes.process_publisher="The Water Team") OR (Processes.process_name="JDownloader*Installer*" AND NOT (Processes.process_company="AppWork GmbH" OR Processes.process_publisher="AppWork GmbH")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_company Processes.process_publisher Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (Network_Resolution.query="*parkspringshotel.com" OR Network_Resolution.query="*auraguest.lk" OR Network_Resolution.query="*checkinnhotels.com") by Network_Resolution.src Network_Resolution.query Network_Resolution.answer | `drop_dm_object_name(Network_Resolution)` | appendpipe [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*parkspringshotel.com/m/Lu6aeloo.php*" OR Web.url="*auraguest.lk/m/douV2quu.php*" OR Web.url="*checkinnhotels.com*") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessVersionInfoCompanyName in~ ("Zipline LLC", "The Water Team")
-   or (FileName has "jdownloader" and not(ProcessVersionInfoCompanyName =~ "AppWork GmbH"))
-   or (InitiatingProcessVersionInfoCompanyName in~ ("Zipline LLC", "The Water Team"))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          ProcessCompany = ProcessVersionInfoCompanyName,
-          ProcessProduct = ProcessVersionInfoProductName,
-          ParentCompany = InitiatingProcessVersionInfoCompanyName,
-          ProcessCommandLine, InitiatingProcessFileName, FileOriginUrl = tostring(parse_json(AdditionalFields).FileOriginUrl)
+let _c2Hosts = dynamic(["parkspringshotel.com","auraguest.lk","checkinnhotels.com"]);
+let _c2Paths = dynamic(["/m/Lu6aeloo.php","/m/douV2quu.php"]);
+let _net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where isnotempty(RemoteUrl)
+    | where RemoteUrl has_any (_c2Hosts) or RemoteUrl has_any (_c2Paths)
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Indicator=RemoteUrl, Source="NetworkEvents";
+let _dns = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
+    | where Q endswith "parkspringshotel.com" or Q endswith "auraguest.lk" or Q endswith "checkinnhotels.com"
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP="", RemotePort=int(null), Indicator=Q, Source="DnsQueryResponse";
+union _net, _dns
 | order by Timestamp desc
 ```
 
-### [LLM] JDownloader installer spawning Python interpreter or PyInstaller _MEI temp dir (Python RAT execution)
+### [LLM] Execution of binary signed by fake publisher 'Zipline LLC' or 'The Water Team' (trojanized JDownloader)
 
-`UC_10_7` · phase: **install** · confidence: **High**
+`UC_17_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="JDownloader*Installer*.exe" OR Processes.parent_process="*JDownloader*" OR match(Processes.parent_process,"(?i)jdownloader")) AND (Processes.process_name IN ("python.exe","pythonw.exe","py.exe") OR Processes.process="*\\_MEI*\\*" OR Processes.process="*\\Temp\\_MEI*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_company IN ("Zipline LLC","The Water Team") OR Processes.parent_process_company IN ("Zipline LLC","The Water Team")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.process_hash Processes.process_company Processes.parent_process_company | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (InitiatingProcessFileName has "jdownloader" or InitiatingProcessFolderPath has "JDownloader" or InitiatingProcessVersionInfoProductName has "JDownloader")
-| where FileName in~ ("python.exe","pythonw.exe","py.exe") 
-     or FolderPath matches regex @"(?i)\\Temp\\_MEI\d+\\" 
-     or ProcessCommandLine matches regex @"(?i)_MEI\d+"
+| where InitiatingProcessVersionInfoCompanyName in~ ("Zipline LLC","The Water Team")
+     or ProcessVersionInfoCompanyName in~ ("Zipline LLC","The Water Team")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine,
+          ProcCompany=ProcessVersionInfoCompanyName,
+          ParentCompany=InitiatingProcessVersionInfoCompanyName,
+          ParentFile=InitiatingProcessFileName,
+          ParentCmd=InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] JDownloader installer spawning Python interpreter (Pyarmor-obfuscated RAT loader)
+
+`UC_17_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name LIKE "%jdownloader%" AND Processes.process_name IN ("python.exe","pythonw.exe","python3.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName matches regex @"(?i)jdownloader.*\.exe$"
+     or InitiatingProcessCommandLine matches regex @"(?i)jdownloader.*(setup|installer|alternative)"
+| where FileName in~ ("python.exe","pythonw.exe","python3.exe","python3.12.exe","python3.11.exe")
+     or ProcessCommandLine matches regex @"(?i)\bpyarmor\b|\bpyimod\d_|_pyi_main"
 | project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentCompany = InitiatingProcessVersionInfoCompanyName,
-          Child = FileName, ChildPath = FolderPath, ChildCmd = ProcessCommandLine,
+          ParentFile=InitiatingProcessFileName, ParentFolder=InitiatingProcessFolderPath,
+          ParentCmd=InitiatingProcessCommandLine, ParentSHA256=InitiatingProcessSHA256,
+          ChildFile=FileName, ChildCmd=ProcessCommandLine, ChildSHA256=SHA256
+| order by Timestamp desc
+```
+
+### [LLM] JDownloader Linux supply chain - pkg/systemd-exec drop or upowerd masquerade in /usr/bin
+
+`UC_17_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/usr/bin/pkg","/usr/bin/systemd-exec","/usr/libexec/upowerd") AND Filesystem.action IN ("created","modified","renamed") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath == "/usr/bin/" and FileName in ("pkg","systemd-exec"))
+     or (FolderPath == "/usr/libexec/" and FileName == "upowerd"
+         and InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","rpm","dnf","yum","zypper","pacman","snap","flatpak"))
+| project Timestamp, DeviceName,
+          AcctName=InitiatingProcessAccountName,
+          ParentProc=InitiatingProcessFileName,
+          ParentCmd=InitiatingProcessCommandLine,
+          TargetPath=strcat(FolderPath, FileName),
           SHA256
 | order by Timestamp desc
 ```
@@ -254,4 +311,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

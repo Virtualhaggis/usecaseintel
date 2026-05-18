@@ -1,24 +1,24 @@
 # [CRIT] Four OpenClaw Flaws Enable Data Theft, Privilege Escalation, and Persistence
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-05-15
 **Article:** https://thehackernews.com/2026/05/four-openclaw-flaws-enable-data-theft.html
 
 ## Threat Profile
 
-Home Cyber Security News 
-OpenClaw Chain Vulnerabilities Expose 245,000 Public AI Agent Servers to Attack 
-By Guru Baran 
-May 15, 2026 
-A chain of four critical vulnerabilities discovered in OpenClaw , one of the fastest-growing open-source platforms for autonomous AI agents, has left an estimated 245,000 publicly accessible server instances exposed to remote exploitation, credential theft, and persistent backdoor installation.
-Originally launched as “Clawdbot” in late 2025, OpenClaw connects la…
+Four OpenClaw Flaws Enable Data Theft, Privilege Escalation, and Persistence 
+ Ravie Lakshmanan  May 15, 2026 Vulnerability / AI Security 
+Cybersecurity researchers have disclosed a set of four security flaws in OpenClaw that could be chained to achieve data theft, privilege escalation, and persistence.
+The vulnerabilities, collectively dubbed
+Claw Chain 
+by Cyera, can permit an attacker to establish a foothold, expose sensitive data, and plant backdoors. A brief description of the flaws is be…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-44112`
+- **CVE:** `CVE-2026-44113`
 - **CVE:** `CVE-2026-44115`
 - **CVE:** `CVE-2026-44118`
-- **CVE:** `CVE-2026-44113`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,107 +30,13 @@ Originally launched as “Clawdbot” in late 2025, OpenClaw connects la…
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1083** — File and Directory Discovery
-- **T1006** — Direct Volume Access
-- **T1547** — Boot or Logon Autostart Execution
-- **T1546** — Event Triggered Execution
-- **T1554** — Compromise Host Software Binary
-- **T1098.004** — Account Manipulation: SSH Authorized Keys
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] OpenShell sandbox heredoc env-var leak (Claw Chain CVE-2026-44115)
-
-`UC_21_9` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("openclaw","openshell","clawdbot") OR Processes.parent_process_path="/opt/openclaw/*" OR Processes.parent_process_path="/usr/lib/openclaw/*" OR Processes.parent_process_path="/var/lib/openclaw/*") AND Processes.process_name IN ("sh","bash","dash","zsh","ash") AND Processes.process="*<<*" AND (Processes.process="*$AWS_*" OR Processes.process="*$AZURE_*" OR Processes.process="*$OPENAI_*" OR Processes.process="*$ANTHROPIC_*" OR Processes.process="*$TOKEN*" OR Processes.process="*$API_KEY*" OR Processes.process="*$SECRET*" OR Processes.process="*$BEARER*" OR Processes.process="*/proc/self/environ*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.kube/config*" OR Processes.process="*/.env*" OR Processes.process="*printenv*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
-    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
-| where FileName in~ ("sh","bash","dash","zsh","ash")
-| where ProcessCommandLine has "<<"
-| where ProcessCommandLine has_any ("$AWS_","$AZURE_","$GCP_","$OPENAI_","$ANTHROPIC_","$TOKEN","$API_KEY","$SECRET","$BEARER","/proc/self/environ",".aws/credentials",".kube/config","/.env","printenv")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          ParentProc = InitiatingProcessFileName,
-          ParentPath = InitiatingProcessFolderPath,
-          ParentCmd  = InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] OpenClaw sandbox-escape read of credential files (Claw Chain CVE-2026-44113)
-
-`UC_21_10` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("openclaw","openshell","clawdbot") OR Processes.parent_process_path="/opt/openclaw/*" OR Processes.parent_process_path="/usr/lib/openclaw/*") AND Processes.process_name IN ("cat","head","tail","cp","dd","openssl","base64","xxd","strings","tar","scp","curl","wget") AND (Processes.process="*/proc/self/environ*" OR Processes.process="*/proc/1/environ*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.aws/config*" OR Processes.process="*.kube/config*" OR Processes.process="*/.ssh/id_*" OR Processes.process="*/.ssh/authorized_keys*" OR Processes.process="*/.docker/config*" OR Processes.process="*/etc/shadow*" OR Processes.process="*/.env*" OR Processes.process="*secrets/*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process _time | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-let SecretPaths = dynamic(["/proc/self/environ","/proc/1/environ",".aws/credentials",".aws/config",".kube/config","/.ssh/id_","/.ssh/authorized_keys","/.docker/config","/etc/shadow","/etc/passwd-","/.env","/secrets/","vault-token"]);
-let Readers = dynamic(["cat","head","tail","cp","dd","openssl","base64","xxd","strings","grep","awk","sed","tar","scp","curl","wget"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
-    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
-| where FileName in~ (Readers)
-| where ProcessCommandLine has_any (SecretPaths)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          ParentProc = InitiatingProcessFileName,
-          ParentPath = InitiatingProcessFolderPath,
-          ParentCmd  = InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] OpenClaw write-side TOCTOU planting persistence outside sandbox (Claw Chain CVE-2026-44112)
-
-`UC_21_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("openclaw","openshell","clawdbot") OR Filesystem.process_path="/opt/openclaw/*" OR Filesystem.process_path="/usr/lib/openclaw/*") AND Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="/etc/cron*" OR Filesystem.file_path="/var/spool/cron/*" OR Filesystem.file_path="/etc/systemd/*" OR Filesystem.file_path="/etc/init.d/*" OR Filesystem.file_path="/root/.ssh/*" OR Filesystem.file_path="/home/*/.ssh/authorized_keys" OR Filesystem.file_path="/etc/profile*" OR Filesystem.file_path="/etc/bash*" OR Filesystem.file_path="/etc/ld.so.preload" OR Filesystem.file_path="/etc/sudoers*" OR Filesystem.file_path="/usr/local/bin/*" OR Filesystem.file_path="/usr/local/sbin/*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let PersistencePaths = dynamic([@"/etc/cron",@"/var/spool/cron",@"/etc/systemd",@"/etc/init.d",@"/root/.ssh",@"/etc/profile",@"/etc/bash",@"/etc/ld.so.preload",@"/etc/sudoers",@"/usr/local/bin",@"/usr/local/sbin"]);
-let PersistenceFiles = dynamic(["authorized_keys","crontab","rc.local","bashrc","profile","ld.so.preload","sudoers"]);
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName has_any ("openclaw","openshell","clawdbot")
-    or InitiatingProcessFolderPath has_any (@"/opt/openclaw",@"/usr/lib/openclaw",@"/var/lib/openclaw")
-| where FolderPath has_any (PersistencePaths) or FileName in~ (PersistenceFiles) or FolderPath endswith "/.ssh/"
-| where not(FolderPath startswith "/opt/openclaw")
-| where not(FolderPath startswith "/var/lib/openclaw")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -280,117 +186,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
-### Ransomware-style mass file rename / extension change
-
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -420,9 +215,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-44112`, `CVE-2026-44115`, `CVE-2026-44118`, `CVE-2026-44113`
+  - CVE(s): `CVE-2026-44112`, `CVE-2026-44113`, `CVE-2026-44115`, `CVE-2026-44118`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

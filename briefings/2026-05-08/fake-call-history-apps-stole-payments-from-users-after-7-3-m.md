@@ -25,61 +25,12 @@ The 28 apps have collectively racked up more than 7.3 million downlo…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1660** — Phishing (Mobile)
-- **T1655** — Masquerading (Mobile)
-- **T1437** — Application Layer Protocol (Mobile)
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Managed Android device has an ESET CallPhantom fake call-history Play Store app installed
-
-`UC_142_4` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Inventory where Inventory.os="Android*" AND (Inventory.app_name IN ("calldetaila.ndcallhisto.rytogetan.ynumber","com.pixelxinnovation.manager","com.app.call.detail.history","sc.call.ofany.mobiledetail","com.cddhaduk.callerid.block.contact","com.basehistory.historydownloading","com.call.of.any.number","com.rajni.callhistory","com.callhistory.calldetails.callerids.callerhistory.callhostoryanynumber.getcall.history.callhistorymanager","com.callinformative.instantcallhistory.callhistorybluethem.callinfo","com.call.detail.caller.history","com.anycallinformation.datadetailswho.callinfo.numberfinder","com.callhistory.callhistoryyourgf","com.calldetails.smshistory.callhistoryofanynumber","com.callhistory.anynumber.chapfvor.history","com.callhistory.callhistoryany.call","com.name.factor","com.getanynumberofcallhistory.callhistoryofanynumber.findcalldetailsofanynumber","com.chdev.callhistory","com.phone.call.history.tracke","com.pdf.maker.pdfreader.pdfscanner","com.any.numbers.calls.history","com.callapp.historyero","all.callhistory.detail","com.easyranktools.callhistoryforanynumber","com.sbpinfotech.findlocationofanynumber","callhistoryeditor.callhistory.numberdetails.calleridlocator","com.all_historydownload.anynumber.callhistorybackup")) by Inventory.dest Inventory.user Inventory.app_name Inventory.app_version | `drop_dm_object_name(Inventory)` | convert ctime(firstSeen) ctime(lastSeen)
-```
-
-**Defender KQL:**
-```kql
-let CallPhantomPackages = dynamic(["calldetaila.ndcallhisto.rytogetan.ynumber","com.pixelxinnovation.manager","com.app.call.detail.history","sc.call.ofany.mobiledetail","com.cddhaduk.callerid.block.contact","com.basehistory.historydownloading","com.call.of.any.number","com.rajni.callhistory","com.callhistory.calldetails.callerids.callerhistory.callhostoryanynumber.getcall.history.callhistorymanager","com.callinformative.instantcallhistory.callhistorybluethem.callinfo","com.call.detail.caller.history","com.anycallinformation.datadetailswho.callinfo.numberfinder","com.callhistory.callhistoryyourgf","com.calldetails.smshistory.callhistoryofanynumber","com.callhistory.anynumber.chapfvor.history","com.callhistory.callhistoryany.call","com.name.factor","com.getanynumberofcallhistory.callhistoryofanynumber.findcalldetailsofanynumber","com.chdev.callhistory","com.phone.call.history.tracke","com.pdf.maker.pdfreader.pdfscanner","com.any.numbers.calls.history","com.callapp.historyero","all.callhistory.detail","com.easyranktools.callhistoryforanynumber","com.sbpinfotech.findlocationofanynumber","callhistoryeditor.callhistory.numberdetails.calleridlocator","com.all_historydownload.anynumber.callhistorybackup"]);
-DeviceTvmSoftwareInventory
-| where Timestamp > ago(30d)
-| where OSPlatform startswith "Android"
-| where SoftwareName in~ (CallPhantomPackages) or SoftwareVendor in~ (CallPhantomPackages)
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, LoggedOnUsers, PublicIP) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, SoftwareVendor, LoggedOnUsers, PublicIP
-| order by Timestamp desc
-```
-
-### [LLM] CallPhantom APK SHA-1 hash observed in file telemetry (sideload / download)
-
-`UC_142_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("799BB5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB") OR Filesystem.file_name="*.apk" AND Filesystem.file_hash IN ("799BB5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen)
-```
-
-**Defender KQL:**
-```kql
-let CallPhantomApkSha1 = dynamic(["799BB5127CA54239D3D4A14367DB3B712012CF14","56A4FD71D1E4BBA2C5C240BE0D794DCFF709D9EB"]);
-union isfuzzy=true
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA1 in~ (CallPhantomApkSha1)
-    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, FileOriginUrl, InitiatingProcessFileName, InitiatingProcessAccountName ),
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileDownloaded","BrowserLaunchedToOpenUrl")
-    | where SHA1 in~ (CallPhantomApkSha1)
-    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, RemoteUrl, InitiatingProcessFileName, AccountName )
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -256,4 +207,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

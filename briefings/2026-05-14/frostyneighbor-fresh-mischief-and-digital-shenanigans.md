@@ -48,139 +48,12 @@ This blogpost covers newly discovered activities attributed to FrostyNeighbor, t
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1218.011** — System Binary Proxy Execution: Rundll32
-- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090.004** — Proxy: Domain Fronting
-- **T1102** — Web Service
-- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] FrostyNeighbor masqueraded rundll32 (ViberPC.exe) loading DLL via SettingTimeAPI export from %ProgramData%
-
-`UC_69_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_path="*\\ProgramData\\ViberPC.exe" OR (Processes.process_name="ViberPC.exe" AND Processes.process_path="*\\ProgramData\\*") OR (Processes.process="*ViberPC.dll*" AND Processes.process="*SettingTimeAPI*") OR Processes.process="*\\ProgramData\\ViberPC.dll,SettingTimeAPI*") by host Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let viberPaths = dynamic([@"\ProgramData\ViberPC.exe", @"\ProgramData\ViberPC.dll", @"\ProgramData\ViberPC.lnk"]);
-let susExport = "SettingTimeAPI";
-union
-( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where (FolderPath has @"\ProgramData\" and FileName =~ "ViberPC.exe")
-         or (ProcessCommandLine has_all (@"\ProgramData\ViberPC.dll", susExport))
-         or (FileName =~ "rundll32.exe" and ProcessCommandLine has_all (@"\ProgramData\", "ViberPC", susExport))
-    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, Signal="process_create"
-),
-( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileCreated","FileRenamed","FileModified")
-    | where (FolderPath has @"\ProgramData\" and FileName in~ ("ViberPC.exe","ViberPC.dll","ViberPC.lnk","ViberPC.reg"))
-         or (FolderPath endswith @"\ProgramData" and FileName matches regex @"(?i)^ViberPC\.(exe|dll|lnk|reg)$")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, Signal="file_write"
-),
-( DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where FolderPath has @"\ProgramData\" and FileName =~ "ViberPC.dll"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, Signal="image_load"
-)
-| order by Timestamp desc
-```
-
-### [LLM] PicassoLoader JS dropper writes %AppData%\WinDataScope\Update.js and schedules .icu-fetched XML task
-
-`UC_69_13` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\AppData\\Roaming\\WinDataScope\\*" OR Filesystem.file_path="*\\AppData\\WinDataScope\\*" OR (Filesystem.file_name="Update.js" AND Filesystem.file_path="*WinDataScope*") OR Filesystem.file_name IN ("WinUpdate.reg","ViberPC.reg","ViberPC.lnk")) by host Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-// FrostyNeighbor first-stage drop chain. WinDataScope = attacker-chosen folder.
-let writers = dynamic(["wscript.exe","cscript.exe","explorer.exe","winrar.exe","7zfm.exe","7zg.exe"]);
-let ProcDrops = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("FileCreated","FileModified")
-    | where (FolderPath has @"\AppData\Roaming\WinDataScope" or FolderPath has @"\AppData\WinDataScope")
-         or (FileName =~ "Update.js" and FolderPath has @"WinDataScope")
-         or FileName in~ ("WinUpdate.reg","ViberPC.reg","ViberPC.lnk","1GreenAM.jpg")
-    | where InitiatingProcessFileName in~ (writers) or InitiatingProcessFolderPath !startswith @"C:\Program Files"
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, FileName, FolderPath, SHA256, Signal="drop";
-let TaskFromIcu = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "schtasks.exe"
-    | where ProcessCommandLine has "/create" and ProcessCommandLine has "/xml"
-    | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","powershell.exe","cmd.exe")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              FileName, FolderPath="", SHA256, Signal="sched_task_xml";
-let RegRun = DeviceRegistryEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "RegistryValueSet"
-    | where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
-    | where RegistryValueData has @"\ProgramData\" and (RegistryValueData has "ViberPC" or RegistryValueData endswith ".lnk")
-    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-              InitiatingProcessCommandLine, FileName=RegistryValueName, FolderPath=RegistryKey,
-              SHA256=tostring(RegistryValueData), Signal="runkey";
-union ProcDrops, TaskFromIcu, RegRun
-| order by Timestamp desc
-```
-
-### [LLM] FrostyNeighbor PicassoLoader / Cobalt Strike C2 beacon to needbinding.icu / nebao.icu families
-
-`UC_69_14` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as ips values(All_Traffic.app) as proc values(All_Traffic.url) as urls from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("*.needbinding.icu","*.nebao.icu","*.algsat.icu","*.sardk.icu","*.alexavegas.icu","*.lavanille.buzz","book-happy.needbinding.icu","attachment-storage-asset-static.needbinding.icu","nama-belakang.nebao.icu","easiestnewsfromourpointofview.algsat.icu","mickeymousegamesdealer.alexavegas.icu","hinesafar.sardk.icu","shinesafar.sardk.icu","best-seller.lavanille.buzz") OR All_Traffic.url IN ("*employment/documents-and-resources*","*statistics/discover.txt*","*wp-content/uploads/2023/10/1GreenAM.jpg*")) by host All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let cncDomains = dynamic([
-    "book-happy.needbinding.icu",
-    "attachment-storage-asset-static.needbinding.icu",
-    "nama-belakang.nebao.icu",
-    "easiestnewsfromourpointofview.algsat.icu",
-    "mickeymousegamesdealer.alexavegas.icu",
-    "hinesafar.sardk.icu",
-    "shinesafar.sardk.icu",
-    "best-seller.lavanille.buzz"
-]);
-let cncRootSuffixes = dynamic([".needbinding.icu",".nebao.icu",".algsat.icu",".sardk.icu",".alexavegas.icu",".lavanille.buzz"]);
-let cncUriHints = dynamic(["/employment/documents-and-resources","/statistics/discover.txt","/wp-content/uploads/2023/10/1GreenAM.jpg"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
-| where RemoteUrl has_any (cncDomains)
-    or RemoteUrl endswith_any (cncRootSuffixes)
-    or RemoteUrl has_any (cncUriHints)
-| extend SuspiciousInitiator = iff(InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","rundll32.exe","viberpc.exe"), "yes", "no")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, SuspiciousInitiator
-| order by SuspiciousInitiator desc, Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -476,7 +349,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_69_11` · phase: **exploit** · confidence: **High**
+`UC_70_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -539,4 +412,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

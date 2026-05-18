@@ -37,12 +37,11 @@ Earlier this month, Abnormal Security …
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
-- **T1621** — Multi-Factor Authentication Request Generation
-- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1102** — Web Service
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090.002** — Proxy: External Proxy
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1098.005** — Account Manipulation: Device Registration
 
 ## Kill chain phases observed
 
@@ -50,142 +49,107 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Microsoft Authentication Broker device-code sign-in from Node.js user agent (Tycoon2FA)
+### [LLM] Successful OAuth deviceCode grant via Microsoft Authentication Broker (Tycoon2FA device-code phishing)
 
-`UC_1_8` · phase: **c2** · confidence: **High**
+`UC_8_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user_agent) as user_agent values(Authentication.app) as app from datamodel=Authentication where Authentication.app="Microsoft Authentication Broker" OR Authentication.signature_id="29d9ed98-a469-4536-ade2-f981bc1d605e" by Authentication.user Authentication.dest | `drop_dm_object_name(Authentication)` | where match(user_agent, "(?i)node|axios|undici|got/\d") | convert ctime(firstTime) ctime(lastTime)
+`azure_monitor_aad` SigninLogs AppId="29d9ed98-a469-4536-ade2-f981bc1d605e" ResultType=0 AuthenticationProtocol="deviceCode" | stats min(_time) as firstSeen, max(_time) as lastSeen, values(IPAddress) as src_ips, values(UserAgent) as user_agents, values(DeviceDetail.deviceId) as new_device_ids by UserPrincipalName, AppDisplayName | where mvcount(new_device_ids) > 0
 ```
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
 | where Timestamp > ago(7d)
-| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker — public-documented first-party appId
-| where ErrorCode == 0
-| where UserAgent matches regex @"(?i)node|axios|undici|got/\d"
-| extend AuthDetailsStr = tostring(AuthenticationProcessingDetails)
-| extend IsDeviceCode = AuthDetailsStr has "deviceCode" or AuthDetailsStr has "device_code"
-| project Timestamp, AccountUpn, ApplicationId, Application, IPAddress, Country, UserAgent,
-          ClientAppUsed, IsDeviceCode, AuthenticationRequirement, ResourceDisplayName, RiskLevelDuringSignIn
+| where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
+| where ErrorCode == 0                                              // successful auth only
+| where IsInteractive == false                                      // deviceCode flow is non-interactive on the auth'd side
+| extend ProcDetails = tostring(AuthenticationProcessingDetails)
+| where ProcDetails has "DeviceCode" or ProcDetails has "deviceCode"
+| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City,
+          UserAgent, ClientAppUsed, ResourceDisplayName, AadDeviceId,
+          DeviceTrustType, OSPlatform, ConditionalAccessStatus, RiskLevelDuringSignIn
 | order by Timestamp desc
 ```
 
-### [LLM] Trustifi click-tracking URL chained into Cloudflare Workers Tycoon2FA landing
+### [LLM] Tycoon2FA device-code phishing infrastructure callouts (eSentire IOC set)
 
-`UC_1_9` · phase: **delivery** · confidence: **High**
+`UC_8_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest from datamodel=Web where (Web.url="*trustifi*" OR Web.url="*track.trustifi*") by Web.src Web.user _time span=5m | `drop_dm_object_name(Web)` | join type=inner src [| tstats summariesonly=true count as landing_hits values(Web.url) as landing_url from datamodel=Web where (Web.url="*cookies.28gholland.workers.dev*" OR Web.url="*shivacrio.com*" OR Web.url="*fijothi.com*") by Web.src _time span=5m | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as procs from datamodel=Network_Traffic where (All_Traffic.dest_ip IN ("47.90.180.205","47.252.11.99") OR All_Traffic.dest="cookies.28gholland.workers.dev" OR All_Traffic.dest="shivacrio.com" OR All_Traffic.dest="fijothi.com") by All_Traffic.src, All_Traffic.user, All_Traffic.dest | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
-let _window = 5m;
-let _landing_domains = dynamic(["cookies.28gholland.workers.dev","shivacrio.com","fijothi.com"]);
+let Tycoon2FA_IPs = dynamic(["47.90.180.205","47.252.11.99"]);
+let Tycoon2FA_Domains = dynamic(["cookies.28gholland.workers.dev","shivacrio.com","fijothi.com"]);
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteIP in (Tycoon2FA_IPs)
+         or RemoteUrl has_any (Tycoon2FA_Domains)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              RemoteIP, RemoteUrl, RemotePort,
+              Process=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine;
+let DnsHits = DeviceEvents
+    | where Timestamp > ago(14d)
+    | where ActionType == "DnsQueryResponse"
+    | extend Q = tostring(parse_json(AdditionalFields).QueryName)
+    | where Q in~ (Tycoon2FA_Domains)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              RemoteIP="", RemoteUrl=Q, RemotePort=int(null),
+              Process=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine;
+union NetHits, DnsHits
+| order by Timestamp desc
+```
+
+### [LLM] Trustifi click-tracker click followed by microsoft.com/devicelogin navigation
+
+`UC_8_10` · phase: **delivery** · confidence: **Medium**
+
+**Defender KQL:**
+```kql
+let WindowMin = 10m;
 let TrustifiClicks = UrlClickEvents
-  | where Timestamp > ago(7d)
-  | where ActionType in ("ClickAllowed","ClickedThrough")
-  | where Url has_any ("trustifi", "track.trustifi", ".trustifi.com")
-  | project ClickTime = Timestamp, AccountUpn, TrustifiUrl = Url, NetworkMessageId;
+    | where Timestamp > ago(7d)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | where Url has_any ("events.trustifi.com","trustifi-mail.com",".trustifi.com/","workers.dev")
+    | project ClickTime = Timestamp, AccountUpn, ClickedUrl = Url, NetworkMessageId, IPAddress;
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any (_landing_domains) or RemoteUrl endswith ".28gholland.workers.dev"
+| where RemoteUrl has "microsoft.com/devicelogin" or RemoteUrl has "login.microsoftonline.com/common/oauth2/deviceauth"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","arc.exe")
 | join kind=inner TrustifiClicks on $left.InitiatingProcessAccountUpn == $right.AccountUpn
-| where Timestamp between (ClickTime .. ClickTime + _window)
-| project ClickTime, LandingHitTime = Timestamp,
+| where Timestamp between (ClickTime .. ClickTime + WindowMin)
+| project ClickTime, NavTime = Timestamp,
           DelaySec = datetime_diff('second', Timestamp, ClickTime),
-          DeviceName, AccountUpn = InitiatingProcessAccountUpn,
-          Browser = InitiatingProcessFileName, TrustifiUrl,
-          LandingUrl = RemoteUrl, RemoteIP
+          DeviceName, AccountUpn, ClickedUrl, MS_Url = RemoteUrl,
+          Browser = InitiatingProcessFileName
 | order by ClickTime desc
 ```
 
-### [LLM] Entra sign-in from Tycoon2FA Alibaba Cloud C2 IPs (47.90.180.205 / 47.252.11.99)
+### [LLM] Entra ID sign-in from Node.js / non-browser user agent
 
-`UC_1_10` · phase: **c2** · confidence: **High**
+`UC_8_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.app) as app values(Authentication.user_agent) as user_agent from datamodel=Authentication where Authentication.src IN ("47.90.180.205","47.252.11.99") by Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+`azure_monitor_aad` (SigninLogs OR AADNonInteractiveUserSignInLogs) ResultType=0 (UserAgent="*node-fetch*" OR UserAgent="*Node.js*" OR UserAgent="*axios*" OR UserAgent="*python-requests*" OR UserAgent="*MSAL*Python*") | stats min(_time) as firstSeen, max(_time) as lastSeen, values(IPAddress) as src_ips, values(AppDisplayName) as apps, values(UserAgent) as user_agents by UserPrincipalName
 ```
 
 **Defender KQL:**
 ```kql
-let _tycoon_ips = dynamic(["47.90.180.205","47.252.11.99"]);
-union isfuzzy=true
-  ( AADSignInEventsBeta
-      | where Timestamp > ago(30d)
-      | where IPAddress in (_tycoon_ips)
-      | project Timestamp, Source="AADSignInEventsBeta", AccountUpn, IPAddress,
-                Application, ApplicationId, UserAgent, ErrorCode, Country, ClientAppUsed, RiskLevelDuringSignIn ),
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where RemoteIP in (_tycoon_ips)
-      | project Timestamp, Source="DeviceNetworkEvents", AccountUpn=InitiatingProcessAccountUpn,
-                IPAddress=RemoteIP, Application=InitiatingProcessFileName, ApplicationId="",
-                UserAgent="", ErrorCode=0, Country="", ClientAppUsed="", RiskLevelDuringSignIn="" )
-| order by Timestamp desc
-```
-
-### [LLM] Newly-registered Entra device followed by token-based access from unfamiliar ASN (Tycoon2FA token theft pivot)
-
-`UC_1_11` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Change where Change.action="created" Change.object_category="device" Change.src_user=* by Change.src_user Change.object _time | `drop_dm_object_name(Change)` | rename src_user as user | join type=inner user [| tstats summariesonly=true values(Authentication.src) as token_src values(Authentication.user_agent) as token_ua dc(Authentication.src) as src_count from datamodel=Authentication where Authentication.action="success" Authentication.app="Microsoft Authentication Broker" by Authentication.user | `drop_dm_object_name(Authentication)`]
-```
-
-**Defender KQL:**
-```kql
-let _baseline = AADSignInEventsBeta
-    | where Timestamp between (ago(30d) .. ago(2h))
-    | where ErrorCode == 0
-    | summarize KnownASNs = make_set(NetworkLocationDetails), KnownCountries = make_set(Country) by AccountUpn;
-let _new_device_regs = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e"   // Microsoft Authentication Broker
-    | where ErrorCode == 0
-    | project RegTime = Timestamp, AccountUpn, RegIP = IPAddress, RegUA = UserAgent, RegCountry = Country;
-_new_device_regs
-| join kind=inner _baseline on AccountUpn
-| extend NotInBaseline = not(KnownCountries has RegCountry)
-| where NotInBaseline
-| project RegTime, AccountUpn, RegIP, RegCountry, RegUA, KnownCountries
-| order by RegTime desc
-```
-
-### [LLM] Browser request to microsoft.com/devicelogin immediately preceded by Tycoon2FA landing-page traffic
-
-`UC_1_12` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web where (Web.url="*cookies.28gholland.workers.dev*" OR Web.url="*shivacrio.com*" OR Web.url="*fijothi.com*" OR Web.url="*microsoft.com/devicelogin*" OR Web.url="*microsoft.com/oauth2/deviceauth*") by Web.src _time span=10m | `drop_dm_object_name(Web)` | where match(urls, "(?i)(cookies\.28gholland\.workers\.dev|shivacrio\.com|fijothi\.com)") AND match(urls, "(?i)microsoft\.com/(devicelogin|oauth2/deviceauth)") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let _landing = dynamic(["cookies.28gholland.workers.dev","shivacrio.com","fijothi.com"]);
-let _window = 10m;
-let _landing_hits = DeviceNetworkEvents
-  | where Timestamp > ago(7d)
-  | where RemoteUrl has_any (_landing) or RemoteUrl endswith ".28gholland.workers.dev"
-  | project LandingTime = Timestamp, DeviceId, DeviceName, AccountUpn = InitiatingProcessAccountUpn,
-            Browser = InitiatingProcessFileName, LandingUrl = RemoteUrl;
-DeviceNetworkEvents
+AADSignInEventsBeta
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("microsoft.com/devicelogin", "login.microsoftonline.com/common/oauth2/deviceauth")
-| join kind=inner _landing_hits on DeviceId
-| where Timestamp between (LandingTime .. LandingTime + _window)
-| project LandingTime, DeviceLoginTime = Timestamp,
-          DelaySec = datetime_diff('second', Timestamp, LandingTime),
-          DeviceName, AccountUpn, Browser, LandingUrl, DeviceLoginUrl = RemoteUrl
-| order by LandingTime desc
+| where ErrorCode == 0
+| where UserAgent matches regex @"(?i)\b(node-fetch|node\.js|axios|got/|undici)\b"
+   or (ApplicationId == "29d9ed98-a469-4536-ade2-f981bc1d605e" and UserAgent !has "Mozilla" and isnotempty(UserAgent))
+| project Timestamp, AccountUpn, AccountDisplayName, ApplicationId, AppDisplayName,
+          ResourceDisplayName, IPAddress, Country, City, UserAgent, ClientAppUsed,
+          IsInteractive, ConditionalAccessStatus, RiskLevelDuringSignIn
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -422,7 +386,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tycoon2FA hijacks Microsoft 365 accounts via device-code phishing
 
-`UC_1_7` · phase: **exploit** · confidence: **High**
+`UC_8_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -479,4 +443,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

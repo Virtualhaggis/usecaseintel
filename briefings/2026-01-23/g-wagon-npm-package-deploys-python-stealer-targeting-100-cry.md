@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] G_Wagon npm stealer C2 egress to specific Appwrite project/bucket IDs
 
-`UC_474_9` · phase: **c2** · confidence: **High**
+`UC_475_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] G_Wagon stealer execution-counter file (.gwagon_status) created in user home
 
-`UC_474_10` · phase: **install** · confidence: **High**
+`UC_475_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceFileEvents
 
 ### [LLM] node.exe spawning Python interpreter with stdin pipe (G_Wagon in-memory dropper chain)
 
-`UC_474_11` · phase: **exploit** · confidence: **Medium**
+`UC_475_11` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -303,7 +303,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — G_Wagon: npm Package Deploys Python Stealer Targeting 100+ Crypto Wallets
 
-`UC_474_8` · phase: **exploit** · confidence: **High**
+`UC_475_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

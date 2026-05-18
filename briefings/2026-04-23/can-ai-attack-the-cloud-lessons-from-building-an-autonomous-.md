@@ -38,80 +38,12 @@ Clo…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1190** — Exploit Public-Facing Application
-- **T1548.005** — Abuse Elevation Control Mechanism: Temporary Elevated Cloud Access
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1537** — Transfer Data to Cloud Account
-- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
-- **T1530** — Data from Cloud Storage
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Linux/GCE web-app process contacts GCP metadata service (SSRF→token theft)
-
-`UC_257_6` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.process) as process_cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name!="google_metadata_script_runner" Processes.process_name!="google_osconfig_agent" Processes.process_name!="google_guest_agent" Processes.process_name!="google_network_daemon" Processes.process_name!="stackdriver-agent" Processes.process_name!="ops-agent" Processes.process_name!="gce-workload-cert-refresh" Processes.process_path!="/usr/bin/google_*" by Processes.dest Processes.process_id Processes.process_guid | `drop_dm_object_name(Processes)` | join type=inner process_guid [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest=169.254.169.254 All_Traffic.dest_port=80 by All_Traffic.process_guid | rename All_Traffic.process_guid as process_guid] | where process_name!="curl" OR (process_name="curl" AND match(process_cmdline,"(?i)Metadata-Flavor: ?Google"))
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where RemotePort == 80
-| where InitiatingProcessFileName !in~ (
-    "google_metadata_script_runner", "google_osconfig_agent",
-    "google_guest_agent", "google_network_daemon",
-    "google_oslogin_nss_cache", "google_clock_skew_daemon",
-    "stackdriver-agent", "ops-agent-engine", "otelopscol",
-    "agentexec", "gce-workload-cert-refresh")
-| where not(InitiatingProcessFolderPath startswith "/usr/bin/google_")
-| where not(InitiatingProcessFolderPath startswith "/usr/lib/google-cloud-sdk/")
-| project Timestamp, DeviceName, InitiatingProcessFileName,
-          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName,
-          LocalIP, RemotePort
-| order by Timestamp desc
-```
-
-### [LLM] GCP IAM service-account impersonation via GenerateAccessToken/SignBlob (post-metadata-theft pivot)
-
-`UC_257_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`google_gcp_pubsub_message` data.protoPayload.methodName IN ("google.iam.credentials.v1.IAMCredentials.GenerateAccessToken","google.iam.credentials.v1.IAMCredentials.SignBlob","google.iam.credentials.v1.IAMCredentials.SignJwt","google.iam.credentials.v1.IAMCredentials.GenerateIdToken")
-| rename data.protoPayload.authenticationInfo.principalEmail as principal data.protoPayload.requestMetadata.callerIp as caller_ip data.protoPayload.request.name as target_sa data.protoPayload.methodName as method
-| eval target_sa=replace(target_sa,"projects/-/serviceAccounts/","")
-| where match(principal,"-compute@developer\.gserviceaccount\.com$") OR match(principal,"@[a-z0-9-]+\.iam\.gserviceaccount\.com$")
-| where principal!=target_sa
-| stats min(_time) as firstTime max(_time) as lastTime count values(target_sa) as impersonated_targets values(caller_ip) as caller_ips values(method) as methods by principal
-| where mvcount(impersonated_targets)>=1
-| `security_content_ctime(firstTime)`
-```
-
-### [LLM] First-time BigQuery extract/export job by GCE service account (data exfiltration)
-
-`UC_257_8` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`google_gcp_pubsub_message` data.protoPayload.methodName IN ("google.cloud.bigquery.v2.JobService.InsertJob","jobservice.jobcompleted") data.protoPayload.metadata.jobChange.job.jobConfig.type="EXPORT"
-| rename data.protoPayload.authenticationInfo.principalEmail as principal data.protoPayload.requestMetadata.callerIp as caller_ip data.protoPayload.metadata.jobChange.job.jobConfig.queryConfig.destinationTable as dest_table data.protoPayload.metadata.jobChange.job.jobConfig.extractConfig.destinationUri as destination_uri data.protoPayload.metadata.jobChange.job.jobConfig.extractConfig.destinationUris{} as dest_uris
-| where match(principal,"-compute@developer\.gserviceaccount\.com$") OR match(principal,"@[a-z0-9-]+\.iam\.gserviceaccount\.com$")
-| eventstats earliest(_time) as first_export_time by principal
-| where _time = first_export_time AND _time > relative_time(now(),"-1d")
-| stats values(destination_uri) as destination_uri values(dest_uris) as dest_uris values(caller_ip) as caller_ips count by principal _time
-| `security_content_ctime(_time)`
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -340,4 +272,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

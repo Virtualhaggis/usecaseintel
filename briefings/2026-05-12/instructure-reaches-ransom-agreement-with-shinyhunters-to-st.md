@@ -30,81 +30,12 @@ In an update shared on Monday, the Utah-based firm said it "reached an …
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1656** — Impersonation
-- **T1528** — Steal Application Access Token
-- **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Inbound phishing impersonating Canvas/Instructure post-ShinyHunters breach
-
-`UC_102_7` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.src_user) as senders values(All_Email.recipient) as recipients from datamodel=Email.All_Email where All_Email.direction="inbound" (All_Email.subject="*Canvas*" OR All_Email.subject="*Instructure*" OR All_Email.subject="*course portal*" OR All_Email.subject="*LMS notification*") NOT (All_Email.src_user_domain="instructure.com" OR All_Email.src_user_domain="canvaslms.com" OR All_Email.src_user_domain="instructuremedia.com") earliest=-30d@d by All_Email.src_user_domain All_Email.recipient_domain | `drop_dm_object_name(All_Email)` | where firstTime >= relative_time(now(), "-30d@d") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let breach_disclosure = datetime(2026-04-15);
-let instructure_domains = dynamic(["instructure.com","canvaslms.com","instructuremedia.com"]);
-let canvas_subject_tokens = dynamic(["Canvas","Instructure","course portal","LMS notification","gradebook","course enrollment"]);
-EmailEvents
-| where Timestamp > breach_disclosure
-| where EmailDirection == "Inbound"
-| where DeliveryAction in ("Delivered","DeliveredAsSpam")
-| where Subject has_any (canvas_subject_tokens)
-| where SenderFromDomain !in~ (instructure_domains)
-  and SenderMailFromDomain !in~ (instructure_domains)
-| join kind=leftouter (
-    EmailUrlInfo
-    | project NetworkMessageId, Url, UrlDomain
-  ) on NetworkMessageId
-| join kind=leftouter (
-    UrlClickEvents
-    | where ActionType in ("ClickAllowed","ClickedThrough")
-    | project NetworkMessageId, ClickTime = Timestamp, ClickedBy = AccountUpn
-  ) on NetworkMessageId
-| project Timestamp, RecipientEmailAddress, SenderFromAddress, SenderFromDomain, Subject, UrlDomain, Url, ClickTime, ClickedBy, AuthenticationDetails
-| order by Timestamp desc
-```
-
-### [LLM] Anomalous Entra ID sign-in to Canvas/Instructure SP from unseen country
-
-`UC_102_8` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.src_country) as src_country from datamodel=Authentication where (Authentication.app="Canvas*" OR Authentication.app="Instructure*" OR Authentication.dest="*instructure.com*") Authentication.action="success" earliest=-30d@d by Authentication.user Authentication.src_country Authentication.app | `drop_dm_object_name(Authentication)` | eventstats values(src_country) as baseline_countries by user | eval new_country=if(isnull(mvfind(baseline_countries, src_country)) AND firstTime>=relative_time(now(),"-24h"),1,0) | where new_country=1 AND firstTime>=relative_time(now(),"-24h") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let baseline_days = 30d;
-let recent_hours = 24h;
-let canvas_apps = dynamic(["canvas","canvas lms","instructure","instructure canvas"]);
-let baseline_user_country = AADSignInEventsBeta
-    | where Timestamp between (ago(baseline_days) .. ago(recent_hours))
-    | where ErrorCode == 0
-    | where tolower(Application) has_any (canvas_apps) or tolower(ResourceDisplayName) has_any (canvas_apps)
-    | where isnotempty(Country)
-    | summarize by AccountUpn, Country;
-AADSignInEventsBeta
-| where Timestamp > ago(recent_hours)
-| where ErrorCode == 0
-| where tolower(Application) has_any (canvas_apps) or tolower(ResourceDisplayName) has_any (canvas_apps)
-| where isnotempty(Country)
-| join kind=leftanti baseline_user_country on AccountUpn, Country
-| project Timestamp, AccountUpn, IPAddress, Country, City, Application, ResourceDisplayName, UserAgent, ClientAppUsed, RiskLevelDuringSignIn, IsAnonymousProxy
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -365,4 +296,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

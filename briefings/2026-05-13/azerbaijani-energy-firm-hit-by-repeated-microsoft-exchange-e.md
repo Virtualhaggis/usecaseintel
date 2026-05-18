@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FamousSparrow Deed RAT C2 beacon to sentinelonepro[.]com typosquat
 
-`UC_78_8` · phase: **c2** · confidence: **High**
+`UC_79_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ union isfuzzy=true
 
 ### [LLM] LogMeIn Hamachi binary executing from non-LogMeIn install path (FamousSparrow Deed RAT side-load)
 
-`UC_78_9` · phase: **install** · confidence: **High**
+`UC_79_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### [LLM] Exchange w3wp.exe dropping DLL/EXE files (post-ProxyNotShell web shell or tooling stage)
 
-`UC_78_10` · phase: **install** · confidence: **Medium**
+`UC_79_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

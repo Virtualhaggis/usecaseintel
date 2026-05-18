@@ -8,6 +8,14 @@ _777 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-18
+- [claude code rce flaw lets attackers execute commands via mal](./2026-05-18/claude-code-rce-flaw-lets-attackers-execute-commands-via-mal.md)
+- [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
+- [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
+- [fast16 malware manipulated nuclear weapons simulation data t](./2026-05-18/fast16-malware-manipulated-nuclear-weapons-simulation-data-t.md)
+- [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
+- [new windows miniplasma zero day let attackers gain system ac](./2026-05-18/new-windows-miniplasma-zero-day-let-attackers-gain-system-ac.md)
+
 ## 2026-05-17
 - [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
 - [new windows miniplasma zero day exploit gives system access ](./2026-05-17/new-windows-miniplasma-zero-day-exploit-gives-system-access-.md)
@@ -15,10 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tycoon2fa hijacks microsoft 365 accounts via device code phi](./2026-05-17/tycoon2fa-hijacks-microsoft-365-accounts-via-device-code-phi.md)
 
 ## 2026-05-16
-- [android 16 vpn bypass lets malicious apps reveal users real ](./2026-05-16/android-16-vpn-bypass-lets-malicious-apps-reveal-users-real-.md)
-- [critical linux kernel flaw ssh keysign pwn exposes ssh keys ](./2026-05-16/critical-linux-kernel-flaw-ssh-keysign-pwn-exposes-ssh-keys-.md)
 - [funnel builder flaw under active exploitation enables woocom](./2026-05-16/funnel-builder-flaw-under-active-exploitation-enables-woocom.md)
-- [google project zero discloses zero click exploit chain for p](./2026-05-16/google-project-zero-discloses-zero-click-exploit-chain-for-p.md)
 - [jdownloader website compromised to distribute malicious wind](./2026-05-16/jdownloader-website-compromised-to-distribute-malicious-wind.md)
 - [malicious jpeg images could trigger php memory safety vulner](./2026-05-16/malicious-jpeg-images-could-trigger-php-memory-safety-vulner.md)
 - [microsoft exchange windows 11 and cursor zero days exploited](./2026-05-16/microsoft-exchange-windows-11-and-cursor-zero-days-exploited.md)
@@ -32,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [funnel builder wordpress plugin bug exploited to steal credi](./2026-05-15/funnel-builder-wordpress-plugin-bug-exploited-to-steal-credi.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
-- [gunra ransomware expands raas operations after shifting from](./2026-05-15/gunra-ransomware-expands-raas-operations-after-shifting-from.md)
 - [inside the remus infostealer session theft maas and rapid ev](./2026-05-15/inside-the-remus-infostealer-session-theft-maas-and-rapid-ev.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
@@ -61,11 +65,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
-- [hackers exploit auth bypass flaw in burst statistics wordpre](./2026-05-14/hackers-exploit-auth-bypass-flaw-in-burst-statistics-wordpre.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
-- [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [teampcp hackers advertise mistral ai code repos for sale](./2026-05-14/teampcp-hackers-advertise-mistral-ai-code-repos-for-sale.md)
