@@ -1,4 +1,4 @@
-# [LOW] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
+# [MED] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
 
 **Source:** ESET WeLiveSecurity
 **Published:** 2026-01-28
@@ -18,12 +18,120 @@ ESET researchers have uncovered an Android spyware campaign leveraging romance s
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1041** — Exfiltration Over C2 Channel
+- **T1105** — Ingress Tool Transfer
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ClickFix-style PowerShell Base64+IEX from Run Dialog (GhostChat / PKCERT lure)
+
+`UC_461_2` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="powershell.exe" AND Processes.process="*FromBase64String*" AND Processes.process="*WindowStyle*" AND (Processes.process="*Invoke-Expression*" OR Processes.process="* IEX*" OR Processes.process="*|IEX*") AND Processes.parent_process_name IN ("explorer.exe","mshta.exe","cmd.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "powershell.exe"
+| where ProcessCommandLine has "FromBase64String"
+| where ProcessCommandLine has "WindowStyle"
+| where ProcessCommandLine has_any ("Invoke-Expression", " IEX", "|IEX", "iex ")
+| where InitiatingProcessFileName in~ ("explorer.exe","mshta.exe","cmd.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] GhostChat C2 beacon to hitpak.org /page.php?tynor=<host>sss<user>
+
+`UC_461_3` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*hitpak.org*" OR (Web.url="*page.php*" AND Web.url="*tynor=*" AND Web.url="*sss*") by Web.src Web.user Web.url Web.dest Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "hitpak.org"
+   or (RemoteUrl has "/page.php" and RemoteUrl has "tynor=" and RemoteUrl has "sss")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] GhostChat second-stage DLL download (notepad2.dll / file.dll)
+
+`UC_461_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url IN ("*hitpak.org/notepad2.dll*","*foxy580.github.io/koko/file.dll*","*foxy580.github.io/koko/*") by Web.src Web.user Web.url Web.dest
+| `drop_dm_object_name(Web)`
+| appendcols [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash="8B103D0AA37E5297143E21949471FD4F6B2ECBAA" OR (Filesystem.file_name IN ("notepad2.dll","file.dll") AND Filesystem.action="created") by Filesystem.dest Filesystem.file_path Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`]
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has_any ("hitpak.org/notepad2.dll","foxy580.github.io/koko/file.dll","foxy580.github.io/koko")
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, Source="Network"
+),
+( DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where SHA1 =~ "8B103D0AA37E5297143E21949471FD4F6B2ECBAA"
+     or (FileName in~ ("notepad2.dll","file.dll") and (FileOriginUrl has "hitpak.org" or FileOriginUrl has "foxy580.github.io"))
+  | project Timestamp, DeviceName, InitiatingProcessAccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=FileOriginUrl, RemoteIP="", Source=strcat("FileWrite:",FileName)
+)
+| order by Timestamp desc
+```
+
+### [LLM] PKCERT impersonation lure access (buildthenations.info)
+
+`UC_461_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*buildthenations.info*" by Web.src Web.user Web.url Web.dest Web.http_user_agent Web.http_referrer
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| eval pkcert_flag=if(match(url,"(?i)/PKCERT/pkcert\.html"),"yes","no")
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "buildthenations.info"
+| extend IsPKCERTLandingPage = tostring(RemoteUrl has "/PKCERT/pkcert.html")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, IsPKCERTLandingPage
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -141,4 +249,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

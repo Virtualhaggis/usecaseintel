@@ -11,15 +11,9 @@ By Bill Toulas
 May 18, 2026
 05:42 PM
 0 
-
-
 A new variant of the ‘SHub’ macOS infostealer uses AppleScript to show a fake security update message and installs a backdoor.
-
-
 Dubbed Reaper, the new version steals sensitive browser data, collects documents and files that may contain financial details, and hijacks crypto wallet apps.
-
-
-Unlike earlier SHub campaigns that relied on “ClickFix” tactics, tricking users into pasting and ex…
+Unlike earlier SHub campaigns that relied on “ClickFix” tactics, tricking users into pasting and executing comm…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -68,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SHub Reaper — Script Editor launched via applescript:// URL from a browser
 
-`UC_3_8` · phase: **delivery** · confidence: **High**
+`UC_4_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — osascript invoking shell with curl|zsh download cradle
 
-`UC_3_9` · phase: **install** · confidence: **High**
+`UC_4_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — Gatekeeper bypass via xattr -cr on application bundles
 
-`UC_3_10` · phase: **install** · confidence: **High**
+`UC_4_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +126,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — LaunchAgent persistence impersonating Google software update
 
-`UC_3_11` · phase: **install** · confidence: **High**
+`UC_4_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +148,7 @@ DeviceFileEvents
 
 ### [LLM] SHub Reaper — egress to Reaper C2 / lure domains
 
-`UC_3_12` · phase: **c2** · confidence: **High**
+`UC_4_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +174,7 @@ union net, dns
 
 ### [LLM] SHub Reaper — crypto wallet bundle tamper / app.asar replacement
 
-`UC_3_13` · phase: **actions** · confidence: **High**
+`UC_4_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

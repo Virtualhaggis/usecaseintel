@@ -1,7 +1,7 @@
 # [MED] actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter Commit That Exfiltrates CI/CD Credentials
 
 **Source:** StepSecurity
-**Published:** 2026-05-18
+**Published:** 2026-05-19
 **Article:** https://www.stepsecurity.io/blog/actions-cool-issues-helper-github-action-compromised-all-tags-point-to-imposter-commit-that-exfiltrates-ci-cd-credentials
 
 ## Threat Profile
@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Egress to t.m-kosche.com (actions-cool/issues-helper exfil domain)
 
-`UC_4_2` · phase: **c2** · confidence: **High**
+`UC_0_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ union
 
 ### [LLM] python3 reads /proc/<pid>/mem of Runner.Worker on Linux GitHub Actions runner
 
-`UC_4_3` · phase: **actions** · confidence: **High**
+`UC_0_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] tr/grep pipeline extracting 'isSecret':true from Runner memory dump
 
-`UC_4_4` · phase: **actions** · confidence: **High**
+`UC_0_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] bun JavaScript runtime executed by GitHub Actions Runner.Worker (anomalous download-and-run)
 
-`UC_4_5` · phase: **install** · confidence: **Medium**
+`UC_0_5` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
 
-`UC_4_1` · phase: **exploit** · confidence: **High**
+`UC_0_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

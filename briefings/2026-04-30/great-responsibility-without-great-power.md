@@ -49,12 +49,43 @@ However, it’s not a pure marketing ploy. It all started in 1995, when collea
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
+- **T1496** — Resource Hijacking
+- **T1055** — Process Injection
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Talos top-prevalent malware hashes (Apr 30 2026): Coinminer/Injector/Dropper sweep
+
+`UC_227_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","c2efb2dcacba6d3ccc175b6ce1b7ed0a","41444d7018601b599beac0c60ed1bf83","7bdbd180c081fa63ca94f9c22c457376","dbd8dbecaa80795c135137d69921fdba")) by host Processes.user Processes.process_name Processes.process Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","c2efb2dcacba6d3ccc175b6ce1b7ed0a","41444d7018601b599beac0c60ed1bf83","7bdbd180c081fa63ca94f9c22c457376","dbd8dbecaa80795c135137d69921fdba")) by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)] | sort 0 - firstTime
+```
+
+**Defender KQL:**
+```kql
+let TalosSHA256 = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","90b1456cdbe6bc2779ea0b4736ed9a998a71ae37390331b6ba87e389a49d3d59","38d053135ddceaef0abb8296f3b0bf6114b25e10e6fa1bb8050aeecec4ba8f55","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","e60ab99da105ee27ee09ea64ed8eb46d8edc92ee37f039dbc3e2bb9f587a33ba"]);
+let TalosMD5 = dynamic(["2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","c2efb2dcacba6d3ccc175b6ce1b7ed0a","41444d7018601b599beac0c60ed1bf83","7bdbd180c081fa63ca94f9c22c457376","dbd8dbecaa80795c135137d69921fdba"]);
+union isfuzzy=true
+    ( DeviceProcessEvents
+        | where Timestamp > ago(7d)
+        | where SHA256 in (TalosSHA256) or MD5 in (TalosMD5)
+        | project Timestamp, DeviceName, AccountName, Source="ProcessExec", FileName, FolderPath, SHA256, MD5, ProcessCommandLine, ParentProc=InitiatingProcessFileName ),
+    ( DeviceFileEvents
+        | where Timestamp > ago(7d)
+        | where SHA256 in (TalosSHA256) or MD5 in (TalosMD5)
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, MD5, ProcessCommandLine=InitiatingProcessCommandLine, ParentProc=InitiatingProcessFileName ),
+    ( EmailAttachmentInfo
+        | where Timestamp > ago(7d)
+        | where SHA256 in (TalosSHA256)
+        | project Timestamp, DeviceName=RecipientEmailAddress, AccountName=SenderFromAddress, Source="EmailAttach", FileName, FolderPath="", SHA256, MD5="", ProcessCommandLine="", ParentProc="" )
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -379,4 +410,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

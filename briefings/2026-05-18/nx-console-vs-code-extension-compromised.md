@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx Console backdoor — malicious npx fetch of nrwl/nx orphan commit 558b09d7
 
-`UC_2_6` · phase: **exploit** · confidence: **High**
+`UC_3_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### [LLM] Nx Console backdoor — known-malicious VSIX / main.js / payload SHA256 on disk
 
-`UC_2_7` · phase: **install** · confidence: **High**
+`UC_3_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ union isfuzzy=true
 
 ### [LLM] Nx Console backdoor — macOS LaunchAgent + kitty persistence artefact creation
 
-`UC_2_8` · phase: **install** · confidence: **High**
+`UC_3_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### [LLM] Nx Console backdoor — GitHub commit-search C2 polling for 'firedalazer' marker
 
-`UC_2_9` · phase: **c2** · confidence: **High**
+`UC_3_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union isfuzzy=true
 
 ### [LLM] Nx Console backdoor — AWS IMDS access (169.254.169.254) from developer workstation
 
-`UC_2_10` · phase: **actions** · confidence: **Medium**
+`UC_3_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -292,7 +292,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nx Console VS Code Extension Compromised
 
-`UC_2_5` · phase: **exploit** · confidence: **High**
+`UC_3_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

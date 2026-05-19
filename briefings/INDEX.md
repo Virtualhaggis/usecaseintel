@@ -8,9 +8,11 @@ _770 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-19
+- [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
+
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
-- [actions cool issues helper github action compromised all tag](./2026-05-18/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
