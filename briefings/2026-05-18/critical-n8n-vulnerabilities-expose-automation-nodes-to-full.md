@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable n8n version exposed to CVE-2026-44789/44790/44791 RCE chain
 
-`UC_12_4` · phase: **exploit** · confidence: **High**
+`UC_14_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] n8n Git node argument injection — git invoked by node with dangerous CLI flags
 
-`UC_12_5` · phase: **exploit** · confidence: **High**
+`UC_14_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] n8n node.js runtime spawns shell or scripting interpreter — post-RCE execution
 
-`UC_12_6` · phase: **exploit** · confidence: **High**
+`UC_14_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### [LLM] n8n process reads sensitive credential or secret files — CVE-2026-44790 arbitrary file read
 
-`UC_12_7` · phase: **actions** · confidence: **Medium**
+`UC_14_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

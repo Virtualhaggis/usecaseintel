@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] s1ngularity Nx postinstall: AI CLI weaponization (claude/gemini/q) with permission-bypass flags
 
-`UC_412_1` · phase: **actions** · confidence: **High**
+`UC_411_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] s1ngularity exfiltration: gh CLI creating public repo matching s1ngularity-repository-* pattern
 
-`UC_412_2` · phase: **actions** · confidence: **High**
+`UC_411_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] Compromised npm/yarn post-install spawning gh auth token (s1ngularity credential harvest)
 
-`UC_412_3` · phase: **install** · confidence: **Medium**
+`UC_411_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable inventory hunt: May 2026 Ivanti/Fortinet/SAP/VMware/n8n patch bundle
 
-`UC_18_5` · phase: **recon** · confidence: **High**
+`UC_20_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] n8n (Node.js) host spawning unexpected shell or script interpreter — likely CVE-2026-42231/42232/44789/44791 post-exploit
 
-`UC_18_6` · phase: **exploit** · confidence: **Medium**
+`UC_20_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] n8n Git node Push CLI flag injection — CVE-2026-44790 arbitrary file read
 
-`UC_18_7` · phase: **actions** · confidence: **High**
+`UC_20_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

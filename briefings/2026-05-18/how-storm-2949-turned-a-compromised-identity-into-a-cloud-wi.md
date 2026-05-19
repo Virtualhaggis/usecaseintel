@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Storm-2949 SSPR abuse: rapid MFA method deletion + Authenticator re-registration after password reset
 
-`UC_1_12` · phase: **install** · confidence: **High**
+`UC_3_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Azure App Service publishing-profile theft via Microsoft.Web/sites/publishxml/action
 
-`UC_1_13` · phase: **weapon** · confidence: **High**
+`UC_3_13` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Key Vault burst secret reads after access-policy / RBAC change (Storm-2949 four-minute pattern)
 
-`UC_1_14` · phase: **weapon** · confidence: **High**
+`UC_3_14` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Short-lived Azure SQL or Storage firewall rule write+delete (Storm-2949 flip-flop)
 
-`UC_1_15` · phase: **weapon** · confidence: **High**
+`UC_3_15` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Azure Storage listKeys + networkAcls public-allow change by same caller (Storm-2949 staging)
 
-`UC_1_16` · phase: **weapon** · confidence: **High**
+`UC_3_16` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ IdentityDirectoryEvents
 
 ### [LLM] Azure VM Run Command from interactive user invoking IMDS for Key Vault access (Storm-2949)
 
-`UC_1_17` · phase: **install** · confidence: **High**
+`UC_3_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ RunCmdTargets
 
 ### [LLM] ScreenConnect / ConnectWise Control client beaconing to Storm-2949 C2 (185.241.208.243) from Azure VM
 
-`UC_1_18` · phase: **c2** · confidence: **High**
+`UC_3_18` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ union isfuzzy=true ScreenConnectProc, ScreenConnectNet
 
 ### [LLM] Mass OneDrive/SharePoint download by single user from Storm-2949 egress IPs
 
-`UC_1_19` · phase: **actions** · confidence: **High**
+`UC_3_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

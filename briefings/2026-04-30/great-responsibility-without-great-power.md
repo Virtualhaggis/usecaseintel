@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Talos top-prevalent malware hashes (Apr 30 2026): Coinminer/Injector/Dropper sweep
 
-`UC_227_10` · phase: **install** · confidence: **High**
+`UC_226_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -350,7 +350,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Great responsibility, without great power
 
-`UC_227_9` · phase: **exploit** · confidence: **High**
+`UC_226_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

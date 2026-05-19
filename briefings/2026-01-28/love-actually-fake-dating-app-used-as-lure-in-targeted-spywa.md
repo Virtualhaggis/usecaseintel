@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClickFix-style PowerShell Base64+IEX from Run Dialog (GhostChat / PKCERT lure)
 
-`UC_461_2` · phase: **exploit** · confidence: **High**
+`UC_460_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] GhostChat C2 beacon to hitpak.org /page.php?tynor=<host>sss<user>
 
-`UC_461_3` · phase: **c2** · confidence: **High**
+`UC_460_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### [LLM] GhostChat second-stage DLL download (notepad2.dll / file.dll)
 
-`UC_461_4` · phase: **install** · confidence: **High**
+`UC_460_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ union
 
 ### [LLM] PKCERT impersonation lure access (buildthenations.info)
 
-`UC_461_5` · phase: **delivery** · confidence: **High**
+`UC_460_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

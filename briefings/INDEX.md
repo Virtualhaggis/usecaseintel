@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
+- [github actions supply chain attack redirects tags to steal c](./2026-05-19/github-actions-supply-chain-attack-redirects-tags-to-steal-c.md)
+- [mythos preview builds poc exploits in automated vulnerabilit](./2026-05-19/mythos-preview-builds-poc-exploits-in-automated-vulnerabilit.md)
 
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
@@ -126,11 +128,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
 - [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
 
-## 2026-05-10
-- [ollama out of bounds read vulnerability allows remote proces](./2026-05-10/ollama-out-of-bounds-read-vulnerability-allows-remote-proces.md)
-
 ## 2026-05-09
-- [cpanel whm release fixes for three new vulnerabilities patch](./2026-05-09/cpanel-whm-release-fixes-for-three-new-vulnerabilities-patch.md)
 - [ghsa critical ghsa v6wj c83f v46x profullstack mcp server vu](./2026-05-09/ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu.md)
 
 ## 2026-05-08

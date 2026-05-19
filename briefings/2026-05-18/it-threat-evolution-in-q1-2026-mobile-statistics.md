@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cisco Secure FMC unpatched against CVE-2026-20131 (Interlock initial access exposure)
 
-`UC_16_7` · phase: **exploit** · confidence: **High**
+`UC_18_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Interlock ransomware C2 infrastructure contact (CVE-2026-20131 campaign IOCs)
 
-`UC_16_8` · phase: **c2** · confidence: **High**
+`UC_18_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SHub Reaper — Script Editor launched via applescript:// URL from a browser
 
-`UC_4_8` · phase: **delivery** · confidence: **High**
+`UC_6_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — osascript invoking shell with curl|zsh download cradle
 
-`UC_4_9` · phase: **install** · confidence: **High**
+`UC_6_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — Gatekeeper bypass via xattr -cr on application bundles
 
-`UC_4_10` · phase: **install** · confidence: **High**
+`UC_6_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### [LLM] SHub Reaper — LaunchAgent persistence impersonating Google software update
 
-`UC_4_11` · phase: **install** · confidence: **High**
+`UC_6_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceFileEvents
 
 ### [LLM] SHub Reaper — egress to Reaper C2 / lure domains
 
-`UC_4_12` · phase: **c2** · confidence: **High**
+`UC_6_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ union net, dns
 
 ### [LLM] SHub Reaper — crypto wallet bundle tamper / app.asar replacement
 
-`UC_4_13` · phase: **actions** · confidence: **High**
+`UC_6_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

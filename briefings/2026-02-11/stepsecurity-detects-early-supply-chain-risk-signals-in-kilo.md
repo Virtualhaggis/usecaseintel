@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] @kilocode/cli npm postinstall symlinking unverified platform binaries
 
-`UC_426_1` · phase: **install** · confidence: **Medium**
+`UC_425_1` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

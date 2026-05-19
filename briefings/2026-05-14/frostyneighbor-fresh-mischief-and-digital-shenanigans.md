@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FrostyNeighbor PicassoLoader drop at %AppData%\WinDataScope\Update.js
 
-`UC_81_12` · phase: **install** · confidence: **High**
+`UC_82_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### [LLM] FrostyNeighbor rundll32.exe masquerade copy as %ProgramData%\ViberPC.exe
 
-`UC_81_13` · phase: **install** · confidence: **High**
+`UC_82_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### [LLM] FrostyNeighbor C2 contact to needbinding.icu / nebao.icu / sardk.icu domains
 
-`UC_81_14` · phase: **c2** · confidence: **High**
+`UC_82_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union NetHits, DnsHits
 
 ### [LLM] FrostyNeighbor HKCU Run persistence pointing to %ProgramData%\ViberPC.lnk
 
-`UC_81_15` · phase: **install** · confidence: **High**
+`UC_82_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceRegistryEvents
 
 ### [LLM] FrostyNeighbor renamed-rundll32 invoking ViberPC.dll export SettingTimeAPI
 
-`UC_81_16` · phase: **exploit** · confidence: **High**
+`UC_82_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### [LLM] FrostyNeighbor SHA-1 IOC sweep (PicassoLoader / Cobalt Strike beacon / lure files)
 
-`UC_81_17` · phase: **delivery** · confidence: **High**
+`UC_82_17` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -517,7 +517,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_81_11` · phase: **exploit** · confidence: **High**
+`UC_82_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

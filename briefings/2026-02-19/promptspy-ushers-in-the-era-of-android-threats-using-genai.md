@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PromptSpy/VNCSpy Android malware C2 callback to hard-coded VNC server (54.67.2.84 / 52.222.205.45)
 
-`UC_399_3` · phase: **c2** · confidence: **High**
+`UC_398_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### [LLM] PromptSpy MorganArg distribution / phishing domain access (mgardownload.com, m-mgarg.com)
 
-`UC_399_4` · phase: **delivery** · confidence: **High**
+`UC_398_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ union isfuzzy=true
 
 ### [LLM] PromptSpy / VNCSpy APK SHA-1 IOC match on managed-endpoint file events
 
-`UC_399_5` · phase: **install** · confidence: **High**
+`UC_398_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

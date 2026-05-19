@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GitHub PAT/OAuth token bulk repository clone or download burst (CoinbaseCartel-style codebase theft)
 
-`UC_13_3` · phase: **actions** · confidence: **Medium**
+`UC_15_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ CloudAppEvents
 
 ### [LLM] GitHub PAT/OAuth token used from first-time IP or country (stolen-token reuse)
 
-`UC_13_4` · phase: **delivery** · confidence: **Medium**
+`UC_15_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

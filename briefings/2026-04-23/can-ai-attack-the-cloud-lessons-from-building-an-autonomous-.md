@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Internal VPC port scanning burst from GCP/cloud VM (Nmap-style sweep)
 
-`UC_255_6` · phase: **recon** · confidence: **Medium**
+`UC_254_6` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceNetworkEvents
 
 ### [LLM] GCP Instance Metadata Server (169.254.169.254) access from web-app process
 
-`UC_255_7` · phase: **exploit** · confidence: **High**
+`UC_254_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] GCP IAM enumeration burst by single service-account principal
 
-`UC_255_8` · phase: **recon** · confidence: **High**
+`UC_254_8` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### [LLM] GCP service account impersonation via iam.serviceAccounts.generateAccessToken
 
-`UC_255_9` · phase: **exploit** · confidence: **High**
+`UC_254_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### [LLM] BigQuery query/extract job writing results to a foreign GCP project
 
-`UC_255_10` · phase: **actions** · confidence: **High**
+`UC_254_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceNetworkEvents
 
 ### [LLM] GCS object copy/rewrite to bucket in foreign GCP project
 
-`UC_255_11` · phase: **actions** · confidence: **High**
+`UC_254_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

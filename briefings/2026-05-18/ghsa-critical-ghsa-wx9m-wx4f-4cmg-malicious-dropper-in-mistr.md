@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Curl download of transformers.pyz from mistralai 2.4.6 dropper C2 IP 83.142.209.194
 
-`UC_6_3` · phase: **install** · confidence: **High**
+`UC_8_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] Python interpreter executing /tmp/transformers.pyz (mistralai 2.4.6 second stage)
 
-`UC_6_4` · phase: **exploit** · confidence: **High**
+`UC_8_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to mistralai 2.4.6 dropper C2 IP 83.142.209.194
 
-`UC_6_5` · phase: **c2** · confidence: **High**
+`UC_8_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceNetworkEvents
 
 ### [LLM] Malicious mistralai 2.4.6 sdist on disk by SHA256
 
-`UC_6_6` · phase: **delivery** · confidence: **High**
+`UC_8_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI
 
-`UC_6_2` · phase: **exploit** · confidence: **High**
+`UC_8_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

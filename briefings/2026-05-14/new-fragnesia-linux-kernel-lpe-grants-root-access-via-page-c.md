@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Fragnesia LPE: /usr/bin/su grants root session with no preceding PAM authentication
 
-`UC_82_6` · phase: **exploit** · confidence: **Medium**
+`UC_83_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] berz0k Linux LPE: .so payload dropped in /tmp followed by LD_PRELOAD execution
 
-`UC_82_7` · phase: **install** · confidence: **High**
+`UC_83_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] Unprivileged user namespace creation by non-root account (Fragnesia/Dirty Frag prerequisite)
 
-`UC_82_8` · phase: **exploit** · confidence: **Medium**
+`UC_83_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -285,7 +285,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_82_5` · phase: **install** · confidence: **High**
+`UC_83_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

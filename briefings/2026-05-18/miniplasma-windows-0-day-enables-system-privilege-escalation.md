@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious npm Package Install - Shai-Hulud Typosquat Campaign (chalk-tempalte / axios-util)
 
-`UC_20_6` · phase: **delivery** · confidence: **High**
+`UC_22_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound C2 to localhost.run Tunnel (lhr.life) Subdomains - Shai-Hulud Copycat
 
-`UC_20_7` · phase: **c2** · confidence: **High**
+`UC_22_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ union isfuzzy=true
 
 ### [LLM] Network Egress to 80.200.28.28:2222 - Axios-Util Infostealer C2
 
-`UC_20_8` · phase: **c2** · confidence: **High**
+`UC_22_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceNetworkEvents
 
 ### [LLM] Shai-Hulud Marker String Hunt - 'A Mini Sha1-Hulud has Appeared'
 
-`UC_20_9` · phase: **actions** · confidence: **Medium**
+`UC_22_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

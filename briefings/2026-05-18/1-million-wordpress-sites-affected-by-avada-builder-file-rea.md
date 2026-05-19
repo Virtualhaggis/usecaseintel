@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Avada Builder CVE-2026-4782 custom_svg arbitrary file read targeting wp-config.php
 
-`UC_22_1` · phase: **exploit** · confidence: **High**
+`UC_24_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceFileEvents
 
 ### [LLM] Avada Builder CVE-2026-4798 product_order time-based SQL injection (SLEEP/BENCHMARK)
 
-`UC_22_2` · phase: **exploit** · confidence: **High**
+`UC_24_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

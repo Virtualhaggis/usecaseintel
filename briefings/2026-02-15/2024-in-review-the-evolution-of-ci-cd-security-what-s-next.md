@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CVE-2024-3094 XZ Utils backdoored liblzma SHA256 hash match on Linux endpoints
 
-`UC_414_3` · phase: **install** · confidence: **High**
+`UC_413_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union isfuzzy=true
 
 ### [LLM] CVE-2024-3094 vulnerable XZ Utils version inventory (xz 5.6.0 / 5.6.1)
 
-`UC_414_4` · phase: **recon** · confidence: **High**
+`UC_413_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Ultralytics PyPI compromised version (8.3.41 / 42 / 45 / 46) install or import
 
-`UC_414_5` · phase: **delivery** · confidence: **High**
+`UC_413_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

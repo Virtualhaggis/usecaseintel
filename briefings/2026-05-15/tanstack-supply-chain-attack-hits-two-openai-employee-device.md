@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud / TeamPCP C2 communication to 83.142.209.194 or campaign domains
 
-`UC_41_6` · phase: **c2** · confidence: **High**
+`UC_42_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ union isfuzzy=true
 
 ### [LLM] npm/pnpm/yarn/pip install of Mini Shai-Hulud trojanized package ecosystems
 
-`UC_41_7` · phase: **delivery** · confidence: **Medium**
+`UC_42_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] Bulk fan-out of credential file reads (~/.aws/, ~/.ssh/, .npmrc, dotenv, docker config)
 
-`UC_41_8` · phase: **actions** · confidence: **Medium**
+`UC_42_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### [LLM] Docker socket abuse / running container env extraction (credential pull from containers)
 
-`UC_41_9` · phase: **actions** · confidence: **Medium**
+`UC_42_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### [LLM] Mass file deletion in user home directories (Mini Shai-Hulud destructive wiper)
 
-`UC_41_10` · phase: **actions** · confidence: **High**
+`UC_42_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

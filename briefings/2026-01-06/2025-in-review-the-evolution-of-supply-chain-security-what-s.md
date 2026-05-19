@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx s1ngularity — Node/npm spawning AI CLI tools (claude/gemini/q) for recon
 
-`UC_502_1` · phase: **actions** · confidence: **High**
+`UC_501_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### [LLM] Nx s1ngularity — 's1ngularity-repository' exfil string in process / git activity
 
-`UC_502_2` · phase: **actions** · confidence: **High**
+`UC_501_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union isfuzzy=true
 
 ### [LLM] tj-actions/changed-files compromise — curl to gist.githubusercontent.com from CI runner context
 
-`UC_502_3` · phase: **install** · confidence: **High**
+`UC_501_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

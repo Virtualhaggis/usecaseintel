@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PicassoLoader JS dropper: wscript/cscript executing .js from RAR-extracted Downloads/Temp path
 
-`UC_73_7` · phase: **install** · confidence: **High**
+`UC_74_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### [LLM] PicassoLoader 10-minute fingerprint beacon: wscript/cscript periodic outbound HTTP cadence
 
-`UC_73_8` · phase: **c2** · confidence: **Medium**
+`UC_74_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### [LLM] CVE-2025-8088 WinRAR path-traversal exploitation: WinRAR spawning child from non-archive directory
 
-`UC_73_9` · phase: **exploit** · confidence: **High**
+`UC_74_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceFileEvents
 
 ### [LLM] BO Team ZeroSSH reverse SSH channel: ssh.exe with -R reverse port forwarding
 
-`UC_73_10` · phase: **c2** · confidence: **High**
+`UC_74_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud 2.0 C2 traffic to metrics-trustwallet.com / 138.124.70.40
 
-`UC_292_7` · phase: **c2** · confidence: **High**
+`UC_291_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union
 
 ### [LLM] Shai-Hulud 2.0 known-malicious payload SHA256 execution / file write
 
-`UC_292_8` · phase: **install** · confidence: **High**
+`UC_291_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ union
 
 ### [LLM] TruffleHog secret-scanner executed by npm/node/bun/yarn/pnpm parent
 
-`UC_292_9` · phase: **actions** · confidence: **High**
+`UC_291_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud 2.0 signature file artifacts: setup_bun.js / bun_environment.js / shai-hulud-workflow.yml
 
-`UC_292_10` · phase: **install** · confidence: **High**
+`UC_291_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

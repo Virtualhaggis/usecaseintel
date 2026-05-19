@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kazuar (Secret Blizzard / Turla) modular backdoor execution by SHA256
 
-`UC_35_2` · phase: **install** · confidence: **High**
+`UC_36_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union isfuzzy=true
 
 ### [LLM] Non-Outlook process accessing Outlook OST/PST mailbox stores (Kazuar Worker MAPI harvest)
 
-`UC_35_3` · phase: **actions** · confidence: **Medium**
+`UC_36_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### [LLM] Non-mail-client process posting to Exchange Web Services (Kazuar Bridge module C2)
 
-`UC_35_4` · phase: **c2** · confidence: **Medium**
+`UC_36_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mailslot creation by non-system process (Kazuar Kernel-module P2P IPC)
 
-`UC_35_5` · phase: **c2** · confidence: **Medium**
+`UC_36_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WinRAR CVE-2025-8088 ADS path-traversal drop into Windows Startup folder
 
-`UC_583_3` · phase: **install** · confidence: **High**
+`UC_582_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] Egress to InedibleOchotense ESET-impersonating phishing domains (esetsmart/esetscanner/esetremover)
 
-`UC_583_4` · phase: **delivery** · confidence: **High**
+`UC_582_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ union _network, _dns
 
 ### [LLM] Kalambur backdoor post-install: RDP enablement + OpenSSH install from non-admin context
 
-`UC_583_5` · phase: **install** · confidence: **High**
+`UC_582_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ union _rdp_enable, _openssh_install
 
 ### [LLM] Known SHA256 IOCs from ESET APT Q2-Q3 2025 report (Kalambur/RomCom delivery)
 
-`UC_583_6` · phase: **install** · confidence: **High**
+`UC_582_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
