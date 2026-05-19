@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_772 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_770 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
-- [5 steps to managing shadow ai tools without slowing down emp](./2026-05-18/5-steps-to-managing-shadow-ai-tools-without-slowing-down-emp.md)
+- [actions cool issues helper github action compromised all tag](./2026-05-18/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
 - [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
@@ -19,14 +19,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
 - [grafana says stolen github token let hackers steal codebase](./2026-05-18/grafana-says-stolen-github-token-let-hackers-steal-codebase.md)
 - [hackers actively exploiting critical nginx rce vulnerability](./2026-05-18/hackers-actively-exploiting-critical-nginx-rce-vulnerability.md)
+- [how storm 2949 turned a compromised identity into a cloud wi](./2026-05-18/how-storm-2949-turned-a-compromised-identity-into-a-cloud-wi.md)
+- [how to reduce phishing exposure before it turns into busines](./2026-05-18/how-to-reduce-phishing-exposure-before-it-turns-into-busines.md)
 - [interpol operation ramz disrupts mena cybercrime networks wi](./2026-05-18/interpol-operation-ramz-disrupts-mena-cybercrime-networks-wi.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
-- [linus torvalds says ai bug reports have made linux security ](./2026-05-18/linus-torvalds-says-ai-bug-reports-have-made-linux-security-.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
 - [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
 - [nx console vs code extension compromised](./2026-05-18/nx-console-vs-code-extension-compromised.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
+- [shub macos infostealer variant spoofs apple security updates](./2026-05-18/shub-macos-infostealer-variant-spoofs-apple-security-updates.md)
 - [weekly recap exchange 0 day npm worm fake ai repo cisco expl](./2026-05-18/weekly-recap-exchange-0-day-npm-worm-fake-ai-repo-cisco-expl.md)
 
 ## 2026-05-17
@@ -41,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [avada builder wordpress plugin flaws allow site credential t](./2026-05-15/avada-builder-wordpress-plugin-flaws-allow-site-credential-t.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
@@ -49,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
-- [popular node ipc npm package compromised to steal credential](./2026-05-15/popular-node-ipc-npm-package-compromised-to-steal-credential.md)
 - [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
 
@@ -94,7 +94,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
 - [ghsa critical cve 2026 31220 pysyft server side arbitrary py](./2026-05-12/ghsa-critical-cve-2026-31220-pysyft-server-side-arbitrary-py.md)
-- [ghsa critical cve 2026 41293 apache tomcat http 2 request he](./2026-05-12/ghsa-critical-cve-2026-41293-apache-tomcat-http-2-request-he.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
@@ -172,7 +171,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 - [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
-- [when prompts become shells rce vulnerabilities in ai agent f](./2026-05-07/when-prompts-become-shells-rce-vulnerabilities-in-ai-agent-f.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)

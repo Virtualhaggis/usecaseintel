@@ -38,10 +38,7 @@ Successful exploitation of CVE-2026-20182 allows an unauthenticated, remote atta
 - **IPv4 (defanged):** `176.65.139.31`
 - **IPv4 (defanged):** `47.104.248.7`
 - **Domain (defanged):** `replit.dev`
-- **Domain (defanged):** `defunct.dat`
-- **Domain (defanged):** `config.json`
-- **Domain (defanged):** `1a820b09-95ba-44eb-b350-417e8241b725-00-1lgwuuen9b77p.worf.replit`
-- **Domain (defanged):** `a820b09-95ba-44eb-b350-417e8241b725-00-1lgwuuen9b77p.worf.replit`
+- **Domain (defanged):** `a820b09-95ba-44eb-b350-417e8241b725-00-1lgwuuen9b77p.worf.replit.dev`
 - **SHA256:** `f6f8e0d790645395188fc521039385b7c4f42fa8b426fd035f489f6cda9b5da1`
 - **SHA256:** `02654acfb21f83485393ba8b14bd8862b919b9ec966fc6768f6aac1338a45ee8`
 - **SHA256:** `0ed72d52347bfe4a78afff8a6982a64050c8fc86d8957a20eeb3e0f3f5342ed0`
@@ -54,7 +51,6 @@ Successful exploitation of CVE-2026-20182 allows an unauthenticated, remote atta
 - **SHA256:** `b0f51b098842cd630097b462aab0ec357e2c7824af37cca6d08165265da2c2d3`
 - **SHA256:** `72f570ce97de3eaaffef33d90b0c337a153fc9690cc34ee207b557d868360060`
 - **SHA256:** `17302d903baf182f94dc3be40ab1e0874dd0eb2ec5255bf9131fd53591efe925`
-- **MD5:** `fece5b954e69b2c6a8d0a1029631a0d7`
 
 ## MITRE ATT&CK Techniques
 
@@ -76,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cisco SD-WAN 'vmanage-admin' SSH publickey logon from unauthorized IP (CVE-2026-20182 / 20127, UAT-8616)
 
-`UC_59_5` · phase: **install** · confidence: **High**
+`UC_60_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound DTLS to Cisco SD-WAN vdaemon UDP/12346 from non-fabric peer (CVE-2026-20182 exploit path)
 
-`UC_59_6` · phase: **exploit** · confidence: **Medium**
+`UC_60_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +135,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 
-`UC_59_4` · phase: **exploit** · confidence: **High**
+`UC_60_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,13 +187,13 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `38.181.52.89`, `89.125.244.33`, `89.125.244.51`, `71.80.85.135`, `212.83.162.37`, `38.60.214.92`, `65.20.67.134`, `104.233.156.1` _(+13 more)_
+  - IP / domain IOC(s): `38.181.52.89`, `89.125.244.33`, `89.125.244.51`, `71.80.85.135`, `212.83.162.37`, `38.60.214.92`, `65.20.67.134`, `104.233.156.1` _(+10 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-20182`, `CVE-2026-20133`, `CVE-2026-20128`, `CVE-2026-20122`, `CVE-2026-20127`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `f6f8e0d790645395188fc521039385b7c4f42fa8b426fd035f489f6cda9b5da1`, `02654acfb21f83485393ba8b14bd8862b919b9ec966fc6768f6aac1338a45ee8`, `0ed72d52347bfe4a78afff8a6982a64050c8fc86d8957a20eeb3e0f3f5342ed0`, `96fc528ca5e7d1c2b3add5e31b8797cb126f704976c8fbeaecdbf0aa4309ad46`, `7aa88a64a527ade7d93c20faf23b54f2ee33ad9b1246cdc2f8ded2ab639affb1`, `0c87871642f84e09e8d3fb23ec36bf55601323e31151a7017a85dbec929cf15d`, `18d77c9c5bbb5b9d5bdfd366fdfcf26bad9e64c63ca865fad711bcce8e3d5a80`, `d94f75a70b5cabaf786ac57177ed841732e62bdcc9a29e06e5b41d9be567bcfa` _(+5 more)_
+  - file hash IOC(s): `f6f8e0d790645395188fc521039385b7c4f42fa8b426fd035f489f6cda9b5da1`, `02654acfb21f83485393ba8b14bd8862b919b9ec966fc6768f6aac1338a45ee8`, `0ed72d52347bfe4a78afff8a6982a64050c8fc86d8957a20eeb3e0f3f5342ed0`, `96fc528ca5e7d1c2b3add5e31b8797cb126f704976c8fbeaecdbf0aa4309ad46`, `7aa88a64a527ade7d93c20faf23b54f2ee33ad9b1246cdc2f8ded2ab639affb1`, `0c87871642f84e09e8d3fb23ec36bf55601323e31151a7017a85dbec929cf15d`, `18d77c9c5bbb5b9d5bdfd366fdfcf26bad9e64c63ca865fad711bcce8e3d5a80`, `d94f75a70b5cabaf786ac57177ed841732e62bdcc9a29e06e5b41d9be567bcfa` _(+4 more)_
 
 
 ## Why this matters

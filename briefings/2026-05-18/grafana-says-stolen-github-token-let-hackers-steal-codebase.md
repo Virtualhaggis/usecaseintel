@@ -28,12 +28,88 @@ Grafana Labs is the company behind Grafana, the popular open-source platform for
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1213.003** — Code Repositories
+- **T1567** — Exfiltration Over Web Service
+- **T1528** — Steal Application Access Token
+- **T1078.004** — Cloud Accounts
+- **T1550.001** — Application Access Token
+- **T1535** — Unused/Unsupported Cloud Regions
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GitHub PAT/OAuth token bulk repository clone or download burst (CoinbaseCartel-style codebase theft)
+
+`UC_13_3` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(All_Changes.object) as repo_count, values(All_Changes.object) as repos, values(All_Changes.src) as src_ips, values(All_Changes.user_agent) as user_agents from datamodel=Change where All_Changes.vendor_product="GitHub" AND All_Changes.action IN ("repo.clone","repo.download_zip","git.clone","git.fetch","repo.archive") by All_Changes.user, _time span=10m | `drop_dm_object_name(All_Changes)` | where repo_count >= 15 | sort - repo_count
+```
+
+**Defender KQL:**
+```kql
+let WindowMin = 10m;
+let CloneActions = dynamic(["Repo cloned","Repository cloned","Repo downloaded as ZIP","git.clone","git.fetch","repo.clone","repo.download_zip","repo.archive"]);
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where Application has "GitHub"
+| where ActionType in~ (CloneActions) or AdditionalFields has_any (CloneActions)
+| extend RepoName = tostring(parse_json(tostring(ActivityObjects))[0].Name),
+         AppInst = tostring(AppInstanceId)
+| summarize RepoCount = dcount(RepoName),
+            EventCount = count(),
+            Repos = make_set(RepoName, 50),
+            SrcIPs = make_set(IPAddress, 10),
+            Countries = make_set(CountryCode, 10),
+            UserAgents = make_set(UserAgent, 5),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp)
+          by AccountObjectId, AccountDisplayName, bin(Timestamp, WindowMin)
+| where RepoCount >= 15
+| where not(AccountDisplayName has_any ("github-actions","dependabot","renovate","backup"))
+| order by RepoCount desc
+```
+
+### [LLM] GitHub PAT/OAuth token used from first-time IP or country (stolen-token reuse)
+
+`UC_13_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as first_seen, count from datamodel=Authentication where Authentication.app="GitHub" AND Authentication.action="success" by Authentication.user, Authentication.src, Authentication.src_country | `drop_dm_object_name(Authentication)` | where first_seen >= relative_time(now(), "-1h") | join type=left user [| tstats `summariesonly` count as baseline_count, values(Authentication.src_country) as baseline_countries from datamodel=Authentication where earliest=-30d@d latest=-1h Authentication.app="GitHub" by Authentication.user | `drop_dm_object_name(Authentication)`] | where baseline_count > 10 AND NOT match(baseline_countries, src_country) | table first_seen, user, src, src_country, baseline_countries, count
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 30d;
+let Recent = 1h;
+let GitHubAuth = CloudAppEvents
+    | where Application has "GitHub"
+    | where ActionType in~ ("Log on","LogOn","Sign in","user.login","oauth_access.create","personal_access_token.access_granted","git.clone","git.fetch","repo.clone");
+let Baseline = GitHubAuth
+    | where Timestamp between (ago(Lookback) .. ago(Recent))
+    | summarize BaselineEvents = count(),
+                BaselineIPs = make_set(IPAddress, 200),
+                BaselineCountries = make_set(CountryCode, 50)
+              by AccountObjectId
+    | where BaselineEvents >= 10;
+GitHubAuth
+| where Timestamp > ago(Recent)
+| summarize RecentEvents = count(),
+            FirstSeen = min(Timestamp),
+            RepoTargets = dcount(tostring(parse_json(tostring(ActivityObjects))[0].Name))
+          by AccountObjectId, AccountDisplayName, IPAddress, CountryCode, City, ISP, UserAgent
+| join kind=inner Baseline on AccountObjectId
+| where IPAddress !in (BaselineIPs)
+| where CountryCode !in (BaselineCountries) or array_length(BaselineCountries) == 0
+| where not(ISP has_any ("Microsoft","GitHub","Azure"))
+| project FirstSeen, AccountDisplayName, IPAddress, CountryCode, City, ISP, UserAgent, RecentEvents, RepoTargets, BaselineCountries
+| order by RepoTargets desc, FirstSeen desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -186,4 +262,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -31,12 +31,121 @@ Active since at least 2016, Ghostwriter has been linked to both cyber espionage 
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — JavaScript
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1029** — Scheduled Transfer
+- **T1082** — System Information Discovery
+- **T1203** — Exploitation for Client Execution
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1572** — Protocol Tunneling
+- **T1219** — Remote Access Software
+- **T1059.003** — Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PicassoLoader JS dropper: wscript/cscript executing .js from RAR-extracted Downloads/Temp path
+
+`UC_73_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("winrar.exe","7zG.exe","7zFM.exe","7z.exe","explorer.exe","WinRAR.exe") AND Processes.process_name IN ("wscript.exe","cscript.exe") AND Processes.process="*.js*" AND (Processes.process="*\\Downloads\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\Temp\\Rar$*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | where user!="*$"
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("winrar.exe","7zg.exe","7zfm.exe","7z.exe","explorer.exe")
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where ProcessCommandLine has ".js"
+| where ProcessCommandLine has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\Temp\Rar$", @"\Users\Public\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] PicassoLoader 10-minute fingerprint beacon: wscript/cscript periodic outbound HTTP cadence
+
+`UC_73_8` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as dest_ports dc(_time) as distinct_seconds min(_time) as firstSeen max(_time) as lastSeen from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("wscript.exe","cscript.exe") AND All_Traffic.dest_category="public" by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port span=10m | `drop_dm_object_name(All_Traffic)` | eval window_minutes=round((lastSeen-firstSeen)/60,0) | where count >= 5 AND window_minutes >= 60 | eval cadence_seconds=round((lastSeen-firstSeen)/(count-1),0) | where cadence_seconds >= 480 AND cadence_seconds <= 720
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(6h)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where RemoteIPType == "Public"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| summarize ConnCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            DistinctMinutes = dcount(bin(Timestamp, 1m)),
+            SampleUrls = make_set(RemoteUrl, 5),
+            SampleCmd = any(InitiatingProcessCommandLine)
+            by DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort
+| extend WindowMin = datetime_diff('minute', LastSeen, FirstSeen)
+| extend AvgCadenceSec = iff(ConnCount > 1, (WindowMin * 60) / (ConnCount - 1), 0)
+| where ConnCount >= 5 and WindowMin >= 60
+| where AvgCadenceSec between (480 .. 720)   // 8-12 minutes — covers the ~10m PicassoLoader fingerprint loop
+| order by ConnCount desc
+```
+
+### [LLM] CVE-2025-8088 WinRAR path-traversal exploitation: WinRAR spawning child from non-archive directory
+
+`UC_73_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("winrar.exe","WinRAR.exe","7zG.exe","7zFM.exe") AND (Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\AppData\\Local\\Microsoft\\WindowsApps\\*") AND (Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.js" OR Filesystem.file_name="*.hta" OR Filesystem.file_name="*.cmd" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("winrar.exe","7zg.exe","7zfm.exe","7z.exe","rar.exe","unrar.exe")
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath has_any (@"\Microsoft\Windows\Start Menu\Programs\Startup\",
+                           @"\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\",
+                           @"\AppData\Local\Microsoft\WindowsApps\",
+                           @"\AppData\Roaming\Microsoft\Windows\SendTo\")
+| where FileName endswith ".lnk" or FileName endswith ".vbs" or FileName endswith ".js"
+   or FileName endswith ".hta" or FileName endswith ".cmd" or FileName endswith ".bat"
+   or FileName endswith ".exe" or FileName endswith ".dll"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] BO Team ZeroSSH reverse SSH channel: ssh.exe with -R reverse port forwarding
+
+`UC_73_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.process_name="ssh.exe" AND (Processes.process="*-R *" OR Processes.process="*-R=*" OR Processes.process="* -NR *" OR Processes.process="* -fNR *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where user!="*$" AND parent_process_name!="explorer.exe" AND parent_process_name!="WindowsTerminal.exe" AND parent_process_name!="cmd.exe"
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "ssh.exe"
+| where ProcessCommandLine matches regex @"(?i)(^|\s)-[a-zA-Z]*R(\s|=)"
+   or ProcessCommandLine has_any (" -fNR "," -NR "," -fR ")
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName !in~ ("explorer.exe","windowsterminal.exe","openssh.exe","vscode.exe","code.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -283,4 +392,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -21,56 +21,17 @@ The pattern is clear. One weak dependency can leak keys. One leaked key can open
 - **CVE:** `CVE-2026-41096`
 - **CVE:** `CVE-2026-42826`
 - **CVE:** `CVE-2026-44338`
-- **CVE:** `CVE-2026-46300`
-- **CVE:** `CVE-2026-46333`
 - **CVE:** `CVE-2026-45185`
 - **CVE:** `CVE-2026-8043`
 - **CVE:** `CVE-2026-44277`
 - **CVE:** `CVE-2026-26083`
-- **CVE:** `CVE-2026-34260`
-- **CVE:** `CVE-2026-34263`
-- **CVE:** `CVE-2026-42231`
-- **CVE:** `CVE-2026-42232`
-- **CVE:** `CVE-2026-44791`
-- **CVE:** `CVE-2026-44789`
-- **CVE:** `CVE-2026-44790`
-- **CVE:** `CVE-2026-42236`
-- **CVE:** `CVE-2026-42230`
 - **CVE:** `CVE-2026-6815`
-- **CVE:** `CVE-2026-2291`
-- **CVE:** `CVE-2026-4890`
-- **CVE:** `CVE-2026-4891`
-- **CVE:** `CVE-2026-4892`
-- **CVE:** `CVE-2026-4893`
 - **CVE:** `CVE-2026-5172`
-- **CVE:** `CVE-2026-6787`
-- **CVE:** `CVE-2026-6788`
-- **CVE:** `CVE-2026-23479`
-- **CVE:** `CVE-2026-25588`
-- **CVE:** `CVE-2026-41002`
-- **CVE:** `CVE-2026-40982`
-- **CVE:** `CVE-2026-40981`
-- **CVE:** `CVE-2026-41713`
-- **CVE:** `CVE-2026-41712`
-- **CVE:** `CVE-2026-41705`
 - **CVE:** `CVE-2026-6722`
 - **CVE:** `CVE-2026-43824`
 - **CVE:** `CVE-2026-27174`
-- **CVE:** `CVE-2026-25254`
-- **CVE:** `CVE-2026-25293`
-- **CVE:** `CVE-2026-28819`
-- **CVE:** `CVE-2026-43668`
-- **CVE:** `CVE-2026-28972`
 - **CVE:** `CVE-2026-44413`
-- **CVE:** `CVE-2026-42010`
-- **CVE:** `CVE-2026-33845`
-- **CVE:** `CVE-2026-42009`
-- **CVE:** `CVE-2026-33846`
 - **CVE:** `CVE-2026-1584`
-- **CVE:** `CVE-2026-30905`
-- **CVE:** `CVE-2026-30906`
-- **CVE:** `CVE-2026-4782`
-- **CVE:** `CVE-2026-4798`
 - **CVE:** `CVE-2026-43898`
 - **CVE:** `CVE-2026-8509`
 - **CVE:** `CVE-2026-8510`
@@ -78,8 +39,21 @@ The pattern is clear. One weak dependency can leak keys. One leaked key can open
 - **CVE:** `CVE-2025-14177`
 - **CVE:** `CVE-2026-33439`
 - **CVE:** `CVE-2025-66335`
-- **CVE:** `CVE-2026-8181`
-- **CVE:** `CVE-2026-41940`
+- **IPv4 (defanged):** `89.124.93.110`
+- **Domain (defanged):** `api.eth-fastscan.org`
+- **Domain (defanged):** `recargapopular.com`
+- **Domain (defanged):** `welovechinatown.info`
+- **Domain (defanged):** `api.masscan.cloud`
+- **Domain (defanged):** `git-tanstack.com`
+- **SHA256:** `6db01158b044f178c45754666e2cbc0365f394e953fbf99ec34aa5304d5b79b1`
+- **SHA256:** `6d5b1b7b9b95f2074094632e3962dc21432c2b7dccfbbe2c7d61f724ffcfea7c`
+- **SHA256:** `4fba92a34fd9338293de53444bc9f05c278897d903a24efb95fde0522b3d50c0`
+- **SHA256:** `04f0569971ac7ff81c8656e8453a69189d8870040044909dad45c04c567e7564`
+- **SHA256:** `ba67720dd115293ec5a12d08be6b0ee982227a4c5e4662fb89269c76556df6e0`
+- **SHA256:** `c1b59cc25bdc1fe3f3ce8eda06d002dda7cb02dea8c29877b68d04cd089363c7`
+- **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
+- **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
+- **SHA256:** `7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b`
 
 ## MITRE ATT&CK Techniques
 
@@ -100,6 +74,8 @@ The pattern is clear. One weak dependency can leak keys. One leaked key can open
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 
 ## Kill chain phases observed
@@ -423,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ⚡ Weekly Recap: Exchange 0-Day, npm Worm, Fake AI Repo, Cisco Exploit and More
 
-`UC_4_10` · phase: **exploit** · confidence: **High**
+`UC_7_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -475,9 +451,15 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-20182`, `CVE-2026-20127`, `CVE-2026-42945`, `CVE-2026-44112`, `CVE-2026-41096`, `CVE-2026-42826`, `CVE-2026-44338` _(+59 more)_
+  - CVE(s): `CVE-2026-42897`, `CVE-2026-20182`, `CVE-2026-20127`, `CVE-2026-42945`, `CVE-2026-44112`, `CVE-2026-41096`, `CVE-2026-42826`, `CVE-2026-44338` _(+18 more)_
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `89.124.93.110`, `api.eth-fastscan.org`, `recargapopular.com`, `welovechinatown.info`, `api.masscan.cloud`, `git-tanstack.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `6db01158b044f178c45754666e2cbc0365f394e953fbf99ec34aa5304d5b79b1`, `6d5b1b7b9b95f2074094632e3962dc21432c2b7dccfbbe2c7d61f724ffcfea7c`, `4fba92a34fd9338293de53444bc9f05c278897d903a24efb95fde0522b3d50c0`, `04f0569971ac7ff81c8656e8453a69189d8870040044909dad45c04c567e7564`, `ba67720dd115293ec5a12d08be6b0ee982227a4c5e4662fb89269c76556df6e0`, `c1b59cc25bdc1fe3f3ce8eda06d002dda7cb02dea8c29877b68d04cd089363c7`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96` _(+1 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

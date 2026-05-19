@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WooYun-Legacy LLM-Priming Repository Pulled by Developer / Build Host
 
-`UC_130_5` · phase: **weapon** · confidence: **High**
+`UC_131_5` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] Agentic Offensive-AI Tooling Execution (Hexstrike AI / Strix)
 
-`UC_130_6` · phase: **recon** · confidence: **Medium**
+`UC_131_6` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

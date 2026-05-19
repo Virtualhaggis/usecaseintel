@@ -26,12 +26,148 @@ This is a developing story. We will update this post with additional…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1105** — Ingress Tool Transfer
+- **T1547.011** — Boot or Logon Autostart Execution: Plist File Modification
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1568** — Dynamic Resolution
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Nx Console backdoor — malicious npx fetch of nrwl/nx orphan commit 558b09d7
+
+`UC_2_6` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Processes WHERE (Processes.process_name IN ("npx.cmd","npx.exe","node.exe","npm.cmd","npm.exe","npx","node")) Processes.process="*github:nrwl/nx*" Processes.process="*558b09d7*" BY Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("npx.cmd","npx.exe","node.exe","npm.cmd","npm.exe","npx","node")
+| where ProcessCommandLine has "github:nrwl/nx"
+| where ProcessCommandLine has "558b09d7"
+| extend EditorParent = iif(InitiatingProcessFileName has_any ("Code.exe","Code - Insiders.exe","Cursor.exe","Electron","code","cursor") or InitiatingProcessParentFileName has_any ("Code.exe","Code - Insiders.exe","Cursor.exe"), "VSCodeFamily", "Other")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName, EditorParent, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Nx Console backdoor — known-malicious VSIX / main.js / payload SHA256 on disk
+
+`UC_2_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Filesystem WHERE Filesystem.file_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1") BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+let MaliciousHashes = dynamic([
+    "1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8",
+    "b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74",
+    "e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1"]);
+union isfuzzy=true
+  (DeviceFileEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (MaliciousHashes)
+   | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+  (DeviceProcessEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (MaliciousHashes) or InitiatingProcessSHA256 in (MaliciousHashes)
+   | project Timestamp, DeviceName, ActionType="ProcessExecuted", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName),
+  (AlertEvidence
+   | where Timestamp > ago(30d)
+   | where SHA256 in (MaliciousHashes)
+   | project Timestamp, DeviceName, ActionType="AlertEvidence", FileName, FolderPath, SHA256, InitiatingProcessFileName="", InitiatingProcessCommandLine=ProcessCommandLine, InitiatingProcessAccountName=AccountName)
+| order by Timestamp desc
+```
+
+### [LLM] Nx Console backdoor — macOS LaunchAgent + kitty persistence artefact creation
+
+`UC_2_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_path="*/Library/LaunchAgents/com.user.kitty-monitor.plist" OR Filesystem.file_path="*/.local/share/kitty/cat.py" OR Filesystem.file_path="*/tmp/kitty-*") BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has "/Library/LaunchAgents" and FileName =~ "com.user.kitty-monitor.plist")
+    or (FolderPath has "/.local/share/kitty" and FileName =~ "cat.py")
+    or (FolderPath matches regex @"(?i)/tmp/kitty-[a-z0-9]+")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Nx Console backdoor — GitHub commit-search C2 polling for 'firedalazer' marker
+
+`UC_2_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Web.Web WHERE Web.url="*api.github.com*" Web.url="*firedalazer*" BY Web.dest Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)`
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+  (DeviceNetworkEvents
+   | where Timestamp > ago(7d)
+   | where RemoteUrl has "api.github.com"
+   | where RemoteUrl has "firedalazer"
+   | project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+  (DeviceProcessEvents
+   | where Timestamp > ago(7d)
+   | where ProcessCommandLine has "firedalazer" and ProcessCommandLine has "api.github.com"
+   | project Timestamp, DeviceName, RemoteIP="", RemoteUrl="", RemotePort=int(null), InitiatingProcessFileName=FileName, InitiatingProcessCommandLine=ProcessCommandLine, InitiatingProcessAccountName=AccountName)
+| order by Timestamp desc
+```
+
+### [LLM] Nx Console backdoor — AWS IMDS access (169.254.169.254) from developer workstation
+
+`UC_2_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) AS firstTime max(_time) AS lastTime FROM datamodel=Network_Traffic.All_Traffic WHERE All_Traffic.dest="169.254.169.254" All_Traffic.dest_port IN (80,443) BY All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT match(app,"(?i)cloud-init|aws-cli|ec2-net-utils|kube-proxy|amazon-ssm-agent")
+```
+
+**Defender KQL:**
+```kql
+let WorkstationOS = dynamic(["Windows10","Windows11","MacOS","macOS"]);
+let Workstations = DeviceInfo
+    | where Timestamp > ago(1d)
+    | where OSPlatform in (WorkstationOS)
+    | summarize arg_max(Timestamp, DeviceId, OSPlatform) by DeviceName
+    | project DeviceId;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "169.254.169.254"
+| where RemotePort in (80, 443)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| where DeviceId in (Workstations)
+| where InitiatingProcessFileName !in~ ("AWSCLI.exe","aws.exe","aws-vault.exe","saml2aws.exe","kube-proxy","amazon-ssm-agent")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -156,7 +292,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nx Console VS Code Extension Compromised
 
-`UC_0_5` · phase: **exploit** · confidence: **High**
+`UC_2_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,4 +349,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

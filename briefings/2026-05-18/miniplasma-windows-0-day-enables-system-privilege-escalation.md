@@ -1,4 +1,4 @@
-# [CRIT] MiniPlasma Windows 0-Day Enables SYSTEM Privilege Escalation on Fully Patched Systems
+# [HIGH] MiniPlasma Windows 0-Day Enables SYSTEM Privilege Escalation on Fully Patched Systems
 
 **Source:** The Hacker News, Cyber Security News
 **Published:** 2026-05-18
@@ -15,11 +15,10 @@ The campaign appears to be the work of a single threat actor deploying multiple 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-41940`
 - **IPv4 (defanged):** `80.200.28.28`
 - **Domain (defanged):** `87e0bbc636999b.lhr.life`
-- **Domain (defanged):** `edcf8b03c84634.lhr.life`
 - **Domain (defanged):** `b94b6bcfa27554.lhr.life`
+- **Domain (defanged):** `edcf8b03c84634.lhr.life`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,16 +28,127 @@ The campaign appears to be the work of a single threat actor deploying multiple 
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1005** — Data from Local System
-- **T1190** — Exploit Public-Facing Application
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059** — Command and Scripting Interpreter
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1572** — Protocol Tunneling
+- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1571** — Non-Standard Port
+- **T1059.007** — JavaScript
+- **T1567.001** — Exfiltration to Code Repository
+- **T1552.001** — Credentials In Files
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Malicious npm Package Install - Shai-Hulud Typosquat Campaign (chalk-tempalte / axios-util)
+
+`UC_20_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe") AND (Processes.process="*chalk-tempalte*" OR Processes.process="*@deadcode09284814/axios-util*" OR Processes.process="*axios-utils*" OR Processes.process="*axois-utils*" OR Processes.process="*color-style-utils*") by host user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe")
+| where ProcessCommandLine has_any ("chalk-tempalte","@deadcode09284814/axios-util","axios-utils","axois-utils","color-style-utils")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Outbound C2 to localhost.run Tunnel (lhr.life) Subdomains - Shai-Hulud Copycat
+
+`UC_20_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query IN ("87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life") OR DNS.query="*.lhr.life") by host DNS.src DNS.query DNS.answer DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ioc_domains = dynamic(["87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life"]);
+union isfuzzy=true
+(DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has_any (ioc_domains) or RemoteUrl endswith ".lhr.life"
+  | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+            InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+  | where QueryName has_any (ioc_domains) or QueryName endswith ".lhr.life"
+  | project Timestamp, DeviceName, ActionType, RemoteUrl=QueryName,
+            InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName)
+| order by Timestamp desc
+```
+
+### [LLM] Network Egress to 80.200.28.28:2222 - Axios-Util Infostealer C2
+
+`UC_20_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.dest_ip="80.200.28.28" AND All_Traffic.dest_port=2222 by host All_Traffic.src All_Traffic.src_user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "80.200.28.28" and RemotePort == 2222
+| project Timestamp, DeviceName, ActionType, Protocol, RemoteIP, RemotePort, LocalIP, LocalPort,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountUpn
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud Marker String Hunt - 'A Mini Sha1-Hulud has Appeared'
+
+`UC_20_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+(`endpoint_processes_index` OR `wineventlog_powershell_index` OR `sysmon_index`) "A Mini Sha1-Hulud has Appeared"
+| eval matched_field = case(match(_raw, "(?i)A Mini Sha1-Hulud has Appeared"), "raw", true(), "unknown")
+| stats count min(_time) as firstTime max(_time) as lastTime values(host) as host values(user) as user values(source) as source values(sourcetype) as sourcetype by matched_field, _raw
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let marker = "A Mini Sha1-Hulud has Appeared";
+union isfuzzy=true
+(DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where ProcessCommandLine has marker or InitiatingProcessCommandLine has marker
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+            InitiatingProcessFileName, InitiatingProcessCommandLine, Source="ProcessEvents"),
+(DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("PowerShellCommand","AmsiScriptDetection","ScriptContent")
+  | where AdditionalFields has marker
+  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName,
+            InitiatingProcessCommandLine, AdditionalFields, Source="DeviceEvents"),
+(DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where InitiatingProcessCommandLine has marker
+  | project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+            InitiatingProcessFileName, InitiatingProcessCommandLine, Source="FileEvents")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -192,12 +302,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `80.200.28.28`, `87e0bbc636999b.lhr.life`, `edcf8b03c84634.lhr.life`, `b94b6bcfa27554.lhr.life`
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-41940`
+  - IP / domain IOC(s): `80.200.28.28`, `87e0bbc636999b.lhr.life`, `b94b6bcfa27554.lhr.life`, `edcf8b03c84634.lhr.life`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

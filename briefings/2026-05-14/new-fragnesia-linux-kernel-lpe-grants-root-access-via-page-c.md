@@ -26,12 +26,90 @@ Codenamed Fragnesia , the security vulnerability is tracked as CVE-2026-46300 (C
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1068** — Exploitation for Privilege Escalation
+- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
+- **T1574.006** — Hijack Execution Flow: Dynamic Linker Hijacking
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1611** — Escape to Host
+- **T1548** — Abuse Elevation Control Mechanism
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Fragnesia LPE: /usr/bin/su grants root session with no preceding PAM authentication
+
+`UC_82_6` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent_proc from datamodel=Endpoint.Processes where Processes.process_name="su" AND (Processes.process_path="/usr/bin/su" OR Processes.process_path="/bin/su") AND Processes.user!="root" AND Processes.user!="" by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | join type=left dest [ search index=os (sourcetype=linux_secure OR sourcetype=syslog) "pam_unix(su:auth)" earliest=-1d | rex field=_raw "by\s+(?<user>[a-z][a-z0-9_-]*)\(" | stats count as pam_auth_count by host user | rename host as dest ] | where isnull(pam_auth_count) OR pam_auth_count=0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where FileName =~ "su" and FolderPath in~ ("/usr/bin","/bin")
+| where AccountName =~ "root"
+| where InitiatingProcessAccountName !in~ ("root","")
+| extend ElapsedMs = datetime_diff('millisecond', ProcessCreationTime, InitiatingProcessCreationTime)
+| project Timestamp, DeviceName, Caller=InitiatingProcessAccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, ElapsedMs
+| order by Timestamp desc
+```
+
+### [LLM] berz0k Linux LPE: .so payload dropped in /tmp followed by LD_PRELOAD execution
+
+`UC_82_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t min(_time) as drop_time values(Filesystem.file_path) as so_path values(Filesystem.process_name) as dropper from datamodel=Endpoint.Filesystem where Filesystem.file_path="/tmp/*.so" AND Filesystem.action="created" AND Filesystem.user!="root" by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest user [ | tstats summariesonly=t min(_time) as exec_time values(Processes.process) as cmd values(Processes.process_name) as proc from datamodel=Endpoint.Processes where Processes.process="*LD_PRELOAD*/tmp/*" by Processes.dest Processes.user | `drop_dm_object_name(Processes)` ] | where exec_time >= drop_time AND exec_time - drop_time < 600 | eval delta_sec=exec_time-drop_time | table dest user so_path dropper cmd proc drop_time exec_time delta_sec
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 1d;
+let WindowMin = 10m;
+let SoDrops = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType in ("FileCreated","FileModified")
+    | where FolderPath startswith "/tmp" and FileName endswith ".so"
+    | where InitiatingProcessAccountName !in~ ("root","")
+    | project SoDropTime = Timestamp, DeviceId, DeviceName, DroppedSo = strcat(FolderPath, "/", FileName), Dropper = InitiatingProcessFileName, Caller = InitiatingProcessAccountName;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where ProcessCommandLine has "LD_PRELOAD" and ProcessCommandLine has "/tmp/"
+| where ProcessCommandLine matches regex @"LD_PRELOAD\s*=\s*[\"']?/tmp/[^ ;\"']+\.so"
+| join kind=inner SoDrops on DeviceId
+| where Timestamp between (SoDropTime .. SoDropTime + WindowMin)
+| extend DelaySec = datetime_diff('second', Timestamp, SoDropTime)
+| project Timestamp, DeviceName, AccountName, Caller, ProcessCommandLine, DroppedSo, Dropper, SoDropTime, DelaySec, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### [LLM] Unprivileged user namespace creation by non-root account (Fragnesia/Dirty Frag prerequisite)
+
+`UC_82_8` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="unshare" AND (Processes.process="*-U*" OR Processes.process="*--user*" OR Processes.process="*--map-root-user*" OR Processes.process="*-r *") AND Processes.user!="root" AND Processes.user!="" by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | where parent_process_name!="podman" AND parent_process_name!="buildah" AND parent_process_name!="snap-confine" AND parent_process_name!="bwrap" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where FileName =~ "unshare"
+| where ProcessCommandLine matches regex @"(?i)(\s|^)(-U|--user|--map-root-user|-r(\s|$))"
+| where InitiatingProcessAccountName !in~ ("root","")
+| where InitiatingProcessFileName !in~ ("podman","buildah","snap-confine","bwrap","flatpak","crun","runc")
+| project Timestamp, DeviceName, Caller=InitiatingProcessAccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -207,7 +285,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_81_5` · phase: **install** · confidence: **High**
+`UC_82_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -248,4 +326,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
