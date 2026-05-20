@@ -13322,6 +13322,7 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
   function openUc(slug){
     var el = document.querySelector('[data-uc-slug="' + slug.replace(/"/g, '\\"') + '"]');
     if (!el) return false;
+    if (typeof showView === 'function') showView('articles');
     var p = el;
     while (p) {
       if (p.tagName === 'DETAILS' && !p.open) p.open = true;
@@ -13336,6 +13337,7 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
   function openArticle(slug){
     var el = document.querySelector('[data-art-slug="' + slug.replace(/"/g, '\\"') + '"]');
     if (!el) return false;
+    if (typeof showView === 'function') showView('articles');
     el.scrollIntoView({behavior:'smooth', block:'start'});
     highlight(el);
     var t = el.querySelector('h2 a, h2');
