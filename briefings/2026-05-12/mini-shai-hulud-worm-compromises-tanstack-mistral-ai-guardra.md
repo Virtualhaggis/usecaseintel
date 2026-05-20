@@ -34,10 +34,11 @@ The affected npm packages have been modified to include an obfuscated JavaScript
 - **T1071** — Application Layer Protocol
 - **T1567** — Exfiltration Over Web Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1105** — Ingress Tool Transfer
-- **T1554** — Compromise Host Software Binary
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1552.004** — Unsecured Credentials: Private Keys (secrets exfil)
+- **T1199** — Trusted Relationship
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
@@ -45,105 +46,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud / TeamPCP exfil to getsession.org, masscan.cloud, git-tanstack.com or 83.142.209.194
+### [LLM] Mini Shai-Hulud credential exfil to Session Protocol domain (filev2.getsession.org)
 
-`UC_117_8` · phase: **c2** · confidence: **High**
+`UC_134_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.194" OR All_Traffic.dest_ip="83.142.209.194" by All_Traffic.src host All_Traffic.process_name
-| `drop_dm_object_name(All_Traffic)`
-| append [
-    | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dns_resolver from datamodel=Network_Resolution.DNS where DNS.query IN ("filev2.getsession.org","*.filev2.getsession.org","api.masscan.cloud","*.api.masscan.cloud","git-tanstack.com","*.git-tanstack.com") by DNS.query host
-    | `drop_dm_object_name(DNS)` ]
-| append [
-    | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.user) as user from datamodel=Web.Web where Web.url="*filev2.getsession.org*" OR Web.url="*api.masscan.cloud*" OR Web.url="*git-tanstack.com*" OR Web.dest="83.142.209.194" by Web.src Web.dest host
-    | `drop_dm_object_name(Web)` ]
-| eval campaign="Mini Shai-Hulud / TeamPCP (CVE-2026-45321)"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*filev2.getsession.org" OR DNS.query="*.getsession.org") by DNS.src, DNS.query, DNS.answer, DNS.record_type | `drop_dm_object_name("DNS")` | convert ctime(firstTime) ctime(lastTime) | sort -lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// Mini Shai-Hulud / TeamPCP egress — Microsoft Defender XDR
-let _campaignDomains = dynamic(["filev2.getsession.org","api.masscan.cloud","git-tanstack.com"]);
-let _campaignIPs = dynamic(["83.142.209.194"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "getsession.org" or RemoteUrl has_cs "filev2.getsession.org"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Mistralai PyPI stager: outbound connection to 83.142.209.194
+
+`UC_134_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.194" by All_Traffic.src, All_Traffic.user, All_Traffic.dest | `drop_dm_object_name("All_Traffic")` | convert ctime(firstTime) ctime(lastTime) | sort -lastTime
+```
+
+**Defender KQL:**
+```kql
 DeviceNetworkEvents
 | where Timestamp > ago(14d)
-| where (isnotempty(RemoteUrl) and RemoteUrl has_any (_campaignDomains))
-    or RemoteIP in (_campaignIPs)
-| project Timestamp, DeviceName, DeviceId,
-          InitiatingProcessAccountName, InitiatingProcessAccountDomain,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessSHA256,
-          RemoteUrl, RemoteIP, RemotePort, Protocol, ActionType,
-          Campaign = "Mini Shai-Hulud / TeamPCP (CVE-2026-45321)"
+| where RemoteIP == "83.142.209.194"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### [LLM] guardrails-ai 0.10.1 stealer: python3 executes /tmp/transformers.pyz on Linux
+### [LLM] Guardrails-AI PyPI dropper: python3 executing /tmp/transformers.pyz
 
-`UC_117_9` · phase: **exploit** · confidence: **High**
+`UC_134_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_proc values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python3.8","python3.9","python3.10","python3.11","python3.12") AND (Processes.process="*/tmp/transformers.pyz*" OR Processes.process="*transformers.pyz*") by Processes.dest Processes.process_name host
-| `drop_dm_object_name(Processes)`
-| eval campaign="Mini Shai-Hulud — guardrails-ai@0.10.1 (Socket)"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parents values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.process_name="python3*" OR Processes.process_name="python") AND Processes.process="*/tmp/transformers.pyz*" by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name("Processes")` | convert ctime(firstTime) ctime(lastTime) | sort -lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// guardrails-ai 0.10.1 stealer execution — Defender XDR (Linux MDE)
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where FileName matches regex @"(?i)^python(3(\.[0-9]+)?)?$"
-| where ProcessCommandLine has "transformers.pyz"
-   and (ProcessCommandLine has "/tmp/" or ProcessCommandLine has @"\tmp\")
-| project Timestamp, DeviceName, DeviceId,
-          AccountName, AccountDomain,
-          FileName, FolderPath, ProcessCommandLine, ProcessId, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          Campaign = "Mini Shai-Hulud — guardrails-ai@0.10.1"
+| where FileName matches regex @"^python(3(\.\d+)?)?$"
+| where ProcessCommandLine has "/tmp/transformers.pyz"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud npm worm artifact: router_init.js written into node_modules
+### [LLM] Mini Shai-Hulud GitHub Actions secrets exfil via api.masscan.cloud
 
-`UC_117_10` · phase: **install** · confidence: **Medium**
+`UC_134_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as procs values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where Filesystem.file_name="router_init.js" AND Filesystem.action IN ("created","modified","write") by Filesystem.dest host
-| `drop_dm_object_name(Filesystem)`
-| eval campaign="Mini Shai-Hulud / TeamPCP — npm worm payload"
-| eval triage_pivot="Examine paths for node_modules/@tanstack, @squawk, @tallyui, @opensearch-project, uipath, draftlab; pivot to DeviceNetworkEvents for filev2.getsession.org"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as ips from datamodel=Network_Resolution.DNS where (DNS.query="api.masscan.cloud" OR DNS.query="*.masscan.cloud") by DNS.src, DNS.query | `drop_dm_object_name("DNS")` | convert ctime(firstTime) ctime(lastTime) | sort -lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// router_init.js drop — Defender XDR
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has "masscan.cloud"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Mini Shai-Hulud router_init.js payload dropped into node_modules
+
+`UC_134_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as writers values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.file_name="router_init.js" AND Filesystem.file_path="*node_modules*" by Filesystem.dest, Filesystem.user, Filesystem.file_name | `drop_dm_object_name("Filesystem")` | convert ctime(firstTime) ctime(lastTime) | sort -lastTime
+```
+
+**Defender KQL:**
+```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where Timestamp > ago(14d)
 | where FileName =~ "router_init.js"
-| extend SuspiciousScope = case(
-    FolderPath has @"\node_modules\" or FolderPath has "/node_modules/", "node_modules drop (likely worm)",
-    FolderPath has @"\@tanstack\" or FolderPath has "/@tanstack/", "TanStack package directory",
-    FolderPath has @"\@squawk\" or FolderPath has @"\@tallyui\" or FolderPath has @"\@opensearch-project\", "Other compromised maintainer namespace",
-    "other — review manually")
-| project Timestamp, DeviceName, DeviceId,
-          FileName, FolderPath, SHA256, FileSize,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          SuspiciousScope,
-          Campaign = "Mini Shai-Hulud / TeamPCP — CVE-2026-45321"
+| where FolderPath has "node_modules"
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -350,7 +346,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Worm Compromises TanStack, Mistral AI, Guardrails AI & More Pack
 
-`UC_117_7` · phase: **exploit** · confidence: **High**
+`UC_134_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -410,4 +406,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

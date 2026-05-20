@@ -27,17 +27,13 @@ This is a developing story. We will update this post with additional…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1105** — Ingress Tool Transfer
+- **T1204.002** — User Execution: Malicious File
 - **T1543.001** — Create or Modify System Process: Launch Agent
-- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1547** — Boot or Logon Autostart Execution
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1546** — Event Triggered Execution
 - **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1528** — Steal Application Access Token
-- **T1505.005** — Server Software Component: IDE Extensions
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -45,38 +41,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Nx Console v18.95.0 — npx fetching nrwl/nx orphan commit 558b09d7
+### [LLM] Nx Console v18.95.0 Malicious Payload Bootstrap via Orphan Commit (npx github:nrwl/nx#558b09d7)
 
-`UC_5_6` · phase: **exploit** · confidence: **High**
+`UC_41_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="npx" OR Processes.process_name="node" OR Processes.process="*npx*") (Processes.process="*github:nrwl/nx#558b09d7*" OR Processes.process="*nrwl/nx#558b09d*") by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Code.exe","Code - Insiders.exe","Cursor.exe","Codium.exe","VSCodium.exe","code","cursor","codium","Code Helper","Electron")) AND (Processes.process="*github:nrwl/nx#558b09d7*" OR Processes.process="*nrwl/nx#558b09d7*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("npx","node")
-| where ProcessCommandLine has "github:nrwl/nx#558b09d7"
-   or ProcessCommandLine matches regex @"(?i)nrwl/nx#558b09d[0-9a-f]+"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
+| where InitiatingProcessFileName in~ ("code.exe","code - insiders.exe","cursor.exe","codium.exe","vscodium.exe","electron","code helper","code","cursor","codium")
+| where ProcessCommandLine has_any ("github:nrwl/nx#558b09d7","nrwl/nx#558b09d7","558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] kitty persistence — cat.py backdoor or com.user.kitty-monitor.plist LaunchAgent dropped
+### [LLM] Nx Console v18.95.0 Compromised VSIX / main.js / payload SHA-256 Hash Match
 
-`UC_5_7` · phase: **install** · confidence: **High**
+`UC_41_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/Library/LaunchAgents/com.user.kitty-monitor.plist" OR Filesystem.file_path="*/.local/share/kitty/cat.py" OR Filesystem.file_name="com.user.kitty-monitor.plist" OR (Filesystem.file_name="cat.py" AND Filesystem.file_path="*/kitty/*")) by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.process_hash) as process_hash from datamodel=Endpoint.Processes where Processes.process_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1") by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let MaliciousHashes = dynamic([
+    "1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8",
+    "b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74",
+    "e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1"
+]);
+union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (MaliciousHashes) or InitiatingProcessSHA256 in (MaliciousHashes)
+        | project Timestamp, DeviceName, AccountName, Source="Process", FileName, FolderPath, SHA256, ProcessCommandLine),
+    (DeviceFileEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (MaliciousHashes)
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine),
+    (DeviceImageLoadEvents
+        | where Timestamp > ago(30d)
+        | where SHA256 in (MaliciousHashes)
+        | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="ImageLoad", FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] macOS LaunchAgent Persistence — com.user.kitty-monitor.plist (Nx Console Compromise)
+
+`UC_41_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*Library/LaunchAgents/com.user.kitty-monitor.plist" OR Filesystem.file_name="com.user.kitty-monitor.plist") AND Filesystem.action IN ("created","modified","written") by Filesystem.dest Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -84,99 +106,60 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where (FolderPath endswith @"/Library/LaunchAgents/com.user.kitty-monitor.plist"
-      or FolderPath endswith @"/.local/share/kitty/cat.py"
-      or FileName =~ "com.user.kitty-monitor.plist"
-      or (FileName =~ "cat.py" and FolderPath has "/kitty/"))
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
+| where FolderPath has "/Library/LaunchAgents/" or FolderPath has @"\Library\LaunchAgents\"
+| where FileName =~ "com.user.kitty-monitor.plist" or FolderPath endswith "com.user.kitty-monitor.plist"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FileName, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] GitHub Search API C2 polling — query string 'firedalazer'
+### [LLM] Kitty cat.py Python Backdoor File Drop / Execution (Nx Console Compromise)
 
-`UC_5_8` · phase: **c2** · confidence: **High**
+`UC_41_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.src) as src values(Web.http_user_agent) as ua from datamodel=Web where Web.url="*api.github.com/search/commits*" Web.url="*firedalazer*" by Web.dest Web.url | `drop_dm_object_name(Web)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as creator from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/.local/share/kitty/cat.py" OR Filesystem.file_path="/tmp/kitty-*" by Filesystem.dest Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python2") AND (Processes.process="*/.local/share/kitty/cat.py*" OR Processes.process="*/kitty/cat.py*" OR Processes.process="*/tmp/kitty-*") by Processes.dest Processes.user | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "api.github.com"
-| where RemoteUrl has "search/commits" and RemoteUrl has "firedalazer"
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] AWS IMDS (169.254.169.254) accessed from non-AWS developer endpoint
-
-`UC_5_9` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.process) as proc values(All_Traffic.user) as user values(All_Traffic.src) as src values(All_Traffic.src_category) as src_cat from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="169.254.169.254" NOT All_Traffic.src_category="aws_instance" NOT All_Traffic.src_category="ec2" by All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where count > 0
-```
-
-**Defender KQL:**
-```kql
-let AwsHosts = DeviceInfo
-    | where Timestamp > ago(7d)
-    | summarize arg_max(Timestamp, *) by DeviceId
-    | where DeviceType =~ "Server" and (Vendor has_any ("Amazon","AWS") or AdditionalFields has "ec2")
-    | distinct DeviceId;
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "169.254.169.254"
-| where DeviceId !in (AwsHosts)
-| where InitiatingProcessFileName !in~ ("aws","aws.exe","awscli","ec2-instance-connect","amazon-ssm-agent","ssm-agent","cloud-init","WindowsAzureGuestAgent.exe")
-| project Timestamp, DeviceName, RemoteIP, RemotePort,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] Nx Console v18.95.0 — malicious VSIX / main.js / payload hash on disk
-
-`UC_5_10` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as proc values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1") by Processes.dest Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1") by Filesystem.dest Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
-```
-
-**Defender KQL:**
-```kql
-let IocHashes = dynamic([
-    "1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8",
-    "b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74",
-    "e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1"
-]);
-union isfuzzy=true
+union
   (DeviceFileEvents
-    | where Timestamp > ago(90d)
-    | where SHA256 in (IocHashes)
-    | project Timestamp, Table="DeviceFileEvents", DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+    | where Timestamp > ago(30d)
+    | where ActionType in ("FileCreated","FileModified","FileRenamed")
+    | where (FolderPath has "/.local/share/kitty/" and FileName =~ "cat.py")
+         or FolderPath matches regex @"^/tmp/kitty-[A-Za-z0-9_\-]+/"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileWrite", ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256),
   (DeviceProcessEvents
-    | where Timestamp > ago(90d)
-    | where SHA256 in (IocHashes) or InitiatingProcessSHA256 in (IocHashes)
-    | project Timestamp, Table="DeviceProcessEvents", DeviceName, FileName=FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceImageLoadEvents
-    | where Timestamp > ago(90d)
-    | where SHA256 in (IocHashes)
-    | project Timestamp, Table="DeviceImageLoadEvents", DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine="")
+    | where Timestamp > ago(30d)
+    | where FileName has_any ("python","python3","python2") or InitiatingProcessFileName has_any ("python","python3","python2")
+    | where ProcessCommandLine has_any (".local/share/kitty/cat.py","/kitty/cat.py","/tmp/kitty-")
+         or InitiatingProcessCommandLine has_any (".local/share/kitty/cat.py","/kitty/cat.py","/tmp/kitty-")
+    | project Timestamp, DeviceName, AccountName, Source="Exec", ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine, SHA256)
+| order by Timestamp desc
+```
+
+### [LLM] AWS IMDS (169.254.169.254) Hit from Developer / Non-EC2 Endpoint (Nx Console Credential Theft)
+
+`UC_41_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.src_ip) as src_ip values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="169.254.169.254" AND All_Traffic.dest_port IN (80,443,8080) NOT (All_Traffic.src_category IN ("aws-ec2","aws_instance","ec2")) by All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where count > 0 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let DevEndpoints = DeviceInfo
+    | where Timestamp > ago(7d)
+    | summarize arg_max(Timestamp, DeviceCategory, OSPlatform, DeviceType, IsInternetFacing) by DeviceId, DeviceName
+    | where DeviceCategory != "Server" or isempty(DeviceCategory);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "169.254.169.254"
+| where RemotePort in (80,443,8080)
+| join kind=inner DevEndpoints on DeviceId
+| project Timestamp, DeviceName, OSPlatform, DeviceCategory, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
@@ -303,7 +286,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nx Console VS Code Extension Compromised
 
-`UC_5_5` · phase: **exploit** · confidence: **High**
+`UC_41_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,4 +343,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

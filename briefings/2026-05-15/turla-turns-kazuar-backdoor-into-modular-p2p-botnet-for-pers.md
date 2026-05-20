@@ -33,12 +33,16 @@ Turla, per the U.S. Cybersecurity and Infrastructure Security Agency (CISA), is 
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
-- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
+- **T1140** — Deobfuscate/Decode Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
 - **T1102.002** — Web Service: Bidirectional Communication
-- **T1559** — Inter-Process Communication
-- **T1106** — Native API
+- **T1090** — Proxy
+- **T1114.001** — Email Collection: Local Email Collection
+- **T1056.001** — Input Capture: Keylogging
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1005** — Data from Local System
 
 ## Kill chain phases observed
 
@@ -46,94 +50,97 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Kazuar (Turla/Secret Blizzard) Known-Sample SHA256 Hash Match
+### [LLM] Pelmeni / ShadowLoader dropper SHA256 hash match on disk or execution
 
-`UC_43_6` · phase: **install** · confidence: **High**
+`UC_59_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | eval kazuar_match="true", threat_actor="Turla/Secret Blizzard", malware="Kazuar" | appendpipe [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | eval kazuar_match="true", threat_actor="Turla/Secret Blizzard", malware="Kazuar"] | sort - firstTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let KazuarHashes = dynamic(["69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85"]);
-union
+let BadHashes = dynamic(["69908f05b436bd97baae56296bf9b9e734486516f9bb9938c2b8752e152315d4","c1f278f88275e07cc03bd390fe1cbeedd55933110c6fd16de4187f4c4aaf42b9","6eb31006ca318a21eb619d008226f08e287f753aec9042269203290462eaa00d","436cfce71290c2fc2f2c362541db68ced6847c66a73b55487e5e5c73b0636c85"]);
+union isfuzzy=true
   (DeviceProcessEvents
-   | where Timestamp > ago(30d)
-   | where SHA256 in (KazuarHashes) or InitiatingProcessSHA256 in (KazuarHashes)
-   | extend EvtSrc = "ProcessExec"
-   | project Timestamp, DeviceName, EvtSrc, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName),
+    | where Timestamp > ago(30d)
+    | where SHA256 in (BadHashes) or InitiatingProcessSHA256 in (BadHashes)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256, Src="ProcessExec"),
   (DeviceFileEvents
-   | where Timestamp > ago(30d)
-   | where SHA256 in (KazuarHashes) or InitiatingProcessSHA256 in (KazuarHashes)
-   | extend EvtSrc = "FileWrite"
-   | project Timestamp, DeviceName, EvtSrc, FileName, FolderPath, SHA256, ProcessCommandLine = InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName = InitiatingProcessAccountName),
-  (DeviceImageLoadEvents
-   | where Timestamp > ago(30d)
-   | where SHA256 in (KazuarHashes) or InitiatingProcessSHA256 in (KazuarHashes)
-   | extend EvtSrc = "ImageLoad"
-   | project Timestamp, DeviceName, EvtSrc, FileName, FolderPath, SHA256, ProcessCommandLine = InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName = InitiatingProcessAccountName)
+    | where Timestamp > ago(30d)
+    | where SHA256 in (BadHashes)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256, Src="FileLand")
 | order by Timestamp desc
 ```
 
-### [LLM] Exchange Web Services Endpoint Access by Non-Mail-Client Process (Kazuar EWS C2 channel)
+### [LLM] Kazuar Bridge module: Exchange Web Services C2 from non-mail-client process
 
-`UC_43_7` · phase: **c2** · confidence: **Medium**
+`UC_59_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.http_user_agent) as user_agents from datamodel=Web.Web where (Web.url="*EWS/Exchange.asmx*" OR Web.url="*/ews/exchange.asmx*" OR Web.url="*ews/exchange/*") AND NOT Web.app IN ("outlook.exe","olk.exe","msedge.exe","chrome.exe","firefox.exe","iexplore.exe","teams.exe","ms-teams.exe","thunderbird.exe","onenote.exe","onedrive.exe","HxOutlook.exe","HxTsr.exe","searchapp.exe","officeclicktorun.exe","officec2rclient.exe") by Web.dest Web.src Web.user Web.app Web.dest_host | `drop_dm_object_name(Web)` | eval threat_actor="Turla/Secret Blizzard", malware="Kazuar", c2_channel="EWS" | sort - firstTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.url) as urls from datamodel=Web where (Web.url="*/EWS/Exchange.asmx*" OR Web.url="*/ews/exchange.asmx*") by Web.src Web.user Web.dest Web.app | `drop_dm_object_name(Web)` | where NOT match(app, "(?i)(outlook|msedge|chrome|firefox|msteams|winword|excel|onenote|onedrive|powerpnt|msaccess|mapisvc|iexplore)\.exe") | where NOT match(mvjoin(user_agents,";"), "(?i)(Microsoft Office|MSOffice|Outlook|Mozilla|Chrome|Edge|Firefox|Safari|Teams|ActiveSync|MailClient)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let MailClients = dynamic(["outlook.exe","olk.exe","hxoutlook.exe","hxtsr.exe","hxstore.exe","msedge.exe","chrome.exe","firefox.exe","iexplore.exe","brave.exe","opera.exe","teams.exe","ms-teams.exe","thunderbird.exe","onenote.exe","onedrive.exe","officeclicktorun.exe","officec2rclient.exe","searchapp.exe","msouc.exe","msoia.exe","communicator.exe","emclient.exe","mailbird.exe"]);
-union
-  (DeviceNetworkEvents
-   | where Timestamp > ago(7d)
-   | where RemoteUrl has_any ("/EWS/Exchange.asmx", "/ews/exchange.asmx", "/ews/exchange/", "/EWS/Services.wsdl")
-     or (RemoteUrl has_any ("outlook.office.com", "outlook.office365.com", "outlook.live.com") and RemoteUrl has "/ews")
-   | where tolower(InitiatingProcessFileName) !in (MailClients)
-   | where InitiatingProcessAccountName !endswith "$"
-   | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, RemoteIP, RemoteUrl, RemotePort, EvtSrc = "NetworkEvent")
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | summarize ParentChain = make_set(InitiatingProcessFileName), AnyCmd = any(InitiatingProcessCommandLine) by DeviceId, FileName
-    | project DeviceId, InitiatingProcessFileName = FileName, ParentChain, AnyCmd
-  ) on $left.DeviceName == $right.DeviceId, InitiatingProcessFileName
+let MailProcs = dynamic(["outlook.exe","msedge.exe","chrome.exe","firefox.exe","msteams.exe","winword.exe","excel.exe","onenote.exe","onedrive.exe","msaccess.exe","powerpnt.exe","mapisvc.exe","iexplore.exe","opera.exe","brave.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "/EWS/Exchange.asmx" or RemoteUrl has "/ews/exchange.asmx"
+| where isnotempty(InitiatingProcessFileName)
+| where not(InitiatingProcessFileName has_any (MailProcs))
+| where not(InitiatingProcessAccountName endswith "$")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### [LLM] Mailslot IPC Write by Non-System Process (Kazuar Kernel Leader-Election Channel)
+### [LLM] Kazuar Worker module: MAPI / Outlook interop DLL load by non-Office process
 
-`UC_43_8` · phase: **c2** · confidence: **Medium**
+`UC_59_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.action) as actions from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\mailslot\\*" OR Filesystem.file_name="*mailslot*") AND NOT Filesystem.process_name IN ("services.exe","lsass.exe","svchost.exe","csrss.exe","wininit.exe","smss.exe","spoolsv.exe","net.exe","net1.exe","wmiprvse.exe","dllhost.exe","msmq.exe","mqsvc.exe","ccmexec.exe","smsexec.exe") AND NOT Filesystem.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | appendpipe [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*\\\\.\\mailslot\\*" AND NOT Processes.process_name IN ("net.exe","net1.exe") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`] | eval threat_actor="Turla/Secret Blizzard", malware="Kazuar", ipc_channel="Mailslot" | sort - firstTime
+`sysmon` EventCode=7 (ImageLoaded="*\\mapi32.dll" OR ImageLoaded="*\\olmapi32.dll" OR ImageLoaded="*\\emsmdb32.dll" OR ImageLoaded="*\\msmapi32.dll" OR ImageLoaded="*\\mspst32.dll" OR ImageLoaded="*Microsoft.Office.Interop.Outlook*") NOT (Image IN ("*\\outlook.exe","*\\winword.exe","*\\excel.exe","*\\powerpnt.exe","*\\onenote.exe","*\\onedrive.exe","*\\msaccess.exe","*\\msteams.exe","*\\mapisvc.exe","*\\visio.exe","*\\mspub.exe","*\\communicator.exe","*\\lync.exe","*\\searchindexer.exe")) | stats min(_time) as firstTime max(_time) as lastTime count values(CommandLine) as cmdlines values(Hashes) as hashes by host User Image ImageLoaded | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let SystemServiceBins = dynamic(["services.exe","lsass.exe","svchost.exe","csrss.exe","wininit.exe","smss.exe","spoolsv.exe","net.exe","net1.exe","wmiprvse.exe","dllhost.exe","msmq.exe","mqsvc.exe","ccmexec.exe","smsexec.exe","taskhostw.exe"]);
-union
-  (DeviceFileEvents
-   | where Timestamp > ago(7d)
-   | where FolderPath has @"\mailslot\" or FileName has "mailslot" or FolderPath has @"\Device\Mailslot\"
-   | where tolower(InitiatingProcessFileName) !in (SystemServiceBins)
-   | where InitiatingProcessAccountName !endswith "$"
-   | where InitiatingProcessAccountName !in~ ("system","local service","network service")
-   | extend EvtSrc = "DeviceFileEvents"
-   | project Timestamp, DeviceName, EvtSrc, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName, InitiatingProcessVersionInfoCompanyName, InitiatingProcessVersionInfoProductName),
-  (DeviceProcessEvents
-   | where Timestamp > ago(7d)
-   | where ProcessCommandLine has_any (@"\\.\mailslot\", @"\\.\Mailslot\", @"\Device\Mailslot\", "CreateMailslot")
-   | where tolower(FileName) !in (SystemServiceBins)
-   | extend EvtSrc = "DeviceProcessEvents"
-   | project Timestamp, DeviceName, EvtSrc, ActionType = "ProcessCreate", FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine = ProcessCommandLine, InitiatingProcessSHA256 = SHA256, InitiatingProcessAccountName = AccountName, InitiatingProcessVersionInfoCompanyName = ProcessVersionInfoCompanyName, InitiatingProcessVersionInfoProductName = ProcessVersionInfoProductName)
+let OfficeProcs = dynamic(["outlook.exe","winword.exe","excel.exe","powerpnt.exe","onenote.exe","onedrive.exe","msaccess.exe","mspub.exe","visio.exe","mapisvc.exe","msteams.exe","communicator.exe","lync.exe","searchindexer.exe","olk.exe"]);
+let MapiDlls = dynamic(["mapi32.dll","mapi.dll","msmapi32.dll","olmapi32.dll","emsmdb32.dll","mspst32.dll","outex.dll","microsoft.office.interop.outlook.dll"]);
+DeviceImageLoadEvents
+| where Timestamp > ago(7d)
+| where tolower(FileName) in (MapiDlls) or FileName has "Microsoft.Office.Interop.Outlook"
+| where not(tolower(InitiatingProcessFileName) in (OfficeProcs))
+| where not(InitiatingProcessFolderPath startswith @"C:\Program Files\Microsoft Office\") and not(InitiatingProcessFolderPath startswith @"C:\Program Files (x86)\Microsoft Office\")
+| where not(InitiatingProcessAccountName endswith "$")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, LoadedDll=FileName, LoadedDllPath=FolderPath, InitiatingProcessFileName
 | order by Timestamp desc
+```
+
+### [LLM] Kazuar Kernel module: mass encrypted-file staging in working directory
+
+`UC_59_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Filesystem.file_name) as file_count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files sum(Filesystem.file_size) as total_bytes from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*\\AppData\\Local\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Windows\\Temp\\*") by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, "(?i)(svchost|msiexec|setup|explorer|onedrive|officeclicktorun|searchindexer|wuauclt|trustedinstaller|msmpeng|mssense|setupapi|compattelrunner|mscorsvw|conhost|taskhostw|msteams|teamsupdate|wermgr|werfault|chrome|msedge|firefox)\.exe") | where file_count >= 20 AND (lastTime - firstTime) <= 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let SystemProcs = dynamic(["svchost.exe","msiexec.exe","setup.exe","explorer.exe","onedrive.exe","onedrivestandaloneupdater.exe","officeclicktorun.exe","searchindexer.exe","wuauclt.exe","trustedinstaller.exe","msmpeng.exe","windefend.exe","mssense.exe","setupapi.exe","compattelrunner.exe","mscorsvw.exe","conhost.exe","taskhostw.exe","msteams.exe","teamsupdate.exe","wermgr.exe","werfault.exe","chrome.exe","msedge.exe","firefox.exe"]);
+DeviceFileEvents
+| where Timestamp > ago(24h)
+| where ActionType == "FileCreated"
+| where FolderPath has_any (@"\AppData\Local\", @"\AppData\Roaming\", @"\ProgramData\", @"\Users\Public\", @"\Windows\Temp\")
+| where not(tolower(InitiatingProcessFileName) in (SystemProcs))
+| where not(InitiatingProcessAccountName endswith "$")
+| extend StageDir = strcat(tostring(split(FolderPath, "\\")[0]), "\\", strcat_array(array_slice(split(FolderPath, "\\"), 1, 5), "\\"))
+| summarize FileCount=dcount(FileName), TotalBytes=sum(FileSize), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleFiles=make_set(FileName, 10), Hashes=make_set(SHA256, 5) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName, StageDir
+| where FileCount >= 20 and datetime_diff('minute', LastSeen, FirstSeen) <= 30
+| order by FileCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -353,4 +360,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

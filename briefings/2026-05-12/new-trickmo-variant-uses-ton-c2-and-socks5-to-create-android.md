@@ -28,12 +28,10 @@ The new variant, observed by ThreatFabric between January and February 2026, has
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1090.003** — Proxy: Multi-hop Proxy
-- **T1568** — Dynamic Resolution
-- **T1660** — Phishing (Mobile)
-- **T1655.001** — Masquerading: Match Legitimate Name or Location
-- **T1407** — Download New Code at Runtime (Mobile)
+- **T1476** — Deliver Malicious App via Other Means
+- **T1404** — Exploitation for Privilege Escalation
+- **T1090** — Proxy
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -41,67 +39,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TrickMo C2 DNS resolution for TON overlay hostnames (.adnl / .bag / .ton)
+### [LLM] TrickMo dropper or payload package install on managed Android device
 
-`UC_116_5` · phase: **c2** · confidence: **High**
+`UC_133_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries from datamodel=Network_Resolution where (DNS.query="*.adnl" OR DNS.query="*.adnl.*" OR DNS.query="*.bag" OR DNS.query="*.bag.*" OR DNS.query="*.ton" OR DNS.query="*.ton.*") by DNS.src DNS.dest DNS.query | `drop_dm_object_name(DNS)` | eval ton_overlay=case(match(query, "(?i)\.adnl(\.|$)"), "adnl", match(query, "(?i)\.bag(\.|$)"), "bag", match(query, "(?i)\.ton(\.|$)"), "ton") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Application_State.All_Application_State where Application_State.app IN ("com.app16330.core20461","com.app15318.core1173","uncle.collop416.wifekin78","nibong.lida531.butler836") by Application_State.dest Application_State.user Application_State.app | `drop_dm_object_name(All_Application_State)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceEvents
+DeviceTvmSoftwareInventory
 | where Timestamp > ago(7d)
-| where ActionType == "DnsQueryResponse"
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueryName endswith ".adnl" or QueryName endswith ".bag" or QueryName endswith ".ton"
-   or QueryName has ".adnl." or QueryName has ".bag."
-| extend TONSuffix = case(QueryName endswith ".adnl" or QueryName has ".adnl.", "adnl",
-                          QueryName endswith ".bag" or QueryName has ".bag.",  "bag",
-                                                                                 "ton")
-| project Timestamp, DeviceName, DeviceId, QueryName, TONSuffix,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where OSPlatform =~ "Android"
+| where SoftwareName in~ ("com.app16330.core20461","com.app15318.core1173","uncle.collop416.wifekin78","nibong.lida531.butler836")
+| project Timestamp, DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion
 | order by Timestamp desc
 ```
 
-### [LLM] TrickMo C dropper / payload Android package identifiers observed in telemetry
+### [LLM] TrickMo SOCKS5-tunnel pivot from Android device
 
-`UC_116_6` · phase: **install** · confidence: **High**
+`UC_133_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.url="*com.app16330.core20461*" OR Web.url="*com.app15318.core1173*" OR Web.url="*uncle.collop416.wifekin78*" OR Web.url="*nibong.lida531.butler836*" OR Web.http_user_agent="*com.app16330.core20461*" OR Web.http_user_agent="*com.app15318.core1173*" OR Web.http_user_agent="*uncle.collop416.wifekin78*" OR Web.http_user_agent="*nibong.lida531.butler836*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | append [ | tstats summariesonly=t count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*com.app16330.core20461*" OR Filesystem.file_path="*com.app15318.core1173*" OR Filesystem.file_path="*uncle.collop416.wifekin78*" OR Filesystem.file_path="*nibong.lida531.butler836*" OR Filesystem.file_name="dex.module") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,1080) AND All_Traffic.direction="outbound" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | search [| inputlookup mobile_android_devices.csv | fields src] | where count >= 5 | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let pkgs = dynamic(["com.app16330.core20461","com.app15318.core1173","uncle.collop416.wifekin78","nibong.lida531.butler836"]);
-union isfuzzy=true
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName has_any (pkgs) or FolderPath has_any (pkgs) or FileName =~ "dex.module"
-    | project Timestamp, Source="DeviceFileEvents", DeviceName, DeviceId, ItemName=FileName, ItemPath=FolderPath,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, FileOriginUrl ),
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (pkgs)
-    | project Timestamp, Source="DeviceNetworkEvents", DeviceName, DeviceId, ItemName=RemoteUrl, ItemPath="",
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256="", FileOriginUrl=RemoteUrl ),
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where AdditionalFields has_any (pkgs)
-    | project Timestamp, Source="DeviceEvents", DeviceName, DeviceId, ItemName=ActionType,
-              ItemPath=tostring(AdditionalFields),
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, FileOriginUrl=RemoteUrl ),
-  ( EmailUrlInfo
-    | where Timestamp > ago(30d)
-    | where Url has_any (pkgs)
-    | join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject) on NetworkMessageId
-    | project Timestamp, Source="EmailUrlInfo", DeviceName="", DeviceId="", ItemName=Url, ItemPath=UrlDomain,
-              InitiatingProcessFileName=SenderFromAddress, InitiatingProcessCommandLine=Subject, SHA256="", FileOriginUrl=Url )
-| order by Timestamp desc
+let AndroidHosts = DeviceInfo
+    | where Timestamp > ago(7d)
+    | where OSPlatform =~ "Android"
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where DeviceId in (AndroidHosts)
+| where RemotePort in (22, 1080)
+| where RemoteIPType == "Public"
+| summarize ConnectionCount = count(),
+            UniqueDests = dcount(RemoteIP),
+            DestSample = make_set(RemoteIP, 10),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp)
+            by DeviceId, DeviceName, RemotePort, InitiatingProcessFileName
+| where ConnectionCount >= 5
+| order by ConnectionCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -314,4 +299,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

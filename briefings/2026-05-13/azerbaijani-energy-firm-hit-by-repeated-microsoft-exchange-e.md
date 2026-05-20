@@ -31,15 +31,16 @@ The activity has been attributed by Bitdefender with moderate-to-high confidence
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
-- **T1505.003** — Server Software Component: Web Shell
 - **T1190** — Exploit Public-Facing Application
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1133** — External Remote Services
+- **T1505.003** — Web Shell
+- **T1059.003** — Windows Command Shell
+- **T1574.002** — DLL Side-Loading
+- **T1036.005** — Match Legitimate Name or Location
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1036** — Masquerading
 
 ## Kill chain phases observed
 
@@ -47,141 +48,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] FamousSparrow Deed RAT C2 beacon to sentinelonepro[.]com typosquat
+### [LLM] FamousSparrow ProxyNotShell exploitation pattern against Exchange Autodiscover endpoint
 
-`UC_94_8` · phase: **c2** · confidence: **High**
+`UC_110_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="sentinelonepro.com" OR DNS.query="*.sentinelonepro.com") by DNS.src DNS.query DNS.answer host
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| append [
-  | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*sentinelonepro.com*" OR Web.dest="*sentinelonepro.com*") by Web.src Web.dest Web.url Web.user
-  | `drop_dm_object_name(Web)`
-  | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-]
-| append [
-  | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*sentinelonepro.com*" OR All_Traffic.dns_query="*sentinelonepro.com*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
-  | `drop_dm_object_name(All_Traffic)`
-  | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.url="*autodiscover.json*" AND (Web.url="*PowerShell*" OR Web.url="*Powershell*" OR Web.url="*powershell*") AND (Web.url="*@*" OR Web.http_cookie="*Email=autodiscover*") by Web.src Web.dest Web.url Web.status | `drop_dm_object_name(Web)` | where status=200 OR status=301 OR status=302 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let c2_domain = "sentinelonepro.com";
-union isfuzzy=true
-  ( DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Query = tostring(parse_json(AdditionalFields).QueryName)
-    | where Query has c2_domain
-    | project Timestamp, DeviceName, Source="DnsQueryResponse",
-              Query, RemoteUrl="", RemoteIP="",
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessAccountName ),
-  ( DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has c2_domain
-    | project Timestamp, DeviceName, Source="NetworkEvent",
-              Query="", RemoteUrl, RemoteIP=tostring(RemoteIP),
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessAccountName=InitiatingProcessAccountName )
-| order by Timestamp desc
-```
-
-### [LLM] LogMeIn Hamachi binary executing from non-LogMeIn install path (FamousSparrow Deed RAT side-load)
-
-`UC_94_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("hamachi.exe","hamachi-2.exe","Hamachi2Svc.exe","hamachi-2-ui.exe")
-      AND NOT (Processes.process_path="*\\Program Files\\LogMeIn Hamachi\\*"
-            OR Processes.process_path="*\\Program Files (x86)\\LogMeIn Hamachi\\*")
-      AND NOT Processes.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE")
-      AND NOT match(Processes.user, "\$$")
-    by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.process_hash Processes.parent_process_name Processes.parent_process Processes.parent_process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| eval suspicious_dropper=if(match(parent_process_name, "(?i)^(w3wp|cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|msiexec|certutil|bitsadmin)\.exe$"), "yes", "no")
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let HamachiBins = dynamic(["hamachi.exe","hamachi-2.exe","Hamachi2Svc.exe","hamachi-2-ui.exe"]);
-let LegitPaths = dynamic([@"c:\program files\logmein hamachi\", @"c:\program files (x86)\logmein hamachi\"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ (HamachiBins)
-| where AccountName !endswith "$"
-| extend LowerPath = tolower(FolderPath)
-| where not(LowerPath startswith @"c:\program files\logmein hamachi\")
-| where not(LowerPath startswith @"c:\program files (x86)\logmein hamachi\")
-| extend SuspiciousParent = iff(InitiatingProcessFileName in~ ("w3wp.exe","cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","msiexec.exe"), "yes","no")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, IsInitiatingProcessRemoteSession, SuspiciousParent
-| join kind=leftouter (
-    DeviceImageLoadEvents
-    | where Timestamp > ago(30d)
-    | where InitiatingProcessFileName in~ (HamachiBins)
-    | extend LoadedLower = tolower(FolderPath)
-    | where not(LoadedLower startswith @"c:\program files\logmein hamachi\")
-    | where not(LoadedLower startswith @"c:\program files (x86)\logmein hamachi\")
-    | where not(LoadedLower startswith @"c:\windows\")
-    | summarize SideLoadedDlls = make_set(strcat(FileName, " (", SHA256, ")"), 10) by DeviceName, InitiatingProcessId
-  ) on DeviceName
-| order by Timestamp desc
-```
-
-### [LLM] Exchange w3wp.exe dropping DLL/EXE files (post-ProxyNotShell web shell or tooling stage)
-
-`UC_94_10` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.process_name="w3wp.exe"
-      AND (Filesystem.file_name="*.aspx" OR Filesystem.file_name="*.ashx"
-           OR Filesystem.file_name="*.asmx" OR Filesystem.file_name="*.asp"
-           OR Filesystem.file_name="*.dll"  OR Filesystem.file_name="*.exe")
-      AND NOT (Filesystem.file_path="*\\inetpub\\temp\\IIS Temporary Compressed Files\\*"
-            OR Filesystem.file_path="*\\Microsoft\\Exchange Server\\V15\\Logging\\*"
-            OR Filesystem.file_path="*\\Temporary ASP.NET Files\\*"
-            OR Filesystem.file_path="*\\GAC_MSIL\\*")
-    by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_name Filesystem.file_path Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| eval is_exchange_path=if(match(file_path, "(?i)\\\\(FrontEnd\\\\HttpProxy|ClientAccess|Exchange Server)\\\\"), "yes", "no")
-| where is_exchange_path="yes"
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(60d)
-| where ActionType == "FileCreated"
+// IIS logs are not in Defender XDR — pivot on w3wp.exe egress, the most reliable post-exploit signal
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
 | where InitiatingProcessFileName =~ "w3wp.exe"
-| where InitiatingProcessCommandLine has_any ("MSExchange", "Exchange")
-| extend Ext = tolower(tostring(split(FileName, ".")[-1]))
-| where Ext in ("aspx","ashx","asmx","asp","dll","exe")
-| extend LowerPath = tolower(FolderPath)
-| where not(LowerPath has @"\inetpub\temp\iis temporary compressed files\")
-| where not(LowerPath has @"\temporary asp.net files\")
-| where not(LowerPath has @"\microsoft\exchange server\v15\logging\")
-| where not(LowerPath has @"\gac_msil\")
-| where LowerPath has_any (@"\frontend\httpproxy\", @"\clientaccess\", @"\exchange server\", @"\inetpub\")
-   or FileName has_any ("hamachi", "Hamachi")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| where InitiatingProcessFolderPath has @"\inetsrv\"
+| where RemoteIPType == "Public"
+| where not(RemoteUrl has_any ("microsoft.com","office.com","office365.com","windows.com","digicert.com"))
+| project Timestamp, DeviceName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Exchange w3wp.exe spawning shell/script interpreter — FamousSparrow web shell foothold
+
+`UC_110_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" AND Processes.parent_process_path="*\\inetsrv\\*" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","powershell_ise.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","net1.exe","whoami.exe","systeminfo.exe","nltest.exe") by host Processes.parent_process_name Processes.process_name Processes.process_path Processes.user | `drop_dm_object_name(Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where InitiatingProcessFolderPath has @"\inetsrv\"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","powershell_ise.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","net1.exe","whoami.exe","systeminfo.exe","nltest.exe","ipconfig.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] FamousSparrow LogMeIn Hamachi DLL side-load chain (LMIGuardianSvc.exe from C:\TEMP)
+
+`UC_110_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as sha256 values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="LMIGuardianSvc.exe" OR Processes.process_name="lmiguardiansvc.exe") AND (Processes.process_path="*\\TEMP\\*" OR Processes.process_path="*\\Temp\\*" OR Processes.process_path="*\\tmp\\*" OR Processes.process_path="*\\AppData\\*" OR Processes.process_path="*\\ProgramData\\*" OR Processes.process_path="*\\Public\\*") AND NOT Processes.process_path="*\\LogMeIn Hamachi\\*" by host Processes.user Processes.process_path Processes.process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="lmiguardiandll.dll" OR Filesystem.file_name=".hamachi.lng" OR Filesystem.file_name="hamachi.lng") by host Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+// Stage 1: Hamachi binary running from non-canonical path
+let SideloadHost = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "LMIGuardianSvc.exe"
+    | where not(FolderPath has @"\LogMeIn Hamachi\")
+    | where FolderPath has_any (@"\TEMP\", @"\Temp\", @"\tmp\", @"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Windows\Temp\")
+    | project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, MD5, ProcessId;
+// Stage 2: rogue DLL or encrypted shellcode dropped near the host binary
+let SideloadArtifacts = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("lmiguardiandll.dll", ".hamachi.lng", "hamachi.lng")
+       or (FolderPath has_any (@"\TEMP\", @"\Temp\") and FileName =~ "lmiguardiandll.dll")
+    | project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine;
+// Stage 3: image-load confirmation — Hamachi process loading the rogue DLL
+let RogueImageLoad = DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName =~ "LMIGuardianSvc.exe"
+    | where FileName =~ "lmiguardiandll.dll"
+    | where not(FolderPath has @"\LogMeIn Hamachi\")
+    | project Timestamp, DeviceName, InitiatingProcessFolderPath, FileName, FolderPath, SHA256;
+union SideloadHost, SideloadArtifacts, RogueImageLoad
+| extend KnownBadMD5 = iff(MD5 =~ "0554f3b69d39d175dd110d765c11347a", "YES — LMIGuardianSvc dropper", "")
+| order by Timestamp desc
+```
+
+### [LLM] FamousSparrow Deed RAT C2 beaconing to sentinelonepro.com / virusblocker.it.com
+
+`UC_110_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution where (DNS.query="sentinelonepro.com" OR DNS.query="*.sentinelonepro.com" OR DNS.query="virusblocker.it.com" OR DNS.query="*.virusblocker.it.com") by host DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="sentinelonepro.com" OR All_Traffic.dest="virusblocker.it.com" OR All_Traffic.dest_url="*sentinelonepro.com*" OR All_Traffic.dest_url="*virusblocker.it.com*") by host All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`] | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let FamousSparrowC2 = dynamic(["sentinelonepro.com","virusblocker.it.com"]);
+let DnsHits = DeviceNetworkEvents
+    | where Timestamp > ago(90d)
+    | where RemoteUrl has_any (FamousSparrowC2) or RemoteUrl endswith ".sentinelonepro.com" or RemoteUrl endswith ".virusblocker.it.com"
+    | project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName;
+let ProcessHits = DeviceProcessEvents
+    | where Timestamp > ago(90d)
+    | where ProcessCommandLine has_any (FamousSparrowC2)
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, SHA256;
+union DnsHits, ProcessHits
 | order by Timestamp desc
 ```
 
@@ -454,4 +420,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

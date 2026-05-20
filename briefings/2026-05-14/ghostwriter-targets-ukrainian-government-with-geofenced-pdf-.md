@@ -32,17 +32,14 @@ Active since at least 2016, Ghostwriter has been linked to both cyber espionage 
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1566.001** — Phishing: Spearphishing Attachment
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1029** — Scheduled Transfer
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1082** — System Information Discovery
 - **T1203** — Exploitation for Client Execution
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1572** — Protocol Tunneling
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1219** — Remote Access Software
-- **T1071** — Application Layer Protocol
+- **T1090.001** — Proxy: Internal Proxy
 
 ## Kill chain phases observed
 
@@ -50,118 +47,126 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PicassoLoader JavaScript executed by WScript from RAR-extracted Downloads/Temp path
+### [LLM] JavaScript payload executed from RAR archive (Ghostwriter PicassoLoader JS variant)
 
-`UC_77_7` · phase: **install** · confidence: **High**
+`UC_93_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, values(Processes.process) as cmdlines, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("winrar.exe","winrar64.exe","7zg.exe","7zfm.exe","explorer.exe") AND Processes.process_name IN ("wscript.exe","cscript.exe") AND (Processes.process LIKE "%.js%" OR Processes.process LIKE "%.vbs%" OR Processes.process LIKE "%.jse%" OR Processes.process LIKE "%.vbe%") AND (Processes.process LIKE "%\\Downloads\\%" OR Processes.process LIKE "%\\Temp\\%" OR Processes.process LIKE "%\\AppData\\%") by host Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | search NOT user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("WinRAR.exe","winrar.exe","Rar.exe","7zG.exe","7zFM.exe","explorer.exe") Processes.process_name IN ("wscript.exe","cscript.exe") (Processes.process="*.js*" OR Processes.process="*.jse*") (Processes.process="*\\Downloads\\*" OR Processes.process="*\\Temp\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\AppData\\Roaming\\*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("winrar.exe","winrar64.exe","7zg.exe","7zfm.exe","explorer.exe","rar.exe","unrar.exe")
+| where InitiatingProcessFileName in~ ("WinRAR.exe","Rar.exe","7zG.exe","7zFM.exe","explorer.exe")
 | where FileName in~ ("wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any (".js",".jse",".vbs",".vbe")
-| where ProcessCommandLine has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\", @"\AppData\Roaming\")
+| where ProcessCommandLine has_any (".js", ".jse")
+| where ProcessCommandLine has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\Temp\", @"\AppData\Roaming\")
 | where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256, InitiatingProcessFolderPath
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] PicassoLoader 10-minute periodic fingerprint beacon from wscript/cscript
+### [LLM] PicassoLoader periodic ~10-minute fingerprint beacons from script-host process
 
-`UC_77_8` · phase: **c2** · confidence: **High**
+`UC_93_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("wscript.exe","cscript.exe") AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest _time span=10m | `drop_dm_object_name(All_Traffic)` | stats dc(_time) as beacon_buckets, min(_time) as firstTime, max(_time) as lastTime, count as conn_total by src user app dest | eval duration_min=(lastTime-firstTime)/60 | eval cadence_min=if(beacon_buckets>1,duration_min/(beacon_buckets-1),0) | where beacon_buckets>=6 AND cadence_min>=8 AND cadence_min<=12 | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ips dc(All_Traffic.dest_ip) as dest_ip_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("wscript.exe","cscript.exe") All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.user All_Traffic.app _time span=10m | `drop_dm_object_name(All_Traffic)` | stats count as beacon_intervals min(firstTime) as firstSeen max(lastTime) as lastSeen values(dest_ips) as remote_ips by src user app | where beacon_intervals >= 6 AND beacon_intervals <= 12 | `security_content_ctime(firstSeen)` | `security_content_ctime(lastSeen)`
 ```
 
 **Defender KQL:**
 ```kql
+let WindowStart = ago(2h);
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > WindowStart
 | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
 | where RemoteIPType == "Public"
-| where isnotempty(RemoteIP)
-| extend Bucket = bin(Timestamp, 10m)
-| summarize Beacons = dcount(Bucket),
-            Connections = count(),
+| where InitiatingProcessAccountName !endswith "$"
+| summarize Beacons = count(),
             FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp),
-            Destinations = make_set(RemoteUrl, 5),
-            DestPorts = make_set(RemotePort, 5)
-            by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP
-| extend DurationMin = datetime_diff('minute', LastSeen, FirstSeen)
-| extend CadenceMin = iff(Beacons > 1, todouble(DurationMin) / (Beacons - 1), 0.0)
-| where Beacons >= 6                 // at least an hour of beacons
-| where CadenceMin between (8.0 .. 12.0)  // ~10-minute periodicity per ESET report
-| project DeviceName, InitiatingProcessFileName, RemoteIP, DestPorts, Destinations, Beacons, Connections, CadenceMin, FirstSeen, LastSeen
-| order by Beacons desc
+            LastSeen = max(Timestamp),
+            IntervalSeconds = make_list(datetime_diff('second', Timestamp, prev(Timestamp))),
+            SampleUrl = any(RemoteUrl)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+               InitiatingProcessId, RemoteIP, bin(Timestamp, 10m)
+| summarize TenMinBuckets = count(),
+            FirstSeen = min(FirstSeen),
+            LastSeen = max(LastSeen),
+            TotalBeacons = sum(Beacons),
+            SampleUrl = any(SampleUrl)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessId, RemoteIP
+| where TenMinBuckets >= 3   // at least 3 distinct 10-min intervals with traffic = strongly periodic
+| where TotalBeacons between (3 .. 60)   // bounded - exclude high-volume non-beaconing traffic
+| order by FirstSeen desc
 ```
 
-### [LLM] WinRAR CVE-2025-8088 directory traversal: archive process writes to Startup folder
+### [LLM] WinRAR CVE-2025-8088 ADS path-traversal exploitation (Gamaredon GammaDrop/GammaLoad delivery)
 
-`UC_77_9` · phase: **exploit** · confidence: **High**
+`UC_93_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, values(Filesystem.file_path) as paths, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("winrar.exe","winrar64.exe","rar.exe","unrar.exe","7zg.exe","7zfm.exe","7z.exe") AND (Filesystem.file_path LIKE "%\\Start Menu\\Programs\\Startup\\%" OR Filesystem.file_path LIKE "%\\System32\\Tasks\\%" OR Filesystem.file_path LIKE "%\\Windows\\Tasks\\%") AND Filesystem.action="created" by host Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("WinRAR.exe","winrar.exe","Rar.exe","UnRAR.exe","unrar.exe") AND (Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" OR Filesystem.file_path="*\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Windows\\Temp\\*" OR Filesystem.file_path="*\\System32\\Tasks\\*") AND (Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.vbe" OR Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.hta") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where InitiatingProcessFileName in~ ("winrar.exe","winrar64.exe","rar.exe","unrar.exe","7zg.exe","7zfm.exe","7z.exe")
-| where FolderPath has_any (
-    @"\Microsoft\Windows\Start Menu\Programs\Startup\",
-    @"\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\",
-    @"\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\",
-    @"\Windows\System32\Tasks\",
-    @"\Windows\Tasks\"
-  )
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessVersionInfoProductVersion, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| where InitiatingProcessFileName in~ ("WinRAR.exe","Rar.exe","UnRAR.exe")
+| where ActionType in ("FileCreated","FileRenamed")
+| where (FolderPath has_any (@"\Microsoft\Windows\Start Menu\Programs\Startup\",
+                              @"\ProgramData\Microsoft\Windows\Start Menu\Programs\StartUp\",
+                              @"\Users\Public\",
+                              @"\Windows\Temp\",
+                              @"\Windows\System32\Tasks\")
+          )
+| where FileName endswith_cs ".vbs" or FileName endswith_cs ".vbe"
+      or FileName endswith_cs ".lnk" or FileName endswith_cs ".exe"
+      or FileName endswith_cs ".dll" or FileName endswith_cs ".hta"
+      or FileName endswith_cs ".js"
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FolderPath, FileName, SHA256, FileOriginUrl, FileOriginReferrerUrl
 | order by Timestamp desc
 ```
 
-### [LLM] ZeroSSH backdoor: userland process opens outbound SSH and spawns cmd.exe
+### [LLM] ZeroSSH reverse SSH tunnel established from cmd.exe (BO Team / Black Owl backdoor)
 
-`UC_77_10` · phase: **c2** · confidence: **Medium**
+`UC_93_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as ssh_conn, values(All_Traffic.dest) as ssh_dests from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (22,2222) AND NOT (All_Traffic.app IN ("ssh.exe","sftp.exe","scp.exe","putty.exe","plink.exe","git.exe","openssh.exe","code.exe","WindowsTerminal.exe")) by host All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.process_path | `drop_dm_object_name(All_Traffic)` | search process_path IN ("*\\Users\\*","*\\ProgramData\\*","*\\AppData\\*","*\\Temp\\*","*\\Public\\*") | join host app [| tstats summariesonly=true count as cmd_count, values(Processes.process) as cmd_cmdlines from datamodel=Endpoint.Processes where Processes.process_name="cmd.exe" by host Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename parent_process_name as app] | where cmd_count > 0
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("ssh.exe","OpenSSH.exe") (Processes.process="*-R *" OR Processes.process="*-R*:*:*") (Processes.process="* -N*" OR Processes.process="* -f *" OR Processes.process="*StrictHostKeyChecking=no*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(parent_process_name, "(?i)cmd\.exe") OR match(parent_process, "(?i)\\(zerossh|brockendoor)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let SshProcs = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemotePort in (22, 2222)
-    | where RemoteIPType == "Public"
-    | where InitiatingProcessFileName !in~ ("ssh.exe","sftp.exe","scp.exe","putty.exe","plink.exe","git.exe","git-remote-ssh.exe","openssh.exe","code.exe","WindowsTerminal.exe","msedge.exe","chrome.exe")
-    | where InitiatingProcessFolderPath has_any (@"\Users\", @"\AppData\", @"\ProgramData\", @"\Temp\", @"\Public\")
-    | where InitiatingProcessVersionInfoCompanyName !has_any ("Microsoft","OpenSSH","PuTTY","GitForWindows")
-    | summarize SshConn = count(), SshDests = make_set(RemoteIP, 5)
-              by DeviceId, DeviceName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName;
-let CmdSpawns = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "cmd.exe"
-    | where InitiatingProcessFolderPath has_any (@"\Users\", @"\AppData\", @"\ProgramData\", @"\Temp\", @"\Public\")
-    | summarize CmdSpawnCount = count(), CmdSamples = make_set(ProcessCommandLine, 5)
-              by DeviceId, InitiatingProcessId, InitiatingProcessFileName;
-SshProcs
-| join kind=inner (CmdSpawns) on DeviceId, InitiatingProcessId, InitiatingProcessFileName
-| where InitiatingProcessAccountName !endswith "$"
-| project DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, SshDests, SshConn, CmdSpawnCount, CmdSamples
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("ssh.exe","OpenSSH.exe")
+| where ProcessCommandLine matches regex @"(?i)\s-R\s*\d{1,5}:"
+   or  ProcessCommandLine matches regex @"(?i)\s-R\s+(127\.0\.0\.1|localhost):"
+   or  ProcessCommandLine has "RemoteForward"
+| where ProcessCommandLine has_any (" -N", " -f ", " -fN", "StrictHostKeyChecking=no", "UserKnownHostsFile=NUL", "UserKnownHostsFile=/dev/null")
+| where InitiatingProcessFileName =~ "cmd.exe"
+   or  InitiatingProcessFolderPath has_any (@"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Temp\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -409,4 +414,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

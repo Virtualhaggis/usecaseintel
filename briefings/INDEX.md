@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_770 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_767 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,51 +8,69 @@ _770 per-article briefings — auto-generated from every article we've pulled. A
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-20
+- [fox tempest malware signing service abused microsoft artifac](./2026-05-20/fox-tempest-malware-signing-service-abused-microsoft-artifac.md)
+- [github hacked internal source code repositories compromised ](./2026-05-20/github-hacked-internal-source-code-repositories-compromised-.md)
+- [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
+- [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
+- [poc exploit released for 20 year old postgresql rce vulnerab](./2026-05-20/poc-exploit-released-for-20-year-old-postgresql-rce-vulnerab.md)
+
 ## 2026-05-19
+- [7 eleven confirms data breach claimed by the shinyhunters ga](./2026-05-19/7-eleven-confirms-data-breach-claimed-by-the-shinyhunters-ga.md)
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
-- [hackers abuse microsoft entra id accounts to exfiltrate micr](./2026-05-19/hackers-abuse-microsoft-entra-id-accounts-to-exfiltrate-micr.md)
-- [mythos preview builds poc exploits in automated vulnerabilit](./2026-05-19/mythos-preview-builds-poc-exploits-in-automated-vulnerabilit.md)
+- [critical microsoft vulnerabilities doubled from exposure to ](./2026-05-19/critical-microsoft-vulnerabilities-doubled-from-exposure-to-.md)
+- [cybercrime service disrupted for abusing microsoft platform ](./2026-05-19/cybercrime-service-disrupted-for-abusing-microsoft-platform-.md)
+- [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
+- [drupal to release urgent core security updates on may 20 sit](./2026-05-19/drupal-to-release-urgent-core-security-updates-on-may-20-sit.md)
+- [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
+- [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
+- [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
+- [ghsa critical cve 2026 45695 kopia rce via ssh proxycommand ](./2026-05-19/ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-.md)
+- [ghsa critical cve 2026 45721 algernon handler lua discovery ](./2026-05-19/ghsa-critical-cve-2026-45721-algernon-handler-lua-discovery-.md)
+- [ghsa critical cve 2026 45758 malicious code in guardrails ai](./2026-05-19/ghsa-critical-cve-2026-45758-malicious-code-in-guardrails-ai.md)
+- [ghsa critical cve 2026 46339 9router unauthenticated remote ](./2026-05-19/ghsa-critical-cve-2026-46339-9router-unauthenticated-remote-.md)
+- [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
+- [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
+- [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
+- [macos malware installs fake google software update launchage](./2026-05-19/macos-malware-installs-fake-google-software-update-launchage.md)
+- [max severity flaw in chromadb for ai apps allows server hija](./2026-05-19/max-severity-flaw-in-chromadb-for-ai-apps-allows-server-hija.md)
+- [microsoft self service password reset abused in azure data t](./2026-05-19/microsoft-self-service-password-reset-abused-in-azure-data-t.md)
 - [nx console vs code extension compromised](./2026-05-19/nx-console-vs-code-extension-compromised.md)
 - [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
+- [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
+- [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
+- [the gentlemen ransomware attacks windows linux nas bsd and e](./2026-05-19/the-gentlemen-ransomware-attacks-windows-linux-nas-bsd-and-e.md)
+- [the new phishing click how oauth consent bypasses mfa](./2026-05-19/the-new-phishing-click-how-oauth-consent-bypasses-mfa.md)
+- [trapdoor android ad fraud scheme hit 659 million daily bid r](./2026-05-19/trapdoor-android-ad-fraud-scheme-hit-659-million-daily-bid-r.md)
+- [uac 0184 malware chain uses bitsadmin and hta files for gate](./2026-05-19/uac-0184-malware-chain-uses-bitsadmin-and-hta-files-for-gate.md)
 
 ## 2026-05-18
-- [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
-- [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
-- [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
 - [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
 - [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
 - [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
-- [grafana says stolen github token let hackers steal codebase](./2026-05-18/grafana-says-stolen-github-token-let-hackers-steal-codebase.md)
-- [hackers actively exploiting critical nginx rce vulnerability](./2026-05-18/hackers-actively-exploiting-critical-nginx-rce-vulnerability.md)
 - [how storm 2949 turned a compromised identity into a cloud wi](./2026-05-18/how-storm-2949-turned-a-compromised-identity-into-a-cloud-wi.md)
 - [how to reduce phishing exposure before it turns into busines](./2026-05-18/how-to-reduce-phishing-exposure-before-it-turns-into-busines.md)
 - [interpol operation ramz disrupts mena cybercrime networks wi](./2026-05-18/interpol-operation-ramz-disrupts-mena-cybercrime-networks-wi.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
-- [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
 - [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
 - [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
-- [shub macos infostealer variant spoofs apple security updates](./2026-05-18/shub-macos-infostealer-variant-spoofs-apple-security-updates.md)
 - [weekly recap exchange 0 day npm worm fake ai repo cisco expl](./2026-05-18/weekly-recap-exchange-0-day-npm-worm-fake-ai-repo-cisco-expl.md)
 
 ## 2026-05-17
 - [grafana github token breach led to codebase download and ext](./2026-05-17/grafana-github-token-breach-led-to-codebase-download-and-ext.md)
-- [new windows miniplasma zero day exploit gives system access ](./2026-05-17/new-windows-miniplasma-zero-day-exploit-gives-system-access-.md)
 - [nginx cve 2026 42945 exploited in the wild causing worker cr](./2026-05-17/nginx-cve-2026-42945-exploited-in-the-wild-causing-worker-cr.md)
-- [tycoon2fa hijacks microsoft 365 accounts via device code phi](./2026-05-17/tycoon2fa-hijacks-microsoft-365-accounts-via-device-code-phi.md)
 
 ## 2026-05-16
 - [funnel builder flaw under active exploitation enables woocom](./2026-05-16/funnel-builder-flaw-under-active-exploitation-enables-woocom.md)
-- [russian hackers turn kazuar backdoor into modular p2p botnet](./2026-05-16/russian-hackers-turn-kazuar-backdoor-into-modular-p2p-botnet.md)
 
 ## 2026-05-15
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
-- [funnel builder wordpress plugin bug exploited to steal credi](./2026-05-15/funnel-builder-wordpress-plugin-bug-exploited-to-steal-credi.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
@@ -123,17 +141,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44643 angular expressions remote code](./2026-05-11/ghsa-critical-cve-2026-44643-angular-expressions-remote-code.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
-- [hackers used ai to develop first known zero day 2fa bypass f](./2026-05-11/hackers-used-ai-to-develop-first-known-zero-day-2fa-bypass-f.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
-- [teampcp compromises checkmarx jenkins ast plugin weeks after](./2026-05-11/teampcp-compromises-checkmarx-jenkins-ast-plugin-weeks-after.md)
-- [weekly recap linux rootkit macos crypto stealer websocket sk](./2026-05-11/weekly-recap-linux-rootkit-macos-crypto-stealer-websocket-sk.md)
 
 ## 2026-05-09
 - [ghsa critical ghsa v6wj c83f v46x profullstack mcp server vu](./2026-05-09/ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu.md)
 
 ## 2026-05-08
-- [active attack dirty frag linux vulnerability expands post co](./2026-05-08/active-attack-dirty-frag-linux-vulnerability-expands-post-co.md)
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 - [ghsa critical cve 2026 43940 electerm runwidget has a path t](./2026-05-08/ghsa-critical-cve-2026-43940-electerm-runwidget-has-a-path-t.md)
@@ -176,12 +190,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
-- [ghsa critical cve 2026 29090 rucio has sql injection in filt](./2026-05-06/ghsa-critical-cve-2026-29090-rucio-has-sql-injection-in-filt.md)
-- [ghsa critical cve 2026 40010 apache wicket has a session fix](./2026-05-06/ghsa-critical-cve-2026-40010-apache-wicket-has-a-session-fix.md)
-- [ghsa critical cve 2026 42238 nginx ui is vulnerable to unaut](./2026-05-06/ghsa-critical-cve-2026-42238-nginx-ui-is-vulnerable-to-unaut.md)
 - [ghsa critical cve 2026 42555 valtimo has spel injection via ](./2026-05-06/ghsa-critical-cve-2026-42555-valtimo-has-spel-injection-via-.md)
-- [ghsa critical cve 2026 43948 wger cross tenant password rese](./2026-05-06/ghsa-critical-cve-2026-43948-wger-cross-tenant-password-rese.md)
-- [ghsa critical cve 2026 44262 scramble vulnerable to remote c](./2026-05-06/ghsa-critical-cve-2026-44262-scramble-vulnerable-to-remote-c.md)
 - [ghsa critical cve 2026 44351 fast jwt jwt auth bypass due to](./2026-05-06/ghsa-critical-cve-2026-44351-fast-jwt-jwt-auth-bypass-due-to.md)
 - [ghsa critical ghsa 289f fq7w 6q2w phpmyfaq has unauthenticat](./2026-05-06/ghsa-critical-ghsa-289f-fq7w-6q2w-phpmyfaq-has-unauthenticat.md)
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
@@ -192,10 +201,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
-- [ghsa critical cve 2026 42300 devguard has an unauthenticated](./2026-05-05/ghsa-critical-cve-2026-42300-devguard-has-an-unauthenticated.md)
-- [ghsa critical cve 2026 42607 grav vulnerable to remote code ](./2026-05-05/ghsa-critical-cve-2026-42607-grav-vulnerable-to-remote-code-.md)
-- [ghsa critical cve 2026 42613 grav vulnerable to privilege es](./2026-05-05/ghsa-critical-cve-2026-42613-grav-vulnerable-to-privilege-es.md)
-- [ghsa critical ghsa vj3m 2g9h vm4p grav has multiple rce vect](./2026-05-05/ghsa-critical-ghsa-vj3m-2g9h-vm4p-grav-has-multiple-rce-vect.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
 
@@ -218,12 +223,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
 - [lightning pypi compromise a bun based credential stealer in ](./2026-04-30/lightning-pypi-compromise-a-bun-based-credential-stealer-in-.md)
 - [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
-- [silver fox uses the new abcdoor backdoor to target organizat](./2026-04-30/silver-fox-uses-the-new-abcdoor-backdoor-to-target-organizat.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 
 ## 2026-04-29
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
-- [bridging the gap to autonomous fixes snyk and atlassian unve](./2026-04-29/bridging-the-gap-to-autonomous-fixes-snyk-and-atlassian-unve.md)
 - [mini shai hulud targets sap npm packages with a bun based se](./2026-04-29/mini-shai-hulud-targets-sap-npm-packages-with-a-bun-based-se.md)
 - [someone published four versions of a fake tanstack package i](./2026-04-29/someone-published-four-versions-of-a-fake-tanstack-package-i.md)
 
@@ -248,12 +251,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
 - [is shai hulud back compromised bitwarden cli contains a self](./2026-04-23/is-shai-hulud-back-compromised-bitwarden-cli-contains-a-self.md)
 - [it pays to be a forever student](./2026-04-23/it-pays-to-be-a-forever-student.md)
-- [uat 4356 s targeting of cisco firepower devices](./2026-04-23/uat-4356-s-targeting-of-cisco-firepower-devices.md)
 
 ## 2026-04-22
 - [cisa kev cve 2026 33825 microsoft defender insufficient gran](./2026-04-22/cisa-kev-cve-2026-33825-microsoft-defender-insufficient-gran.md)
 - [gpt proxy backdoor in npm and pypi turns servers into chines](./2026-04-22/gpt-proxy-backdoor-in-npm-and-pypi-turns-servers-into-chines.md)
-- [ir trends q1 2026 phishing reemerges as top initial access v](./2026-04-22/ir-trends-q1-2026-phishing-reemerges-as-top-initial-access-v.md)
 - [when wi fi encryption fails protecting your enterprise from ](./2026-04-22/when-wi-fi-encryption-fails-protecting-your-enterprise-from-.md)
 
 ## 2026-04-21
@@ -620,7 +621,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-03
 - [cisa kev cve 2021 26828 openplc scadabr unrestricted upload ](./2025-12-03/cisa-kev-cve-2021-26828-openplc-scadabr-unrestricted-upload-.md)
-- [critical react next js rce vulnerability cve 2025 55182 what](./2025-12-03/critical-react-next-js-rce-vulnerability-cve-2025-55182-what.md)
 
 ## 2025-12-02
 - [cisa kev cve 2025 48572 android framework privilege escalati](./2025-12-02/cisa-kev-cve-2025-48572-android-framework-privilege-escalati.md)
@@ -830,7 +830,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 5777 citrix netscaler adc and gateway out ](./2025-07-10/cisa-kev-cve-2025-5777-citrix-netscaler-adc-and-gateway-out-.md)
 
 ## 2025-07-08
-- [evolving harden runner s disable sudo policy for improved ru](./2025-07-08/evolving-harden-runner-s-disable-sudo-policy-for-improved-ru.md)
 - [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
 
 ## 2025-07-07

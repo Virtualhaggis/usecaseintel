@@ -1,24 +1,34 @@
 # [HIGH] MiniPlasma Windows 0-Day Enables SYSTEM Privilege Escalation on Fully Patched Systems
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-05-18
 **Article:** https://thehackernews.com/2026/05/miniplasma-windows-0-day-enables-system.html
 
 ## Threat Profile
 
-Home Cyber Attack News 
-Four Malicious npm Packages Steal SSH Keys, Cloud Credentials, and Crypto Wallets 
-By Guru Baran 
-May 18, 2026 
-Four malicious npm packages capable of stealing SSH keys, cloud credentials, cryptocurrency wallets, and environment variables, while one variant quietly transforms infected machines into a DDoS botnet .
-The campaign appears to be the work of a single threat actor deploying multiple infostealer variants simultaneously through a coordinated typosquatting operatio…
+Four Malicious npm Packages Deliver Infostealers and Phantom Bot DDoS Malware 
+ Ravie Lakshmanan  May 18, 2026 Supply Chain Attack / Botnet 
+Cybersecurity researchers have discovered four new npm packages containing information-stealing malware, one of which is a clone of the Shai-Hulud worm open-sourced by TeamPCP .
+The list of identified packages is below -
+chalk-tempalte (825 Downloads)
+@deadcode09284814/axios-util (284 Downloads)
+axois-utils (963 Downloads)
+color-style-utils (934 Downloads…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `80.200.28.28`
 - **Domain (defanged):** `87e0bbc636999b.lhr.life`
-- **Domain (defanged):** `b94b6bcfa27554.lhr.life`
 - **Domain (defanged):** `edcf8b03c84634.lhr.life`
+- **Domain (defanged):** `b94b6bcfa27554.lhr.life`
+- **Domain (defanged):** `f04a273bd84c0622-80-200-28-28.serveousercontent.com`
+- **Domain (defanged):** `8a3e818ea8f11186-80-200-28-28.serveousercontent.com`
+- **SHA256:** `165fa92d237fd017c227d00da06ab788212a62be94bf61e95df2d22d00377ef2`
+- **SHA256:** `7d0ae79fdb1e9968f3323a3712b624643a782ba3efb2cf3a2cb9c4c5513cea30`
+- **SHA256:** `308b15c023088a7188dea4ef609010ac2493eb4c365b103053d7621a9ca5b935`
+- **SHA256:** `9e380ec88d3ccf3929e1a104e3b868d4d7b59ca189a8a431a54e9f3357dfdd81`
+- **SHA256:** `d1c9e3f296ee9f7d5032f73f9c504cede50334bc14c394055fd5cb9c3a6e08b3`
+- **SHA256:** `ffba9bdd6793edd5b38e12900252c1813a693f59c25af51c3b658cf3f27b6162`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,10 +37,14 @@ The campaign appears to be the work of a single threat actor deploying multiple 
 - **T1071** — Application Layer Protocol
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1005** — Data from Local System
-- **T1059.001** — PowerShell
-- **T1027** — Obfuscated Files or Information
+- **T1053.005** — Scheduled Task
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1090.002** — Proxy: External Proxy
 - **T1568** — Dynamic Resolution
@@ -51,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection or DNS to Shai-Hulud copycat C2 (lhr.life subdomains / 80.200.28.28:2222)
 
-`UC_27_6` · phase: **c2** · confidence: **High**
+`UC_54_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] Install of typosquatted Shai-Hulud copycat npm packages (chalk-tempalte / axois-utils / color-style-utils / @deadcode09284814/axios-util)
 
-`UC_27_7` · phase: **delivery** · confidence: **High**
+`UC_54_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +114,7 @@ DeviceProcessEvents
 
 ### [LLM] node/npm process reading SSH private keys or cloud credential files (Shai-Hulud infostealer behavior)
 
-`UC_27_8` · phase: **actions** · confidence: **Medium**
+`UC_54_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +145,7 @@ DeviceFileEvents
 
 ### [LLM] Phantom Bot persistence registration by node/npm context (axois-utils GoLang implant survives package deletion)
 
-`UC_27_9` · phase: **install** · confidence: **Medium**
+`UC_54_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,50 +253,103 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### Crypto-wallet file/keystore access by non-wallet process
+### Scheduled task created with suspicious image / encoded args
 
-`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Ethereum\keystore\*"
-        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
-        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
-        OR Filesystem.file_path="*\Electrum\wallets\*"
-        OR Filesystem.file_path="*\MetaMask\*"
-        OR Filesystem.file_path="*\Phantom\*"
-        OR Filesystem.file_path="*\Atomic\Local Storage\*")
-      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
-| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
-### PowerShell encoded / obfuscated command
-
-`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("powershell.exe","pwsh.exe")
-      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
-        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
-        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*Net.WebClient*")
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
+```
+
+### Ransomware-style mass file rename / extension change
+
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
@@ -292,10 +359,10 @@ DeviceFileEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -327,9 +394,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `80.200.28.28`, `87e0bbc636999b.lhr.life`, `b94b6bcfa27554.lhr.life`, `edcf8b03c84634.lhr.life`
+  - IP / domain IOC(s): `80.200.28.28`, `87e0bbc636999b.lhr.life`, `edcf8b03c84634.lhr.life`, `b94b6bcfa27554.lhr.life`, `f04a273bd84c0622-80-200-28-28.serveousercontent.com`, `8a3e818ea8f11186-80-200-28-28.serveousercontent.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `165fa92d237fd017c227d00da06ab788212a62be94bf61e95df2d22d00377ef2`, `7d0ae79fdb1e9968f3323a3712b624643a782ba3efb2cf3a2cb9c4c5513cea30`, `308b15c023088a7188dea4ef609010ac2493eb4c365b103053d7621a9ca5b935`, `9e380ec88d3ccf3929e1a104e3b868d4d7b59ca189a8a431a54e9f3357dfdd81`, `d1c9e3f296ee9f7d5032f73f9c504cede50334bc14c394055fd5cb9c3a6e08b3`, `ffba9bdd6793edd5b38e12900252c1813a693f59c25af51c3b658cf3f27b6162`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

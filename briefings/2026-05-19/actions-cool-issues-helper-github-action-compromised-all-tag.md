@@ -19,13 +19,12 @@ Back to Blog Threat Intel actions-cool/issues-helper GitHub Action Compromised: 
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1567** — Exfiltration Over Web Service
 - **T1003.007** — OS Credential Dumping: Proc Filesystem
-- **T1212** — Exploitation for Credential Access
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1528** — Steal Application Access Token
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1105** — Ingress Tool Transfer
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1199** — Trusted Relationship
 
 ## Kill chain phases observed
 
@@ -33,104 +32,92 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound C2/exfil to TeamPCP/Shai-Hulud domain t.m-kosche.com
+### [LLM] Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint
 
-`UC_4_2` · phase: **c2** · confidence: **High**
+`UC_40_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="t.m-kosche.com" OR DNS.query="*.m-kosche.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="t.m-kosche.com" OR All_Traffic.dest_host="t.m-kosche.com") by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query="*m-kosche.com" by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Web.Web where Web.url="*m-kosche.com*" OR Web.dest="*m-kosche.com*" by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`] | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="*m-kosche.com*" by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)`]
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteUrl has "m-kosche.com" or RemoteUrl =~ "t.m-kosche.com"),
-  (DeviceEvents | where Timestamp > ago(30d) | where ActionType == "DnsQueryResponse" | where AdditionalFields has "m-kosche.com")
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, ReportId
+let exfil_domain = "m-kosche.com";
+union isfuzzy=true
+(DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has exfil_domain or RemoteUrl endswith ".m-kosche.com"
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, ActionType),
+(DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("DnsQueryResponse","ConnectionSuccess")
+  | where RemoteUrl has exfil_domain or AdditionalFields has exfil_domain
+  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AdditionalFields)
 | order by Timestamp desc
 ```
 
-### [LLM] Linux process reading /proc/<pid>/mem of Runner.Worker (Actions secret theft)
+### [LLM] python3 reading /proc/<PID>/mem to scrape Runner.Worker secrets
 
-`UC_4_3` · phase: **actions** · confidence: **High**
+`UC_40_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("python3","python","sudo","dd","cat","gdb") (Processes.process="*/proc/*/mem*" OR Processes.process="*Runner.Worker*" OR (Processes.process="*/proc/*" AND Processes.process="*mem*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where match(cmd, "/proc/\d+/mem") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3") AND (Processes.process="*/proc/*/mem*" OR Processes.process="*isSecret*" OR Processes.process="*Runner.Worker*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(cmdline, "(?i)/proc/\d+/mem") OR match(cmdline, "(?i)isSecret|Runner\.Worker")
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where DeviceName !endswith "$"
-| where FileName in~ ("python3","python","sudo","dd","cat","gdb")
+| where FileName matches regex @"^python3?(\.\d+)?$" or InitiatingProcessFileName matches regex @"^python3?(\.\d+)?$"
 | where ProcessCommandLine matches regex @"/proc/\d+/mem"
-   or (ProcessCommandLine has "/proc/" and ProcessCommandLine has "mem" and ProcessCommandLine has_any ("Runner.Worker","isSecret"))
-| extend SuspiciousElevation = iif(InitiatingProcessFileName =~ "sudo" or ProcessCommandLine startswith "sudo ", "yes", "no"),
-         GitHubRunnerContext = iif(InitiatingProcessCommandLine has_any ("Runner.Worker","Runner.Listener","actions-runner","_work/_actions","actions-cool/issues-helper","bun") or FolderPath has "actions-runner" or InitiatingProcessFolderPath has "actions-runner", "yes", "no")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          InitiatingProcessParentFileName, SuspiciousElevation, GitHubRunnerContext, SHA256
+   or ProcessCommandLine has_any ("isSecret","Runner.Worker")
+   or InitiatingProcessCommandLine matches regex @"/proc/\d+/mem"
+| extend ProcMemTarget = extract(@"/proc/(\d+)/mem", 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcMemTarget, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] `gh auth token` exfiltration from non-interactive parent on CI/CD host
+### [LLM] bun runtime executed on CI runner spawning python3 with sudo escalation
 
-`UC_4_4` · phase: **actions** · confidence: **Medium**
+`UC_40_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name="gh" (Processes.process="*auth token*" OR Processes.process="*auth status --show-token*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | search NOT parent_process_name IN ("bash","zsh","fish","sh","pwsh","powershell.exe","cmd.exe","terminal","iTerm2","Windows Terminal") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as bun_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=bun OR Processes.process="*bun*" OR Processes.process="*/bun *") by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name=bun (Processes.process_name IN ("python","python3","sudo") OR Processes.process="*gh auth token*") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename process as child_cmd process_name as child_name]
 ```
 
 **Defender KQL:**
 ```kql
+let lookback = 30d;
+let BunHosts = DeviceProcessEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "bun" or FolderPath endswith "/bun" or ProcessCommandLine matches regex @"(?i)(curl|wget)[^\n]*bun\.sh"
+    | project BunTime = Timestamp, DeviceId, DeviceName, BunPid = ProcessId, BunCmd = ProcessCommandLine, BunParent = InitiatingProcessFileName;
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "gh" or FileName =~ "gh.exe"
-| where ProcessCommandLine has_any ("auth token","auth status --show-token")
-| extend RunnerContext = iif(InitiatingProcessFolderPath has "actions-runner" or InitiatingProcessCommandLine has_any ("Runner.Worker","_work/_actions","actions-cool/issues-helper","bun","node /home/runner"), "yes", "no"),
-         NonInteractiveParent = iif(InitiatingProcessFileName in~ ("bash","sh","zsh","pwsh","powershell.exe","cmd.exe") and InitiatingProcessParentFileName !in~ ("sshd","sshd-session","terminal","WindowsTerminal.exe","explorer.exe","gnome-terminal-","konsole"), "yes", "no")
-| where RunnerContext == "yes" or NonInteractiveParent == "yes"
-   or InitiatingProcessFileName in~ ("bun","node","python3","python")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          InitiatingProcessParentFileName, RunnerContext, NonInteractiveParent
+| where Timestamp > ago(lookback)
+| where InitiatingProcessFileName =~ "bun"
+| where FileName in~ ("python","python3","sudo","gh")
+   or ProcessCommandLine has_any ("gh auth token","sudo python3","/proc/","isSecret")
+| join kind=inner BunHosts on DeviceId
+| where Timestamp between (BunTime .. BunTime + 10m)
+| project Timestamp, DeviceName, AccountName, BunTime, BunCmd, BunParent, ChildImage = FileName, ChildCmd = ProcessCommandLine, ChildSha256 = SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Bun runtime download/execution on GitHub Actions self-hosted runner
+### [LLM] GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag
 
-`UC_4_5` · phase: **install** · confidence: **Medium**
+`UC_40_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN ("bun","bun.exe") OR Processes.process="*bun.sh*" OR Processes.process="*install.sh*bun*" OR Processes.process="*github.com/oven-sh/bun*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/actions-runner/*bun*" OR Filesystem.file_path="*/_work/_actions/actions-cool/issues-helper/*" OR Filesystem.file_name IN ("bun","bun.exe")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let runnerProcs = DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where FileName in~ ("bun","bun.exe") or ProcessCommandLine has_any ("bun.sh/install","oven-sh/bun","~/.bun/bin/bun","/home/runner/.bun")
-  | extend Source="Process"
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, SHA256, Source;
-let runnerFiles = DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where (FileName in~ ("bun","bun.exe") and (FolderPath has "actions-runner" or FolderPath has "_work" or FolderPath has "/home/runner"))
-      or FolderPath has "actions-cool/issues-helper"
-  | extend Source="File", AccountName=InitiatingProcessAccountName, ProcessCommandLine=InitiatingProcessCommandLine
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, SHA256, Source;
-union runnerProcs, runnerFiles
-| where InitiatingProcessFolderPath has "actions-runner" or InitiatingProcessCommandLine has_any ("Runner.Worker","_work/_actions","issues-helper") or FolderPath has "actions-runner" or FolderPath has "issues-helper" or FolderPath has "/home/runner"
-| order by Timestamp desc
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.object) as workflow from datamodel=Change.All_Changes where All_Changes.object_category="file" AND All_Changes.object_path="*.github/workflows/*" AND (All_Changes.change_type="modification" OR All_Changes.change_type="created") by All_Changes.src All_Changes.object_path | `drop_dm_object_name(All_Changes)` | append [search index=github_audit OR sourcetype=github:* ("actions-cool/issues-helper" OR "actions-cool/maintain-one-comment") | stats count min(_time) as firstTime max(_time) as lastTime by repo workflow actor action_ref] | search (workflow="*actions-cool/issues-helper*" OR workflow="*actions-cool/maintain-one-comment*" OR action_ref="*actions-cool/issues-helper*" OR action_ref="*actions-cool/maintain-one-comment*")
 ```
 
 ### Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
 
-`UC_4_1` · phase: **exploit** · confidence: **High**
+`UC_40_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,4 +174,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **MED** based on: IOCs present, 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: IOCs present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

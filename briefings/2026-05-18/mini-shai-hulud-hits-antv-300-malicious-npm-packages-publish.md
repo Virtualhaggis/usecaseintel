@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm preinstall hook spawning bun runtime
 
-`UC_8_8` · phase: **install** · confidence: **High**
+`UC_43_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud Claude Code SessionStart hook injection via npm install
 
-`UC_8_9` · phase: **install** · confidence: **High**
+`UC_43_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code tasks.json folderOpen persistence written by npm install chain
 
-`UC_8_10` · phase: **install** · confidence: **Medium**
+`UC_43_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud Linux daemon persistence: kitty/cat.py and systemd user service
 
-`UC_8_11` · phase: **install** · confidence: **High**
+`UC_43_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud C2 backchannel: python polling GitHub commit search for 'firedalazer'
 
-`UC_8_12` · phase: **c2** · confidence: **High**
+`UC_43_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud GitHub dead-drop exfiltration via python-requests/2.31.0
 
-`UC_8_13` · phase: **actions** · confidence: **High**
+`UC_43_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -405,7 +405,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages Published via Compromised
 
-`UC_8_7` · phase: **exploit** · confidence: **High**
+`UC_43_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

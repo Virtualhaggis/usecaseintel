@@ -43,9 +43,11 @@ Obfusc…
 - **T1027** — Obfuscated Files or Information
 - **T1041** — Exfiltration Over C2 Channel
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1027.009** — Embedded Payloads
-- **T1115** — Clipboard Data
-- **T1016** — System Network Configuration Discovery
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1074.001** — Local Data Staging
+- **T1204.002** — User Execution: Malicious File
+- **T1027.002** — Obfuscated Files or Information: Software Packing
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 
 ## Kill chain phases observed
 
@@ -53,126 +55,68 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Gremlin Stealer C2 exfiltration to 194.87.92.109/i.php
+### [LLM] Outbound connection to Gremlin Stealer exfiltration host 194.87.92.109
 
-`UC_47_8` · phase: **actions** · confidence: **High**
+`UC_63_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="194.87.92.109" by All_Traffic.src All_Traffic.src_user All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.user) as user from datamodel=Web.Web where Web.url="*194.87.92.109/i.php*" OR (Web.dest="194.87.92.109" AND Web.url="*/i.php*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="194.87.92.109" by All_Traffic.dest All_Traffic.src host | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Gremlin Stealer exfiltration to 194.87.92.109/i.php
+let GremlinExfilIp = "194.87.92.109";
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "194.87.92.109"
-   or RemoteUrl has "194.87.92.109"
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","HttpConnectionInspected")
-| project Timestamp, DeviceName, DeviceId,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine,
-          InitiatingProcessSHA256,
-          RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
-| order by Timestamp desc
+| where RemoteIP == GremlinExfilIp
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp asc
 ```
 
-### [LLM] Gremlin Stealer .NET sample execution by SHA256
+### [LLM] ZIP archive named with public-IPv4 pattern created in user-writable directory (Gremlin Stealer)
 
-`UC_47_9` · phase: **install** · confidence: **High**
+`UC_63_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b","9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614","971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759","ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd","f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346","a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd","691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3","281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2","9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20","d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c","1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.zip" (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\Users\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | rex field=file_name "^(?<ipv4>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\.zip$" | where isnotnull(ipv4) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Gremlin Stealer SHA256 hash sweep — execution, drop, or load
-let GremlinHashes = dynamic([
-    "2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b",
-    "9aab30a3190301016c79f8a7f8edf45ec088ceecad39926cfcf3418145f3d614",
-    "971198ff86aeb42739ba9381923d0bc6f847a91553ec57ea6bae5becf80f8759",
-    "ab0fa760bd037a95c4dee431e649e0db860f7cdad6428895b9a399b6991bf3cd",
-    "f76ba1a4650d8cafb6d3ff071688c5db6fd37e165050f03cece693826f51d346",
-    "a9f529a5cbc1f3ee80f785b22e0c472953e6cb226952218aecc7ab07ca328abd",
-    "691896c7be87e47f3e9ae914d76caaf026aaad0a1034e9f396c2354245215dc3",
-    "281b970f281dbea3c0e8cfc68b2e9939b253e5d3de52265b454d8f0f578768a2",
-    "9fda1ddb1acf8dd3685ec31b0b07110855832e3bed28a0f3b81c57fe7fe3ac20",
-    "d11938f14499de03d6a02b5e158782afd903460576e9227e0a15d960a2e9c02c",
-    "1bd0a200528c82c6488b4f48dd6dbc818d48782a2e25ccd22781c5718c3f62f5"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FileName matches regex @"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\.zip$"
+| where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Users\", @"\ProgramData\")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, InitiatingProcessSHA256
+| order by Timestamp asc
+```
+
+### [LLM] Gremlin Stealer packed sample SHA256 execution (2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b)
+
+`UC_63_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.user) as user values(Processes.parent_process_name) as parent values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_hash="2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b" by Processes.dest Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash="2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) ]
+```
+
+**Defender KQL:**
+```kql
+let GremlinSha256 = "2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b";
 union isfuzzy=true
-    (DeviceProcessEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (GremlinHashes)
-        | project Timestamp, Source="ProcessEvent", DeviceName, AccountName,
-                  FileName, FolderPath, SHA256,
-                  ProcessCommandLine, InitiatingProcessFileName,
-                  InitiatingProcessCommandLine),
-    (DeviceFileEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (GremlinHashes)
-        | project Timestamp, Source="FileEvent", DeviceName,
-                  AccountName=InitiatingProcessAccountName,
-                  FileName, FolderPath, SHA256,
-                  ProcessCommandLine="",
-                  InitiatingProcessFileName, InitiatingProcessCommandLine),
-    (DeviceImageLoadEvents
-        | where Timestamp > ago(30d)
-        | where SHA256 in (GremlinHashes)
-        | project Timestamp, Source="ImageLoad", DeviceName,
-                  AccountName=InitiatingProcessAccountName,
-                  FileName, FolderPath, SHA256,
-                  ProcessCommandLine="",
-                  InitiatingProcessFileName, InitiatingProcessCommandLine)
-| order by Timestamp desc
-```
-
-### [LLM] Gremlin Stealer reconnaissance: api.ipify.org call followed by egress to 194.87.92.109
-
-`UC_47_10` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true min(_time) as ipifyTime values(All_Traffic.app) as ipifyApp from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="api.ipify.org" OR All_Traffic.url="*api.ipify.org*" by All_Traffic.src All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` | join type=inner src [ | tstats summariesonly=true min(_time) as gremlinTime values(All_Traffic.dest) as gremlinDest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="194.87.92.109" by All_Traffic.src | `drop_dm_object_name(All_Traffic)` ] | eval delaySec = gremlinTime - ipifyTime | where delaySec >= 0 AND delaySec <= 600 | table ipifyTime gremlinTime delaySec src gremlinDest
-```
-
-**Defender KQL:**
-```kql
-// Gremlin Stealer recon→exfil chain: api.ipify.org lookup then egress to 194.87.92.109 within 10 min, same host+process
-let WindowMin = 10m;
-let IpifyHits = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has "api.ipify.org"
-       or RemoteUrl has "ipify.org"
-    | project IpifyTime = Timestamp, DeviceId, DeviceName,
-              InitiatingProcessId, InitiatingProcessFileName,
-              InitiatingProcessCommandLine,
-              InitiatingProcessAccountName,
-              InitiatingProcessSHA256;
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "194.87.92.109" or RemoteUrl has "194.87.92.109"
-| project GremlinTime = Timestamp, DeviceId, DeviceName,
-          InitiatingProcessId, InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessAccountName,
-          InitiatingProcessSHA256,
-          RemoteIP, RemoteUrl, RemotePort
-| join kind=inner IpifyHits on DeviceId, InitiatingProcessId,
-                                InitiatingProcessFileName
-| where GremlinTime between (IpifyTime .. IpifyTime + WindowMin)
-| extend DelaySec = datetime_diff('second', GremlinTime, IpifyTime)
-| project IpifyTime, GremlinTime, DelaySec, DeviceName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessSHA256,
-          RemoteIP, RemoteUrl
-| order by GremlinTime desc
+  (DeviceProcessEvents
+    | where Timestamp > ago(90d)
+    | where SHA256 == GremlinSha256 or InitiatingProcessSHA256 == GremlinSha256
+    | project Timestamp, _Source = "Process", DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessSHA256),
+  (DeviceFileEvents
+    | where Timestamp > ago(90d)
+    | where SHA256 == GremlinSha256
+    | project Timestamp, _Source = "File", DeviceName, AccountName = InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine = InitiatingProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessSHA256)
+| order by Timestamp asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -419,4 +363,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

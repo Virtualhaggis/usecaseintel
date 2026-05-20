@@ -50,16 +50,11 @@ Microsoft Threat Intelligence recently uncovered a methodical, sophisticated, an
 - **T1098.005** — Account Manipulation: Device Registration
 - **T1087.004** — Account Discovery: Cloud Account
 - **T1069.003** — Permission Groups Discovery: Cloud Groups
-- **T1526** — Cloud Service Discovery
+- **T1567.002** — Exfiltration to Cloud Storage
 - **T1530** — Data from Cloud Storage
-- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
-- **T1651** — Cloud Administration Command
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1555.006** — Credentials from Password Stores: Cloud Secrets Management
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1555.006** — Credentials from Password Stores: Cloud Secrets Management Stores
 
 ## Kill chain phases observed
 
@@ -67,73 +62,73 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Sign-in from Storm-2949 attacker infrastructure (176.123.4.44, 91.208.197.87, 185.241.208.243)
+### [LLM] Sign-in from Storm-2949 attacker egress IPs (176.123.4.44 / 91.208.197.87 / 185.241.208.243)
 
-`UC_9_12` · phase: **delivery** · confidence: **High**
+`UC_44_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.src) as src_ip values(Authentication.dest) as dest from datamodel=Authentication where Authentication.action=success Authentication.src IN ("176.123.4.44","91.208.197.87","185.241.208.243") by Authentication.user | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.user) as user values(Authentication.app) as app from datamodel=Authentication where Authentication.src IN ("176.123.4.44","91.208.197.87","185.241.208.243") by Authentication.user Authentication.action Authentication.app | `drop_dm_object_name(Authentication)`
 ```
 
 **Defender KQL:**
 ```kql
-union AADSignInEventsBeta, IdentityLogonEvents
+AADSignInEventsBeta
 | where Timestamp > ago(30d)
 | where IPAddress in ("176.123.4.44","91.208.197.87","185.241.208.243")
-| project Timestamp, IPAddress, AccountUpn, AccountDisplayName, Application, ResourceDisplayName, Country, UserAgent, ErrorCode, IsInteractive
-| order by Timestamp desc
+| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Application, ResourceDisplayName, ErrorCode, RiskLevelDuringSignIn, UserAgent, ClientAppUsed, IsInteractive
+| order by Timestamp asc
 ```
 
-### [LLM] Self-service MFA method removal followed by attacker-device registration
+### [LLM] Storm-2949 SSPR + MFA-method swap sequence (password reset followed by attacker MFA registration)
 
-`UC_9_13` · phase: **install** · confidence: **High**
+`UC_44_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`azure_audit` operationName IN ("Delete authentication method","Register security info","User registered security info","Update user","Reset user password") | bin _time span=15m | stats values(operationName) as ops dc(operationName) as opCount min(_time) as firstSeen max(_time) as lastSeen by targetUserPrincipalName initiatedBy_userPrincipalName initiatedBy_ipAddress _time | where opCount>=2 AND mvfind(ops,"Delete authentication method")>=0 AND mvfind(ops,"Register security info")>=0 | convert ctime(firstSeen) ctime(lastSeen)
+`azure_audit` (OperationName="Reset user password (self-service)" OR OperationName="User registered security info" OR OperationName="User deleted security info") | bin _time span=15m | stats values(OperationName) as ops dc(OperationName) as op_kinds values(InitiatedBy.user.userPrincipalName) as upn min(_time) as firstTime max(_time) as lastTime by TargetResources{}.userPrincipalName | where op_kinds>=2 AND mvfind(ops,"Reset user password")>=0 AND mvfind(ops,"User registered security info")>=0
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where Application == "Microsoft Azure" or Application has "Azure Active Directory"
-| where ActionType in ("Delete authentication method.","Register security info","User registered security info","Update user.","Reset user password.","Update authentication phone.")
-| extend TargetUser = tostring(ActivityObjects[0].Name)
-| summarize Ops = make_set(ActionType), OpCount = dcount(ActionType), IPs = make_set(IPAddress), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by TargetUser, AccountObjectId, bin(Timestamp, 15m)
-| where OpCount >= 2 and Ops has "Delete authentication method." and Ops has_any ("Register security info","User registered security info")
-| order by LastSeen desc
-```
-
-### [LLM] Microsoft Graph API user/SP enumeration via curl or python user-agent
-
-`UC_9_14` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-`azure_signin_noninteractive` AppDisplayName="Microsoft Graph*" UserAgent IN ("curl/*","python-requests/*","PostmanRuntime/*","axios/*","Go-http-client/*") | bin _time span=10m | stats count dc(ResourceDisplayName) as resourceCount values(IPAddress) as ips by UserPrincipalName UserAgent _time | where count > 30
-```
-
-**Defender KQL:**
-```kql
+// Defender Advanced Hunting doesn't expose AuditLogs directly — use CloudAppEvents proxy
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where ApplicationId == "00000003-0000-0000-c000-000000000000" or Application has "Microsoft Graph"
-| where UserAgent has_any ("curl/","python-requests/","python/","PostmanRuntime","axios/","Go-http-client","PowerShell/")
-| where ActionType has_any ("List users","List applications","List servicePrincipals","List groups","Read user.","Read directoryObjects")
-| summarize CallCount = count(), Activities = make_set(ActionType, 25), IPs = make_set(IPAddress, 10), UserAgents = make_set(UserAgent, 5) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
-| where CallCount > 30
-| order by CallCount desc
+| where Application == "Microsoft Azure Active Directory"
+| where ActionType in ("Reset user password (self-service)","User registered security info","User deleted security info","Update user")
+| extend TargetUpn = tostring(parse_json(tostring(RawEventData)).TargetResources[0].userPrincipalName)
+| summarize Ops = make_set(ActionType), OpCount = dcount(ActionType), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), IPs = make_set(IPAddress) by AccountObjectId, TargetUpn, bin(Timestamp, 15m)
+| where OpCount >= 2 and Ops has "Reset user password (self-service)" and Ops has "User registered security info"
+| order by FirstSeen desc
 ```
 
-### [LLM] Mass OneDrive/SharePoint file download from single session
+### [LLM] Storm-2949 Microsoft Graph API tenant enumeration via cURL / Python user-agent
 
-`UC_9_15` · phase: **actions** · confidence: **High**
+`UC_44_14` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-`office365_management` Operation IN ("FileDownloaded","FileSyncDownloadedFull") Workload IN ("OneDrive","SharePoint") | bin _time span=10m | stats count dc(ObjectId) as uniqueFiles values(ClientIP) as src_ip values(UserAgent) as ua by UserId _time | where count > 200 OR uniqueFiles > 200 | sort - count
+`azure_signin` ResourceDisplayName="Microsoft Graph" UserAgent IN ("python-requests/*","curl/*","PowerShell/*","Go-http-client/*") | stats count dc(UserAgent) as ua_variants values(UserAgent) as agents values(IPAddress) as srcip values(AppDisplayName) as app by UserPrincipalName | where count>=10
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ResourceDisplayName == "Microsoft Graph"
+| where UserAgent matches regex @"(?i)^(python-requests|curl|go-http-client|powershell|aiohttp|httpx)/"
+| summarize Calls = count(), UAs = make_set(UserAgent), IPs = make_set(IPAddress), Apps = make_set(Application), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn
+| where Calls >= 10
+| order by Calls desc
+```
+
+### [LLM] Storm-2949 OneDrive / SharePoint bulk file download (mass-exfil pattern)
+
+`UC_44_15` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`o365_management_activity` Workload="OneDrive" OR Workload="SharePoint" Operation IN ("FileDownloaded","FileSyncDownloadedFull") | bucket _time span=15m | stats dc(ObjectId) as files dc(Site_Url) as sites values(ClientIP) as ip values(UserAgent) as ua min(_time) as firstTime max(_time) as lastTime by UserId _time | where files>=200
 ```
 
 **Defender KQL:**
@@ -142,95 +137,76 @@ CloudAppEvents
 | where Timestamp > ago(7d)
 | where Application in ("Microsoft OneDrive for Business","Microsoft SharePoint Online")
 | where ActionType in ("FileDownloaded","FileSyncDownloadedFull")
-| summarize FileCount = count(), UniqueFiles = dcount(ObjectName), IPs = make_set(IPAddress, 10), UA = make_set(UserAgent, 5), FirstFile = min(Timestamp), LastFile = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
-| where FileCount > 200 or UniqueFiles > 200
-| extend DurationSec = datetime_diff("second", LastFile, FirstFile), HighRiskIP = iif(IPs has_any ("176.123.4.44","91.208.197.87","185.241.208.243"), "YES", "no")
+| summarize FileCount = dcount(ObjectName), Sites = dcount(tostring(parse_json(tostring(RawEventData)).SiteUrl)), IPs = make_set(IPAddress), UAs = make_set(UserAgent), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 15m)
+| where FileCount >= 200
+| extend DurationMin = datetime_diff('minute', LastSeen, FirstSeen)
 | order by FileCount desc
 ```
 
-### [LLM] Azure VM Run Command invocation from compromised cloud identity
+### [LLM] ScreenConnect outbound connection to Storm-2949 C2 (185.241.208.243) from Azure VM
 
-`UC_9_16` · phase: **exploit** · confidence: **High**
+`UC_44_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`azure_activity` operationNameValue IN ("Microsoft.Compute/virtualMachines/runCommand/action","Microsoft.Compute/virtualMachines/runCommands/write","Microsoft.Compute/virtualMachines/extensions/write") | stats count values(ResourceId) as targetVMs values(CallerIpAddress) as src_ip by Caller _time | where count >= 1
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dport values(All_Traffic.src) as src values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="185.241.208.243" by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where Application == "Microsoft Azure"
-| where ActionType has_any ("Microsoft.Compute/virtualMachines/runCommand/action","Microsoft.Compute/virtualMachines/runCommands/write","Run Command on Virtual Machine")
-| extend TargetVM = tostring(ActivityObjects[0].Name)
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, TargetVM, RawEventData, UserAgent
+union isfuzzy=true
+  (DeviceNetworkEvents | where Timestamp > ago(30d) | where RemoteIP == "185.241.208.243" | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountUpn),
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where FileName matches regex @"(?i)^(ScreenConnect|connectwise)" or ProcessCommandLine has_any ("screenconnect.client.exe","ScreenConnect.WindowsClient.exe","ConnectWise Control") | project Timestamp, DeviceName, FileName, ProcessCommandLine, AccountUpn, InitiatingProcessFileName)
 | order by Timestamp desc
 ```
 
-### [LLM] ScreenConnect connectivity to Storm-2949 C2 (185.241.208.243)
+### [LLM] Defender Antivirus tamper attempts from compromised-identity Azure VM session
 
-`UC_9_17` · phase: **c2** · confidence: **High**
+`UC_44_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="185.241.208.243" by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`
-| append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","ScreenConnect.ClientSetup.exe") OR Processes.process IN ("*ScreenConnect*&h=185.241.208.243*","*ScreenConnect*&e=Access*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") AND (Processes.process="*Set-MpPreference*DisableRealtimeMonitoring*" OR Processes.process="*Set-MpPreference*-ExclusionPath*" OR Processes.process="*Add-MpPreference*-ExclusionProcess*" OR Processes.process="*Set-MpPreference*-DisableIOAVProtection*" OR Processes.process="*sc*config*WinDefend*" OR Processes.process="*reg*add*DisableAntiSpyware*")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-let ScreenConnectIP = "185.241.208.243";
-let NetEvents = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteIP == ScreenConnectIP
-    | project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl;
-let ProcEvents = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName has_any ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","ScreenConnect.ClientSetup.exe")
-       or ProcessCommandLine has_all ("ScreenConnect","185.241.208.243")
-    | project Timestamp, DeviceName, DeviceId, FileName, ProcessCommandLine, AccountName, SHA256, InitiatingProcessFileName;
-union NetEvents, ProcEvents
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","reg.exe","sc.exe")
+| where ProcessCommandLine matches regex @"(?i)(Set-MpPreference\s+.*DisableRealtimeMonitoring|Set-MpPreference\s+.*-ExclusionPath|Add-MpPreference\s+.*-ExclusionProcess|Set-MpPreference\s+.*-DisableIOAVProtection|DisableAntiSpyware|sc\s+(stop|config)\s+WinDefend|sc\s+(stop|config)\s+Sense)"
+| project Timestamp, DeviceName, AccountUpn, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessAccountUpn, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### [LLM] Burst access to Azure Key Vault secrets from a single principal
+### [LLM] Azure Key Vault secret extraction by user identity (Storm-2949 credential-access pattern)
 
-`UC_9_18` · phase: **actions** · confidence: **High**
+`UC_44_18` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`azure_keyvault` OperationName IN ("SecretGet","SecretList","KeyGet","KeyList","CertificateGet","VaultGet") | bin _time span=15m | stats dc(Resource) as secretsAccessed values(OperationName) as ops values(CallerIPAddress) as src_ip by identity_claim_upn _time | where secretsAccessed > 5
+`azure_keyvault_audit` (OperationName="SecretGet" OR OperationName="SecretList" OR OperationName="KeyGet" OR OperationName="CertificateGet" OR OperationName="VaultGet") identity_claim_appid=null | stats count dc(id_s) as distinct_secrets values(identity_claim_upn) as upn values(CallerIPAddress) as ip min(_time) as firstTime max(_time) as lastTime by identity_claim_upn KeyVaultName | where count>=20 OR distinct_secrets>=5
+```
+
+### [LLM] Service principal credential added by user (Storm-2949 SP persistence attempt)
+
+`UC_44_19` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`azure_audit` (OperationName="Add service principal credentials" OR OperationName="Update application – Certificates and secrets management" OR OperationName="Update service principal") | stats count values(TargetResources{}.displayName) as sp_name values(InitiatedBy.user.userPrincipalName) as upn values(InitiatedBy.user.ipAddress) as ip min(_time) as firstTime max(_time) as lastTime by InitiatedBy.user.id
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
-| where Timestamp > ago(14d)
-| where Application has "Key Vault" or ActionType has_any ("SecretGet","SecretList","KeyGet","KeyList","CertificateGet")
-| extend Vault = tostring(ActivityObjects[0].Name)
-| summarize SecretsAccessed = dcount(ObjectName), Ops = make_set(ActionType), Vaults = make_set(Vault), IPs = make_set(IPAddress) by AccountObjectId, AccountDisplayName, bin(Timestamp, 15m)
-| where SecretsAccessed > 5
-| extend HighRiskIP = iif(IPs has_any ("176.123.4.44","91.208.197.87","185.241.208.243"), "YES", "no")
-| order by SecretsAccessed desc
-```
-
-### [LLM] Service principal credential addition or owner assignment
-
-`UC_9_19` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`azure_audit` operationName IN ("Add service principal credentials","Update application – Certificates and secrets management","Update service principal","Add owner to service principal","Add owner to application") | stats values(operationName) as ops values(targetResources_displayName) as targetSP values(initiatedBy_ipAddress) as src_ip values(result) as result by initiatedBy_userPrincipalName _time
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("Add service principal credentials.","Update application – Certificates and secrets management.","Update service principal.","Add owner to service principal.","Add owner to application.","Add application.")
-| extend TargetSP = tostring(ActivityObjects[0].Name), TargetType = tostring(ActivityObjects[0].Type)
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, TargetSP, TargetType, RawEventData
+| where Timestamp > ago(7d)
+| where Application == "Microsoft Azure Active Directory"
+| where ActionType in ("Add service principal credentials","Update application – Certificates and secrets management","Update service principal")
+| extend Initiator = tostring(parse_json(tostring(RawEventData)).InitiatedBy.user.userPrincipalName)
+| extend TargetSp = tostring(parse_json(tostring(RawEventData)).TargetResources[0].displayName)
+| where isnotempty(Initiator)   // exclude SP-on-SP credential adds (Graph automation)
+| project Timestamp, Initiator, TargetSp, ActionType, IPAddress, AccountObjectId
 | order by Timestamp desc
 ```
 
@@ -616,4 +592,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 20 use case(s) fired, 35 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 20 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

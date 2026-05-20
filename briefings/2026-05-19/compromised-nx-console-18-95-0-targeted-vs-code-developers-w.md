@@ -39,17 +39,15 @@ The extension in question is rwl.angular-console (version 18.95.0), a popular us
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1176** — Browser Extensions
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1105** — Ingress Tool Transfer
-- **T1204.003** — User Execution: Malicious Image / Compromised Extension
-- **T1547.011** — Boot or Logon Autostart Execution: Plist Modification
 - **T1543.001** — Create or Modify System Process: Launch Agent
 - **T1059.006** — Command and Scripting Interpreter: Python
-- **T1102.002** — Web Service: Bidirectional Communication
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1074.001** — Data Staged: Local Data Staging
 - **T1564.001** — Hide Artifacts: Hidden Files and Directories
-- **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -57,107 +55,125 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Compromised Nx Console extension rwl.angular-console 18.95.0 installed on developer endpoint
+### [LLM] macOS LaunchAgent persistence: com.user.kitty-monitor.plist drop (Nx Console stealer)
 
-`UC_2_13` · phase: **delivery** · confidence: **High**
+`UC_39_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.vscode/extensions/rwl.angular-console-18.95.0*" OR Filesystem.file_path="*\\.vscode\\extensions\\rwl.angular-console-18.95.0*" OR Filesystem.file_path="*/.cursor/extensions/rwl.angular-console-18.95.0*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/LaunchAgents/com.user.kitty-monitor.plist" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has "rwl.angular-console-18.95.0"
-   or FileName has "rwl.angular-console-18.95.0"
-| where FolderPath has_any (".vscode/extensions", "\\.vscode\\extensions", ".cursor/extensions", ".vscode-server")
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp asc
+| where FolderPath has "Library/LaunchAgents" and FileName =~ "com.user.kitty-monitor.plist"
+| project Timestamp, DeviceName, DeviceId, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
-### [LLM] Bun runtime installed/executed by VS Code child to run nrwl/nx orphan-commit payload
+### [LLM] Python interpreter executing cat.py from kitty path (Nx Console backdoor)
 
-`UC_2_14` · phase: **install** · confidence: **High**
+`UC_39_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Code","Code Helper","Code Helper (Plugin)","Code Helper (Renderer)","Code.exe","Cursor","Cursor.exe","Electron") AND (Processes.process_name IN ("bun","bunx","node") OR Processes.process IN ("*bun.sh/install*","*github.com/nrwl/nx*","*raw.githubusercontent.com/nrwl/nx*","*index.js*"))) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process, "(?i)(bun\\.sh/install|nrwl/nx|raw\\.githubusercontent\\.com/nrwl|orphan|/blob/[a-f0-9]{40}/)") OR process_name IN ("bun","bunx") | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_name="python" OR Processes.process_name="python3" OR Processes.process_name="python2") AND (Processes.process="*/.local/share/kitty/cat.py*" OR Processes.process="*kitty/cat.py*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let vscode_parents = dynamic(["Code","Code Helper","Code Helper (Plugin)","Code Helper (Renderer)","Code.exe","Cursor","Cursor.exe","Electron","node"]);
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ (vscode_parents) or InitiatingProcessParentFileName in~ (vscode_parents)
-| where FileName in~ ("bun","bunx","sh","bash","zsh","curl","wget")
-      or ProcessCommandLine has_any ("bun.sh/install","github.com/nrwl/nx","raw.githubusercontent.com/nrwl/nx","/orphan/","index.js")
-| where ProcessCommandLine has_any ("bun","nrwl/nx","raw.githubusercontent.com","curl","wget")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp asc
+| where FileName in~ ("python","python3","python2")
+| where ProcessCommandLine has ".local/share/kitty/cat.py"
+   or ProcessCommandLine has "kitty/cat.py"
+| project Timestamp, DeviceName, DeviceId, AccountName,
+          FileName, ProcessCommandLine, FolderPath,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
 ```
 
-### [LLM] macOS LaunchAgent persistence: com.user.kitty-monitor.plist written to ~/Library/LaunchAgents
+### [LLM] Nx Console stealer known-bad SHA256/SHA1 hash sighting
 
-`UC_2_15` · phase: **install** · confidence: **High**
+`UC_39_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/Library/LaunchAgents/com.user.kitty-monitor.plist*" OR Filesystem.file_name="com.user.kitty-monitor.plist") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1","43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9","558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2") by Filesystem.dest Filesystem.user Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(90d)
-| where FileName =~ "com.user.kitty-monitor.plist"
-   or FolderPath has "com.user.kitty-monitor.plist"
-| where FolderPath has "/Library/LaunchAgents"
-| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp asc
-```
-
-### [LLM] Python backdoor cat.py executing as detached daemon (__DAEMONIZED=1) from kitty share directory
-
-`UC_2_16` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python","python3","python2","Python") AND (Processes.process="*cat.py*" OR Processes.process="*.local/share/kitty/cat.py*" OR Processes.process="*__DAEMONIZED=1*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process, "(?i)(\\.local/share/kitty/cat\\.py|__DAEMONIZED=1)") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(90d)
-| where FileName in~ ("python","python3","python2","Python")
-| where ProcessCommandLine has_any ("cat.py", ".local/share/kitty/cat.py")
-   or ProcessCommandLine has ".local/share/kitty"
-   or AdditionalFields has "__DAEMONIZED"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, AdditionalFields
-| order by Timestamp asc
-```
-
-### [LLM] Known Nx Console stealer payload SHA256 hashes observed on disk or in process execution
-
-`UC_2_17` · phase: **weapon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1","43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9","558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1","43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9","558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let nx_sha256 = dynamic(["1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8","b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74","e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1","43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9"]);
-let nx_sha1 = dynamic(["558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2"]);
+let badSha256 = dynamic([
+  "1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8",
+  "b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74",
+  "e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1",
+  "43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9"
+]);
+let badSha1 = dynamic(["558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2"]);
 union
-(DeviceFileEvents | where Timestamp > ago(90d) | where SHA256 in (nx_sha256) or SHA1 in (nx_sha1) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="DeviceFileEvents", FileName, FolderPath, SHA256, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine),
-(DeviceProcessEvents | where Timestamp > ago(90d) | where SHA256 in (nx_sha256) or SHA1 in (nx_sha1) | project Timestamp, DeviceName, AccountName, Source="DeviceProcessEvents", FileName, FolderPath, SHA256, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine),
-(DeviceImageLoadEvents | where Timestamp > ago(90d) | where SHA256 in (nx_sha256) or SHA1 in (nx_sha1) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="DeviceImageLoadEvents", FileName, FolderPath, SHA256, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine)
-| order by Timestamp asc
+(   DeviceFileEvents
+    | where Timestamp > ago(60d)
+    | where SHA256 in (badSha256) or SHA1 in (badSha1)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, SHA1, EventTable="DeviceFileEvents", InitiatingProcessFileName, InitiatingProcessCommandLine
+),
+(   DeviceProcessEvents
+    | where Timestamp > ago(60d)
+    | where SHA256 in (badSha256) or SHA1 in (badSha1) or InitiatingProcessSHA256 in (badSha256) or InitiatingProcessSHA1 in (badSha1)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, SHA1, EventTable="DeviceProcessEvents", InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
+### [LLM] Stealer state markers on disk: /var/tmp/.gh_update_state and /tmp/kitty-* (Nx Console)
+
+`UC_39_16` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/var/tmp/.gh_update_state" OR Filesystem.file_path="/tmp/kitty-*" OR Filesystem.file_name=".gh_update_state" OR Filesystem.file_name="kitty-*") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "/var/tmp" and FileName == ".gh_update_state"
+   or FolderPath has "/tmp" and FileName startswith "kitty-"
+| project Timestamp, DeviceName, DeviceId, ActionType,
+          FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] VS Code / Cursor spawning Bun runtime to execute remote payload (Nx Console workspace-open trigger)
+
+`UC_39_17` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where (Processes.process_name="bun" OR Processes.process="*bun.sh/install*" OR Processes.process="*curl*bun.sh*") AND (Processes.parent_process_name IN ("Code Helper","Code","code","Cursor","cursor","Code - Insiders","node") OR Processes.parent_process="*angular-console*" OR Processes.parent_process="*nrwl.angular-console*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "bun" or FileName =~ "bun.exe"
+         or ProcessCommandLine has "bun.sh/install"
+         or (ProcessCommandLine has_any ("curl","wget") and ProcessCommandLine has "bun.sh"))
+| where InitiatingProcessFileName in~ ("Code Helper","Code Helper (Renderer)","Code Helper (Plugin)","Code","code","Cursor","cursor","Code - Insiders.exe","Code.exe","Cursor.exe","node","node.exe")
+   or InitiatingProcessCommandLine has_any ("angular-console","nrwl.angular-console","rwl.angular-console",".vscode/extensions",".cursor/extensions")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, FolderPath, SHA256
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -539,7 +555,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised Nx Console 18.95.0 Targeted VS Code Developers with Credential Steal
 
-`UC_2_12` · phase: **exploit** · confidence: **High**
+`UC_39_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -596,4 +612,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
