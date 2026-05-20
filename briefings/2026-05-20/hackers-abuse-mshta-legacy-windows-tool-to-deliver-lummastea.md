@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Abuse MSHTA Legacy Windows Tool to Deliver LummaStealer and Amatera Malware 
 By Tushar Subhra Dutta 
 May 20, 2026 
-
-
-
-
 Hackers are exploiting a decades-old Windows tool to deliver dangerous malware onto unsuspecting systems, with consequences ranging from stolen passwords to full system compromise. 
 The tool is MSHTA, short for Microsoft HTML Application Host, a built-in Windows utility that can run scripts from local files and remote internet locations. 
-At…
+Attackers …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,86 +44,17 @@ At…
 - **IPv4 (defanged):** `201.138.238.195`
 - **IPv4 (defanged):** `204.44.110.216`
 - **IPv4 (defanged):** `222.73.29.92`
-- **Domain (defanged):** `google-services.cc`
 - **Domain (defanged):** `memory-scanner.cc`
-- **Domain (defanged):** `explorer.vg`
-- **Domain (defanged):** `ccleaner.gl`
-- **Domain (defanged):** `capcha.html`
-- **Domain (defanged):** `denek.local-wanderer.shop`
-- **Domain (defanged):** `buck2nd.oss-eu-central-1.aliyuncs.com`
-- **Domain (defanged):** `macphotoeditor.shop`
-- **Domain (defanged):** `topofsuper.shop`
-- **Domain (defanged):** `antibot-check.icu`
-- **Domain (defanged):** `checkpageonce.com`
-- **Domain (defanged):** `echoicedeals.shop`
-- **Domain (defanged):** `kizmond.shop`
-- **Domain (defanged):** `klipjaqemiu.shop`
-- **Domain (defanged):** `onceletthemcheck.com`
-- **Domain (defanged):** `pawpaws.readit-carfanatics.com`
-- **Domain (defanged):** `propofgustestyle.info`
-- **Domain (defanged):** `recaptcha-verify.html`
-- **Domain (defanged):** `recaptcha-process.com`
-- **Domain (defanged):** `retrosome.shop`
-- **Domain (defanged):** `ru2-2.eml`
-- **Domain (defanged):** `savecoupons.store`
-- **Domain (defanged):** `solve.gevaq.com`
-- **Domain (defanged):** `awjxs.captcha`
-- **Domain (defanged):** `solve.jenj.org`
-- **Domain (defanged):** `thepremiumstuffs.shop`
-- **Domain (defanged):** `triptrip.melody-wave.shop`
-- **Domain (defanged):** `check.qlkwr.com`
-- **Domain (defanged):** `awjsx.captcha`
-- **Domain (defanged):** `driftcharm.shop`
-- **Domain (defanged):** `etrademart.shop`
-- **Domain (defanged):** `scrutinycheck.cash`
-- **Domain (defanged):** `simplerwebs.space`
-- **Domain (defanged):** `simplerwebs.world`
-- **Domain (defanged):** `mine.json`
 - **Domain (defanged):** `fileless-market.cc`
-- **Domain (defanged):** `hell1-kitty.cc`
-- **Domain (defanged):** `holiday-forever.cc`
+- **Domain (defanged):** `google-services.cc`
 - **Domain (defanged):** `system-monitor.cc`
-- **Domain (defanged):** `forest-entity.cc`
-- **Domain (defanged):** `indeanapolice.cc`
 - **Domain (defanged):** `files-storage.cc`
-- **Domain (defanged):** `some-othertag.cc`
-- **Domain (defanged):** `s3-updatehub.cc`
-- **Domain (defanged):** `s3-microservice-updatehub.cc`
-- **Domain (defanged):** `microservice-update-s2-bucket.cc`
-- **Domain (defanged):** `parent-control.cc`
-- **Domain (defanged):** `alphazero1-endscape.cc`
-- **Domain (defanged):** `microservice-update-s1-bucket.cc`
-- **Domain (defanged):** `globalsnn2-new.cc`
-- **Domain (defanged):** `polystore9-servicebucket.cc`
-- **Domain (defanged):** `hardware-office.cc`
-- **Domain (defanged):** `immortal-service.cc`
-- **Domain (defanged):** `globalsnn1-new.cc`
-- **Domain (defanged):** `acio-patron.cc`
-- **Domain (defanged):** `hell2-kitty.cc`
-- **Domain (defanged):** `hell10-kitty.cc`
-- **Domain (defanged):** `alpha-centavr.cc`
-- **Domain (defanged):** `azure-s3-bucket.cc`
-- **Domain (defanged):** `hosting-control.cc`
-- **Domain (defanged):** `communicationfirewall-security.cc`
-- **Domain (defanged):** `domain-monitoring.cc`
-- **Domain (defanged):** `network-defender.cc`
-- **Domain (defanged):** `critical-service.cc`
-- **Domain (defanged):** `offshore-storage.cc`
-- **Domain (defanged):** `uruguvai.cc`
 - **Domain (defanged):** `web3-walletnotify.cc`
 - **Domain (defanged):** `debank-api.cc`
 - **Domain (defanged):** `py-installer.cc`
-- **Domain (defanged):** `memory-protection-layer1.cc`
-- **Domain (defanged):** `s1-microservice-updatehub.cc`
-- **Domain (defanged):** `s10-microservice-updatehub.cc`
 - **Domain (defanged):** `sentinel1-endpoint-security.cc`
-- **Domain (defanged):** `fileless-storage-s3.cc`
-- **Domain (defanged):** `ms-team-ping6.com`
-- **Domain (defanged):** `holiday-updateservice.com`
-- **Domain (defanged):** `health-smooth-eu2.com`
-- **Domain (defanged):** `health-smooth-eu3.com`
-- **Domain (defanged):** `bigbrainsholdings.com`
-- **Domain (defanged):** `my-smart-house1.com`
+- **Domain (defanged):** `explorer.vg`
+- **Domain (defanged):** `ccleaner.gl`
 - **Domain (defanged):** `microservice.gl`
 - **Domain (defanged):** `geo-foundation.vg`
 - **Domain (defanged):** `deluxe.gl`
@@ -135,13 +62,18 @@ At…
 - **Domain (defanged):** `msgrouppolicy.vg`
 - **Domain (defanged):** `holypriest.gl`
 - **Domain (defanged):** `msedge.vg`
-- **Domain (defanged):** `asq.d6shiiwz.pw`
-- **Domain (defanged):** `d6.hta`
-- **Domain (defanged):** `asd.s7610rir.pw`
-- **Domain (defanged):** `checking.hta`
-- **Domain (defanged):** `d1.pool4883.pw`
-- **Domain (defanged):** `r7.hta`
-- **Domain (defanged):** `us1.somepools555.pw`
+- **Domain (defanged):** `ms-team-ping6.com`
+- **Domain (defanged):** `holiday-updateservice.com`
+- **Domain (defanged):** `health-smooth-eu2.com`
+- **Domain (defanged):** `health-smooth-eu3.com`
+- **Domain (defanged):** `bigbrainsholdings.com`
+- **Domain (defanged):** `my-smart-house1.com`
+- **Domain (defanged):** `d6shiiwz.pw`
+- **Domain (defanged):** `s7610rir.pw`
+- **Domain (defanged):** `pool4883.pw`
+- **Domain (defanged):** `somepools555.pw`
+- **Domain (defanged):** `macphotoeditor.shop`
+- **Domain (defanged):** `antibot-check.icu`
 - **SHA256:** `AA845A8FB4AB38AEBE6A16A2A8F80CA4467AC0991D3EEF4D8A10BDF97DEDB1E9`
 - **SHA256:** `02630FA994B1566AD1515FD87220FC037B967F07495985A3637D68D7E08C57EE`
 - **SHA256:** `1E0E375F3EE82D5AF5DFE6F7DF0E2FAC9A7D37C67ADD3390D05A93AFD85B7C84`
@@ -167,12 +99,109 @@ At…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1543.001** — Persistence (article-specific)
+- **T1218.005** — System Binary Proxy Execution: Mshta
+- **T1036.003** — Masquerading: Rename System Utilities
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Renamed MSHTA (iso2022.exe) spawned by Python Setup.exe loader
+
+`UC_10_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.original_file_name="mshta.exe" Processes.process_name!="mshta.exe" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where parent_process_name IN ("python.exe","pythonw.exe","Setup.exe") OR match(process_name,"(?i)iso2022\.exe$") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessVersionInfoOriginalFileName =~ "mshta.exe" or ProcessVersionInfoInternalFileName =~ "mshta.exe"
+| where FileName !~ "mshta.exe"
+| where AccountName !endswith "$"
+| extend RenamedAs = FileName, OriginalBinary = ProcessVersionInfoOriginalFileName
+| project Timestamp, DeviceName, AccountName, RenamedAs, OriginalBinary, FolderPath, ProcessCommandLine,
+          ParentName = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] MSHTA spawned by explorer.exe via Win+R ClickFix paste
+
+`UC_10_12` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" Processes.process_name="mshta.exe" by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)` | where match(process,"(?i)https?://") OR match(process,"(?i)\.(mp4|mp3|eml|json|html|hta)(\b|$)") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName =~ "mshta.exe"
+| where ProcessCommandLine matches regex @"(?i)https?://"
+   or ProcessCommandLine matches regex @"(?i)\.(mp4|mp3|eml|json|html|hta)(\s|\"|$)"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] MSHTA fetching Capcha.html / recaptcha-verify ClickFix landing page
+
+`UC_10_13` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="mshta.exe" OR Processes.original_file_name="mshta.exe") by Processes.dest Processes.user Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | where match(process,"(?i)(Capcha\.html|recaptcha-verify\.html|singl[56]\.mp4|re[25]\.mp4|s[567]\.(mp3|mp4)|RIWZ\.mp4|madonna\.mp4|web44\.mp4|anrek\.mp4|mine\.json|ru2-2\.eml|awjxs\.captcha|awjsx\.captcha)") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "mshta.exe" or ProcessVersionInfoOriginalFileName =~ "mshta.exe"
+| where ProcessCommandLine matches regex @"(?i)(Capcha\.html|recaptcha-verify\.html|singl[56]\.mp4|re[25]\.mp4|s[567]\.(mp3|mp4)|RIWZ\.mp4|madonna\.mp4|web44\.mp4|anrek\.mp4|mine\.json|ru2-2\.eml|awjxs\.captcha|awjsx\.captcha|S6\.mp4)"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] MSHTA C2 retrieval to CountLoader / Emmenhtal infrastructure
+
+`UC_10_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="mshta.exe" OR All_Traffic.process_name="iso2022.exe") (All_Traffic.dest IN ("memory-scanner.cc","fileless-market.cc","google-services.cc","system-monitor.cc","files-storage.cc","hell1-kitty.cc","holiday-forever.cc","forest-entity.cc","indeanapolice.cc","some-othertag.cc","s3-updatehub.cc","s3-microservice-updatehub.cc","microservice-update-s2-bucket.cc","parent-control.cc","web3-walletnotify.cc","debank-api.cc","py-installer.cc","explorer.vg","ccleaner.gl") OR All_Traffic.dest_ip IN ("185.147.124.40","92.255.57.155","185.208.159.199","87.96.21.84","58.221.252.210","60.173.116.152","61.136.101.152","61.147.108.92")) by All_Traffic.src All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let CountLoaderDomains = dynamic(["memory-scanner.cc","fileless-market.cc","google-services.cc","system-monitor.cc","files-storage.cc","hell1-kitty.cc","holiday-forever.cc","forest-entity.cc","indeanapolice.cc","some-othertag.cc","s3-updatehub.cc","s3-microservice-updatehub.cc","microservice-update-s2-bucket.cc","parent-control.cc","web3-walletnotify.cc","debank-api.cc","py-installer.cc","explorer.vg","ccleaner.gl"]);
+let CountLoaderIPs = dynamic(["185.147.124.40","92.255.57.155","185.208.159.199","87.96.21.84","58.221.252.210","60.173.116.152","61.136.101.152","61.147.108.92"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("mshta.exe","iso2022.exe")
+     or InitiatingProcessVersionInfoProductName =~ "mshta.exe"
+| where RemoteIP in (CountLoaderIPs)
+     or RemoteUrl has_any (CountLoaderDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol, InitiatingProcessSHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -472,7 +501,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse MSHTA Legacy Windows Tool to Deliver LummaStealer and Amatera Malw
 
-`UC_5_10` · phase: **exploit** · confidence: **High**
+`UC_10_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -524,7 +553,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `185.147.124.40`, `92.255.57.155`, `185.208.159.199`, `87.96.21.84`, `58.221.252.210`, `60.173.116.152`, `61.136.101.152`, `61.147.108.92` _(+114 more)_
+  - IP / domain IOC(s): `185.147.124.40`, `92.255.57.155`, `185.208.159.199`, `87.96.21.84`, `58.221.252.210`, `60.173.116.152`, `61.136.101.152`, `61.147.108.92` _(+50 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `AA845A8FB4AB38AEBE6A16A2A8F80CA4467AC0991D3EEF4D8A10BDF97DEDB1E9`, `02630FA994B1566AD1515FD87220FC037B967F07495985A3637D68D7E08C57EE`, `1E0E375F3EE82D5AF5DFE6F7DF0E2FAC9A7D37C67ADD3390D05A93AFD85B7C84`, `333E2192F2551415659FB4094E81B911708921BB588EECF65E27F51C9938DFC2`, `38FE562136ADE372FC4CEDDE67826AEEA8404E93A54A4A4736DDB4C8C8D4C96D`, `7D0487AFC91B0FE8B2FBF732AB54C3C07E86BF69471BBA6C283AABEA190499BA`
@@ -532,4 +561,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -10,22 +10,17 @@ Home Cyber Security News
 Hackers Use Single-Letter Go Module Typosquat to Deploy DNS-Based Backdoor 
 By Tushar Subhra Dutta 
 May 20, 2026 
-
-
-
-
 A seemingly innocent typo in a Go module name has been quietly serving a live backdoor for nearly three years. Security researchers uncovered a malicious package called  github.com/shopsprint/decimal  that impersonates the popular  github.com/shopspring/decimal  library, differing by just a single letter in its name. 
-The package went live in 2017 bu…
+The package went live in 2017 but was we…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33017`
 - **Domain (defanged):** `dnslog-cdn-images.freemyip.com`
 - **Domain (defanged):** `freemyip.com`
 - **SHA256:** `dd9c0268c8944e6ddf90d4d0c81aa843785b7a9ee965faa635841ed9fc0ba086`
 - **SHA256:** `387d7ea5ca733b1e7219c943f4b461877a8df0148adfef42b1538b6c398fbb41`
-- **SHA1:** `2f0ee073c6f29d66188a845592029c9b52528f04`
 - **SHA1:** `fd26f4ca4746ee390e22043a5e19ebf2b7fcd1f9`
+- **SHA1:** `2f0ee073c6f29d66188a845592029c9b52528f04`
 - **MD5:** `e3c6ce0440d9acd0f1cef1f0da3cdb5d`
 
 ## MITRE ATT&CK Techniques
@@ -33,15 +28,62 @@ The package went live in 2017 bu…
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript / Go init()
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] DNS query to shopsprint/decimal C2 domain freemyip.com / dnslog-cdn-images subdomain
+
+`UC_8_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query_type) as qtype from datamodel=Network_Resolution where DNS.query="dnslog-cdn-images.freemyip.com" OR DNS.query="*.freemyip.com" by DNS.query DNS.src host | `drop_dm_object_name(DNS)` | where qtype="TXT" OR count>=2 | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("dnslog-cdn-images.freemyip.com", ".freemyip.com")
+   or RemoteUrl =~ "freemyip.com"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] File-event hash match for trojanized shopsprint/decimal v1.3.3 (decimal.go or module zip)
+
+`UC_8_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="dd9c0268c8944e6ddf90d4d0c81aa843785b7a9ee965faa635841ed9fc0ba086" OR Filesystem.file_hash="387d7ea5ca733b1e7219c943f4b461877a8df0148adfef42b1538b6c398fbb41" OR Filesystem.file_hash="fd26f4ca4746ee390e22043a5e19ebf2b7fcd1f9" OR Filesystem.file_hash="e3c6ce0440d9acd0f1cef1f0da3cdb5d" OR Filesystem.file_name="decimal.go" AND Filesystem.file_path="*shopsprint*decimal*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(90d)
+| where SHA256 in~ (
+    "dd9c0268c8944e6ddf90d4d0c81aa843785b7a9ee965faa635841ed9fc0ba086",
+    "387d7ea5ca733b1e7219c943f4b461877a8df0148adfef42b1538b6c398fbb41")
+   or SHA1 =~ "fd26f4ca4746ee390e22043a5e19ebf2b7fcd1f9"
+   or MD5 =~ "e3c6ce0440d9acd0f1cef1f0da3cdb5d"
+   or (FolderPath has "shopsprint" and FolderPath has "decimal" and FileName =~ "decimal.go")
+   or (FolderPath has "shopsprint\\decimal@v1.3.3")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, SHA1, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -112,13 +154,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `dnslog-cdn-images.freemyip.com`, `freemyip.com`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33017`
-
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `dd9c0268c8944e6ddf90d4d0c81aa843785b7a9ee965faa635841ed9fc0ba086`, `387d7ea5ca733b1e7219c943f4b461877a8df0148adfef42b1538b6c398fbb41`, `2f0ee073c6f29d66188a845592029c9b52528f04`, `fd26f4ca4746ee390e22043a5e19ebf2b7fcd1f9`, `e3c6ce0440d9acd0f1cef1f0da3cdb5d`
+  - file hash IOC(s): `dd9c0268c8944e6ddf90d4d0c81aa843785b7a9ee965faa635841ed9fc0ba086`, `387d7ea5ca733b1e7219c943f4b461877a8df0148adfef42b1538b6c398fbb41`, `fd26f4ca4746ee390e22043a5e19ebf2b7fcd1f9`, `2f0ee073c6f29d66188a845592029c9b52528f04`, `e3c6ce0440d9acd0f1cef1f0da3cdb5d`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

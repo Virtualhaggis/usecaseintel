@@ -9,15 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-20
+- [a day in the life of a strategy co op in snyk s boston offic](./2026-05-20/a-day-in-the-life-of-a-strategy-co-op-in-snyk-s-boston-offic.md)
 - [agent ai is coming are you ready](./2026-05-20/agent-ai-is-coming-are-you-ready.md)
-- [fox tempest malware signing service abused microsoft artifac](./2026-05-20/fox-tempest-malware-signing-service-abused-microsoft-artifac.md)
+- [critical exiftool vulnerability allows attackers to compromi](./2026-05-20/critical-exiftool-vulnerability-allows-attackers-to-compromi.md)
+- [freepbx vulnerability allow attackers to gain access to user](./2026-05-20/freepbx-vulnerability-allow-attackers-to-gain-access-to-user.md)
 - [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
 - [graphworm malware uses microsoft onedrive as command and con](./2026-05-20/graphworm-malware-uses-microsoft-onedrive-as-command-and-con.md)
 - [hackers abuse mshta legacy windows tool to deliver lummastea](./2026-05-20/hackers-abuse-mshta-legacy-windows-tool-to-deliver-lummastea.md)
 - [hackers use single letter go module typosquat to deploy dns ](./2026-05-20/hackers-use-single-letter-go-module-typosquat-to-deploy-dns-.md)
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
-- [poc exploit released for 20 year old postgresql rce vulnerab](./2026-05-20/poc-exploit-released-for-20-year-old-postgresql-rce-vulnerab.md)
+- [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
+- [pardus linux local privilege escalation flaw allows silent r](./2026-05-20/pardus-linux-local-privilege-escalation-flaw-allows-silent-r.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)
 
@@ -26,7 +29,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
-- [critical microsoft vulnerabilities doubled from exposure to ](./2026-05-19/critical-microsoft-vulnerabilities-doubled-from-exposure-to-.md)
 - [cybercrime service disrupted for abusing microsoft platform ](./2026-05-19/cybercrime-service-disrupted-for-abusing-microsoft-platform-.md)
 - [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
 - [drupal to release urgent core security updates on may 20 sit](./2026-05-19/drupal-to-release-urgent-core-security-updates-on-may-20-sit.md)
@@ -128,7 +130,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
-- [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
@@ -222,7 +223,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-30
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
-- [lightning pypi compromise a bun based credential stealer in ](./2026-04-30/lightning-pypi-compromise-a-bun-based-credential-stealer-in-.md)
 - [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 

@@ -46,12 +46,121 @@ The security of…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1568** — Dynamic Resolution
+- **T1546.016** — Event Triggered Execution: Installer Packages
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
+
+`UC_227_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parentcmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe") AND Processes.process_name IN ("node.exe","curl.exe","powershell.exe","wget.exe","bun.exe","bash.exe","sh.exe")) (Processes.process="*github.com/oven-sh/bun*" OR Processes.process="*oven-sh/bun/releases*" OR Processes.process="*bun-windows-x64*" OR Processes.process="*bun-linux-x64*" OR Processes.process="*bun-darwin*") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let bunUrlIndicators = dynamic(["github.com/oven-sh/bun", "oven-sh/bun/releases", "bun-windows-x64", "bun-linux-x64", "bun-darwin"]);
+let npmParents = dynamic(["npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe","npx.exe"]);
+let downloaderChildren = dynamic(["node.exe","curl.exe","powershell.exe","wget.exe","bun.exe","bash.exe","sh.exe","pwsh.exe"]);
+// Process-tree pivot — npm parent spawning a downloader child with Bun URL on the command line
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where InitiatingProcessFileName in~ (npmParents) or InitiatingProcessParentFileName in~ (npmParents)
+    | where FileName in~ (downloaderChildren)
+    | where ProcessCommandLine has_any (bunUrlIndicators) or InitiatingProcessCommandLine has_any (bunUrlIndicators)
+    | where AccountName !endswith "$"
+    | project Timestamp, DeviceName, AccountName,
+              ParentImage = InitiatingProcessParentFileName,
+              InitImage  = InitiatingProcessFileName,
+              InitCmd    = InitiatingProcessCommandLine,
+              ChildImage = FileName,
+              ChildCmd   = ProcessCommandLine, SHA256;
+// Network pivot — same process families connecting to github.com for the Bun release tarball
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where RemoteUrl has "github.com" and (RemoteUrl has "oven-sh/bun" or RemoteUrl has "bun-windows" or RemoteUrl has "bun-linux" or RemoteUrl has "bun-darwin")
+    | where InitiatingProcessFileName in~ (downloaderChildren)
+    | where InitiatingProcessParentFileName in~ (npmParents) or InitiatingProcessCommandLine has_any (npmParents)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              ParentImage = InitiatingProcessParentFileName,
+              InitImage   = InitiatingProcessFileName,
+              InitCmd     = InitiatingProcessCommandLine,
+              ChildImage  = "<network-egress>", ChildCmd = RemoteUrl, SHA256 = InitiatingProcessSHA256;
+union ProcHits, NetHits
+| order by Timestamp desc
+```
+
+### [LLM] C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
+
+`UC_227_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+(`cim_Network_Traffic_indexes` (dest="audit.checkmarx.cx" OR dest="audit.checkmarx[.]cx" OR dest_ip="94.154.172.43")) OR (`cim_Network_Resolution_indexes` query="*audit.checkmarx.cx*") OR (`cim_Web_indexes` (url="*audit.checkmarx.cx*" OR dest="audit.checkmarx.cx") (url="*/v1/telemetry*" OR uri_path="/v1/telemetry")) | stats min(_time) as firstTime max(_time) as lastTime count by host src dest dest_ip url http_method app | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2Hosts = dynamic(["audit.checkmarx.cx", "audit.checkmarx[.]cx"]);
+let c2Ips    = dynamic(["94.154.172.43"]);
+let c2Path   = "/v1/telemetry";
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteUrl has_any (c2Hosts)) or (RemoteIP in (c2Ips)) or (RemoteUrl has c2Path and RemotePort in (443, 80))
+| where InitiatingProcessFileName !in~ ("MsSense.exe","SenseIR.exe")
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName,
+          RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
+
+`UC_227_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("bw_setup.js","bw1.js") OR Filesystem.file_path="*@bitwarden/cli*" OR Filesystem.file_path="*node_modules*@bitwarden*cli*") by host Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | appendpipe [| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe") Processes.process="*bw_setup.js*" OR Processes.process="*bw1.js*") by host Processes.user Processes.parent_process Processes.process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let stageFiles = dynamic(["bw_setup.js", "bw1.js"]);
+let packageHints = dynamic(["@bitwarden\\cli", "@bitwarden/cli", "node_modules\\@bitwarden\\cli", "node_modules/@bitwarden/cli"]);
+let shaiHuludMarker = "Shai-Hulud: The Third Coming";
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where (FileName in~ (stageFiles)) or (FolderPath has_any (packageHints) and FileName endswith ".js") or (AdditionalFields has shaiHuludMarker)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              FolderPath, FileName, SHA256;
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npm-cli.js","bun.exe")
+    | where ProcessCommandLine has_any (stageFiles)
+    | project Timestamp, DeviceName, AccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName,
+              FolderPath, FileName = FileName, SHA256, ProcCmd = ProcessCommandLine;
+union FileHits, ProcHits
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -285,7 +394,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 1)
 
-`UC_225_7` · phase: **exploit** · confidence: **High**
+`UC_227_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -342,4 +451,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

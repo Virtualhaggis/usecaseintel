@@ -360,7 +360,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_313_10` · phase: **exploit** · confidence: **High**
+`UC_314_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -15,8 +15,6 @@ The zero-day flaw, now tracked as CVE-2026-45585 , carries a CVSS score of 6.8. 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45585`
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,12 +27,69 @@ The zero-day flaw, now tracked as CVE-2026-45585 , carries a CVSS score of 6.8. 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1204.002** — User Execution: Malicious File
+- **T1542.003** — Pre-OS Boot: Bootkit
+- **T1112** — Modify Registry
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] YellowKey CVE-2026-45585 unmitigated state — autofstx.exe still in WinRE BootExecute
+
+`UC_9_6` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Control\\Session Manager*" Registry.registry_value_name="BootExecute" Registry.registry_value_data="*autofstx*" by Registry.dest Registry.user Registry.registry_value_data Registry.action | `drop_dm_object_name(Registry)` | stats max(lastTime) as lastTime values(registry_value_data) as latest_values values(action) as actions by dest user | where like(latest_values,"%autofstx%") | convert ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(60d)
+| where RegistryKey endswith @"Control\Session Manager"
+| where RegistryValueName =~ "BootExecute"
+| summarize arg_max(Timestamp, *) by DeviceId
+| where RegistryValueData has "autofstx"
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, OSBuild) by DeviceId
+  ) on DeviceId
+| project Timestamp, DeviceId, DeviceName, OSPlatform, OSVersion, OSBuild,
+          RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] YellowKey mitigation tampered — autofstx.exe re-added to WinRE BootExecute REG_MULTI_SZ
+
+`UC_9_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.action=modified Registry.registry_path="*\\Control\\Session Manager*" Registry.registry_value_name="BootExecute" Registry.registry_value_data="*autofstx*" by Registry.dest Registry.user Registry.process_name Registry.process_id Registry.registry_value_data | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey endswith @"Control\Session Manager"
+| where RegistryValueName =~ "BootExecute"
+| where RegistryValueData has "autofstx"
+| where isnotempty(PreviousRegistryValueData) and not (PreviousRegistryValueData has "autofstx")
+| project Timestamp, DeviceId, DeviceName, RegistryKey, RegistryValueName,
+          PreviousRegistryValueData, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine,
+          InitiatingProcessAccountDomain, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -151,7 +206,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Agent AI is Coming. Are You Ready?
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_9_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,9 +258,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45585`, `CVE-2026-42897`, `CVE-2026-41940`
+  - CVE(s): `CVE-2026-45585`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

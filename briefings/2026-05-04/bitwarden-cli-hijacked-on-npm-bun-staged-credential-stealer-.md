@@ -29,12 +29,97 @@ Back to Blog Threat Intel Bitwarden CLI Hijacked on npm: Bun-Staged Credential S
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
+- **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Bun runtime fetched from github.com/oven-sh/bun during npm install (Bitwarden CLI hijack)
+
+`UC_224_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(All_Traffic.dest) as dest from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe") AND (Processes.process="*bw_setup.js*" OR Processes.process="*oven-sh/bun*" OR Processes.process="*bun-v1.3.13*") by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let BunDownload = DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where RemoteUrl has_any ("github.com/oven-sh/bun/releases","oven-sh/bun/releases/download") or RemoteUrl has "bun-v1.3.13"
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","npm-cli.js","yarn.exe","pnpm.exe")
+| project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP;
+let Preinstall = DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where ProcessCommandLine has_any ("bw_setup.js","@bitwarden/cli")
+   or (FileName =~ "node.exe" and InitiatingProcessFileName in~ ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe") and ProcessCommandLine has "preinstall")
+| project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+BunDownload
+| join kind=inner Preinstall on DeviceId
+| where abs(datetime_diff('second', Timestamp, Timestamp1)) <= 120
+| project Timestamp, DeviceName, AccountName=tostring(AccountName), InitiatingProcessFileName, RemoteUrl, RemoteIP, PreinstallCmd=ProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP @bitwarden/cli stealer exfil to audit.checkmarx.cx (94.154.172.43)
+
+`UC_224_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="audit.checkmarx.cx" OR All_Traffic.dest_ip="94.154.172.43" OR All_Traffic.url="*audit.checkmarx.cx*" by host All_Traffic.user | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 30d;
+let BadHost = dynamic(["audit.checkmarx.cx"]);
+let BadIP   = dynamic(["94.154.172.43"]);
+union isfuzzy=true
+  (DeviceNetworkEvents
+   | where Timestamp > ago(Lookback)
+   | where RemoteUrl has_any (BadHost) or RemoteIP in (BadIP)
+   | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source="DeviceNetworkEvents"),
+  (DeviceEvents
+   | where Timestamp > ago(Lookback)
+   | where ActionType =~ "DnsQueryResponse" or ActionType startswith "Dns"
+   | where AdditionalFields has "audit.checkmarx.cx"
+   | project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl=tostring(parse_json(AdditionalFields).DnsQueryString), RemoteIP=tostring(parse_json(AdditionalFields).IPAddresses), RemotePort=int(null), Source="DeviceEvents-DNS")
+| order by Timestamp desc
+```
+
+### [LLM] Known-malicious bw_setup.js / bw1.js SHA256 dropped under @bitwarden/cli
+
+`UC_224_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14") OR Filesystem.file_name IN ("bw_setup.js","bw1.js") by host Filesystem.file_name | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+let BadHashes = dynamic(["18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb","8605e365edf11160aad517c7d79a3b26b62290e5072ef97b102a01ddbb343f14"]);
+union isfuzzy=true
+  (DeviceFileEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (BadHashes) or (FileName in~ ("bw_setup.js","bw1.js") and FolderPath has "@bitwarden\\cli")
+   | project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, SHA256, Initiator=InitiatingProcessFileName, InitiatorCmd=InitiatingProcessCommandLine, User=InitiatingProcessAccountName),
+  (DeviceProcessEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (BadHashes) or ProcessCommandLine has_any ("bw_setup.js","bw1.js")
+   | project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, SHA256, Initiator=InitiatingProcessFileName, InitiatorCmd=InitiatingProcessCommandLine, User=AccountName)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -266,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Bitwarden CLI Hijacked on npm: Bun-Staged Credential Stealer Targets Developers,
 
-`UC_222_8` · phase: **exploit** · confidence: **High**
+`UC_224_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -326,4 +411,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

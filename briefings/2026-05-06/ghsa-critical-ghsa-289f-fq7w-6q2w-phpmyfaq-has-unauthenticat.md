@@ -19,6 +19,8 @@ phpMyFAQ has unauthenticated SQL injection via User-Agent header in BuiltinCaptc
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -26,9 +28,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] phpMyFAQ unauthenticated SQLi via User-Agent on /api/captcha (GHSA-289f-fq7w-6q2w)
+
+`UC_208_1` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.src) as src_ips values(Web.status) as statuses from datamodel=Web where Web.url="*/api/captcha*" Web.http_method=GET (Web.http_user_agent="*SLEEP(*" OR Web.http_user_agent="*BENCHMARK(*" OR Web.http_user_agent="*SUBSTR(*" OR Web.http_user_agent="*SUBSTRING(*" OR Web.http_user_agent="* OR 1=1*" OR Web.http_user_agent="*UNION SELECT*" OR Web.http_user_agent="*UNION/**/SELECT*" OR Web.http_user_agent="*' OR '*" OR Web.http_user_agent="*-- *" OR Web.http_user_agent="*/*!*") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | where count >= 1
+```
+
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-289f-fq7w-6q2w: phpMyFAQ has unauthenticated SQL injectio
 
-`UC_206_0` · phase: **install** · confidence: **High**
+`UC_208_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,4 +73,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

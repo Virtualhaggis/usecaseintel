@@ -17,14 +17,16 @@ Nightmare Eclipse said that exploiting this zero-day involve…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33825`
 - **CVE:** `CVE-2026-45585`
+- **CVE:** `CVE-2026-33825`
+- **Domain (defanged):** `github.com/Nightmare-Eclipse/YellowKey`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
+- **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1112** — Modify Registry
@@ -40,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe injected into BootExecute registry value
 
-`UC_11_3` · phase: **install** · confidence: **High**
+`UC_16_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +65,7 @@ DeviceRegistryEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe file artifact on disk or removable media
 
-`UC_11_4` · phase: **install** · confidence: **High**
+`UC_16_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +85,7 @@ DeviceFileEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reagentc.exe WinRE image mount or trust re-establishment
 
-`UC_11_5` · phase: **install** · confidence: **Medium**
+`UC_16_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reg.exe loading WinRE registry hive offline
 
-`UC_11_6` · phase: **install** · confidence: **High**
+`UC_16_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +165,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft shares mitigation for YellowKey Windows zero-day
 
-`UC_11_2` · phase: **exploit** · confidence: **High**
+`UC_16_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -215,9 +217,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33825`, `CVE-2026-45585`
+  - CVE(s): `CVE-2026-45585`, `CVE-2026-33825`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `github.com/Nightmare-Eclipse/YellowKey`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

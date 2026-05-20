@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Storm-2949 SSPR abuse with MFA method tampering on privileged Entra ID accounts
 
-`UC_22_6` · phase: **exploit** · confidence: **High**
+`UC_26_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ CloudAppEvents
 
 ### [LLM] High-volume Microsoft Graph directory enumeration consistent with Storm-2949 Python tooling
 
-`UC_22_7` · phase: **recon** · confidence: **Medium**
+`UC_26_7` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ AADSignInEventsBeta
 
 ### [LLM] Storm-2949 OneDrive/SharePoint mass-download burst from compromised identity
 
-`UC_22_8` · phase: **actions** · confidence: **High**
+`UC_26_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ CloudAppEvents
 
 ### [LLM] Storm-2949 Azure Key Vault secret enumeration and bulk retrieval
 
-`UC_22_9` · phase: **actions** · confidence: **High**
+`UC_26_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ CloudAppEvents
 
 ### [LLM] Storm-2949 Azure Storage account key/SAS token theft and firewall relaxation
 
-`UC_22_10` · phase: **actions** · confidence: **High**
+`UC_26_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ CloudAppEvents
 
 ### [LLM] Storm-2949 Azure VM Run Command and VMAccess extension abuse
 
-`UC_22_11` · phase: **install** · confidence: **High**
+`UC_26_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ CloudAppEvents
 
 ### [LLM] Storm-2949 ScreenConnect (ConnectWise Control) deployment on compromised hosts
 
-`UC_22_12` · phase: **install** · confidence: **High**
+`UC_26_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ DeviceProcessEvents
 
 ### [LLM] Connection from Storm-2949 known-bad infrastructure (176.123.4.44, 91.208.197.87, 185.241.208.243)
 
-`UC_22_13` · phase: **c2** · confidence: **High**
+`UC_26_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_384_7` · phase: **exploit** · confidence: **High**
+`UC_385_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

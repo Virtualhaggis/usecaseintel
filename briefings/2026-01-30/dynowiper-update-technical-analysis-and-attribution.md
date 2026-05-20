@@ -247,7 +247,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_454_8` · phase: **exploit** · confidence: **High**
+`UC_455_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

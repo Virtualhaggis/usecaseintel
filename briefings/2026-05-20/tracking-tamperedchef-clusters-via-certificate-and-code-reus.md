@@ -32,10 +32,11 @@ Execu…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `www.crystalpdf.com`
-- **Domain (defanged):** `onezipapp.com`
-- **SHA256:** `248de1470771904462c91f146074e49b3d7416844ec143ade53f4ac0487fdb44`
-- **SHA256:** `2231bfa7c7bd4a8ff12568074f83de8e4ec95c226230cccc6616a1a4416de268`
+- **Domain (defanged):** `crystalpdf.com`
+- **Domain (defanged):** `vault.appsuites.ai`
+- **Domain (defanged):** `pdf-tool.appsuites.ai`
+- **Domain (defanged):** `appsuites.ai`
+- **Domain (defanged):** `freeonlinetools.info`
 
 ## MITRE ATT&CK Techniques
 
@@ -53,12 +54,142 @@ Execu…
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
+- **T1588.003** — Obtain Capabilities: Code Signing Certificates
+- **T1036.001** — Masquerading: Invalid Code Signature
+- **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1105** — Ingress Tool Transfer
+- **T1059** — Command and Scripting Interpreter
+- **T1480** — Execution Guardrails
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] TamperedChef shell-company code-signing certificate execution (CL-UNK-1090)
+
+`UC_13_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.process_signature_publisher IN ("CANDY TECH LTD","G.R.CIGAR. LTD","G.R.CIGAR LTD","TAU CENTAURI LTD","AMARYLLIS SIGNAL LTD","METROPOLITAN DESIGN LLC") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_signature_publisher | `drop_dm_object_name(Processes)` | where firstTime >= relative_time(now(), "-30d@d")
+```
+
+**Defender KQL:**
+```kql
+let TamperedChefSigners = dynamic(["CANDY TECH LTD","G.R.CIGAR. LTD","G.R.CIGAR LTD","TAU CENTAURI LTD","AMARYLLIS SIGNAL LTD","METROPOLITAN DESIGN LLC"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessVersionInfoCompanyName in~ (TamperedChefSigners)
+   or InitiatingProcessVersionInfoCompanyName in~ (TamperedChefSigners)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, SHA256,
+          Signer = coalesce(ProcessVersionInfoCompanyName, InitiatingProcessVersionInfoCompanyName),
+          Product = ProcessVersionInfoProductName,
+          ProcessCommandLine,
+          ParentFileName = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] TamperedChef C2 / distribution callback to appsuites.ai and sibling domains
+
+`UC_13_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as resolved from datamodel=Network_Resolution.DNS where (DNS.query="appsuites.ai" OR DNS.query="*.appsuites.ai" OR DNS.query="crystalpdf.com" OR DNS.query="*.crystalpdf.com" OR DNS.query="freeonlinetools.info" OR DNS.query="*.freeonlinetools.info" OR DNS.query="fullpdf.com") by DNS.query DNS.src | `drop_dm_object_name(DNS)` | where firstTime >= relative_time(now(), "-30d@d")
+```
+
+**Defender KQL:**
+```kql
+let TamperedChefHosts = dynamic(["appsuites.ai","pdf-tool.appsuites.ai","vault.appsuites.ai","crystalpdf.com","freeonlinetools.info","fullpdf.com"]);
+let NetHits = DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where isnotempty(RemoteUrl)
+  | extend Host = tolower(tostring(parse_url(RemoteUrl).Host))
+  | where Host in~ (TamperedChefHosts) or Host endswith ".appsuites.ai" or Host endswith ".crystalpdf.com"
+  | project Timestamp, DeviceName, Source = "Network", Indicator = RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessVersionInfoCompanyName;
+let DnsHits = DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | extend Query = tolower(tostring(parse_json(AdditionalFields).DnsQueryString))
+  | where Query in~ (TamperedChefHosts) or Query endswith ".appsuites.ai" or Query endswith ".crystalpdf.com"
+  | project Timestamp, DeviceName, Source = "DNS", Indicator = Query, RemoteIP = tostring(parse_json(AdditionalFields).IPAddresses), InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessVersionInfoCompanyName;
+union NetHits, DnsHits
+| order by Timestamp desc
+```
+
+### [LLM] TamperedChef trojanized-app activation via --cm / --enableupdate / --fullupdate flags
+
+`UC_13_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_name IN ("AppSuitePDF.exe","CrystalPDF.exe","Calendaromatic.exe","JustAskJacky.exe","PDFEditor.exe","ManualFinder.exe","RecipeLister.exe") OR Processes.process LIKE "%AppSuite%" OR Processes.process LIKE "%CrystalPDF%") AND (Processes.process LIKE "%--cm %" OR Processes.process LIKE "%--cm\"%" OR Processes.process LIKE "%--enableupdate%" OR Processes.process LIKE "%--fullupdate%" OR Processes.process LIKE "%--install %") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | where firstTime >= relative_time(now(), "-30d@d")
+```
+
+**Defender KQL:**
+```kql
+let TamperedChefBinaries = dynamic(["AppSuitePDF.exe","AppSuite.exe","CrystalPDF.exe","Calendaromatic.exe","JustAskJacky.exe","PDFEditor.exe","ManualFinder.exe","RecipeLister.exe","OneStart.exe","EpiBrowser.exe"]);
+let TamperedChefSigners = dynamic(["CANDY TECH LTD","G.R.CIGAR. LTD","G.R.CIGAR LTD","TAU CENTAURI LTD","AMARYLLIS SIGNAL LTD","METROPOLITAN DESIGN LLC"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (TamperedChefBinaries)
+   or ProcessVersionInfoCompanyName in~ (TamperedChefSigners)
+   or ProcessVersionInfoProductName has_any ("AppSuite","CrystalPDF","Calendaromatic","JustAskJacky","Recipe Lister","Manual Finder")
+| where ProcessCommandLine has_any ("--cm ","--cm=","--enableupdate","--fullupdate","--install ")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, ProcessCommandLine, SHA256,
+          Signer = ProcessVersionInfoCompanyName,
+          Product = ProcessVersionInfoProductName,
+          ParentFileName = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] TamperedChef scheduled-task persistence via task.xml + obfuscated JS (appsuite-print.js)
+
+`UC_13_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*/create*" Processes.process="*/xml*" (Processes.process LIKE "%\\Temp\\%task.xml%" OR Processes.process LIKE "%\\AppData\\%task.xml%" OR Processes.process LIKE "%AppSuite%task%.xml%" OR Processes.process LIKE "%CrystalPDF%task%.xml%") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | where firstTime >= relative_time(now(), "-30d@d") | join type=outer dest [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("wscript.exe","cscript.exe") (Processes.process LIKE "%appsuite-print.js%" OR Processes.process LIKE "%appsuite%.js%" OR Processes.process LIKE "%crystalpdf%.js%") by Processes.dest Processes.process | `drop_dm_object_name(Processes)` | rename process as script_cmdline]
+```
+
+**Defender KQL:**
+```kql
+let WindowHours = 24h;
+let ScheduleHits = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where FileName =~ "schtasks.exe"
+  | where ProcessCommandLine has_all ("/create","/xml")
+  | where ProcessCommandLine has_any ("\\Temp\\","\\AppData\\","AppSuite","CrystalPDF","Calendaromatic","JustAskJacky","task.xml")
+  | project SchedTime = Timestamp, DeviceName, AccountName,
+            SchedCmd = ProcessCommandLine,
+            SchedParent = InitiatingProcessFileName,
+            SchedParentCompany = InitiatingProcessVersionInfoCompanyName;
+let ScriptHits = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where FileName in~ ("wscript.exe","cscript.exe","node.exe")
+  | where ProcessCommandLine has_any ("appsuite-print.js","appsuite","crystalpdf","calendaromatic","justaskjacky") and ProcessCommandLine has ".js"
+  | project ScriptTime = Timestamp, DeviceName, ScriptCmd = ProcessCommandLine,
+            ScriptParent = InitiatingProcessFileName;
+ScheduleHits
+| join kind=inner ScriptHits on DeviceName
+| where ScriptTime between (SchedTime .. SchedTime + WindowHours)
+| project SchedTime, ScriptTime, DeviceName, AccountName,
+          SchedParent, SchedParentCompany, SchedCmd,
+          ScriptParent, ScriptCmd
+| order by SchedTime desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -321,7 +452,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracking TamperedChef Clusters via Certificate and Code Reuse
 
-`UC_8_9` · phase: **exploit** · confidence: **High**
+`UC_13_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,12 +504,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `www.crystalpdf.com`, `onezipapp.com`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `248de1470771904462c91f146074e49b3d7416844ec143ade53f4ac0487fdb44`, `2231bfa7c7bd4a8ff12568074f83de8e4ec95c226230cccc6616a1a4416de268`
+  - IP / domain IOC(s): `crystalpdf.com`, `vault.appsuites.ai`, `pdf-tool.appsuites.ai`, `appsuites.ai`, `freeonlinetools.info`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

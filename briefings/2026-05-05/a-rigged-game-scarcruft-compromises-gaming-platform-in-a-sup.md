@@ -35,12 +35,81 @@ ESET researchers uncovered a multiplatform supply-chain attack by North Korea-al
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567.002** — Exfiltration to Cloud Storage
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ScarCruft sqgame supply-chain delivery domain contact (BirdCall/RokRAT)
+
+`UC_221_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("sqgame.net","*.sqgame.net","sqgame.com.cn","*.sqgame.com.cn","xiazai.sqgame.com.cn") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let SqgameDomains = dynamic(["sqgame.net","sqgame.com.cn","xiazai.sqgame.com.cn"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (SqgameDomains)
+   or tostring(parse_url(RemoteUrl).Host) has_any (SqgameDomains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] BirdCall trojanized APK/mono.dll SHA1 match on Windows endpoints
+
+`UC_221_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF","FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9") OR Filesystem.file_name IN ("ybht.apk","sqybhs.apk","20240429.zip") OR (Filesystem.file_name="mono.dll" AND Filesystem.file_path="*sqgame*")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let BadSha1 = dynamic(["03E3ECE9F48CF4104AAFC535790CA2FB3C6B26CF","FC0C691DB7E2D2BD3B0B4C1E24D18DF72168B7D9"]);
+let BadNames = dynamic(["ybht.apk","sqybhs.apk","20240429.zip"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA1 in~ (BadSha1)
+   or FileName in~ (BadNames)
+   or (FileName =~ "mono.dll" and FolderPath has "sqgame")
+   or FileOriginUrl has_any ("sqgame.net","sqgame.com.cn","xiazai.sqgame.com.cn")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA1, SHA256, FileOriginUrl, FileOriginReferrerUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] BirdCall RokRAT cloud-storage C2 beacon (Dropbox/pCloud) from non-browser process
+
+`UC_221_9` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN ("*dropboxapi.com","*api.pcloud.com","*pcloud.com","*dropbox.com") AND NOT All_Traffic.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari.exe","Dropbox.exe","pCloud.exe","explorer.exe","OneDrive.exe") by All_Traffic.src All_Traffic.dest All_Traffic.process_name All_Traffic.process_path All_Traffic.user | `drop_dm_object_name(All_Traffic)` | where count > 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let CloudC2 = dynamic(["api.dropboxapi.com","content.dropboxapi.com","api.pcloud.com","eapi.pcloud.com","api.pcloud.link"]);
+let KnownClients = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","Dropbox.exe","DropboxUpdate.exe","pCloud.exe","OneDrive.exe","explorer.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any (CloudC2) or tostring(parse_url(RemoteUrl).Host) has_any (CloudC2)
+| where InitiatingProcessFileName !in~ (KnownClients)
+| where InitiatingProcessAccountName !endswith "$"
+| summarize EventCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Urls=make_set(RemoteUrl,10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where EventCount >= 3
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -157,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A rigged game: ScarCruft compromises gaming platform in a supply-chain attack
 
-`UC_219_6` · phase: **exploit** · confidence: **High**
+`UC_221_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -217,4 +286,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

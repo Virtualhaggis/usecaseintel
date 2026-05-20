@@ -23,12 +23,138 @@ Share on X Share on X Share o…
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1546** — Event Triggered Execution
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1610** — Deploy Container
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound to elementary-data exfil C2 igotnofriendsonlineorirl-imgonnakmslmao.sky
+
+`UC_223_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_host="igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud" OR All_Traffic.dest="igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud" by All_Traffic.src host All_Traffic.app | `drop_dm_object_name(All_Traffic)` | appendpipe [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.dest) as dest from datamodel=Web where Web.url="*igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud*" OR Web.dest="igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud" by Web.src host Web.http_method | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let MaliciousDomain = "igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud";
+let WindowDays = 30d;
+union isfuzzy=true
+    (DeviceNetworkEvents
+        | where Timestamp > ago(WindowDays)
+        | where RemoteUrl has MaliciousDomain
+        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source = "DeviceNetworkEvents"),
+    (DeviceEvents
+        | where Timestamp > ago(WindowDays)
+        | where ActionType == "DnsQueryResponse"
+        | where AdditionalFields has MaliciousDomain or RemoteUrl has MaliciousDomain
+        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort = toint(0), Source = "DeviceEvents(DNS)")
+| order by Timestamp desc
+```
+
+### [LLM] Malicious elementary.pth dropped in Python site-packages
+
+`UC_223_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="elementary.pth") AND (Filesystem.file_path="*site-packages*" OR Filesystem.file_path="*dist-packages*") by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
+| where FileName =~ "elementary.pth"
+| where FolderPath has_any ("\\site-packages\\", "/site-packages/", "/dist-packages/")
+| extend IsOversized = (FileSize > 50000)  // legit .pth files are <1KB; payload is ~245KB
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, IsOversized,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Install of trojaned elementary-data 0.23.3 via pip / poetry / uv
+
+`UC_223_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip3.exe","pip","pip3","poetry","poetry.exe","uv","uv.exe","python.exe","python3","python")) AND (Processes.process="*elementary-data==0.23.3*" OR Processes.process="*elementary-data 0.23.3*" OR Processes.process="*elementary_data-0.23.3*") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("pip.exe", "pip3.exe", "pip", "pip3", "poetry.exe", "poetry", "uv.exe", "uv", "python.exe", "python3", "python")
+   or InitiatingProcessFileName in~ ("pip.exe", "pip3.exe", "poetry.exe", "uv.exe")
+| where ProcessCommandLine has "elementary-data"
+| where ProcessCommandLine has_any ("==0.23.3", " 0.23.3", "elementary_data-0.23.3", "elementary-data-0.23.3")
+   or (ProcessCommandLine has "elementary-data" and ProcessCommandLine has_any ("install", "add", "sync") and not(ProcessCommandLine has "==0.23.4" or ProcessCommandLine has "<0.23.3"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Docker / Kubernetes pull of compromised ghcr.io/elementary-data/elementary image
+
+`UC_223_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("docker.exe","docker","podman","podman.exe","crictl","crictl.exe","kubectl","kubectl.exe","nerdctl","nerdctl.exe","buildah","skopeo")) AND Processes.process="*ghcr.io/elementary-data/elementary*" AND (Processes.process="*pull*" OR Processes.process="*run*" OR Processes.process="*create*") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("docker.exe", "docker", "podman.exe", "podman", "crictl.exe", "crictl", "kubectl.exe", "kubectl", "nerdctl.exe", "nerdctl", "buildah", "skopeo")
+| where ProcessCommandLine has "ghcr.io/elementary-data/elementary"
+| extend IsLatestOrBad = ProcessCommandLine has_any (":latest", ":0.23.3", "sha256:31ecc5939de6") or not(ProcessCommandLine matches regex @":(0\.23\.[4-9]|0\.2[4-9]|[1-9])")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, IsLatestOrBad
+| order by Timestamp desc
+```
+
+### [LLM] Stage-3 exfil archive trin.tar.gz POST via curl --data-binary
+
+`UC_223_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+(| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","curl.exe") AND Processes.process="*--data-binary*" AND (Processes.process="*skyhanni.cloud*" OR Processes.process="*trin.tar.gz*") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)`) | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_name="trin.tar.gz" by Filesystem.dest Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let WindowDays = 30d;
+let C2 = "igotnofriendsonlineorirl-imgonnakmslmao.skyhanni.cloud";
+union isfuzzy=true
+    (DeviceProcessEvents
+        | where Timestamp > ago(WindowDays)
+        | where FileName in~ ("curl", "curl.exe")
+        | where ProcessCommandLine has "--data-binary"
+        | where ProcessCommandLine has_any (C2, "trin.tar.gz", "X-Rise-To-The-Trinny")
+        | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, Source = "ProcessExec"),
+    (DeviceFileEvents
+        | where Timestamp > ago(WindowDays)
+        | where ActionType in ("FileCreated", "FileModified")
+        | where FileName =~ "trin.tar.gz"
+        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine = strcat(FolderPath, "\\", FileName), Source = "FileWrite")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -150,7 +276,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
 
-`UC_221_5` · phase: **install** · confidence: **High**
+`UC_223_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,4 +317,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

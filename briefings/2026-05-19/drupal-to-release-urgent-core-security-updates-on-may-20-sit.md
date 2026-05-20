@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] durabletask C2 contact — check.git-service.com / t.m-kosche.com from python3
 
-`UC_18_8` · phase: **c2** · confidence: **High**
+`UC_22_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceNetworkEvents
 
 ### [LLM] python3 dropping and detached-spawning /tmp/managed.pyz (durabletask rope.pyz dropper)
 
-`UC_18_9` · phase: **install** · confidence: **High**
+`UC_22_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ union procs, files
 
 ### [LLM] GitHub token exfiltration — `gh auth token` / `gh auth status --show-token` spawned by python3
 
-`UC_18_10` · phase: **actions** · confidence: **High**
+`UC_22_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake pgsql-monitor systemd persistence dropped by python3
 
-`UC_18_11` · phase: **install** · confidence: **High**
+`UC_22_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -315,7 +315,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Drupal to Release Urgent Core Security Updates on May 20, Sites Told to Prepare
 
-`UC_18_7` · phase: **exploit** · confidence: **High**
+`UC_22_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

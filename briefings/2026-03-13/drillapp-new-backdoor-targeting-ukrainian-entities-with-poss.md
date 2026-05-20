@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_352_3` · phase: **install** · confidence: **High**
+`UC_353_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — @velora-dex/sdk Compromised on npm: Malicious Version Drops macOS Backdoor via l
 
-`UC_293_3` · phase: **exploit** · confidence: **High**
+`UC_294_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

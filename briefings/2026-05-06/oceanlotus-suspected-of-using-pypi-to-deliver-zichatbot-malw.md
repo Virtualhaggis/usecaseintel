@@ -46,12 +46,136 @@ Through our daily threat hunting, we noticed that, beginning in July 2025, a ser
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1543** — Create or Modify System Process
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Pip install of OceanLotus-attributed ZiChatBot PyPI wheels (uuid32-utils, colorinal, termncolor)
+
+`UC_210_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("pip.exe","pip3.exe","python.exe","python3.exe","pip","python","python3") (Processes.process="*uuid32-utils*" OR Processes.process="*uuid32_utils*" OR Processes.process="*colorinal*" OR Processes.process="*termncolor*") Processes.process="*install*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","pip","python","python3")
+| where ProcessCommandLine has "install"
+| where ProcessCommandLine has_any ("uuid32-utils","uuid32_utils","colorinal","termncolor")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] ZiChatBot runner vcpktsvr.exe executed from %LOCALAPPDATA%\vcpacket\
+
+`UC_210_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="vcpktsvr.exe" OR Processes.process_path="*\\AppData\\Local\\vcpacket\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "vcpktsvr.exe"
+   or FolderPath has @"\AppData\Local\vcpacket\"
+| where AccountName !endswith "$"
+| extend SuspectedLibcef = iff(FolderPath has @"\vcpacket\", "yes (check libcef.dll side-load)", "no")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspectedLibcef
+| order by Timestamp desc
+```
+
+### [LLM] ZiChatBot persistence Run-key write 'pkt-update' pointing to vcpacket\vcpktsvr.exe
+
+`UC_210_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as data values(Registry.process_name) as writer from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\*" (Registry.registry_value_name="pkt-update" OR Registry.registry_value_data="*\\vcpacket\\vcpktsvr.exe*") by Registry.dest Registry.user Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
+| where RegistryValueName =~ "pkt-update"
+   or RegistryValueData has @"\vcpacket\vcpktsvr.exe"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] ZiChatBot Linux persistence /tmp/obsHub/obs-check-update via crontab
+
+`UC_210_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process="*/tmp/obsHub/obs-check-update*" OR Processes.process="*chmod +x /tmp/obsHub*" OR (Processes.process_name="crontab" AND Processes.process="*obs-check-update*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+union
+(
+  DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where ProcessCommandLine has "/tmp/obsHub/obs-check-update"
+     or (FileName == "crontab" and ProcessCommandLine has "obs-check-update")
+     or (ProcessCommandLine has "chmod" and ProcessCommandLine has "/tmp/obsHub")
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="Process"
+),
+(
+  DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where FolderPath has "/tmp/obsHub" or FileName == "obs-check-update"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="File"
+)
+| order by Timestamp desc
+```
+
+### [LLM] ZiChatBot Zulip C2 beacon to helper.zulipchat.com from non-browser process
+
+`UC_210_13` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="helper.zulipchat.com" OR All_Traffic.dest="*.zulipchat.com") by All_Traffic.dest All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT match(process_name, "(?i)^(chrome|msedge|firefox|brave|opera|safari|iexplore|zulip|electron|slack)\.exe$") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "zulipchat.com" or RemoteUrl =~ "helper.zulipchat.com"
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","safari.exe","iexplore.exe","zulip.exe","electron.exe","slack.exe","teams.exe")
+| where InitiatingProcessFileName !endswith "\\msedgewebview2.exe"
+| where InitiatingProcessAccountName !endswith "$"
+| extend HighFidelity = iff(InitiatingProcessFileName =~ "vcpktsvr.exe" or InitiatingProcessFolderPath has @"\vcpacket\" or InitiatingProcessFolderPath has "/tmp/obsHub/" or InitiatingProcessFileName =~ "obs-check-update", "yes-known-ZiChatBot", "hunt")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, HighFidelity
+| order by HighFidelity asc, Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -290,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus suspected of using PyPI to deliver ZiChatBot malware
 
-`UC_208_8` · phase: **exploit** · confidence: **High**
+`UC_210_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -350,4 +474,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

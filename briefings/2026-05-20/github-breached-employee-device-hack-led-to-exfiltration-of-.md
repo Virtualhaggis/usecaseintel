@@ -1,6 +1,6 @@
 # [CRIT] GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Repos
 
-**Source:** The Hacker News, BleepingComputer, Cyber Security News, Aikido
+**Source:** The Hacker News, BleepingComputer, Cyber Security News
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/github-investigating-teampcp-claimed.html
 
@@ -15,15 +15,16 @@ Typosquatting is no longer a user problem. Attackers now embed lookalike domains
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
+- **Domain (defanged):** `npmjs.help`
+- **Domain (defanged):** `websocket-api2.publicvm.com`
+- **Domain (defanged):** `metrics-trustwallet.com`
+- **Domain (defanged):** `api.metrics-trustwallet.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -39,12 +40,119 @@ Typosquatting is no longer a user problem. Attackers now embed lookalike domains
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1598.003** — Phishing for Information: Spearphishing Link
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Browser contact with Trust Wallet impostor analytics domain (metrics-trustwallet.com)
+
+`UC_1_13` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.app) as app values(Network_Traffic.src) as src values(Network_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (Network_Traffic.dest="metrics-trustwallet.com" OR Network_Traffic.dest="api.metrics-trustwallet.com" OR Network_Traffic.dest_url="*metrics-trustwallet.com*") by Network_Traffic.src host Network_Traffic.user | `drop_dm_object_name(Network_Traffic)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (Network_Resolution.DNS.query="metrics-trustwallet.com" OR Network_Resolution.DNS.query="api.metrics-trustwallet.com") by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badHosts = dynamic(["metrics-trustwallet.com", "api.metrics-trustwallet.com"]);
+let net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (badHosts)
+       or tolower(RemoteUrl) endswith "metrics-trustwallet.com"
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, ActionType, ReportId;
+let dns = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | where AdditionalFields has_any (badHosts)
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, AdditionalFields, ActionType, ReportId;
+union isfuzzy=true net, dns
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud npm worm C2 callback to websocket-api2.publicvm.com
+
+`UC_1_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+(`cim_Network_Resolution_indexes` OR `cim_Network_Traffic_indexes`) (query="websocket-api2.publicvm.com" OR dest="websocket-api2.publicvm.com" OR url="*websocket-api2.publicvm.com*")
+| eval ioc="websocket-api2.publicvm.com"
+| stats count min(_time) as firstTime max(_time) as lastTime values(src) as src values(user) as user values(process_name) as process_name values(dest_port) as dest_port by host ioc
+| convert ctime(firstTime) ctime(lastTime)
+| append [| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.process_name="node.exe" OR Processes.process_name="npm.exe" OR Processes.process_name="npx.exe" OR Processes.process_name="yarn.exe" OR Processes.process_name="pnpm.exe") (Processes.process="*postinstall*" OR Processes.process="*npm install*" OR Processes.process="*npm publish*") by Processes.host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+let ioc = "websocket-api2.publicvm.com";
+let net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has ioc
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, ReportId;
+let dns = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | where AdditionalFields has ioc
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, AdditionalFields, ReportId;
+let nodeProc = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ ("node.exe", "npm.exe", "npx.exe", "yarn.exe", "pnpm.exe") or FileName in~ ("node.exe", "npm.exe", "npx.exe")
+    | where ProcessCommandLine has_any ("postinstall", "preinstall", "prepare")
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, AccountName, FileName, ReportId;
+union isfuzzy=true net, dns
+| join kind=leftouter (nodeProc | project Timestamp, DeviceName, NodeCmd = ProcessCommandLine) on DeviceName
+| where isempty(Timestamp1) or abs(datetime_diff('second', Timestamp, Timestamp1)) < 600
+| project-away Timestamp1, DeviceName1
+| order by Timestamp desc
+```
+
+### [LLM] npm credential phishing typosquat domain visit (npmjs.help)
+
+`UC_1_15` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.user) as user values(Web.http_user_agent) as ua values(Web.url) as url from datamodel=Web.Web where (Web.url="*npmjs.help*" OR Web.dest="npmjs.help") by Web.site
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="npmjs.help" by DNS.src DNS.query | `drop_dm_object_name(DNS)`]
+```
+
+**Defender KQL:**
+```kql
+let ioc = "npmjs.help";
+let clicks = UrlClickEvents
+    | where Timestamp > ago(30d)
+    | where Url has ioc
+    | project Timestamp, AccountUpn, Url, ActionType, IsClickedThrough, IPAddress, ReportId;
+let net = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has ioc
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountUpn, RemoteUrl, RemoteIP, ReportId;
+let dns = DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse" and AdditionalFields has ioc
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, AdditionalFields, ReportId;
+let mail = EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | where Url has ioc or UrlDomain =~ ioc
+    | join kind=inner (EmailEvents | project NetworkMessageId, Timestamp, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction) on NetworkMessageId
+    | project Timestamp, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, Url, DeliveryAction, ReportId;
+union isfuzzy=true clicks, net, dns, mail
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -415,7 +523,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Re
 
-`UC_4_12` · phase: **exploit** · confidence: **High**
+`UC_1_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,10 +574,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-41940`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `npmjs.help`, `websocket-api2.publicvm.com`, `metrics-trustwallet.com`, `api.metrics-trustwallet.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

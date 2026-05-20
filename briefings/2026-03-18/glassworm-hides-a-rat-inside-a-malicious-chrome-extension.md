@@ -424,7 +424,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm Hides a RAT Inside a Malicious Chrome Extension
 
-`UC_343_13` · phase: **exploit** · confidence: **High**
+`UC_344_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

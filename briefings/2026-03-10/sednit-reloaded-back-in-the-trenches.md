@@ -283,7 +283,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_359_7` · phase: **exploit** · confidence: **High**
+`UC_360_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

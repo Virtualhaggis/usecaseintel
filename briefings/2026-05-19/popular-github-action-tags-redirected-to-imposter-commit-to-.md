@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/pnpm/yarn install of Mini Shai-Hulud compromised AntV ecosystem versions
 
-`UC_42_10` · phase: **delivery** · confidence: **High**
+`UC_45_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound to t.m-kosche.com fake OpenTelemetry C2
 
-`UC_42_11` · phase: **c2** · confidence: **High**
+`UC_45_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union isfuzzy=true
 
 ### [LLM] Mini Shai-Hulud persistence drop into .claude/settings.json or .vscode/tasks.json by node
 
-`UC_42_12` · phase: **install** · confidence: **High**
+`UC_45_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud node process fans out across cloud/credential file paths
 
-`UC_42_13` · phase: **actions** · confidence: **High**
+`UC_45_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub repo created with reversed Shai-Hulud worm description by stolen token
 
-`UC_42_14` · phase: **actions** · confidence: **High**
+`UC_45_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -451,7 +451,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular GitHub Action Tags Redirected to Imposter Commit to Steal CI/CD Credenti
 
-`UC_42_9` · phase: **exploit** · confidence: **High**
+`UC_45_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network contact with seized Fox Tempest MSaaS infrastructure (signspace.cloud)
 
-`UC_16_8` · phase: **c2** · confidence: **High**
+`UC_20_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### [LLM] Execution or write of known Fox Tempest-signed malware samples by SHA256/SHA1
 
-`UC_16_9` · phase: **install** · confidence: **High**
+`UC_20_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ union isfuzzy=true
 
 ### [LLM] Fake Teams/AnyDesk/PuTTY/Webex installer running from user-writable path
 
-`UC_16_10` · phase: **delivery** · confidence: **Medium**
+`UC_20_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -34,12 +34,105 @@ Blog Vulnerabilities & Threats Someone published four versions of a fake "tansta
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1567** — Exfiltration Over Web Service
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Malicious tanstack npm postinstall hook executing postinstall.cjs
+
+`UC_240_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","npm","npm-cli") OR Processes.parent_process="*npm*") AND Processes.process_name IN ("node.exe","node") AND (Processes.process="*tanstack*postinstall*" OR Processes.process="*node_modules/tanstack/postinstall.cjs*" OR Processes.process="*node_modules\\tanstack\\postinstall.cjs*") by host Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("node.exe","node")
+| where InitiatingProcessFileName in~ ("npm.exe","node.exe","npm","node","npm-cli.js")
+| where ProcessCommandLine has_any ("tanstack/postinstall.cjs","tanstack\\postinstall.cjs","node_modules/tanstack/postinstall","node_modules\\tanstack\\postinstall")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Svix Ingest webhook exfiltration relay (src_3387PLMB2uhXOBe3Q8sHu)
+
+`UC_240_12` · phase: **exfiltration** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*api.svix.com/ingest/api/v1/source/src_3387PLMB2uhXOBe3Q8sHu*" OR Web.url="*src_3387PLMB2uhXOBe3Q8sHu*" OR Web.url="*3j2jokvbaF4WWdngv8zBbk*") by host Web.user Web.src Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "api.svix.com"
+| where RemoteUrl has_any ("src_3387PLMB2uhXOBe3Q8sHu","3j2jokvbaF4WWdngv8zBbk","/ingest/api/v1/source/")
+   or InitiatingProcessFileName in~ ("node.exe","node")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Node.js postinstall reading .env / .env.* during package install
+
+`UC_240_13` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node") AND (Filesystem.file_name=".env" OR Filesystem.file_name=".env.local" OR Filesystem.file_name=".env.production" OR Filesystem.file_name=".env.staging" OR Filesystem.file_name=".env.development" OR Filesystem.file_path="*\.env.*") by host Filesystem.user Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where mvcount(files) >= 2 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let envFiles = dynamic([".env",".env.local",".env.production",".env.staging",".env.development",".env.test"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where ActionType in~ ("FileCreated","FileModified","FileRead","FileAccessed")
+   or isnotempty(FileName)
+| where FileName in~ (envFiles) or FileName startswith ".env."
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), EnvFilesRead=make_set(FileName), FolderPaths=make_set(FolderPath), CmdLine=any(InitiatingProcessCommandLine)
+    by DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName
+| where array_length(EnvFilesRead) >= 2 or (InitiatingProcessParentFileName in~ ("npm.exe","node.exe","npm") and array_length(EnvFilesRead) >= 1)
+| order by FirstSeen desc
+```
+
+### [LLM] Known-bad tanstack 2.0.4-2.0.7 package tarball SHA256 file hash on disk
+
+`UC_240_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| union [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90","04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566","abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9","7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f") by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90","04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566","abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9","7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f") by host Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badHashes = dynamic(["72ec4571e27c06f1d48737477c2b38a4f90d699950dab8946b48591133dc4f90","04ee5325c8900c9d644ed81c9012525b6fc19f21c65cef85b6ba98b6a0a23566","abc164807947b102164488a08161adb4ee08be6b78a371350a6b156eed0d97d9","7bb84e6ba893248814cd3bac70b7bdc115740fba9e13419940c73460cbcd7b6f"]);
+union isfuzzy=true
+  (DeviceFileEvents
+    | where Timestamp > ago(90d)
+    | where SHA256 in (badHashes)
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+  (DeviceProcessEvents
+    | where Timestamp > ago(90d)
+    | where SHA256 in (badHashes) or InitiatingProcessSHA256 in (badHashes)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName)
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -329,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_239_10` · phase: **exploit** · confidence: **High**
+`UC_240_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,4 +482,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
