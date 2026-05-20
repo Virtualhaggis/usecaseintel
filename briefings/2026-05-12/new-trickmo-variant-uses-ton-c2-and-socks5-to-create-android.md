@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TrickMo dropper or payload package install on managed Android device
 
-`UC_133_5` · phase: **install** · confidence: **High**
+`UC_137_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceTvmSoftwareInventory
 
 ### [LLM] TrickMo SOCKS5-tunnel pivot from Android device
 
-`UC_133_6` · phase: **c2** · confidence: **Medium**
+`UC_137_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

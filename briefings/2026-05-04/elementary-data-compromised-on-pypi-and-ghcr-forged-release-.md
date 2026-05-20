@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — elementary-data Compromised on PyPI and GHCR: Forged Release Pushed via GitHub A
 
-`UC_220_5` · phase: **install** · confidence: **High**
+`UC_221_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

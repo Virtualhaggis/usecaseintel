@@ -1,20 +1,23 @@
-# [CRIT] Microsoft shares mitigation for YellowKey Windows zero-day
+# [HIGH] Microsoft shares mitigation for YellowKey Windows zero-day
 
-**Source:** BleepingComputer, Cyber Security News
+**Source:** BleepingComputer
 **Published:** 2026-05-20
 **Article:** https://www.bleepingcomputer.com/news/microsoft/microsoft-shares-mitigation-for-yellowkey-windows-zero-day/
 
 ## Threat Profile
 
-Home Cyber Security News 
-Microsoft Releases Mitigation for Windows BitLocker Security Feature Bypass 0-Day Vulnerability 
-By Guru Baran 
-May 20, 2026 
-Microsoft has disclosed a critical zero-day vulnerability in Windows BitLocker, tracked as CVE-2026-45585, that allows threat actors with physical access to bypass full-disk encryption entirely, potentially exposing sensitive data within minutes.
-The flaw was publicly disclosed on May 19, 2026, and while no active exploitation has been confirmed,…
+Microsoft shares mitigation for YellowKey Windows zero-day 
+By Sergiu Gatlan 
+May 20, 2026
+03:31 AM
+1 
+Microsoft has shared mitigations for YellowKey, a recently disclosed Windows BitLocker zero-day vulnerability that grants access to protected drives.
+The security flaw was disclosed last week by an anonymous security researcher known as 'Nightmare Eclipse,' who described it as a backdoor and published a proof-of-concept (PoC) exploit.
+Nightmare Eclipse said that exploiting this zero-day involve…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2026-33825`
 - **CVE:** `CVE-2026-45585`
 
 ## MITRE ATT&CK Techniques
@@ -22,7 +25,6 @@ The flaw was publicly disclosed on May 19, 2026, and while no active exploitatio
 - **T1190** — Exploit Public-Facing Application
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
-- **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
 - **T1112** — Modify Registry
@@ -38,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe injected into BootExecute registry value
 
-`UC_0_4` · phase: **install** · confidence: **High**
+`UC_11_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +63,7 @@ DeviceRegistryEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe file artifact on disk or removable media
 
-`UC_0_5` · phase: **install** · confidence: **High**
+`UC_11_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +83,7 @@ DeviceFileEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reagentc.exe WinRE image mount or trust re-establishment
 
-`UC_0_6` · phase: **install** · confidence: **Medium**
+`UC_11_5` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reg.exe loading WinRE registry hive offline
 
-`UC_0_7` · phase: **install** · confidence: **High**
+`UC_11_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,33 +161,9 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
 ### Article-specific behavioural hunt — Microsoft shares mitigation for YellowKey Windows zero-day
 
-`UC_0_3` · phase: **exploit** · confidence: **High**
+`UC_11_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,15 +183,6 @@ DeviceProcessEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]
-| append [
-  | tstats `summariesonly` count
-      from datamodel=Endpoint.Registry
-      where Registry.action IN ("created","modified")
-        AND (Registry.registry_path="*HKLM\\ControlSet001\\Control\\Session*" OR Registry.registry_path="*HKLM\\WinREHive*")
-      by Registry.dest, Registry.process_name, Registry.registry_path,
-         Registry.registry_value_name, Registry.registry_value_data
-  | `drop_dm_object_name(Registry)`
 ]
 ```
 
@@ -239,16 +208,6 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
-
-// Registry persistence locations named in the article
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has_any ("HKLM\ControlSet001\Control\Session", "HKLM\WinREHive")
-| project Timestamp, DeviceName, AccountName, RegistryKey,
-          RegistryValueName, RegistryValueData,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -256,9 +215,9 @@ DeviceRegistryEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45585`
+  - CVE(s): `CVE-2026-33825`, `CVE-2026-45585`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

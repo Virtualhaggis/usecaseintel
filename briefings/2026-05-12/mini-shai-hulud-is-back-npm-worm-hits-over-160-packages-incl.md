@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm payload dropped under node_modules (router_init.js / tanstack_runner.js / known SHA256)
 
-`UC_141_9` · phase: **delivery** · confidence: **High**
+`UC_142_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceFileEvents
 
 ### [LLM] Bun spawned with tanstack_runner.js via npm prepare lifecycle (Mini Shai-Hulud)
 
-`UC_141_10` · phase: **install** · confidence: **High**
+`UC_142_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud persistence to ~/.claude/hooks and .vscode/tasks.json by node/npm/bun
 
-`UC_141_11` · phase: **install** · confidence: **High**
+`UC_142_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and
 
-`UC_141_8` · phase: **exploit** · confidence: **High**
+`UC_142_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

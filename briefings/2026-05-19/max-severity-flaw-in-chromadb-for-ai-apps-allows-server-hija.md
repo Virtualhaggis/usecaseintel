@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Suspicious child process spawned by ChromaDB / uvicorn Python worker
 
-`UC_7_1` · phase: **install** · confidence: **High**
+`UC_15_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### [LLM] ChromaDB Python worker contacts Hugging Face for first time on host (CVE-2026-45829 model fetch)
 
-`UC_7_2` · phase: **exploit** · confidence: **Medium**
+`UC_15_2` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -290,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus suspected of using PyPI to deliver ZiChatBot malware
 
-`UC_207_8` · phase: **exploit** · confidence: **High**
+`UC_208_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

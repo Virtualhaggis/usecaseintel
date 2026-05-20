@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-289f-fq7w-6q2w: phpMyFAQ has unauthenticated SQL injectio
 
-`UC_205_0` · phase: **install** · confidence: **High**
+`UC_206_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,31 +1,25 @@
 # [HIGH] Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
 
-**Source:** The Hacker News, BleepingComputer, Cyber Security News, Aikido
+**Source:** The Hacker News, BleepingComputer, Cyber Security News
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/grafana-github-breach-exposes-source.html
 
 ## Threat Profile
 
-GitHub Investigating TeamPCP Claimed Breach of ~4,000 Internal Repositories 
- Ravie Lakshmanan  May 20, 2026 Malware / Cloud Security 
-GitHub on Tuesday said it's investigating unauthorized access to its internal repositories after the notorious threat actor known as TeamPCP listed the platform's source code and internal organizations for sale on a cybercrime forum.
-"While we currently have no evidence of impact to customer information stored outside of GitHub's internal repositories (such as …
+Home Cyber Attack News 
+GitHub Hacked – Internal Source Code Repositories Compromised via Employee Device 
+By Guru Baran 
+May 20, 2026 
+GitHub has confirmed unauthorized access to its internal repositories after detecting a compromised employee device infected through a malicious Visual Studio Code extension, the company disclosed in a series of official statements on May 20, 2026.
+The Microsoft-owned code hosting platform said it identified and contained the breach after a poisoned VS Code exte…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `83.142.209.194`
-- **Domain (defanged):** `check.git-service.com`
-- **Domain (defanged):** `t.m-kosche.com`
-- **SHA256:** `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`
-- **SHA256:** `7d80b3ef74ad7992b93c31966962612e4e2ceb93e7727cdbd1d2a9af47d44ba8`
-- **SHA256:** `aeaf583e20347bf850e2fabdcd6f4982996ba023f8c2cd56bbd299cfd56516f5`
-- **SHA256:** `877ff2531a63393c4cb9c3c86908b62d9c4fc3db971bc231c48537faae6cb3ec`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
+- **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1486** — Data Encrypted for Impact
@@ -34,7 +28,6 @@ GitHub on Tuesday said it's investigating unauthorized access to its internal re
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — Malicious File
 - **T1105** — Ingress Tool Transfer
 - **T1059.006** — Command and Scripting Interpreter: Python
@@ -60,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious durabletask PyPI package install (versions 1.4.1-1.4.3)
 
-`UC_1_8` · phase: **delivery** · confidence: **High**
+`UC_12_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +83,7 @@ union ProcessHits, FileHits
 
 ### [LLM] Python interpreter fetches rope.pyz dropper from check.git-service.com
 
-`UC_1_9` · phase: **install** · confidence: **High**
+`UC_12_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +109,7 @@ union NetHits, RopeFile
 
 ### [LLM] Linux Python stealer harvesting cloud, vault, SSH and password-manager secrets
 
-`UC_1_10` · phase: **actions** · confidence: **High**
+`UC_12_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +144,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud worm propagation via AWS SSM SendCommand fan-out
 
-`UC_1_11` · phase: **actions** · confidence: **High**
+`UC_12_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +153,7 @@ DeviceFileEvents
 
 ### [LLM] FIRESCALE backup-C2 lookup via GitHub commit-message search
 
-`UC_1_12` · phase: **c2** · confidence: **High**
+`UC_12_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +180,7 @@ union PrimaryUrlHit, CmdHit
 
 ### [LLM] Locale-gated destructive payload: python parent spawns rm -rf / on Linux
 
-`UC_1_13` · phase: **actions** · confidence: **High**
+`UC_12_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -217,39 +210,29 @@ union RmHits, AudioHits, LocaleHits
 | order by Timestamp desc
 ```
 
-### Beaconing — periodic outbound to small set of destinations
+### Suspicious browser extension installation
 
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -389,17 +372,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `83.142.209.194`, `check.git-service.com`, `t.m-kosche.com`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`, `7d80b3ef74ad7992b93c31966962612e4e2ceb93e7727cdbd1d2a9af47d44ba8`, `aeaf583e20347bf850e2fabdcd6f4982996ba023f8c2cd56bbd299cfd56516f5`, `877ff2531a63393c4cb9c3c86908b62d9c4fc3db971bc231c48537faae6cb3ec`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

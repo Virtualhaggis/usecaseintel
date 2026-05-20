@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A rigged game: ScarCruft compromises gaming platform in a supply-chain attack
 
-`UC_218_6` · phase: **exploit** · confidence: **High**
+`UC_219_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

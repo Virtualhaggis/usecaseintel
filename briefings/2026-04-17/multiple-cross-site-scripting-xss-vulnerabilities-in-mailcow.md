@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Cross-Site Scripting (XSS) Vulnerabilities in Mailcow
 
-`UC_272_3` · phase: **exploit** · confidence: **High**
+`UC_273_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

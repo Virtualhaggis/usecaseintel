@@ -9,11 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-20
+- [agent ai is coming are you ready](./2026-05-20/agent-ai-is-coming-are-you-ready.md)
 - [fox tempest malware signing service abused microsoft artifac](./2026-05-20/fox-tempest-malware-signing-service-abused-microsoft-artifac.md)
-- [github hacked internal source code repositories compromised ](./2026-05-20/github-hacked-internal-source-code-repositories-compromised-.md)
+- [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
+- [graphworm malware uses microsoft onedrive as command and con](./2026-05-20/graphworm-malware-uses-microsoft-onedrive-as-command-and-con.md)
+- [hackers abuse mshta legacy windows tool to deliver lummastea](./2026-05-20/hackers-abuse-mshta-legacy-windows-tool-to-deliver-lummastea.md)
+- [hackers use single letter go module typosquat to deploy dns ](./2026-05-20/hackers-use-single-letter-go-module-typosquat-to-deploy-dns-.md)
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [poc exploit released for 20 year old postgresql rce vulnerab](./2026-05-20/poc-exploit-released-for-20-year-old-postgresql-rce-vulnerab.md)
+- [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
+- [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)
 
 ## 2026-05-19
 - [7 eleven confirms data breach claimed by the shinyhunters ga](./2026-05-19/7-eleven-confirms-data-breach-claimed-by-the-shinyhunters-ga.md)
@@ -34,17 +40,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
-- [macos malware installs fake google software update launchage](./2026-05-19/macos-malware-installs-fake-google-software-update-launchage.md)
 - [max severity flaw in chromadb for ai apps allows server hija](./2026-05-19/max-severity-flaw-in-chromadb-for-ai-apps-allows-server-hija.md)
 - [microsoft self service password reset abused in azure data t](./2026-05-19/microsoft-self-service-password-reset-abused-in-azure-data-t.md)
 - [nx console vs code extension compromised](./2026-05-19/nx-console-vs-code-extension-compromised.md)
 - [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 - [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
-- [the gentlemen ransomware attacks windows linux nas bsd and e](./2026-05-19/the-gentlemen-ransomware-attacks-windows-linux-nas-bsd-and-e.md)
 - [the new phishing click how oauth consent bypasses mfa](./2026-05-19/the-new-phishing-click-how-oauth-consent-bypasses-mfa.md)
 - [trapdoor android ad fraud scheme hit 659 million daily bid r](./2026-05-19/trapdoor-android-ad-fraud-scheme-hit-659-million-daily-bid-r.md)
-- [uac 0184 malware chain uses bitsadmin and hta files for gate](./2026-05-19/uac-0184-malware-chain-uses-bitsadmin-and-hta-files-for-gate.md)
 
 ## 2026-05-18
 - [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
@@ -123,9 +126,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
-- [instructure reaches ransom agreement with shinyhunters to st](./2026-05-12/instructure-reaches-ransom-agreement-with-shinyhunters-to-st.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
-- [mini shai hulud worm compromises tanstack mistral ai guardra](./2026-05-12/mini-shai-hulud-worm-compromises-tanstack-mistral-ai-guardra.md)
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [new trickmo variant uses ton c2 and socks5 to create android](./2026-05-12/new-trickmo-variant-uses-ton-c2-and-socks5-to-create-android.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
@@ -307,7 +308,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-08
 - [aikido attack finds multiple 0 days in hoppscotch](./2026-04-08/aikido-attack-finds-multiple-0-days-in-hoppscotch.md)
 - [cisa kev cve 2026 1340 ivanti endpoint manager mobile epmm c](./2026-04-08/cisa-kev-cve-2026-1340-ivanti-endpoint-manager-mobile-epmm-c.md)
-- [cracks in the bedrock agent god mode](./2026-04-08/cracks-in-the-bedrock-agent-god-mode.md)
 - [glassworm goes native new zig dropper infects every ide on y](./2026-04-08/glassworm-goes-native-new-zig-dropper-infects-every-ide-on-y.md)
 
 ## 2026-04-07
