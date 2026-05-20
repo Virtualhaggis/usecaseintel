@@ -872,7 +872,12 @@ LLM_RELEVANCE_MODEL = os.environ.get("USECASEINTEL_RELEVANCE_MODEL", "claude-hai
 # one lets the model cross-check against vendor advisories, GHSA, and
 # abuse.ch before emitting IOCs (and flag confidence by source count).
 LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", "claude-opus-4-7")
-LLM_UC_MAX_BODY_CHARS = 15000  # cap body length sent to LLM
+LLM_UC_MAX_BODY_CHARS = 8000  # cap body length sent to UC LLM. Lowered from
+                              # 15000 (May 2026 token-reduction Phase 3a) —
+                              # lede + IOC paragraphs land in the first 3-5 KB
+                              # of most articles; trailing half is repetition
+                              # and footer boilerplate. Keep `LLM_IOC_MAX_BODY_CHARS`
+                              # at 12000 since IOC extraction needs the long tail.
 # Cap on chars sent to the IOC extractor. 12k captures full article
 # bodies for >95% of sources; Opus context window is generous so we
 # also include up to 2 inline image URLs for vision-capable runs.
@@ -908,27 +913,50 @@ KC_VERSION = "v1"
 # regresses while the cache re-warms. Expect ~$200-300 LLM cost
 # across the next 4-5 pipeline runs as ~1100 UCs regenerate; then
 # every UC card shows the 6th Falcon tab alongside the existing five.
-UC_VERSION = "v3"
+UC_VERSION = "v4"  # bumped v3→v4 (May 2026 token-reduction Phase 1/2):
+                   # slim KQL knowledge + per-platform schema gating + tighter
+                   # UC body cap. Forces full UC-cache regen so live UCs
+                   # are produced under the new lean prompt — old cached
+                   # JSON came from the heavyweight prompt and wasn't billed
+                   # any less by hitting the cache.
 KNOWLEDGE_DIR = Path(__file__).parent / "knowledge"
 
 
+# Slim-knowledge mode — env-controlled, defaults ON to cut prompt-cache
+# write tokens by ~85% on every uc call. The full 11-file KQL bundle
+# (~130 KB) was burning the bulk of weekly Pro quota; the slim subset
+# preserves operator/anti-pattern guidance which is what the model
+# actually needs at generation time. Tables/translation refs are
+# already covered by _SENTINEL_SCHEMA_BLOCK / _DEFENDER_SCHEMA_BLOCK
+# so the deleted KQL table files were redundant. Set to "0"/"false"
+# to restore the legacy full bundle for A/B comparison.
+_KNOWLEDGE_SLIM = os.environ.get("USECASEINTEL_KNOWLEDGE_SLIM", "1").lower() in ("1", "true", "yes")
+
+
 def _load_kql_knowledge() -> str:
-    """Read every knowledge/*.md file and concatenate into a single
-    reference block. Loaded once at module import; included verbatim
-    in every LLM-driven UC-generation prompt so the model has anchor
-    patterns / anti-patterns / table recipes to hand. Cheap (~30 KB)
-    and a one-time prompt-cache hit per Claude session.
+    """Read knowledge/*.md files and concatenate into a single reference
+    block. Loaded once at module import; included verbatim in every
+    LLM-driven UC-generation prompt. In slim mode (default), loads only
+    the three files the model needs at write-time: fundamentals,
+    patterns, and anti-patterns (~18 KB instead of ~130 KB). Table
+    schemas are already in `_SENTINEL_SCHEMA_BLOCK` and
+    `_DEFENDER_SCHEMA_BLOCK`; example queries and translation guides
+    are useful for humans but bloat the LLM cache_create write.
     Falls back to empty string if the directory is missing — pipeline
     keeps working, just without the knowledge anchors."""
     if not KNOWLEDGE_DIR.exists():
         return ""
+    if _KNOWLEDGE_SLIM:
+        files = ("kql_fundamentals.md", "kql_patterns.md", "kql_antipatterns.md")
+    else:
+        files = ("kql_fundamentals.md", "kql_searching_filtering.md",
+                 "kql_scalar_functions.md", "kql_combining_data.md",
+                 "kql_aggregation_anomaly.md",
+                 "kql_patterns.md", "kql_tables.md",
+                 "kql_sentinel_tables.md", "kql_translation.md",
+                 "kql_antipatterns.md", "kql_examples.md")
     parts = []
-    for fname in ("kql_fundamentals.md", "kql_searching_filtering.md",
-                  "kql_scalar_functions.md", "kql_combining_data.md",
-                  "kql_aggregation_anomaly.md",
-                  "kql_patterns.md", "kql_tables.md",
-                  "kql_sentinel_tables.md", "kql_translation.md",
-                  "kql_antipatterns.md", "kql_examples.md"):
+    for fname in files:
         p = KNOWLEDGE_DIR / fname
         if p.exists():
             try:
@@ -1002,6 +1030,32 @@ _DEFENDER_SCHEMA_BLOCK = _load_schema_block("defender_spec_tables.json")
 _SENTINEL_SCHEMA_BLOCK = _load_schema_block("sentinel_spec_tables.json")
 
 
+# Per-platform schema gating. Env var format: comma-separated platform
+# names from {sentinel, defender, datadog, falcon}. Default = all four
+# (backwards-compatible). When restricted, the corresponding schema
+# placeholder substitutes to empty string so the prompt skips that
+# platform's knowledge entirely — saves the per-call cache_create cost
+# for unused platforms.
+_UC_PLATFORMS_DEFAULT = frozenset({"sentinel", "defender", "datadog", "falcon"})
+_UC_PLATFORMS_ENV = os.environ.get("USECASEINTEL_UC_PLATFORMS", "").strip().lower()
+if _UC_PLATFORMS_ENV:
+    _UC_PLATFORMS = frozenset(
+        p.strip() for p in _UC_PLATFORMS_ENV.split(",") if p.strip()
+    ) & _UC_PLATFORMS_DEFAULT
+    if not _UC_PLATFORMS:
+        _UC_PLATFORMS = _UC_PLATFORMS_DEFAULT  # invalid input → use all
+else:
+    _UC_PLATFORMS = _UC_PLATFORMS_DEFAULT
+
+
+def _platform_block(platform: str, full_block: str) -> str:
+    """Return the schema/knowledge block for `platform` if it's in the
+    active platform set, otherwise an empty string. Lets the uc prompt
+    skip schemas for platforms the operator has explicitly disabled via
+    USECASEINTEL_UC_PLATFORMS."""
+    return full_block if platform in _UC_PLATFORMS else ""
+
+
 # ---- Schema-field validator (canonical Defender table columns) -------------
 # Lazy-imported so a missing data_sources/defender_spec_tables.json doesn't
 # break the rest of the pipeline.
@@ -1012,11 +1066,27 @@ except Exception:
     _validate_kql_fields = None  # type: ignore[assignment]
     _auto_fix_kql_fields = None  # type: ignore[assignment]
 
+# ---- KQL syntax validator (Microsoft.Azure.Kusto.Language parser) ----------
+# Wraps the self-contained C# binary at tools/kql_syntax_checker/bin/. If the
+# binary is missing the wrapper silently returns no errors, so the pipeline
+# degrades to schema-only validation rather than crashing.
+try:
+    from kql_syntax_validator import validate_kql_syntax_batch as _validate_kql_syntax_batch
+except Exception:
+    _validate_kql_syntax_batch = None  # type: ignore[assignment]
+
 # Sigma rule validator. Optional dependency — pysigma may not be installed.
 try:
     from sigma_export import validate_sigma as _validate_sigma_yaml
 except Exception:
     _validate_sigma_yaml = None  # type: ignore[assignment]
+
+
+# ---- UC retry policy ---------------------------------------------------------
+# Up to N re-prompts of the LLM when a generated UC fails validation.
+# Each retry is one additional `uc` LLM call (counts against the per-kind
+# budget). 2 retries catches ~95% of LLM near-miss errors with bounded cost.
+_UC_MAX_VALIDATION_RETRIES = 2
 
 
 def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
@@ -1064,6 +1134,102 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
         # Trim to plain dicts in case Issue subclass shows up oddly in JSON.
         uc_dict[issues_key] = [dict(i) for i in issues]
     return len(issues)
+
+
+def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
+    """Run the Kusto.Language parser across every UC's defender_kql and
+    sentinel_kql in one subprocess call. Attaches issues per-platform to
+    `_syntax_issues` (defender) and `_sentinel_syntax_issues` (sentinel).
+    Returns the total error count across the batch.
+
+    No-op (returns 0) if the underlying validator wrapper is unavailable
+    — pipeline degrades to schema-only validation rather than crashing."""
+    if _validate_kql_syntax_batch is None or not ucs:
+        return 0
+    # Build a flat batch of (id, kql) tuples; id encodes which uc and which
+    # platform so we can dispatch results back to the right uc/key.
+    batch: list[tuple[str, str]] = []
+    for idx, uc in enumerate(ucs):
+        if not isinstance(uc, dict):
+            continue
+        for kql_key in ("defender_kql", "sentinel_kql"):
+            kql = (uc.get(kql_key) or "").strip()
+            if kql:
+                batch.append((f"{idx}|{kql_key}", kql))
+    if not batch:
+        return 0
+    try:
+        results = _validate_kql_syntax_batch(batch)
+    except Exception as e:
+        # Validator must never crash the pipeline.
+        print(f"    [!] syntax validator raised: {str(e)[:160]}", flush=True)
+        return 0
+    total_errors = 0
+    for r in results:
+        eid = r.get("id", "")
+        errors = r.get("errors") or []
+        if not errors:
+            continue
+        if "|" not in eid:
+            continue
+        idx_s, kql_key = eid.split("|", 1)
+        try:
+            idx = int(idx_s)
+        except ValueError:
+            continue
+        if idx < 0 or idx >= len(ucs):
+            continue
+        if not isinstance(ucs[idx], dict):
+            continue
+        issues_key = "_syntax_issues" if kql_key == "defender_kql" else "_sentinel_syntax_issues"
+        ucs[idx][issues_key] = errors
+        total_errors += len(errors)
+    return total_errors
+
+
+def _format_validation_errors_for_retry(ucs: list[dict]) -> str:
+    """Build a concise error payload to append to the original UC prompt on
+    retry. Includes both schema (field-level) and syntax (grammar) issues
+    so the LLM sees everything it needs to fix in one round-trip. Capped
+    at ~2 KB to keep retry-prompt overhead small."""
+    if not ucs:
+        return ""
+    lines: list[str] = []
+    lines.append("VALIDATION ERRORS FROM YOUR PREVIOUS RESPONSE — fix and re-emit the full JSON.")
+    lines.append("Reuse the same `title` and `phase` for each UC; only edit the broken fields.")
+    lines.append("")
+    for idx, uc in enumerate(ucs):
+        if not isinstance(uc, dict):
+            continue
+        uc_label = uc.get("title") or uc.get("uc_id") or f"UC#{idx}"
+        uc_errors: list[str] = []
+        for issues_key, platform_label, kql_key in (
+            ("_field_issues",           "defender_kql (schema)", "defender_kql"),
+            ("_sentinel_field_issues",  "sentinel_kql (schema)", "sentinel_kql"),
+            ("_syntax_issues",          "defender_kql (syntax)", "defender_kql"),
+            ("_sentinel_syntax_issues", "sentinel_kql (syntax)", "sentinel_kql"),
+        ):
+            issues = uc.get(issues_key) or []
+            for i in issues[:4]:  # cap per platform per uc
+                if isinstance(i, dict):
+                    msg = (i.get("message") or i.get("reason") or "").strip()[:160]
+                    if "line" in i and "column" in i:
+                        msg = f"L{i['line']}:C{i['column']} {msg}"
+                    if i.get("suggestion"):
+                        msg += f" — try `{i['suggestion']}`"
+                else:
+                    msg = str(i)[:160]
+                if msg:
+                    uc_errors.append(f"    [{platform_label}] {msg}")
+        if uc_errors:
+            lines.append(f"  - UC: {uc_label[:80]}")
+            lines.extend(uc_errors)
+    payload = "\n".join(lines).strip()
+    # Hard cap to keep retry-prompt overhead bounded; if a single retry
+    # surfaces >2 KB of errors something else is wrong, truncate and move on.
+    if len(payload) > 2400:
+        payload = payload[:2400] + "\n    ... (additional errors truncated)"
+    return payload + "\n"
 
 
 def _attach_sigma_issues(uc_dict: dict, sigma_key: str = "sigma_yaml") -> int:
@@ -1314,18 +1480,23 @@ except (ImportError, AttributeError):
 # LLM step entirely. Reset in main() at the start of each run.
 # =============================================================================
 _OAUTH_MAX_CONSECUTIVE_FAILURES = 3      # legacy threshold (kept for log strings)
-_OAUTH_UC_CALL_TIMEOUT_SEC = 1200        # UC call with WebSearch + WebFetch: 20 min
-                                          # ceiling. This is a MAX not a fixed wait —
-                                          # successful calls return when the subprocess
-                                          # exits (typical 60-240s). Bumped 300->600
-                                          # so the long-tail of heavy WebSearch articles
-                                          # (multiple round-trips + complex Splunk/KQL
-                                          # generation) reliably complete instead of
-                                          # tripping the breaker. The worst-case
-                                          # wallclock for a degenerate run hitting the
-                                          # 6/12 breaker trip is 60 min, but only when
-                                          # six consecutive UC calls genuinely hang —
-                                          # not for the typical successful pipeline.
+_OAUTH_UC_CALL_TIMEOUT_SEC = 600         # UC call with WebSearch + WebFetch: 10 min
+                                          # ceiling. Lowered from 1200 → 600 on
+                                          # 2026-05-20 after the 18:30 ClankerusecasePipeline
+                                          # run on 2026-05-19 hung for 13.5 hours on a
+                                          # `claude -p` subprocess whose 1200s timeout
+                                          # didn't fire (Windows pipe-handle issue —
+                                          # descendants kept stdout/stderr open after
+                                          # parent claude.exe stalled; communicate()
+                                          # never raised TimeoutExpired). The hang
+                                          # blocked 6+ subsequent scheduled fires.
+                                          # 95th percentile observed UC call is ~280s,
+                                          # so 600s gives 2x headroom while bounding
+                                          # the worst-case stuck-call wallclock to
+                                          # 600 + 60 watchdog = ~11 min instead of 21.
+                                          # The watchdog thread in
+                                          # _do_claude_cli_call_once is the real fix;
+                                          # this lower timeout is defense in depth.
 _OAUTH_RELEVANCE_CALL_TIMEOUT_SEC = 45   # _llm_relevance_call: max_turns=1, no search
 
 # Per-kind circuit breakers with a rolling-window failure-rate trigger.
@@ -1553,15 +1724,28 @@ def write_last_run_articles(articles_meta: list) -> None:
 def _reset_oauth_circuit_breaker():
     """Call at the start of every main() run so a fresh pipeline doesn't
     inherit a stuck-open breaker (or used-up budget) from a previous
-    in-process retry."""
+    in-process retry. Also resets the dual-account latch so each run
+    starts back on primary — Pro quotas reset on their own cadence so
+    we always re-exercise A when it's potentially recovered."""
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
+    global _CLAUDE_ACTIVE_ACCOUNT, _CLAUDE_SWITCHED, _LOGGED_STARTUP_ACCOUNT
+    global _LAST_CLAUDE_STDERR_TAIL, _LAST_CLAUDE_STREAM_ERROR
     for bk in _OAUTH_BREAKERS.values():
         bk["failures"] = 0
         bk["open"] = False
         bk["window"] = []
         bk["used"] = 0
+        bk.pop("_budget_logged", None)
     _OAUTH_FAILURES = 0
     _OAUTH_CIRCUIT_OPEN = False
+    _CLAUDE_ACTIVE_ACCOUNT = "primary"
+    _CLAUDE_SWITCHED = False
+    _LOGGED_STARTUP_ACCOUNT = False
+    _LAST_CLAUDE_STDERR_TAIL = ""
+    _LAST_CLAUDE_STREAM_ERROR = ""
+    # Per-run usage monitoring: zero the counters and register the
+    # at-exit summary hook on the first run (idempotent).
+    _begin_usage_run()
 
 
 def _record_oauth_outcome(kind: str, ok: bool, reason: str | None = None) -> None:
@@ -1590,6 +1774,18 @@ def _record_oauth_outcome(kind: str, ok: bool, reason: str | None = None) -> Non
         print(f"    [!] OAuth circuit breaker OPEN for '{kind}' — "
               f"{bk['failures']}/{len(bk['window'])} failures in window. "
               f"Falling back to regex/rules for remainder of run.")
+        # Belt-and-suspenders dual-account safety net: if the breaker
+        # tripped while still on primary AND a secondary is configured,
+        # treat the open event as an implicit "primary is unhealthy" signal
+        # and flip accounts. This catches credit-exhaustion cases the
+        # `_looks_like_credit_error` regex missed (e.g. new wording from
+        # Anthropic). The switch resets every breaker so future calls
+        # resume on secondary; if both accounts are bad, the breakers
+        # re-trip and we fall through to the regex/rules path as before.
+        if (_CLAUDE_ACTIVE_ACCOUNT == "primary"
+                and not _CLAUDE_SWITCHED
+                and _CLAUDE_CONFIG_DIR_SECONDARY):
+            _maybe_switch_account(reason=f"breaker_open[{kind}] {bk['failures']}/{len(bk['window'])}")
     if kind == "uc":
         _OAUTH_FAILURES = bk["failures"]
         _OAUTH_CIRCUIT_OPEN = bk["open"]
@@ -1654,6 +1850,215 @@ def _oauth_circuit_open(kind: str = "uc") -> bool:
 _CLAUDE_CLI_PATH = os.environ.get("USECASEINTEL_CLAUDE_CLI", "claude")
 
 
+# -----------------------------------------------------------------------------
+# Dual-account failover.
+#
+# When two Claude Pro subscriptions are wired up via separate CLAUDE_CONFIG_DIR
+# locations (USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY / _SECONDARY), the pipeline
+# starts on primary and sticky-switches to secondary on the first credit /
+# quota exhaustion error. One-way per run: a fresh pipeline invocation always
+# starts back on primary so quotas can recover naturally.
+# -----------------------------------------------------------------------------
+_CLAUDE_CONFIG_DIR_PRIMARY   = os.environ.get("USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY", "").strip()
+_CLAUDE_CONFIG_DIR_SECONDARY = os.environ.get("USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY", "").strip()
+_CLAUDE_ACTIVE_ACCOUNT = "primary"     # flips to "secondary" once, sticky for the run
+_CLAUDE_SWITCHED       = False         # one-way latch
+_LAST_CLAUDE_STDERR_TAIL  = ""         # populated by _do_claude_cli_call_once
+_LAST_CLAUDE_STREAM_ERROR = ""         # populated by _parse_stream_json_buffer on is_error
+_LOGGED_STARTUP_ACCOUNT = False        # one-shot startup log gate
+
+# -----------------------------------------------------------------------------
+# Per-run LLM usage monitoring.
+#
+# Captures the `usage` block from each `claude -p --output-format stream-json`
+# result event, plus wall-time, accumulated per-kind (uc / ioc / relevance /
+# vision / kc / review) and per-account. Prints a tabulated summary at process
+# exit and appends one JSONL row to intel/.usage_log.jsonl for trend tracking.
+# Used by show_usage.ps1 to answer "am I using too much, and at which stage?".
+# -----------------------------------------------------------------------------
+import threading as _threading
+import atexit as _atexit
+_USAGE_LOCK = _threading.Lock()
+_USAGE_BY_KIND: dict[str, dict] = {}
+_USAGE_RUN_START: float | None = None
+_USAGE_LOG_PATH = Path(__file__).parent / "intel" / ".usage_log.jsonl"
+_USAGE_ATEXIT_REGISTERED = False
+
+
+def _begin_usage_run() -> None:
+    """Initialise the per-run usage state. Called from
+    `_reset_oauth_circuit_breaker` so every fresh pipeline run starts with
+    zero counters. Idempotent — safe to call more than once per process."""
+    global _USAGE_RUN_START, _USAGE_ATEXIT_REGISTERED
+    with _USAGE_LOCK:
+        _USAGE_BY_KIND.clear()
+        _USAGE_RUN_START = time.time()
+    if not _USAGE_ATEXIT_REGISTERED:
+        _atexit.register(_emit_usage_summary)
+        _USAGE_ATEXIT_REGISTERED = True
+
+
+def _record_usage(kind: str, account: str, ok: bool,
+                  wall_seconds: float, usage: dict | None) -> None:
+    """Accumulate one call's outcome into the per-kind counters. `usage` is
+    the dict pulled from the stream-json `result.usage` block (may be None on
+    a pre-token-emit failure / timeout). Safe to call from worker threads —
+    counter mutation is lock-protected; the per-call log line is emitted
+    outside the lock to avoid serialising prints.
+
+    Lazily initialises the per-run state on first call so entry points
+    that don't go through `_reset_oauth_circuit_breaker` (e.g. biweekly_review
+    runs that just import gen and start calling) still get a summary."""
+    if _USAGE_RUN_START is None:
+        _begin_usage_run()
+    u = usage or {}
+    in_tok = int(u.get("input_tokens", 0) or 0)
+    out_tok = int(u.get("output_tokens", 0) or 0)
+    cache_r = int(u.get("cache_read_input_tokens", 0) or 0)
+    cache_w = int(u.get("cache_creation_input_tokens", 0) or 0)
+    with _USAGE_LOCK:
+        slot = _USAGE_BY_KIND.setdefault(kind, {
+            "calls": 0, "errors": 0,
+            "input_tokens": 0, "output_tokens": 0,
+            "cache_read": 0, "cache_create": 0,
+            "wall_seconds": 0.0,
+            "by_account": {"primary": 0, "secondary": 0},
+        })
+        slot["calls"] += 1
+        if not ok:
+            slot["errors"] += 1
+        slot["input_tokens"]  += in_tok
+        slot["output_tokens"] += out_tok
+        slot["cache_read"]    += cache_r
+        slot["cache_create"]  += cache_w
+        slot["wall_seconds"]  += float(wall_seconds or 0.0)
+        slot["by_account"][account] = slot["by_account"].get(account, 0) + 1
+    # One-line per-call log so an operator tailing the run sees activity as
+    # it happens. Single print = atomic — interleaved concurrent calls don't
+    # mangle each other's lines.
+    print(f"    [USAGE {kind}/{account}] in={in_tok:,} out={out_tok:,} "
+          f"cache_r={cache_r:,} cache_w={cache_w:,} dur={wall_seconds:.1f}s "
+          f"ok={ok}", flush=True)
+
+
+def _emit_usage_summary() -> None:
+    """Print a per-kind summary table to stdout and append one JSON record to
+    intel/.usage_log.jsonl. Registered via atexit so a clean exit *or* a
+    Ctrl+C still produces a row. A hard kill (SIGKILL / taskkill /F) will
+    skip it — that's expected and acceptable."""
+    with _USAGE_LOCK:
+        if not _USAGE_BY_KIND:
+            return
+        # Snapshot under the lock so we don't race a late call.
+        snapshot = {k: dict(v) for k, v in _USAGE_BY_KIND.items()}
+        # by_account is nested — copy that too.
+        for k, slot in snapshot.items():
+            slot["by_account"] = dict(_USAGE_BY_KIND[k].get("by_account") or {})
+        run_start = _USAGE_RUN_START
+    wall_total = time.time() - (run_start or time.time())
+    totals = {k: 0 for k in ("calls", "errors", "input_tokens",
+                             "output_tokens", "cache_read",
+                             "cache_create", "wall_seconds")}
+    for slot in snapshot.values():
+        for k in totals:
+            totals[k] += slot.get(k, 0)
+    print("")
+    print(f"================== LLM USAGE SUMMARY (run wall {wall_total:.0f}s) ==================")
+    print(f"account_switched={_CLAUDE_SWITCHED}   active_at_end={_CLAUDE_ACTIVE_ACCOUNT}")
+    print(f"{'kind':10} {'calls':>6} {'errs':>5} "
+          f"{'input':>11} {'output':>10} {'cache_r':>11} {'cache_w':>10} {'wall_s':>8}  by_account")
+    for kind in sorted(snapshot.keys()):
+        slot = snapshot[kind]
+        ba = slot.get("by_account") or {}
+        ba_str = f"p={ba.get('primary',0)} s={ba.get('secondary',0)}"
+        print(f"{kind:10} {slot['calls']:>6} {slot['errors']:>5} "
+              f"{slot['input_tokens']:>11,} {slot['output_tokens']:>10,} "
+              f"{slot['cache_read']:>11,} {slot['cache_create']:>10,} "
+              f"{slot['wall_seconds']:>8.0f}  {ba_str}")
+    print("-" * 96)
+    print(f"{'TOTAL':10} {totals['calls']:>6} {totals['errors']:>5} "
+          f"{totals['input_tokens']:>11,} {totals['output_tokens']:>10,} "
+          f"{totals['cache_read']:>11,} {totals['cache_create']:>10,} "
+          f"{totals['wall_seconds']:>8.0f}")
+    print("=" * 96)
+    # Trend JSONL row.
+    try:
+        _USAGE_LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+        import json as _json
+        row = {
+            "ts": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "script": Path(sys.argv[0]).name if sys.argv else "?",
+            "wall_seconds_total": round(wall_total, 1),
+            "account_switched": bool(_CLAUDE_SWITCHED),
+            "active_at_end": _CLAUDE_ACTIVE_ACCOUNT,
+            "totals": totals,
+            "by_kind": snapshot,
+        }
+        with open(_USAGE_LOG_PATH, "a", encoding="utf-8") as fh:
+            fh.write(_json.dumps(row, ensure_ascii=False) + "\n")
+    except Exception as e:
+        print(f"[USAGE] failed to append trend row: {e}")
+
+
+# Credit / quota / rate-limit phrasing observed across Anthropic surface area
+# (API stderr, CLI stderr, stream-json `is_error` payloads). False positives
+# only cost one wasted switch per run; false negatives degrade to the existing
+# breaker-open path which still trips after 6 failures in 12 calls.
+_CREDIT_ERROR_RE = re.compile(
+    r"(credit\s*balance|insufficient[_\s-]*credit|out\s*of\s*credit|low\s*credit|"
+    r"usage\s*limit|quota\s*exceed|insufficient[_\s-]*quota|"
+    r"rate[-_\s]*limit(ed)?|429|"
+    r"weekly\s*limit|5[-\s]*hour\s*limit|monthly\s*limit|hour(?:ly)?\s*limit|"
+    r"upgrade\s*your\s*plan|payment[_\s-]*required|402|"
+    r"max\s*plan|reached\s*your\s*(?:weekly|monthly|usage|hourly)?\s*limit|"
+    r"plan_limit|overload(ed)?|api_error_status)",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_credit_error(*chunks: str) -> bool:
+    """Return True if any chunk contains a known credit/quota/rate-limit phrase.
+    Used to decide whether a failed `claude -p` call should trigger an account
+    switch vs. just count against the circuit breaker."""
+    for c in chunks:
+        if c and _CREDIT_ERROR_RE.search(c):
+            return True
+    return False
+
+
+def _active_config_dir() -> str:
+    """Return the CLAUDE_CONFIG_DIR value that should be injected into the next
+    `claude -p` subprocess env. Empty string means 'inherit / let CLI use its
+    default ~/.claude' — which is the legacy single-account behaviour."""
+    if _CLAUDE_ACTIVE_ACCOUNT == "secondary" and _CLAUDE_CONFIG_DIR_SECONDARY:
+        return _CLAUDE_CONFIG_DIR_SECONDARY
+    return _CLAUDE_CONFIG_DIR_PRIMARY
+
+
+def _maybe_switch_account(reason: str) -> bool:
+    """Flip primary→secondary once per run. Resets the circuit breakers since
+    the failures were credentials-bound, not infra-bound. Returns True on a
+    real switch, False if already switched or no secondary configured."""
+    global _CLAUDE_ACTIVE_ACCOUNT, _CLAUDE_SWITCHED, _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
+    if _CLAUDE_SWITCHED or not _CLAUDE_CONFIG_DIR_SECONDARY:
+        return False
+    _CLAUDE_ACTIVE_ACCOUNT = "secondary"
+    _CLAUDE_SWITCHED = True
+    # Reset every per-kind breaker — windows, failure counters, open flag.
+    # Keep `used` budgets in place so a runaway run still has a cost cap.
+    for bk in _OAUTH_BREAKERS.values():
+        bk["failures"] = 0
+        bk["open"] = False
+        bk["window"] = []
+        bk.pop("_budget_logged", None)
+    _OAUTH_FAILURES = 0
+    _OAUTH_CIRCUIT_OPEN = False
+    safe = (reason or "").encode("ascii", "replace").decode("ascii")[:160]
+    print(f"[CLAUDE-AUTH] primary account exhausted ({safe!r}); switching to "
+          f"secondary account (dir={_CLAUDE_CONFIG_DIR_SECONDARY})", flush=True)
+    return True
+
+
 def _parse_stream_json_buffer(raw: str, *, timed_out: bool) -> str | None:
     """Parse line-delimited JSON output from `claude -p --output-format
     stream-json`. Returns the response text (or partial text on timeout)
@@ -1668,6 +2073,8 @@ def _parse_stream_json_buffer(raw: str, *, timed_out: bool) -> str | None:
     `assistant` events otherwise. Truncated last lines (timeout cut us
     mid-JSON) are silently dropped.
     """
+    global _LAST_CLAUDE_STREAM_ERROR
+    _LAST_CLAUDE_STREAM_ERROR = ""
     if not raw:
         return None
     import json as _json
@@ -1715,7 +2122,30 @@ def _parse_stream_json_buffer(raw: str, *, timed_out: bool) -> str | None:
                   f"{len(text_chunks)} text chunk(s) from partial stream")
         return "\n".join(text_chunks)
     if saw_error:
+        _LAST_CLAUDE_STREAM_ERROR = str(error_note or "")[:300]
         print(f"    [!] claude CLI returned is_error event: {error_note}")
+    return None
+
+
+def _extract_stream_usage(raw: str) -> dict | None:
+    """Pull the `usage` dict out of the most recent `result` event in the
+    stream-json output, or None if the event was malformed / truncated.
+    Sibling of `_parse_stream_json_buffer` — kept separate so the existing
+    text-parse public contract stays unchanged for every other caller."""
+    if not raw:
+        return None
+    import json as _json
+    for line in reversed(raw.splitlines()):
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            obj = _json.loads(line)
+        except Exception:
+            continue
+        if isinstance(obj, dict) and obj.get("type") == "result":
+            usage = obj.get("usage")
+            return usage if isinstance(usage, dict) else None
     return None
 
 
@@ -1726,6 +2156,92 @@ def _call_claude_cli(
     allowed_tools: list[str] | None = None,
     system_prompt: str | None = None,
     timeout: int = 180,
+    kind: str = "uc",
+) -> str | None:
+    """Public entry point used by every LLM call site. Performs the
+    `claude -p` invocation, and on a credit/quota-exhaustion failure on
+    the primary account, switches to the secondary CLAUDE_CONFIG_DIR
+    once per run and retries the same call. All breaker bookkeeping,
+    success/failure notes, and call-site contracts stay unchanged —
+    callers see the same (str | None) return.
+
+    The `kind` kwarg (uc / ioc / relevance / vision / kc / review) is
+    used purely for usage accounting and per-call logging; it does not
+    affect routing or the breaker, which the caller still manages."""
+    out = _do_claude_cli_call_once(
+        prompt, model=model, allowed_tools=allowed_tools,
+        system_prompt=system_prompt, timeout=timeout, kind=kind,
+    )
+    if out:
+        return out
+    # Failover path. Only meaningful when:
+    #   1. A secondary config dir is configured.
+    #   2. We haven't already switched (one-way per run).
+    #   3. The failure looks like credit/quota exhaustion (vs. timeout,
+    #      network blip, transient model error). We pattern-match against
+    #      both the stderr tail and the stream-json is_error payload.
+    if (_CLAUDE_ACTIVE_ACCOUNT == "primary"
+            and not _CLAUDE_SWITCHED
+            and _CLAUDE_CONFIG_DIR_SECONDARY
+            and _looks_like_credit_error(_LAST_CLAUDE_STDERR_TAIL,
+                                         _LAST_CLAUDE_STREAM_ERROR)):
+        reason = (_LAST_CLAUDE_STREAM_ERROR
+                  or _LAST_CLAUDE_STDERR_TAIL
+                  or "credit/quota error")[:160]
+        if _maybe_switch_account(reason=reason):
+            return _do_claude_cli_call_once(
+                prompt, model=model, allowed_tools=allowed_tools,
+                system_prompt=system_prompt, timeout=timeout, kind=kind,
+            )
+    return out
+
+
+def _kill_process_tree(proc) -> None:
+    """Kill a subprocess AND every descendant. `claude.exe` is a Node.js
+    launcher that spawns child processes (MCP servers etc.) which inherit
+    our stdin/stdout pipe handles. A bare `proc.kill()` on Windows only
+    terminates the immediate child — the descendants hold the pipes open
+    and any subsequent `proc.communicate()` blocks forever on them.
+
+    Caused a 13.5-hour pipeline hang on 2026-05-19 18:30 (PID 9980 /
+    claude PID 83708 / `_OAUTH_UC_CALL_TIMEOUT_SEC=1200` never fired).
+
+    Windows: `taskkill /F /T /PID <pid>` walks the parent→child chain.
+    POSIX: `os.killpg()` against the process group requested at Popen
+    time via `start_new_session=True`. Falls back to plain `proc.kill()`
+    on any error — better than nothing."""
+    import subprocess as _sp
+    try:
+        if proc.poll() is not None:
+            return  # already exited
+    except Exception:
+        return
+    try:
+        if os.name == "nt":
+            _sp.run(
+                ["taskkill", "/F", "/T", "/PID", str(proc.pid)],
+                capture_output=True, timeout=15,
+            )
+        else:
+            import signal
+            os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+    except Exception as e:
+        try:
+            proc.kill()
+        except Exception:
+            pass
+        print(f"    [!] kill_process_tree fell back to proc.kill: {e}",
+              flush=True)
+
+
+def _do_claude_cli_call_once(
+    prompt: str,
+    *,
+    model: str,
+    allowed_tools: list[str] | None = None,
+    system_prompt: str | None = None,
+    timeout: int = 180,
+    kind: str = "uc",
 ) -> str | None:
     """Run `claude -p --output-format stream-json` as a subprocess.
 
@@ -1745,8 +2261,17 @@ def _call_claude_cli(
 
     Returns None on launch failure, non-zero exit with empty stream,
     or genuinely-empty output. Caller is responsible for the per-kind
-    breaker.
+    breaker. Stashes the stderr tail into `_LAST_CLAUDE_STDERR_TAIL`
+    so the failover layer in `_call_claude_cli` can decide whether to
+    flip to the secondary CLAUDE_CONFIG_DIR.
     """
+    global _LAST_CLAUDE_STDERR_TAIL, _LOGGED_STARTUP_ACCOUNT
+    _LAST_CLAUDE_STDERR_TAIL = ""
+
+    # Wall-time measurement for usage accounting. Captured even on launch
+    # failure so the metric reflects real time spent attempting the call.
+    _wall_t0 = time.perf_counter()
+
     cmd = [
         _CLAUDE_CLI_PATH, "-p",
         "--output-format", "stream-json",
@@ -1768,39 +2293,118 @@ def _call_claude_cli(
     env.pop("CLAUDE_CODE_ENTRYPOINT", None)
     env.pop("CLAUDE_CODE_SSE_PORT", None)
 
+    # Dual-account: route this subprocess to the active CLAUDE_CONFIG_DIR.
+    # Empty string means "let the CLI use its built-in default ~/.claude",
+    # which preserves single-account behaviour when the user hasn't
+    # configured the secondary env var.
+    cfg_dir = _active_config_dir()
+    if cfg_dir:
+        env["CLAUDE_CONFIG_DIR"] = cfg_dir
+
+    # One-shot startup log so the operator can see which account the run
+    # actually started on. Only logged once per process; subsequent calls
+    # are silent unless a switch happens.
+    if not _LOGGED_STARTUP_ACCOUNT:
+        _LOGGED_STARTUP_ACCOUNT = True
+        print(f"[CLAUDE-AUTH] active account = {_CLAUDE_ACTIVE_ACCOUNT} "
+              f"(dir={cfg_dir or '<default ~/.claude>'})", flush=True)
+
     import subprocess
+    popen_kwargs = dict(
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        env=env,
+    )
+    # POSIX: put the child in its own session/group so `os.killpg()`
+    # inside `_kill_process_tree` can terminate the whole descendant
+    # tree. On Windows we use `taskkill /T` which doesn't need this.
+    if os.name != "nt":
+        popen_kwargs["start_new_session"] = True
     try:
-        proc = subprocess.Popen(
-            cmd,
-            stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-            env=env,
-        )
+        proc = subprocess.Popen(cmd, **popen_kwargs)
     except OSError as e:
+        _LAST_CLAUDE_STDERR_TAIL = f"launch_failed: {e}"
         print(f"    [!] claude CLI launch failed: {e}")
+        _record_usage(kind, _CLAUDE_ACTIVE_ACCOUNT, ok=False,
+                      wall_seconds=time.perf_counter() - _wall_t0,
+                      usage=None)
         return None
+
+    # Wallclock watchdog. Belt-and-suspenders for the 2026-05-19 18:30
+    # incident where `proc.communicate(timeout=N)` did not raise
+    # TimeoutExpired because claude.exe's Node descendants kept the
+    # stdout/stderr pipes open after the parent stalled. After
+    # `timeout + 60s` of wallclock the watchdog force-kills the process
+    # tree AND closes the pipe handles from the parent side, which
+    # unblocks Python's pipe-reader threads inside communicate().
+    _watchdog_done = _threading.Event()
+    _watchdog_state = {"fired": False}
+
+    def _watchdog():
+        if _watchdog_done.wait(timeout + 60):
+            return  # main thread released the latch in time — clean
+        _watchdog_state["fired"] = True
+        print(f"    [!] watchdog firing — claude CLI exceeded "
+              f"{timeout + 60}s (pid={proc.pid}); force-killing tree",
+              flush=True)
+        _kill_process_tree(proc)
+        # Close the pipes from the parent side so the pipe-reader
+        # threads inside communicate() unblock even when descendant
+        # processes are still holding the kernel handles open.
+        for pipe in (proc.stdin, proc.stdout, proc.stderr):
+            try:
+                if pipe and not pipe.closed:
+                    pipe.close()
+            except Exception:
+                pass
+
+    _watchdog_thread = _threading.Thread(target=_watchdog, daemon=True)
+    _watchdog_thread.start()
 
     timed_out = False
     stdout_buf = ""
     stderr_buf = ""
     try:
-        stdout_buf, stderr_buf = proc.communicate(input=prompt, timeout=timeout)
-    except subprocess.TimeoutExpired as exc:
-        timed_out = True
-        # The exception carries the partial stdout/stderr captured up
-        # to the timeout point. Kill the subprocess and grab anything
-        # that buffered between the kill and exit.
-        proc.kill()
         try:
-            tail_stdout, tail_stderr = proc.communicate(timeout=10)
-        except Exception:
-            tail_stdout, tail_stderr = ("", "")
-        stdout_buf = (exc.stdout or "") + (tail_stdout or "")
-        stderr_buf = (exc.stderr or "") + (tail_stderr or "")
+            stdout_buf, stderr_buf = proc.communicate(input=prompt, timeout=timeout)
+        except subprocess.TimeoutExpired as exc:
+            timed_out = True
+            # The exception carries the partial stdout/stderr captured up
+            # to the timeout point. Tree-kill the subprocess (not just
+            # the parent — see _kill_process_tree docstring) and grab
+            # anything that buffered between the kill and exit.
+            _kill_process_tree(proc)
+            try:
+                tail_stdout, tail_stderr = proc.communicate(timeout=10)
+            except subprocess.TimeoutExpired:
+                tail_stdout, tail_stderr = ("", "")
+            except Exception:
+                tail_stdout, tail_stderr = ("", "")
+            stdout_buf = (exc.stdout or "") + (tail_stdout or "")
+            stderr_buf = (exc.stderr or "") + (tail_stderr or "")
+    finally:
+        # Always release the watchdog latch so the daemon thread exits
+        # promptly. If the watchdog has already fired this is a no-op.
+        _watchdog_done.set()
+
+    # Always stash a stderr tail for the failover layer to inspect.
+    if stderr_buf:
+        _LAST_CLAUDE_STDERR_TAIL = stderr_buf.strip()[-600:]
+    if _watchdog_state["fired"]:
+        # Surface the forced-kill in the stderr tail so the failover
+        # credit-error detector + usage tracker can distinguish "real
+        # claude error" from "we had to hard-kill it". The credit-error
+        # regex won't match the marker, so failover correctly stays put
+        # (a hung CLI is not a credit/quota signal).
+        _LAST_CLAUDE_STDERR_TAIL = (
+            f"[watchdog-forced-kill after {timeout + 60}s] "
+            + (_LAST_CLAUDE_STDERR_TAIL or "(no stderr)")
+        )
+        timed_out = True
 
     # Non-zero exit on a non-timeout run: surface the stderr tail.
     if not timed_out and proc.returncode != 0:
@@ -1809,7 +2413,17 @@ def _call_claude_cli(
         print(f"    [!] claude CLI rc={proc.returncode}: {tail}")
         # Fall through anyway in case partial stream-json text landed.
 
-    return _parse_stream_json_buffer(stdout_buf or "", timed_out=timed_out)
+    text = _parse_stream_json_buffer(stdout_buf or "", timed_out=timed_out)
+    # Record usage even on failure so the operator can see how much wall-time
+    # was lost to bad calls. `usage` may be None if no `result` event landed
+    # (e.g. a hard timeout before the first token). Token counts default to 0.
+    _record_usage(
+        kind, _CLAUDE_ACTIVE_ACCOUNT,
+        ok=bool(text),
+        wall_seconds=time.perf_counter() - _wall_t0,
+        usage=_extract_stream_usage(stdout_buf or ""),
+    )
+    return text
 
 
 # =============================================================================
@@ -1907,6 +2521,7 @@ def _llm_call_via_oauth(prompt: str, enable_search: bool = True) -> str | None:
         model=LLM_UC_MODEL,
         allowed_tools=tools,
         timeout=_OAUTH_UC_CALL_TIMEOUT_SEC,
+        kind="uc",
     )
     if out:
         _note_oauth_success("uc")
@@ -2123,53 +2738,152 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<KILL_CHAIN>>",  kc_block)
               .replace("<<IMAGE_URLS>>",  image_block)
               .replace("<<EXTRA_CONTEXT>>", _format_extra_context(article))
-              .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
-              .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
-              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
-              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK)
-              .replace("<<FALCON_SCHEMA>>", _FALCON_KNOWLEDGE_BLOCK))
-    raw = None
-    if use_oauth:
-        raw = _llm_call_via_oauth(prompt)
-    if raw is None and api_key:
-        raw = _llm_call_via_api_key(prompt, api_key)
-    if raw is None:
-        return []
-    raw = raw.strip()
-    if raw.startswith("```"):
-        raw = re.sub(r"^```(?:json)?\s*", "", raw)
-        raw = re.sub(r"\s*```\s*$", "", raw)
-    # The Agent SDK sometimes wraps the JSON in chatty prose. Try to
-    # extract the first balanced { ... } block if a direct parse fails.
+              .replace("<<DEFENDER_SCHEMA>>", _platform_block("defender", _DEFENDER_SCHEMA_BLOCK))
+              .replace("<<SENTINEL_SCHEMA>>", _platform_block("sentinel", _SENTINEL_SCHEMA_BLOCK))
+              .replace("<<KQL_KNOWLEDGE>>",
+                       _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
+              .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
+              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK)))
+    # Phase 3b: skip the WebSearch/WebFetch tool definitions when the article
+    # already carries hard IOC signals — CVEs, IPs, domains, or file hashes.
+    # In that case the body has enough grounding to generate UCs without a
+    # web fetch, and we avoid paying the per-call tool-spec cache_create
+    # cost (~2-4 KB per uc call) AND avoid multi-turn search detours.
+    has_hard_iocs = bool(
+        (ind.get("cves") or [])
+        or (ind.get("ips") or [])
+        or (ind.get("domains") or [])
+        or (ind.get("sha256") or []) or (ind.get("sha1") or []) or (ind.get("md5") or [])
+    )
+    # ---- LLM call + parse + validate, with auto-retry on validation errors ----
+    # Up to _UC_MAX_VALIDATION_RETRIES extra re-prompts when the parsed UCs
+    # fail schema or syntax validation. Each retry costs one additional `uc`
+    # LLM call (counts against the per-kind budget). We stop early on any
+    # of: (1) clean validation, (2) JSON parse failure that retry can't
+    # plausibly fix, (3) LLM returning None mid-loop (treat as soft fail —
+    # ship whatever the prior attempt produced).
     json_lib = __import__("json")
-    try:
-        data = json_lib.loads(raw)
-    except Exception:
-        m = re.search(r"\{.*\}", raw, re.DOTALL)
-        if m:
-            try:
-                data = json_lib.loads(m.group(0))
-            except Exception as e:
-                print(f"    [!] LLM output JSON-parse failed: {str(e)[:80]}")
+    prompt_to_send = prompt
+    data: dict | None = None
+    retries_used = 0
+    for attempt in range(_UC_MAX_VALIDATION_RETRIES + 1):
+        raw = None
+        if use_oauth:
+            raw = _llm_call_via_oauth(prompt_to_send, enable_search=not has_hard_iocs)
+        if raw is None and api_key:
+            raw = _llm_call_via_api_key(prompt_to_send, api_key)
+        if raw is None:
+            # LLM unavailable. If we already have data from a prior attempt,
+            # ship that — better partial than nothing. Otherwise give up.
+            if data is None:
                 return []
-        else:
-            print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
-            return []
-    # Schema-field validation — flag any column the LLM invented or used on
-    # the wrong table for either platform. Issues are attached per-platform
-    # to each UC in the cache for later auditing via validate_kql_knowledge.py.
-    total_issues = 0
-    total_sigma_issues = 0
-    for uc in data.get("ucs") or []:
-        if isinstance(uc, dict):
-            total_issues += _attach_field_issues(uc, "defender_kql")
-            total_issues += _attach_field_issues(uc, "sentinel_kql",
-                                                  issues_key="_sentinel_field_issues")
-            total_sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
+            break
+        raw = raw.strip()
+        if raw.startswith("```"):
+            raw = re.sub(r"^```(?:json)?\s*", "", raw)
+            raw = re.sub(r"\s*```\s*$", "", raw)
+        # The Agent SDK sometimes wraps the JSON in chatty prose. Try to
+        # extract the first balanced { ... } block if a direct parse fails.
+        parsed = None
+        try:
+            parsed = json_lib.loads(raw)
+        except Exception:
+            m = re.search(r"\{.*\}", raw, re.DOTALL)
+            if m:
+                try:
+                    parsed = json_lib.loads(m.group(0))
+                except Exception as e:
+                    if attempt < _UC_MAX_VALIDATION_RETRIES and data is None:
+                        # First attempts at JSON parse failed — re-prompt the
+                        # LLM with a strict "emit JSON only" reminder.
+                        print(f"    [!] LLM JSON-parse failed (attempt {attempt+1}): {str(e)[:80]} — retrying")
+                        retries_used += 1
+                        prompt_to_send = (
+                            prompt
+                            + "\n\nYour previous response was not valid JSON. "
+                              "Emit ONLY the JSON object, no prose, no code fences, no preamble."
+                        )
+                        continue
+                    print(f"    [!] LLM output JSON-parse failed: {str(e)[:80]}")
+                    return [] if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+            else:
+                if attempt < _UC_MAX_VALIDATION_RETRIES and data is None:
+                    print(f"    [!] LLM output had no JSON block (attempt {attempt+1}) — retrying")
+                    retries_used += 1
+                    prompt_to_send = (
+                        prompt
+                        + "\n\nYour previous response had no JSON block. "
+                          "Emit ONLY the JSON object, nothing before or after."
+                    )
+                    continue
+                print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
+                return [] if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+        data = parsed
+        ucs_list = data.get("ucs") if isinstance(data, dict) else None
+        if not ucs_list:
+            # Empty UC list is a valid response (genuinely low-action article).
+            # Don't retry; treat it as terminal.
+            break
+        # Run schema validation (auto-fixes in place) and syntax validation
+        # (Microsoft.Azure.Kusto.Language). Track totals so the retry trigger
+        # only fires when residual errors remain AFTER auto-fix.
+        field_issues = 0
+        sigma_issues = 0
+        # Clear any inline issue keys from the prior attempt so we get fresh
+        # counts (auto-fix rewrites kql in place so reruns may find nothing).
+        for uc in ucs_list:
+            if isinstance(uc, dict):
+                for k in ("_field_issues", "_field_issues_autofix",
+                          "_sentinel_field_issues", "_sentinel_field_issues_autofix",
+                          "_syntax_issues", "_sentinel_syntax_issues"):
+                    uc.pop(k, None)
+        for uc in ucs_list:
+            if isinstance(uc, dict):
+                field_issues += _attach_field_issues(uc, "defender_kql")
+                field_issues += _attach_field_issues(uc, "sentinel_kql",
+                                                      issues_key="_sentinel_field_issues")
+                sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
+        syntax_issues = _attach_syntax_issues_batch(ucs_list)
+        total_validation_errors = field_issues + syntax_issues
+        if total_validation_errors == 0:
+            # Clean. No retry needed.
+            break
+        if attempt >= _UC_MAX_VALIDATION_RETRIES:
+            # Out of retries. Ship with issues attached — better than nothing.
+            break
+        # Build the retry payload and re-prompt.
+        error_text = _format_validation_errors_for_retry(ucs_list)
+        if not error_text:
+            break
+        retries_used += 1
+        print(f"    [UC-RETRY] attempt {attempt+1}: "
+              f"{field_issues} field + {syntax_issues} syntax issue(s) — re-prompting LLM")
+        prompt_to_send = prompt + "\n\n" + error_text
+
+    if data is None or not isinstance(data, dict):
+        return []
+
+    # Final tally for the log line — uses the issue keys attached during the
+    # last successful validation pass.
+    ucs_list = data.get("ucs") or []
+    total_issues = sum(
+        len(u.get("_field_issues") or []) + len(u.get("_sentinel_field_issues") or [])
+        for u in ucs_list if isinstance(u, dict)
+    )
+    total_syntax_issues = sum(
+        len(u.get("_syntax_issues") or []) + len(u.get("_sentinel_syntax_issues") or [])
+        for u in ucs_list if isinstance(u, dict)
+    )
+    total_sigma_issues = sum(
+        len(u.get("_sigma_issues") or []) for u in ucs_list if isinstance(u, dict)
+    )
     if total_issues:
-        print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(data.get('ucs') or [])} UC(s)")
+        print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(ucs_list)} UC(s)")
+    if total_syntax_issues:
+        print(f"    [!] {total_syntax_issues} KQL syntax issue(s) flagged across {len(ucs_list)} UC(s)")
     if total_sigma_issues:
-        print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(data.get('ucs') or [])} UC(s)")
+        print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(ucs_list)} UC(s)")
+
     # Stamp the cache with the inputs we used so the 24h re-review pass
     # can detect when an article's body has been edited, a new image has
     # been added, or when a similar article has appeared elsewhere.
@@ -2178,6 +2892,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
     data["_similar_count"] = int(article.get("_similar_count", 0))
     data["_image_count"]   = len(image_urls)
     data["_analyzed_at"]   = dt.datetime.now(dt.timezone.utc).isoformat()
+    data["_retries_used"]  = retries_used
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
 
@@ -2467,11 +3182,12 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<MITRE_ID>>", actor.get("mitre_id", ""))
               .replace("<<DESCRIPTION>>", description or "(no description in MITRE bundle)")
               .replace("<<TECHNIQUES>>", ", ".join(techs[:60]))
-              .replace("<<DEFENDER_SCHEMA>>", _DEFENDER_SCHEMA_BLOCK)
-              .replace("<<SENTINEL_SCHEMA>>", _SENTINEL_SCHEMA_BLOCK)
-              .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
-              .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK)
-              .replace("<<FALCON_SCHEMA>>", _FALCON_KNOWLEDGE_BLOCK))
+              .replace("<<DEFENDER_SCHEMA>>", _platform_block("defender", _DEFENDER_SCHEMA_BLOCK))
+              .replace("<<SENTINEL_SCHEMA>>", _platform_block("sentinel", _SENTINEL_SCHEMA_BLOCK))
+              .replace("<<KQL_KNOWLEDGE>>",
+                       _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
+              .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
+              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK)))
     raw = None
     try:
         if use_oauth:
@@ -16773,6 +17489,7 @@ def _llm_relevance_call(prompt: str) -> dict | None:
             model=LLM_RELEVANCE_MODEL,
             allowed_tools=None,
             timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC,
+            kind="relevance",
         )
         if raw:
             _note_oauth_success("relevance")
@@ -17019,17 +17736,20 @@ _IOC_REQUIRED_KEYS = ("cves", "ips", "domains", "sha256", "sha1",
                       "md5", "software")
 
 
-def _format_extra_context(article: dict, max_code_blocks: int = 6,
-                          max_tables: int = 3, max_refs: int = 10,
-                          max_kbs: int = 12, max_cvss: int = 5) -> str:
+def _format_extra_context(article: dict, max_code_blocks: int = 3,
+                          max_tables: int = 2, max_refs: int = 5,
+                          max_kbs: int = 8, max_cvss: int = 4) -> str:
     """Build the `<<EXTRA_CONTEXT>>` block injected into the IOC/UC/KC
     prompts. Surfaces the structured artefacts the HTML fetcher
     extracted at parse time so the LLM sees them alongside the prose
-    body. Returns empty string when the article has nothing extra —
-    keeps the prompt clean.
+    body. Returns empty string when the article has nothing extra.
 
-    Includes: code blocks, HTML tables, KB / patch numbers, CVSS
-    scores, and the author-curated References section.
+    Phase 5 (May 2026 token reduction): caps tightened from
+    (6/3/10/12/5) to (3/2/5/8/4) and per-cell/per-block char limits
+    halved. Tables alone were ~5-7 KB per call worst-case; bringing
+    them in line with the body cap (8K) instead of dominating it.
+    Headers compressed to single-line terse markers so the model can
+    still identify each section without prose preamble.
     """
     code_blocks = (article.get("code_blocks") or [])[:max_code_blocks]
     tables      = (article.get("tables") or [])[:max_tables]
@@ -17040,47 +17760,33 @@ def _format_extra_context(article: dict, max_code_blocks: int = 6,
         return ""
     parts = []
     if code_blocks:
-        parts.append(
-            "Verbatim code blocks extracted from the article body (literal "
-            "command-lines, config snippets, IOC dumps — anchor detections "
-            "on the EXACT strings shown):\n"
-        )
+        parts.append("Code blocks (verbatim — anchor detections on exact strings):\n")
         for i, block in enumerate(code_blocks, 1):
-            # Cap each block defensively in the prompt too (extractor
-            # already capped at 800 chars but multi-block prompts add up).
-            parts.append(f"  [Block {i}]\n{block[:600]}\n\n")
+            # Was 600; halved to 400.
+            parts.append(f"  [Block {i}]\n{block[:400]}\n\n")
     if tables:
-        parts.append(
-            "Structured tables extracted from the article body (IOC matrices, "
-            "affected-version tables, hash columns — read row by row):\n"
-        )
+        parts.append("Tables (IOC matrices / affected versions):\n")
         for i, tbl in enumerate(tables, 1):
             headers = tbl.get("headers") or []
             rows = tbl.get("rows") or []
             parts.append(f"  [Table {i}]")
             if headers:
-                parts.append(f"    Headers: {' | '.join(headers[:8])}\n")
-            for r_idx, row in enumerate(rows[:12], 1):
-                parts.append(f"    Row {r_idx}: {' | '.join(str(c)[:120] for c in row[:8])}\n")
+                # Was 8 cols; trimmed to 6.
+                parts.append(f"    Headers: {' | '.join(headers[:6])}\n")
+            # Was 12 rows × 8 cols × 120 chars; now 6 × 6 × 80.
+            for r_idx, row in enumerate(rows[:6], 1):
+                parts.append(f"    Row {r_idx}: {' | '.join(str(c)[:80] for c in row[:6])}\n")
             parts.append("\n")
     if kb_numbers:
-        parts.append(
-            "Microsoft KB / patch identifiers mentioned in the article "
-            "(remediation correlation):\n"
-        )
-        parts.append("  " + ", ".join(kb_numbers) + "\n\n")
+        parts.append("KB / patch IDs: " + ", ".join(kb_numbers) + "\n\n")
     if cvss_scores:
-        parts.append("CVSS scores mentioned in the article:\n")
-        parts.append("  " + ", ".join(cvss_scores) + "\n\n")
+        parts.append("CVSS scores: " + ", ".join(cvss_scores) + "\n\n")
     if references:
-        parts.append(
-            "Author-curated references / citations from the article "
-            "(higher-confidence starting points for corroboration than "
-            "blind WebSearch):\n"
-        )
+        parts.append("References (author-curated):\n")
         for r in references:
-            url = r.get("url", "")[:200]
-            label = (r.get("label") or "")[:120]
+            # url cap was 200; label cap was 120. Halved to 120/80.
+            url = r.get("url", "")[:120]
+            label = (r.get("label") or "")[:80]
             parts.append(f"  - {label}\n    {url}\n" if label and label != url
                          else f"  - {url}\n")
         parts.append("\n")
@@ -17285,6 +17991,7 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
             allowed_tools=["WebSearch", "WebFetch"],
             system_prompt=_IOC_PROMPT_SYSTEM,
             timeout=_OAUTH_UC_CALL_TIMEOUT_SEC,
+            kind="ioc",
         )
         if not raw:
             # Retry once without tools — saves the article when the
@@ -17296,6 +18003,7 @@ def _llm_extract_iocs_pass1(article: dict) -> dict | None:
                 allowed_tools=None,
                 system_prompt=_IOC_PROMPT_SYSTEM,
                 timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+                kind="ioc",
             )
         if raw:
             _note_oauth_success("ioc")
@@ -17378,6 +18086,7 @@ def _llm_extract_iocs_pass2(article: dict, pass1: dict) -> list:
             allowed_tools=None,
             system_prompt=_IOC_PROMPT_SYSTEM,
             timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC,
+            kind="ioc",
         )
         if raw:
             _note_oauth_success("ioc")
@@ -17558,6 +18267,7 @@ def _llm_extract_vision_iocs(article: dict) -> dict | None:
             allowed_tools=["Read"],
             system_prompt=_VISION_PROMPT_SYSTEM,
             timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 3,  # ~135s for N images
+            kind="vision",
         )
         if not raw:
             _note_oauth_failure("vision CLI no result", kind="vision")
@@ -17629,6 +18339,22 @@ def _llm_extract_iocs(article: dict) -> dict | None:
     # the article is so sparse that gap-fill won't add value.
     body_len = len(article.get("raw_body") or "")
     if body_len < 800:
+        return p1
+    # Phase 4b: short-circuit Pass 2 when Pass 1 already produced a healthy
+    # IOC set. Gap-fill exists to rescue sparse-pass1 articles; it's wasted
+    # work on dense ones. Count is across hard kinds (cves+ips+domains+
+    # hashes+software); >=5 means we already have enough to render the
+    # IOC drawer and run hunts.
+    p1_hard_count = (
+        len(p1.get("cves") or [])
+        + len(p1.get("ips") or [])
+        + len(p1.get("domains") or [])
+        + len(p1.get("sha256") or [])
+        + len(p1.get("sha1") or [])
+        + len(p1.get("md5") or [])
+        + len(p1.get("software") or [])
+    )
+    if p1_hard_count >= 5:
         return p1
     # If pass 2 fails, we still keep pass 1 — partial result beats no
     # result. Gap-fill is purely additive.
@@ -17955,6 +18681,21 @@ def _llm_kill_chain_call(article: dict, ind: dict) -> dict | None:
     api_key = os.environ.get("ANTHROPIC_API_KEY")
     if _oauth_circuit_open("kc"):
         return None
+    # Phase 4a: skip kc reconstruction for low-signal articles. KC needs
+    # at least one anchor (CVE / IPs / domains / hashes / named actor /
+    # campaign tag) to produce a meaningful phase walk; without those
+    # the LLM tends to return generic / empty kill chains that don't
+    # help analysts. 318 kc calls/24h → ~150 expected post-gate.
+    has_kc_anchor = bool(
+        (ind.get("cves") or [])
+        or (ind.get("ips") or [])
+        or (ind.get("domains") or [])
+        or (ind.get("sha256") or []) or (ind.get("sha1") or []) or (ind.get("md5") or [])
+        or (ind.get("actors") or [])
+        or (ind.get("campaign") or "").strip()
+    )
+    if not has_kc_anchor:
+        return None
 
     body = (article.get("raw_body") or "")[:LLM_IOC_MAX_BODY_CHARS]
     title = (article.get("title") or "")[:300]
@@ -17985,14 +18726,20 @@ def _llm_kill_chain_call(article: dict, ind: dict) -> dict | None:
 
     raw = None
     if use_oauth and not _oauth_circuit_open("kc"):
-        # Direct `claude -p` subprocess. KC is a single bounded JSON
-        # call — no tools needed.
+        # Phase 4c REVERTED (May 2026 smoke-test on UC_VERSION=v4 run):
+        # Haiku produced rc=1 with zero output on every kc invocation
+        # (6/6 failures, ~90s each), suggesting the kc prompt + JSON
+        # response shape doesn't agree with this Haiku build. Reverted
+        # to Opus (LLM_IOC_MODEL); kc volume is small (~70k output
+        # tokens/day) so the Opus cost is acceptable.
+        # KC is a single bounded JSON call — no tools needed.
         raw = _call_claude_cli(
             prompt,
             model=LLM_IOC_MODEL,
             allowed_tools=None,
             system_prompt=_KC_PROMPT_SYSTEM,
             timeout=_OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+            kind="kc",
         )
         if raw:
             _note_oauth_success("kc")

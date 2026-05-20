@@ -31,15 +31,17 @@ The campaign appears to be the work of a single threat actor deploying multiple 
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1567** — Exfiltration Over Web Service
-- **T1041** — Exfiltration Over C2 Channel
-- **T1571** — Non-Standard Port
-- **T1059.007** — JavaScript
-- **T1567.001** — Exfiltration to Code Repository
-- **T1552.001** — Credentials In Files
+- **T1090.002** — Proxy: External Proxy
+- **T1568** — Dynamic Resolution
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1555** — Credentials from Password Stores
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1543.003** — Create or Modify System Process: Windows Service
 
 ## Kill chain phases observed
 
@@ -47,106 +49,129 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Malicious npm Package Install - Shai-Hulud Typosquat Campaign (chalk-tempalte / axios-util)
+### [LLM] Outbound connection or DNS to Shai-Hulud copycat C2 (lhr.life subdomains / 80.200.28.28:2222)
 
-`UC_22_6` · phase: **delivery** · confidence: **High**
+`UC_27_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe") AND (Processes.process="*chalk-tempalte*" OR Processes.process="*@deadcode09284814/axios-util*" OR Processes.process="*axios-utils*" OR Processes.process="*axois-utils*" OR Processes.process="*color-style-utils*") by host user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.user) as user values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where (All_Traffic.dest="80.200.28.28" AND All_Traffic.dest_port=2222) OR All_Traffic.dest_url IN ("*87e0bbc636999b.lhr.life*","*b94b6bcfa27554.lhr.life*","*edcf8b03c84634.lhr.life*") by All_Traffic.dest All_Traffic.dest_url host | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Network_Resolution where DNS.query IN ("87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life") by DNS.query DNS.src host | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let C2Domains = dynamic(["87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life"]);
+let C2IP = "80.200.28.28";
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where (RemoteIP == C2IP and RemotePort == 2222)
+    or RemoteUrl has_any (C2Domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessParentFileName,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl,
+          Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Install of typosquatted Shai-Hulud copycat npm packages (chalk-tempalte / axois-utils / color-style-utils / @deadcode09284814/axios-util)
+
+`UC_27_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","node.exe") (Processes.process="*chalk-tempalte*" OR Processes.process="*axois-utils*" OR Processes.process="*color-style-utils*" OR Processes.process="*@deadcode09284814/axios-util*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let MalPackages = dynamic(["chalk-tempalte","axois-utils","color-style-utils","@deadcode09284814/axios-util"]);
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe")
-| where ProcessCommandLine has_any ("chalk-tempalte","@deadcode09284814/axios-util","axios-utils","axois-utils","color-style-utils")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","npx.cmd","node.exe")
+    or InitiatingProcessFileName in~ ("npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe")
+| where ProcessCommandLine has_any (MalPackages)
+    or InitiatingProcessCommandLine has_any (MalPackages)
+| project Timestamp, DeviceName, AccountName, AccountUpn,
+          FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, FolderPath
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound C2 to localhost.run Tunnel (lhr.life) Subdomains - Shai-Hulud Copycat
+### [LLM] node/npm process reading SSH private keys or cloud credential files (Shai-Hulud infostealer behavior)
 
-`UC_22_7` · phase: **c2** · confidence: **High**
+`UC_27_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query IN ("87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life") OR DNS.query="*.lhr.life") by host DNS.src DNS.query DNS.answer DNS.record_type | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node","npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd") AND (Filesystem.file_path="*\\.ssh\\id_rsa*" OR Filesystem.file_path="*/.ssh/id_*" OR Filesystem.file_path="*\\.aws\\credentials*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*\\.config\\gcloud*" OR Filesystem.file_path="*/.config/gcloud*" OR Filesystem.file_path="*\\.azure\\accessTokens*" OR Filesystem.file_path="*\\.npmrc*" OR Filesystem.file_path="*wallet.dat*" OR Filesystem.file_path="*keystore*") by Filesystem.dest Filesystem.user Filesystem.action | `drop_dm_object_name(Filesystem)` | where mvcount(file_path) >= 2 | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let ioc_domains = dynamic(["87e0bbc636999b.lhr.life","b94b6bcfa27554.lhr.life","edcf8b03c84634.lhr.life"]);
-union isfuzzy=true
-(DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has_any (ioc_domains) or RemoteUrl endswith ".lhr.life"
-  | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-  | where QueryName has_any (ioc_domains) or QueryName endswith ".lhr.life"
-  | project Timestamp, DeviceName, ActionType, RemoteUrl=QueryName,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName)
-| order by Timestamp desc
+let CredPaths = dynamic([
+  "\\.ssh\\id_rsa","\\.ssh\\id_ed25519","/.ssh/id_rsa","/.ssh/id_ed25519",
+  "\\.aws\\credentials","/.aws/credentials",
+  "\\.config\\gcloud","/.config/gcloud",
+  "\\.azure\\accessTokens","\\.azure\\azureProfile",
+  "\\.npmrc","/.npmrc",
+  "wallet.dat","keystore","metamask","electrum"
+]);
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd")
+| where FolderPath has_any (CredPaths) or FileName has_any (CredPaths)
+| where InitiatingProcessParentFileName !in~ ("code.exe","devenv.exe","webstorm64.exe","idea64.exe")
+    or ActionType in ("FileCreated","FileModified","FileRenamed")
+| summarize PathsTouched = dcount(FolderPath), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Sample = make_set(FolderPath, 10)
+        by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where PathsTouched >= 2
+| order by LastSeen desc
 ```
 
-### [LLM] Network Egress to 80.200.28.28:2222 - Axios-Util Infostealer C2
+### [LLM] Phantom Bot persistence registration by node/npm context (axois-utils GoLang implant survives package deletion)
 
-`UC_22_8` · phase: **c2** · confidence: **High**
+`UC_27_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.dest_ip="80.200.28.28" AND All_Traffic.dest_port=2222 by host All_Traffic.src All_Traffic.src_user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as autostart_target values(Registry.process_name) as writing_process from datamodel=Endpoint.Registry where Registry.process_name IN ("node.exe","npm.cmd","npm.exe","yarn.cmd","pnpm.cmd") AND (Registry.registry_path="*\\CurrentVersion\\Run*" OR Registry.registry_path="*\\CurrentVersion\\RunOnce*" OR Registry.registry_path="*\\Services\\*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.cmd","npm.exe") Processes.process_name IN ("schtasks.exe","sc.exe","reg.exe","powershell.exe") (Processes.process="*schtasks*/create*" OR Processes.process="*sc*create*" OR Processes.process="*reg*add*Run*" OR Processes.process="*New-ScheduledTask*" OR Processes.process="*Register-ScheduledTask*") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "80.200.28.28" and RemotePort == 2222
-| project Timestamp, DeviceName, ActionType, Protocol, RemoteIP, RemotePort, LocalIP, LocalPort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessAccountUpn
-| order by Timestamp desc
-```
-
-### [LLM] Shai-Hulud Marker String Hunt - 'A Mini Sha1-Hulud has Appeared'
-
-`UC_22_9` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-(`endpoint_processes_index` OR `wineventlog_powershell_index` OR `sysmon_index`) "A Mini Sha1-Hulud has Appeared"
-| eval matched_field = case(match(_raw, "(?i)A Mini Sha1-Hulud has Appeared"), "raw", true(), "unknown")
-| stats count min(_time) as firstTime max(_time) as lastTime values(host) as host values(user) as user values(source) as source values(sourcetype) as sourcetype by matched_field, _raw
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let marker = "A Mini Sha1-Hulud has Appeared";
-union isfuzzy=true
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where ProcessCommandLine has marker or InitiatingProcessCommandLine has marker
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, Source="ProcessEvents"),
-(DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType in ("PowerShellCommand","AmsiScriptDetection","ScriptContent")
-  | where AdditionalFields has marker
-  | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName,
-            InitiatingProcessCommandLine, AdditionalFields, Source="DeviceEvents"),
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessCommandLine has marker
-  | project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-            InitiatingProcessFileName, InitiatingProcessCommandLine, Source="FileEvents")
+let NodeProcs = dynamic(["node.exe","npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd"]);
+let AutostartKeys = dynamic([
+  "\\CurrentVersion\\Run",
+  "\\CurrentVersion\\RunOnce",
+  "\\CurrentVersion\\Explorer\\Run",
+  "\\Services\\",
+  "\\Image File Execution Options\\"
+]);
+(
+  DeviceRegistryEvents
+  | where Timestamp > ago(14d)
+  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+  | where InitiatingProcessFileName in~ (NodeProcs)
+      or InitiatingProcessParentFileName in~ (NodeProcs)
+  | where RegistryKey has_any (AutostartKeys)
+  | project Timestamp, DeviceName, InitiatingProcessAccountName,
+            InitiatingProcessFileName, InitiatingProcessParentFileName,
+            InitiatingProcessCommandLine, RegistryKey, RegistryValueName,
+            RegistryValueData, Source="Registry"
+)
+| union
+(
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ (NodeProcs)
+  | where FileName in~ ("schtasks.exe","sc.exe","reg.exe","powershell.exe","pwsh.exe")
+  | where ProcessCommandLine has_any ("/create","create binPath","reg add","\\Run","Register-ScheduledTask","New-ScheduledTask")
+  | project Timestamp, DeviceName, InitiatingProcessAccountName=AccountName,
+            InitiatingProcessFileName, InitiatingProcessParentFileName,
+            InitiatingProcessCommandLine=ProcessCommandLine,
+            RegistryKey="", RegistryValueName="", RegistryValueData=FileName, Source="ProcessSpawn"
+)
 | order by Timestamp desc
 ```
 
@@ -307,4 +332,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -22,10 +22,9 @@ The issues, discovered by researcher Rafie Muhamma…
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1083** — File and Directory Discovery
-- **T1552.001** — Credentials in Files
-- **T1505.003** — Server Software Component: Web Shell
-- **T1003** — OS Credential Dumping
+- **T1212** — Exploitation for Credential Access
 
 ## Kill chain phases observed
 
@@ -33,46 +32,22 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Avada Builder CVE-2026-4782 custom_svg arbitrary file read targeting wp-config.php
+### [LLM] Avada Builder custom_svg arbitrary file-read targeting wp-config.php (CVE-2026-4782)
 
-`UC_24_1` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.url="*custom_svg*" (Web.url="*wp-config*" OR Web.url="*..%2F*" OR Web.url="*..%2f*" OR Web.url="*../*" OR Web.url="*%2e%2e%2f*" OR Web.url="*file%3A%2F%2F*" OR Web.url="*php%3A%2F%2Ffilter*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | where count >= 1
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "wp-config.php"
-| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe","php-fpm.exe")
-| where ActionType in ("FileCreated","FileModified","FileRenamed") or ActionType has "Read"
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] Avada Builder CVE-2026-4798 product_order time-based SQL injection (SLEEP/BENCHMARK)
-
-`UC_24_2` · phase: **exploit** · confidence: **High**
+`UC_29_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.status) as status sum(Web.response_time) as total_response_time from datamodel=Web.Web where (Web.url="*product_order*" AND (Web.url="*SLEEP*" OR Web.url="*sleep%28*" OR Web.url="*BENCHMARK*" OR Web.url="*WAITFOR*" OR Web.url="*PG_SLEEP*" OR Web.url="*pg_sleep*" OR Web.url="*0x*UNION*" OR Web.url="*%20AND%20*" OR Web.url="*%27%20OR%20*" OR Web.url="*--+*")) by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | where count >= 3
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as user_agents values(Web.status) as statuses from datamodel=Web.Web where (Web.url="*custom_svg=*" OR Web.http_user_agent="*custom_svg=*") (Web.url="*wp-config*" OR Web.url="*..%2F*" OR Web.url="*..%252F*" OR Web.url="*../*" OR Web.url="*..\\*" OR Web.url="*/etc/passwd*" OR Web.url="*.env*" OR Web.url="*php://filter*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-**Defender KQL:**
-```kql
-// Defender XDR has no native inbound-HTTP table for WordPress sites; falls back to network-inspect on hosts where the web stack is colocated
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType == "HttpConnectionInspected"
-| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","nginx.exe","httpd.exe","php-fpm.exe")
-| where RemoteUrl has "product_order"
-| where RemoteUrl has_any ("SLEEP","sleep%28","BENCHMARK","WAITFOR","PG_SLEEP","pg_sleep")
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemoteUrl, InitiatingProcessCommandLine
-| order by Timestamp desc
+### [LLM] Avada Builder time-based SQL injection via product_order (CVE-2026-4798)
+
+`UC_29_2` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as user_agents values(Web.status) as statuses avg(Web.response_time) as avg_response_time max(Web.response_time) as max_response_time from datamodel=Web.Web where (Web.url="*product_order=*" OR Web.url="*product_order%3D*") (Web.url="*SLEEP*" OR Web.url="*BENCHMARK*" OR Web.url="*pg_sleep*" OR Web.url="*WAITFOR*" OR Web.url="*UNION*SELECT*" OR Web.url="*0x7e*" OR Web.url="*--+-*" OR Web.url="*%2D%2D*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | where count > 1 OR max_response_time > 5000
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -85,4 +60,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

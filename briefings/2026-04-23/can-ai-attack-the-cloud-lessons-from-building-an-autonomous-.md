@@ -38,17 +38,16 @@ Clo…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1046** — Network Service Discovery
-- **T1580** — Cloud Infrastructure Discovery
-- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1087.004** — Account Discovery: Cloud Account
-- **T1069.003** — Permission Groups Discovery: Cloud Groups
+- **T1087** — Account Discovery
+- **T1069** — Permission Groups Discovery
 - **T1526** — Cloud Service Discovery
+- **T1580** — Cloud Infrastructure Discovery
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1548.005** — Abuse Elevation Control Mechanism: Temporary Elevated Cloud Access
+- **T1548** — Abuse Elevation Control Mechanism
 - **T1537** — Transfer Data to Cloud Account
 - **T1567.002** — Exfiltration to Cloud Storage
-- **T1619** — Cloud Storage Object Discovery
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
@@ -56,82 +55,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Internal VPC port scanning burst from GCP/cloud VM (Nmap-style sweep)
+### [LLM] Burst GCP IAM/discovery enumeration by a single service account (AI-agent velocity fingerprint)
 
-`UC_254_6` · phase: **recon** · confidence: **Medium**
+`UC_255_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count dc(All_Traffic.dest_ip) as DistinctIPs dc(All_Traffic.dest_port) as DistinctPorts values(All_Traffic.dest_port) as Ports from datamodel=Network_Traffic where All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16 by All_Traffic.src host All_Traffic.app _time span=5m | `drop_dm_object_name(All_Traffic)` | where DistinctIPs>=5 AND DistinctPorts>=10
+index=gcp_audit (sourcetype="google:gcp:pubsub:message" OR sourcetype="gcp:audit")
+| spath protoPayload.methodName output=method
+| spath protoPayload.authenticationInfo.principalEmail output=principal
+| where like(principal,"%.iam.gserviceaccount.com") AND (match(method,"(?i)(testIamPermissions|getIamPolicy|listServiceAccounts|projects\.list|roles\.list|compute\.instances\.list|storage\.buckets\.list|bigquery\.datasets\.list|secretmanager\.secrets\.list|serviceusage\.services\.list)"))
+| bin _time span=60s
+| stats dc(method) as DistinctMethods, values(method) as Methods, count as Calls by _time, principal
+| where DistinctMethods >= 10
+| `drop_dm_object_name(Change)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1h)
-| where ActionType in ("ConnectionAttempt","ConnectionFailed","ConnectionSuccess")
-| where RemoteIPType == "Private"
-| where InitiatingProcessFileName !in~ ("sshd","kubelet","google_guest_agent","google_osconfig_agent","node_exporter","prometheus")
-| summarize DistinctIPs = dcount(RemoteIP), DistinctPorts = dcount(RemotePort), Attempts = count(), SamplePorts = make_set(RemotePort, 20), SampleIPs = make_set(RemoteIP, 20) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, bin(Timestamp, 5m)
-| where DistinctIPs >= 5 and DistinctPorts >= 10
-| order by Attempts desc
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Google Cloud Platform"
+| where AccountDisplayName endswith ".iam.gserviceaccount.com"
+| where ActionType has_any ("testIamPermissions","getIamPolicy","ListServiceAccounts","Roles.list","projects.list","compute.instances.list","storage.buckets.list","bigquery.datasets.list","secretmanager.secrets.list","serviceusage.services.list")
+| summarize DistinctActions = dcount(ActionType), Actions = make_set(ActionType), Calls = count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp)
+    by AccountDisplayName, IPAddress, bin(Timestamp, 1m)
+| where DistinctActions >= 10  // empirical AI-agent fan-out threshold from Zealot PoC
+| order by FirstSeen desc
 ```
 
-### [LLM] GCP Instance Metadata Server (169.254.169.254) access from web-app process
+### [LLM] GCP service-account impersonation chain via iamcredentials.GenerateAccessToken / SignJwt
 
-`UC_254_7` · phase: **exploit** · confidence: **High**
+`UC_255_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Network_Traffic where All_Traffic.dest_ip=169.254.169.254 by All_Traffic.src All_Traffic.process_name All_Traffic.process_path _time | `drop_dm_object_name(All_Traffic)` | search process_name IN ("python*","node","java","php-fpm","ruby","perl","nginx","apache2","httpd","gunicorn","uwsgi","tomcat*")
+index=gcp_audit protoPayload.serviceName="iamcredentials.googleapis.com" (protoPayload.methodName="GenerateAccessToken" OR protoPayload.methodName="SignJwt" OR protoPayload.methodName="SignBlob" OR protoPayload.methodName="GenerateIdToken")
+| spath protoPayload.authenticationInfo.principalEmail output=actor
+| spath protoPayload.request.name output=target_sa
+| rex field=target_sa "projects/-/serviceAccounts/(?<target_email>[^/]+)"
+| eval pair=actor." -> ".target_email
+| stats earliest(_time) as first_seen, latest(_time) as last_seen, count by pair, actor, target_email
+| join type=left pair [ search index=gcp_audit earliest=-30d@d latest=-1d@d protoPayload.serviceName="iamcredentials.googleapis.com"
+    | spath protoPayload.authenticationInfo.principalEmail output=actor
+    | spath protoPayload.request.name output=target_sa
+    | rex field=target_sa "projects/-/serviceAccounts/(?<target_email>[^/]+)"
+    | eval pair=actor." -> ".target_email
+    | stats count as baseline_count by pair ]
+| where isnull(baseline_count)
+| `drop_dm_object_name(Change)`
+```
+
+**Defender KQL:**
+```kql
+let Baseline = CloudAppEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where Application == "Google Cloud Platform"
+    | where ActionType in ("GenerateAccessToken","SignJwt","SignBlob","GenerateIdToken")
+    | extend Raw = parse_json(RawEventData)
+    | extend TargetSa = tostring(Raw.protoPayload.request.name)
+    | extend Pair = strcat(AccountDisplayName, " -> ", TargetSa)
+    | summarize by Pair;
+CloudAppEvents
+| where Timestamp > ago(1d)
+| where Application == "Google Cloud Platform"
+| where ActionType in ("GenerateAccessToken","SignJwt","SignBlob","GenerateIdToken")
+| extend Raw = parse_json(RawEventData)
+| extend TargetSa = tostring(Raw.protoPayload.request.name)
+| extend Pair = strcat(AccountDisplayName, " -> ", TargetSa)
+| join kind=leftanti Baseline on Pair
+| project Timestamp, Actor=AccountDisplayName, TargetSa, IPAddress, ActionType, RawEventData
+| order by Timestamp desc
+```
+
+### [LLM] BigQuery query results or table data exported to a foreign GCP project / external GCS bucket
+
+`UC_255_8` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+index=gcp_audit protoPayload.serviceName="bigquery.googleapis.com" (protoPayload.methodName="google.cloud.bigquery.v2.JobService.InsertJob" OR protoPayload.methodName="jobservice.jobcompleted" OR protoPayload.methodName="jobservice.insert")
+| spath resource.labels.project_id output=src_project
+| spath protoPayload.metadata.jobChange.job.jobConfig.queryConfig.destinationTable.projectId output=dest_query_project
+| spath protoPayload.metadata.jobChange.job.jobConfig.extractConfig.destinationUris{} output=extract_uris
+| spath protoPayload.authenticationInfo.principalEmail output=principal
+| eval dest_extract_project=if(isnotnull(extract_uris), mvfilter(match(extract_uris,"gs://[^/]+")), null())
+| where (isnotnull(dest_query_project) AND dest_query_project!=src_project) OR isnotnull(extract_uris)
+| stats values(dest_query_project) as ForeignDestProject, values(extract_uris) as ExtractTargets, count by _time, src_project, principal
+| `drop_dm_object_name(Web)`
+```
+
+**Defender KQL:**
+```kql
+let AllowedProjects = dynamic(["org-prod-data","org-analytics-prod","org-shared-bigquery"]);  // populate from CMDB
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Google Cloud Platform"
+| where ActionType has_any ("InsertJob","jobservice.jobcompleted","tables.export","tabledata.list")
+| extend Raw = parse_json(RawEventData)
+| extend SrcProject = tostring(Raw.resource.labels.project_id)
+| extend DestQueryProject = tostring(Raw.protoPayload.metadata.jobChange.job.jobConfig.queryConfig.destinationTable.projectId)
+| extend ExtractUris = tostring(Raw.protoPayload.metadata.jobChange.job.jobConfig.extractConfig.destinationUris)
+| where (isnotempty(DestQueryProject) and DestQueryProject != SrcProject and DestQueryProject !in (AllowedProjects))
+     or (isnotempty(ExtractUris) and not(ExtractUris has_any (AllowedProjects)))
+| project Timestamp, Principal=AccountDisplayName, IPAddress, SrcProject, DestQueryProject, ExtractUris, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] Compute Engine IMDS credential fetch from web-application runtime (SSRF chain entry)
+
+`UC_255_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, values(All_Traffic.process) as processes, values(All_Traffic.app) as apps, values(All_Traffic.src) as src, min(_time) as first_seen from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="169.254.169.254" OR All_Traffic.dest_host="metadata.google.internal") AND All_Traffic.app IN ("nginx","apache2","httpd","node","python","python3","java","php-fpm","gunicorn","uwsgi","tomcat","ruby","puma") by All_Traffic.src, All_Traffic.dest, All_Traffic.app, All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteIP == "169.254.169.254"
-| where InitiatingProcessFileName !in~ ("google_metadata_script_runner","google_guest_agent","google_osconfig_agent","google_oslogin_control","gcloud","gsutil","bq","kubelet","cloud-init","metadata-helper","systemd-networkd")
-| where InitiatingProcessFileName has_any ("python","node","java","php","ruby","perl","gunicorn","uwsgi","nginx","apache2","httpd","tomcat","curl","wget")
-   or InitiatingProcessCommandLine has_any ("169.254.169.254","metadata.google.internal","computeMetadata/v1")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort
+| where RemoteIP == "169.254.169.254" or RemoteUrl has "metadata.google.internal"
+| where InitiatingProcessFileName in~ ("nginx","apache2","httpd","node","node.js","python","python3","java","php-fpm","php","gunicorn","uwsgi","tomcat","ruby","puma")
+| where InitiatingProcessParentFileName !in~ ("systemd","cloud-init","google_metadata_script_runner","google_osconfig_agent")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemoteUrl, RemotePort, LocalIP
 | order by Timestamp desc
-```
-
-### [LLM] GCP IAM enumeration burst by single service-account principal
-
-`UC_254_8` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`gcp_audit` (data.protoPayload.methodName="google.iam.admin.v1.ListServiceAccounts" OR data.protoPayload.methodName="google.iam.admin.v1.ListRoles" OR data.protoPayload.methodName="*.GetIamPolicy" OR data.protoPayload.methodName="google.cloud.resourcemanager.v3.Projects.GetIamPolicy" OR data.protoPayload.methodName="*.Instances.List" OR data.protoPayload.methodName="*.Buckets.List" OR data.protoPayload.methodName="*.Datasets.List") data.protoPayload.authenticationInfo.principalEmail="*.iam.gserviceaccount.com" | bin _time span=5m | stats dc(data.protoPayload.methodName) as DistinctMethods count as Calls values(data.protoPayload.methodName) as Methods by _time data.protoPayload.authenticationInfo.principalEmail data.protoPayload.requestMetadata.callerIp | where DistinctMethods>=5
-```
-
-### [LLM] GCP service account impersonation via iam.serviceAccounts.generateAccessToken
-
-`UC_254_9` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`gcp_audit` (data.protoPayload.methodName="GenerateAccessToken" OR data.protoPayload.methodName="google.iam.credentials.v1.IAMCredentials.GenerateAccessToken" OR data.protoPayload.methodName="SignJwt" OR data.protoPayload.methodName="google.iam.credentials.v1.IAMCredentials.SignJwt") | rex field=data.protoPayload.resourceName "serviceAccounts/(?<TargetSA>[^/]+)" | eval Caller=data.protoPayload.authenticationInfo.principalEmail | where Caller!=TargetSA AND like(Caller,"%.iam.gserviceaccount.com") | stats count values(TargetSA) as TargetSAs values(data.protoPayload.requestMetadata.callerIp) as CallerIPs by _time Caller
-```
-
-### [LLM] BigQuery query/extract job writing results to a foreign GCP project
-
-`UC_254_10` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`gcp_audit` data.protoPayload.serviceName="bigquery.googleapis.com" (data.protoPayload.methodName="jobservice.insert" OR data.protoPayload.methodName="google.cloud.bigquery.v2.JobService.InsertJob") | spath input=data.protoPayload.metadata.tableDataRead.jobName output=JobName | spath input=data.protoPayload.metadata.jobChange.job.jobConfig.queryConfig.destinationTable.projectId output=DestProject | spath input=data.resource.labels.project_id output=SrcProject | where isnotnull(DestProject) AND DestProject!=SrcProject | table _time data.protoPayload.authenticationInfo.principalEmail SrcProject DestProject JobName data.protoPayload.requestMetadata.callerIp
-```
-
-### [LLM] GCS object copy/rewrite to bucket in foreign GCP project
-
-`UC_254_11` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-`gcp_audit` data.protoPayload.serviceName="storage.googleapis.com" data.protoPayload.methodName IN ("storage.objects.copy","storage.objects.rewrite","storage.objects.compose") | spath input=data.protoPayload.resourceLocation.currentLocations{} output=DestLoc | rex field=data.protoPayload.resourceName "projects/_/buckets/(?<DestBucket>[^/]+)" | eval SrcProject=data.resource.labels.project_id | lookup gcs_bucket_project_map.csv bucket as DestBucket OUTPUT project as DestProject | where SrcProject!=DestProject | table _time data.protoPayload.authenticationInfo.principalEmail SrcProject DestBucket DestProject data.protoPayload.requestMetadata.callerIp
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -361,4 +410,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

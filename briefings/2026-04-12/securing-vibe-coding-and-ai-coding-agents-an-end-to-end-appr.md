@@ -36,14 +36,13 @@ Developer machines hold your most sensitive credentials such as GitHub crede…
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
-- **T1567** — Exfiltration Over Web Service
+- **T1041** — Exfiltration Over C2 Channel
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1567** — Exfiltration Over Web Service
+- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1083** — File and Directory Discovery
-- **T1546** — Event Triggered Execution
 
 ## Kill chain phases observed
 
@@ -51,105 +50,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Shai-Hulud 2.0 C2 traffic to metrics-trustwallet.com / 138.124.70.40
+### [LLM] Trust Wallet Shai-Hulud C2 callback to metrics-trustwallet.com / 138.124.70.40
 
-`UC_291_7` · phase: **c2** · confidence: **High**
+`UC_292_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(DNS.answer) as answer values(DNS.src) as src from datamodel=Network_Resolution where (DNS.query="*metrics-trustwallet.com" OR DNS.query="metrics-trustwallet.com" OR DNS.query="api.metrics-trustwallet.com") by DNS.src DNS.query host | `drop_dm_object_name(DNS)` | appendpipe [| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Network_Traffic where (All_Traffic.dest="138.124.70.40" OR All_Traffic.dest_ip="138.124.70.40") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | convert ctime(firstSeen) ctime(lastSeen)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("metrics-trustwallet.com","api.metrics-trustwallet.com","*.metrics-trustwallet.com") by DNS.src DNS.query DNS.answer host
+| `drop_dm_object_name(DNS)`
+| append 
+   [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN ("138.124.70.40") AND All_Traffic.dest_port IN (80,443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+   | `drop_dm_object_name(All_Traffic)`]
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has "metrics-trustwallet.com" or RemoteIP == "138.124.70.40"
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-  | where QueryName has "metrics-trustwallet.com"
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, QueryName, AdditionalFields
-)
-| order by Timestamp desc
-```
-
-### [LLM] Shai-Hulud 2.0 known-malicious payload SHA256 execution / file write
-
-`UC_291_8` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | appendpipe [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | convert ctime(firstSeen) ctime(lastSeen)
-```
-
-**Defender KQL:**
-```kql
-let ShaiHuludHashes = dynamic([
-    "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09",
-    "b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777",
-    "dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c",
-    "4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db",
-    "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
-    "f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068",
-    "cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd",
-    "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a"
-]);
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (ShaiHuludHashes) or InitiatingProcessSHA256 in (ShaiHuludHashes)
-  | project Timestamp, Source="ProcessEvents", DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (ShaiHuludHashes)
-  | project Timestamp, Source="FileEvents", DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-),
-( DeviceImageLoadEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in (ShaiHuludHashes)
-  | project Timestamp, Source="ImageLoad", DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-)
-| order by Timestamp desc
-```
-
-### [LLM] TruffleHog secret-scanner executed by npm/node/bun/yarn/pnpm parent
-
-`UC_291_9` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmdline values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog*" OR Processes.process="*trufflehog*" OR Processes.process_path="*trufflehog*") AND (Processes.parent_process_name IN ("node.exe","node","npm.cmd","npm.exe","npm","npx.cmd","npx.exe","npx","bun.exe","bun","yarn.exe","yarn","yarn.cmd","pnpm.exe","pnpm","pnpm.cmd") OR Processes.parent_process="*node *" OR Processes.parent_process="*npm *" OR Processes.parent_process="*bun *") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstSeen) ctime(lastSeen)
-```
-
-**Defender KQL:**
-```kql
-let _pkg_mgr = dynamic(["node.exe","node","npm.cmd","npm.exe","npm","npx.cmd","npx.exe","npx","bun.exe","bun","yarn.exe","yarn","yarn.cmd","pnpm.exe","pnpm","pnpm.cmd"]);
-DeviceProcessEvents
+let badDomains = dynamic(["metrics-trustwallet.com","api.metrics-trustwallet.com"]);
+let badIPs = dynamic(["138.124.70.40"]);
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName has "trufflehog"
-   or ProcessCommandLine has "trufflehog"
-   or FolderPath has "trufflehog"
-| where InitiatingProcessFileName in~ (_pkg_mgr)
-   or InitiatingProcessParentFileName in~ (_pkg_mgr)
-   or InitiatingProcessCommandLine has_any ("node ", "npm ", "npx ", "bun ", "yarn ", "pnpm ")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine
+| where RemoteUrl has_any (badDomains) or RemoteIP in (badIPs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
 | order by Timestamp desc
 ```
 
-### [LLM] Shai-Hulud 2.0 signature file artifacts: setup_bun.js / bun_environment.js / shai-hulud-workflow.yml
+### [LLM] Shai-Hulud 2.0 npm worm artifact: setup_bun.js / bun_environment.js dropped by node/npm
 
-`UC_291_10` · phase: **install** · confidence: **High**
+`UC_292_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Filesystem.process_name) as written_by values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("setup_bun.js","bun_environment.js","shai-hulud-workflow.yml") OR Filesystem.file_path="*\\.github\\workflows\\shai-hulud-workflow.yml" OR Filesystem.file_path="*/.github/workflows/shai-hulud-workflow.yml") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as writers from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("setup_bun.js","bun_environment.js") by Filesystem.dest Filesystem.user Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| where match(writers, "(?i)(node|npm|yarn|pnpm|bun)\\.(exe|cmd)?") OR match(paths, "(?i)node_modules|npm-cache|\\\\AppData\\\\Local\\\\npm")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -157,11 +94,36 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ ("setup_bun.js","bun_environment.js","shai-hulud-workflow.yml")
-   or FolderPath has @"\.github\workflows\shai-hulud-workflow.yml"
-   or FolderPath has "/.github/workflows/shai-hulud-workflow.yml"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where FileName in~ ("setup_bun.js","bun_environment.js")
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","bun.exe","sh.exe","bash.exe")
+   or FolderPath has_any (@"\node_modules\",@"\.npm\",@"\AppData\Local\npm\",@"\AppData\Roaming\npm\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FileName, FolderPath, SHA256, FileSize
+| order by Timestamp desc
+```
+
+### [LLM] Shai-Hulud preinstall: node/npm spawning git/curl/gh pushing to attacker repo or GitHub API
+
+`UC_292_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.exe","pnpm.exe","bun.exe") AND Processes.process_name IN ("git.exe","curl.exe","gh.exe","node.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(cmds, "(?i)(api\\.github\\.com|/user/repos|Sha1-Hulud|Shai-Hulud|--detach|bun_environment|setup_bun|aws/credentials|\\.npmrc|id_rsa|/.ssh/)")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let pkgMgrs = dynamic(["node.exe","npm.cmd","npm.exe","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","bun.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ (pkgMgrs)
+| where FileName in~ ("git.exe","curl.exe","gh.exe","node.exe","powershell.exe","pwsh.exe")
+| where ProcessCommandLine has_any ("api.github.com/user/repos","Sha1-Hulud","Shai-Hulud","The Second Coming","bun_environment","setup_bun","--detach",".aws/credentials",".npmrc","id_rsa",".ssh/","GH_TOKEN","NPM_TOKEN")
+   or InitiatingProcessCommandLine has_any ("bun_environment.js","setup_bun.js","--detach")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
@@ -308,4 +270,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

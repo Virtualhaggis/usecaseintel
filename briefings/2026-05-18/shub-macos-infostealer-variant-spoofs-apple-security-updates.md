@@ -40,19 +40,15 @@ Unlike earlier SHub campaigns that relied on “ClickFix” tactics, tricking us
 - **T1027** — Obfuscated Files or Information
 - **T1059.002** — Command and Scripting Interpreter: AppleScript
 - **T1218** — System Binary Proxy Execution
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1553.001** — Subvert Trust Controls: Gatekeeper Bypass
-- **T1222.002** — File and Directory Permissions Modification: Linux and Mac
-- **T1547.011** — Boot or Logon Autostart Execution: Plist Modification
+- **T1565.001** — Stored Data Manipulation
+- **T1554** — Compromise Client Software Binary
 - **T1543.001** — Create or Modify System Process: Launch Agent
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1565.001** — Data Manipulation: Stored Data Manipulation
-- **T1554** — Compromise Host Software Binary
-- **T1657** — Financial Theft
 
 ## Kill chain phases observed
 
@@ -60,77 +56,79 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] SHub Reaper — Script Editor launched via applescript:// URL from a browser
+### [LLM] macOS Script Editor / osascript invoked via applescript:// URL scheme (SHub Reaper bypass)
 
-`UC_6_8` · phase: **delivery** · confidence: **High**
+`UC_11_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.os="macOS" (Processes.process_name="Script Editor" OR Processes.process_name="osascript") (Processes.parent_process_name IN ("Safari","Google Chrome","Firefox","firefox","Microsoft Edge","Brave Browser","Arc","Opera","Vivaldi","Orion") OR Processes.process="*applescript://*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("Script Editor","osascript","open") OR Processes.process IN ("*applescript://*")) Processes.os="macOS" by host, user, Processes.process_name, Processes.process, Processes.parent_process_name, Processes.parent_process | `drop_dm_object_name(Processes)` | search process="*applescript://*" OR parent_process="*applescript://*" OR (process_name="Script Editor" AND parent_process_name IN ("Google Chrome","Google Chrome Helper","Safari","firefox","Microsoft Edge","Brave Browser","Opera","Arc","Vivaldi","Orion","open","launchd"))
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName in~ ("Script Editor","osascript")
-| where InitiatingProcessFileName in~ ("Safari","Google Chrome","Google Chrome Helper","firefox","Microsoft Edge","Microsoft Edge Helper","Brave Browser","Arc","Opera","Vivaldi","Orion")
-   or ProcessCommandLine has "applescript://"
-| where AccountName != "_spotlight" and AccountName != "root"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
+| where ProcessCommandLine has "applescript://" or InitiatingProcessCommandLine has "applescript://"
+   or (FolderPath has "Script Editor.app" and InitiatingProcessFileName in~ ("Google Chrome","Google Chrome Helper","Safari","firefox","Microsoft Edge","Brave Browser","Opera","Arc","Vivaldi","Orion","open","launchd"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] SHub Reaper — osascript invoking shell with curl|zsh download cradle
+### [LLM] osascript spawning curl/zsh fetch-and-execute loader chain (SHub Reaper)
 
-`UC_6_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.os="macOS" Processes.parent_process_name IN ("osascript","Script Editor") Processes.process_name IN ("zsh","bash","sh","curl") (Processes.process="*curl*" Processes.process="*zsh*") OR Processes.process="*do shell script*" by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let macShellChildren = dynamic(["zsh","bash","sh","curl","wget"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("osascript","Script Editor")
-| where FileName in~ (macShellChildren)
-   or ProcessCommandLine has_any ("curl -", "curl http", "curl https", "| zsh", "|zsh", "do shell script")
-| extend SuspiciousFetch = iif(ProcessCommandLine has "curl" and ProcessCommandLine has_any ("| zsh","|zsh","| sh","|sh","| bash","|bash"), "yes","no")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SuspiciousFetch, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] SHub Reaper — Gatekeeper bypass via xattr -cr on application bundles
-
-`UC_6_10` · phase: **install** · confidence: **High**
+`UC_11_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.os="macOS" Processes.process_name="xattr" Processes.process="*-cr*" (Processes.process="*.app*" OR Processes.process="*/Applications/*" OR Processes.process="*app.asar*") by host Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=osascript (Processes.process_name IN (curl,zsh,sh,bash) OR Processes.process IN ("*XProtectRemediator*","*curl *","*| zsh*","*|zsh*")) Processes.os="macOS" by host, user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName =~ "xattr"
-| where ProcessCommandLine has "-cr"
-| where ProcessCommandLine has_any (".app","/Applications/","app.asar","Exodus","Atomic Wallet","Ledger Live","Electrum","Trezor")
-   or InitiatingProcessFileName in~ ("osascript","zsh","bash","sh","Script Editor")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where InitiatingProcessFileName =~ "osascript"
+| where FileName in~ ("curl","zsh","sh","bash") or ProcessCommandLine has_any ("curl ","| zsh","|zsh","XProtectRemediator")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] SHub Reaper — LaunchAgent persistence impersonating Google software update
+### [LLM] xattr -cr quarantine strip on crypto wallet bundle / app.asar replacement (SHub Reaper wallet hijack)
 
-`UC_6_11` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.action="created" Filesystem.file_path="*/Library/LaunchAgents/*" Filesystem.file_name="*.plist" (Filesystem.file_name="*Google*" OR Filesystem.file_name="*google*" OR Filesystem.file_name="*GoogleSoftware*" OR Filesystem.file_name="*Keystone*" OR Filesystem.file_name="*updater*") by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os="macOS" ((Processes.process_name=xattr Processes.process="*-cr*") OR (Processes.process_name=codesign Processes.process="*--sign -*") OR Processes.process="*app.asar*") by host, user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | search process="*Exodus*" OR process="*Atomic*" OR process="*Ledger Live*" OR process="*Electrum*" OR process="*Trezor*" OR process="*app.asar*"
+```
+
+**Defender KQL:**
+```kql
+let WalletPaths = dynamic(["Exodus.app","Atomic.app","Atomic Wallet.app","Ledger Live.app","Electrum.app","Trezor Suite.app"]);
+let ProcAbuse = DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where (FileName =~ "xattr" and ProcessCommandLine has "-cr")
+       or (FileName =~ "codesign" and ProcessCommandLine matches regex @"--sign\s+-(\s|$)")
+  | where ProcessCommandLine has_any (WalletPaths) or ProcessCommandLine has "app.asar"
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+let FileAbuse = DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FileName =~ "app.asar"
+  | where FolderPath has_any (WalletPaths)
+  | where InitiatingProcessFileName !in~ ("Exodus","Atomic Wallet","Ledger Live","Electrum","Trezor Suite","installd","Installer")
+  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union ProcAbuse, FileAbuse
+| order by Timestamp desc
+```
+
+### [LLM] macOS LaunchAgent persistence impersonating Google software update (SHub Reaper beacon)
+
+`UC_11_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/LaunchAgents/*" Filesystem.file_name="*.plist" by host, user, Filesystem.file_name, Filesystem.file_path, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search (file_name="*google*" OR file_name="*keystone*" OR file_name="*update*" OR file_name="*softwareupdate*") process_name!="Keystone" process_name!="GoogleSoftwareUpdateAgent" process_name!="GoogleUpdater" process_name!="installd" process_name!="Installer"
 ```
 
 **Defender KQL:**
@@ -140,57 +138,34 @@ DeviceFileEvents
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
 | where FolderPath has "/Library/LaunchAgents/"
 | where FileName endswith ".plist"
-| where FileName has_any ("Google","google","GoogleSoftware","Keystone","GoogleUpdate","updater")
-| where InitiatingProcessFileName !in~ ("GoogleSoftwareUpdate","GoogleUpdater","installd","Installer","GoogleSoftwareUpdateAgent","GoogleSoftwareUpdateDaemon")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256
+| where FileName has_any ("google","keystone","softwareupdate","update")
+| where InitiatingProcessFileName !in~ ("Keystone","GoogleSoftwareUpdateAgent","GoogleUpdater","ksinstall","installd","Installer","system_installd")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
-### [LLM] SHub Reaper — egress to Reaper C2 / lure domains
+### [LLM] macOS host beaconing to known SHub Reaper distribution / C2 infrastructure
 
-`UC_6_12` · phase: **c2** · confidence: **High**
+`UC_11_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("qq-0732gwh22.com","mlcrosoft.co.com","mlroweb.com","hebsbsbzjsjshduxbs.xyz") OR All_Traffic.url="*qq-0732gwh22.com*" OR All_Traffic.url="*mlcrosoft.co.com*" OR All_Traffic.url="*mlroweb.com*" OR All_Traffic.url="*hebsbsbzjsjshduxbs.xyz*") by host All_Traffic.src All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="qq-0732gwh22.com" OR All_Traffic.dest="mlcrosoft.co.com" OR All_Traffic.dest="mlroweb.com" OR All_Traffic.dest="hebsbsbzjsjshduxbs.xyz" OR All_Traffic.url="*qq-0732gwh22.com*" OR All_Traffic.url="*mlcrosoft.co.com*" OR All_Traffic.url="*mlroweb.com*" OR All_Traffic.url="*hebsbsbzjsjshduxbs.xyz*") by host, user, All_Traffic.src, All_Traffic.dest, All_Traffic.url, All_Traffic.app | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
-let shubDomains = dynamic(["qq-0732gwh22.com","mlcrosoft.co.com","mlroweb.com","hebsbsbzjsjshduxbs.xyz"]);
-let net = DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl has_any (shubDomains)
-    | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let dns = DeviceEvents
-    | where Timestamp > ago(30d)
-    | where ActionType == "DnsQueryResponse"
-    | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
-    | where Q in (shubDomains) or Q endswith ".qq-0732gwh22.com" or Q endswith ".mlcrosoft.co.com" or Q endswith ".mlroweb.com" or Q endswith ".hebsbsbzjsjshduxbs.xyz"
-    | project Timestamp, DeviceId, DeviceName, RemoteUrl=Q, InitiatingProcessFileName, InitiatingProcessCommandLine;
-union net, dns
-| order by Timestamp desc
-```
-
-### [LLM] SHub Reaper — crypto wallet bundle tamper / app.asar replacement
-
-`UC_6_13` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") Filesystem.file_name="app.asar" (Filesystem.file_path="*/Exodus.app/*" OR Filesystem.file_path="*/Atomic Wallet.app/*" OR Filesystem.file_path="*/Ledger Live.app/*" OR Filesystem.file_path="*/Electrum*.app/*" OR Filesystem.file_path="*/Trezor Suite.app/*") by host Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let walletBundles = dynamic(["/Exodus.app/","/Atomic Wallet.app/","/Ledger Live.app/","/Electrum.app/","/Electrum-LTC.app/","/Trezor Suite.app/"]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName =~ "app.asar"
-| where FolderPath has_any (walletBundles)
-| where InitiatingProcessFileName !in~ ("Exodus","Atomic Wallet","Ledger Live","Electrum","Trezor Suite","installd","Installer","DiskManagementTool","xpcproxy")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256, SHA256
+let IOCDomains = dynamic(["qq-0732gwh22.com","mlcrosoft.co.com","mlroweb.com","hebsbsbzjsjshduxbs.xyz"]);
+let IOCSha256 = dynamic(["6552824c59ddacb134073f24a4bd4724514a938a9dc59f1733503642faed3bd3"]);
+let Net = DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has_any (IOCDomains)
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessSHA256;
+let Hash = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where SHA256 in (IOCSha256)
+  | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union Net, Hash
 | order by Timestamp desc
 ```
 
@@ -439,4 +414,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

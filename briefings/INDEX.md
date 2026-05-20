@@ -10,13 +10,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
-- [github actions supply chain attack redirects tags to steal c](./2026-05-19/github-actions-supply-chain-attack-redirects-tags-to-steal-c.md)
+- [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
+- [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
+- [hackers abuse microsoft entra id accounts to exfiltrate micr](./2026-05-19/hackers-abuse-microsoft-entra-id-accounts-to-exfiltrate-micr.md)
 - [mythos preview builds poc exploits in automated vulnerabilit](./2026-05-19/mythos-preview-builds-poc-exploits-in-automated-vulnerabilit.md)
+- [nx console vs code extension compromised](./2026-05-19/nx-console-vs-code-extension-compromised.md)
+- [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 
 ## 2026-05-18
 - [1 million wordpress sites affected by avada builder file rea](./2026-05-18/1-million-wordpress-sites-affected-by-avada-builder-file-rea.md)
 - [critical n8n vulnerabilities expose automation nodes to full](./2026-05-18/critical-n8n-vulnerabilities-expose-automation-nodes-to-full.md)
-- [critical wordpress plugin vulnerability exposes websites to ](./2026-05-18/critical-wordpress-plugin-vulnerability-exposes-websites-to-.md)
 - [exploit available for new dirtydecrypt linux root escalation](./2026-05-18/exploit-available-for-new-dirtydecrypt-linux-root-escalation.md)
 - [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
 - [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
@@ -29,8 +32,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
 - [microsoft confirms windows 11 update fails with error 0x800f](./2026-05-18/microsoft-confirms-windows-11-update-fails-with-error-0x800f.md)
+- [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
 - [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
-- [nx console vs code extension compromised](./2026-05-18/nx-console-vs-code-extension-compromised.md)
 - [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
 - [shub macos infostealer variant spoofs apple security updates](./2026-05-18/shub-macos-infostealer-variant-spoofs-apple-security-updates.md)
 - [weekly recap exchange 0 day npm worm fake ai repo cisco expl](./2026-05-18/weekly-recap-exchange-0-day-npm-worm-fake-ai-repo-cisco-expl.md)
@@ -46,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian hackers turn kazuar backdoor into modular p2p botnet](./2026-05-16/russian-hackers-turn-kazuar-backdoor-into-modular-p2p-botnet.md)
 
 ## 2026-05-15
-- [active supply chain attack malicious node ipc versions publi](./2026-05-15/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
@@ -113,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
 
 ## 2026-05-11
-- [fake openai privacy filter repo hits 1 on hugging face draws](./2026-05-11/fake-openai-privacy-filter-repo-hits-1-on-hugging-face-draws.md)
 - [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
 - [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
@@ -223,7 +224,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-29
 - [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 - [bridging the gap to autonomous fixes snyk and atlassian unve](./2026-04-29/bridging-the-gap-to-autonomous-fixes-snyk-and-atlassian-unve.md)
-- [don t panic the thymeleaf template injection that only hurts](./2026-04-29/don-t-panic-the-thymeleaf-template-injection-that-only-hurts.md)
 - [mini shai hulud targets sap npm packages with a bun based se](./2026-04-29/mini-shai-hulud-targets-sap-npm-packages-with-a-bun-based-se.md)
 - [someone published four versions of a fake tanstack package i](./2026-04-29/someone-published-four-versions-of-a-fake-tanstack-package-i.md)
 

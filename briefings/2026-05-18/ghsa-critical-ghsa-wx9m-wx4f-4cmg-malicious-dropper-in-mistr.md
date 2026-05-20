@@ -27,13 +27,12 @@ The `mistralai` PyPI project is currently quarantined.
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1105** — Ingress Tool Transfer
-- **T1195.002** — Compromise Software Supply Chain
-- **T1573.002** — Asymmetric Cryptography (-k TLS verify disabled)
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1564.001** — Hide Artifacts: Hidden Files and Directories (/tmp drop)
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1036** — Masquerading
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -41,13 +40,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Curl download of transformers.pyz from mistralai 2.4.6 dropper C2 IP 83.142.209.194
+### [LLM] mistralai 2.4.6 dropper: curl downloading transformers.pyz with TLS verification disabled
 
-`UC_8_3` · phase: **install** · confidence: **High**
+`UC_13_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl Processes.process="*83.142.209.194*" Processes.process="*transformers.pyz*" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent_proc values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=curl Processes.process="*transformers.pyz*" (Processes.process="*83.142.209.194*" OR Processes.process="*-k *") by Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -55,42 +54,66 @@ _(none detected from narrative keywords)_
 DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName =~ "curl"
-| where ProcessCommandLine has "83.142.209.194"
-   and ProcessCommandLine has "transformers.pyz"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+| where ProcessCommandLine has "transformers.pyz"
+| where ProcessCommandLine has "83.142.209.194" or ProcessCommandLine has "-k"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, FolderPath,
           InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+          InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Python interpreter executing /tmp/transformers.pyz (mistralai 2.4.6 second stage)
+### [LLM] mistralai 2.4.6 dropper: /tmp/transformers.pyz file creation
 
-`UC_8_4` · phase: **exploit** · confidence: **High**
+`UC_13_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/tmp/transformers.pyz*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.process_path) as procpath from datamodel=Endpoint.Filesystem where Filesystem.file_path="/tmp/transformers.pyz" Filesystem.action=created by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileModified")
+| where FolderPath has "/tmp/" and FileName =~ "transformers.pyz"
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
+          InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] mistralai 2.4.6 dropper: Python interpreter executing /tmp/transformers.pyz
+
+`UC_13_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as procpath values(Processes.parent_process) as parentcmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=python OR Processes.process_name=python3 OR Processes.process_name=python2 OR Processes.process_name=pypy OR Processes.process_name=pypy3) Processes.process="*/tmp/transformers.pyz*" by Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
+| where FileName matches regex @"^(python[23]?(\.[0-9]+)?|pypy[23]?)$"
+   or FolderPath endswith "/python" or FolderPath endswith "/python3"
 | where ProcessCommandLine has "/tmp/transformers.pyz"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine,
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine,
           InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound connection to mistralai 2.4.6 dropper C2 IP 83.142.209.194
+### [LLM] mistralai 2.4.6 dropper: outbound connection to C2 IP 83.142.209.194
 
-`UC_8_5` · phase: **c2** · confidence: **High**
+`UC_13_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_in) as bytes_in sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="83.142.209.194" by All_Traffic.src All_Traffic.user All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.src) as src values(All_Traffic.dest_port) as ports values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.194" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -98,35 +121,16 @@ DeviceProcessEvents
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "83.142.209.194"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### [LLM] Malicious mistralai 2.4.6 sdist on disk by SHA256
-
-`UC_8_6` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash="6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 == "6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, FileOriginUrl
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI
 
-`UC_8_2` · phase: **exploit** · confidence: **High**
+`UC_13_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,4 +190,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

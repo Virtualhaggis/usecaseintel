@@ -24,17 +24,15 @@ May 15, 2026
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
 - **T1041** — Exfiltration Over C2 Channel
-- **T1074.001** — Data Staged: Local Data Staging
-- **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1071.004** — Application Layer Protocol: DNS
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1106** — Native API
-- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
-- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1105** — Ingress Tool Transfer
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1560.001** — Archive Collected Data: Archive via Utility
 
 ## Kill chain phases observed
 
@@ -42,45 +40,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] node-ipc stealer C2 beacon — DNS/HTTPS to azurestaticprovider[.]net
+### [LLM] Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)
 
-`UC_49_4` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.DNS.query="*azurestaticprovider.net*" by Network_Resolution.DNS.src Network_Resolution.DNS.query Network_Resolution.DNS.answer Network_Resolution.DNS.dest 
-| `drop_dm_object_name(DNS)`
-| append [ | tstats summariesonly=t count from datamodel=Network_Traffic where Network_Traffic.All_Traffic.dest_ip="37.16.75.69" OR Network_Traffic.All_Traffic.dest="*azurestaticprovider.net*" by Network_Traffic.All_Traffic.src Network_Traffic.All_Traffic.dest Network_Traffic.All_Traffic.dest_ip Network_Traffic.All_Traffic.app Network_Traffic.All_Traffic.user 
-| `drop_dm_object_name(All_Traffic)` ]
-| sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let _ioc_domains = dynamic(["azurestaticprovider.net","sh.azurestaticprovider.net"]);
-union isfuzzy=true
-  (DeviceNetworkEvents
-     | where Timestamp > ago(30d)
-     | where RemoteUrl has "azurestaticprovider.net" or RemoteUrl has_any (_ioc_domains)
-     | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol, ActionType),
-  (DeviceEvents
-     | where Timestamp > ago(30d)
-     | where ActionType == "DnsQueryResponse"
-     | extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
-     | where QueryName has "azurestaticprovider.net"
-     | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, QueryName, ActionType)
-| order by Timestamp desc
-```
-
-### [LLM] node-ipc stealer C2 — outbound connection to 37.16.75.69
-
-`UC_49_5` · phase: **c2** · confidence: **High**
+`UC_52_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.All_Traffic.dest_port) as ports values(Network_Traffic.All_Traffic.transport) as protocols values(Network_Traffic.All_Traffic.app) as apps values(Network_Traffic.All_Traffic.user) as users from datamodel=Network_Traffic where Network_Traffic.All_Traffic.dest_ip="37.16.75.69" by Network_Traffic.All_Traffic.src Network_Traffic.All_Traffic.src_ip Network_Traffic.All_Traffic.dest_ip
-| `drop_dm_object_name(All_Traffic)`
-| sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.process) as process values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest="37.16.75.69" OR All_Traffic.dest_host="azurestaticprovider.net" OR All_Traffic.dest_host="sh.azurestaticprovider.net" OR All_Traffic.dest_host="*.azurestaticprovider.net") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -88,87 +54,103 @@ union isfuzzy=true
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "37.16.75.69"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, Protocol, ActionType, LocalIP, LocalPort
+   or RemoteUrl has_any ("azurestaticprovider.net","sh.azurestaticprovider.net")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessParentFileName,
+          InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### [LLM] node-ipc stealer staging — files written to $TMPDIR/nt-* by node process
+### [LLM] DNS lookup for azurestaticprovider[.]net node-ipc exfil domain
 
-`UC_49_6` · phase: **actions** · confidence: **High**
+`UC_52_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as filenames from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/tmp/nt-*" OR Filesystem.file_path="*\\Temp\\nt-*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\nt-*") (Filesystem.process_name="node" OR Filesystem.process_name="node.exe" OR Filesystem.process_name="npm*" OR Filesystem.process_name="yarn*" OR Filesystem.process_name="pnpm*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query_type) as qtype values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query="azurestaticprovider.net" OR DNS.query="*.azurestaticprovider.net" by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where (FolderPath matches regex @"(?i)[\\/]tmp[\\/]nt-" 
-      or FolderPath matches regex @"(?i)\\Temp\\nt-"
-      or FolderPath matches regex @"(?i)\\AppData\\Local\\Temp\\nt-")
-| where InitiatingProcessFileName in~ ("node.exe","node","npm.exe","yarn.exe","pnpm.exe","npx.exe","electron.exe")
-   or InitiatingProcessParentFileName in~ ("node.exe","node")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256, FileSize, ActionType
-| order by Timestamp desc
+| where RemoteUrl has "azurestaticprovider.net"
+   or RemoteUrl endswith ".azurestaticprovider.net"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(),
+            SampleProc=any(InitiatingProcessFileName),
+            SampleCmd=any(InitiatingProcessCommandLine),
+            SampleUser=any(InitiatingProcessAccountName)
+            by DeviceName, RemoteUrl
+| order by FirstSeen asc
 ```
 
-### [LLM] node-ipc malicious payload marker — process or child launched with __ntw=1 environment flag
+### [LLM] node-ipc stealer __ntw=1 environment marker in process command line
 
-`UC_49_7` · phase: **exploit** · confidence: **High**
+`UC_52_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process="*__ntw=1*" OR Processes.process="*__ntw =1*" OR Processes.parent_process="*__ntw=1*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.process_path) as proc_path from datamodel=Endpoint.Processes where Processes.process="*__ntw=1*" OR Processes.parent_process="*__ntw=1*" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has "__ntw=1" 
-   or ProcessCommandLine has "__ntw =1"
+| where ProcessCommandLine has "__ntw=1"
    or InitiatingProcessCommandLine has "__ntw=1"
-   or InitiatingProcessCommandLine has "__ntw =1"
-| project Timestamp, DeviceName, AccountName, ProcessId, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] node-ipc stealer DNS-port exfil — UDP/53 traffic originating from node process
+### [LLM] Malicious node-ipc package landed on disk under node_modules
 
-`UC_49_8` · phase: **actions** · confidence: **Medium**
+`UC_52_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.All_Traffic.dest_ip) as dest_ips values(Network_Traffic.All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where Network_Traffic.All_Traffic.dest_port=53 Network_Traffic.All_Traffic.transport="udp" (Network_Traffic.All_Traffic.app="node" OR Network_Traffic.All_Traffic.app="node.exe" OR Network_Traffic.All_Traffic.process_name="node" OR Network_Traffic.All_Traffic.process_name="node.exe") by Network_Traffic.All_Traffic.src Network_Traffic.All_Traffic.user Network_Traffic.All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where count > 5
-| sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="node-ipc.cjs" AND Filesystem.file_path="*node_modules*node-ipc*" AND Filesystem.action="created" by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where firstTime >= relative_time(now(),"-30d@d") AND firstTime >= strptime("2026-05-14T00:00:00","%Y-%m-%dT%H:%M:%S") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort == 53 and Protocol == "Udp"
-| where InitiatingProcessFileName in~ ("node.exe","node","electron.exe")
-   or InitiatingProcessParentFileName in~ ("node.exe","node")
-| where RemoteIPType == "Public"
-| summarize ConnCount = count(), 
-            DistinctIPs = dcount(RemoteIP),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            SampleRemoteIPs = make_set(RemoteIP, 10),
-            Cmd = any(InitiatingProcessCommandLine)
-            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
-| where ConnCount > 5 or DistinctIPs > 2
-| order by ConnCount desc
+DeviceFileEvents
+| where Timestamp >= datetime(2026-05-14T00:00:00Z)
+| where ActionType in ("FileCreated","FileModified")
+| where FileName =~ "node-ipc.cjs"
+| where FolderPath has "node_modules" and FolderPath has "node-ipc"
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp asc
+```
+
+### [LLM] node.js process staging credential dump in nt-* temp directory
+
+`UC_52_8` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files dc(Filesystem.file_name) as file_count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Temp\\nt-*" OR Filesystem.file_path="*/tmp/nt-*" OR Filesystem.file_path="*/var/folders/*/T/nt-*") AND Filesystem.process_name IN ("node.exe","node") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where file_count >= 3 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath matches regex @"(?i)([\\/]Temp[\\/]nt-|/tmp/nt-|/var/folders/.+?/T/nt-)"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            DistinctFiles=dcount(FileName), SampleFiles=make_set(FileName, 25),
+            TotalBytes=sum(FileSize)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFolderPath, FolderPath
+| where DistinctFiles >= 3
+| order by FirstSeen asc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -226,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_49_3` · phase: **exploit** · confidence: **High**
+`UC_52_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -283,4 +265,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

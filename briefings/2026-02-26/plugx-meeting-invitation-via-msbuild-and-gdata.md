@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Renamed MSBuild auto-loading sibling .csproj from user-writable path
 
-`UC_386_8` · phase: **delivery** · confidence: **High**
+`UC_387_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] G DATA Avk.exe sideload from C:\Users\Public\GDatas with numeric-arg persistence
 
-`UC_386_9` · phase: **install** · confidence: **High**
+`UC_387_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ _proc
 
 ### [LLM] PlugX STATICPLUGIN C2 / staging-domain contact (decoraat[.]net, gesecole[.]net)
 
-`UC_386_10` · phase: **c2** · confidence: **High**
+`UC_387_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_386_7` · phase: **exploit** · confidence: **High**
+`UC_387_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

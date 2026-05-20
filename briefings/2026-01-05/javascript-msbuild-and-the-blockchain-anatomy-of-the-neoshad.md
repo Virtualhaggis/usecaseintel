@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NeoShadow npm loader: node.exe spawning MSBuild with a .proj from %TEMP%
 
-`UC_504_10` · phase: **install** · confidence: **High**
+`UC_505_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] NeoShadow persistence: config.proj written to %APPDATA%\Microsoft\CLR
 
-`UC_504_11` · phase: **install** · confidence: **High**
+`UC_505_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### [LLM] NeoShadow C2 / Etherscan blockchain C2-resolution traffic
 
-`UC_504_12` · phase: **c2** · confidence: **High**
+`UC_505_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -348,7 +348,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JavaScript, MSBuild, and the Blockchain: Anatomy of the NeoShadow npm Supply-Cha
 
-`UC_504_9` · phase: **exploit** · confidence: **High**
+`UC_505_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -26,6 +26,14 @@ REM ANTHROPIC_API_KEY. The other wrappers (run_once.bat, biweekly.bat,
 REM loop_pipeline.sh) already set this; the scheduled daily run was
 REM missing it, which is why the [LLM] count was decaying as cache
 REM entries got invalidated.
+REM Dual-account failover. See run_once.bat for the protocol; same
+REM PRIMARY=A / SECONDARY=B config-dir pair used across every scheduled
+REM batch so a sticky switch persists for the rest of the daily run.
+REM Dual-account env vars deferred until setup_dual_account.ps1 has been run.
+REM Until then, leave both vars unset so the pipeline uses the default
+REM %USERPROFILE%\.claude session. Re-enable by uncommenting both lines.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 
 for /f %%a in ('powershell -nop -c "Get-Date -Format yyyy-MM-dd"') do set TS=%%a

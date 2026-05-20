@@ -71,3 +71,9 @@ intel/last_run_articles.json
 # The originals get renamed with a timestamp suffix; keep them locally
 # as a recovery option but don't pollute git status with them.
 *.invalidated-*
+
+# Per-run LLM usage log (one JSON record per pipeline / review / biweekly
+# run, written by generate._emit_usage_summary at process exit). Local
+# operator metric; not part of the public threat-intel exports. View it
+# with `.\show_usage.ps1`.
+intel/.usage_log.jsonl

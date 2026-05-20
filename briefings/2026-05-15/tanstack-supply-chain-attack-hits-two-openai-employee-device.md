@@ -29,18 +29,14 @@ OpenAI has disclosed that two of its employee devices in its corporate environme
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1090** — Proxy
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1041** — Exfiltration Over C2 Channel
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1552.004** — Unsecured Credentials: Private Keys
-- **T1083** — File and Directory Discovery
-- **T1552.007** — Container API
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1568.001** — Dynamic Resolution: Fast Flux DNS
+- **T1552.007** — Unsecured Credentials: Container API
 - **T1613** — Container and Resource Discovery
-- **T1552.001** — Credentials In Files
-- **T1485** — Data Destruction
-- **T1561.001** — Disk Wipe: Disk Content Wipe
 
 ## Kill chain phases observed
 
@@ -48,127 +44,110 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud / TeamPCP C2 communication to 83.142.209.194 or campaign domains
+### [LLM] Mini Shai-Hulud C2 beacon to hard-coded IP 83.142.209.194
 
-`UC_42_6` · phase: **c2** · confidence: **High**
+`UC_46_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="83.142.209.194" OR All_Traffic.dest="83.142.209.194" by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.app host | `drop_dm_object_name(All_Traffic)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*git-tanstack.com" OR DNS.query="*.getsession.org" OR DNS.answer="83.142.209.194") by DNS.src DNS.query DNS.answer host | `drop_dm_object_name(DNS)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.194" by All_Traffic.src host All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name("All_Traffic")` | eval campaign="Mini Shai-Hulud (TeamPCP) primary C2" | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let bad_ips = dynamic(["83.142.209.194"]);
-let bad_domains = dynamic(["git-tanstack.com","getsession.org"]);
-union isfuzzy=true
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteIP in (bad_ips) or RemoteUrl has_any (bad_domains)
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, ActionType ),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | extend Query = tostring(parse_json(AdditionalFields).QueryName), Answer = tostring(parse_json(AdditionalFields).IPAddresses)
-  | where Query has_any (bad_domains) or Answer has "83.142.209.194"
-  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, Query, Answer )
-| order by Timestamp desc
-```
-
-### [LLM] npm/pnpm/yarn/pip install of Mini Shai-Hulud trojanized package ecosystems
-
-`UC_42_7` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm","pnpm.exe","pnpm","yarn.exe","yarn","pip.exe","pip","pip3","pip3.exe","python.exe","python","python3") (Processes.process="*install*" OR Processes.process="* add *" OR Processes.process="* ci *") (Processes.process="*@tanstack/*" OR Processes.process="*mistralai*" OR Processes.process="*guardrails-ai*" OR Processes.process="*@opensearch-project/*" OR Processes.process="*@uipath/*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
+DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("npm.exe","npm","pnpm.exe","pnpm","yarn.exe","yarn") and ProcessCommandLine matches regex @"(?i)\b(install|add|ci|i)\b")
-   or (FileName in~ ("pip.exe","pip","pip3","pip3.exe","python.exe","python","python3") and ProcessCommandLine has "install")
-| where ProcessCommandLine has_any ("@tanstack/","mistralai","guardrails-ai","@opensearch-project/","@uipath/")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where RemoteIP == "83.142.209.194"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, ActionType
 | order by Timestamp desc
 ```
 
-### [LLM] Bulk fan-out of credential file reads (~/.aws/, ~/.ssh/, .npmrc, dotenv, docker config)
+### [LLM] Trojanized npm/pip postinstall harvests SSH keys, dotenv files and cloud credentials
 
-`UC_42_8` · phase: **actions** · confidence: **Medium**
+`UC_46_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Filesystem.file_path) as secret_files values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.aws/config" OR Filesystem.file_path="*/.ssh/id_rsa" OR Filesystem.file_path="*/.ssh/id_ed25519" OR Filesystem.file_path="*/.ssh/id_ecdsa" OR Filesystem.file_path="*/.ssh/id_dsa" OR Filesystem.file_path="*/.ssh/config" OR Filesystem.file_path="*/.docker/config.json" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.pypirc" OR Filesystem.file_path="*/.git-credentials" OR Filesystem.file_path="*/.netrc" OR Filesystem.file_name="*.env") by Filesystem.dest Filesystem.user Filesystem.process_guid span=5m | `drop_dm_object_name(Filesystem)` | where secret_files >= 4 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count values(Filesystem.file_path) as files dc(Filesystem.file_path) as uniq_files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.ssh/id_rsa" OR Filesystem.file_path="*/.ssh/id_ed25519" OR Filesystem.file_path="*/.ssh/config" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.aws/config" OR Filesystem.file_path="*/.env" OR Filesystem.file_path="*/.env.*" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.pypirc") Filesystem.process_name IN ("python","python3","node","npm","pip","pip3","yarn","pnpm") by host Filesystem.user Filesystem.process_name Filesystem.process_guid | `drop_dm_object_name("Filesystem")` | where uniq_files >= 3 | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let CredPaths = dynamic(["/.aws/credentials","/.aws/config","/.ssh/id_rsa","/.ssh/id_ed25519","/.ssh/id_ecdsa","/.ssh/id_dsa","/.ssh/config","/.docker/config.json","/.npmrc","/.pypirc","/.git-credentials","/.netrc"]);
+let lookback = 30d;
+let credPaths = dynamic(["\\.ssh\\id_rsa","\\.ssh\\id_ed25519","\\.ssh\\config","\\.ssh\\known_hosts","/.ssh/id_rsa","/.ssh/id_ed25519","/.ssh/config","/.aws/credentials","/.aws/config","\\.aws\\credentials","\\.aws\\config","/.npmrc","\\.npmrc","/.pypirc","\\.pypirc","/.docker/config.json","\\.docker\\config.json"]);
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any (CredPaths) or (FileName endswith ".env" and (FolderPath startswith "/home/" or FolderPath startswith "/Users/" or FolderPath startswith "/root/"))
-| where InitiatingProcessFileName !in~ ("sshd","ssh","scp","rsync","git","gh","aws","kubectl","helm","terraform","ansible-playbook","dockerd","containerd","backup","restic","borg")
-| summarize SecretFileCount = dcount(strcat(FolderPath, "/", FileName)),
-            Files = make_set(strcat(FolderPath, "/", FileName), 50),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, bin(Timestamp, 2m)
-| where SecretFileCount >= 4
-| order by SecretFileCount desc, LastSeen desc
+| where Timestamp > ago(lookback)
+| where ActionType in ("FileCreated","FileModified","FileRenamed","FileAccessed","FileOpened")
+| where InitiatingProcessFileName in~ ("python.exe","python","python3","python3.11","node.exe","node","npm","npm.exe","pip","pip.exe","pip3","yarn","pnpm")
+| where FolderPath has_any (credPaths) or FileName endswith ".env" or FileName matches regex @"(?i)\.env\."
+| summarize FileSet = make_set(strcat(FolderPath, "\\", FileName), 20),
+            UniqueFiles = dcount(strcat(FolderPath, FileName)),
+            FirstRead = min(Timestamp), LastRead = max(Timestamp)
+            by DeviceId, DeviceName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName
+| where UniqueFiles >= 3                              // burst-read across credential surfaces
+| extend WindowSec = datetime_diff('second', LastRead, FirstRead)
+| where WindowSec <= 120                              // tight burst — Mini Shai-Hulud collection module runs in seconds
+| order by FirstRead desc
 ```
 
-### [LLM] Docker socket abuse / running container env extraction (credential pull from containers)
+### [LLM] FIRESCALE fallback - GitHub commit-message search from non-developer process
 
-`UC_42_9` · phase: **actions** · confidence: **Medium**
+`UC_46_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.process_name IN ("docker","docker.exe") AND (Processes.process="*inspect*" OR Processes.process="*exec*env*" OR Processes.process="*\".Config.Env*")) OR (Processes.process="*/var/run/docker.sock*" AND Processes.process_name IN ("curl","socat","nc","python","python3","node")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search NOT (parent IN ("dockerd","containerd","containerd-shim","kubelet","runc","systemd","docker-compose","compose")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*api.github.com/search/commits*" OR Web.url="*search/commits?q=*") Web.http_user_agent!="*git/*" Web.http_user_agent!="*GitHub-Hookshot*" Web.process_name IN ("python","python3","node","curl","wget") by host Web.user Web.process_name Web.url | `drop_dm_object_name("Web")` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let lookback = 30d;
+DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where RemoteUrl has "api.github.com" and (RemoteUrl has "/search/commits" or RemoteUrl has "search/commits?q=")
+| where InitiatingProcessFileName in~ ("python.exe","python","python3","node.exe","node","curl.exe","curl","wget.exe","wget")
+| where InitiatingProcessFileName !in~ ("git.exe","gh.exe","git","gh")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, RemoteIP, RemoteUrl
+| join kind=inner (
+    DeviceFileEvents
+    | where Timestamp > ago(lookback)
+    | where InitiatingProcessFileName in~ ("python.exe","python","python3","node.exe","node")
+    | where FolderPath has_any (".ssh",".aws",".env",".npmrc",".pypirc")
+    | project FileReadTime = Timestamp, DeviceId, InitiatingProcessId
+  ) on DeviceId, InitiatingProcessId
+| where Timestamp between (FileReadTime .. FileReadTime + 5m)         // network call within 5min of credential read
+| order by Timestamp desc
+```
+
+### [LLM] Mini Shai-Hulud Docker container credential extraction
+
+`UC_46_9` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="docker" OR Processes.process_name="docker.exe") (Processes.process="*inspect*" OR Processes.process="*exec*env*" OR Processes.process="*ps -q*") Processes.parent_process_name IN ("python","python3","node","sh","bash","zsh") by host Processes.user Processes.parent_process_name Processes.parent_process_guid | `drop_dm_object_name("Processes")` | where mvcount(cmds) >= 2 | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let lookback = 30d;
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ( FileName in~ ("docker","docker.exe")
-          and ( ProcessCommandLine has "inspect"
-             or (ProcessCommandLine has "exec" and ProcessCommandLine has "env")
-             or ProcessCommandLine has ".Config.Env"
-             or (ProcessCommandLine has "ps" and ProcessCommandLine has "-q") ) )
-   or ( ProcessCommandLine has "/var/run/docker.sock"
-        and FileName in~ ("curl","socat","nc","ncat","python","python3","node","bash","sh") )
-| where InitiatingProcessFileName !in~ ("dockerd","containerd","containerd-shim","kubelet","runc","systemd","docker-compose")
-| where InitiatingProcessCommandLine !has "compose" and InitiatingProcessCommandLine !has "kubectl" and InitiatingProcessCommandLine !has "helm"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where Timestamp > ago(lookback)
+| where FileName in~ ("docker","docker.exe")
+| where ProcessCommandLine has_any ("inspect","exec","ps -q","container ls")
+| where ProcessCommandLine has_any ("--format","{{.Config.Env}}","env","printenv","-e ")
+   or ProcessCommandLine matches regex @"(?i)exec\s+\S+\s+(env|printenv|/usr/bin/env|sh\s+-c\s+env)"
+| where InitiatingProcessFileName in~ ("python.exe","python","python3","node.exe","node","sh","bash","zsh","dash")
+| join kind=inner (
+    DeviceFileEvents
+    | where Timestamp > ago(lookback)
+    | where InitiatingProcessFileName in~ ("python.exe","python","python3","node.exe","node")
+    | where FolderPath has_any (".ssh",".aws",".env")
+    | project FileReadTime = Timestamp, DeviceId, ParentPid = InitiatingProcessId
+  ) on DeviceId
+| where Timestamp between (FileReadTime .. FileReadTime + 10m)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, AccountName
 | order by Timestamp desc
-```
-
-### [LLM] Mass file deletion in user home directories (Mini Shai-Hulud destructive wiper)
-
-`UC_42_10` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(Filesystem.file_path) as DeletedFileCount values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action="deleted" (Filesystem.file_path="/home/*" OR Filesystem.file_path="/Users/*" OR Filesystem.file_path="/root/*" OR Filesystem.file_path="C:\\Users\\*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_guid span=2m | `drop_dm_object_name(Filesystem)` | where DeletedFileCount >= 200 | search NOT (process_name IN ("explorer.exe","finder","trash","rsync","restic","borg","npm.exe","pnpm.exe","yarn.exe","git","gc.exe")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where ActionType == "FileDeleted"
-| where FolderPath startswith "/home/" or FolderPath startswith "/Users/" or FolderPath startswith "/root/" or FolderPath matches regex @"(?i)^[a-z]:\\users\\"
-| where InitiatingProcessFileName !in~ ("explorer.exe","finder","trash","rsync","restic","borg","npm.exe","pnpm.exe","yarn.exe","git","git.exe","go.exe","cargo","cargo.exe","OneDrive.exe","Dropbox.exe")
-| summarize DeletedFileCount = dcount(strcat(FolderPath, "/", FileName)),
-            SampleFiles = make_set(FileName, 20),
-            FirstDelete = min(Timestamp), LastDelete = max(Timestamp),
-            DurationSec = datetime_diff('second', max(Timestamp), min(Timestamp))
-            by DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, bin(Timestamp, 2m)
-| where DeletedFileCount >= 200
-| extend DeletionsPerSecond = round(todouble(DeletedFileCount) / todouble(case(DurationSec == 0, 1, DurationSec)), 2)
-| order by DeletedFileCount desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -388,4 +367,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

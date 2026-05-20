@@ -15,6 +15,16 @@ set LOG=logs\auto.log
 
 >>"%LOG%" echo.
 >>"%LOG%" echo === run_once start %TS% ===
+REM Dual-account failover: point at two Claude CLI config dirs (each
+REM holding its own logged-in session). generate.py routes the first
+REM `claude -p` call through PRIMARY and sticky-switches to SECONDARY
+REM on credit/quota exhaustion. Leave PRIMARY/SECONDARY unset to fall
+REM back to legacy single-account behaviour (default ~/.claude).
+REM Dual-account env vars deferred until setup_dual_account.ps1 has been run.
+REM Until then, leave both vars unset so the pipeline uses the default
+REM %USERPROFILE%\.claude session. Re-enable by uncommenting both lines.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 REM `py -u` forces unbuffered stdout. Without this, Python fully buffers
 REM output when redirected to a file (>>"%LOG%"), so progress only lands

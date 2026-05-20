@@ -34,12 +34,11 @@ Topping the list is a critical flaw impacting Ivanti Xtraction (CVE-2026-8043, C
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
-- **T1592** — Gather Victim Host Information
 - **T1059** — Command and Scripting Interpreter
 - **T1068** — Exploitation for Privilege Escalation
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1005** — Data from Local System
-- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1059.004** — Unix Shell
+- **T1059.001** — PowerShell
+- **T1505.003** — Web Shell
 
 ## Kill chain phases observed
 
@@ -47,91 +46,80 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Vulnerable inventory hunt: May 2026 Ivanti/Fortinet/SAP/VMware/n8n patch bundle
+### [LLM] n8n Git node CLI argument injection (CVE-2026-44790) — git child of node with --upload-pack/--receive-pack/-c core.sshCommand
 
-`UC_20_5` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-8043","CVE-2026-44277","CVE-2026-26083","CVE-2026-34260","CVE-2026-34263","CVE-2026-41702","CVE-2026-42231","CVE-2026-42232","CVE-2026-44789","CVE-2026-44790","CVE-2026-44791") by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort -lastSeen
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-8043","CVE-2026-44277","CVE-2026-26083","CVE-2026-34260","CVE-2026-34263","CVE-2026-41702","CVE-2026-42231","CVE-2026-42232","CVE-2026-44789","CVE-2026-44790","CVE-2026-44791")
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | project CveId, CvssScore, IsExploitAvailable, PublishedDate) on CveId
-| summarize DeviceCount = dcount(DeviceName),
-            Devices    = make_set(DeviceName, 50),
-            FirstSeen  = min(Timestamp),
-            LastSeen   = max(Timestamp)
-            by CveId, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable
-| order by CvssScore desc, DeviceCount desc
-```
-
-### [LLM] n8n (Node.js) host spawning unexpected shell or script interpreter — likely CVE-2026-42231/42232/44789/44791 post-exploit
-
-`UC_20_6` · phase: **exploit** · confidence: **Medium**
+`UC_25_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmdlines values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND (Processes.parent_process="*n8n*") AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe")) by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort -lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node","node.exe","n8n","n8n.exe") (Processes.process_name="git" OR Processes.process_name="git.exe") (Processes.process="*--upload-pack=*" OR Processes.process="*--receive-pack=*" OR Processes.process="*-c core.sshCommand=*" OR Processes.process="*--exec=*" OR Processes.process="*-u *" OR Processes.process="*core.sshCommand*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rename firstTime as firstTime, lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where InitiatingProcessCommandLine contains "n8n"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| where InitiatingProcessFileName in~ ("node","node.exe","n8n","n8n.exe")
+| where FileName in~ ("git","git.exe")
+| where ProcessCommandLine has_any ("--upload-pack=", "--receive-pack=", "core.sshCommand", "--exec=")
+   or ProcessCommandLine matches regex @"(?i)-c\s+core\.sshCommand"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### [LLM] n8n Node.js worker spawning interactive shell — RCE chained from prototype-pollution CVEs (42231/42232/44789/44791)
+
+`UC_25_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node","node.exe","n8n","n8n.exe") (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe","nc","ncat","socat") OR Processes.process="*/dev/tcp/*" OR Processes.process="*bash -i*" OR Processes.process="*IEX*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*FromBase64String*" OR Processes.process="*-EncodedCommand*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node","node.exe","n8n","n8n.exe")
+| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe","nc","ncat","socat","python","python3","perl","ruby")
+   or ProcessCommandLine has_any ("/dev/tcp/","bash -i","sh -i","IEX","Invoke-Expression","FromBase64String","-EncodedCommand","socket.socket")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
-          NodeCmd  = InitiatingProcessCommandLine,
-          NodePath = InitiatingProcessFolderPath,
-          ChildBinary = FileName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
           ChildCmd    = ProcessCommandLine,
-          ChildSHA256 = SHA256,
-          NodeSHA256  = InitiatingProcessSHA256
+          SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] n8n Git node Push CLI flag injection — CVE-2026-44790 arbitrary file read
+### [LLM] Vulnerable n8n / Ivanti Xtraction / FortiAuthenticator / FortiSandbox / SAP / VMware Fusion inventory — exposure surface map
 
-`UC_20_7` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as git_cmdlines from datamodel=Endpoint.Processes where (Processes.process_name="git.exe" OR Processes.process_name="git") AND (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND (Processes.parent_process="*n8n*") AND (Processes.process="*--upload-pack*" OR Processes.process="*--receive-pack*" OR Processes.process="*--exec=*" OR Processes.process="*--exec-path*" OR Processes.process="*core.sshCommand*" OR Processes.process="*--config-env*" OR Processes.process="*protocol.ext.allow*" OR Processes.process="*core.gitProxy*" OR Processes.process="*core.fsmonitor*" OR Processes.process="*core.editor*") by host Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | sort -lastTime
-```
+`UC_25_7` · phase: **recon** · confidence: **High**
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("git.exe","git")
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where InitiatingProcessCommandLine contains "n8n"
-| where ProcessCommandLine has_any (
-    "--upload-pack",
-    "--receive-pack",
-    "--exec=",
-    "--exec-path",
-    "core.sshCommand",
-    "--config-env",
-    "protocol.ext.allow",
-    "core.gitProxy",
-    "core.fsmonitor",
-    "core.editor",
-    "core.hooksPath",
-    "--no-verify"
-  )
-| project Timestamp, DeviceName, AccountName,
-          NodeCmd = InitiatingProcessCommandLine,
-          GitCmd  = ProcessCommandLine,
-          GitPath = FolderPath,
-          InitiatingProcessSHA256
-| order by Timestamp desc
+let TargetCves = dynamic([
+    "CVE-2026-8043",   // Ivanti Xtraction
+    "CVE-2026-44277",  // FortiAuthenticator
+    "CVE-2026-26083",  // FortiSandbox
+    "CVE-2026-34260",  // SAP S/4HANA
+    "CVE-2026-34263",  // SAP Commerce Cloud
+    "CVE-2026-41702",  // VMware Fusion
+    "CVE-2026-42231","CVE-2026-42232","CVE-2026-44789","CVE-2026-44790","CVE-2026-44791" // n8n
+]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (TargetCves)
+| join kind=leftouter DeviceTvmSoftwareVulnerabilitiesKB on CveId
+| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable,
+          RecommendedSecurityUpdate, PublishedDate
+| order by CvssScore desc, DeviceName asc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -255,4 +243,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

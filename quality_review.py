@@ -440,6 +440,7 @@ def _llm_review_call(prompt: str) -> dict | None:
             allowed_tools=None,
             system_prompt=_REVIEW_PROMPT_SYSTEM,
             timeout=gen._OAUTH_RELEVANCE_CALL_TIMEOUT_SEC * 2,
+            kind="review",
         )
         if raw:
             gen._note_oauth_success("review")

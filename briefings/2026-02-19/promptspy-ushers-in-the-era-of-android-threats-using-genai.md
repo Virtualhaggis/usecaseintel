@@ -19,130 +19,12 @@ ESET researchers uncovered the first known case of Android malware abusing gener
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1219** — Remote Access Software
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1095** — Non-Application Layer Protocol
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1189** — Drive-by Compromise
-- **T1583.001** — Acquire Infrastructure: Domains
-- **T1204.002** — User Execution: Malicious File
-- **T1608.001** — Stage Capabilities: Upload Malware
-- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] PromptSpy/VNCSpy Android malware C2 callback to hard-coded VNC server (54.67.2.84 / 52.222.205.45)
-
-`UC_398_3` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps values(All_Traffic.transport) as transports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("54.67.2.84","52.222.205.45") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let promptspy_c2 = dynamic(["54.67.2.84","52.222.205.45"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (promptspy_c2)
-| project Timestamp, DeviceName, DeviceId, ActionType, RemoteIP, RemotePort, Protocol, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          InitiatingProcessAccountName, InitiatingProcessAccountUpn, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### [LLM] PromptSpy MorganArg distribution / phishing domain access (mgardownload.com, m-mgarg.com)
-
-`UC_398_4` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as resolved_ips values(DNS.record_type) as record_types from datamodel=Network_Resolution.DNS where (DNS.query="mgardownload.com" OR DNS.query="*.mgardownload.com" OR DNS.query="m-mgarg.com" OR DNS.query="*.m-mgarg.com") by DNS.src DNS.query
-| `drop_dm_object_name(DNS)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| append 
-    [| tstats summariesonly=true count from datamodel=Web.Web where (Web.url="*mgardownload.com*" OR Web.url="*m-mgarg.com*" OR Web.site="mgardownload.com" OR Web.site="m-mgarg.com") by Web.src Web.user Web.site Web.url Web.http_user_agent
-     | `drop_dm_object_name(Web)`]
-```
-
-**Defender KQL:**
-```kql
-let promptspy_domains = dynamic(["mgardownload.com","m-mgarg.com"]);
-union isfuzzy=true
-  ( DeviceEvents
-      | where Timestamp > ago(30d)
-      | where ActionType == "DnsQueryResponse"
-      | extend Query = tostring(parse_json(AdditionalFields).QueryName)
-      | where Query has_any (promptspy_domains)
-      | project Timestamp, DeviceName, DeviceId, Query, InitiatingProcessFileName,
-                InitiatingProcessCommandLine, InitiatingProcessAccountName, Source="DnsQueryResponse" ),
-  ( DeviceNetworkEvents
-      | where Timestamp > ago(30d)
-      | where RemoteUrl has_any (promptspy_domains)
-      | project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort,
-                InitiatingProcessFileName, InitiatingProcessCommandLine,
-                InitiatingProcessAccountUpn, Source="DeviceNetworkEvents" ),
-  ( UrlClickEvents
-      | where Timestamp > ago(30d)
-      | where Url has_any (promptspy_domains)
-      | project Timestamp, AccountUpn, Url, ActionType, IsClickedThrough, IPAddress,
-                NetworkMessageId, Workload, Source="UrlClickEvents" )
-| order by Timestamp desc
-```
-
-### [LLM] PromptSpy / VNCSpy APK SHA-1 IOC match on managed-endpoint file events
-
-`UC_398_5` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("6BBC9AB132BA066F63676E05DA13D108598BC29B","375D7423E63C8F5F2CC814E8CFE697BA25168AFA","3978AC5CD14E357320E127D6C87F10CB70A1DCC2","E60D12017D2DA579DF87368F5596A0244621AE86","9B1723284E311794987997CB7E8814EB6014713F","076801BD9C6EB78FC0331A4C7A22C73199CC3824","8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA","F8F4C5BC498BCCE907DC975DD88BE8D594629909","C14E9B062ED28115EDE096788F62B47A6ED841AC") by Filesystem.dest Filesystem.file_name Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let promptspy_sha1 = dynamic([
-  "6BBC9AB132BA066F63676E05DA13D108598BC29B",
-  "375D7423E63C8F5F2CC814E8CFE697BA25168AFA",
-  "3978AC5CD14E357320E127D6C87F10CB70A1DCC2",
-  "E60D12017D2DA579DF87368F5596A0244621AE86",
-  "9B1723284E311794987997CB7E8814EB6014713F",
-  "076801BD9C6EB78FC0331A4C7A22C73199CC3824",
-  "8364730E9BB2CF3A4B016DE1B34F38341C0EE2FA",
-  "F8F4C5BC498BCCE907DC975DD88BE8D594629909",
-  "C14E9B062ED28115EDE096788F62B47A6ED841AC"]);
-let promptspy_filenames = dynamic([
-  "net.ustexas.myavlive.apk","nlll4.un7o6.q38l5.apk","ppyzz.dpk0p.ln441.apk",
-  "mgappc-1.apk","mgappm-1.apk","mgappn-0.apk","mgappn-1.apk",
-  "app-release.apk","mgapp.apk"]);
-union isfuzzy=true
-  ( DeviceFileEvents
-      | where Timestamp > ago(30d)
-      | where SHA1 in (promptspy_sha1) or FileName in~ (promptspy_filenames)
-      | project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath,
-                SHA1, SHA256, FileOriginUrl, FileOriginReferrerUrl,
-                InitiatingProcessFileName, InitiatingProcessFolderPath,
-                InitiatingProcessAccountName, InitiatingProcessAccountUpn, Source="DeviceFileEvents" ),
-  ( EmailAttachmentInfo
-      | where Timestamp > ago(30d)
-      | where FileName in~ (promptspy_filenames) or FileType =~ "APK"
-      | join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction) on NetworkMessageId
-      | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress,
-                Subject, FileName, FileType, SHA256, MalwareFilterVerdict, DeliveryAction, Source="EmailAttachmentInfo" )
-| order by Timestamp desc
-```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -231,4 +113,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 6 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

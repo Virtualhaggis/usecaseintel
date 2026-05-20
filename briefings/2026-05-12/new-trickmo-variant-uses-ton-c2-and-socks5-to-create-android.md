@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TrickMo C2 DNS resolution for TON overlay hostnames (.adnl / .bag / .ton)
 
-`UC_113_5` · phase: **c2** · confidence: **High**
+`UC_116_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceEvents
 
 ### [LLM] TrickMo C dropper / payload Android package identifiers observed in telemetry
 
-`UC_113_6` · phase: **install** · confidence: **High**
+`UC_116_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

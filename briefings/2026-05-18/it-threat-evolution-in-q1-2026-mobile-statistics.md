@@ -40,82 +40,12 @@ TOP 10 countries and territories attacked by m…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1133** — External Remote Services
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1090** — Proxy
-- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Cisco Secure FMC unpatched against CVE-2026-20131 (Interlock initial access exposure)
-
-`UC_18_7` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.vendor_product) as vendor_product from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-20131" by Vulnerabilities.dest Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| where match(vendor_product, "(?i)cisco|firepower|FMC|Secure Firewall") OR match(signature, "(?i)FMC|Firepower|Secure Firewall Management")
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2026-20131"
-| where SoftwareVendor =~ "cisco"
-   or SoftwareName has_any ("firepower","secure firewall","fmc","firepower management center")
-| join kind=leftouter (
-    DeviceInfo
-    | summarize arg_max(Timestamp, OSPlatform, IsInternetFacing, MachineGroup) by DeviceId
-  ) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, MachineGroup, IsInternetFacing,
-          SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by IsInternetFacing desc, DeviceName asc
-```
-
-### [LLM] Interlock ransomware C2 infrastructure contact (CVE-2026-20131 campaign IOCs)
-
-`UC_18_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("206.251.239.164","199.217.98.153","89.46.237.33","144.172.94.59","199.217.99.121","188.245.41.78","144.172.110.106","95.217.22.175","37.27.244.222","37.27.244.222") by All_Traffic.src All_Traffic.dest_ip
-| `drop_dm_object_name(All_Traffic)`
-| append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query from datamodel=Network_Resolution.DNS where DNS.query IN ("*cherryberry.click","*ms-server-default.com","*initialize-configs.com","*browser-updater.com","*browser-updater.live","*os-update-server.com","*os-update-server.org","*os-update-server.live","*os-update-server.top") by DNS.src DNS.query | `drop_dm_object_name(DNS)` ]
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let InterlockIPs = dynamic(["206.251.239.164","199.217.98.153","89.46.237.33","144.172.94.59","199.217.99.121","188.245.41.78","144.172.110.106","95.217.22.175","37.27.244.222"]);
-let InterlockDomains = dynamic(["cherryberry.click","ms-server-default.com","initialize-configs.com","browser-updater.com","browser-updater.live","os-update-server.com","os-update-server.org","os-update-server.live","os-update-server.top"]);
-union isfuzzy=true
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteIP in (InterlockIPs)
-     or (isnotempty(RemoteUrl) and (RemoteUrl has_any (InterlockDomains)))
-  | project Timestamp, Source="DeviceNetworkEvents", DeviceName, AccountName=InitiatingProcessAccountName,
-            InitiatingProcessFileName, InitiatingProcessCommandLine,
-            RemoteIP, RemotePort, RemoteUrl, ActionType ),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | extend Q = tolower(tostring(parse_json(AdditionalFields).QueryName))
-  | where Q has_any (InterlockDomains)
-  | project Timestamp, Source="DnsQueryResponse", DeviceName, AccountName=InitiatingProcessAccountName,
-            InitiatingProcessFileName, InitiatingProcessCommandLine,
-            RemoteIP="", RemotePort=int(null), RemoteUrl=Q, ActionType )
-| order by Timestamp desc
-```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -294,4 +224,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -18,35 +18,12 @@ Supply chain security stories often focus on confirmed compromises. But man…
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1546.016** — Event Triggered Execution: Installer Packages
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] @kilocode/cli npm postinstall symlinking unverified platform binaries
-
-`UC_425_1` · phase: **install** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent_proc values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe","npm","node","yarn","pnpm") OR Processes.process_name IN ("node.exe","node","ln","ln.exe","mklink.exe","cmd.exe","sh","bash")) (Processes.process="*@kilocode/cli*" OR Processes.process="*@kilocode/cli-darwin-arm64*" OR Processes.process="*@kilocode/cli-linux*" OR Processes.process="*@kilocode/cli-win32*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npm-cli.js","npm","node","yarn","pnpm")
-    or FileName in~ ("node.exe","node","ln","mklink.exe","cmd.exe","sh","bash")
-| where ProcessCommandLine has_any ("@kilocode/cli","@kilocode/cli-darwin-arm64","@kilocode/cli-linux","@kilocode/cli-win32","kilocode-cli")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -75,4 +52,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

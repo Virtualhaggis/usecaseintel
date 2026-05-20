@@ -14,6 +14,7 @@ ROOT     = Path(__file__).parent
 LOG      = ROOT / "logs" / "auto.log"
 DROPS    = ROOT / "intel" / "relevance_drops.jsonl"
 BRIEFS   = ROOT / "briefings"
+USAGE    = ROOT / "intel" / ".usage_log.jsonl"
 OUT      = ROOT / "pipeline.html"
 
 
@@ -109,6 +110,28 @@ def _briefings_today() -> int:
     return len(list(dirs[0].glob("*.md"))) if dirs else 0
 
 
+def _usage_log_data(limit: int = 200) -> list[dict]:
+    """Read intel/.usage_log.jsonl, return up to `limit` most recent rows
+    sorted newest-first. Each row is one pipeline / review / biweekly run,
+    written by generate._emit_usage_summary at process exit. Returns []
+    if the file doesn't exist yet (no runs have completed under the new
+    instrumentation)."""
+    if not USAGE.exists():
+        return []
+    rows = []
+    for line in USAGE.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        try:
+            rows.append(json.loads(line))
+        except Exception:
+            continue
+    # Newest first by ts (already lexicographically sortable since UTC ISO).
+    rows.sort(key=lambda r: r.get("ts", ""), reverse=True)
+    return rows[:limit]
+
+
 def _scheduled_tasks() -> list[dict]:
     """Read live state of the two project Windows Scheduled Tasks. PowerShell
     only — quietly returns [] on macOS/Linux or if PS not available."""
@@ -146,8 +169,19 @@ def _escape(s: str) -> str:
 
 
 def render(stats: dict, drops: list[dict], today_count: int,
-           tasks: list[dict] | None = None) -> str:
+           tasks: list[dict] | None = None,
+           usage_runs: list[dict] | None = None) -> str:
     tasks = tasks or []
+    usage_runs = usage_runs or []
+    # Inline the usage rows as JSON for the dashboard JS. Defang the
+    # `</script>` sequence so a payload containing it can't escape the
+    # script tag; the JS side parses with JSON.parse so the escape is
+    # purely a string-level safety measure.
+    usage_json = json.dumps(usage_runs, ensure_ascii=False).replace(
+        "</", "<\\/")
+    # Empty-state flag drives whether the dashboard renders a table or a
+    # gentle "no runs yet" panel.
+    usage_count = len(usage_runs)
     # Top stats tiles
     tile = lambda v, l: (
         f'<div class="stat"><div class="v">{v}</div>'
@@ -300,15 +334,78 @@ def render(stats: dict, drops: list[dict], today_count: int,
     color:var(--muted-2); font-size:12px; margin-top:32px;
     padding-top:18px; border-top:1px solid var(--border); text-align:center;
   }}
+
+  /* Tab navigation */
+  .tabs{{
+    display:flex; gap:4px; border-bottom:1px solid var(--border);
+    margin-bottom:24px; padding-bottom:0;
+  }}
+  .tab-btn{{
+    background:transparent; color:var(--muted); border:none;
+    padding:10px 18px; font-size:14px; font-weight:600; cursor:pointer;
+    border-bottom:2px solid transparent; margin-bottom:-1px;
+    transition:color .12s, border-color .12s;
+    font-family:inherit;
+  }}
+  .tab-btn:hover{{color:var(--text);}}
+  .tab-btn.active{{
+    color:var(--accent); border-bottom-color:var(--accent);
+  }}
+  .tab-pane{{display:none;}}
+  .tab-pane.active{{display:block;}}
+
+  /* Usage dashboard */
+  .usage-controls{{
+    display:flex; gap:10px; align-items:center; margin:8px 0 16px;
+    flex-wrap:wrap;
+  }}
+  .usage-controls label{{
+    font-size:12px; color:var(--muted); display:flex; gap:6px; align-items:center;
+  }}
+  .usage-controls select, .usage-controls input{{
+    background:var(--panel-elev); color:var(--text); border:1px solid var(--border);
+    border-radius:6px; padding:4px 8px; font-size:12px; font-family:inherit;
+  }}
+  .usage-table{{font-size:12px;}}
+  .usage-table th{{cursor:pointer; user-select:none;}}
+  .usage-table th:hover{{color:var(--text);}}
+  .usage-table th.sorted::after{{content:" ▼"; color:var(--accent); font-size:9px;}}
+  .usage-table th.sorted.asc::after{{content:" ▲";}}
+  .usage-table tbody tr{{cursor:pointer;}}
+  .usage-table tbody tr:hover{{background:rgba(113,112,255,0.06);}}
+  .usage-table tr.expanded{{background:rgba(113,112,255,0.10);}}
+  .usage-table td.num{{text-align:right; font-variant-numeric:tabular-nums;}}
+  .usage-table td.center{{text-align:center;}}
+  .usage-bykind{{
+    background:var(--panel-elev); padding:14px 18px; border-radius:8px;
+    margin:6px 0 14px; font-size:12px;
+  }}
+  .usage-bykind table{{margin-top:6px; font-size:11.5px;}}
+  .usage-bykind td.num{{text-align:right; font-variant-numeric:tabular-nums;}}
+  .badge-y{{color:var(--warn); font-weight:700;}}
+  .badge-n{{color:var(--muted-2);}}
+  .spark{{display:inline-block; vertical-align:middle; margin-left:8px;}}
+  .empty-state{{
+    color:var(--muted); padding:32px; text-align:center;
+    background:var(--panel-elev); border-radius:10px;
+    border:1px dashed var(--border-2);
+  }}
 </style>
 </head>
 <body>
 
 <h1>Clankerusecase Pipeline — Internal Docs</h1>
 <p class="lede">Diagrams of how articles flow from RSS into the live site at
-<code>clankerusecase.com</code>. Each section maps to the actual code in
-<code>generate.py</code> with line refs. Stats below come from the most
-recent pipeline run.</p>
+<code>clankerusecase.com</code>, plus an interactive view of every run's
+LLM-token usage. Each workflow section maps to the actual code in
+<code>generate.py</code>.</p>
+
+<div class="tabs" role="tablist">
+  <button class="tab-btn active" data-tab="workflows" role="tab">Workflows</button>
+  <button class="tab-btn" data-tab="usage" role="tab">Usage <span style="opacity:.5; font-weight:400;">({usage_count} runs)</span></button>
+</div>
+
+<div class="tab-pane active" id="tab-workflows" role="tabpanel">
 
 <section>
   <h2><span class="num">0</span>Latest run</h2>
@@ -456,20 +553,26 @@ flowchart TB
 
 <section>
   <h2><span class="num">5</span>LLM UC generation</h2>
-  <p class="sub">Per-article bespoke detection UCs. Two auth paths
-  (Claude Code OAuth via <code>claude-agent-sdk</code> + ANTHROPIC_API_KEY
-  fallback). Cached per article URL so re-runs cost nothing.</p>
+  <p class="sub">Per-article bespoke detection UCs. OAuth path uses
+  <code>claude -p --output-format stream-json</code> as a subprocess (the
+  claude-agent-sdk SDK path was retired — multiple Windows-specific bugs).
+  Falls back to <code>ANTHROPIC_API_KEY</code> if OAuth is unavailable.
+  Cached per article URL so re-runs cost nothing.</p>
   <div class="mermaid">
 flowchart TB
   A[article passed relevance gate] --> B{{cache hit on<br/>SHA1 of URL?}}
   B -- yes --> R[load cached UCs<br/>cost: $0]
   B -- no --> C{{_llm_should_process<br/>keyword gate}}
   C -- skip --> S[no LLM UCs<br/>template UCs only]
-  C -- accept --> D{{OAuth available<br/>AND circuit not open?}}
-  D -- yes --> E[_llm_call_via_oauth<br/>claude-agent-sdk<br/>Opus + WebSearch<br/>180s timeout, max_turns=4]
+  C -- accept --> D{{OAuth available<br/>AND uc breaker not open?}}
+  D -- yes --> E[_llm_call_via_oauth →<br/>_call_claude_cli<br/>subprocess: claude -p<br/>Opus + WebSearch<br/>1200s budget, 250 calls/run]
   D -- no --> F{{ANTHROPIC_API_KEY?}}
   E -- success --> P[parse JSON UCs]
-  E -- 3 failures in a row --> G[OAuth circuit breaker OPEN<br/>skip OAuth rest of run]
+  E -- credit/quota error --> SW{{secondary CLAUDE_CONFIG_DIR<br/>configured?}}
+  SW -- yes --> SWY[switch to secondary account<br/>reset breakers<br/>retry once]
+  SW -- no --> G
+  SWY --> E
+  E -- 6 of 12 in window fail --> G[OAuth circuit breaker OPEN<br/>skip OAuth rest of run]
   E -- subprocess crash<br/>or timeout --> G
   G --> F
   F -- yes --> H[_llm_call_via_api_key<br/>anthropic SDK]
@@ -479,8 +582,8 @@ flowchart TB
   P --> W[write cache file]
   W --> R
   </div>
-  <span class="ref">_llm_generate_ucs at generate.py:1118 ·
-  _llm_call_via_oauth at 1052 (with circuit breaker) ·
+  <span class="ref">_llm_generate_ucs · _llm_call_via_oauth ·
+  _call_claude_cli (failover + usage capture) ·
   cache at <code>intel/.llm_uc_cache/&lt;sha[:2]&gt;/&lt;sha&gt;.json</code></span>
 </section>
 
@@ -509,17 +612,25 @@ flowchart LR
 
 <section>
   <h2><span class="num">7</span>Scheduled pipelines</h2>
-  <p class="sub">Two independent Windows Scheduled Tasks run on this PC.
-  They're decoupled but the weekly synthesis feeds new use cases that the
-  every-2h pipeline picks up on its next run.</p>
+  <p class="sub">Three independent Windows Scheduled Tasks run on this PC.
+  The 2-hour main pipeline and the 2-hour quality-review pass interleave on
+  alternate xx:30 boundaries, while the weekly synthesis feeds new use
+  cases that the next main run picks up.</p>
   <div class="mermaid">
 flowchart TB
-  subgraph T1[ClankerusecasePipeline · every 2h]
+  subgraph T1[ClankerusecasePipeline · every 2h xx:30]
     direction LR
     P1A[Windows Task Scheduler<br/>06:30 +PT2H] --> P1B[run_once.bat]
-    P1B --> P1C[generate.py<br/>fetch · filter · dedupe<br/>relevance · LLM UC · render]
+    P1B --> P1C[generate.py<br/>fetch · filter · dedupe<br/>relevance · LLM UC · IOC · KC · vision<br/>render]
     P1C --> P1D[git commit + push<br/>GitHub Pages publishes ~60s]
-    P1D --> P1E[logs/auto.log]
+    P1D --> P1E[logs/auto.log<br/>+ intel/.usage_log.jsonl row]
+  end
+  subgraph T3[ClankerusecaseQualityReview · every 2h xx:30 alt]
+    direction LR
+    P3A[Windows Task Scheduler<br/>07:30 +PT2H] --> P3B[run_review.bat]
+    P3B --> P3C[quality_review.py<br/>Haiku reviewer pass<br/>over latest run articles]
+    P3C --> P3D[intel/quality_suggestions.jsonl<br/>commit + push]
+    P3D --> P3E[logs/review.log<br/>+ intel/.usage_log.jsonl row]
   end
   subgraph T2[ClankerusecaseBiweekly · Sundays 23:00]
     direction LR
@@ -530,8 +641,10 @@ flowchart TB
     P2E --> P2F[briefings/_weekly/&lt;ISO-week&gt;.md<br/>logs/biweekly.log]
   end
   P2D -. feeds .-> P1C
+  P1C -. shares .pipeline.lock .-> P3C
   P1C -.> ARTICLES[Articles tab on the live site]
   P2D -.> WKC[WKC bucket in Detection Library<br/>filter by 'WKC' kind chip]
+  P3D -. annotates next run .-> P1C
   </div>
   <h3 style="margin-top:18px; font-size:16px;">Live task state on this PC</h3>
   <table>
@@ -539,30 +652,328 @@ flowchart TB
       <th>Next run</th><th>Result</th></tr></thead>
     <tbody>{tasks_html}</tbody>
   </table>
-  <span class="ref">Both tasks live under Windows Task Scheduler.
-  Inspect with <code>schtasks /Query /TN ClankerusecasePipeline /V /FO LIST</code>.
-  Pipeline 1 log: <code>logs/auto.log</code>. Biweekly log:
-  <code>logs/biweekly.log</code>.</span>
+  <span class="ref">All three tasks live under Windows Task Scheduler.
+  Inspect any with <code>schtasks /Query /TN ClankerusecasePipeline /V /FO LIST</code>.
+  Logs: <code>logs/auto.log</code> (pipeline), <code>logs/review.log</code>
+  (quality review), <code>logs/biweekly.log</code> (weekly synthesis).
+  Every run also appends one row to <code>intel/.usage_log.jsonl</code>
+  for the Usage tab.</span>
 </section>
 
 <section>
   <h2><span class="num">8</span>Operational safety nets</h2>
   <div class="pillbar">
-    <span class="pill good">OAuth circuit breaker (3 failures → open)</span>
-    <span class="pill good">Per-call timeouts (180s UC / 45s relevance)</span>
+    <span class="pill good">Per-kind OAuth circuit breakers (6 of 12 in window → open)</span>
+    <span class="pill good">Per-kind call budgets (uc 250 · ioc 200 · relevance 400 · kc/vision 150)</span>
+    <span class="pill good">Dual-account failover (primary → secondary on credit/quota error)</span>
+    <span class="pill good">Per-run LLM usage capture → <code>intel/.usage_log.jsonl</code></span>
+    <span class="pill good">Per-call timeouts (1200s UC / 45s relevance / 135s vision)</span>
     <span class="pill good">Stale-briefing cleanup each run</span>
     <span class="pill good">Marketing-post filter at fetch boundary</span>
-    <span class="pill good">Cache invalidation via CLASSIFIER_VERSION bump</span>
+    <span class="pill good">Cache invalidation via UC_VERSION + CLASSIFIER_VERSION bumps</span>
     <span class="pill good">relevance_drops.jsonl audit log</span>
     <span class="pill good">analyst override list (_RELEVANCE_OVERRIDE_TITLES)</span>
   </div>
-  <p class="sub">When the claude-agent-sdk subprocess crashes mid-run, the
-  circuit breaker stops calling it for the rest of the pass — the pipeline
-  finishes with rules-only relevance + template UCs. Previously this
-  exact crash would stall a pipeline for ~30 minutes.</p>
-  <span class="ref">_OAUTH_CIRCUIT_OPEN at generate.py:998 ·
-  _note_oauth_failure at 1014</span>
+  <p class="sub">When <code>claude -p</code> returns a credit/quota error on the
+  primary account, <code>_call_claude_cli</code> flips
+  <code>CLAUDE_CONFIG_DIR</code> to the secondary account, resets the
+  breakers, and retries the same call (sticky for the rest of the run).
+  If no secondary is configured, or if both accounts fail, the per-kind
+  breaker trips after 6 failures in the rolling 12-call window and the
+  run falls through to <code>ANTHROPIC_API_KEY</code> or rules-only
+  output. Every call's token usage + wall-time is captured per kind and
+  written to a rolling JSONL on process exit — see the Usage tab.</p>
+  <span class="ref">_OAUTH_BREAKERS · _maybe_switch_account ·
+  _record_usage / _emit_usage_summary (atexit) ·
+  setup_dual_account.ps1 · show_usage.ps1</span>
 </section>
+
+</div><!-- /tab-pane workflows -->
+
+<div class="tab-pane" id="tab-usage" role="tabpanel">
+
+<section>
+  <h2><span class="num">U</span>LLM usage per run</h2>
+  <p class="sub">Every <code>generate.py</code> / <code>quality_review.py</code>
+  / <code>biweekly_review.py</code> run writes one row to
+  <code>intel/.usage_log.jsonl</code> at process exit, capturing token
+  counts and wall-time per LLM kind (uc · ioc · relevance · vision · kc ·
+  review). This dashboard is generated from those rows. Re-run
+  <code>py build_pipeline_docs.py</code> to refresh.</p>
+
+  <div id="usage-summary" class="stats"></div>
+
+  <div class="usage-controls">
+    <label>script
+      <select id="usage-filter-script">
+        <option value="">(all)</option>
+      </select>
+    </label>
+    <label>last
+      <select id="usage-filter-limit">
+        <option value="25">25 runs</option>
+        <option value="50">50 runs</option>
+        <option value="100">100 runs</option>
+        <option value="200" selected>all</option>
+      </select>
+    </label>
+    <label style="margin-left:auto; font-family:var(--mono); font-size:11px;
+                  color:var(--muted-2);">
+      click a row to see per-kind breakdown
+    </label>
+  </div>
+
+  <div id="usage-empty" class="empty-state" style="display:none;">
+    No runs logged yet. Trigger <code>run_once.bat</code> (or wait for the
+    next scheduled fire) and refresh this page — the first row will appear
+    in <code>intel/.usage_log.jsonl</code>.
+  </div>
+
+  <table id="usage-table" class="usage-table" style="display:none;">
+    <thead>
+      <tr>
+        <th data-sort="ts" class="sorted">timestamp (UTC)</th>
+        <th data-sort="script">script</th>
+        <th data-sort="wall_seconds_total" class="num">wall s</th>
+        <th data-sort="account_switched" class="center">switched</th>
+        <th data-sort="active_at_end">acct end</th>
+        <th data-sort="calls" class="num">calls</th>
+        <th data-sort="input_tokens" class="num">input tok</th>
+        <th data-sort="output_tokens" class="num">output tok</th>
+        <th data-sort="cache_read" class="num">cache_r</th>
+        <th data-sort="top_kind">top kind</th>
+      </tr>
+    </thead>
+    <tbody id="usage-tbody"></tbody>
+  </table>
+
+  <span class="ref">Source: <code>intel/.usage_log.jsonl</code> ·
+  inline rendering only (no external fetch, no analytics, no PII).
+  Counters come from the stream-json <code>result.usage</code> block
+  returned by every <code>claude -p</code> subprocess call.</span>
+</section>
+
+</div><!-- /tab-pane usage -->
+
+<script id="usage-data" type="application/json">{usage_json}</script>
+<script>
+(function(){{
+  // ----- Tab switching -----
+  var tabs = document.querySelectorAll('.tab-btn');
+  var panes = document.querySelectorAll('.tab-pane');
+  tabs.forEach(function(btn){{
+    btn.addEventListener('click', function(){{
+      var target = btn.getAttribute('data-tab');
+      tabs.forEach(function(b){{ b.classList.toggle('active', b === btn); }});
+      panes.forEach(function(p){{
+        p.classList.toggle('active', p.id === 'tab-' + target);
+      }});
+      // Force Mermaid to re-render diagrams when the Workflows tab is
+      // re-activated — they sometimes initialise zero-width when hidden.
+      if (target === 'workflows' && window.mermaid){{
+        try {{ window.mermaid.run({{querySelector:'.mermaid'}}); }} catch(e){{}}
+      }}
+    }});
+  }});
+
+  // ----- Usage dashboard -----
+  var raw = document.getElementById('usage-data').textContent || '[]';
+  var DATA = [];
+  try {{ DATA = JSON.parse(raw); }} catch(e){{ DATA = []; }}
+
+  var fmt = function(n){{
+    if (n == null || isNaN(n)) return '—';
+    n = Number(n);
+    if (n >= 1e9) return (n/1e9).toFixed(2) + 'B';
+    if (n >= 1e6) return (n/1e6).toFixed(2) + 'M';
+    if (n >= 1e3) return (n/1e3).toFixed(1) + 'k';
+    return n.toLocaleString();
+  }};
+  var fmtInt = function(n){{
+    if (n == null || isNaN(n)) return '—';
+    return Number(n).toLocaleString();
+  }};
+  var topKindOf = function(byKind){{
+    if (!byKind) return '—';
+    var best = null, bestN = -1;
+    Object.keys(byKind).forEach(function(k){{
+      var n = (byKind[k] && byKind[k].output_tokens) || 0;
+      if (n > bestN){{ bestN = n; best = k; }}
+    }});
+    return best || '—';
+  }};
+
+  // Populate script filter from data.
+  var scripts = {{}};
+  DATA.forEach(function(r){{
+    if (r && r.script) scripts[r.script] = true;
+  }});
+  var scriptSelect = document.getElementById('usage-filter-script');
+  Object.keys(scripts).sort().forEach(function(s){{
+    var opt = document.createElement('option');
+    opt.value = s; opt.textContent = s;
+    scriptSelect.appendChild(opt);
+  }});
+
+  var sortKey = 'ts';
+  var sortAsc = false;
+
+  function applyFilters(){{
+    var sf = document.getElementById('usage-filter-script').value;
+    var lim = parseInt(document.getElementById('usage-filter-limit').value, 10) || 200;
+    var rows = DATA.slice();
+    if (sf) rows = rows.filter(function(r){{ return r.script === sf; }});
+    rows.sort(function(a, b){{
+      var av, bv;
+      if (sortKey === 'top_kind'){{
+        av = topKindOf(a.by_kind); bv = topKindOf(b.by_kind);
+      }} else if (['calls','input_tokens','output_tokens','cache_read'].indexOf(sortKey) >= 0){{
+        av = (a.totals||{{}})[sortKey] || 0;
+        bv = (b.totals||{{}})[sortKey] || 0;
+      }} else if (sortKey === 'account_switched'){{
+        av = a[sortKey] ? 1 : 0; bv = b[sortKey] ? 1 : 0;
+      }} else {{
+        av = a[sortKey]; bv = b[sortKey];
+      }}
+      if (av < bv) return sortAsc ? -1 : 1;
+      if (av > bv) return sortAsc ? 1 : -1;
+      return 0;
+    }});
+    return rows.slice(0, lim);
+  }}
+
+  function renderSummary(rows){{
+    var box = document.getElementById('usage-summary');
+    box.innerHTML = '';
+    if (!rows.length) return;
+    var totIn=0, totOut=0, totCache=0, totCalls=0, totWall=0, switches=0;
+    rows.forEach(function(r){{
+      var t = r.totals || {{}};
+      totIn   += t.input_tokens  || 0;
+      totOut  += t.output_tokens || 0;
+      totCache+= t.cache_read    || 0;
+      totCalls+= t.calls         || 0;
+      totWall += t.wall_seconds  || 0;
+      if (r.account_switched) switches++;
+    }});
+    var avgOut = rows.length ? Math.round(totOut / rows.length) : 0;
+    var tiles = [
+      [rows.length,        'runs shown'],
+      [fmtInt(totCalls),   'total calls'],
+      [fmt(totIn),         'input tokens'],
+      [fmt(totOut),        'output tokens'],
+      [fmt(totCache),      'cache reads'],
+      [Math.round(totWall) + 's', 'total LLM wall'],
+      [fmtInt(avgOut),     'avg output / run'],
+      [switches + ' / ' + rows.length, 'failover triggered'],
+    ];
+    tiles.forEach(function(t){{
+      var d = document.createElement('div');
+      d.className = 'stat';
+      d.innerHTML = '<div class="v">' + t[0] + '</div><div class="l">' + t[1] + '</div>';
+      box.appendChild(d);
+    }});
+  }}
+
+  function renderByKindRow(r){{
+    var bk = r.by_kind || {{}};
+    var names = Object.keys(bk).sort();
+    if (!names.length) return '<div class="usage-bykind">(no per-kind data for this run)</div>';
+    var html = '<div class="usage-bykind"><strong>Per-kind breakdown</strong>'
+             + '<table><thead><tr><th>kind</th><th class="num">calls</th>'
+             + '<th class="num">errs</th><th class="num">input</th>'
+             + '<th class="num">output</th><th class="num">cache_r</th>'
+             + '<th class="num">cache_w</th><th class="num">wall s</th>'
+             + '<th>by account</th></tr></thead><tbody>';
+    names.forEach(function(k){{
+      var s = bk[k] || {{}};
+      var ba = s.by_account || {{}};
+      html += '<tr><td><code>' + k + '</code></td>'
+            + '<td class="num">' + fmtInt(s.calls) + '</td>'
+            + '<td class="num">' + fmtInt(s.errors) + '</td>'
+            + '<td class="num">' + fmtInt(s.input_tokens) + '</td>'
+            + '<td class="num">' + fmtInt(s.output_tokens) + '</td>'
+            + '<td class="num">' + fmtInt(s.cache_read) + '</td>'
+            + '<td class="num">' + fmtInt(s.cache_create) + '</td>'
+            + '<td class="num">' + (s.wall_seconds || 0).toFixed(1) + '</td>'
+            + '<td>p=' + fmtInt(ba.primary||0) + ' s=' + fmtInt(ba.secondary||0) + '</td>'
+            + '</tr>';
+    }});
+    html += '</tbody></table></div>';
+    return html;
+  }}
+
+  function renderTable(){{
+    var rows = applyFilters();
+    var tbody = document.getElementById('usage-tbody');
+    var table = document.getElementById('usage-table');
+    var empty = document.getElementById('usage-empty');
+    tbody.innerHTML = '';
+    renderSummary(rows);
+    if (!rows.length){{
+      table.style.display = 'none';
+      empty.style.display = 'block';
+      return;
+    }}
+    table.style.display = '';
+    empty.style.display = 'none';
+    rows.forEach(function(r, i){{
+      var t = r.totals || {{}};
+      var tr = document.createElement('tr');
+      tr.dataset.idx = i;
+      tr.innerHTML =
+        '<td><code>' + (r.ts || '—') + '</code></td>'
+      + '<td>' + (r.script || '—') + '</td>'
+      + '<td class="num">' + (r.wall_seconds_total || 0).toFixed(0) + '</td>'
+      + '<td class="center">' + (r.account_switched
+            ? '<span class="badge-y">Y</span>' : '<span class="badge-n">.</span>') + '</td>'
+      + '<td>' + (r.active_at_end || '—') + '</td>'
+      + '<td class="num">' + fmtInt(t.calls) + '</td>'
+      + '<td class="num">' + fmtInt(t.input_tokens) + '</td>'
+      + '<td class="num">' + fmtInt(t.output_tokens) + '</td>'
+      + '<td class="num">' + fmtInt(t.cache_read) + '</td>'
+      + '<td><code>' + topKindOf(r.by_kind) + '</code></td>';
+      tr.addEventListener('click', function(){{
+        var nxt = tr.nextSibling;
+        if (nxt && nxt.classList && nxt.classList.contains('bykind-row')){{
+          nxt.remove();
+          tr.classList.remove('expanded');
+          return;
+        }}
+        var row = document.createElement('tr');
+        row.className = 'bykind-row';
+        var td = document.createElement('td');
+        td.colSpan = 10;
+        td.innerHTML = renderByKindRow(r);
+        row.appendChild(td);
+        tr.parentNode.insertBefore(row, tr.nextSibling);
+        tr.classList.add('expanded');
+      }});
+      tbody.appendChild(tr);
+    }});
+    // Update header sort indicators.
+    document.querySelectorAll('.usage-table th').forEach(function(th){{
+      th.classList.remove('sorted','asc');
+      if (th.getAttribute('data-sort') === sortKey){{
+        th.classList.add('sorted');
+        if (sortAsc) th.classList.add('asc');
+      }}
+    }});
+  }}
+
+  document.querySelectorAll('.usage-table th').forEach(function(th){{
+    th.addEventListener('click', function(){{
+      var k = th.getAttribute('data-sort');
+      if (sortKey === k){{ sortAsc = !sortAsc; }} else {{ sortKey = k; sortAsc = false; }}
+      renderTable();
+    }});
+  }});
+  document.getElementById('usage-filter-script').addEventListener('change', renderTable);
+  document.getElementById('usage-filter-limit').addEventListener('change', renderTable);
+
+  renderTable();
+}})();
+</script>
 
 <div class="footer">
   Re-generate this page by running <code>py build_pipeline_docs.py</code>
@@ -579,7 +990,8 @@ def main():
     drops = _drop_log_sample()
     today = _briefings_today()
     tasks = _scheduled_tasks()
-    html = render(stats, drops, today, tasks)
+    usage = _usage_log_data()
+    html = render(stats, drops, today, tasks, usage_runs=usage)
     OUT.write_text(html, encoding="utf-8")
     size_kb = OUT.stat().st_size / 1024
     print(f"[*] Wrote {OUT.name} ({size_kb:.1f} KB)")
@@ -587,6 +999,7 @@ def main():
     print(f"[*] Latest run: {stats.get('started')}")
     print(f"[*] Articles kept / dropped: "
           f"{stats.get('articles_kept')} / {stats.get('articles_dropped')}")
+    print(f"[*] Usage runs embedded: {len(usage)}")
 
 
 if __name__ == "__main__":

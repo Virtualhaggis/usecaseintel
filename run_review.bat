@@ -18,6 +18,14 @@ set LOG=logs\review.log
 
 >>"%LOG%" echo.
 >>"%LOG%" echo === run_review start %TS% ===
+REM Dual-account failover. See run_once.bat for the protocol. Review-pass
+REM LLM calls (Haiku reviewer via gen._call_claude_cli) also honour the
+REM sticky switch because the failover lives inside _call_claude_cli.
+REM Dual-account env vars deferred until setup_dual_account.ps1 has been run.
+REM Until then, leave both vars unset so the pipeline uses the default
+REM %USERPROFILE%\.claude session. Re-enable by uncommenting both lines.
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 REM `py -u` forces unbuffered stdout so progress lands in the log
 REM immediately, same convention as the main pipeline.

@@ -27,11 +27,9 @@ Codenamed Fragnesia , the security vulnerability is tracked as CVE-2026-46300 (C
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1068** — Exploitation for Privilege Escalation
-- **T1548.003** — Abuse Elevation Control Mechanism: Sudo and Sudo Caching
-- **T1574.006** — Hijack Execution Flow: Dynamic Linker Hijacking
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1548.003** — Sudo and Sudo Caching
 - **T1611** — Escape to Host
-- **T1548** — Abuse Elevation Control Mechanism
+- **T1574.006** — Dynamic Linker Hijacking
 
 ## Kill chain phases observed
 
@@ -39,76 +37,126 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Fragnesia LPE: /usr/bin/su grants root session with no preceding PAM authentication
+### [LLM] Unprivileged user invokes ip xfrm / IPsec configuration (Fragnesia CVE-2026-46300 primitive)
 
-`UC_83_6` · phase: **exploit** · confidence: **Medium**
+`UC_86_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent_proc from datamodel=Endpoint.Processes where Processes.process_name="su" AND (Processes.process_path="/usr/bin/su" OR Processes.process_path="/bin/su") AND Processes.user!="root" AND Processes.user!="" by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | join type=left dest [ search index=os (sourcetype=linux_secure OR sourcetype=syslog) "pam_unix(su:auth)" earliest=-1d | rex field=_raw "by\s+(?<user>[a-z][a-z0-9_-]*)\(" | stats count as pam_auth_count by host user | rename host as dest ] | where isnull(pam_auth_count) OR pam_auth_count=0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os=linux Processes.process_name=ip Processes.process="*xfrm*" (Processes.user!=root AND Processes.user_id!=0) by Processes.dest Processes.user Processes.user_id Processes.process Processes.parent_process_name Processes.process_path | `drop_dm_object_name(Processes)` | where match(process, "(?i)\\b(state|policy)\\b") AND match(process, "(?i)esp(4|6)?") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(1d)
-| where FileName =~ "su" and FolderPath in~ ("/usr/bin","/bin")
-| where AccountName =~ "root"
-| where InitiatingProcessAccountName !in~ ("root","")
-| extend ElapsedMs = datetime_diff('millisecond', ProcessCreationTime, InitiatingProcessCreationTime)
-| project Timestamp, DeviceName, Caller=InitiatingProcessAccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, ElapsedMs
+| where Timestamp > ago(7d)
+| where DeviceInfo has "Linux" or FolderPath startswith "/"
+| where FileName == "ip" or InitiatingProcessCommandLine has "ip xfrm"
+| where ProcessCommandLine has "xfrm"
+| where ProcessCommandLine has_any ("state", "policy")
+| where ProcessCommandLine matches regex @"(?i)\besp(4|6|-in-tcp)?\b|proto\s+esp"
+| where AccountName !in~ ("root", "system", "network-manager", "systemd-network", "strongswan", "charon", "pluto")
+| where isnotempty(AccountName)
+| project Timestamp, DeviceName, AccountName, AccountSid, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath
 | order by Timestamp desc
 ```
 
-### [LLM] berz0k Linux LPE: .so payload dropped in /tmp followed by LD_PRELOAD execution
+### [LLM] Root shell from /usr/bin/su without prior auth (Fragnesia page-cache corruption outcome)
 
-`UC_83_7` · phase: **install** · confidence: **High**
+`UC_86_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t min(_time) as drop_time values(Filesystem.file_path) as so_path values(Filesystem.process_name) as dropper from datamodel=Endpoint.Filesystem where Filesystem.file_path="/tmp/*.so" AND Filesystem.action="created" AND Filesystem.user!="root" by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner dest user [ | tstats summariesonly=t min(_time) as exec_time values(Processes.process) as cmd values(Processes.process_name) as proc from datamodel=Endpoint.Processes where Processes.process="*LD_PRELOAD*/tmp/*" by Processes.dest Processes.user | `drop_dm_object_name(Processes)` ] | where exec_time >= drop_time AND exec_time - drop_time < 600 | eval delta_sec=exec_time-drop_time | table dest user so_path dropper cmd proc drop_time exec_time delta_sec
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os=linux Processes.process_path="/usr/bin/su" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_id Processes.process | `drop_dm_object_name(Processes)` | join type=left dest user [ search index=linux_secure (sourcetype=linux_secure OR sourcetype=auth) ("pam_unix(su:session): session opened" OR "pam_unix(su:auth): authentication failure" OR "FAILED su") earliest=-5m latest=+5m | stats count as PamEvents by dest user ] | where isnull(PamEvents) OR PamEvents=0 | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 1d;
-let WindowMin = 10m;
-let SoDrops = DeviceFileEvents
-    | where Timestamp > ago(LookbackDays)
+let suExec =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath == "/usr/bin/su" or FileName == "su" and FolderPath startswith "/usr"
+    | where AccountName !in~ ("root","system")
+    | project SuTime = Timestamp, DeviceId, DeviceName, SuUser = AccountName, SuParent = InitiatingProcessFileName, SuParentCmd = InitiatingProcessCommandLine, ProcessId, ProcessCommandLine;
+let rootSpawn =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName == "su" and InitiatingProcessFolderPath == "/usr/bin/su"
+    | where AccountName =~ "root"
+    | project RootTime = Timestamp, DeviceId, DeviceName, ChildImage = FileName, ChildCmd = ProcessCommandLine, InitiatingProcessId;
+suExec
+| join kind=inner rootSpawn on DeviceId
+| where RootTime between (SuTime .. SuTime + 30s)
+| join kind=leftanti (
+    DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType has_any ("PamAuthentication","UserAccountModified") or AdditionalFields has "pam_unix(su:session): session opened"
+  ) on DeviceId
+| project SuTime, DeviceName, SuUser, SuParent, SuParentCmd, ChildImage, ChildCmd, DelaySec = datetime_diff('second', RootTime, SuTime)
+| order by SuTime desc
+```
+
+### [LLM] Unprivileged user namespace creation followed by xfrm/esp activity (Fragnesia AppArmor bypass path)
+
+`UC_86_8` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os=linux (Processes.process_name=unshare OR Processes.process="*unshare*-U*" OR Processes.process="*clone(CLONE_NEWUSER*") (Processes.user!=root AND Processes.user_id!=0) by Processes.dest Processes.user Processes.parent_process_id Processes.process_id Processes.process | `drop_dm_object_name(Processes)` | join type=inner dest user [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.os=linux Processes.process="*xfrm*" Processes.process="*esp*" by Processes.dest Processes.user Processes.parent_process_id _time | `drop_dm_object_name(Processes)` | rename _time as xfrm_time ] | where xfrm_time >= firstTime AND xfrm_time <= firstTime+60
+```
+
+**Defender KQL:**
+```kql
+let userns =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FolderPath startswith "/" 
+    | where (FileName == "unshare" and ProcessCommandLine matches regex @"(?i)(^|\s)(-U|--user)(\s|$)")
+         or ProcessCommandLine has "CLONE_NEWUSER"
+    | where AccountName !in~ ("root","system")
+    | project UnshareTime = Timestamp, DeviceId, DeviceName, AccountName, UnshareCmd = ProcessCommandLine, UnshareSid = ProcessId, UnshareParent = InitiatingProcessId;
+let xfrm =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has "xfrm" and ProcessCommandLine matches regex @"(?i)\besp(4|6|-in-tcp)?\b|proto\s+esp"
+    | project XfrmTime = Timestamp, DeviceId, AccountName, XfrmCmd = ProcessCommandLine, XfrmParent = InitiatingProcessId;
+userns
+| join kind=inner xfrm on DeviceId, AccountName
+| where XfrmTime between (UnshareTime .. UnshareTime + 60s)
+| project UnshareTime, XfrmTime, DelaySec = datetime_diff('second', XfrmTime, UnshareTime), DeviceName, AccountName, UnshareCmd, XfrmCmd
+| order by UnshareTime desc
+```
+
+### [LLM] Unprivileged user drops .so payload in /tmp followed by dlopen/LD_PRELOAD (berz0k zero-day pattern)
+
+`UC_86_9` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.os=linux Filesystem.file_path="/tmp/*" Filesystem.file_name="*.so*" (Filesystem.user!=root AND Filesystem.user_id!=0) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | join type=inner dest user [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.os=linux (Processes.process="*LD_PRELOAD=/tmp/*" OR Processes.process="*dlopen*/tmp/*.so*" OR Processes.process="*/tmp/*.so*") by Processes.dest Processes.user Processes.process Processes.parent_process_name _time | `drop_dm_object_name(Processes)` | rename _time as loadTime ] | where loadTime >= firstTime AND loadTime <= firstTime + 300
+```
+
+**Defender KQL:**
+```kql
+let soDrop =
+    DeviceFileEvents
+    | where Timestamp > ago(7d)
     | where ActionType in ("FileCreated","FileModified")
-    | where FolderPath startswith "/tmp" and FileName endswith ".so"
-    | where InitiatingProcessAccountName !in~ ("root","")
-    | project SoDropTime = Timestamp, DeviceId, DeviceName, DroppedSo = strcat(FolderPath, "/", FileName), Dropper = InitiatingProcessFileName, Caller = InitiatingProcessAccountName;
-DeviceProcessEvents
-| where Timestamp > ago(LookbackDays)
-| where ProcessCommandLine has "LD_PRELOAD" and ProcessCommandLine has "/tmp/"
-| where ProcessCommandLine matches regex @"LD_PRELOAD\s*=\s*[\"']?/tmp/[^ ;\"']+\.so"
-| join kind=inner SoDrops on DeviceId
-| where Timestamp between (SoDropTime .. SoDropTime + WindowMin)
-| extend DelaySec = datetime_diff('second', Timestamp, SoDropTime)
-| project Timestamp, DeviceName, AccountName, Caller, ProcessCommandLine, DroppedSo, Dropper, SoDropTime, DelaySec, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### [LLM] Unprivileged user namespace creation by non-root account (Fragnesia/Dirty Frag prerequisite)
-
-`UC_83_8` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="unshare" AND (Processes.process="*-U*" OR Processes.process="*--user*" OR Processes.process="*--map-root-user*" OR Processes.process="*-r *") AND Processes.user!="root" AND Processes.user!="" by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | where parent_process_name!="podman" AND parent_process_name!="buildah" AND parent_process_name!="snap-confine" AND parent_process_name!="bwrap" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(1d)
-| where FileName =~ "unshare"
-| where ProcessCommandLine matches regex @"(?i)(\s|^)(-U|--user|--map-root-user|-r(\s|$))"
-| where InitiatingProcessAccountName !in~ ("root","")
-| where InitiatingProcessFileName !in~ ("podman","buildah","snap-confine","bwrap","flatpak","crun","runc")
-| project Timestamp, DeviceName, Caller=InitiatingProcessAccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
+    | where FolderPath startswith "/tmp"
+    | where FileName matches regex @"(?i)\.so(\.[0-9]+)*$"
+    | where InitiatingProcessAccountName !in~ ("root","system")
+    | project DropTime = Timestamp, DeviceId, DeviceName, DroppedPath = strcat(FolderPath, "/", FileName), Dropper = InitiatingProcessFileName, DropperCmd = InitiatingProcessCommandLine, Uid = InitiatingProcessAccountName;
+let soLoad =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine matches regex @"(?i)LD_PRELOAD\s*=\s*/tmp/[^\s]+\.so" 
+         or ProcessCommandLine has "/tmp/" and ProcessCommandLine matches regex @"(?i)/tmp/[^\s]+\.so"
+    | project LoadTime = Timestamp, DeviceId, LoaderCmd = ProcessCommandLine, LoaderAccount = AccountName, LoaderInitiator = InitiatingProcessCommandLine;
+soDrop
+| join kind=inner soLoad on DeviceId
+| where LoadTime between (DropTime .. DropTime + 5m)
+| project DropTime, LoadTime, DelaySec = datetime_diff('second', LoadTime, DropTime), DeviceName, Uid, DroppedPath, DropperCmd, LoaderCmd, LoaderAccount
+| order by DropTime desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -285,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_83_5` · phase: **install** · confidence: **High**
+`UC_86_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -326,4 +374,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

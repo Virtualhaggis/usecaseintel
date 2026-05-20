@@ -28,12 +28,19 @@ Grafana Labs is the company behind Grafana, the popular open-source platform for
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1213.003** — Code Repositories
+- **T1199** — Trusted Relationship
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1213.003** — Data from Information Repositories: Code Repositories
 - **T1567** — Exfiltration Over Web Service
-- **T1528** — Steal Application Access Token
-- **T1078.004** — Cloud Accounts
-- **T1550.001** — Application Access Token
-- **T1535** — Unused/Unsupported Cloud Regions
+- **T1119** — Automated Collection
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1070** — Indicator Removal
+- **T1564.008** — Hide Artifacts: Email Hiding Rules
+- **T1490** — Inhibit System Recovery
+- **T1486** — Data Encrypted for Impact
+- **T1529** — System Shutdown/Reboot
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 
 ## Kill chain phases observed
 
@@ -41,74 +48,112 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GitHub PAT/OAuth token bulk repository clone or download burst (CoinbaseCartel-style codebase theft)
+### [LLM] GitHub Actions 'Pwn Request' — forked PR triggers pull_request_target workflow with secret exfiltration
 
-`UC_15_3` · phase: **actions** · confidence: **Medium**
+`UC_20_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(All_Changes.object) as repo_count, values(All_Changes.object) as repos, values(All_Changes.src) as src_ips, values(All_Changes.user_agent) as user_agents from datamodel=Change where All_Changes.vendor_product="GitHub" AND All_Changes.action IN ("repo.clone","repo.download_zip","git.clone","git.fetch","repo.archive") by All_Changes.user, _time span=10m | `drop_dm_object_name(All_Changes)` | where repo_count >= 15 | sort - repo_count
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Change.object) as repo values(Change.object_attrs.head_repository.full_name) as forkRepo values(Change.object_attrs.head_repository.fork) as isFork values(Change.object_attrs.event) as triggerEvent values(Change.user) as actor values(Change.src) as src from datamodel=Change.All_Changes where Change.object_category="github_workflow_run" Change.action="started" Change.object_attrs.event="pull_request_target" Change.object_attrs.head_repository.fork="true" by Change.object_id Change.user _time span=5m | `drop_dm_object_name(Change)` | join type=inner object_id [| tstats `summariesonly` count from datamodel=Change.All_Changes where Change.object_category="github_workflow_job" (Change.object_attrs.steps.run="*curl*" OR Change.object_attrs.steps.run="*wget*" OR Change.object_attrs.steps.run="*env*>*" OR Change.object_attrs.steps.run="*printenv*" OR Change.object_attrs.steps.run="*${{*secrets*" OR Change.object_attrs.steps.run="*openssl*enc*") by Change.object_id | rename Change.object_id as object_id | fields object_id] | where isFork="true" | table firstSeen actor repo forkRepo triggerEvent src
 ```
 
 **Defender KQL:**
 ```kql
-let WindowMin = 10m;
-let CloneActions = dynamic(["Repo cloned","Repository cloned","Repo downloaded as ZIP","git.clone","git.fetch","repo.clone","repo.download_zip","repo.archive"]);
+// CloudAppEvents requires GitHub connected to Microsoft Defender for Cloud Apps; otherwise this UC is GitHub-audit-only and Defender XDR cannot see it.
 CloudAppEvents
-| where Timestamp > ago(1d)
-| where Application has "GitHub"
-| where ActionType in~ (CloneActions) or AdditionalFields has_any (CloneActions)
-| extend RepoName = tostring(parse_json(tostring(ActivityObjects))[0].Name),
-         AppInst = tostring(AppInstanceId)
-| summarize RepoCount = dcount(RepoName),
-            EventCount = count(),
-            Repos = make_set(RepoName, 50),
-            SrcIPs = make_set(IPAddress, 10),
-            Countries = make_set(CountryCode, 10),
-            UserAgents = make_set(UserAgent, 5),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-          by AccountObjectId, AccountDisplayName, bin(Timestamp, WindowMin)
-| where RepoCount >= 15
-| where not(AccountDisplayName has_any ("github-actions","dependabot","renovate","backup"))
-| order by RepoCount desc
+| where Timestamp > ago(7d)
+| where Application == "GitHub"
+| where ActionType in ("workflow_run.started", "workflows.completed_workflow_run", "workflow_job.completed")
+| extend Event = tostring(RawEventData.workflow_run.event)
+| extend ForkSource = tobool(RawEventData.workflow_run.head_repository.fork)
+| extend HeadRepo = tostring(RawEventData.workflow_run.head_repository.full_name)
+| extend BaseRepo = tostring(RawEventData.workflow_run.repository.full_name)
+| extend StepsRaw = tostring(RawEventData)
+| where Event == "pull_request_target" and ForkSource == true
+| where StepsRaw has_any ("curl ", "wget ", "printenv", "${{ secrets", "env >", "openssl enc")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, BaseRepo, HeadRepo, Event, StepsRaw
 ```
 
-### [LLM] GitHub PAT/OAuth token used from first-time IP or country (stolen-token reuse)
+### [LLM] GitHub PAT mass private-repo clone burst from a single actor
 
-`UC_15_4` · phase: **delivery** · confidence: **Medium**
+`UC_20_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as first_seen, count from datamodel=Authentication where Authentication.app="GitHub" AND Authentication.action="success" by Authentication.user, Authentication.src, Authentication.src_country | `drop_dm_object_name(Authentication)` | where first_seen >= relative_time(now(), "-1h") | join type=left user [| tstats `summariesonly` count as baseline_count, values(Authentication.src_country) as baseline_countries from datamodel=Authentication where earliest=-30d@d latest=-1h Authentication.app="GitHub" by Authentication.user | `drop_dm_object_name(Authentication)`] | where baseline_count > 10 AND NOT match(baseline_countries, src_country) | table first_seen, user, src, src_country, baseline_countries, count
+| tstats `summariesonly` count dc(Web.url) as repoCount values(Web.url) as repos values(Web.src) as srcIPs values(Web.http_user_agent) as userAgents min(_time) as firstSeen max(_time) as lastSeen from datamodel=Web.Web where Web.app="github" Web.action IN ("git.clone","repo.download_zip","repo.archive_downloaded") Web.dest_category="private" by Web.user _time span=10m | `drop_dm_object_name(Web)` | where repoCount >= 3 | eval cloneRatePerMin = round(count / 10.0, 2) | where cloneRatePerMin > 0.3 | table firstSeen lastSeen user repoCount repos srcIPs userAgents cloneRatePerMin
 ```
 
 **Defender KQL:**
 ```kql
-let Lookback = 30d;
-let Recent = 1h;
-let GitHubAuth = CloudAppEvents
-    | where Application has "GitHub"
-    | where ActionType in~ ("Log on","LogOn","Sign in","user.login","oauth_access.create","personal_access_token.access_granted","git.clone","git.fetch","repo.clone");
-let Baseline = GitHubAuth
-    | where Timestamp between (ago(Lookback) .. ago(Recent))
-    | summarize BaselineEvents = count(),
-                BaselineIPs = make_set(IPAddress, 200),
-                BaselineCountries = make_set(CountryCode, 50)
-              by AccountObjectId
-    | where BaselineEvents >= 10;
-GitHubAuth
-| where Timestamp > ago(Recent)
-| summarize RecentEvents = count(),
-            FirstSeen = min(Timestamp),
-            RepoTargets = dcount(tostring(parse_json(tostring(ActivityObjects))[0].Name))
-          by AccountObjectId, AccountDisplayName, IPAddress, CountryCode, City, ISP, UserAgent
-| join kind=inner Baseline on AccountObjectId
-| where IPAddress !in (BaselineIPs)
-| where CountryCode !in (BaselineCountries) or array_length(BaselineCountries) == 0
-| where not(ISP has_any ("Microsoft","GitHub","Azure"))
-| project FirstSeen, AccountDisplayName, IPAddress, CountryCode, City, ISP, UserAgent, RecentEvents, RepoTargets, BaselineCountries
-| order by RepoTargets desc, FirstSeen desc
+// GitHub audit data is generally not native to Defender XDR. If GitHub Enterprise is connected to Microsoft Defender for Cloud Apps the events surface in CloudAppEvents.
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "GitHub"
+| where ActionType in ("git.clone", "repo.download_zip", "repository.archive_downloaded")
+| extend RepoName = tostring(RawEventData.repo)
+| extend RepoVisibility = tostring(RawEventData.repository.visibility)
+| where RepoVisibility =~ "private"
+| summarize RepoCount = dcount(RepoName), Repos = make_set(RepoName, 50), SrcIPs = make_set(IPAddress, 10), UAs = make_set(UserAgent, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountObjectId, AccountDisplayName, bin(Timestamp, 10m)
+| where RepoCount >= 3
+| order by FirstSeen desc
+```
+
+### [LLM] GitHub fork-then-delete by external account immediately after privileged workflow run
+
+`UC_20_5` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(_time) as eventTimes values(Change.action) as actions values(Change.object) as forkRepo values(Change.object_attrs.parent.full_name) as parentRepo values(Change.user) as actor values(Change.src) as src from datamodel=Change.All_Changes where Change.object_category="github_repository" Change.object_attrs.fork="true" Change.action IN ("repo.create","repo.destroy") by Change.object_id _time span=1d | `drop_dm_object_name(Change)` | where mvcount(actions)=2 AND mvfind(actions,"repo.create")>=0 AND mvfind(actions,"repo.destroy")>=0 | eval lifespanSec = abs(round(mvindex(eventTimes,1) - mvindex(eventTimes,0))) | where lifespanSec < 86400 | table actor forkRepo parentRepo lifespanSec eventTimes src
+```
+
+**Defender KQL:**
+```kql
+// Requires GitHub connected via Defender for Cloud Apps; otherwise out of scope for Defender XDR.
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application == "GitHub"
+| where ActionType in ("repo.create", "repository.create", "repo.destroy", "repository.destroy")
+| extend RepoName = tostring(RawEventData.repo)
+| extend IsFork = tobool(RawEventData.repository.fork)
+| extend ParentRepo = tostring(RawEventData.repository.parent.full_name)
+| where IsFork == true
+| summarize Actions = make_set(ActionType), EventTimes = make_list(Timestamp), Parents = make_set(ParentRepo) by AccountObjectId, AccountDisplayName, RepoName
+| where array_length(Actions) == 2 and Actions has "repo.create" and Actions has "repo.destroy"
+| extend LifespanSec = datetime_diff("second", todatetime(EventTimes[1]), todatetime(EventTimes[0]))
+| where abs(LifespanSec) < 86400
+| project AccountDisplayName, AccountObjectId, RepoName, Parents, LifespanSec, EventTimes
+```
+
+### [LLM] ShinySp1d3r ESXi — mass snapshot deletion immediately followed by VMDK rename/write
+
+`UC_20_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(Processes.process) as cmdVariants values(Processes.process) as cmds values(Processes.dest) as esxiHost values(Processes.user) as user min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Processes where (Processes.process="*vim-cmd*vmsvc/snapshot.removeall*" OR Processes.process="*vim-cmd*vmsvc/power.off*" OR Processes.process="*esxcli*vm*process*kill*" OR Processes.process="*esxcli*storage*filesystem*list*") by Processes.dest _time span=5m | `drop_dm_object_name(Processes)` | where cmdVariants >= 2 | join type=inner dest [| tstats `summariesonly` count values(Filesystem.file_path) as encryptedFiles from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*.vmdk" OR Filesystem.file_name="*.vmdk.encrypted" OR Filesystem.file_name="*.vmdk.shiny*" OR Filesystem.action="renamed") Filesystem.file_create_time > now()-600 by Filesystem.dest | rename Filesystem.dest as dest | fields dest encryptedFiles] | table firstSeen lastSeen esxiHost user cmdVariants cmds encryptedFiles
+```
+
+**Defender KQL:**
+```kql
+// ShinySp1d3r executes ON the ESXi hypervisor — Defender for Endpoint does not cover ESXi natively. Pivoting to the Windows/Linux jump host that staged the SSH/PowerCLI session is the closest Defender-side signal.
+let WindowMinutes = 10m;
+let EsxiCmdHosts = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where (FileName =~ "ssh.exe" or FileName =~ "plink.exe" or FileName =~ "powershell.exe" or FileName =~ "pwsh.exe")
+    | where ProcessCommandLine has_any ("vim-cmd vmsvc/snapshot.removeall", "vim-cmd vmsvc/power.off", "esxcli vm process kill", "Get-VM", "Remove-Snapshot", "Stop-VM -Confirm:$false", "Set-VM -RunAsync")
+    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName;
+EsxiCmdHosts
+| summarize CmdHits = count(), Cmds = make_set(ProcessCommandLine, 20), Users = make_set(AccountName, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, bin(Timestamp, WindowMinutes)
+| where CmdHits >= 3
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemotePort in (22, 443, 902, 903, 5988, 5989)
+    | where InitiatingProcessFileName in~ ("ssh.exe", "plink.exe", "powershell.exe", "pwsh.exe")
+    | summarize EsxiTargets = make_set(RemoteIP, 20) by DeviceId
+) on DeviceId
+| project FirstSeen, LastSeen, DeviceName, Users, CmdHits, Cmds, EsxiTargets
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -262,4 +307,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
