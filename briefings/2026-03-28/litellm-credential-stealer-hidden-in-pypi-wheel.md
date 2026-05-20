@@ -34,12 +34,176 @@ On March 24, 2026, a critical supply chain compromise was identified across two 
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1546** — Event Triggered Execution
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1027** — Obfuscated Files or Information
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1082** — System Information Discovery
+- **T1033** — System Owner/User Discovery
+- **T1016** — System Network Configuration Discovery
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1528** — Steal Application Access Token
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1613** — Container and Resource Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound DNS/HTTPS to TeamPCP exfil domain models.litellm.cloud (litellm PyPI compromise)
+
+`UC_323_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.user) as user values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="models.litellm.cloud" OR All_Traffic.dest_host="*.litellm.cloud") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval signal="TeamPCP_litellm_exfil_domain"
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 30d;
+let ExfilDomains = dynamic(["models.litellm.cloud"]);
+union isfuzzy=true
+(DeviceNetworkEvents
+  | where Timestamp > ago(LookbackDays)
+  | where RemoteUrl has_any (ExfilDomains) or RemoteUrl endswith ".litellm.cloud"
+  | project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, ActionType),
+(DeviceEvents
+  | where Timestamp > ago(LookbackDays)
+  | where ActionType == "DnsQueryResponse"
+  | where RemoteUrl has_any (ExfilDomains) or AdditionalFields has "models.litellm.cloud"
+  | project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, AdditionalFields, ActionType)
+| order by Timestamp desc
+```
+
+### [LLM] Malicious litellm_init.pth dropped to site-packages by pip (litellm==1.82.8 install artifact)
+
+`UC_323_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="litellm_init.pth" OR (Filesystem.file_path="*site-packages*" Filesystem.file_name="litellm_init.pth") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| eval signal="TeamPCP_litellm_pth_dropper"
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FileName =~ "litellm_init.pth"
+   or (FolderPath has "site-packages" and FileName endswith ".pth" and SHA256 == "ceNa7wMJnNHy1kRnNCcwJaFjWX3pORLfMh7xGL8TUjg")
+| project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Python spawning python -c with base64.b64decode exec (litellm .pth stage-1 launcher)
+
+`UC_323_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python","python3","python3.10","python3.11","python3.12") Processes.process_name IN ("python.exe","python","python3","python3.10","python3.11","python3.12") (Processes.process="*base64.b64decode*" Processes.process="*exec(*" Processes.process="* -c *") by Processes.dest Processes.user Processes.parent_process Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName matches regex @"(?i)^python\d*(\.exe)?$"
+| where FileName matches regex @"(?i)^python\d*(\.exe)?$"
+| where ProcessCommandLine has "-c"
+| where ProcessCommandLine has "base64.b64decode"
+| where ProcessCommandLine has_any ("exec(","exec (")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Python process spawning shell with TeamPCP recon chain (hostname; whoami; uname; ip addr fallback)
+
+`UC_323_14` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python","python3","python3.10","python3.11","python3.12") Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe") (Processes.process="*hostname*" Processes.process="*whoami*" Processes.process="*uname -a*") OR (Processes.process="*ip addr 2>/dev/null*" Processes.process="*ifconfig*") by Processes.dest Processes.user Processes.parent_process Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName matches regex @"(?i)^python\d*(\.exe)?$"
+| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh")
+| where (ProcessCommandLine has "hostname" and ProcessCommandLine has "whoami" and ProcessCommandLine has "uname")
+    or ProcessCommandLine has "ip addr 2>/dev/null || ifconfig"
+    or (ProcessCommandLine has "hostname" and ProcessCommandLine has "printenv" and ProcessCommandLine has "ip route")
+| project Timestamp, DeviceId, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] Python process contacting AWS IMDS 169.254.169.254 (litellm stealer IAM credential theft)
+
+`UC_323_15` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="169.254.169.254" All_Traffic.app IN ("python.exe","python","python3","python3.10","python3.11","python3.12") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| eval signal="TeamPCP_litellm_IMDS_theft"
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "169.254.169.254"
+| where InitiatingProcessFileName matches regex @"(?i)^python\d*(\.exe)?$"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| order by Timestamp desc
+```
+
+### [LLM] In-cluster Kubernetes secret enumeration with Python user-agent (litellm stealer K8s pivot)
+
+`UC_323_16` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_path="/var/run/secrets/kubernetes.io/serviceaccount/token" Filesystem.process_name IN ("python","python3","python3.10","python3.11","python3.12") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.action
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath startswith "/var/run/secrets/kubernetes.io/serviceaccount"
+   or FileName == "token" and FolderPath has "kubernetes.io/serviceaccount"
+| where InitiatingProcessFileName matches regex @"(?i)^python\d*$"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceId, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -360,7 +524,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_314_10` · phase: **exploit** · confidence: **High**
+`UC_323_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -417,4 +581,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

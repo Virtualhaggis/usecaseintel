@@ -10,13 +10,9 @@ Home Cyber Security News
 Pardus Linux Local Privilege Escalation Flaw Allows Silent Root Access 
 By Abinaya 
 May 20, 2026 
-
-
-
-
 A critical vulnerability chain affecting Pardus Linux has been disclosed, allowing local users to gain full root privileges without authentication. 
 The issue, assigned a CVSS v3.1 score of 9.3, impacts the pardus-update package, a core component responsible for system updates in the Debian-based distribution maintained by TÜBİTAK.
-Pardus is widely deployed across g…
+Pardus is widely deployed across governmen…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SUID bit set on /bin/bash via chmod (Pardus CVE-2026-5140 post-exploit)
 
-`UC_2_5` · phase: **install** · confidence: **High**
+`UC_11_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +64,7 @@ DeviceProcessEvents
 
 ### [LLM] Privilege-retention root shell via '/bin/bash -p' (Pardus CVE-2026-5140 escalation)
 
-`UC_2_6` · phase: **actions** · confidence: **High**
+`UC_11_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +86,7 @@ DeviceProcessEvents
 
 ### [LLM] Unprivileged pkexec invocation of pardus-update privileged actions (CVE-2026-5140 entry)
 
-`UC_2_7` · phase: **exploit** · confidence: **High**
+`UC_11_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] Rogue APT source file dropped in /etc/apt/sources.list.d/ via pardus-update flow (CVE-2026-5140)
 
-`UC_2_8` · phase: **install** · confidence: **High**
+`UC_11_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +218,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pardus Linux Local Privilege Escalation Flaw Allows Silent Root Access
 
-`UC_2_4` · phase: **exploit** · confidence: **High**
+`UC_11_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

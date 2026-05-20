@@ -48,12 +48,159 @@ LAB52, the intelligence team at S2 Group, has identified a new campaign targetin
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1123** — Audio Capture
+- **T1125** — Video Capture
+- **T1113** — Screen Capture
+- **T1105** — Ingress Tool Transfer
+- **T1218** — System Binary Proxy Execution
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1218.002** — System Binary Proxy Execution: Control Panel
+- **T1090** — Proxy
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] DRILLAPP: Edge launched headless with media/security guardrails disabled
+
+`UC_362_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="msedge.exe" Processes.process="*--headless*" (Processes.process="*--disable-web-security*" OR Processes.process="*--allow-file-access-from-files*" OR Processes.process="*--use-fake-ui-for-media-stream*" OR Processes.process="*--auto-select-screen-capture-source=true*" OR Processes.process="*--disable-user-media-security*") by host Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where mvcount(split(cmdline,"--")) >= 3 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "msedge.exe"
+| where ProcessCommandLine has "--headless"
+| where ProcessCommandLine has_any ("--disable-web-security","--allow-file-access-from-files","--use-fake-ui-for-media-stream","--auto-select-screen-capture-source=true","--disable-user-media-security","--no-sandbox")
+| extend FlagCount = countof(ProcessCommandLine, "--disable-web-security") + countof(ProcessCommandLine, "--allow-file-access-from-files") + countof(ProcessCommandLine, "--use-fake-ui-for-media-stream") + countof(ProcessCommandLine, "--auto-select-screen-capture-source") + countof(ProcessCommandLine, "--disable-user-media-security")
+| where FlagCount >= 2
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, FlagCount, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] DRILLAPP variant 2: Edge launched with --remote-debugging-port=9222 for CDP-based file download
+
+`UC_362_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="msedge.exe" (Processes.process="*--remote-debugging-port=9222*" OR Processes.process="*--remote-debugging-port=*") by host Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | search NOT parent IN ("chromedriver.exe","msedgedriver.exe","node.exe","python.exe","code.exe","devenv.exe") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "msedge.exe"
+| where ProcessCommandLine has "--remote-debugging-port"
+| extend DebugPort = extract(@"--remote-debugging-port=(\d{2,5})", 1, ProcessCommandLine)
+| where isnotempty(DebugPort)
+| where InitiatingProcessFileName !in~ ("chromedriver.exe","msedgedriver.exe","node.exe","python.exe","code.exe","devenv.exe","pytest.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, ProcessCommandLine, DebugPort, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] DRILLAPP variant 1 persistence: LNK file written to user Startup folder by non-Explorer process
+
+`UC_362_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file values(Filesystem.process_name) as parent_proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" Filesystem.file_name="*.lnk" by host Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | search NOT parent_proc IN ("explorer.exe","OneDrive.exe","setup.exe","msiexec.exe","TrustedInstaller.exe") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup"
+| where FileName endswith ".lnk"
+| where InitiatingProcessFileName !in~ ("explorer.exe","onedrive.exe","msiexec.exe","setup.exe","trustedinstaller.exe","officeclicktorun.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] DRILLAPP C2 staging: msedge.exe contacting pastefy.app
+
+`UC_362_7` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="msedge.exe" (All_Traffic.dest="pastefy.app" OR All_Traffic.dest="*.pastefy.app") by host All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName =~ "msedge.exe"
+| where RemoteUrl has "pastefy.app" or RemoteUrl endswith "pastefy.app"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessId
+| order by Timestamp desc
+```
+
+### [LLM] DRILLAPP variant 2 delivery: CPL file executed from user-writable folder spawning Edge
+
+`UC_362_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="rundll32.exe" Processes.process="*shell32.dll,Control_RunDLL*" (Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\AppData\\Roaming\\*" OR Processes.process="*\\Downloads\\*" OR Processes.process="*\\Users\\Public\\*") Processes.process="*.cpl*" by host Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CplLaunch = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where FileName =~ "rundll32.exe"
+    | where ProcessCommandLine has "shell32.dll,Control_RunDLL"
+    | where ProcessCommandLine matches regex @"(?i)\.cpl"
+    | where ProcessCommandLine has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Downloads\", @"\Users\Public\")
+    | project CplTime=Timestamp, DeviceId, RundllPid=ProcessId, CplCmd=ProcessCommandLine, AccountName, DeviceName;
+let EdgeSpawn = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where FileName =~ "msedge.exe"
+    | project EdgeTime=Timestamp, DeviceId, ParentPid=InitiatingProcessId, EdgeCmd=ProcessCommandLine;
+CplLaunch
+| join kind=inner EdgeSpawn on DeviceId, $left.RundllPid == $right.ParentPid
+| where EdgeTime between (CplTime .. CplTime + 5m)
+| project CplTime, EdgeTime, DeviceName, AccountName, CplCmd, EdgeCmd
+```
+
+### [LLM] DRILLAPP C2: msedge.exe egress to known DRILLAPP IPs or WebSocket to localhost:8000
+
+`UC_362_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.dest_port) as dport values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="80.89.224.13" OR All_Traffic.dest="188.137.228.162" OR (All_Traffic.app="msedge.exe" AND All_Traffic.dest IN ("127.0.0.1","::1","localhost") AND All_Traffic.dest_port=8000)) by host All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemoteIP in ("80.89.224.13","188.137.228.162"))
+    or (InitiatingProcessFileName =~ "msedge.exe" and RemoteIP in ("127.0.0.1","::1") and RemotePort == 8000)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
 
 ### PowerShell encoded / obfuscated command
 
@@ -86,7 +233,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_353_3` · phase: **install** · confidence: **High**
+`UC_362_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,4 +293,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

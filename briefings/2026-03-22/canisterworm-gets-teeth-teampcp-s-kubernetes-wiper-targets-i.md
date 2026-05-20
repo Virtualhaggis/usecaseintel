@@ -28,12 +28,138 @@ The script uses the exact same ICP canister ( tdtqy-oyaaa-aaaae-af2dq-cai[.]raw[
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1102** — Web Service
+- **T1610** — Deploy Container
+- **T1611** — Escape to Host
+- **T1485** — Data Destruction
+- **T1561.002** — Disk Wipe: Disk Structure Wipe
+- **T1529** — System Shutdown/Reboot
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] DNS/HTTP egress to CanisterWorm ICP canister C2 (tdtqy-oyaaa-aaaae-af2dq-cai)
+
+`UC_341_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.query="*tdtqy-oyaaa-aaaae-af2dq-cai*" OR Network_Resolution.query="*.raw.icp0.io" by Network_Resolution.src Network_Resolution.dest Network_Resolution.query | `drop_dm_object_name(Network_Resolution)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*tdtqy-oyaaa-aaaae-af2dq-cai*" by Web.src Web.dest Web.url | `drop_dm_object_name(Web)`]
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("tdtqy-oyaaa-aaaae-af2dq-cai", ".raw.icp0.io")
+   or AdditionalFields has "tdtqy-oyaaa-aaaae-af2dq-cai"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessAccountName,
+          RemoteIP, RemotePort, RemoteUrl, LocalIP
+| order by Timestamp desc
+```
+
+### [LLM] Cloudflare-tunnel curl-piped Python stager (kamikaze.sh / kube.py)
+
+`UC_341_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*kamikaze.sh*" OR Processes.process="*kube.py*" OR Processes.process="*souls-entire-defined-routes.trycloudflare.com*" OR Processes.process="*championships-peoples-point-cassette.trycloudflare.com*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("kamikaze.sh","kube.py","souls-entire-defined-routes.trycloudflare.com","championships-peoples-point-cassette.trycloudflare.com")
+   or InitiatingProcessCommandLine has_any ("kamikaze.sh","kube.py","souls-entire-defined-routes.trycloudflare.com","championships-peoples-point-cassette.trycloudflare.com")
+| where FileName in~ ("curl","wget","python","python3","bash","sh","dash")
+     or InitiatingProcessFileName in~ ("curl","wget","python","python3","bash","sh","dash")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Malicious privileged DaemonSet apply in kube-system (host-provisioner-iran / host-provisioner-std / kamikaze)
+
+`UC_341_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="kubectl" AND Processes.process="*apply*" AND (Processes.process="*host-provisioner-iran*" OR Processes.process="*host-provisioner-std*" OR Processes.process="*kamikaze*") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "kubectl" or InitiatingProcessFileName =~ "kubectl")
+| where ProcessCommandLine has_any ("host-provisioner-iran","host-provisioner-std","kamikaze")
+   or (ProcessCommandLine has "apply" and ProcessCommandLine has "kube-system" and ProcessCommandLine has "DaemonSet")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Host-root mount wiper: chroot /mnt/host reboot -f or rm -rf / --no-preserve-root
+
+`UC_341_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*rm -rf / --no-preserve-root*" OR (Processes.process="*chroot*" AND Processes.process="*/mnt/host*" AND Processes.process="*reboot*") OR (Processes.process="*find /mnt/host*" AND Processes.process="*-exec rm -rf*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "rm -rf / --no-preserve-root"
+   or (ProcessCommandLine has "chroot" and ProcessCommandLine has "/mnt/host" and ProcessCommandLine has "reboot")
+   or (ProcessCommandLine has "find /mnt/host" and ProcessCommandLine has "-exec rm -rf")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] CanisterWorm persistence: pglog/pg_state/internal-monitor systemd unit and /tmp/pglog drop
+
+`UC_341_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/systemd/system/pglog.service" OR Filesystem.file_path="/etc/systemd/system/pg_state.service" OR Filesystem.file_path="/etc/systemd/system/internal-monitor.service" OR Filesystem.file_path="/tmp/pglog/*" OR (Filesystem.file_name="runner.py" AND Filesystem.file_path="/tmp/*")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.process="*systemctl enable --now pglog*" OR Processes.process="*systemctl enable --now pg_state*" OR Processes.process="*systemctl enable --now internal-monitor*") by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where (FolderPath has "/etc/systemd/system/" and FileName in~ ("pglog.service","pg_state.service","internal-monitor.service"))
+        or FolderPath startswith "/tmp/pglog"
+        or (FolderPath has "/tmp/" and FileName =~ "runner.py")
+    | extend Evt = "FileWrite", Detail = strcat(FolderPath, FileName), Cmd = InitiatingProcessCommandLine, Bin = InitiatingProcessFileName),
+  (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where ProcessCommandLine has_any ("systemctl enable --now pglog","systemctl enable --now pg_state","systemctl enable --now internal-monitor")
+         or (ProcessCommandLine has "Description=System Monitor" and ProcessCommandLine has "ExecStart=/usr/bin/python3")
+    | extend Evt = "ProcessExec", Detail = ProcessCommandLine, Cmd = ProcessCommandLine, Bin = FileName)
+| project Timestamp, DeviceName, Evt, Detail, Bin, Cmd
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -207,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterWorm Gets Teeth: TeamPCP's Kubernetes Wiper Targets Iran
 
-`UC_332_7` · phase: **exploit** · confidence: **High**
+`UC_341_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -264,4 +390,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

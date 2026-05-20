@@ -1,6 +1,6 @@
 # [HIGH] Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
 
-**Source:** The Hacker News, BleepingComputer, Cyber Security News, Aikido
+**Source:** The Hacker News, BleepingComputer, Aikido
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/grafana-github-breach-exposes-source.html
 
@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious durabletask PyPI package install (versions 1.4.1-1.4.3)
 
-`UC_14_5` · phase: **delivery** · confidence: **High**
+`UC_22_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ union ProcessHits, FileHits
 
 ### [LLM] Python interpreter fetches rope.pyz dropper from check.git-service.com
 
-`UC_14_6` · phase: **install** · confidence: **High**
+`UC_22_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ union NetHits, RopeFile
 
 ### [LLM] Linux Python stealer harvesting cloud, vault, SSH and password-manager secrets
 
-`UC_14_7` · phase: **actions** · confidence: **High**
+`UC_22_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud worm propagation via AWS SSM SendCommand fan-out
 
-`UC_14_8` · phase: **actions** · confidence: **High**
+`UC_22_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceFileEvents
 
 ### [LLM] FIRESCALE backup-C2 lookup via GitHub commit-message search
 
-`UC_14_9` · phase: **c2** · confidence: **High**
+`UC_22_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ union PrimaryUrlHit, CmdHit
 
 ### [LLM] Locale-gated destructive payload: python parent spawns rm -rf / on Linux
 
-`UC_14_10` · phase: **actions** · confidence: **High**
+`UC_22_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -244,7 +244,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
 
-`UC_14_4` · phase: **exploit** · confidence: **High**
+`UC_22_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Copy Fail (CVE-2026-31431) PoC retrieval from copy.fail/exp
 
-`UC_217_5` · phase: **delivery** · confidence: **High**
+`UC_226_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### [LLM] Copy Fail (CVE-2026-31431) - Python interpreter spawning su/sudo/passwd as non-root
 
-`UC_217_6` · phase: **exploit** · confidence: **Medium**
+`UC_226_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -202,7 +202,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Copy Fail: What You Need to Know About the Most Severe Linux Threat in Years
 
-`UC_217_4` · phase: **install** · confidence: **High**
+`UC_226_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

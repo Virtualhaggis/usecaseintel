@@ -24,12 +24,140 @@ Back to Blog Threat Intel TeamPCP Plants WAV Steganography Credential Stealer in
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1027.003** — Obfuscated Files or Information: Steganography
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1560.001** — Archive Collected Data: Archive via Utility
+- **T1041** — Exfiltration Over C2 Channel
+- **T1486** — Data Encrypted for Impact
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] TeamPCP telnyx FetchAudio() — python subprocess running inline base64 exec
+
+`UC_316_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_name from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python.exe","python3.exe","pythonw.exe") AND Processes.process="*import base64*" AND Processes.process="*exec(base64.b64decode*" by host, user, Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName has_any ("python","python3","python.exe","python3.exe","pythonw.exe")
+| where ProcessCommandLine has "import base64" and ProcessCommandLine has "exec(base64.b64decode"
+| where InitiatingProcessFileName has_any ("python","python3","python.exe","python3.exe")
+   or InitiatingProcessParentFileName has_any ("python","python3","python.exe","python3.exe")
+   or InitiatingProcessCommandLine has "import telnyx"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Outbound connection to TeamPCP C2 83.142.209.203 / ringtone.wav stego payload fetch
+
+`UC_316_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="83.142.209.203" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_ip, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Web.Web where Web.url="*83.142.209.203*ringtone.wav*" OR Web.url="*/ringtone.wav*" by Web.src, Web.dest, Web.url, Web.http_user_agent | `drop_dm_object_name(Web)`] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.203"
+   or RemoteUrl has "83.142.209.203"
+   or RemoteUrl endswith "/ringtone.wav"
+| where InitiatingProcessFileName has_any ("python","python3","python.exe","python3.exe")
+   or RemotePort == 8080
+| project Timestamp, DeviceName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName,
+          RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp asc
+```
+
+### [LLM] msbuild.exe dropped to Startup folder (TeamPCP telnyx Windows persistence)
+
+`UC_316_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where Filesystem.file_name="msbuild.exe" AND (Filesystem.file_path="*\\Startup\\*" OR Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*") by host, user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FileName =~ "msbuild.exe"
+| where FolderPath has @"\Startup\"
+   or FolderPath has @"\Start Menu\Programs\Startup\"
+   or FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP exfiltration archive tpcp.tar.gz created on disk
+
+`UC_316_10` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="tpcp.tar.gz" by host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(90d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FileName =~ "tpcp.tar.gz"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp asc
+```
+
+### [LLM] pip install of malicious telnyx versions 4.87.1 / 4.87.2
+
+`UC_316_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip","pip3","pip.exe","pip3.exe") OR Processes.process="*-m pip*") AND Processes.process="*install*" AND Processes.process="*telnyx*" AND (Processes.process="*4.87.1*" OR Processes.process="*4.87.2*") by host, user | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where (FileName has_any ("pip","pip3","pip.exe","pip3.exe"))
+   or (FileName has_any ("python","python3","python.exe","python3.exe") and ProcessCommandLine has "-m pip")
+| where ProcessCommandLine has "install"
+| where ProcessCommandLine has "telnyx"
+| where ProcessCommandLine has_any ("4.87.1","4.87.2")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -234,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_307_6` · phase: **exploit** · confidence: **High**
+`UC_316_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -291,4 +419,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

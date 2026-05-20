@@ -21,12 +21,100 @@ Table of Contents Loading …
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — JavaScript
+- **T1505.001** — SQL Stored Procedures - n/a (npm postinstall hook abuse)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1219** — Remote Access Software
+- **T1552.001** — Credentials In Files
+- **T1555** — Credentials from Password Stores
+- **T1543.004** — Create or Modify System Process: Launch Daemon
+- **T1543.002** — Create or Modify System Process: Systemd Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] npm postinstall chain installs malicious 'openclaw' global package (cline@2.3.0 supply-chain IOC)
+
+`UC_308_4` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm","npm.cmd","node","node.exe") OR Processes.parent_process_name IN ("npm","npm.cmd","node","node.exe")) Processes.process="*openclaw*" Processes.process IN ("*install -g openclaw*","*install --global openclaw*","*i -g openclaw*","*add -g openclaw*") by host Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename firstTime as firstSeen lastTime as lastSeen | convert ctime(firstSeen) ctime(lastSeen)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "openclaw"
+| where (FileName in~ ("npm","npm.cmd","node","node.exe","npm-cli.js") or InitiatingProcessFileName in~ ("npm","npm.cmd","node","node.exe"))
+| where ProcessCommandLine matches regex @"(?i)\b(install|i|add)\b(\s+--global|\s+-g)?\s+openclaw"
+   or ProcessCommandLine matches regex @"(?i)\bopenclaw(@(latest|[\d\.]+))?\b"
+| extend SupplyChainParent = iff(InitiatingProcessCommandLine has_cs "cline" or InitiatingProcessParentFileName in~ ("npm","node"), "cline@2.3.0 postinstall (suspected)", "")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SupplyChainParent
+| order by Timestamp desc
+```
+
+### [LLM] OpenClaw Gateway WebSocket listener / loopback connection on TCP 18789
+
+`UC_308_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app values(All_Traffic.process) as process from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=18789 (All_Traffic.dest_ip IN ("127.0.0.1","::1","localhost") OR All_Traffic.src_ip IN ("127.0.0.1","::1")) by host All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | rename firstTime as firstSeen lastTime as lastSeen | convert ctime(firstSeen) ctime(lastSeen)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (LocalPort == 18789 and LocalIP in ("127.0.0.1","::1"))
+     or (RemotePort == 18789 and RemoteIP in ("127.0.0.1","::1"))
+| where ActionType in ("ListeningConnectionCreated","ConnectionSuccess","ConnectionAttempt","InboundConnectionAccepted")
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, LocalIP, LocalPort, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Access to OpenClaw credential store (~/.openclaw/credentials/, ~/.openclaw/config.json5)
+
+`UC_308_6` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process values(Filesystem.user) as user values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.openclaw/credentials/*" OR Filesystem.file_path="*/.openclaw/config.json5" OR Filesystem.file_name="config.json5") by host Filesystem.dest Filesystem.action | `drop_dm_object_name(Filesystem)` | rename firstTime as firstSeen lastTime as lastSeen | convert ctime(firstSeen) ctime(lastSeen)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where (FolderPath has "/.openclaw/credentials" or FolderPath has "/.openclaw/" and FileName =~ "config.json5")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] OpenClaw persistence — launchd plist / systemd unit drop referencing 'openclaw'
+
+`UC_308_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","write") (Filesystem.file_path IN ("/Library/LaunchDaemons/*","/Library/LaunchAgents/*","/etc/systemd/system/*","/etc/systemd/user/*","*/.config/systemd/user/*")) (Filesystem.file_name="*openclaw*" OR Filesystem.file_name="*clawdbot*" OR Filesystem.file_name="*moltbot*" OR Filesystem.file_path="*openclaw*") by host Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | rename firstTime as firstSeen lastTime as lastSeen | convert ctime(firstSeen) ctime(lastSeen)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has_any ("/Library/LaunchDaemons","/Library/LaunchAgents","/etc/systemd/system","/etc/systemd/user","/.config/systemd/user")
+| where FileName has_any ("openclaw","clawdbot","moltbot") or FolderPath has_any ("openclaw","clawdbot","moltbot")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### OAuth consent / suspicious app grant
 
@@ -81,7 +169,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cline Supply Chain Attack Detected: cline@2.3.0 Silently Installs OpenClaw
 
-`UC_299_3` · phase: **exploit** · confidence: **High**
+`UC_308_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,4 +226,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,4 +1,4 @@
-# [LOW] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
+# [MED] Love? Actually: Fake dating app used as lure in targeted spyware campaign in Pakistan
 
 **Source:** ESET WeLiveSecurity
 **Published:** 2026-01-28
@@ -18,12 +18,57 @@ ESET researchers have uncovered an Android spyware campaign leveraging romance s
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GhostChat C2/staging infrastructure contact (hitpak.org, buildthenations.info, fkclb.com)
+
+`UC_468_2` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest in ("hitpak.org","buildthenations.info","fkclb.com") OR All_Traffic.url IN ("*hitpak.org*","*buildthenations.info*","*fkclb.com*")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.url | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let GhostChatDomains = dynamic(["hitpak.org","buildthenations.info","fkclb.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (GhostChatDomains) or RemoteUrl endswith ".hitpak.org" or RemoteUrl endswith ".buildthenations.info" or RemoteUrl endswith ".fkclb.com"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] GhostChat C2 beacon URL pattern: hitpak.org/page.php?tynor=<host>sss<user>
+
+`UC_468_3` · phase: **exfil** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url from datamodel=Web.Web where Web.url="*page.php?tynor=*sss*" by Web.src Web.user Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl matches regex @"(?i)(hitpak\.org|buildthenations\.info|fkclb\.com)/page\.php\?tynor=[^&]*sss[^&]*"
+   or RemoteUrl has "page.php?tynor=" and RemoteUrl has "sss"
+| extend BeaconHost = extract(@"(?i)tynor=([^s&]+)sss", 1, RemoteUrl)
+| extend BeaconUser = extract(@"(?i)sss([^&]+)", 1, RemoteUrl)
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, BeaconHost, BeaconUser
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -141,4 +186,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **LOW** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

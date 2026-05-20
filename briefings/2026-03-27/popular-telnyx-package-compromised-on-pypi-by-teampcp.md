@@ -30,12 +30,153 @@ The pattern is consistent: steal credentials from a trusted security to…
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1547.001** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1027.003** — Steganography
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Telnyx PyPI compromise: malicious telnyx 4.87.1 / 4.87.2 hash on disk
+
+`UC_325_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9","cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3") OR (Filesystem.file_name="_client.py" AND Filesystem.file_path="*\\telnyx\\*") by host Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in ("7321caa303fe96ded0492c747d2f353c4f7d17185656fe292ab0a59e2bd0b8d9","cd08115806662469bbedec4b03f8427b97c8a4b3bc1442dc18b72b4e19395fe3")
+   or (FolderPath has @"\telnyx\" and FileName =~ "_client.py")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, FileOriginUrl
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP C2 egress to 83.142.209.203:8080 (telnyx WAV-stego dropper)
+
+`UC_325_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.203" by All_Traffic.src host All_Traffic.user All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.203"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP WAV-stego payload drop (hangup.wav / ringtone.wav)
+
+`UC_325_11` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name="hangup.wav" OR Filesystem.file_name="ringtone.wav") by host Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | join host [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.203" by host | `drop_dm_object_name(All_Traffic)` | rename count as c2_hits | fields host c2_hits] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let WavDrop = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where FileName in~ ("hangup.wav","ringtone.wav")
+  | project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, FileOriginUrl, FileOriginIP, SHA256;
+let C2Hosts = DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteIP == "83.142.209.203"
+  | distinct DeviceId;
+WavDrop
+| where FileOriginIP == "83.142.209.203" or FileOriginUrl has "83.142.209.203" or DeviceId in (C2Hosts)
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP msbuild.exe persistence in user Startup folder
+
+`UC_325_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as parent values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("msbuild.exe","msbuild.exe.lock") AND Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*" by host Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("msbuild.exe","msbuild.exe.lock")
+| where FolderPath has @"\Start Menu\Programs\Startup\"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, FileName, SHA256, FileOriginUrl, FileOriginIP
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP Linux/Mac stdin-piped Python second stage (sys.executable -)
+
+`UC_325_13` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name="python" OR Processes.process_name="python3" OR Processes.process_name="python3.11" OR Processes.process_name="python3.12") AND Processes.process IN ("*python3 -","*python -","*python3.* -") AND Processes.parent_process_name IN ("python","python3","python3.11","python3.12") by host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | join host [| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="83.142.209.203" by host | `drop_dm_object_name(All_Traffic)` | rename count as c2_hits | fields host c2_hits] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let PyExecDash = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where FileName matches regex @"^python[0-9.]*$"
+  | where ProcessCommandLine matches regex @"(?i)\bpython[0-9.]*\s+-\s*$"
+  | where InitiatingProcessFileName matches regex @"(?i)^python[0-9.]*$"
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath;
+let C2Hit = DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteIP == "83.142.209.203"
+  | summarize ConnTime = min(Timestamp) by DeviceName;
+PyExecDash
+| join kind=inner C2Hit on DeviceName
+| where abs(datetime_diff('minute', Timestamp, ConnTime)) <= 15
+| order by Timestamp desc
+```
+
+### [LLM] TeamPCP tpcp.tar.gz exfil POST signature on egress proxy / WAF
+
+`UC_325_14` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.http_method) as methods from datamodel=Web.Web where Web.dest="83.142.209.203" AND Web.http_method="POST" AND (Web.url="*tpcp.tar.gz*" OR Web.http_user_agent="*tpcp*") by host Web.src Web.dest Web.dest_port Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "83.142.209.203" and RemotePort == 8080
+| join kind=leftouter (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "tpcp.tar.gz"
+    | project DeviceName, ExfilTime = Timestamp, FolderPath, FileName
+  ) on DeviceName
+| where isnotempty(ExfilTime) or InitiatingProcessFileName matches regex @"(?i)^python[0-9.]*(\.exe)?$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, ExfilTime, FolderPath, FileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -186,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular telnyx package compromised on PyPI by TeamPCP
 
-`UC_316_8` · phase: **exploit** · confidence: **High**
+`UC_325_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -249,4 +390,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

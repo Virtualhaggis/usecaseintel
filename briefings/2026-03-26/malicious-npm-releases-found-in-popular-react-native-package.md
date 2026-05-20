@@ -20,12 +20,95 @@ Back to Blog Threat Intel Malicious npm Releases Found in Popular React Native P
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — JavaScript
+- **T1546** — Event Triggered Execution
+- **T1102.001** — Dead Drop Resolver
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Compromised react-native-international-phone-number / react-native-country-select files written to node_modules
+
+`UC_332_4` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\react-native-international-phone-number\\*" OR Filesystem.file_path="*/node_modules/react-native-international-phone-number/*" OR Filesystem.file_path="*\\node_modules\\react-native-country-select\\*" OR Filesystem.file_path="*/node_modules/react-native-country-select/*") Filesystem.action="create" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed")
+| where FolderPath has_any ("\\node_modules\\react-native-international-phone-number\\","/node_modules/react-native-international-phone-number/","\\node_modules\\react-native-country-select\\","/node_modules/react-native-country-select/")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Attacker-controlled scoped npm relay packages on disk (@usebioerhold8733 / @agnoliaarisian7180)
+
+`UC_332_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\@usebioerhold8733\\*" OR Filesystem.file_path="*/node_modules/@usebioerhold8733/*" OR Filesystem.file_path="*\\node_modules\\@agnoliaarisian7180\\*" OR Filesystem.file_path="*/node_modules/@agnoliaarisian7180/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(60d)
+| where FolderPath has_any ("\\node_modules\\@usebioerhold8733\\","/node_modules/@usebioerhold8733/","\\node_modules\\@agnoliaarisian7180\\","/node_modules/@agnoliaarisian7180/")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] npm postinstall hook spawning node init.js or child.js (React Native attack pattern)
+
+`UC_332_6` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="node.exe" Processes.parent_process_name IN ("node.exe","npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","cmd.exe") (Processes.process="*init.js*" OR Processes.process="*child.js*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, "(?i)\b(init|child)\.js\b") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "node.exe"
+| where ProcessCommandLine matches regex @"(?i)\b(init|child)\.js\b"
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","cmd.exe")
+   or InitiatingProcessCommandLine has_any ("npm ","yarn ","pnpm ","postinstall")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] node.exe contacting Solana JSON-RPC endpoints (suspected blockchain dead-drop C2)
+
+`UC_332_7` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.src_process_name IN ("node.exe","node","npm.cmd","yarn.exe","pnpm.exe") (Web.url="*solana.com*" OR Web.url="*helius-rpc*" OR Web.url="*quiknode*" OR Web.url="*alchemy.com*" OR Web.url="*rpcpool.com*" OR Web.url="*ankr.com*") by Web.src Web.user Web.src_process_name Web.url Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","node","npm.cmd","yarn.exe","pnpm.exe")
+| where RemoteUrl has_any ("solana.com","helius-rpc","quiknode","alchemy.com","rpcpool.com","ankr.com","mainnet-beta")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -117,7 +200,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_323_3` · phase: **exploit** · confidence: **High**
+`UC_332_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,4 +250,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

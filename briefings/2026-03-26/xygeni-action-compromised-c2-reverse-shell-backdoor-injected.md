@@ -22,12 +22,82 @@ Back to Blog Threat Intel xygeni-action Compromised: C2 Reverse Shell Backdoor I
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090** — Proxy
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1554** — Compromise Host Software Binary
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound C2 callback to xygeni-action backdoor IP 91.214.78.178 from CI runner
+
+`UC_335_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="91.214.78.178" OR All_Traffic.dest_ip="91.214.78.178" OR All_Traffic.dest_host="*91.214.78.178.nip.io" OR All_Traffic.dest_host="security-verify.91.214.78.178.nip.io" OR All_Traffic.url="*91.214.78.178.nip.io*" by All_Traffic.src, All_Traffic.user, All_Traffic.app, All_Traffic.dest_ip, All_Traffic.dest_host, All_Traffic.dest_port, All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "91.214.78.178"
+   or RemoteUrl has "91.214.78.178.nip.io"
+   or RemoteUrl has "security-verify.91.214.78.178"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] GitHub Actions workflow file referencing compromised xygeni/xygeni-action@v5 or backdoored commit 4bf1d4e
+
+`UC_335_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*_actions/xygeni/xygeni-action/v5*" OR Filesystem.file_path="*_actions\\xygeni\\xygeni-action\\v5*" OR Filesystem.file_path="*4bf1d4e*") AND NOT (Filesystem.file_path="*13c6ed2797df7d85749864e2cbcf09c893f43b23*" OR Filesystem.file_path="*v6.4.0*") by Filesystem.dest, Filesystem.user, Filesystem.process_name, Filesystem.file_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where (FolderPath has "_actions" or FolderPath has ".github/workflows" or FolderPath has @".github\workflows")
+| where (FolderPath has "xygeni-action" and (FolderPath has @"\v5\" or FolderPath has "/v5/" or FolderPath endswith @"\v5" or FolderPath endswith "/v5"))
+   or FolderPath has "4bf1d4e"
+| where FolderPath !has "13c6ed2" and FolderPath !has "v6.4.0" and FolderPath !has "v5.38.1"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] Bash-spawned curl to xygeni-action C2 nip.io endpoint with /b/in /b/q /b/r path on CI runner
+
+`UC_335_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="curl" OR Processes.process_name="curl.exe" OR Processes.process_name="wget" OR Processes.process_name="wget.exe") AND (Processes.process="*91.214.78.178.nip.io*" OR Processes.process="*security-verify.91.214.78.178*" OR (Processes.process="*91.214.78.178*" AND (Processes.process="*/b/in*" OR Processes.process="*/b/q*" OR Processes.process="*/b/r*"))) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("curl","curl.exe","wget","wget.exe")
+| where ProcessCommandLine has "91.214.78.178.nip.io"
+   or ProcessCommandLine has "security-verify.91.214.78.178"
+   or (ProcessCommandLine has "91.214.78.178" and ProcessCommandLine has_any ("/b/in","/b/q","/b/r"))
+| extend ParentIsShell = InitiatingProcessFileName in~ ("bash","sh","dash","zsh","ash")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ParentIsShell
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -119,7 +189,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — xygeni-action Compromised: C2 Reverse Shell Backdoor Injected via Tag Poisoning
 
-`UC_326_4` · phase: **install** · confidence: **High**
+`UC_335_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,4 +230,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

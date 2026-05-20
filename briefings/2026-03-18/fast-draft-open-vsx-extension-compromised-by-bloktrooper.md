@@ -25,12 +25,136 @@ Blog Vulnerabilities & Threats fast-draft Open VSX Extension Compromised by Blok
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.003** — Windows Command Shell
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1095** — Non-Application Layer Protocol
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1059.007** — JavaScript
+- **T1106** — Native API
+- **T1564.003** — Hidden Window
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] VSCode/VSCodium spawning shell or curl to raw.githubusercontent.com/BlokTrooper
+
+`UC_354_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("Code.exe","Code - Insiders.exe","VSCodium.exe","Cursor.exe","node.exe") AND Processes.process_name IN ("curl.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe") AND Processes.process="*raw.githubusercontent.com*" AND Processes.process="*BlokTrooper*" by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("Code.exe","Code - Insiders.exe","VSCodium.exe","Cursor.exe","node.exe")
+| where FileName in~ ("curl.exe","cmd.exe","sh.exe","bash.exe","wsl.exe","powershell.exe","pwsh.exe")
+| where ProcessCommandLine has "raw.githubusercontent.com" and ProcessCommandLine has "BlokTrooper"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Outbound TCP beacon to BlokTrooper Socket.IO C2 195.201.104.53:6931/6936/6939
+
+`UC_354_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="195.201.104.53" AND All_Traffic.dest_port IN (6931,6936,6939) by All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "195.201.104.53"
+| where RemotePort in (6931, 6936, 6939)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, LocalPort, Protocol
+| order by Timestamp asc
+```
+
+### [LLM] VSCode-family host fetching from raw.githubusercontent.com/BlokTrooper/extension path
+
+`UC_354_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user) as user values(Web.src) as src from datamodel=Web.Web where Web.url="*raw.githubusercontent.com*" AND (Web.url="*BlokTrooper/extension*" OR Web.url="*BlokTrooper%2Fextension*") by Web.dest Web.url Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "raw.githubusercontent.com"
+| where RemoteUrl has "BlokTrooper"
+| where RemoteUrl has_any ("/scripts/linux.sh", "/scripts/mac.sh", "/scripts/windows.cmd", "/icons/", "/extension/")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Four-way node.exe -e fanout spawned from VSCode shell descendants (BlokTrooper stage-2)
+
+`UC_354_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="node.exe" AND Processes.process="* -e *" AND Processes.parent_process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe") by Processes.dest Processes.user Processes.parent_process_name _time span=5m
+| where count >= 4
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "node.exe"
+| where ProcessCommandLine matches regex @"(?i)\s-e\s"
+| where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wsl.exe")
+| where InitiatingProcessParentFileName in~ ("Code.exe","Code - Insiders.exe","VSCodium.exe","Cursor.exe","node.exe")
+    or InitiatingProcessCommandLine has_any (@"\AppData\Local\Temp\", "/tmp/", "BlokTrooper", @"\.npm\")
+| summarize NodeChildCount = count(), SampleCmds = make_set(ProcessCommandLine, 6), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, AccountName, InitiatingProcessParentFileName, bin(Timestamp, 5m)
+| where NodeChildCount >= 4
+| order by FirstSeen desc
+```
+
+### [LLM] Non-browser process copying Chrome/Edge/Brave Login Data, Web Data, or wallet extension LevelDB state
+
+`UC_354_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.process) as cmd from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Login Data","Login Data For Account","Web Data","Local State","Cookies") OR Filesystem.file_path="*\\Local Extension Settings\\*") AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","brave.exe","opera.exe","MsMpEng.exe","explorer.exe","MsSense.exe") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where (FileName in~ ("Login Data","Login Data For Account","Web Data","Local State","Cookies"))
+    or (FolderPath has @"\Local Extension Settings\")
+    or (PreviousFileName in~ ("Login Data","Login Data For Account","Web Data","Local State","Cookies"))
+    or (PreviousFolderPath has @"\Local Extension Settings\")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","brave.exe","opera.exe","opera_gx.exe","explorer.exe","MsMpEng.exe","MsSense.exe","MpDefenderCoreService.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -181,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_345_6` · phase: **install** · confidence: **High**
+`UC_354_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,4 +346,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

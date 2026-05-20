@@ -39,12 +39,125 @@ Blog Vulnerabilities & Threats GlassWorm Hides a RAT Inside a Malicious Chrome E
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
 - **T1546.003** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1105** — Ingress Tool Transfer
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1657** — Financial Theft
+- **T1555** — Credentials from Password Stores
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] GlassWorm hardcoded C2 IP egress (45.32.150.251 / 217.69.3.152) for Stage-2 fetch and exfil
+
+`UC_353_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as process values(All_Traffic.user) as user from datamodel=Network_Traffic where All_Traffic.dest in ("45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("45.32.150.251","217.69.3.152","217.69.0.159","45.150.34.158")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm Stage-3 RAT installation under %APPDATA%\QtCvyfVWKH\index.js
+
+`UC_353_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Roaming\\QtCvyfVWKH\\*" OR Filesystem.file_name IN ("c_x64.node","f_ex86.node","index_ia32.node","index_x64.node","w.node") by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has @"\AppData\Roaming\QtCvyfVWKH"
+   or (FileName in~ ("c_x64.node","f_ex86.node","index_ia32.node","index_x64.node","w.node","data") and FolderPath has @"\AppData\")
+| where InitiatingProcessFileName !in~ ("msiexec.exe","trustedinstaller.exe")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm Stage-3a UpdateLedger Run-key persistence pointing at %TEMP%\SKuyzYcDD.exe
+
+`UC_353_16` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as data values(Registry.process_name) as process_name from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\*" AND (Registry.registry_value_name="UpdateLedger" OR Registry.registry_value_data="*SKuyzYcDD.exe*") by Registry.dest Registry.registry_value_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
+| where RegistryValueName =~ "UpdateLedger"
+   or RegistryValueData has "SKuyzYcDD.exe"
+   or RegistryValueData has @"\Temp\SKuyzYcDD"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm Solana blockchain dead-drop C2 lookup via public RPC endpoints from Node
+
+`UC_353_17` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.query) as query from datamodel=Network_Resolution where DNS.query IN ("api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SolanaRpc = dynamic(["api.mainnet-beta.solana.com","solana-mainnet.gateway.tatum.io","go.getblock.us","solana-rpc.publicnode.com","api.blockeden.xyz","solana.drpc.org","solana.leorpc.com","solana.api.onfinality.io","solana.api.pocket.network"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has_any (SolanaRpc)
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","python.exe","py.exe","code.exe","electron.exe")
+   or InitiatingProcessParentFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","code.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] GlassWorm Stage-3a Ledger impersonator binary execution (SHA256 06fab21d / SKuyzYcDD.exe)
+
+`UC_353_18` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.parent_process_name) as parent_process_name values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_hash="06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d" OR Processes.process_name="SKuyzYcDD.exe" OR Processes.process_path="*\\Temp\\SKuyzYcDD.exe") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 == "06fab21dc276e3ab9b5d0a1532398979fd377b080c86d74f2c53a04603a43b1d"
+   or FileName =~ "SKuyzYcDD.exe"
+   or (FolderPath has @"\Temp\" and FileName endswith ".exe" and ProcessVersionInfoOriginalFileName =~ "Assaac.exe")
+   or ProcessVersionInfoCompanyName =~ "LLC LogicSub"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, ProcessVersionInfoCompanyName, ProcessVersionInfoOriginalFileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -424,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm Hides a RAT Inside a Malicious Chrome Extension
 
-`UC_344_13` · phase: **exploit** · confidence: **High**
+`UC_353_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -484,4 +597,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

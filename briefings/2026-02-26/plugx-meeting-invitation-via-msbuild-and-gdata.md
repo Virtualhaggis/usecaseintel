@@ -49,12 +49,88 @@ PlugX is a long-running Remote Access Trojan (RAT) that has been consistently li
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1127.001** — Trusted Developer Utilities Proxy Execution: MSBuild
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PlugX phishing lure — 'Meeting Invitation' email linking to gesecole.net ZIP
+
+`UC_394_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where (All_Email.subject="*Meeting Invitation*" OR All_Email.subject="*Invitation_Letter*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.message_id | `drop_dm_object_name(All_Email)` | join type=inner message_id [| tstats `summariesonly` count from datamodel=Email.All_Email where All_Email.url IN ("*gesecole.net*","*onedown.gesecole.net*","*Invitation_Letter_No*.zip") by All_Email.message_id All_Email.url | `drop_dm_object_name(All_Email)`] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let LureSubjects = dynamic(["Meeting Invitation","Invitation_Letter","Invitation Letter"]); let PlugxDomains = dynamic(["gesecole.net","onedown.gesecole.net"]); let LureMail = EmailEvents | where Timestamp > ago(30d) | where Subject has_any (LureSubjects); let LureUrls = EmailUrlInfo | where Timestamp > ago(30d) | where Url has_any (PlugxDomains) or Url has "Invitation_Letter_No" or Url endswith ".zip"; LureMail | join kind=inner LureUrls on NetworkMessageId | project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation | order by Timestamp desc
+```
+
+### [LLM] Renamed MSBuild.exe executing inline .csproj from user-writable path
+
+`UC_394_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=msbuild.exe OR Processes.original_file_name=MSBuild.exe) Processes.process="*.csproj*" by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process_path, "(?i)\\\\(Users|Downloads|Temp|AppData|Public|ProgramData)\\\\") OR match(process, "(?i)\\\\(Users|Downloads|Temp|AppData|Public)\\\\.*\\.csproj") OR match(process, "(?i)(Invitation|Letter|Meeting|Agenda).*\\.csproj") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "msbuild.exe" or ProcessVersionInfoOriginalFileName =~ "MSBuild.exe" or ProcessVersionInfoInternalFileName =~ "MSBuild.exe" | where ProcessCommandLine has ".csproj" | where ProcessCommandLine matches regex @"(?i)\\(Users|Downloads|Temp|AppData|Public|ProgramData)\\" or FolderPath matches regex @"(?i)\\(Users|Downloads|Temp|AppData|Public|ProgramData)\\" | where not(FolderPath has_any (@"\Program Files\Microsoft Visual Studio\", @"\Program Files (x86)\Microsoft Visual Studio\", @"\Program Files\dotnet\")) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoOriginalFileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256 | order by Timestamp desc
+```
+
+### [LLM] PlugX DLL side-load — G DATA Avk.exe running from C:\Users\Public\GDatas\
+
+`UC_394_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=avk.exe OR Processes.original_file_name="AVK.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | where NOT match(process_path, "(?i)\\\\Program Files( \\(x86\\))?\\\\G(\\s)?DATA\\\\") AND (match(process_path, "(?i)\\\\(Users\\\\Public|AppData|Temp|ProgramData|Downloads)\\\\") OR match(process, "(?i)\\s\\d{2,5}\\s\\d{2,5}\\s*$")) | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "avk.exe" or ProcessVersionInfoOriginalFileName =~ "AVK.exe" or ProcessVersionInfoCompanyName has "G DATA" | where not(FolderPath matches regex @"(?i)\\Program Files( \(x86\))?\\G\s?DATA\\") | where FolderPath has_any (@"\Users\Public\", @"\AppData\", @"\Temp\", @"\ProgramData\", @"\Downloads\") or ProcessCommandLine matches regex @"(?i)\\Avk\.exe[\"']?\s+\d{2,5}\s+\d{2,5}\s*$" | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessVersionInfoCompanyName, ProcessVersionInfoOriginalFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256 | join kind=leftouter (DeviceImageLoadEvents | where Timestamp > ago(7d) | where FileName =~ "avk.dll" | project DeviceId, DllFolderPath = FolderPath, DllSHA256 = SHA256, DllInitiatingProcessId = InitiatingProcessId) on DeviceId | order by Timestamp desc
+```
+
+### [LLM] PlugX persistence — Run key 'G DATA' pointing to C:\Users\Public\GDatas\Avk.exe
+
+`UC_394_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" (Registry.registry_value_name="G DATA" OR Registry.registry_value_data="*\\Users\\Public\\GDatas\\Avk.exe*" OR Registry.registry_value_data="*GDatas\\Avk.exe*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents | where Timestamp > ago(30d) | where ActionType in ("RegistryValueSet","RegistryKeyCreated") | where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run" | where RegistryValueName =~ "G DATA" or RegistryValueData has @"\Users\Public\GDatas\Avk.exe" or RegistryValueData has @"GDatas\Avk.exe" or RegistryValueData matches regex @"(?i)Avk\.exe[\"']?\s+\d{2,5}\s+\d{2,5}" | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName, InitiatingProcessAccountName | order by Timestamp desc
+```
+
+### [LLM] PlugX C2 egress — connections to decoraat.net / decoorat.net / gesecole.net
+
+`UC_394_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*decoraat.net" OR DNS.query="*decoorat.net" OR DNS.query="*gesecole.net" OR DNS.query="*onedown.gesecole.net") by DNS.src DNS.query DNS.answer DNS.dest | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="decoraat.net" OR All_Traffic.dest="decoorat.net" OR All_Traffic.dest="gesecole.net" OR All_Traffic.dest="onedown.gesecole.net") All_Traffic.dest_port=443 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let PlugxDomains = dynamic(["decoraat.net","decoorat.net","gesecole.net","onedown.gesecole.net"]); DeviceNetworkEvents | where Timestamp > ago(30d) | where (isnotempty(RemoteUrl) and RemoteUrl has_any (PlugxDomains)) or (isnotempty(RemoteIP) and RemotePort == 443 and RemoteUrl has_any (PlugxDomains)) | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName | order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -258,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_385_7` · phase: **exploit** · confidence: **High**
+`UC_394_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -318,4 +394,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

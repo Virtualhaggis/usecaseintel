@@ -27,12 +27,131 @@ Table of Contents Loa…
 - **T1027** — Obfuscated Files or Information
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1105** — Ingress Tool Transfer
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] axios Supply Chain RAT C2 Callback to sfrclak.com (Port 8000)
+
+`UC_305_8` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Network_Resolution.DNS.src) as src values(Network_Resolution.DNS.answer) as answer from datamodel=Network_Resolution where Network_Resolution.DNS.query="*sfrclak.com" by Network_Resolution.DNS.query | `drop_dm_object_name("DNS")` | append [ | tstats summariesonly=t count from datamodel=Network_Traffic where (Network_Traffic.All_Traffic.dest="sfrclak.com" OR Network_Traffic.All_Traffic.dest_host="sfrclak.com") AND Network_Traffic.All_Traffic.dest_port=8000 by Network_Traffic.All_Traffic.src, Network_Traffic.All_Traffic.dest, Network_Traffic.All_Traffic.dest_port | `drop_dm_object_name("All_Traffic")` ] | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceNetworkEvents
+   | where Timestamp > ago(7d)
+   | where RemoteUrl has "sfrclak.com" or (tolower(RemoteUrl) endswith "sfrclak.com" and RemotePort == 8000)
+   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemoteUrl, RemotePort, Evidence="network_connect"),
+  (DeviceEvents
+   | where Timestamp > ago(7d)
+   | where ActionType in ("DnsQueryResponse","DnsConnectionInspected")
+   | where AdditionalFields has "sfrclak.com" or RemoteUrl has "sfrclak.com"
+   | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemoteUrl, Evidence="dns_query")
+| order by Timestamp desc
+```
+
+### [LLM] npm postinstall node setup.js dropper executing from plain-crypto-js with immediate network egress
+
+`UC_305_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","npm") AND Processes.process_name IN ("node.exe","node") AND (Processes.process="*plain-crypto-js*setup.js*" OR Processes.process="*\\plain-crypto-js\\setup.js*" OR Processes.process="*/plain-crypto-js/setup.js*") by host, user, Processes.process_id, Processes.process, Processes.parent_process | `drop_dm_object_name("Processes")` | rename process_id as proc_id | join type=left host proc_id [| tstats summariesonly=t count from datamodel=Network_Traffic where All_Traffic.app="node.exe" OR All_Traffic.process_name="node.exe" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.process_id | `drop_dm_object_name("All_Traffic")` | rename src as host, process_id as proc_id ] | where isnotnull(dest)
+```
+
+**Defender KQL:**
+```kql
+let SetupRun = DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where FileName in~ ("node.exe","node")
+  | where InitiatingProcessFileName in~ ("npm.exe","node.exe","npm","npm-cli.js","yarn.exe","pnpm.exe","pnpm","yarn")
+     or InitiatingProcessCommandLine has_any ("npm install","npm i ","npm ci","yarn install","pnpm install")
+  | where ProcessCommandLine has "setup.js"
+  | where ProcessCommandLine has "plain-crypto-js" or InitiatingProcessFolderPath has "plain-crypto-js" or FolderPath has "plain-crypto-js"
+  | project SetupTime=Timestamp, DeviceId, DeviceName, AccountName, ProcessId, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName;
+SetupRun
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where InitiatingProcessFileName in~ ("node.exe","node")
+    | where RemoteIPType == "Public"
+    | project NetTime=Timestamp, DeviceId, ChildProcId=InitiatingProcessId, RemoteIP, RemoteUrl, RemotePort
+  ) on DeviceId
+| where ChildProcId == ProcessId
+| where datetime_diff('second', NetTime, SetupTime) between (0 .. 60)
+| project SetupTime, NetTime, DelaySec=datetime_diff('second', NetTime, SetupTime), DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by SetupTime desc
+```
+
+### [LLM] Malicious axios or plain-crypto-js package files written to node_modules
+
+`UC_305_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\plain-crypto-js\\setup.js*" OR Filesystem.file_path="*/node_modules/plain-crypto-js/setup.js*" OR Filesystem.file_path="*\\node_modules\\plain-crypto-js\\package.md*" OR Filesystem.file_path="*/node_modules/plain-crypto-js/package.md*") by host, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name("Filesystem")` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has @"\node_modules\plain-crypto-js" or FolderPath has "/node_modules/plain-crypto-js")
+   and FileName in~ ("setup.js","package.md","package.json")
+| extend IsDropper = (FileName =~ "setup.js")
+| extend IsAntiForensic = (FileName =~ "package.md")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, FileSize, IsDropper, IsAntiForensic
+| order by Timestamp desc
+```
+
+### [LLM] plain-crypto-js setup.js self-deletion or package.json overwrite (anti-forensics)
+
+`UC_305_11` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where ((Filesystem.action="deleted" AND (Filesystem.file_path="*\\node_modules\\plain-crypto-js\\setup.js*" OR Filesystem.file_path="*/node_modules/plain-crypto-js/setup.js*")) OR (Filesystem.action IN ("modified","created") AND (Filesystem.file_path="*\\node_modules\\plain-crypto-js\\package.json*" OR Filesystem.file_path="*/node_modules/plain-crypto-js/package.json*") AND Filesystem.process_name="node.exe")) by host, Filesystem.file_path, Filesystem.action | `drop_dm_object_name("Filesystem")` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let TargetDir = "plain-crypto-js";
+let Deletions = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("FileDeleted","FileRenamed")
+  | where FolderPath has TargetDir
+  | where FileName =~ "setup.js" or PreviousFileName =~ "setup.js"
+  | project DelTime=Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, DelActor=InitiatingProcessFileName, DelActorCmd=InitiatingProcessCommandLine, DelPath=FolderPath;
+let Rewrites = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where ActionType in ("FileModified","FileCreated")
+  | where FolderPath has TargetDir and FileName =~ "package.json"
+  | where InitiatingProcessFileName in~ ("node.exe","node")
+  | project RewriteTime=Timestamp, DeviceId, RewriteActor=InitiatingProcessFileName, RewriteCmd=InitiatingProcessCommandLine, RewriteSHA=SHA256;
+Deletions
+| join kind=inner Rewrites on DeviceId
+| where abs(datetime_diff('second', RewriteTime, DelTime)) <= 30
+| project DelTime, RewriteTime, DeviceName, AccountName, DelActor, DelActorCmd, DelPath, RewriteActor, RewriteCmd, RewriteSHA
+| order by DelTime desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -205,7 +324,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios Compromised on npm - Malicious Versions Drop Remote Access Trojan
 
-`UC_296_7` · phase: **exploit** · confidence: **High**
+`UC_305_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -262,4 +381,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

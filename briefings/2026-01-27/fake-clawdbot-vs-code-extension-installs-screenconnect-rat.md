@@ -40,12 +40,140 @@ Blog Vulnerabilities & Threats Fake Clawdbot VS Code Extension Installs ScreenCo
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1176** — Software Extensions
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1105** — Ingress Tool Transfer
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1090** — Proxy
+- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
+- **T1574.002** — DLL Side-Loading
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Fake Clawdbot VS Code extension fetches config.json from clawdbot.getintwopc.site
+
+`UC_469_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*clawdbot.getintwopc.site*" OR Web.dest="clawdbot.getintwopc.site" OR Web.url="*getintwopc.site/config.json*" by host, src, user, Web.dest, Web.url, Web.http_method, Web.app | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=t count from datamodel=Network_Resolution where Network_Resolution.DNS.query="*clawdbot.getintwopc.site*" OR Network_Resolution.DNS.query="*getintwopc.site" by host, src, user, Network_Resolution.DNS.query | `drop_dm_object_name(Network_Resolution)` ]
+```
+
+**Defender KQL:**
+```kql
+let SuspiciousDomains = dynamic(["clawdbot.getintwopc.site","getintwopc.site"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (SuspiciousDomains) or RemoteUrl has "/config.json" and RemoteUrl has "getintwopc"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Clawdbot extension stages ScreenConnect payload to %TEMP%\Lightshot
+
+`UC_469_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Local\\Temp\\Lightshot\\*" Filesystem.file_name IN ("Code.exe","DWrite.dll","ffmpeg.dll","libEGL.dll","msvcp140.dll","v8_context_snapshot.bin","vcruntime140.dll","vcruntime140_1.dll","icudtl.dat") by host, Filesystem.user, Filesystem.process_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where mvcount(files) >= 2
+```
+
+**Defender KQL:**
+```kql
+let StagedNames = dynamic(["Code.exe","DWrite.dll","ffmpeg.dll","libEGL.dll","msvcp140.dll","v8_context_snapshot.bin","vcruntime140.dll","vcruntime140_1.dll","icudtl.dat"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has @"\AppData\Local\Temp\Lightshot\"
+| where FileName in~ (StagedNames)
+| summarize FilesDropped = make_set(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), DropperImage = any(InitiatingProcessFileName), DropperCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, FolderPath
+| where array_length(FilesDropped) >= 2
+| order by LastSeen desc
+```
+
+### [LLM] ScreenConnect client installed under attacker instance ID 083e4d30c7ea44f7
+
+`UC_469_16` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where Filesystem.file_path="*ScreenConnect Client (083e4d30c7ea44f7)*" by host, Filesystem.user, Filesystem.process_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.process_path="*ScreenConnect Client (083e4d30c7ea44f7)*" OR Processes.process="*ScreenConnect Client (083e4d30c7ea44f7)*" OR Processes.parent_process="*ScreenConnect Client (083e4d30c7ea44f7)*") by host, Processes.user, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` ]
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+(DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where FolderPath has "ScreenConnect Client (083e4d30c7ea44f7)" or FolderPath has "083e4d30c7ea44f7"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where FolderPath has "ScreenConnect Client (083e4d30c7ea44f7)" or ProcessCommandLine has "083e4d30c7ea44f7" or InitiatingProcessFolderPath has "083e4d30c7ea44f7"
+  | project Timestamp, DeviceName, AccountName, ActionType="ProcessCreate", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] ScreenConnect client beacons to attacker relay meeting.bulletmailer.net:8041
+
+`UC_469_17` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest IN ("178.16.54.253","179.43.176.32") OR All_Traffic.dest_host="meeting.bulletmailer.net" OR All_Traffic.dest_host="*.bulletmailer.net") AND (All_Traffic.dest_port=8041 OR All_Traffic.app="ScreenConnect.ClientService.exe" OR All_Traffic.app="ScreenConnect.WindowsBackstageShell.exe" OR All_Traffic.app="ScreenConnect.WindowsFileManager.exe") by host, src, user, All_Traffic.app, All_Traffic.dest, All_Traffic.dest_host, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+let RelayIPs = dynamic(["178.16.54.253","179.43.176.32"]);
+let RelayDomains = dynamic(["meeting.bulletmailer.net","bulletmailer.net"]);
+let RelayProcs = dynamic(["ScreenConnect.ClientService.exe","ScreenConnect.WindowsBackstageShell.exe","ScreenConnect.WindowsFileManager.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (RelayIPs)
+   or RemoteUrl has_any (RelayDomains)
+   or (RemotePort == 8041 and InitiatingProcessFileName in~ (RelayProcs))
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Malicious DWrite.dll sideload + Dropbox MSI fallback (Rust loader d1e0c267...)
+
+`UC_469_18` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash="d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea" OR Filesystem.file_hash="e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2") by host, Filesystem.user, Filesystem.process_name, Filesystem.file_name, Filesystem.file_path, Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [ | tstats summariesonly=t count from datamodel=Web where Web.url="*dropbox.com/scl/fi/tmwi4j86op04r9qo2xdgh/zoomupdate.msi*" OR Web.url="*rlkey=ymr9yn5p3q2w2l3uz9cg71dvm*" by host, Web.user, Web.app, Web.url, Web.http_method, Web.dest | `drop_dm_object_name(Web)` ] | append [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsBackstageShell.exe","ScreenConnect.WindowsFileManager.exe") AND Processes.process IN ("*dropbox.com*","*zoomupdate.msi*","*DWrite.dll*")) by host, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` ]
+```
+
+**Defender KQL:**
+```kql
+let KnownHashes = dynamic(["d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea","e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2"]);
+let DropboxIOC = "dropbox.com/scl/fi/tmwi4j86op04r9qo2xdgh/zoomupdate.msi";
+let DropboxKey  = "rlkey=ymr9yn5p3q2w2l3uz9cg71dvm";
+let ScProcs = dynamic(["ScreenConnect.ClientService.exe","ScreenConnect.WindowsBackstageShell.exe","ScreenConnect.WindowsFileManager.exe"]);
+union isfuzzy=true
+(DeviceImageLoadEvents
+  | where Timestamp > ago(30d)
+  | where SHA256 in (KnownHashes) or (FileName =~ "DWrite.dll" and InitiatingProcessFileName in~ (ScProcs) and FolderPath !startswith @"C:\Windows\System32")
+  | project Timestamp, DeviceName, ActionType="ImageLoad", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl=""),
+(DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where SHA256 in (KnownHashes) or (FileName =~ "zoomupdate.msi" and FileOriginUrl has "dropbox.com")
+  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath=InitiatingProcessFolderPath, RemoteUrl=FileOriginUrl),
+(DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has DropboxIOC or RemoteUrl has DropboxKey or (RemoteUrl has "dropbox.com" and InitiatingProcessFileName in~ (ScProcs))
+  | project Timestamp, DeviceName, ActionType="NetConnect", FileName=InitiatingProcessFileName, FolderPath=InitiatingProcessFolderPath, SHA256=InitiatingProcessSHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteUrl)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -424,7 +552,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Clawdbot VS Code Extension Installs ScreenConnect RAT
 
-`UC_460_13` · phase: **exploit** · confidence: **High**
+`UC_469_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -484,4 +612,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 19 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

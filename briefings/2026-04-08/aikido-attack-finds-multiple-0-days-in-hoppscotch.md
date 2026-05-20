@@ -18,12 +18,95 @@ Blog Vulnerabilities & Threats Aikido Attack finds multiple 0-days in Hoppscotch
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
+- **T1190** — Exploit Public-Facing Application
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1185** — Browser Session Hijacking
+- **T1213** — Data from Information Repositories
+- **T1199** — Trusted Relationship
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Hoppscotch device-login open redirect token theft via localhost.* / sslip.io bypass
+
+`UC_310_3` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*/device-login*" Web.url="*redirect_uri*" (Web.url="*localhost.*" OR Web.url="*sslip.io*") by Web.src Web.dest Web.url Web.user Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| where NOT match(url, "redirect_uri=https?(:|%3A)(/|%2F){2}localhost(:|%3A|/|%2F)")
+| convert ctime(firstTime) ctime(lastTime)
+| table firstTime, lastTime, src, user, dest, url, http_user_agent, count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl contains "/device-login"
+| where RemoteUrl contains "redirect_uri"
+| where RemoteUrl contains "localhost." or RemoteUrl contains "sslip.io"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+```
+
+### [LLM] Hoppscotch Mock Server stored XSS via GraphQL updateRESTUserRequest content-type override
+
+`UC_310_4` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as graphqlTime from datamodel=Web where Web.url="*/graphql*" Web.http_method=POST by Web.src Web.user Web.url
+| `drop_dm_object_name(Web)`
+| join type=inner src [
+    | tstats summariesonly=true count min(_time) as mockTime from datamodel=Web where Web.url="*/mock/*" Web.http_method=GET by Web.src Web.url Web.http_user_agent
+    | `drop_dm_object_name(Web)`
+    | rename url as mockUrl http_user_agent as mockUA
+  ]
+| where mockTime >= graphqlTime AND mockTime <= graphqlTime + 86400
+| where match(mockUA, "(?i)(Mozilla|Chrome|Firefox|Safari|Edge)")
+| table graphqlTime, mockTime, src, user, url, mockUrl, mockUA
+```
+
+**Defender KQL:**
+```kql
+let GraphqlPosts = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where RemoteUrl contains "/graphql"
+    | where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","curl.exe","python.exe","node.exe")
+    | project GraphqlTime=Timestamp, DeviceId, InitiatingProcessAccountName, GraphqlUrl=RemoteUrl;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl contains "/mock/"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari.exe")
+| join kind=inner GraphqlPosts on DeviceId
+| where Timestamp between (GraphqlTime .. GraphqlTime + 24h)
+| project Timestamp, GraphqlTime, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, MockUrl=RemoteUrl, GraphqlUrl
+```
+
+### [LLM] Hoppscotch cross-team request injection via moveRequest GraphQL with null nextRequestID
+
+`UC_310_5` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+index=* (sourcetype=nginx:plus:access OR sourcetype=hoppscotch:* OR sourcetype=waf:*)
+  uri_path="*/graphql*" http_method=POST
+  ("MoveTeamRequest" OR "moveRequest")
+  "nextRequestID" "null"
+  destCollID
+| rex field=_raw "\"req\"\s*:\s*\"(?<reqId>[^\"]+)\""
+| rex field=_raw "\"dest\"\s*:\s*\"(?<destCollId>[^\"]+)\""
+| rex field=_raw "\"next\"\s*:\s*(?<nextVal>null|\"[^\"]*\")"
+| where nextVal="null"
+| stats count, values(reqId) as movedRequestIds, values(destCollId) as destCollIds, dc(destCollId) as uniqueDests, earliest(_time) as first, latest(_time) as last by src, user
+| where count >= 1
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -111,4 +194,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

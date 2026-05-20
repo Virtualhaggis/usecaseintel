@@ -19,12 +19,62 @@ Blog Vulnerabilities & Threats Multiple Cross-Site Scripting (XSS) Vulnerabiliti
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.001** — Phishing: Spearphishing Attachment
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Mailcow Autodiscover endpoint receives unauthenticated XSS payload (GHSA-f9xf-vc72-rcgm)
+
+`UC_283_4` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web where Web.http_method=POST AND Web.url="*Autodiscover.xml*" by _time, Web.src, Web.dest, Web.url, Web.http_user_agent, Web.http_referrer
+| `drop_dm_object_name(Web)`
+| where match(url, "(?i)(onerror|onload|<script|<img|<svg|<iframe|javascript:)") OR match(http_user_agent, "(?i)(<script|<img|onerror)")
+| sort 0 - _time
+```
+
+### [LLM] Mailcow quarantine XSS via EICAR + HTML in attachment filename (GHSA-2xjc-rg88-jvpp)
+
+`UC_283_5` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Email where (Email.signature="*EICAR*" OR Email.malware_signature="*EICAR*" OR Email.message_info="*EICAR*") by _time, Email.src_user, Email.recipient_address, Email.file_name, Email.subject, Email.signature
+| `drop_dm_object_name(Email)`
+| where match(file_name, "(?i)(<img|<script|<svg|<iframe|onerror=|onload=)")
+| sort 0 - _time
+```
+
+**Defender KQL:**
+```kql
+EmailAttachmentInfo
+| where Timestamp > ago(30d)
+| where ThreatNames has_any ("EICAR", "EICAR-Test-File", "EICAR_Test_File") or FileName has_cs "EICAR"
+| where FileName has "<img" or FileName has "<script" or FileName has "<svg" or FileName has "<iframe" or FileName has "onerror=" or FileName has "onload="
+| join kind=leftouter (EmailEvents | project NetworkMessageId, Subject, SenderIPv4, SenderIPv6, EmailDirection, DeliveryAction) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, FileName, FileType, ThreatNames, MalwareFilterVerdict, SenderIPv4, EmailDirection, DeliveryAction
+| order by Timestamp desc
+```
+
+### [LLM] Mailcow login with HTML/JS injected into X-Real-IP header (GHSA-jprq-w83q-q62h)
+
+`UC_283_6` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web where (Web.url="*/SOGo/*" OR Web.url="*/api/v1/*" OR Web.url="*/index.php*" OR Web.url="*mailcow*") by _time, Web.src, Web.dest, Web.url, Web.http_user_agent, Web.http_referrer
+| `drop_dm_object_name(Web)`
+| search ("X-Real-IP" OR "real_rip") ("<img" OR "<script" OR "<svg" OR "<iframe" OR "onerror=" OR "onload=")
+| sort 0 - _time
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -111,7 +161,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Cross-Site Scripting (XSS) Vulnerabilities in Mailcow
 
-`UC_274_3` · phase: **exploit** · confidence: **High**
+`UC_283_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,4 +211,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

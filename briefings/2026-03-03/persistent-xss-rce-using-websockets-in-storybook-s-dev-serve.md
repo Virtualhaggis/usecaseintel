@@ -20,12 +20,70 @@ Blog Vulnerabilities & Threats Persistent XSS/RCE using WebSockets in Storybook�
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059** — Command and Scripting Interpreter
+- **T1552.001** — Credentials In Files
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Storybook WebSocket XSS/RCE — malicious .stories file written to src/stories (CVE-2026-27148)
+
+`UC_385_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path="*\\src\\stories\\*" OR Filesystem.file_path="*/src/stories/*") (Filesystem.file_name="*.stories.ts*" OR Filesystem.file_name="*.stories.js*" OR Filesystem.file_name="*.stories.tsx" OR Filesystem.file_name="*.stories.jsx") (Filesystem.file_name="*';*" OR Filesystem.file_name="*alert(*" OR Filesystem.file_name="*require(*" OR Filesystem.file_name="*child_process*" OR Filesystem.file_name="*process.env*" OR Filesystem.file_name="*execSync*" OR Filesystem.file_name="*document.domain*" OR Filesystem.file_name="*RCE_PROOF*") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated", "FileModified")
+| where FolderPath has @"\src\stories" or FolderPath contains "/src/stories/"
+| where FileName endswith ".ts" or FileName endswith ".tsx" or FileName endswith ".js" or FileName endswith ".jsx"
+| where FileName has_any ("';", "alert(", "require(", "child_process", "process.env", "execSync", "document.domain", "RCE_PROOF")
+| where InitiatingProcessFolderPath !contains "\\node_modules\\" and InitiatingProcessFolderPath !contains "/node_modules/"
+| project Timestamp, DeviceName, FolderPath, FileName,
+          WriterProcess = InitiatingProcessFileName,
+          WriterCmd = InitiatingProcessCommandLine,
+          WriterParent = InitiatingProcessParentFileName,
+          AccountName = InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Storybook portable-stories RCE — vitest/node spawning shell, recon or secret-grep child (CVE-2026-27148)
+
+`UC_385_6` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (node.exe,node,vitest.exe,vitest,npx.exe,npx,pnpm.exe,yarn.exe,npm.exe,npm)) (Processes.parent_process="*vitest*" OR Processes.parent_process="*@storybook*" OR Processes.parent_process="*portable-stories*" OR Processes.parent_process="*composeStories*" OR Processes.parent_process="*storybook test*") (Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,sh,bash,zsh,dash,curl.exe,wget.exe,certutil.exe,bitsadmin.exe,whoami.exe,whoami,id,hostname.exe,hostname,nslookup.exe) OR Processes.process="*RCE_PROOF*" OR Processes.process="*child_process*" OR Processes.process="*execSync*" OR Processes.process="*AWS_SECRET*" OR Processes.process="*AWS_ACCESS_KEY*" OR Processes.process="*GITHUB_TOKEN*" OR Processes.process="*NPM_TOKEN*" OR Processes.process="*/etc/passwd*" OR Processes.process="*~/.aws*" OR Processes.process="*~/.ssh*") by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","node","vitest.exe","vitest","npx.exe","npx","pnpm.exe","yarn.exe","npm.exe","npm")
+| where InitiatingProcessCommandLine has_any ("vitest","@storybook","portable-stories","composeStories","storybook test")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","dash","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","whoami.exe","whoami","id","hostname.exe","hostname","nslookup.exe")
+   or ProcessCommandLine has_any ("RCE_PROOF","child_process","execSync","spawnSync","AWS_SECRET","AWS_ACCESS_KEY","GITHUB_TOKEN","NPM_TOKEN","/etc/passwd","~/.aws","~/.ssh","env | base64","env|base64")
+| where AccountName !endswith "$"
+| where InitiatingProcessCommandLine !has "playwright" and InitiatingProcessCommandLine !has "test-storybook" and ProcessCommandLine !has "node_modules\\.bin\\esbuild"
+| project Timestamp, DeviceName, AccountName,
+          ParentProcess = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildProcess = FileName,
+          ChildCmd = ProcessCommandLine,
+          ChildHash = SHA256
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -112,7 +170,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server
 
-`UC_376_4` · phase: **exploit** · confidence: **High**
+`UC_385_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,4 +227,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

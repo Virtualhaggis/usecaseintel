@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised reviewdog/action-setup commit SHA referenced in GitHub Actions workflow (CVE-2025-30154)
 
-`UC_689_3` · phase: **delivery** · confidence: **High**
+`UC_697_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GitHub Actions Runner.Worker memory dumped via /proc on Linux runner (reviewdog payload)
 
-`UC_689_4` · phase: **actions** · confidence: **High**
+`UC_697_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

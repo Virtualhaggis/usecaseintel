@@ -38,12 +38,120 @@ ESET researchers identified new data-wiping malware that we have named Dyno…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
+- **T1485** — Data Destruction
+- **T1561.001** — Disk Wipe: Disk Content Wipe
+- **T1570** — Lateral Tool Transfer
+- **T1105** — Ingress Tool Transfer
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1090** — Proxy
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] DynoWiper / ZOV wiper known-bad SHA-1 hash execution
+
+`UC_464_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("472ca448f82a7ff6f373a32fdb9586fd7c38b631","4f8e9336a784a196353023133e0f8fa54f6a92e2","4ec3c90846af6b79ee1a5188eefa3fd21f6d4cf6","86596a5c5b05a8bfbd14876de7404702f7d0d61b","69ede7e341fd26fa0577692b601d80cb44778d93") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let DynoWiperZovSha1 = dynamic(["472CA448F82A7FF6F373A32FDB9586FD7C38B631","4F8E9336A784A196353023133E0F8FA54F6A92E2","4EC3C90846AF6B79EE1A5188EEFA3FD21F6D4CF6","86596A5C5B05A8BFBD14876DE7404702F7D0D61B","69EDE7E341FD26FA0577692B601D80CB44778D93"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA1 in~ (DynoWiperZovSha1) or InitiatingProcessSHA1 in~ (DynoWiperZovSha1)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA1, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Executable dropped into C:\inetpub\pub\ shared directory
+
+`UC_464_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="C:\\inetpub\\pub\\*" Filesystem.file_name IN ("*.exe","*.dll","*.bat","*.ps1","*.scr") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath startswith @"C:\inetpub\pub\"
+| where FileName endswith ".exe" or FileName endswith ".dll" or FileName endswith ".scr" or FileName endswith ".bat" or FileName endswith ".ps1"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RequestAccountName, RequestSourceIP
+| order by Timestamp desc
+```
+
+### [LLM] DynoWiper schtask.exe / *_update.exe execution from C:\inetpub\pub\
+
+`UC_464_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_path="C:\\inetpub\\pub\\*" (Processes.process_name IN ("schtask.exe","schtask2.exe") OR Processes.process_name="*_update.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FolderPath startswith @"C:\inetpub\pub\"
+| where FileName in~ ("schtask.exe","schtask2.exe") or FileName endswith "_update.exe"
+| project Timestamp, DeviceName, AccountName, AccountDomain, FileName, FolderPath, ProcessCommandLine, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
+
+`UC_464_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="31.172.71.5" OR All_Traffic.dest="*progamevl.ru" OR All_Traffic.app="*progamevl.ru*") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteIP == "31.172.71.5" or RemoteUrl has "progamevl.ru"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Mass file-content overwrite by single non-system process from non-standard path
+
+`UC_464_13` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Filesystem.file_path) as FileCount values(Filesystem.file_path) as Files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("modified","written") Filesystem.process_path!="C:\\Windows\\*" Filesystem.process_path!="C:\\Program Files*" by Filesystem.dest Filesystem.process_name Filesystem.process_path Filesystem.user span=5m | where FileCount > 200 | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let WindowMinutes = 5m;
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileModified","FileCreated")
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFolderPath !startswith @"C:\Windows\"
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files"
+| summarize FileCount = dcount(FolderPath), SampleFiles = make_set(FolderPath, 20), SampleProc = any(InitiatingProcessCommandLine)
+    by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessId, bin(Timestamp, WindowMinutes)
+| where FileCount > 200
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -247,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_455_8` · phase: **exploit** · confidence: **High**
+`UC_464_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -304,4 +412,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

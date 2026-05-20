@@ -21,12 +21,49 @@ Well, it’s true. This attack vector, called …
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1212** — Exploitation for Credential Access
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] SvelteKit Vercel __pathname cache deception exploit request (CVE-2026-27118)
+
+`UC_405_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.uri_path) as uri_path values(Web.src) as src values(Web.user_agent) as user_agent values(Web.http_method) as method values(Web.status) as status from datamodel=Web where Web.url="*__pathname=*" Web.url="*/_app/immutable/*" by Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### [LLM] User-targeted SvelteSpill exploit URL delivered or clicked (CVE-2026-27118)
+
+`UC_405_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest values(Web.user_agent) as user_agent from datamodel=Web where Web.url="*__pathname=*" Web.url="*/_app/immutable/*" by Web.src | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let ExploitClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where Url has "__pathname=" and Url has "/_app/immutable/"
+    | project Timestamp, AccountUpn, Url, ActionType, Workload, NetworkMessageId, IPAddress, IsClickedThrough, Source = "UrlClickEvents";
+let ExploitInEmail = EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | where Url has "__pathname=" and Url has "/_app/immutable/"
+    | join kind=leftouter (EmailEvents | project NetworkMessageId, RecipientEmailAddress, SenderFromAddress, Subject, DeliveryAction) on NetworkMessageId
+    | project Timestamp, AccountUpn = RecipientEmailAddress, Url, ActionType = DeliveryAction, Workload = "Email", NetworkMessageId, IPAddress = "", IsClickedThrough = bool(null), Source = "EmailUrlInfo";
+union ExploitClicks, ExploitInEmail
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -113,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
 
-`UC_396_4` · phase: **exploit** · confidence: **High**
+`UC_405_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,4 +207,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

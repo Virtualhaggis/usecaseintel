@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] n8n Git node CLI argument injection (CVE-2026-44790) — git child of node with --upload-pack/--receive-pack/-c core.sshCommand
 
-`UC_60_5` · phase: **exploit** · confidence: **High**
+`UC_72_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] n8n Node.js worker spawning interactive shell — RCE chained from prototype-pollution CVEs (42231/42232/44789/44791)
 
-`UC_60_6` · phase: **install** · confidence: **High**
+`UC_72_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Vulnerable n8n / Ivanti Xtraction / FortiAuthenticator / FortiSandbox / SAP / VMware Fusion inventory — exposure surface map
 
-`UC_60_7` · phase: **recon** · confidence: **High**
+`UC_72_7` · phase: **recon** · confidence: **High**
 
 **Defender KQL:**
 ```kql

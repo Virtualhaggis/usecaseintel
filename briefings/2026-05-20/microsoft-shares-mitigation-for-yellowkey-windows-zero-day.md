@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe injected into BootExecute registry value
 
-`UC_16_4` · phase: **install** · confidence: **High**
+`UC_24_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceRegistryEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - autofstx.exe file artifact on disk or removable media
 
-`UC_16_5` · phase: **install** · confidence: **High**
+`UC_24_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceFileEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reagentc.exe WinRE image mount or trust re-establishment
 
-`UC_16_6` · phase: **install** · confidence: **Medium**
+`UC_24_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] YellowKey CVE-2026-45585 - reg.exe loading WinRE registry hive offline
 
-`UC_16_7` · phase: **install** · confidence: **High**
+`UC_24_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft shares mitigation for YellowKey Windows zero-day
 
-`UC_16_3` · phase: **exploit** · confidence: **High**
+`UC_24_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

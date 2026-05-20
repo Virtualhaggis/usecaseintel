@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DNS query to shopsprint/decimal C2 domain freemyip.com / dnslog-cdn-images subdomain
 
-`UC_8_4` · phase: **c2** · confidence: **High**
+`UC_17_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] File-event hash match for trojanized shopsprint/decimal v1.3.3 (decimal.go or module zip)
 
-`UC_8_5` · phase: **delivery** · confidence: **High**
+`UC_17_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

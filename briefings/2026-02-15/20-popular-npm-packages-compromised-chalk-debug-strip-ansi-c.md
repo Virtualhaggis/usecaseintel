@@ -26,12 +26,136 @@ Back to Blog Threat Intel 20+ Popular NPM Packages Compromised (Chalk, Debug, St
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1656** — Impersonation
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Phishing email impersonating npm support from typosquatted npmjs.help domain
+
+`UC_420_7` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.recipient) as recipients values(All_Email.subject) as subjects values(All_Email.src_user) as src_user from datamodel=Email where All_Email.src_user_domain="npmjs.help" OR All_Email.src_user="support@npmjs.help" OR All_Email.url="*npmjs.help*" by All_Email.recipient | `drop_dm_object_name(All_Email)`
+```
+
+**Defender KQL:**
+```kql
+// Qix npm phishing — sender domain npmjs.help (legitimate domain is npmjs.com)
+let LookbackDays = 30d;
+let PhishDomains = dynamic(["npmjs.help"]);
+let MailHits =
+    EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where SenderMailFromDomain in~ (PhishDomains)
+       or SenderFromDomain in~ (PhishDomains)
+       or SenderMailFromAddress endswith "@npmjs.help"
+       or SenderFromAddress endswith "@npmjs.help"
+    | project Timestamp, NetworkMessageId, RecipientEmailAddress,
+              SenderMailFromAddress, SenderFromAddress, Subject,
+              DeliveryAction, DeliveryLocation, ThreatTypes, UrlCount;
+let UrlHits =
+    EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | where Url has "npmjs.help"
+    | project Timestamp, NetworkMessageId, Url, UrlDomain;
+MailHits
+| join kind=leftouter UrlHits on NetworkMessageId
+| project Timestamp, RecipientEmailAddress, SenderMailFromAddress,
+          SenderFromAddress, Subject, DeliveryAction, DeliveryLocation,
+          ThreatTypes, Url, NetworkMessageId
+| order by Timestamp desc
+```
+
+### [LLM] Install of Qix-compromised npm package@version (chalk 5.6.1, debug 4.4.2, ansi-styles 6.2.2 et al.)
+
+`UC_420_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe") OR Processes.parent_process_name IN ("npm.exe","yarn.exe","pnpm.exe")) AND Processes.process IN ("*chalk@5.6.1*","*debug@4.4.2*","*ansi-styles@6.2.2*","*ansi-regex@6.2.1*","*strip-ansi@7.1.1*","*color-convert@3.1.1*","*color-name@2.0.1*","*color@5.0.1*","*color-string@2.1.1*","*supports-color@10.2.1*","*wrap-ansi@9.0.1*","*slice-ansi@7.1.1*","*is-arrayish@0.3.3*","*simple-swizzle@0.2.3*","*supports-hyperlinks@4.1.1*","*has-ansi@6.0.1*","*chalk-template@1.1.1*","*backslash@0.2.1*","*error-ex@1.3.3*") by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+// Qix npm compromise — install of one of the 19 malicious package@version pairs
+let LookbackDays = 60d;
+let BadVersions = dynamic([
+    "chalk@5.6.1", "debug@4.4.2", "ansi-styles@6.2.2",
+    "ansi-regex@6.2.1", "strip-ansi@7.1.1", "color-convert@3.1.1",
+    "color-name@2.0.1", "color@5.0.1", "color-string@2.1.1",
+    "supports-color@10.2.1", "wrap-ansi@9.0.1", "slice-ansi@7.1.1",
+    "is-arrayish@0.3.3", "simple-swizzle@0.2.3", "supports-hyperlinks@4.1.1",
+    "has-ansi@6.0.1", "chalk-template@1.1.1", "backslash@0.2.1",
+    "error-ex@1.3.3"
+]);
+let CmdHits =
+    DeviceProcessEvents
+    | where Timestamp > ago(LookbackDays)
+    | where FileName in~ ("npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","node.exe")
+         or InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe","node.exe")
+    | where ProcessCommandLine has_any (BadVersions)
+         or InitiatingProcessCommandLine has_any (BadVersions)
+    | project Timestamp, DeviceName, AccountName,
+              FileName, ProcessCommandLine,
+              ParentName = InitiatingProcessFileName,
+              ParentCmd  = InitiatingProcessCommandLine,
+              Source = "cmdline";
+let FileHits =
+    DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType in~ ("FileCreated","FileModified")
+    | where (FolderPath has @"\node_modules\chalk\"     and FileName =~ "package.json")
+         or (FolderPath has @"\node_modules\debug\"     and FileName =~ "package.json")
+         or (FolderPath has @"\node_modules\ansi-styles\" and FileName =~ "package.json")
+         or (FolderPath has @"\node_modules\color\"     and FileName =~ "package.json")
+         or (FileName =~ "package-lock.json")
+    | project Timestamp, DeviceName, AccountName,
+              FileName = strcat(FolderPath, "\\", FileName), ProcessCommandLine = InitiatingProcessCommandLine,
+              ParentName = InitiatingProcessFileName, ParentCmd = InitiatingProcessParentFileName,
+              Source = "file";
+union CmdHits, FileHits
+| order by Timestamp desc
+```
+
+### [LLM] Egress to Qix npm phishing/exfil infrastructure (npmjs.help, publicvm.com, BunnyCDN buckets)
+
+`UC_420_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="185.7.81.108" OR All_Traffic.dest_host IN ("npmjs.help","*.npmjs.help","websocket-api2.publicvm.com","static-mw-host.b-cdn.net","img-data-backup.b-cdn.net") OR All_Traffic.url IN ("*npmjs.help*","*websocket-api2.publicvm.com*","*static-mw-host.b-cdn.net*","*img-data-backup.b-cdn.net*")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host
+```
+
+**Defender KQL:**
+```kql
+// Qix npm compromise — egress to phishing/exfil infrastructure
+let LookbackDays = 60d;
+let BadHosts = dynamic([
+    "npmjs.help",
+    "websocket-api2.publicvm.com",
+    "static-mw-host.b-cdn.net",
+    "img-data-backup.b-cdn.net"
+]);
+let BadIPs = dynamic(["185.7.81.108"]);
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where RemoteUrl has_any (BadHosts)
+     or RemoteIP in (BadIPs)
+| project Timestamp, DeviceName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountUpn,
+          RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -295,4 +419,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_767 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_769 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,21 +11,32 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-20
 - [a day in the life of a strategy co op in snyk s boston offic](./2026-05-20/a-day-in-the-life-of-a-strategy-co-op-in-snyk-s-boston-offic.md)
 - [agent ai is coming are you ready](./2026-05-20/agent-ai-is-coming-are-you-ready.md)
+- [cisa kev cve 2008 4250 microsoft windows buffer overflow vul](./2026-05-20/cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul.md)
+- [cisa kev cve 2009 1537 microsoft directx null byte overwrite](./2026-05-20/cisa-kev-cve-2009-1537-microsoft-directx-null-byte-overwrite.md)
+- [cisa kev cve 2009 3459 adobe acrobat and reader heap based b](./2026-05-20/cisa-kev-cve-2009-3459-adobe-acrobat-and-reader-heap-based-b.md)
+- [cisa kev cve 2010 0249 microsoft internet explorer use after](./2026-05-20/cisa-kev-cve-2010-0249-microsoft-internet-explorer-use-after.md)
+- [cisa kev cve 2026 41091 microsoft defender link following vu](./2026-05-20/cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu.md)
+- [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
 - [critical exiftool vulnerability allows attackers to compromi](./2026-05-20/critical-exiftool-vulnerability-allows-attackers-to-compromi.md)
+- [devilnfc android malware uses kiosk mode to trap victims dur](./2026-05-20/devilnfc-android-malware-uses-kiosk-mode-to-trap-victims-dur.md)
 - [freepbx vulnerability allow attackers to gain access to user](./2026-05-20/freepbx-vulnerability-allow-attackers-to-gain-access-to-user.md)
+- [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
+- [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
-- [graphworm malware uses microsoft onedrive as command and con](./2026-05-20/graphworm-malware-uses-microsoft-onedrive-as-command-and-con.md)
 - [hackers abuse mshta legacy windows tool to deliver lummastea](./2026-05-20/hackers-abuse-mshta-legacy-windows-tool-to-deliver-lummastea.md)
 - [hackers use single letter go module typosquat to deploy dns ](./2026-05-20/hackers-use-single-letter-go-module-typosquat-to-deploy-dns-.md)
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
+- [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
 - [pardus linux local privilege escalation flaw allows silent r](./2026-05-20/pardus-linux-local-privilege-escalation-flaw-allows-silent-r.md)
+- [pintheft linux vulnerability let attackers gain root access ](./2026-05-20/pintheft-linux-vulnerability-let-attackers-gain-root-access-.md)
+- [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
+- [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)
 
 ## 2026-05-19
-- [7 eleven confirms data breach claimed by the shinyhunters ga](./2026-05-19/7-eleven-confirms-data-breach-claimed-by-the-shinyhunters-ga.md)
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
@@ -44,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
 - [max severity flaw in chromadb for ai apps allows server hija](./2026-05-19/max-severity-flaw-in-chromadb-for-ai-apps-allows-server-hija.md)
 - [microsoft self service password reset abused in azure data t](./2026-05-19/microsoft-self-service-password-reset-abused-in-azure-data-t.md)
-- [nx console vs code extension compromised](./2026-05-19/nx-console-vs-code-extension-compromised.md)
 - [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 - [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
@@ -132,7 +142,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
-- [undermining the trust boundary investigating a stealthy intr](./2026-05-12/undermining-the-trust-boundary-investigating-a-stealthy-intr.md)
+- [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11
 - [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
@@ -196,7 +206,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44351 fast jwt jwt auth bypass due to](./2026-05-06/ghsa-critical-cve-2026-44351-fast-jwt-jwt-auth-bypass-due-to.md)
 - [ghsa critical ghsa 289f fq7w 6q2w phpmyfaq has unauthenticat](./2026-05-06/ghsa-critical-ghsa-289f-fq7w-6q2w-phpmyfaq-has-unauthenticat.md)
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
-- [ghsa critical ghsa 9pq7 mfwh xx2j phpmyfaq enables unauthent](./2026-05-06/ghsa-critical-ghsa-9pq7-mfwh-xx2j-phpmyfaq-enables-unauthent.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 
 ## 2026-05-05
@@ -615,9 +624,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-05
 - [cisa kev cve 2025 55182 meta react server components remote ](./2025-12-05/cisa-kev-cve-2025-55182-meta-react-server-components-remote-.md)
-
-## 2025-12-04
-- [promptpwnd prompt injection vulnerabilities in github action](./2025-12-04/promptpwnd-prompt-injection-vulnerabilities-in-github-action.md)
 
 ## 2025-12-03
 - [cisa kev cve 2021 26828 openplc scadabr unrestricted upload ](./2025-12-03/cisa-kev-cve-2021-26828-openplc-scadabr-unrestricted-upload-.md)
@@ -1352,19 +1358,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-04-24
 - [cisa kev cve 2024 20359 cisco asa and ftd privilege escalati](./2024-04-24/cisa-kev-cve-2024-20359-cisco-asa-and-ftd-privilege-escalati.md)
 - [cisa kev cve 2024 4040 crushftp vfs sandbox escape vulnerabi](./2024-04-24/cisa-kev-cve-2024-4040-crushftp-vfs-sandbox-escape-vulnerabi.md)
-
-## 2024-04-23
-- [cisa kev cve 2022 38028 microsoft windows print spooler priv](./2024-04-23/cisa-kev-cve-2022-38028-microsoft-windows-print-spooler-priv.md)
-
-## 2024-04-12
-- [cisa kev cve 2024 3400 palo alto networks pan os command inj](./2024-04-12/cisa-kev-cve-2024-3400-palo-alto-networks-pan-os-command-inj.md)
-
-## 2024-04-11
-- [cisa kev cve 2024 3273 d link multiple nas devices command i](./2024-04-11/cisa-kev-cve-2024-3273-d-link-multiple-nas-devices-command-i.md)
-
-## 2024-04-04
-- [cisa kev cve 2024 29745 android pixel information disclosure](./2024-04-04/cisa-kev-cve-2024-29745-android-pixel-information-disclosure.md)
-- [cisa kev cve 2024 29748 android pixel privilege escalation v](./2024-04-04/cisa-kev-cve-2024-29748-android-pixel-privilege-escalation-v.md)
-
-## 2024-03-26
-- [cisa kev cve 2023 24955 microsoft sharepoint server code inj](./2024-03-26/cisa-kev-cve-2023-24955-microsoft-sharepoint-server-code-inj.md)

@@ -113,7 +113,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Renamed MSHTA (iso2022.exe) spawned by Python Setup.exe loader
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_19_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### [LLM] MSHTA spawned by explorer.exe via Win+R ClickFix paste
 
-`UC_10_12` · phase: **delivery** · confidence: **High**
+`UC_19_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceProcessEvents
 
 ### [LLM] MSHTA fetching Capcha.html / recaptcha-verify ClickFix landing page
 
-`UC_10_13` · phase: **delivery** · confidence: **High**
+`UC_19_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### [LLM] MSHTA C2 retrieval to CountLoader / Emmenhtal infrastructure
 
-`UC_10_14` · phase: **c2** · confidence: **High**
+`UC_19_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -501,7 +501,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse MSHTA Legacy Windows Tool to Deliver LummaStealer and Amatera Malw
 
-`UC_10_10` · phase: **exploit** · confidence: **High**
+`UC_19_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
