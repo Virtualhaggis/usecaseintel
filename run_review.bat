@@ -35,6 +35,10 @@ if errorlevel 1 (
   exit /b 1
 )
 
+REM Refresh the operator dashboard so the Usage tab includes this review's
+REM rows. pipeline.html is intentionally not committed (operator-internal).
+py -u build_pipeline_docs.py 1>>"%LOG%" 2>>&1
+
 REM Stage and push the review output. intel/quality_suggestions.jsonl
 REM is committed so the next pipeline run can read it; intel/quality_review/
 REM and intel/.pipeline.lock are gitignored, so they stay local.

@@ -41,6 +41,11 @@ REM Rebuild the SOC cheat sheet so curated query bundles stay current.
 REM Cheap (~1s) and idempotent -- only writes when content actually changed.
 py -u build_soc_cheatsheet.py 1>>"%LOG%" 2>>&1
 
+REM Refresh the operator dashboard so the Usage tab reflects this run.
+REM pipeline.html is intentionally not committed (operator-internal page);
+REM it just gets re-rendered locally from intel/.usage_log.jsonl.
+py -u build_pipeline_docs.py 1>>"%LOG%" 2>>&1
+
 REM Stage just the regenerated outputs -- never sweep up unrelated edits.
 REM daily_digest.md is gitignored; sitemap.xml is regenerated each run.
 git add intel/ catalog/ briefings/ rule_packs/ share/ techniques/ actors/ targets/ index.html sitemap.xml cheatsheet.html 1>>"%LOG%" 2>>&1

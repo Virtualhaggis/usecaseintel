@@ -27,6 +27,10 @@ if errorlevel 1 (
   exit /b 1
 )
 
+REM Refresh the operator dashboard so the Usage tab includes this weekly
+REM run's rows. pipeline.html is intentionally not committed (operator-internal).
+py -u build_pipeline_docs.py 1>>"%LOG%" 2>>&1
+
 REM Stage just the new weekly outputs.
 git add use_cases/weekly/ briefings/_weekly/ 1>>"%LOG%" 2>>&1
 git diff --cached --quiet
