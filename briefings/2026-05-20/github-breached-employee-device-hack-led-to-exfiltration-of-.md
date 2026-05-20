@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser contact with Trust Wallet impostor analytics domain (metrics-trustwallet.com)
 
-`UC_5_8` · phase: **c2** · confidence: **High**
+`UC_11_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] Shai-Hulud npm worm C2 callback to websocket-api2.publicvm.com
 
-`UC_5_9` · phase: **c2** · confidence: **High**
+`UC_11_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] npm credential phishing typosquat domain visit (npmjs.help)
 
-`UC_5_10` · phase: **delivery** · confidence: **High**
+`UC_11_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -291,7 +291,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Re
 
-`UC_5_7` · phase: **exploit** · confidence: **High**
+`UC_11_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

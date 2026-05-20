@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_769 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_773 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-20
+- [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-20/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [a day in the life of a strategy co op in snyk s boston offic](./2026-05-20/a-day-in-the-life-of-a-strategy-co-op-in-snyk-s-boston-offic.md)
 - [agent ai is coming are you ready](./2026-05-20/agent-ai-is-coming-are-you-ready.md)
 - [cisa kev cve 2008 4250 microsoft windows buffer overflow vul](./2026-05-20/cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul.md)
@@ -24,8 +25,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
 - [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
-- [hackers abuse mshta legacy windows tool to deliver lummastea](./2026-05-20/hackers-abuse-mshta-legacy-windows-tool-to-deliver-lummastea.md)
-- [hackers use single letter go module typosquat to deploy dns ](./2026-05-20/hackers-use-single-letter-go-module-typosquat-to-deploy-dns-.md)
+- [hackers bypass sonicwall vpn mfa due to incomplete patching](./2026-05-20/hackers-bypass-sonicwall-vpn-mfa-due-to-incomplete-patching.md)
+- [hackers use fake income tax assessment pages to infect windo](./2026-05-20/hackers-use-fake-income-tax-assessment-pages-to-infect-windo.md)
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
@@ -34,6 +35,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
+- [trapdoor android ad fraud operation uses 455 malicious apps ](./2026-05-20/trapdoor-android-ad-fraud-operation-uses-455-malicious-apps-.md)
+- [ukraine identifies infostealer operator tied to 28 000 stole](./2026-05-20/ukraine-identifies-infostealer-operator-tied-to-28-000-stole.md)
+- [void botnet uses ethereum smart contracts for seizure resist](./2026-05-20/void-botnet-uses-ethereum-smart-contracts-for-seizure-resist.md)
 - [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)
 
 ## 2026-05-19
@@ -54,6 +58,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
 - [max severity flaw in chromadb for ai apps allows server hija](./2026-05-19/max-severity-flaw-in-chromadb-for-ai-apps-allows-server-hija.md)
+- [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
 - [microsoft self service password reset abused in azure data t](./2026-05-19/microsoft-self-service-password-reset-abused-in-azure-data-t.md)
 - [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 - [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
@@ -221,9 +226,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
 - [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
 - [shai hulud worm pivots to multi cloud intercom client 7 0 4 ](./2026-05-04/shai-hulud-worm-pivots-to-multi-cloud-intercom-client-7-0-4-.md)
-
-## 2026-05-02
-- [the npm threat landscape attack surface and mitigations upda](./2026-05-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 
 ## 2026-05-01
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)

@@ -1,35 +1,33 @@
-# [HIGH] Drupal to Release Urgent Core Security Updates on May 20, Sites Told to Prepare
+# [CRIT] Drupal to Release Urgent Core Security Updates on May 20, Sites Told to Prepare
 
-**Source:** The Hacker News, BleepingComputer, Aikido, GitHub Security Advisories
+**Source:** The Hacker News, Aikido, StepSecurity
 **Published:** 2026-05-19
 **Article:** https://thehackernews.com/2026/05/drupal-to-release-urgent-core-security.html
 
 ## Threat Profile
 
-Blog Vulnerabilities & Threats Microsoft's durabletask package on PyPi Compromised. Mini Shai Hulud attacks again... again! Microsoft's durabletask package on PyPi Compromised. Mini Shai Hulud attacks again... again! Written by Raphael Silva Published on: May 19, 2026 We've identified three malicious versions of durabletask on PyPI, 1.4.1 , 1.4.2 , and 1.4.3 , that contain a dropper injected directly into the package's Python source files. When a developer installs any of these versions and impo…
+Back to Blog Threat Intel Shai-Hulud: Here We Go Again. Mass npm Supply Chain Attack Hits the AntV Ecosystem A new wave of the Mini Shai-Hulud worm has compromised packages across Alibaba's AntV data visualization ecosystem, echarts-for-react, timeago.js, and dozens more. Stolen CI/CD secrets are being dumped to thousands of public GitHub repositories as the attack continues to spread. Sai Likhith View LinkedIn May 19, 2026
+Share on X Share on X Share on LinkedIn Share on Facebook Follow our RSS…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `check.git-service.com`
 - **Domain (defanged):** `t.m-kosche.com`
-- **Domain (defanged):** `git-service.com`
-- **SHA256:** `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`
-- **SHA256:** `3de04fe2a76262743ed089efa7115f4508619838e77d60b9a1aab8b20d2cc8bf`
-- **SHA256:** `85f54c089d78ebfb101454ec934c767065a342a43c9ee1beac8430cdd3b2086f`
-- **SHA256:** `c0b094e46842260936d4b97ce63e4539b99a3eae48b736798c700217c52569dc`
+- **SHA1:** `7cb42f57561c321ecb09b4552802ae0ac55b3a7a`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
+- **T1005** — Data from Local System
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1005** — Data from Local System
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1195.002** — Compromise Software Supply Chain
+- **T1566.002** — Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
+- **T1059.001** — PowerShell
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
+- **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
@@ -37,6 +35,7 @@ Blog Vulnerabilities & Threats Microsoft's durabletask package on PyPi Compromis
 - **T1105** — Ingress Tool Transfer
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1528** — Steal Application Access Token
 - **T1543.002** — Create or Modify System Process: Systemd Service
 - **T1546** — Event Triggered Execution
 
@@ -48,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] durabletask C2 contact — check.git-service.com / t.m-kosche.com from python3
 
-`UC_36_8` · phase: **c2** · confidence: **High**
+`UC_58_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] python3 dropping and detached-spawning /tmp/managed.pyz (durabletask rope.pyz dropper)
 
-`UC_36_9` · phase: **install** · confidence: **High**
+`UC_58_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +113,7 @@ union procs, files
 
 ### [LLM] GitHub token exfiltration — `gh auth token` / `gh auth status --show-token` spawned by python3
 
-`UC_36_10` · phase: **actions** · confidence: **High**
+`UC_58_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +139,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake pgsql-monitor systemd persistence dropped by python3
 
-`UC_36_11` · phase: **install** · confidence: **High**
+`UC_58_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,35 +202,6 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
-### Infostealer — non-browser process accessing browser cookie/login DBs
-
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-```
-
 ### Crypto-wallet file/keystore access by non-wallet process
 
 `UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
@@ -262,31 +232,175 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### OAuth consent / suspicious app grant
+### Infostealer — non-browser process accessing browser cookie/login DBs
 
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Phishing-link click correlated to endpoint execution
+
+`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
+```
+
+**Defender KQL:**
+```kql
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
+```
+
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -315,14 +429,14 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Drupal to Release Urgent Core Security Updates on May 20, Sites Told to Prepare
 
-`UC_36_7` · phase: **exploit** · confidence: **High**
+`UC_58_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 ``` Article-specific bespoke detection — Drupal to Release Urgent Core Security Updates on May 20, Sites Told to Prepare ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("__init__.py","__main__.py","roulette.py","timeago.js"))
+    where (Processes.process_name IN ("timeago.js","canvas-nest.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js","bun.exe","index.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -331,7 +445,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/tmp/managed.pyz*" OR Filesystem.file_path="*/var/run/docker.sock*" OR Filesystem.file_path="*/tmp/kubectl*" OR Filesystem.file_path="*/dev/null*" OR Filesystem.file_path="*/usr/bin/pgmonitor.py*" OR Filesystem.file_path="*/etc/timezone*" OR Filesystem.file_path="*/etc/localtime*" OR Filesystem.file_path="*/etc/systemd/system/pgsql-monitor.service*" OR Filesystem.file_name IN ("__init__.py","__main__.py","roulette.py","timeago.js"))
+      AND (Filesystem.file_path="*/etc/rancher/k3s/k3s.yaml*" OR Filesystem.file_path="*/dev/null*" OR Filesystem.file_name IN ("timeago.js","canvas-nest.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js","bun.exe","index.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -345,7 +459,7 @@ DeviceProcessEvents
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("__init__.py", "__main__.py", "roulette.py", "timeago.js"))
+| where (FileName in~ ("timeago.js", "canvas-nest.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js", "bun.exe", "index.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -355,7 +469,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/tmp/managed.pyz", "/var/run/docker.sock", "/tmp/kubectl", "/dev/null", "/usr/bin/pgmonitor.py", "/etc/timezone", "/etc/localtime", "/etc/systemd/system/pgsql-monitor.service") or FileName in~ ("__init__.py", "__main__.py", "roulette.py", "timeago.js"))
+| where (FolderPath has_any ("/etc/rancher/k3s/k3s.yaml", "/dev/null") or FileName in~ ("timeago.js", "canvas-nest.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js", "bun.exe", "index.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -367,12 +481,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `check.git-service.com`, `t.m-kosche.com`, `git-service.com`
+  - IP / domain IOC(s): `t.m-kosche.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`, `3de04fe2a76262743ed089efa7115f4508619838e77d60b9a1aab8b20d2cc8bf`, `85f54c089d78ebfb101454ec934c767065a342a43c9ee1beac8430cdd3b2086f`, `c0b094e46842260936d4b97ce63e4539b99a3eae48b736798c700217c52569dc`
+  - file hash IOC(s): `7cb42f57561c321ecb09b4552802ae0ac55b3a7a`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

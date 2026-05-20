@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FamousSparrow ProxyNotShell exploitation pattern against Exchange Autodiscover endpoint
 
-`UC_129_8` · phase: **exploit** · confidence: **High**
+`UC_133_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### [LLM] Exchange w3wp.exe spawning shell/script interpreter — FamousSparrow web shell foothold
 
-`UC_129_9` · phase: **install** · confidence: **High**
+`UC_133_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] FamousSparrow LogMeIn Hamachi DLL side-load chain (LMIGuardianSvc.exe from C:\TEMP)
 
-`UC_129_10` · phase: **install** · confidence: **High**
+`UC_133_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ union SideloadHost, SideloadArtifacts, RogueImageLoad
 
 ### [LLM] FamousSparrow Deed RAT C2 beaconing to sentinelonepro.com / virusblocker.it.com
 
-`UC_129_11` · phase: **c2** · confidence: **High**
+`UC_133_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

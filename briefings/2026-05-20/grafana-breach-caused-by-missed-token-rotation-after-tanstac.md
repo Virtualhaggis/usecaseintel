@@ -1,49 +1,65 @@
 # [CRIT] Grafana breach caused by missed token rotation after TanStack attack
 
-**Source:** BleepingComputer, Microsoft Security Blog
+**Source:** BleepingComputer, Microsoft Security Blog, Unit 42 (Palo Alto)
 **Published:** 2026-05-20
 **Article:** https://www.bleepingcomputer.com/news/security/grafana-breach-caused-by-missed-token-rotation-after-tanstack-attack/
 
 ## Threat Profile
 
-Tags 
-Linux 
-Content types 
-Research 
-Products and services 
-Microsoft Defender 
-Topics 
-Actionable threat insights 
-Defending against advanced tactics 
-Microsoft has identified an active supply chain attack targeting the @antv node package manager (npm) package ecosystem. A threat actor compromised an @antv maintainer account and published malicious versions of widely used data-visualization packages, resulting in cascading downstream impact.
-The compromise propagated through dependency chains …
+Threat Research Center 
+High Profile Threats 
+Malware 
+Malware 
+The npm Threat Landscape: Attack Surface and Mitigations 
+12 min read 
+Related Products Advanced DNS Security Advanced URL Filtering Cloud-Delivered Security Services Cortex Cortex Cloud Unit 42 Incident Response 
+By: Unit 42 
+Published: April 24, 2026 
+Categories: High Profile Threats 
+Malware 
+Tags: Credential Harvesting 
+GitHub 
+Npm packages 
+Obfuscation 
+Payload 
+Supply chain 
+Worm propagation 
+Executive Summary 
+The security of…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `t.m-kosche.com`
-- **Domain (defanged):** `check.git-service.com`
-- **SHA256:** `7c24b4d9a8f448832f3752d7f67dcdbf1b7f0f41e10bf633efa175e627144e8b`
-- **SHA1:** `d78c25443ec4a0d7f0a85776461f3b1163132537`
-- **SHA1:** `1916faa365f2788b6e193514872d51a242876569`
+- **CVE:** `CVE-2025-55182`
+- **IPv4 (defanged):** `94.154.172.43`
+- **IPv4 (defanged):** `91.195.240.123`
+- **Domain (defanged):** `audit.checkmarx.cx`
+- **Domain (defanged):** `checkmarx.cx`
+- **Domain (defanged):** `proton.me`
+- **SHA256:** `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`
+- **SHA256:** `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`
+- **SHA256:** `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`
+- **SHA1:** `bc544f455d7c06c8a1f3446160a6d9a4a8236b11`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
+- **T1566.002** — Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1059.004** — Unix Shell
 - **T1546.016** — Installer Packages
 - **T1548.003** — Sudo and Sudo Caching
 - **T1222.002** — Linux and Mac File and Directory Permissions Modification
+- **T1003** — OS Credential Dumping
 - **T1057** — Process Discovery
 - **T1552.001** — Credentials In Files
 - **T1552.005** — Cloud Instance Metadata API
@@ -63,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious @antv preinstall chain: node spawns sh spawns bun on Linux CI runner
 
-`UC_0_9` · phase: **install** · confidence: **High**
+`UC_6_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] Trojanised @antv payload SHA256 / 499KB single-line index.js on disk
 
-`UC_0_10` · phase: **delivery** · confidence: **High**
+`UC_6_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +124,7 @@ DeviceFileEvents
 
 ### [LLM] Passwordless sudoers rule injected via bind mount at /mnt or /etc/sudoers.d
 
-`UC_0_11` · phase: **exploit** · confidence: **High**
+`UC_6_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +147,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions Runner.Worker process memory scraping via /proc
 
-`UC_0_12` · phase: **exploit** · confidence: **High**
+`UC_6_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +172,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud / Vault / Kubernetes credential file harvesting from npm or bun lineage
 
-`UC_0_13` · phase: **actions** · confidence: **High**
+`UC_6_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +201,7 @@ DeviceFileEvents
 
 ### [LLM] AWS SecretsManager region-wide enumeration burst from CI identity
 
-`UC_0_14` · phase: **actions** · confidence: **High**
+`UC_6_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -199,7 +215,7 @@ DeviceFileEvents
 
 ### [LLM] DNS or HTTPS to Shai-Hulud C2 (t.m-kosche.com, check.git-service.com)
 
-`UC_0_15` · phase: **c2** · confidence: **High**
+`UC_6_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -233,7 +249,7 @@ union
 
 ### [LLM] GitHub repo creation with 'Shai-Hulud :We Here Go Again' reversed description
 
-`UC_0_16` · phase: **actions** · confidence: **High**
+`UC_6_17` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -278,6 +294,148 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Phishing-link click correlated to endpoint execution
+
+`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
+```
+
+**Defender KQL:**
+```kql
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
+```
+
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
 ### PowerShell encoded / obfuscated command
 
 `UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
@@ -307,90 +465,6 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Ransomware-style mass file rename / extension change
-
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-```
-
-### LSASS process access / dump (credential theft)
-
-`UC_LSASS` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc
-```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -417,14 +491,14 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Grafana breach caused by missed token rotation after TanStack attack
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_6_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 ``` Article-specific bespoke detection — Grafana breach caused by missed token rotation after TanStack attack ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("index.js","node.js","npm.cmd","npm.exe","npx.cmd","npx.exe","bun.exe","cat.py"))
+    where (Processes.process_name IN ("mcpaddon.js","bw_setup.js","node.js","bw1.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -433,7 +507,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/var/run/secrets/vault/token*" OR Filesystem.file_path="*/home/runner/.vault-token*" OR Filesystem.file_path="*/root/.vault-token*" OR Filesystem.file_path="*/etc/vault/token*" OR Filesystem.file_path="*/etc/hosts*" OR Filesystem.file_path="*/etc/sudoers.d*" OR Filesystem.file_name IN ("index.js","node.js","npm.cmd","npm.exe","npx.cmd","npx.exe","bun.exe","cat.py"))
+      AND (Filesystem.file_path="*/usr/bin/env*" OR Filesystem.file_name IN ("mcpaddon.js","bw_setup.js","node.js","bw1.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -447,7 +521,7 @@ DeviceProcessEvents
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("index.js", "node.js", "npm.cmd", "npm.exe", "npx.cmd", "npx.exe", "bun.exe", "cat.py"))
+| where (FileName in~ ("mcpaddon.js", "bw_setup.js", "node.js", "bw1.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -457,7 +531,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/var/run/secrets/vault/token", "/home/runner/.vault-token", "/root/.vault-token", "/etc/vault/token", "/etc/hosts", "/etc/sudoers.d") or FileName in~ ("index.js", "node.js", "npm.cmd", "npm.exe", "npx.cmd", "npx.exe", "bun.exe", "cat.py"))
+| where (FolderPath has_any ("/usr/bin/env") or FileName in~ ("mcpaddon.js", "bw_setup.js", "node.js", "bw1.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -469,12 +543,15 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `t.m-kosche.com`, `check.git-service.com`
+  - IP / domain IOC(s): `94.154.172.43`, `91.195.240.123`, `audit.checkmarx.cx`, `checkmarx.cx`, `proton.me`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-55182`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `7c24b4d9a8f448832f3752d7f67dcdbf1b7f0f41e10bf633efa175e627144e8b`, `d78c25443ec4a0d7f0a85776461f3b1163132537`, `1916faa365f2788b6e193514872d51a242876569`
+  - file hash IOC(s): `f35475829991b303c5efc2ee0f343dd38f8614e8b5e69db683923135f85cf60d`, `18f784b3bc9a0bcdcb1a8d7f51bc5f54323fc40cbd874119354ab609bef6e4cb`, `167ce57ef59a32a6a0ef4137785828077879092d7f83ddbc1755d6e69116e0ad`, `bc544f455d7c06c8a1f3446160a6d9a4a8236b11`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 18 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

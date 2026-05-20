@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater SimpleHelp RMM client spawning shell or recon LOLBin
 
-`UC_366_9` · phase: **install** · confidence: **High**
+`UC_369_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Iran-aligned MFA push-bombing followed by new auth method registered (AA24-290A)
 
-`UC_366_10` · phase: **actions** · confidence: **High**
+`UC_369_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

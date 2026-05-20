@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SUID bit set on /bin/bash via chmod (Pardus CVE-2026-5140 post-exploit)
 
-`UC_11_5` · phase: **install** · confidence: **High**
+`UC_17_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### [LLM] Privilege-retention root shell via '/bin/bash -p' (Pardus CVE-2026-5140 escalation)
 
-`UC_11_6` · phase: **actions** · confidence: **High**
+`UC_17_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### [LLM] Unprivileged pkexec invocation of pardus-update privileged actions (CVE-2026-5140 entry)
 
-`UC_11_7` · phase: **exploit** · confidence: **High**
+`UC_17_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] Rogue APT source file dropped in /etc/apt/sources.list.d/ via pardus-update flow (CVE-2026-5140)
 
-`UC_11_8` · phase: **install** · confidence: **High**
+`UC_17_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pardus Linux Local Privilege Escalation Flaw Allows Silent Root Access
 
-`UC_11_4` · phase: **exploit** · confidence: **High**
+`UC_17_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
