@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Non-browser process polling public Ethereum/Polygon JSON-RPC endpoints at 3-5 min cadence (Void/Aeternum C2)
 
-`UC_2_7` · phase: **c2** · confidence: **High**
+`UC_9_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### [LLM] Scheduled task created by ~1.5MB unsigned binary that subsequently polls Ethereum RPC (Void Botnet v1.1 persistence)
 
-`UC_2_8` · phase: **install** · confidence: **High**
+`UC_9_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ SchedCreate
 
 ### [LLM] Loader process polling Ethereum RPC also spawning PowerShell/MSI/cmd children (Void task-execution)
 
-`UC_2_9` · phase: **actions** · confidence: **High**
+`UC_9_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

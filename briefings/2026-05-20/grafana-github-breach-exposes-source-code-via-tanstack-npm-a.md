@@ -1,36 +1,39 @@
 # [HIGH] Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
 
-**Source:** The Hacker News, BleepingComputer, Aikido
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/grafana-github-breach-exposes-source.html
 
 ## Threat Profile
 
-Blog Vulnerabilities & Threats GitHub breached via a malicious VS Code extension: why developer devices are the real target GitHub breached via a malicious VS Code extension: why developer devices are the real target Written by Shaun Brown Published on: May 20, 2026 On May 19, GitHub disclosed that it was investigating unauthorized access to internal repositories. TeamPCP claims to have extracted data from roughly 4,000 private repos. The reported vector: a malicious VS Code extension installed …
+Grafana GitHub Breach Exposes Source Code via TanStack npm Attack 
+ Ravie Lakshmanan  May 20, 2026 Supply Chain Attack / Cloud Security 
+Grafana Labs, on May 19, 2026, said an investigation into its recent breach found no evidence of customer production systems or operations being compromised.
+It said the scope of the incident is limited to the Grafana Labs GitHub environment, which includes public and private source code along with internal GitHub repositories.
+"After the initial assessment, …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-45321`
-- **Domain (defanged):** `filev2.getsession.org`
-- **Domain (defanged):** `seed1.getsession.org`
-- **Domain (defanged):** `seed2.getsession.org`
-- **Domain (defanged):** `seed3.getsession.org`
-- **Domain (defanged):** `api.masscan.cloud`
+- **IPv4 (defanged):** `83.142.209.194`
 - **Domain (defanged):** `git-tanstack.com`
-- **Domain (defanged):** `litter.catbox.moe`
+- **Domain (defanged):** `filev2.getsession.org`
+- **Domain (defanged):** `api.masscan.cloud`
+- **SHA256:** `ce7e4199506959fd7a71b64209b2c07b9c82e53a946aa7d78298dc9249230d01`
 - **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
 - **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
-- **SHA1:** `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
+- **SHA256:** `7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b`
+- **SHA256:** `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`
 
 ## MITRE ATT&CK Techniques
 
-- **T1539** — Steal Web Session Cookie
-- **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1204.002** — User Execution: Malicious File
-- **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — Malicious File
 - **T1105** — Ingress Tool Transfer
 - **T1059.006** — Command and Scripting Interpreter: Python
@@ -56,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious durabletask PyPI package install (versions 1.4.1-1.4.3)
 
-`UC_26_5` · phase: **delivery** · confidence: **High**
+`UC_31_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +89,7 @@ union ProcessHits, FileHits
 
 ### [LLM] Python interpreter fetches rope.pyz dropper from check.git-service.com
 
-`UC_26_6` · phase: **install** · confidence: **High**
+`UC_31_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +115,7 @@ union NetHits, RopeFile
 
 ### [LLM] Linux Python stealer harvesting cloud, vault, SSH and password-manager secrets
 
-`UC_26_7` · phase: **actions** · confidence: **High**
+`UC_31_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +150,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud worm propagation via AWS SSM SendCommand fan-out
 
-`UC_26_8` · phase: **actions** · confidence: **High**
+`UC_31_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] FIRESCALE backup-C2 lookup via GitHub commit-message search
 
-`UC_26_9` · phase: **c2** · confidence: **High**
+`UC_31_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +186,7 @@ union PrimaryUrlHit, CmdHit
 
 ### [LLM] Locale-gated destructive payload: python parent spawns rm -rf / on Linux
 
-`UC_26_10` · phase: **actions** · confidence: **High**
+`UC_31_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,98 +216,125 @@ union RmHits, AudioHits, LocaleHits
 | order by Timestamp desc
 ```
 
-### Infostealer — non-browser process accessing browser cookie/login DBs
+### Ransomware-style mass file rename / extension change
 
-`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
-        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
-        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
-      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`
+    from datamodel=Endpoint.Processes
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessAccountName !endswith "$"
-| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
-| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
 ```
 
-### Article-specific behavioural hunt — Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
+### Remote service execution — PsExec / SMB lateral movement
 
-`UC_26_4` · phase: **exploit** · confidence: **High**
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Grafana GitHub Breach Exposes Source Code via TanStack npm Attack ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("timeago.js"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("timeago.js"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
 ```
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Grafana GitHub Breach Exposes Source Code via TanStack npm Attack
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("timeago.js"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
+```
 
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("timeago.js"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45321`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `filev2.getsession.org`, `seed1.getsession.org`, `seed2.getsession.org`, `seed3.getsession.org`, `api.masscan.cloud`, `git-tanstack.com`, `litter.catbox.moe`
+  - IP / domain IOC(s): `83.142.209.194`, `git-tanstack.com`, `filev2.getsession.org`, `api.masscan.cloud`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
+  - file hash IOC(s): `ce7e4199506959fd7a71b64209b2c07b9c82e53a946aa7d78298dc9249230d01`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b`, `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 11 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,0 +1,131 @@
+{
+  "name": "Mustang Panda",
+  "ucs": [
+    {
+      "title": "[LLM] Mustang Panda PlugX DLL side-loading: vendor-signed binary executing from user-writable path",
+      "description": "Detects Mustang Panda's signature PlugX/Korplug delivery chain where the actor drops a legitimately signed third-party binary (Adobe, Avast, ESET, OneDrive, McAfee, HP, Lenovo) into %APPDATA%, %PUBLIC%, %PROGRAMDATA% or %TEMP% so that it side-loads an attacker-controlled DLL plus an encrypted .DAT payload sitting in the same folder. Vendor utilities of this name never legitimately live in those user-writable directories, so the path-plus-name combination is the high-fidelity tell that distinguishes this from generic DLL side-loading.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"AdobeUpdate.exe\",\"Acrobat.exe\",\"AcroBroker.exe\",\"AvastSvc.exe\",\"wsc_proxy.exe\",\"EACore.exe\",\"HPCustParticipation.exe\",\"HxTsr.exe\",\"McUICnt.exe\",\"mcvsmap.exe\",\"OneDrive.exe\",\"LenovoEmailIcon.exe\",\"SoundReco.exe\",\"hkcmd.exe\",\"plugins.exe\",\"RTSCom.exe\",\"VLC.exe\",\"ClientVPN.exe\") AND Processes.process_path IN (\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\PerfLogs\\\\*\",\"*\\\\Recycle.bin\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process_path | `drop_dm_object_name(Processes)` | eval firstTime=strftime(firstTime,\"%F %T\"), lastTime=strftime(lastTime,\"%F %T\") | join type=left dest [| tstats `summariesonly` count as datDrops values(Filesystem.file_name) as dat_files from datamodel=Endpoint.Filesystem where Filesystem.action=\"created\" AND Filesystem.file_name IN (\"*.dat\",\"*.DAT\",\"*.bin\") AND Filesystem.file_path IN (\"*\\\\AppData\\\\Roaming\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\PerfLogs\\\\*\") by Filesystem.dest | `drop_dm_object_name(Filesystem)`]",
+      "kql": "let MustangPandaHosts = dynamic([\"adobeupdate.exe\",\"acrobat.exe\",\"acrobroker.exe\",\"avastsvc.exe\",\"wsc_proxy.exe\",\"eacore.exe\",\"hpcustparticipation.exe\",\"hxtsr.exe\",\"mcuicnt.exe\",\"mcvsmap.exe\",\"onedrive.exe\",\"lenovoemailicon.exe\",\"soundreco.exe\",\"hkcmd.exe\",\"plugins.exe\",\"rtscom.exe\",\"vlc.exe\",\"clientvpn.exe\"]);\nlet SuspectPaths = dynamic([@\"\\AppData\\Roaming\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\Users\\Public\\\", @\"\\ProgramData\\\", @\"\\PerfLogs\\\", @\"\\Recycle.bin\\\", @\"\\Windows\\Temp\\\"]);\nlet SideLoads = DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where tolower(FileName) in (MustangPandaHosts)\n| where FolderPath has_any (SuspectPaths)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName !in~ (\"msiexec.exe\",\"setup.exe\",\"setupexe.exe\",\"services.exe\");\nlet DatDrops = DeviceFileEvents\n| where Timestamp > ago(14d)\n| where ActionType == \"FileCreated\"\n| where FileName endswith \".dat\" or FileName endswith \".bin\"\n| where FolderPath has_any (SuspectPaths)\n| project DropTime = Timestamp, DeviceId, DroppedFile = FileName, DropFolder = FolderPath, Dropper = InitiatingProcessFileName;\nSideLoads\n| join kind=leftouter DatDrops on DeviceId\n| where isempty(DropFolder) or (DropFolder =~ FolderPath and abs(datetime_diff('hour', DropTime, Timestamp)) <= 24)\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,\n          ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, SHA256,\n          InitiatingProcessFileName, InitiatingProcessFolderPath,\n          DroppedFile, DropFolder, DropTime\n| order by Timestamp desc",
+      "sentinel_kql": "let MustangPandaHosts = dynamic([\"adobeupdate.exe\",\"acrobat.exe\",\"acrobroker.exe\",\"avastsvc.exe\",\"wsc_proxy.exe\",\"eacore.exe\",\"hpcustparticipation.exe\",\"hxtsr.exe\",\"mcuicnt.exe\",\"mcvsmap.exe\",\"onedrive.exe\",\"lenovoemailicon.exe\",\"soundreco.exe\",\"hkcmd.exe\",\"plugins.exe\",\"rtscom.exe\",\"vlc.exe\",\"clientvpn.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| extend ImageName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ImageName in (MustangPandaHosts)\n| where NewProcessName matches regex @\"(?i)\\\\(AppData\\\\Roaming|AppData\\\\Local\\\\Temp|Users\\\\Public|ProgramData|PerfLogs|Recycle\\.bin|Windows\\\\Temp)\\\\\"\n| where SubjectUserName !endswith \"$\"\n| where ParentProcessName !endswith \"msiexec.exe\" and ParentProcessName !endswith \"services.exe\"\n| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName, ProcessId, TokenElevationType",
+      "sigma_yaml": "title: Mustang Panda PlugX DLL Side-Loading via Vendor-Signed Binary in User-Writable Path\nid: 4b5f7c41-2d6a-4a2b-9c12-3b6cb7c8f0a1\nstatus: experimental\ndescription: Detects Mustang Panda / Earth Preta PlugX delivery where a legitimately signed vendor utility runs from a non-standard user-writable directory to side-load a malicious DLL plus encrypted .DAT payload.\nreferences:\n  - https://attack.mitre.org/groups/G0129/\n  - https://www.trendmicro.com/en_us/research/24/g/earth-preta-mustang-panda.html\nauthor: SOC Detection Engineering\ndate: 2026-05-21\ntags:\n  - attack.defense_evasion\n  - attack.persistence\n  - attack.t1574.002\n  - attack.t1036.005\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  selection_image:\n    Image|endswith:\n      - '\\AdobeUpdate.exe'\n      - '\\Acrobat.exe'\n      - '\\AcroBroker.exe'\n      - '\\AvastSvc.exe'\n      - '\\wsc_proxy.exe'\n      - '\\EACore.exe'\n      - '\\HPCustParticipation.exe'\n      - '\\HxTsr.exe'\n      - '\\McUICnt.exe'\n      - '\\mcvsmap.exe'\n      - '\\OneDrive.exe'\n      - '\\LenovoEmailIcon.exe'\n      - '\\SoundReco.exe'\n      - '\\hkcmd.exe'\n      - '\\plugins.exe'\n      - '\\RTSCom.exe'\n      - '\\ClientVPN.exe'\n  selection_path:\n    Image|contains:\n      - '\\AppData\\Roaming\\'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\Users\\Public\\'\n      - '\\ProgramData\\'\n      - '\\PerfLogs\\'\n      - '\\Recycle.bin\\'\n      - '\\Windows\\Temp\\'\n  filter_installer:\n    ParentImage|endswith:\n      - '\\msiexec.exe'\n      - '\\setup.exe'\n      - '\\services.exe'\n  condition: selection_image and selection_path and not filter_installer\nfalsepositives:\n  - Software development environments staging vendor binaries for testing\n  - Portable-app launchers (rare in managed enterprise estates)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\\\AdobeUpdate.exe OR *\\\\adobeupdate.exe OR *\\\\Acrobat.exe OR *\\\\acrobat.exe OR *\\\\AvastSvc.exe OR *\\\\avastsvc.exe OR *\\\\wsc_proxy.exe OR *\\\\EACore.exe OR *\\\\eacore.exe OR *\\\\HPCustParticipation.exe OR *\\\\McUICnt.exe OR *\\\\mcuicnt.exe OR *\\\\OneDrive.exe OR *\\\\onedrive.exe OR *\\\\LenovoEmailIcon.exe OR *\\\\SoundReco.exe OR *\\\\soundreco.exe OR *\\\\hkcmd.exe OR *\\\\plugins.exe OR *\\\\RTSCom.exe OR *\\\\HxTsr.exe) AND @Image:(*\\\\AppData\\\\Roaming\\\\* OR *\\\\AppData\\\\Local\\\\Temp\\\\* OR *\\\\Users\\\\Public\\\\* OR *\\\\users\\\\public\\\\* OR *\\\\ProgramData\\\\* OR *\\\\programdata\\\\* OR *\\\\PerfLogs\\\\* OR *\\\\Windows\\\\Temp\\\\* OR *\\\\windows\\\\temp\\\\*) AND -@ParentImage:(*\\\\msiexec.exe OR *\\\\MsiExec.exe OR *\\\\services.exe OR *\\\\setup.exe)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ImageFileName=/\\\\(adobeupdate|acrobat|acrobroker|avastsvc|wsc_proxy|eacore|hpcustparticipation|hxtsr|mcuicnt|mcvsmap|onedrive|lenovoemailicon|soundreco|hkcmd|plugins|rtscom|clientvpn)\\.exe$/i\n| ImageFileName=/\\\\(AppData\\\\Roaming|AppData\\\\Local\\\\Temp|Users\\\\Public|ProgramData|PerfLogs|Recycle\\.bin|Windows\\\\Temp)\\\\/i\n| NOT ParentBaseFileName=/^(msiexec|services|setup|setupexe)\\.exe$/i\n| UserName!=\"SYSTEM\"\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, SHA256HashData, ParentBaseFileName], function=count())",
+      "rationale": "Mustang Panda / Earth Preta has used the same DLL-side-loading host triplet (legit signed EXE + sibling rogue DLL + encrypted .DAT) since at least 2017 across PlugX, Korplug, ToneShell, ToneIns, PUBLOAD and PlugX-USB campaigns. Trend Micro, Mandiant, Recorded Future, ESET and Trellix all document this same fingerprint with the vendor binaries listed (Adobe Acrobat helper, Avast wsc_proxy, ESET, On"
+    },
+    {
+      "title": "[LLM] Mustang Panda HIUPAN / PlugX-USB worm execution from removable-drive RECYCLE.BIN folder",
+      "description": "Detects Earth Preta / Mustang Panda's USB worm component (HIUPAN, SnakeDisk, U2DiskWatch, PlugX-USB) which hides a victim's real files on a removable drive with attrib +s +h, drops the PlugX payload into a hidden $RECYCLE.BIN or '.delete' subdirectory on that drive, and creates LNK shortcuts with the original filenames so a double-click launches cmd.exe / rundll32.exe targeting the hidden payload on D:\u2013Z:. This LNK-explorer-cmd-USBpath chain is uniquely Mustang Panda \u2014 the only Chinese APT documented to industrialize PlugX-USB as the primary lateral-movement vector in Southeast Asia.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1091",
+        "T1059.003",
+        "T1036.005",
+        "T1564.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=\"explorer.exe\" AND Processes.process_name IN (\"cmd.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\") AND NOT Processes.user IN (\"*$\",\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, \"(?i)[D-Z]:\\\\\\\\.*\\\\\\\\(\\$?RECYCLE\\.BIN|System Volume Information|\\.delete|\\$Recycle\\.Bin)\\\\\\\\\") | eval firstTime=strftime(firstTime,\"%F %T\"), lastTime=strftime(lastTime,\"%F %T\")",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName =~ \"explorer.exe\"\n| where FileName in~ (\"cmd.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\")\n| where ProcessCommandLine matches regex @\"(?i)\\b[D-Z]:\\\\[^\\\"\\s]*\\\\(\\$?RECYCLE\\.BIN|System Volume Information|\\.delete|\\$Recycle\\.Bin)\\\\\"\n   or ProcessCommandLine matches regex @\"(?i)\\b[D-Z]:\\\\[^\\\"\\s]*\\.(exe|dll|dat|bat|vbs)\\b\"\n   and ProcessCommandLine matches regex @\"(?i)attrib(\\.exe)?\\s+\\+s\\s+\\+h|/c\\s+start\\s+[D-Z]:\\\\\"\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,\n          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\explorer.exe\"\n| extend ImageName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ImageName in (\"cmd.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\")\n| where CommandLine matches regex @\"(?i)\\b[D-Z]:\\\\[^\\\"\\s]*\\\\(\\$?RECYCLE\\.BIN|System Volume Information|\\.delete|\\$Recycle\\.Bin)\\\\\"\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName, ProcessId",
+      "sigma_yaml": "title: Mustang Panda HIUPAN USB Worm Execution from Removable-Drive RECYCLE.BIN\nid: 7c2af831-9e1d-4b6f-8e34-2c4b9d7a8f12\nstatus: experimental\ndescription: Detects Mustang Panda / Earth Preta PlugX-USB (HIUPAN, SnakeDisk, U2DiskWatch) worm execution where explorer.exe launches a shell interpreter pointed at a path on D:-Z: residing under a hidden RECYCLE.BIN / System Volume Information / .delete folder \u2014 the canonical Mustang Panda USB payload-hide pattern.\nreferences:\n  - https://attack.mitre.org/groups/G0129/\n  - https://www.trendmicro.com/en_us/research/24/g/earth-preta-mustang-panda.html\n  - https://www.welivesecurity.com/en/eset-research/mustang-panda-plugx-usb/\nauthor: SOC Detection Engineering\ndate: 2026-05-21\ntags:\n  - attack.initial_access\n  - attack.lateral_movement\n  - attack.t1091\n  - attack.t1059.003\n  - attack.t1564.001\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  selection_parent:\n    ParentImage|endswith: '\\explorer.exe'\n  selection_image:\n    Image|endswith:\n      - '\\cmd.exe'\n      - '\\rundll32.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\regsvr32.exe'\n  selection_cmdline:\n    CommandLine|re|i: '\\b[D-Z]:\\\\[^\\\"\\s]*\\\\(\\$?RECYCLE\\.BIN|System Volume Information|\\.delete|\\$Recycle\\.Bin)\\\\'\n  condition: selection_parent and selection_image and selection_cmdline\nfalsepositives:\n  - Forensic / recovery utilities legitimately reading $RECYCLE.BIN on external disks (rare, user-initiated)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\explorer.exe OR *\\\\Explorer.exe OR *\\\\EXPLORER.EXE) AND @Image:(*\\\\cmd.exe OR *\\\\CMD.EXE OR *\\\\rundll32.exe OR *\\\\RunDLL32.exe OR *\\\\RUNDLL32.EXE OR *\\\\wscript.exe OR *\\\\WScript.exe OR *\\\\WSCRIPT.EXE OR *\\\\cscript.exe OR *\\\\CScript.exe OR *\\\\regsvr32.exe OR *\\\\RegSvr32.exe) AND @CommandLine:(*\":\\\\*\\\\$RECYCLE.BIN\\\\\"* OR *\":\\\\*\\\\RECYCLE.BIN\\\\\"* OR *\":\\\\*\\\\$Recycle.Bin\\\\\"* OR *\":\\\\*\\\\System Volume Information\\\\\"* OR *\":\\\\*\\\\.delete\\\\\"*) AND -@User:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ParentBaseFileName=/^explorer\\.exe$/i\n| ImageFileName=/\\\\(cmd|rundll32|wscript|cscript|regsvr32)\\.exe$/i\n| CommandLine=/[D-Z]:\\\\\\\\[^\"\\s]*\\\\\\\\(\\$?RECYCLE\\.BIN|System Volume Information|\\.delete|\\$Recycle\\.Bin)\\\\\\\\/i\n| UserName!=\"SYSTEM\"\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName, SHA256HashData], function=count())",
+      "rationale": "Mustang Panda is the only documented Chinese state actor that consistently weaponizes USB worms as the primary lateral-movement and air-gap-bridging vector (ESET 2023, Trellix 2024, Trend Micro 2024 'Earth Preta DOPLUGS / HIUPAN' research). The actor's tradecraft is highly stable: hide the user's real files on the removable drive with `attrib +s +h`, drop the PlugX/DOPLUGS payload to a hidden subd",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "RECYCLE",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RECYCLE` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "System",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`System` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Volume",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Volume` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Information",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Information` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "RECYCLE",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`RECYCLE` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "System",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`System` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Volume",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Volume` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Information",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Information` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "yaml/sigma error: mapping values are not allowed in this context\n  in \"<unicode string>\", line 4, column 181"
+      ]
+    }
+  ]
+}

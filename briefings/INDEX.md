@@ -1,12 +1,19 @@
 # Briefings — full archive
 
-_773 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_774 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-05-21
+- [claude code s network sandbox vulnerability exposes user cre](./2026-05-21/claude-code-s-network-sandbox-vulnerability-exposes-user-cre.md)
+- [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
+- [gremlin stealer stores c2 urls and exfiltration paths in enc](./2026-05-21/gremlin-stealer-stores-c2-urls-and-exfiltration-paths-in-enc.md)
+- [highly critical drupal core flaw exposes postgresql sites to](./2026-05-21/highly-critical-drupal-core-flaw-exposes-postgresql-sites-to.md)
+- [two u s executives plead guilty in india based tech support ](./2026-05-21/two-u-s-executives-plead-guilty-in-india-based-tech-support-.md)
 
 ## 2026-05-20
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-20/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
@@ -18,9 +25,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2010 0249 microsoft internet explorer use after](./2026-05-20/cisa-kev-cve-2010-0249-microsoft-internet-explorer-use-after.md)
 - [cisa kev cve 2026 41091 microsoft defender link following vu](./2026-05-20/cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu.md)
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
-- [critical exiftool vulnerability allows attackers to compromi](./2026-05-20/critical-exiftool-vulnerability-allows-attackers-to-compromi.md)
 - [devilnfc android malware uses kiosk mode to trap victims dur](./2026-05-20/devilnfc-android-malware-uses-kiosk-mode-to-trap-victims-dur.md)
-- [freepbx vulnerability allow attackers to gain access to user](./2026-05-20/freepbx-vulnerability-allow-attackers-to-gain-access-to-user.md)
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
 - [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
@@ -30,7 +35,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
-- [pardus linux local privilege escalation flaw allows silent r](./2026-05-20/pardus-linux-local-privilege-escalation-flaw-allows-silent-r.md)
 - [pintheft linux vulnerability let attackers gain root access ](./2026-05-20/pintheft-linux-vulnerability-let-attackers-gain-root-access-.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
@@ -144,7 +148,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
-- [new exim bdat vulnerability exposes gnutls builds to potenti](./2026-05-12/new-exim-bdat-vulnerability-exposes-gnutls-builds-to-potenti.md)
 - [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)

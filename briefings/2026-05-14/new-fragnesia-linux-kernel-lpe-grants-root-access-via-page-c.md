@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unprivileged user invokes ip xfrm / IPsec configuration (Fragnesia CVE-2026-46300 primitive)
 
-`UC_125_6` · phase: **exploit** · confidence: **High**
+`UC_128_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### [LLM] Root shell from /usr/bin/su without prior auth (Fragnesia page-cache corruption outcome)
 
-`UC_125_7` · phase: **install** · confidence: **Medium**
+`UC_128_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ suExec
 
 ### [LLM] Unprivileged user namespace creation followed by xfrm/esp activity (Fragnesia AppArmor bypass path)
 
-`UC_125_8` · phase: **exploit** · confidence: **Medium**
+`UC_128_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ userns
 
 ### [LLM] Unprivileged user drops .so payload in /tmp followed by dlopen/LD_PRELOAD (berz0k zero-day pattern)
 
-`UC_125_9` · phase: **install** · confidence: **Medium**
+`UC_128_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -333,7 +333,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Fragnesia Linux Kernel LPE Grants Root Access via Page Cache Corruption
 
-`UC_125_5` · phase: **install** · confidence: **High**
+`UC_128_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

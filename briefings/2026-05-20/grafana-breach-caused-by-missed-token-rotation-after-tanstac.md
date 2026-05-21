@@ -1,6 +1,6 @@
 # [CRIT] Grafana breach caused by missed token rotation after TanStack attack
 
-**Source:** BleepingComputer, Microsoft Security Blog, Unit 42 (Palo Alto)
+**Source:** BleepingComputer, Microsoft Security Blog, Unit 42 (Palo Alto), StepSecurity
 **Published:** 2026-05-20
 **Article:** https://www.bleepingcomputer.com/news/security/grafana-breach-caused-by-missed-token-rotation-after-tanstack-attack/
 
@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious @antv preinstall chain: node spawns sh spawns bun on Linux CI runner
 
-`UC_6_8` · phase: **install** · confidence: **High**
+`UC_13_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### [LLM] Trojanised @antv payload SHA256 / 499KB single-line index.js on disk
 
-`UC_6_9` · phase: **delivery** · confidence: **High**
+`UC_13_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### [LLM] Passwordless sudoers rule injected via bind mount at /mnt or /etc/sudoers.d
 
-`UC_6_10` · phase: **exploit** · confidence: **High**
+`UC_13_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions Runner.Worker process memory scraping via /proc
 
-`UC_6_11` · phase: **exploit** · confidence: **High**
+`UC_13_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud / Vault / Kubernetes credential file harvesting from npm or bun lineage
 
-`UC_6_12` · phase: **actions** · confidence: **High**
+`UC_13_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ DeviceFileEvents
 
 ### [LLM] AWS SecretsManager region-wide enumeration burst from CI identity
 
-`UC_6_13` · phase: **actions** · confidence: **High**
+`UC_13_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,7 +206,7 @@ DeviceFileEvents
 
 ### [LLM] DNS or HTTPS to Shai-Hulud C2 (t.m-kosche.com, check.git-service.com)
 
-`UC_6_14` · phase: **c2** · confidence: **High**
+`UC_13_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -240,7 +240,7 @@ union
 
 ### [LLM] GitHub repo creation with 'Shai-Hulud :We Here Go Again' reversed description
 
-`UC_6_15` · phase: **actions** · confidence: **High**
+`UC_13_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -482,7 +482,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Grafana breach caused by missed token rotation after TanStack attack
 
-`UC_6_7` · phase: **exploit** · confidence: **High**
+`UC_13_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

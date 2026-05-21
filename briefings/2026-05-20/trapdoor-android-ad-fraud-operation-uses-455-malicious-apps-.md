@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Trapdoor Android C2 — DNS resolution to HUMAN-published Trapdoor C2 domain watch
 
-`UC_5_6` · phase: **c2** · confidence: **Medium**
+`UC_12_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trapdoor /api/referrer anti-analysis endpoint hit in corporate web proxy
 
-`UC_5_7` · phase: **c2** · confidence: **Low**
+`UC_12_7` · phase: **c2** · confidence: **Low**
 
 **Splunk SPL (CIM):**
 ```spl
