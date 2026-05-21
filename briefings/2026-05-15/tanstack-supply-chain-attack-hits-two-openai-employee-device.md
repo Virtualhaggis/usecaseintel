@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud C2 beacon to hard-coded IP 83.142.209.194
 
-`UC_88_6` · phase: **c2** · confidence: **High**
+`UC_114_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trojanized npm/pip postinstall harvests SSH keys, dotenv files and cloud credentials
 
-`UC_88_7` · phase: **actions** · confidence: **High**
+`UC_114_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### [LLM] FIRESCALE fallback - GitHub commit-message search from non-developer process
 
-`UC_88_8` · phase: **c2** · confidence: **Medium**
+`UC_114_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud Docker container credential extraction
 
-`UC_88_9` · phase: **actions** · confidence: **Medium**
+`UC_114_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

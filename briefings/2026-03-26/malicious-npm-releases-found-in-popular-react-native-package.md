@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised react-native-international-phone-number / react-native-country-select files written to node_modules
 
-`UC_336_4` · phase: **delivery** · confidence: **Medium**
+`UC_379_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceFileEvents
 
 ### [LLM] Attacker-controlled scoped npm relay packages on disk (@usebioerhold8733 / @agnoliaarisian7180)
 
-`UC_336_5` · phase: **delivery** · confidence: **High**
+`UC_379_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] npm postinstall hook spawning node init.js or child.js (React Native attack pattern)
 
-`UC_336_6` · phase: **install** · confidence: **Medium**
+`UC_379_6` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] node.exe contacting Solana JSON-RPC endpoints (suspected blockchain dead-drop C2)
 
-`UC_336_7` · phase: **c2** · confidence: **Medium**
+`UC_379_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +200,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm Releases Found in Popular React Native Packages - 130K+ Monthly Do
 
-`UC_336_3` · phase: **exploit** · confidence: **High**
+`UC_379_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

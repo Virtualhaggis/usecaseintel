@@ -10,12 +10,8 @@ Home Cyber Security News
 Gremlin Stealer Stores C2 URLs and Exfiltration Paths in Encrypted Resource Sections 
 By Tushar Subhra Dutta 
 May 21, 2026 
-
-
-
-
 A newly analyzed variant of the Gremlin stealer malware has raised alarms by hiding its command-and-control (C2) addresses and data exfiltration paths inside encrypted resource sections of a compiled program. 
-This approach makes the malware harder to detect through traditional scanning, allowing it to operate silently on infected systems b…
+This approach makes the malware harder to detect through traditional scanning, allowing it to operate silently on infected systems before st…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -56,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gremlin Stealer C2 beacon to 194.87.92.109/i.php
 
-`UC_5_6` · phase: **c2** · confidence: **High**
+`UC_11_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] Known Gremlin Stealer SHA256 sample execution
 
-`UC_5_7` · phase: **install** · confidence: **High**
+`UC_11_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +106,7 @@ union isfuzzy=true
 
 ### [LLM] IP-address-named ZIP archive created (Gremlin Stealer exfil pattern)
 
-`UC_5_8` · phase: **actions** · confidence: **High**
+`UC_11_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +127,7 @@ DeviceFileEvents
 
 ### [LLM] Discord token leveldb files read by non-Discord process
 
-`UC_5_9` · phase: **actions** · confidence: **Medium**
+`UC_11_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -248,7 +244,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Gremlin Stealer Stores C2 URLs and Exfiltration Paths in Encrypted Resource Sect
 
-`UC_5_5` · phase: **exploit** · confidence: **High**
+`UC_11_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

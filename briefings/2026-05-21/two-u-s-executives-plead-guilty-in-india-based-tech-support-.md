@@ -10,12 +10,8 @@ Home Cyber Security
 Two U.S. Executives Plead Guilty in India-Based Tech-Support Fraud Schemes 
 By Guru Baran 
 May 21, 2026 
-
-
-
-
 Two former executives of a U.S.-based call routing and analytics company have pleaded guilty to federal charges for knowingly enabling India-based call centers to defraud thousands of American victims through elaborate tech-support scam operations spanning nearly six years.
-Former CEO Adam Young, 42, of Miami, FL, and former CSO Harrison Gevirtz, 33, of Las Vegas,…
+Former CEO Adam Young, 42, of Miami, FL, and former CSO Harrison Gevirtz, 33, of Las Vegas, NV, eac…
 
 ## Indicators of Compromise (high-fidelity only)
 

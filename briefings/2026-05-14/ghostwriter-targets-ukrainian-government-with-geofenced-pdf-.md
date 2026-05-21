@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JavaScript payload executed from RAR archive (Ghostwriter PicassoLoader JS variant)
 
-`UC_119_7` · phase: **delivery** · confidence: **High**
+`UC_144_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] PicassoLoader periodic ~10-minute fingerprint beacons from script-host process
 
-`UC_119_8` · phase: **c2** · confidence: **Medium**
+`UC_144_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### [LLM] WinRAR CVE-2025-8088 ADS path-traversal exploitation (Gamaredon GammaDrop/GammaLoad delivery)
 
-`UC_119_9` · phase: **delivery** · confidence: **High**
+`UC_144_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceFileEvents
 
 ### [LLM] ZeroSSH reverse SSH tunnel established from cmd.exe (BO Team / Black Owl backdoor)
 
-`UC_119_10` · phase: **c2** · confidence: **High**
+`UC_144_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

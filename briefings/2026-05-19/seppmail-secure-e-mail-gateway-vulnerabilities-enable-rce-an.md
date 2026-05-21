@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SEPPMail CVE-2026-44128 Perl Eval Injection via /api.app/template upldd Parameter
 
-`UC_63_5` · phase: **exploit** · confidence: **High**
+`UC_62_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SEPPMail CVE-2026-44127 Path Traversal in /api.app/attachment/preview
 
-`UC_63_6` · phase: **exploit** · confidence: **High**
+`UC_62_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SEPPMail CVE-2026-2743 SEPPMaillog Bloat Attack (Pre-RCE syslog Reload Trigger)
 
-`UC_63_7` · phase: **weapon** · confidence: **Medium**
+`UC_62_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SEPPMail Appliance Outbound Reverse Shell to External C2 (Post-CVE-2026-2743 Exploitation)
 
-`UC_63_8` · phase: **c2** · confidence: **Medium**
+`UC_62_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SEPPMail Secure E-Mail Gateway Vulnerabilities Enable RCE and Mail Traffic Acces
 
-`UC_63_4` · phase: **install** · confidence: **High**
+`UC_62_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

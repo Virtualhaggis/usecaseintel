@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious nrwl.angular-console VS Code extension drop (TeamPCP Nx Console campaign)
 
-`UC_1_6` · phase: **delivery** · confidence: **High**
+`UC_8_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code Code.exe spawns shell running 'MCP setup' style curl/wget from nrwl/nx GitHub raw
 
-`UC_1_7` · phase: **install** · confidence: **High**
+`UC_8_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] VS Code child shell accessing 1Password / Claude Code / npm / AWS / GitHub crede
 
-`UC_1_8` · phase: **actions** · confidence: **High**
+`UC_8_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### [LLM] Egress to TeamPCP credential-stealer infrastructure (94.154.172.43 / 45.148.10.212 / lookalike domains)
 
-`UC_1_9` · phase: **c2** · confidence: **High**
+`UC_8_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] Bulk GitHub repository clone fan-out from a single account (TeamPCP 3,800-repo exfil pattern)
 
-`UC_1_10` · phase: **actions** · confidence: **Medium**
+`UC_8_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

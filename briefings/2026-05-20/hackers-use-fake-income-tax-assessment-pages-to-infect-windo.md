@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TAX#TRIDENT ClientSetup execution with C2 IP embedded in filename
 
-`UC_8_8` · phase: **install** · confidence: **High**
+`UC_13_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### [LLM] TAX#TRIDENT UAC bypass: ConsentPromptBehaviorAdmin set to 0 by script engine
 
-`UC_8_9` · phase: **install** · confidence: **High**
+`UC_13_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceRegistryEvents
 
 ### [LLM] TAX#TRIDENT ClientSetup persistence: MANC service + YtMiniFilter/ytdisk driver registration
 
-`UC_8_10` · phase: **install** · confidence: **High**
+`UC_13_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ union svcReg, driverFiles
 
 ### [LLM] Script engine executing files disguised with image/web extensions (TAX#TRIDENT uacMC.png pattern)
 
-`UC_8_11` · phase: **delivery** · confidence: **High**
+`UC_13_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to TAX#TRIDENT C2 infrastructure (IPs, ports, lure domains)
 
-`UC_8_12` · phase: **c2** · confidence: **High**
+`UC_13_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Income Tax Assessment Pages to Infect Windows Systems
 
-`UC_8_7` · phase: **exploit** · confidence: **High**
+`UC_13_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
