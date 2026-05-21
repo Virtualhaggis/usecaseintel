@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_766 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_764 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,16 +10,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
-- [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
 - [badiis malware turns hijacks iis servers and redirect users ](./2026-05-21/badiis-malware-turns-hijacks-iis-servers-and-redirect-users-.md)
 - [critical cisco secure workload vulnerability enables unautho](./2026-05-21/critical-cisco-secure-workload-vulnerability-enables-unautho.md)
 - [critical drupal core security vulnerability exposes websites](./2026-05-21/critical-drupal-core-security-vulnerability-exposes-websites.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
-- [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
+- [highly critical drupal core flaw exposes postgresql sites to](./2026-05-21/highly-critical-drupal-core-flaw-exposes-postgresql-sites-to.md)
+- [microsoft warns of two actively exploited defender vulnerabi](./2026-05-21/microsoft-warns-of-two-actively-exploited-defender-vulnerabi.md)
 - [new microsoft defender 0 days actively exploited in the wild](./2026-05-21/new-microsoft-defender-0-days-actively-exploited-in-the-wild.md)
 - [new nginx 0 day rce nginx poolslip affects millions of nginx](./2026-05-21/new-nginx-0-day-rce-nginx-poolslip-affects-millions-of-nginx.md)
+- [p2pinfect botnet compromises kubernetes clusters through exp](./2026-05-21/p2pinfect-botnet-compromises-kubernetes-clusters-through-exp.md)
+- [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-21/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
-- [two u s executives plead guilty in india based tech support ](./2026-05-21/two-u-s-executives-plead-guilty-in-india-based-tech-support-.md)
 - [wanttocry ransomware abuses smb services to remotely encrypt](./2026-05-21/wanttocry-ransomware-abuses-smb-services-to-remotely-encrypt.md)
 
 ## 2026-05-20
@@ -144,7 +145,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
-- [webinar how modern attack paths cross code pipelines and clo](./2026-05-13/webinar-how-modern-attack-paths-cross-code-pipelines-and-clo.md)
 
 ## 2026-05-12
 - [accelerating detection engineering using ai assisted synthet](./2026-05-12/accelerating-detection-engineering-using-ai-assisted-synthet.md)
@@ -169,7 +169,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
-- [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 
 ## 2026-05-09
 - [ghsa critical ghsa v6wj c83f v46x profullstack mcp server vu](./2026-05-09/ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu.md)
@@ -403,7 +402,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-03-17
 - [fake clawdbot vs code extension installs screenconnect rat](./2026-03-17/fake-clawdbot-vs-code-extension-installs-screenconnect-rat.md)
-- [mongobleed mongodb zlib vulnerability cve 2025 14847 and how](./2026-03-17/mongobleed-mongodb-zlib-vulnerability-cve-2025-14847-and-how.md)
 - [npm debug and chalk packages compromised](./2026-03-17/npm-debug-and-chalk-packages-compromised.md)
 - [shai hulud strikes again the golden path](./2026-03-17/shai-hulud-strikes-again-the-golden-path.md)
 

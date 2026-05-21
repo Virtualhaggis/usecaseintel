@@ -1,44 +1,23 @@
 # [HIGH] GitHub Internal Repositories Breached via Malicious Nx Console VS Code Extension
 
-**Source:** The Hacker News
+**Source:** The Hacker News, BleepingComputer, Cyber Security News, Aikido
 **Published:** 2026-05-21
 **Article:** https://thehackernews.com/2026/05/github-internal-repositories-breached.html
 
 ## Threat Profile
 
-GitHub Internal Repositories Breached via Malicious Nx Console VS Code Extension 
- Ravie Lakshmanan  May 21, 2026 Supply Chain Attack / Developer Tools 
-GitHub on Wednesday officially confirmed that the breach of its internal repositories was the result of a compromise of an employee device involving a poisoned version of the Nx Console Microsoft Visual Studio Code (VS Code) extension. 
-The development comes as the Nx team revealed that the extension, nrwl.angular-console , was breached after …
+Blog Vulnerabilities & Threats GitHub breached via a malicious VS Code extension: why developer devices are the real target GitHub breached via a malicious VS Code extension: why developer devices are the real target Written by Shaun Brown Published on: May 20, 2026 On May 19, GitHub disclosed that it was investigating unauthorized access to internal repositories. TeamPCP claims to have extracted data from roughly 4,000 private repos. The reported vector: a malicious VS Code extension installed …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `94.154.172.43`
-- **IPv4 (defanged):** `45.148.10.212`
-- **Domain (defanged):** `audit.checkmarx.cx`
-- **Domain (defanged):** `checkmarx.zone`
-- **Domain (defanged):** `scan.aquasecurtiy.org`
-- **Domain (defanged):** `git-tanstack.com`
-- **Domain (defanged):** `api.masscan.cloud`
-- **SHA256:** `1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8`
-- **SHA256:** `b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74`
-- **SHA256:** `e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1`
-- **SHA256:** `43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9`
-- **SHA1:** `558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2`
-- **SHA1:** `ba642fe2c7c65e42dd7f6444b83023dc6827e08c`
-- **SHA1:** `acfc3f957a63b4cde93ff645f2b6bf26a8ed1bbf`
-- **SHA1:** `9d88f040c44b5f4d5f9db15ff89310776c168e99`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
-- **T1486** — Data Encrypted for Impact
-- **T1003.001** — LSASS Memory
-- **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1204.002** — User Execution: Malicious File
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
 - **T1176** — Browser Extensions
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
@@ -62,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious nrwl.angular-console VS Code extension drop (TeamPCP Nx Console campaign)
 
-`UC_13_6` · phase: **delivery** · confidence: **High**
+`UC_8_2` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +61,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code Code.exe spawns shell running 'MCP setup' style curl/wget from nrwl/nx GitHub raw
 
-`UC_13_7` · phase: **install** · confidence: **High**
+`UC_8_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] VS Code child shell accessing 1Password / Claude Code / npm / AWS / GitHub crede
 
-`UC_13_8` · phase: **actions** · confidence: **High**
+`UC_8_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Egress to TeamPCP credential-stealer infrastructure (94.154.172.43 / 45.148.10.212 / lookalike domains)
 
-`UC_13_9` · phase: **c2** · confidence: **High**
+`UC_8_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +130,7 @@ DeviceNetworkEvents
 
 ### [LLM] Bulk GitHub repository clone fan-out from a single account (TeamPCP 3,800-repo exfil pattern)
 
-`UC_13_10` · phase: **actions** · confidence: **Medium**
+`UC_8_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,125 +149,85 @@ DeviceProcessEvents
 | order by CloneCount desc
 ```
 
-### Ransomware-style mass file rename / extension change
+### Infostealer — non-browser process accessing browser cookie/login DBs
 
-`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("modified","renamed")
-    by Filesystem.dest, Filesystem.user, _time span=1m
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
 | `drop_dm_object_name(Filesystem)`
-| where files > 200
-| sort - files
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(1d)
+| where Timestamp > ago(7d)
 | where InitiatingProcessAccountName !endswith "$"
-| where ActionType in ("FileRenamed","FileModified")
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
 ```
 
-### LSASS process access / dump (credential theft)
+### Article-specific behavioural hunt — GitHub Internal Repositories Breached via Malicious Nx Console VS Code Extension
 
-`UC_LSASS` · phase: **actions** · confidence: **High**
+`UC_8_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+``` Article-specific bespoke detection — GitHub Internal Repositories Breached via Malicious Nx Console VS Code Extension ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
-        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
-        OR Processes.process="*procdump*lsass*")
-       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+    where (Processes.process_name IN ("timeago.js"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("timeago.js"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
 ```
 
 **Defender KQL:**
 ```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where ActionType == "OpenProcessApiCall"
-| where FileName =~ "lsass.exe"
-| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
-                                          "svchost.exe","wininit.exe","services.exe",
-                                          "lsm.exe","SearchProtocolHost.exe")
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
+// Article-specific bespoke detection — GitHub Internal Repositories Breached via Malicious Nx Console VS Code Extension
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("timeago.js"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("timeago.js"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
-
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `94.154.172.43`, `45.148.10.212`, `audit.checkmarx.cx`, `checkmarx.zone`, `scan.aquasecurtiy.org`, `git-tanstack.com`, `api.masscan.cloud`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8`, `b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74`, `e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1`, `43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9`, `558b09d7ad0d1660e2a0fb8a06da81a6f42e06d2`, `ba642fe2c7c65e42dd7f6444b83023dc6827e08c`, `acfc3f957a63b4cde93ff645f2b6bf26a8ed1bbf`, `9d88f040c44b5f4d5f9db15ff89310776c168e99`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

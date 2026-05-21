@@ -178,7 +178,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Top Cloud Security Tools for Modern Teams
 
-`UC_71_3` · phase: **exploit** · confidence: **High**
+`UC_74_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
