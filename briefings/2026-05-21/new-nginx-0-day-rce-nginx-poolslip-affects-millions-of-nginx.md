@@ -10,13 +10,9 @@ Home Cyber Security News
 New NGINX 0-Day RCE “nginx-poolslip” Affects Millions of NGINX Servers 
 By Guru Baran 
 May 21, 2026 
-
-
-
-
 A newly disclosed zero-day remote code execution (RCE) vulnerability, dubbed nginx-poolslip, has been identified in NGINX version 1.31.0, the latest stable release of the widely deployed web server software.
 The discovery was made by security agent Vega, operating under the NebSec security team, and publicly disclosed via X (formerly Twitter) on May 21, 2026.
-Jus…
+Just weeks …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGINX worker process spawning shell or recon binary (post-RCE indicator for nginx-poolslip / nginx-rift class)
 
-`UC_2_3` · phase: **exploit** · confidence: **Medium**
+`UC_8_3` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -324,7 +324,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Is Shai-Hulud Back? Compromised Bitwarden CLI Contains a Self-Propagating npm Wo
 
-`UC_287_10` · phase: **exploit** · confidence: **High**
+`UC_285_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

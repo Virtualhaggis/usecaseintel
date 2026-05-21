@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_767 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_766 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,13 +11,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
-- [claude code s network sandbox vulnerability exposes user cre](./2026-05-21/claude-code-s-network-sandbox-vulnerability-exposes-user-cre.md)
+- [badiis malware turns hijacks iis servers and redirect users ](./2026-05-21/badiis-malware-turns-hijacks-iis-servers-and-redirect-users-.md)
 - [critical cisco secure workload vulnerability enables unautho](./2026-05-21/critical-cisco-secure-workload-vulnerability-enables-unautho.md)
 - [critical drupal core security vulnerability exposes websites](./2026-05-21/critical-drupal-core-security-vulnerability-exposes-websites.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
-- [gremlin stealer stores c2 urls and exfiltration paths in enc](./2026-05-21/gremlin-stealer-stores-c2-urls-and-exfiltration-paths-in-enc.md)
 - [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
+- [new microsoft defender 0 days actively exploited in the wild](./2026-05-21/new-microsoft-defender-0-days-actively-exploited-in-the-wild.md)
 - [new nginx 0 day rce nginx poolslip affects millions of nginx](./2026-05-21/new-nginx-0-day-rce-nginx-poolslip-affects-millions-of-nginx.md)
+- [the wild west of vs code extensions and how a poisoned exten](./2026-05-21/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [two u s executives plead guilty in india based tech support ](./2026-05-21/two-u-s-executives-plead-guilty-in-india-based-tech-support-.md)
 - [wanttocry ransomware abuses smb services to remotely encrypt](./2026-05-21/wanttocry-ransomware-abuses-smb-services-to-remotely-encrypt.md)
 
@@ -35,12 +36,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
 - [hackers bypass sonicwall vpn mfa due to incomplete patching](./2026-05-20/hackers-bypass-sonicwall-vpn-mfa-due-to-incomplete-patching.md)
-- [hackers use fake income tax assessment pages to infect windo](./2026-05-20/hackers-use-fake-income-tax-assessment-pages-to-infect-windo.md)
 - [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
-- [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [ukraine identifies infostealer operator tied to 28 000 stole](./2026-05-20/ukraine-identifies-infostealer-operator-tied-to-28-000-stole.md)
 - [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)

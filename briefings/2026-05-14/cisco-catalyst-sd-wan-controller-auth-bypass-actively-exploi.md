@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound exploit traffic to Cisco SD-WAN from UAT-8616 / Cluster IPs (CVE-2026-20182, -20133/-20128/-20122)
 
-`UC_131_5` · phase: **exploit** · confidence: **High**
+`UC_130_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### [LLM] JSP webshell deployment on Cisco SD-WAN Manager (XenShell / Godzilla / Behinder)
 
-`UC_131_6` · phase: **install** · confidence: **High**
+`UC_130_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### [LLM] Cisco SD-WAN post-exploit C2 callback: AdaptixC2 / Sliver / Mythic on Clusters 5
 
-`UC_131_7` · phase: **c2** · confidence: **High**
+`UC_130_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceNetworkEvents
 
 ### [LLM] XMRig cryptominer deployment on exploited Cisco SD-WAN (Cluster 7)
 
-`UC_131_8` · phase: **actions** · confidence: **Medium**
+`UC_130_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceProcessEvents
 
 ### [LLM] Known-bad SHA256 execution on Cisco SD-WAN — UAT-8616 / Cluster IOC sample match
 
-`UC_131_9` · phase: **install** · confidence: **High**
+`UC_130_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -208,7 +208,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Cisco Catalyst SD-WAN Controller Auth Bypass Actively Exploited to Gain Admin Ac
 
-`UC_131_4` · phase: **exploit** · confidence: **High**
+`UC_130_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

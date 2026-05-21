@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Roundcube display-attachment XSS exploit URL pattern (CVE-2026-35538/35539)
 
-`UC_302_3` · phase: **exploit** · confidence: **High**
+`UC_300_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,7 +49,7 @@ DeviceNetworkEvents
 
 ### [LLM] Vulnerable Roundcube installation exposed (CVE-2026-35538 / CVE-2026-35539, fixed in 1.6.14)
 
-`UC_302_4` · phase: **recon** · confidence: **High**
+`UC_300_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

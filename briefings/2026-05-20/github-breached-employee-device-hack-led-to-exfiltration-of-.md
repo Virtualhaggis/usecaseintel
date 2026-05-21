@@ -1,6 +1,6 @@
 # [CRIT] GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Repos
 
-**Source:** The Hacker News, BleepingComputer, Aikido
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/github-investigating-teampcp-claimed.html
 

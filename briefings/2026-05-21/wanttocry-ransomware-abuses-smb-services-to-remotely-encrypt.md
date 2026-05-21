@@ -10,12 +10,8 @@ Home Cyber Security News
 WantToCry Ransomware Abuses SMB Services to Remotely Encrypt Files 
 By Tushar Subhra Dutta 
 May 21, 2026 
-
-
-
-
 A ransomware strain called WantToCry has been targeting businesses by abusing a widely used file-sharing protocol to encrypt files without dropping any malware on the victim’s system. 
-The attacks mark a notable shift in how ransomware operators approach campaigns, serving as a warning to any organization that still has file-sharing services exposed to the o…
+The attacks mark a notable shift in how ransomware operators approach campaigns, serving as a warning to any organization that still has file-sharing services exposed to the open inte…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -53,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SMB brute-force followed by successful external network logon (WantToCry initial access)
 
-`UC_5_6` · phase: **delivery** · confidence: **High**
+`UC_10_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +87,7 @@ DeviceLogonEvents
 
 ### [LLM] WantToCry ransom note !Want_To_Cry.txt dropped via SMB share
 
-`UC_5_7` · phase: **actions** · confidence: **High**
+`UC_10_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +111,7 @@ DeviceFileEvents
 
 ### [LLM] Mass file rewrite to .want_to_cry extension over SMB session (WantToCry remote encryption)
 
-`UC_5_8` · phase: **actions** · confidence: **High**
+`UC_10_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +143,7 @@ DeviceFileEvents
 
 ### [LLM] Network communication with WantToCry encryption-infrastructure IPs
 
-`UC_5_9` · phase: **c2** · confidence: **High**
+`UC_10_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

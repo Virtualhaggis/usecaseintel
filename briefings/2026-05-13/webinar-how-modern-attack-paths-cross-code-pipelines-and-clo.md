@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GemStuffer: `gem push` to RubyGems from /tmp staging directory
 
-`UC_163_4` · phase: **actions** · confidence: **High**
+`UC_162_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] GemStuffer: fabricated RubyGems credentials dropped at /tmp/gemhome/.gem/credentials
 
-`UC_163_5` · phase: **install** · confidence: **High**
+`UC_162_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### [LLM] GemStuffer: host scrapes UK council ModernGov portal then POSTs to RubyGems API
 
-`UC_163_6` · phase: **c2** · confidence: **Medium**
+`UC_162_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
