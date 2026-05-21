@@ -11,15 +11,9 @@ By Sergiu Gatlan
 May 21, 2026
 09:58 AM
 0 
-
-
 Cisco has released security updates to address a maximum-severity Secure Workload vulnerability that allows attackers to gain Site Admin privileges.
-
-
 Formerly known as Cisco Tetration, Cisco Secure Workload helps admins reduce their network's attack surface through zero trust microsegmentation and stop lateral movement to keep business applications safe.
-
-
-Tracked as CVE-2026-…
+Tracked as CVE-2026-20223 , the …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable Cisco Secure Workload version present in asset fleet (CVE-2026-20223)
 
-`UC_5_5` · phase: **recon** · confidence: **High**
+`UC_8_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +73,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Cisco Secure Workload Site Admin action crossing tenant boundary in a single session
 
-`UC_5_6` · phase: **exploit** · confidence: **Medium**
+`UC_8_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +82,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Anomalous unauthenticated REST access to Cisco Secure Workload appliance from non-management subnet
 
-`UC_5_7` · phase: **delivery** · confidence: **Medium**
+`UC_8_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

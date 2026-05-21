@@ -11,18 +11,15 @@ By Bill Toulas
 May 21, 2026
 09:09 AM
 0 
-
-
 A virtual private network service called 'First VPN,' used in ransomware and data theft attacks, has been taken offline in a joint international law enforcement operation.
-
-
 Authorities have seized dozens of First VPN servers located in 27 countries, arrested the administrator, and conducted a house search in Ukraine.
-
-
-The VPN service was advertised on various cybercrime for…
+The VPN service was advertised on various cybercrime forums as a pri…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `134.255.210.160`
+- **IPv4 (defanged):** `185.247.71.106`
+- **IPv4 (defanged):** `185.253.98.242`
 - **Domain (defanged):** `1vpns.com`
 - **Domain (defanged):** `1vpns.net`
 - **Domain (defanged):** `1vpns.org`
@@ -46,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Historical DNS queries to seized First VPN infrastructure (1vpns.com/.net/.org)
 
-`UC_6_4` · phase: **c2** · confidence: **High**
+`UC_9_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +154,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `1vpns.com`, `1vpns.net`, `1vpns.org`
+  - IP / domain IOC(s): `134.255.210.160`, `185.247.71.106`, `185.253.98.242`, `1vpns.com`, `1vpns.net`, `1vpns.org`
 
 
 ## Why this matters

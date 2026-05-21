@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unauthorised inbound TCP/6379 to Kubernetes Redis pods from public Internet
 
-`UC_8_7` · phase: **delivery** · confidence: **High**
+`UC_11_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### [LLM] Redis container spawning shell (sh/bash) or download utility — P2PInfect post-SLAVEOF execution
 
-`UC_8_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connections from Kubernetes pods to known P2PInfect mesh peer IPs
 
-`UC_8_9` · phase: **c2** · confidence: **High**
+`UC_11_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceNetworkEvents
 
 ### [LLM] P2PInfect malicious Redis module dropped — known MD5 hash match
 
-`UC_8_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceFileEvents
 
 ### [LLM] Kubernetes pod accessing cloud instance metadata service from Redis context
 
-`UC_8_11` · phase: **actions** · confidence: **Medium**
+`UC_11_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

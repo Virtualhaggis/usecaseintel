@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hoppscotch device-login open redirect token theft via localhost.* / sslip.io bypass
 
-`UC_322_3` · phase: **exploit** · confidence: **High**
+`UC_330_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hoppscotch Mock Server stored XSS via GraphQL updateRESTUserRequest content-type override
 
-`UC_322_4` · phase: **exploit** · confidence: **Medium**
+`UC_330_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hoppscotch cross-team request injection via moveRequest GraphQL with null nextRequestID
 
-`UC_322_5` · phase: **exploit** · confidence: **Medium**
+`UC_330_5` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

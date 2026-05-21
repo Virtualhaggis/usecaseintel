@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Repeated SUID helper invocation (ssh-keysign/chage) by unprivileged user — ssh-keysign-pwn race
 
-`UC_1_1` · phase: **exploit** · confidence: **High**
+`UC_4_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### [LLM] kernel.yama.ptrace_scope lowered or disabled — ssh-keysign-pwn mitigation tampering
 
-`UC_1_2` · phase: **weapon** · confidence: **Medium**
+`UC_4_2` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Read of /etc/shadow or /etc/ssh/*_key by non-root, non-canonical process — ssh-keysign-pwn post-exploit
 
-`UC_1_3` · phase: **actions** · confidence: **High**
+`UC_4_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceFileEvents
 
 ### [LLM] RDS kernel module loaded — PinTheft LPE exploit prerequisite
 
-`UC_1_4` · phase: **weapon** · confidence: **High**
+`UC_4_4` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
