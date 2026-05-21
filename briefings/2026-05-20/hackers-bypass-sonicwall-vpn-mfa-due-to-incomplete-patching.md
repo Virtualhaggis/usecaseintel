@@ -11,15 +11,9 @@ By Bill Toulas
 May 20, 2026
 05:19 PM
 0 
-
-
 Threat actors brute-forced VPN credentials and bypassed multi-factor authentication (MFA) on SonicWall Gen6 SSL-VPN appliances to deploy tools used in ransomware attacks.
-
-
 During the intrusions, the hacker took between 30 and 60 minutes to log in, do network reconnaissance, test credential reuse on internal systems, and log out.
-
-
-SonicWall warned in a security advisory for CVE-2024-128…
+SonicWall warned in a security advisory for CVE-2024-12802 that inst…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -35,12 +29,161 @@ SonicWall warned in a security advisory for CVE-2024-128…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1133** — External Remote Services
+- **T1556.006** — Modify Authentication Process: Multi-Factor Authentication
+- **T1078** — Valid Accounts
+- **T1078.003** — Valid Accounts: Local Accounts
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1550.002** — Use Alternate Authentication Material: Pass the Hash
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1055** — Process Injection
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1068** — Exploitation for Privilege Escalation
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1014** — Rootkit
+- **T1543.003** — Create or Modify System Process: Windows Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] SonicWall SSL-VPN sess="CLI" tag — scripted/automated MFA-bypass authentication
+
+`UC_4_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+index=netfw OR index=sonicwall sourcetype="sonicwall*" sess="CLI"
+| rex field=_raw "user=(?<vpn_user>[^\s]+)"
+| rex field=_raw "src=(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats earliest(_time) as first_seen, latest(_time) as last_seen, count by vpn_user, src_ip, host
+| eval session_dur_min=round((last_seen-first_seen)/60,1)
+| where session_dur_min < 120
+| sort - first_seen
+```
+
+### [LLM] SonicWall SSL-VPN Event ID 238 / 1080 — CVE-2024-12802 exploitation signal
+
+`UC_4_6` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+index=netfw OR index=sonicwall sourcetype="sonicwall*" (eventid=238 OR eventid=1080 OR signature_id=238 OR signature_id=1080 OR msg_id=238 OR msg_id=1080)
+| rex field=_raw "user=(?<vpn_user>[^\s]+)"
+| rex field=_raw "src=(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| stats earliest(_time) as first_seen, latest(_time) as last_seen, count, values(vpn_user) as users, values(src_ip) as srcs by host, eventid
+| sort - first_seen
+```
+
+### [LLM] SonicWall SSL-VPN UPN-format authentication (user@domain) succeeding without paired MFA challenge
+
+`UC_4_7` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+index=netfw OR index=sonicwall sourcetype="sonicwall*" action=success user="*@*"
+| rex field=user "^(?<vpn_user>[^@]+)@(?<vpn_domain>.+)$"
+| rex field=_raw "src=(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+| join type=left vpn_user, src_ip [
+    search index=netfw OR index=sonicwall sourcetype="sonicwall*" (mfa=* OR otp=* OR "MFA challenge" OR "TOTP" OR "second factor") earliest=-5m
+    | rex field=user "^(?<vpn_user>[^@]+)"
+    | rex field=_raw "src=(?<src_ip>\d+\.\d+\.\d+\.\d+)"
+    | stats count as mfa_events by vpn_user, src_ip ]
+| where isnull(mfa_events) OR mfa_events=0
+| stats earliest(_time) as first_seen, count by vpn_user, vpn_domain, src_ip
+| sort - first_seen
+```
+
+### [LLM] Post-VPN RDP to domain-joined server using shared local administrator credentials within 30 minutes of SonicWall logon
+
+`UC_4_8` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Authentication where Authentication.action=success Authentication.signature_id=4624 Authentication.authentication_method=RemoteInteractive by _time, Authentication.user, Authentication.src, Authentication.dest, Authentication.user_category
+| `drop_dm_object_name("Authentication")`
+| where match(user, "(?i)^(administrator|admin|localadmin|sysadmin|backup[-_]?admin)$") OR like(user, "%admin")
+| join type=inner src [
+    search index=netfw OR index=sonicwall sourcetype="sonicwall*" action=success earliest=-30m
+    | rex field=_raw "src=(?<src>\d+\.\d+\.\d+\.\d+)"
+    | rex field=_raw "user=(?<vpn_user>[^\s]+)"
+    | stats values(vpn_user) as vpn_user, earliest(_time) as vpn_first_seen by src ]
+| eval rdp_delay_min=round((_time-vpn_first_seen)/60,1)
+| where rdp_delay_min<=30
+| stats values(dest) as targets, values(user) as rdp_user, values(vpn_user) as vpn_user, count by src
+```
+
+**Defender KQL:**
+```kql
+let LocalAdminNames = dynamic(["administrator", "admin", "localadmin", "sysadmin", "backup-admin", "backup_admin"]);
+DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where LogonType == "RemoteInteractive"
+| where ActionType == "LogonSuccess"
+| where (AccountName in~ (LocalAdminNames)) or (AccountName endswith "admin" and AccountName !endswith "$")
+| where IsLocalAdmin == true
+| where AccountDomain !in~ ("AzureAD", "NT AUTHORITY", "Window Manager")
+| where AccountDomain =~ DeviceName // local account, domain == hostname
+| summarize TargetDevices = make_set(DeviceName, 50), LogonTimes = make_list(Timestamp, 50), Sources = make_set(RemoteIP, 50), HostsTouched = dcount(DeviceName) by AccountName, AccountSid
+| where HostsTouched >= 1
+| order by HostsTouched desc
+```
+
+### [LLM] Cobalt Strike beacon deployment attempt on Windows host within 60 minutes of SonicWall VPN ingress
+
+`UC_4_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name=rundll32.exe OR Processes.process_name=regsvr32.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) (Processes.process="*msagent_*" OR Processes.process="*postex_*" OR Processes.process="*status_*" OR Processes.process="*BeaconLoader*" OR Processes.process="*ReflectiveLoader*" OR (Processes.process="*StartW*" AND (Processes.process_name=rundll32.exe OR Processes.process_name=regsvr32.exe))) by _time Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name("Processes")`
+```
+
+**Defender KQL:**
+```kql
+let CSTokens = dynamic(["msagent_", "postex_", "status_", "BeaconLoader", "ReflectiveLoader"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any (CSTokens)
+    or InitiatingProcessCommandLine has_any (CSTokens)
+    or (InitiatingProcessFileName in~ ("rundll32.exe","regsvr32.exe") and ProcessCommandLine has_any ("StartW", "DllRegisterServer /s"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] BYOVD vulnerable-driver write or load attempt post-VPN intrusion to disable EDR
+
+`UC_4_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\drivers\\*" Filesystem.file_name IN ("gdrv.sys","RTCore64.sys","mhyprot2.sys","kArrayNull.sys","procexp152.sys","dbutil_2_3.sys","truesight.sys","DBUtilDrv2.sys","AsrDrv101.sys","AsrDrv102.sys","GMER64.sys","WinRing0x64.sys","BSdrv.sys") by _time Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash
+| `drop_dm_object_name("Filesystem")`
+| sort - _time
+```
+
+**Defender KQL:**
+```kql
+let KnownVulnerableDriverNames = dynamic([
+    "gdrv.sys","RTCore64.sys","mhyprot2.sys","kArrayNull.sys","procexp152.sys",
+    "dbutil_2_3.sys","truesight.sys","DBUtilDrv2.sys","AsrDrv101.sys",
+    "AsrDrv102.sys","GMER64.sys","BSdrv.sys","WinRing0x64.sys"
+]);
+union isfuzzy=true
+(DeviceImageLoadEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ (KnownVulnerableDriverNames)
+    | project Timestamp, DeviceName, ActionType="ImageLoad", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName),
+(DeviceFileEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ (KnownVulnerableDriverNames)
+    | where ActionType in ("FileCreated","FileRenamed","FileModified")
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName)
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -171,4 +314,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

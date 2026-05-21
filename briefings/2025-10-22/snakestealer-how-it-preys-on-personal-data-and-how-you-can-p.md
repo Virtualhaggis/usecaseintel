@@ -24,12 +24,143 @@ ESET researchers have tracked numerous campaigns recently where an infostealer w
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567.003** — Exfiltration Over Web Service: Exfiltration to Text Storage Sites
+- **T1048.003** — Exfiltration Over Unencrypted/Obfuscated Non-C2 Protocol
+- **T1071.003** — Application Layer Protocol: Mail Protocols
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1555** — Credentials from Password Stores
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] SnakeStealer Telegram Bot Exfiltration via api.telegram.org from Non-Telegram Process
+
+`UC_607_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.dest) as dest from datamodel=Web where Web.url="*api.telegram.org/bot*" AND NOT Web.process IN ("telegram.exe","Telegram.exe","TelegramDesktop.exe","Updater.exe") by Web.src Web.user Web.process Web.dest | `drop_dm_object_name(Web)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "api.telegram.org"
+| where InitiatingProcessFileName !in~ ("telegram.exe","updater.exe")
+| where InitiatingProcessFolderPath !contains @"\Telegram Desktop\"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName,
+          AccountUpn=InitiatingProcessAccountUpn,
+          ProcessName=InitiatingProcessFileName,
+          ProcessPath=InitiatingProcessFolderPath,
+          ProcessCmd=InitiatingProcessCommandLine,
+          ProcessSHA256=InitiatingProcessSHA256,
+          RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] SnakeStealer SMTP Credential Exfiltration to Public Webmail Relays from Non-Mail Client
+
+`UC_607_5` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.process) as process values(All_Traffic.user) as user from datamodel=Network_Traffic where All_Traffic.dest_port IN (587,465,25) AND All_Traffic.dest IN ("smtp.zoho.com","smtp.gmail.com","smtp-mail.outlook.com","smtp.mail.yahoo.com","smtp.yandex.com","smtp.mail.ru","mail.privateemail.com") AND NOT All_Traffic.process IN ("outlook.exe","thunderbird.exe","emclient.exe","mailbird.exe","msimn.exe","HostedOffice.exe") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.process | `drop_dm_object_name(All_Traffic)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SmtpHosts = dynamic(["smtp.zoho.com","smtp.gmail.com","smtp-mail.outlook.com","smtp.mail.yahoo.com","smtp.yandex.com","smtp.mail.ru","mail.privateemail.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort in (587, 465, 25)
+| where RemoteUrl has_any (SmtpHosts)
+| where InitiatingProcessFileName !in~ ("outlook.exe","thunderbird.exe","emclient.exe","mailbird.exe","msimn.exe","hostedoffice.exe")
+| where InitiatingProcessFolderPath !contains @"\Microsoft Office\"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName,
+          AccountUpn=InitiatingProcessAccountUpn,
+          ProcessName=InitiatingProcessFileName,
+          ProcessPath=InitiatingProcessFolderPath,
+          ProcessCmd=InitiatingProcessCommandLine,
+          ProcessSHA256=InitiatingProcessSHA256,
+          RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] SnakeStealer Startup-Folder Persistence (ageless.vbs / .exe drop in Programs\Startup)
+
+`UC_607_6` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_path="*\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\*" AND (Filesystem.file_name="*.vbs" OR Filesystem.file_name="*.js" OR Filesystem.file_name="*.lnk" OR Filesystem.file_name="*.exe" OR Filesystem.file_name="*.bat" OR Filesystem.file_name="*.cmd" OR Filesystem.file_name="*.wsf" OR Filesystem.file_name="*.hta") AND NOT Filesystem.process_name IN ("explorer.exe","setup.exe","msiexec.exe","TrustedInstaller.exe","OfficeClickToRun.exe","OneDriveSetup.exe") by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has @"\Microsoft\Windows\Start Menu\Programs\Startup\"
+| where FileName endswith ".vbs" or FileName endswith ".js"
+       or FileName endswith ".lnk" or FileName endswith ".exe"
+       or FileName endswith ".bat" or FileName endswith ".cmd"
+       or FileName endswith ".wsf" or FileName endswith ".hta"
+| where InitiatingProcessFileName !in~ ("explorer.exe","msiexec.exe","setup.exe","TrustedInstaller.exe","OfficeClickToRun.exe","OneDriveSetup.exe","Update.exe")
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files"
+| where InitiatingProcessFolderPath !startswith @"C:\Windows\System32\"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName,
+          AccountUpn=InitiatingProcessAccountUpn,
+          FileName, FolderPath, SHA256,
+          DropperFile=InitiatingProcessFileName,
+          DropperPath=InitiatingProcessFolderPath,
+          DropperCmd=InitiatingProcessCommandLine,
+          DropperSHA256=InitiatingProcessSHA256,
+          DropperCompany=InitiatingProcessVersionInfoCompanyName
+| order by Timestamp desc
+```
+
+### [LLM] SnakeStealer Wi-Fi Credential Harvest via netsh wlan show profile key=clear
+
+`UC_607_7` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_cmd values(Processes.parent_process_name) as parent_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name="netsh.exe" AND Processes.process="*wlan*" AND Processes.process="*key=clear*" AND NOT Processes.parent_process_name IN ("mmc.exe","wininit.exe","services.exe","SCNotification.exe") by host Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | rename firstTime as _time | convert ctime(_time) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "netsh.exe"
+| where ProcessCommandLine has "wlan"
+| where ProcessCommandLine has "key=clear" or ProcessCommandLine has "key = clear"
+| where InitiatingProcessFileName !in~ ("mmc.exe","wininit.exe","services.exe","SCNotification.exe")
+| where AccountName !endswith "$"
+| extend ParentInUserWriteable = (InitiatingProcessFolderPath has @"\AppData\Local\Temp\"
+                                  or InitiatingProcessFolderPath has @"\AppData\Roaming\"
+                                  or InitiatingProcessFolderPath has @"\Users\Public\"
+                                  or InitiatingProcessFolderPath has @"\ProgramData\")
+| project Timestamp, DeviceName, AccountName, AccountUpn,
+          ChildCmd=ProcessCommandLine,
+          ParentName=InitiatingProcessFileName,
+          ParentPath=InitiatingProcessFolderPath,
+          ParentCmd=InitiatingProcessCommandLine,
+          ParentSHA256=InitiatingProcessSHA256,
+          ParentCompany=InitiatingProcessVersionInfoCompanyName,
+          ParentInUserWriteable
+| order by Timestamp desc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -211,4 +342,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -26,12 +26,71 @@ In the world of CI/CD automation, GitHub Actions have become indispensable. But 
 - **T1190** — Exploit Public-Facing Application
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain
+- **T1199** — Trusted Relationship
+- **T1552.001** — Credentials In Files
+- **T1003** — OS Credential Dumping
+- **T1567** — Exfiltration Over Web Service
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] tj-actions / reviewdog imposter-commit SHA referenced on CI/CD runner or developer host
+
+`UC_686_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_process values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process IN ("*0e58ed8671d6b60d0890c21b07f8835ace038e67*", "*fbc2c5ebe64389f297a7808025379f77133f1292*", "*e1e36574b3af1ddaab74f5e69505d8836bf12f52*", "*ce4a123414f9fffa959d1f329c4749da83c4bf10*", "*c17ac4b5c1cb901a7ccddf00ac9722b8e2725345*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let ImposterShas = dynamic(["0e58ed8671d6b60d0890c21b07f8835ace038e67","fbc2c5ebe64389f297a7808025379f77133f1292","e1e36574b3af1ddaab74f5e69505d8836bf12f52","ce4a123414f9fffa959d1f329c4749da83c4bf10","c17ac4b5c1cb901a7ccddf00ac9722b8e2725345"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any (ImposterShas) or InitiatingProcessCommandLine has_any (ImposterShas)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] tj-actions memdump.py credential-dump payload fetched or executed on CI runner
+
+`UC_686_4` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.process IN ("*memdump.py*", "*30e525b776c409e03c2d6f328f254965*", "*gist.githubusercontent.com/nikitastupin*") OR (Processes.process_name IN ("curl","curl.exe","wget","wget.exe") AND Processes.process="*nikitastupin*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let GistId = "30e525b776c409e03c2d6f328f254965";
+let ProcessHit = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where ProcessCommandLine has_any ("memdump.py", GistId, "gist.githubusercontent.com/nikitastupin")
+     or InitiatingProcessCommandLine has_any ("memdump.py", GistId, "gist.githubusercontent.com/nikitastupin")
+  | extend Signal = "process_cmdline"
+  | project Timestamp, DeviceName, AccountName, Signal, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath;
+let NetworkHit = DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has GistId or RemoteUrl has "gist.githubusercontent.com/nikitastupin/30e525b776c409e03c2d6f328f254965"
+  | extend Signal = "network_egress"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Signal, FileName=InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath=InitiatingProcessFolderPath;
+union ProcessHit, NetworkHit
+| order by Timestamp desc
+```
 
 ### Article-specific behavioural hunt — The GitHub Warning Everyone Ignores: 'This Commit Does Not Belong to Any Branch'
 
@@ -95,4 +154,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

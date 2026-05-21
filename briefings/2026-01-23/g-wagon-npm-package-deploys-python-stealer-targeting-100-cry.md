@@ -27,12 +27,128 @@ Blog Vulnerabilities & Threats G_Wagon: npm Package Deploys Python Stealer Targe
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
+- **T1132.001** — Data Encoding: Standard Encoding
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] G_Wagon npm postinstall spawns python with stdin pipe (fileless payload exec)
+
+`UC_481_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" Processes.process_name IN ("python.exe","pythonw.exe","python3.exe") (Processes.process="*python.exe\" -" OR Processes.process="*python.exe -" OR Processes.process="*pythonw.exe\" -" OR Processes.process="*python3.exe\" -") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.parent_process_path | `drop_dm_object_name(Processes)` | where NOT match(process_path, "(?i)\\\\(Program Files|Python\\d+|Anaconda|Miniconda|conda)\\\\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where FileName matches regex @"(?i)^python(w|3)?\.exe$"
+| where ProcessCommandLine matches regex @"(?i)python(w|3)?(\.exe)?""?\s+-\s*$"
+| where FolderPath !startswith @"C:\Program Files\Python"
+   and FolderPath !startswith @"C:\Program Files (x86)\Python"
+   and FolderPath !startswith @"C:\Python"
+   and FolderPath !startswith @"C:\Windows"
+   and FolderPath !contains @"\Anaconda"
+   and FolderPath !contains @"\Miniconda"
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] G_Wagon dropper: node.exe spawns system tar.exe extracting from stdin (-x -f - -C)
+
+`UC_481_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" Processes.process_name="tar.exe" Processes.process="*-x*" Processes.process="*-f*-*" Processes.process="*-C*" by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.parent_process_path | `drop_dm_object_name(Processes)` | regex process="(?i)\s-f\s+-\s+" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where FileName =~ "tar.exe"
+| where ProcessCommandLine has "-x" and ProcessCommandLine has "-C"
+| where ProcessCommandLine matches regex @"(?i)\s-f\s+-(\s|$)"
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine,
+          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessParentCreationTime, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] G_Wagon C2 beacon: node.exe or python.exe egress to Appwrite storage buckets
+
+`UC_481_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as urls values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest) as dest_ip from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node.exe","python.exe","pythonw.exe","python3.exe") (All_Traffic.dest_host="nyc.cloud.appwrite.io" OR All_Traffic.dest_host="fra.cloud.appwrite.io" OR All_Traffic.url="*688625a0000f8a1b71e8*" OR All_Traffic.url="*6886229e003d46469fab*" OR All_Traffic.url="*69732d9c000042399d88*") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe","python.exe","pythonw.exe","python3.exe")
+| where RemoteUrl has "cloud.appwrite.io"
+   or RemoteUrl has "688625a0000f8a1b71e8"   // G_Wagon storage bucket
+   or RemoteUrl has "6886229e003d46469fab"   // G_Wagon Appwrite project
+   or RemoteUrl has "69732d9c000042399d88"   // G_Wagon payload file ID
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] G_Wagon Python runtime drop into npm cache with lib_core/renderer or python_runtime paths
+
+`UC_481_12` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("tar.exe","node.exe") (Filesystem.file_path="*\\lib_core\\renderer\\*" OR Filesystem.file_path="*\\python_runtime\\*" OR Filesystem.file_name="latest_script.py") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where InitiatingProcessFileName in~ ("tar.exe","node.exe")
+| where FolderPath matches regex @"(?i)\\(lib_core\\renderer|python_runtime)\\"
+   or FileName =~ "latest_script.py"
+   or (FileName matches regex @"(?i)^python(w|3)?\.exe$"
+        and FolderPath !startswith @"C:\Program Files"
+        and FolderPath !startswith @"C:\Python"
+        and FolderPath !startswith @"C:\Windows"
+        and FolderPath !contains @"\Anaconda"
+        and FolderPath !contains @"\Miniconda")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            FileCount=count(), SampleFiles=make_set(FileName, 20),
+            SampleFolder=any(FolderPath)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+               InitiatingProcessParentFileName, InitiatingProcessCommandLine
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -292,4 +408,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

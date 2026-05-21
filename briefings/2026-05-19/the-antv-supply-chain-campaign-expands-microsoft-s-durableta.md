@@ -20,6 +20,10 @@ npm Security removed th…
 - **Domain (defanged):** `filev2.getsession.org`
 - **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
 - **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
+- **SHA1:** `12ed9a3c1f73617aefdb740480695c04405d7b4b`
+- **SHA1:** `e7d582b98ca80690883175470e96f703ef6dc497`
+- **MD5:** `833fd59ebe66a4449982c6d18db656b4`
+- **MD5:** `b82e54923f7e440664d2d75bd31588ca`
 
 ## MITRE ATT&CK Techniques
 
@@ -274,7 +278,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `filev2.getsession.org`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
+  - file hash IOC(s): `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `12ed9a3c1f73617aefdb740480695c04405d7b4b`, `e7d582b98ca80690883175470e96f703ef6dc497`, `833fd59ebe66a4449982c6d18db656b4`, `b82e54923f7e440664d2d75bd31588ca`
 
 
 ## Why this matters

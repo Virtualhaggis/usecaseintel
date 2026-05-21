@@ -40,12 +40,146 @@ Blog Vulnerabilities & Threats Fake Clawdbot VS Code Extension Installs ScreenCo
 - **T1195.002** — Compromise Software Supply Chain
 - **T1053.005** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1572** — Protocol Tunneling
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1105** — Ingress Tool Transfer
+- **T1027.002** — Software Packing
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1564.003** — Hide Artifacts: Hidden Window
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ScreenConnect client beaconing to ClawdBot attacker relay (meeting.bulletmailer.net:8041)
+
+`UC_472_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("178.16.54.253","179.43.176.32") OR All_Traffic.dest_host IN ("meeting.bulletmailer.net","clawdbot.getintwopc.site","darkgptprivate.com") OR (All_Traffic.dest_port=8041 AND All_Traffic.app IN ("ScreenConnect.ClientService.exe","ScreenConnect.WindowsBackstageShell.exe","ScreenConnect.WindowsFileManager.exe"))) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let C2Hosts = dynamic(["meeting.bulletmailer.net","clawdbot.getintwopc.site","darkgptprivate.com"]);
+let C2IPs = dynamic(["178.16.54.253","179.43.176.32"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (C2IPs)
+   or (isnotempty(RemoteUrl) and RemoteUrl has_any (C2Hosts))
+   or (RemotePort == 8041 and InitiatingProcessFileName startswith "ScreenConnect.")
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Weaponised ScreenConnect install path with attacker instance GUID 083e4d30c7ea44f7
+
+`UC_472_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.process_name) as procs from datamodel=Endpoint.Filesystem where Filesystem.file_path="*ScreenConnect Client (083e4d30c7ea44f7)*" by Filesystem.dest Filesystem.user Filesystem.file_path
+| `drop_dm_object_name(Filesystem)`
+| append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_path="*ScreenConnect Client (083e4d30c7ea44f7)*" by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process]
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let GUID = "083e4d30c7ea44f7";
+union isfuzzy=true
+  (DeviceFileEvents
+     | where Timestamp > ago(30d)
+     | where FolderPath has GUID
+     | project Timestamp, DeviceName, Source="FileEvent", ActionType, FileName, FolderPath, SHA256,
+               InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName),
+  (DeviceProcessEvents
+     | where Timestamp > ago(30d)
+     | where FolderPath has GUID or InitiatingProcessFolderPath has GUID
+     | project Timestamp, DeviceName, Source="ProcessEvent", ActionType, FileName, FolderPath, SHA256,
+               InitiatingProcessFileName, InitiatingProcessCommandLine=ProcessCommandLine, AccountName)
+| order by Timestamp desc
+```
+
+### [LLM] DWrite.dll Rust sideloader dropped outside Windows directory (ClawdBot redundant payload)
+
+`UC_472_16` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as procs values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.file_name="DWrite.dll" AND NOT Filesystem.file_path IN ("*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*","*\\Windows\\WinSxS\\*") AND (Filesystem.file_hash="d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea" OR Filesystem.file_path="*ScreenConnect Client (083e4d30c7ea44f7)*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\Lightshot\\*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let BadHash = "d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea";
+union isfuzzy=true
+  (DeviceImageLoadEvents
+     | where Timestamp > ago(30d)
+     | where FileName =~ "DWrite.dll"
+     | where not(FolderPath startswith @"C:\Windows\")
+     | where SHA256 == BadHash
+        or InitiatingProcessFileName startswith "ScreenConnect."
+        or FolderPath has "083e4d30c7ea44f7"
+        or FolderPath has @"\AppData\Local\Temp\Lightshot\"
+     | project Timestamp, DeviceName, Source="ImageLoad", FileName, FolderPath, SHA256,
+               InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine),
+  (DeviceFileEvents
+     | where Timestamp > ago(30d)
+     | where FileName =~ "DWrite.dll"
+     | where SHA256 == BadHash
+        or FolderPath has "083e4d30c7ea44f7"
+        or FolderPath has @"\AppData\Local\Temp\Lightshot\"
+     | project Timestamp, DeviceName, Source="FileWrite", FileName, FolderPath, SHA256,
+               InitiatingProcessFileName, InitiatingProcessFolderPath=InitiatingProcessFolderPath, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] VS Code (Code.exe/node) drops payload to %TEMP%\Lightshot staging directory
+
+`UC_472_17` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_hash) as hashes from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Local\\Temp\\Lightshot\\*" AND (Filesystem.process_name IN ("Code.exe","node.exe") OR Filesystem.file_hash IN ("e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2","d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea") OR Filesystem.file_name IN ("Code.exe","DWrite.dll","zoomupdate.msi")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let BadHashes = dynamic(["e20b920c7af988aa215c95bbaa365d005dd673544ab7e3577b60fecf11dcdea2","d1e0c26774cb8beabaf64f119652719f673fb530368d5b2166178191ad5fcbea"]);
+let StagingDrops = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FolderPath has @"\AppData\Local\Temp\Lightshot\"
+    | where InitiatingProcessFileName in~ ("Code.exe","node.exe")
+         or SHA256 in (BadHashes)
+         or FileName in~ ("Code.exe","DWrite.dll","zoomupdate.msi","ffmpeg.dll","libEGL.dll","v8_context_snapshot.bin")
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName;
+let DetachedExec = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FolderPath has @"\AppData\Local\Temp\Lightshot\"
+         or InitiatingProcessFolderPath has @"\AppData\Local\Temp\Lightshot\"
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union StagingDrops, DetachedExec
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -484,4 +618,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 18 use case(s) fired, 29 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

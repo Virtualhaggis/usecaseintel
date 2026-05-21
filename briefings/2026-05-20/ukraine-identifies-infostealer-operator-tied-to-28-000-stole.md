@@ -11,12 +11,8 @@ By Bill Toulas
 May 20, 2026
 05:36 PM
 0 
-
-
 The Ukrainian cyberpolice, working in conjunction with U.S. law enforcement, has identified an 18-year-old man from Odesa suspected of running an infostealer malware operation targeting users of an online store in California.
-
-
-According to the Ukrainian police, the threat actor used information-stealing malware between 2024 and 2025 to infect users’ devices and steal browser se…
+According to the Ukrainian police, the threat actor used information-stealing malware between 2024 and 2025 to infect users’ devices and steal browser sessions a…
 
 ## Indicators of Compromise (high-fidelity only)
 

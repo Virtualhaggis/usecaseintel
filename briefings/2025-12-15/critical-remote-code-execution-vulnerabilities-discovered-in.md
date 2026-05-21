@@ -18,12 +18,60 @@ Back to Blog Resources Critical Remote Code Execution Vulnerabilities Discovered
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059** — Command and Scripting Interpreter
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Node.js process downloads payload via curl/wget (React2Shell SNOWLIGHT/VShell deployment)
+
+`UC_537_3` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND Processes.process_name IN ("curl.exe","wget.exe","bitsadmin.exe","certutil.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe") AND (Processes.process="*http://*" OR Processes.process="*https://*" OR Processes.process="*ftp://*" OR Processes.process="*tftp://*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("node.exe", "node")
+| where FileName in~ ("curl.exe","wget.exe","bitsadmin.exe","certutil.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe")
+| where ProcessCommandLine has_any ("http://","https://","ftp://","tftp://")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Vulnerable React Server Components or Next.js App Router versions present in inventory
+
+`UC_537_4` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| inputlookup vulnerability_lookup where (cve="CVE-2025-55182" OR cve="CVE-2025-66478") OR (product="react" AND (version="19.0" OR version="19.0.0" OR version="19.1" OR version="19.1.0" OR version="19.1.1" OR version="19.2" OR version="19.2.0")) OR (product="next" AND (version="14.3.0-canary*" OR version="15.0.*" OR version="15.1.*" OR version="15.2.*" OR version="15.3.*" OR version="15.4.*" OR version="15.5.*" OR version="16.0.0" OR version="16.0.1" OR version="16.0.2" OR version="16.0.3" OR version="16.0.4" OR version="16.0.5" OR version="16.0.6")) | table host product version cve severity recommended_fix
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2025-55182","CVE-2025-66478")
+| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| union (
+    DeviceTvmSoftwareInventory
+    | where SoftwareName has_any ("react-server-dom-parcel","react-server-dom-webpack","react-server-dom-turbopack","react","next")
+    | where (SoftwareName == "react" and SoftwareVersion has_any ("19.0.0","19.1.0","19.1.1","19.2.0"))
+         or (SoftwareName startswith "react-server-dom-" and SoftwareVersion has_any ("19.0.0","19.1.0","19.1.1","19.2.0"))
+         or (SoftwareName == "next" and (SoftwareVersion startswith "14.3.0-canary." or SoftwareVersion startswith "15.0." or SoftwareVersion startswith "15.1." or SoftwareVersion startswith "15.2." or SoftwareVersion startswith "15.3." or SoftwareVersion startswith "15.4." or SoftwareVersion startswith "15.5." or SoftwareVersion startswith "16.0."))
+    | project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId="CVE-2025-55182/CVE-2025-66478", VulnerabilitySeverityLevel="Critical", RecommendedSecurityUpdate="Upgrade to React 19.0.1/19.1.2/19.2.1 or Next.js patched version per StepSecurity advisory"
+)
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -108,4 +156,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

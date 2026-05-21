@@ -39,12 +39,113 @@ Blog Vulnerabilities & Threats Gone Phishin': npm Packages Serving Custom Creden
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1102** — Web Service
+- **T1056.003** — Input Capture: Web Portal Capture
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
+
+`UC_482_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest="163.123.236.118" by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "163.123.236.118"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Aikido npm phishing: DNS / web request to siemens-energy.icu or siemensergy.icu typosquats
+
+`UC_482_12` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query IN ("*siemens-energy.icu", "*siemensergy.icu", "login.siemens-energy.icu", "login.siemensergy.icu") by DNS.src DNS.dest | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(60d)
+| where RemoteUrl has_any ("siemens-energy.icu", "siemensergy.icu")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Aikido campaign: jsDelivr CDN fetch of weaponised flockiali/opresc/prndn/oprnm/operni npm package
+
+`UC_482_13` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where Web.url IN ("*cdn.jsdelivr.net/npm/flockiali*", "*cdn.jsdelivr.net/npm/opresc*", "*cdn.jsdelivr.net/npm/prndn*", "*cdn.jsdelivr.net/npm/oprnm*", "*cdn.jsdelivr.net/npm/operni*") by Web.src Web.dest Web.http_method | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(60d)
+| where RemoteUrl has "cdn.jsdelivr.net/npm/"
+| where RemoteUrl has_any ("/flockiali", "/opresc", "/prndn", "/oprnm", "/operni")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] Aikido npm phishing: user clicked phishing URL hosting /DIVzTaSF credential capture
+
+`UC_482_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where (Web.url="*siemens-energy.icu/DIVzTaSF*" OR Web.url="*siemensergy.icu/DIVzTaSF*" OR Web.url="*siemens-energy.icu/*" OR Web.url="*oprsys.deno.dev*") by Web.src Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+UrlClickEvents
+| where Timestamp > ago(60d)
+| where Url has_any ("siemens-energy.icu", "siemensergy.icu", "oprsys.deno.dev")
+| project Timestamp, AccountUpn, Url, ActionType, NetworkMessageId, IPAddress, IsClickedThrough, UrlChain, Workload
+| order by Timestamp desc
+```
+
+### [LLM] Aikido npm phishing: inbound email containing jsDelivr link to flockiali/opresc/prndn/oprnm/operni
+
+`UC_482_15` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subject values(All_Email.url) as url from datamodel=Email where (All_Email.url="*cdn.jsdelivr.net/npm/flockiali*" OR All_Email.url="*cdn.jsdelivr.net/npm/opresc*" OR All_Email.url="*cdn.jsdelivr.net/npm/prndn*" OR All_Email.url="*cdn.jsdelivr.net/npm/oprnm*" OR All_Email.url="*cdn.jsdelivr.net/npm/operni*" OR All_Email.url="*siemens-energy.icu*" OR All_Email.url="*siemensergy.icu*" OR All_Email.url="*oprsys.deno.dev*") by All_Email.src_user All_Email.recipient | `drop_dm_object_name(All_Email)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let BadUrls = EmailUrlInfo
+    | where Timestamp > ago(60d)
+    | where Url has_any ("cdn.jsdelivr.net/npm/flockiali", "cdn.jsdelivr.net/npm/opresc", "cdn.jsdelivr.net/npm/prndn", "cdn.jsdelivr.net/npm/oprnm", "cdn.jsdelivr.net/npm/operni", "siemens-energy.icu", "siemensergy.icu", "oprsys.deno.dev")
+    | project Timestamp, NetworkMessageId, Url, UrlDomain;
+EmailEvents
+| where Timestamp > ago(60d)
+| join kind=inner BadUrls on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, SenderIPv4, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -402,4 +503,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 16 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -10,22 +10,17 @@ Home Cyber Security News
 Trapdoor Android Ad Fraud Operation Uses 455 Malicious Apps to Generate Fake Clicks 
 By Tushar Subhra Dutta 
 May 20, 2026 
-
-
-
-
 A large-scale ad fraud operation called Trapdoor has been discovered targeting Android users through 455 malicious apps, quietly generating fake ad clicks and draining real advertising budgets across the digital ecosystem. 
-At its peak, the operation produced 659 million fraudulent bid requests in a single day and accumulated well over 24 mi…
+At its peak, the operation produced 659 million fraudulent bid requests in a single day and accumulated well over 24 million do…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `any.run`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
@@ -33,12 +28,67 @@ At its peak, the operation produced 659 million fraudulent bid requests in a sin
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1568** — Dynamic Resolution
+- **T1497.001** — Virtualization/Sandbox Evasion: System Checks
+- **T1497.003** — Virtualization/Sandbox Evasion: Time Based Evasion
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Trapdoor Android C2 — DNS resolution to HUMAN-published Trapdoor C2 domain watch
+
+`UC_5_6` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where [search index=threat_intel source=human_trapdoor_iocs indicator_type=domain | rename indicator as DNS.query | fields DNS.query] by DNS.query DNS.src host | `drop_dm_object_name(DNS)`
+```
+
+**Defender KQL:**
+```kql
+// Populate TrapdoorDomains with the 183 Trapdoor C2 domains published by HUMAN Satori (CSV linked in the article).
+let TrapdoorDomains = dynamic([
+    "replace-with-human-csv-domain-1.example",
+    "replace-with-human-csv-domain-2.example"
+]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where isnotempty(RemoteUrl)
+| extend RemoteHost = tolower(tostring(parse_url(RemoteUrl).Host))
+| where RemoteHost in~ (TrapdoorDomains) or RemoteUrl has_any (TrapdoorDomains)
+| where InitiatingProcessFileName !in~ ("smartscreen.exe", "MsSense.exe", "MpCmdRun.exe")
+| project Timestamp, DeviceId, DeviceName, RemoteHost, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] Trapdoor /api/referrer anti-analysis endpoint hit in corporate web proxy
+
+`UC_5_7` · phase: **c2** · confidence: **Low**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as ua values(Web.src) as src from datamodel=Web where Web.url="*/api/referrer*" by Web.dest Web.url | `drop_dm_object_name(Web)` | where match(ua, "(?i)(Android|Dalvik|okhttp)") | join type=left dest [| inputlookup human_trapdoor_c2_domains | rename domain as dest | fields dest known_trapdoor] | where known_trapdoor="true"
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has "/api/referrer"
+| extend RemoteHost = tolower(tostring(parse_url(RemoteUrl).Host))
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe")
+   or InitiatingProcessFileName has_any ("WebView","WebViewHost")
+| project Timestamp, DeviceId, DeviceName, RemoteHost, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -210,14 +260,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `any.run`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

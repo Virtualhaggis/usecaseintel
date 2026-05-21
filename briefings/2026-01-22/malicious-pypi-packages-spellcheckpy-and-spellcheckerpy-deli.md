@@ -33,12 +33,82 @@ Hidden ins…
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573** — Encrypted Channel
+- **T1008** — Fallback Channels
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PyPI install of malicious typosquat spellcheckpy or spellcheckerpy
+
+`UC_485_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip3.exe","pip","pip3","uv","uv.exe","pipx","pipx.exe","python.exe","python3","python") AND (Processes.process="*spellcheckpy*" OR Processes.process="*spellcheckerpy*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName has_any ("pip.exe","pip3.exe","pip","pip3","uv","uv.exe","pipx","pipx.exe","python.exe","python3","python")
+      or FileName has_any ("pip.exe","pip3.exe","uv.exe","pipx.exe"))
+| where ProcessCommandLine has_any ("spellcheckpy","spellcheckerpy")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
+| order by Timestamp desc
+```
+
+### [LLM] Python parent spawns detached 'python3 -' child reading payload from stdin
+
+`UC_485_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","python3","python","python3.exe") AND Processes.parent_process_name IN ("python.exe","python3","python","python3.exe") AND (Processes.process="*python3 -" OR Processes.process="*python -" OR Processes.process="*python.exe -" OR Processes.process="*python3.exe -")) by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has "python"
+| where FileName has "python"
+| where ProcessCommandLine endswith " -" or ProcessCommandLine endswith "python3 -" or ProcessCommandLine endswith "python -" or ProcessCommandLine endswith "python.exe -" or ProcessCommandLine endswith "python3.exe -"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] C2 beacon or stage-2 fetch to updatenet[.]work / 172.86.73.139 / dothebest[.]store
+
+`UC_485_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("updatenet.work","dothebest.store") OR All_Traffic.dest_ip="172.86.73.139" OR All_Traffic.url="*updatenet.work*" OR All_Traffic.url="*dothebest.store*" OR All_Traffic.url="*update1.php*" OR All_Traffic.url="*settings/history.php*") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let c2_domains = dynamic(["updatenet.work","dothebest.store"]);
+let c2_ip = "172.86.73.139";
+let c2_paths = dynamic(["update1.php","settings/history.php"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == c2_ip
+   or RemoteUrl has_any (c2_domains)
+   or RemoteUrl has_any (c2_paths)
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -330,4 +400,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
