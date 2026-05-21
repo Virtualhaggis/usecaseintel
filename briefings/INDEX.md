@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_764 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_765 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,16 +10,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
+- [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
 - [badiis malware turns hijacks iis servers and redirect users ](./2026-05-21/badiis-malware-turns-hijacks-iis-servers-and-redirect-users-.md)
+- [chinese hackers target telcos with new linux windows malware](./2026-05-21/chinese-hackers-target-telcos-with-new-linux-windows-malware.md)
 - [critical cisco secure workload vulnerability enables unautho](./2026-05-21/critical-cisco-secure-workload-vulnerability-enables-unautho.md)
 - [critical drupal core security vulnerability exposes websites](./2026-05-21/critical-drupal-core-security-vulnerability-exposes-websites.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
-- [highly critical drupal core flaw exposes postgresql sites to](./2026-05-21/highly-critical-drupal-core-flaw-exposes-postgresql-sites-to.md)
-- [microsoft warns of two actively exploited defender vulnerabi](./2026-05-21/microsoft-warns-of-two-actively-exploited-defender-vulnerabi.md)
+- [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
+- [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
+- [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
 - [new microsoft defender 0 days actively exploited in the wild](./2026-05-21/new-microsoft-defender-0-days-actively-exploited-in-the-wild.md)
 - [new nginx 0 day rce nginx poolslip affects millions of nginx](./2026-05-21/new-nginx-0-day-rce-nginx-poolslip-affects-millions-of-nginx.md)
 - [p2pinfect botnet compromises kubernetes clusters through exp](./2026-05-21/p2pinfect-botnet-compromises-kubernetes-clusters-through-exp.md)
+- [police seize first vpn service used in ransomware data theft](./2026-05-21/police-seize-first-vpn-service-used-in-ransomware-data-theft.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
+- [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-21/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [wanttocry ransomware abuses smb services to remotely encrypt](./2026-05-21/wanttocry-ransomware-abuses-smb-services-to-remotely-encrypt.md)
 
@@ -37,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
 - [hackers bypass sonicwall vpn mfa due to incomplete patching](./2026-05-20/hackers-bypass-sonicwall-vpn-mfa-due-to-incomplete-patching.md)
-- [microsoft shares mitigation for yellowkey windows zero day](./2026-05-20/microsoft-shares-mitigation-for-yellowkey-windows-zero-day.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
@@ -50,7 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
-- [cybercrime service disrupted for abusing microsoft platform ](./2026-05-19/cybercrime-service-disrupted-for-abusing-microsoft-platform-.md)
 - [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
 - [drupal to release urgent core security updates on may 20 sit](./2026-05-19/drupal-to-release-urgent-core-security-updates-on-may-20-sit.md)
 - [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
@@ -63,7 +66,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
-- [max severity flaw in chromadb for ai apps allows server hija](./2026-05-19/max-severity-flaw-in-chromadb-for-ai-apps-allows-server-hija.md)
 - [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 - [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
@@ -139,7 +141,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
 
 ## 2026-05-13
-- [azerbaijani energy firm hit by repeated microsoft exchange e](./2026-05-13/azerbaijani-energy-firm-hit-by-repeated-microsoft-exchange-e.md)
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
 - [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)

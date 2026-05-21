@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SMB brute-force followed by successful external network logon (WantToCry initial access)
 
-`UC_15_6` · phase: **delivery** · confidence: **High**
+`UC_20_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceLogonEvents
 
 ### [LLM] WantToCry ransom note !Want_To_Cry.txt dropped via SMB share
 
-`UC_15_7` · phase: **actions** · confidence: **High**
+`UC_20_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### [LLM] Mass file rewrite to .want_to_cry extension over SMB session (WantToCry remote encryption)
 
-`UC_15_8` · phase: **actions** · confidence: **High**
+`UC_20_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceFileEvents
 
 ### [LLM] Network communication with WantToCry encryption-infrastructure IPs
 
-`UC_15_9` · phase: **c2** · confidence: **High**
+`UC_20_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] wdavdaemon or MDE Linux endpoints observed on CI/CD build runners
 
-`UC_656_1` · phase: **install** · confidence: **Medium**
+`UC_657_1` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ union isfuzzy=true
 
 ### [LLM] CI/CD Linux build host outbound to gist.githubusercontent.com (tj-actions IOC pattern)
 
-`UC_656_2` · phase: **c2** · confidence: **High**
+`UC_657_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

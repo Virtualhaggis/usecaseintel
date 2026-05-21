@@ -10,18 +10,15 @@ Home Cyber Security News
 P2PInfect Botnet Compromises Kubernetes Clusters Through Exposed Redis Instances 
 By Tushar Subhra Dutta 
 May 21, 2026 
-
-
-
-
 A well-known botnet is now targeting cloud environments in a more calculated way than before. P2PInfect, a Rust-written peer-to-peer malware active since mid-2023, has been observed compromising Kubernetes clusters by breaking into Redis instances left exposed to the internet. 
-The campaign marks a notable shift, moving from simple server infec…
+The campaign marks a notable shift, moving from simple server infections to…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2022-0543`
 - **CVE:** `CVE-2025-49844`
 - **CVE:** `CVE-2025-11953`
+- **CVE:** `CVE-2025-55182`
 - **IPv4 (defanged):** `8.210.50.65`
 - **IPv4 (defanged):** `8.218.225.42`
 - **IPv4 (defanged):** `8.210.178.40`
@@ -64,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unauthorised inbound TCP/6379 to Kubernetes Redis pods from public Internet
 
-`UC_2_7` · phase: **delivery** · confidence: **High**
+`UC_8_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +83,7 @@ DeviceNetworkEvents
 
 ### [LLM] Redis container spawning shell (sh/bash) or download utility — P2PInfect post-SLAVEOF execution
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_8_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connections from Kubernetes pods to known P2PInfect mesh peer IPs
 
-`UC_2_9` · phase: **c2** · confidence: **High**
+`UC_8_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +122,7 @@ DeviceNetworkEvents
 
 ### [LLM] P2PInfect malicious Redis module dropped — known MD5 hash match
 
-`UC_2_10` · phase: **install** · confidence: **High**
+`UC_8_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +141,7 @@ DeviceFileEvents
 
 ### [LLM] Kubernetes pod accessing cloud instance metadata service from Redis context
 
-`UC_2_11` · phase: **actions** · confidence: **Medium**
+`UC_8_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -288,7 +285,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `8.210.50.65`, `8.218.225.42`, `8.210.178.40`, `47.86.5.176`, `178.62.63.125`, `47.237.140.12`, `47.83.124.121`, `47.86.33.195`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2022-0543`, `CVE-2025-49844`, `CVE-2025-11953`
+  - CVE(s): `CVE-2022-0543`, `CVE-2025-49844`, `CVE-2025-11953`, `CVE-2025-55182`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `80676a539765a9e117f20b6b99887eca`, `5d1ca537c4bedebf2f4d276d4199ea95`, `a1a35afebb585917675534de3d610c93`, `08ad2c2877edda9a050b81d011c1c003`

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NGINX worker process spawning shell or recon binary (post-RCE indicator for nginx-poolslip / nginx-rift class)
 
-`UC_14_3` · phase: **exploit** · confidence: **Medium**
+`UC_18_3` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

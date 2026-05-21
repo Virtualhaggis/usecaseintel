@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Maintainer-targeted phishing infrastructure access — npmjs.help (Sept 2025 chalk/debug supply-chain precursor)
 
-`UC_404_10` · phase: **delivery** · confidence: **High**
+`UC_405_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ NetworkHits
 
 ### [LLM] npm/yarn/pnpm install of compromised chalk/debug family package during 2025-09-08 13:16-15:20 UTC window
 
-`UC_404_11` · phase: **install** · confidence: **High**
+`UC_405_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### [LLM] node_modules file writes for compromised chalk/debug family packages during 2025-09-08 publish window
 
-`UC_404_12` · phase: **install** · confidence: **High**
+`UC_405_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -441,7 +441,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm debug and chalk packages compromised
 
-`UC_404_9` · phase: **exploit** · confidence: **High**
+`UC_405_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
