@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Pelmeni / ShadowLoader dropper SHA256 hash match on disk or execution
 
-`UC_102_6` · phase: **delivery** · confidence: **High**
+`UC_114_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union isfuzzy=true
 
 ### [LLM] Kazuar Bridge module: Exchange Web Services C2 from non-mail-client process
 
-`UC_102_7` · phase: **c2** · confidence: **Medium**
+`UC_114_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### [LLM] Kazuar Worker module: MAPI / Outlook interop DLL load by non-Office process
 
-`UC_102_8` · phase: **actions** · confidence: **Medium**
+`UC_114_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Kazuar Kernel module: mass encrypted-file staging in working directory
 
-`UC_102_9` · phase: **actions** · confidence: **Medium**
+`UC_114_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

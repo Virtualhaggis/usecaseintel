@@ -15,6 +15,12 @@ Threat actors seeded more than 175+ throwaway packages as disposable hosting for
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `cfn.jackpotmastersdanske.com`
+- **Domain (defanged):** `musicboxcr.com`
+- **Domain (defanged):** `villasmbuva.co.mz`
+- **Domain (defanged):** `cfn.fejyhy.com`
+- **Domain (defanged):** `cfn.fenamu.com`
+- **Domain (defanged):** `cfn.notwinningbutpartici.com`
+- **Domain (defanged):** `elkendinsc.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,12 +35,105 @@ Threat actors seeded more than 175+ throwaway packages as disposable hosting for
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1102.001** — Web Service: Dead Drop Resolver
+- **T1189** — Drive-by Compromise
+- **T1102** — Web Service
+- **T1568** — Dynamic Resolution
+- **T1056.003** — Web Portal Capture
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Inbound email with HTML attachment linking to unpkg.com Beamglea package
+
+`UC_698_8` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Email where Email.url="*unpkg.com/redirect-*" OR Email.url="*unpkg.com/mad-*" OR Email.url="*unpkg.com/*beamglea*" by _time Email.recipient Email.src_user Email.subject Email.message_id Email.file_name
+| `drop_dm_object_name(Email)`
+| where match(file_name, "(?i)\.html?$")
+```
+
+**Defender KQL:**
+```kql
+let lookback = 7d;
+let htmlAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(lookback)
+    | where FileType in~ ("html","htm") or FileName endswith ".html" or FileName endswith ".htm";
+let unpkgUrls = EmailUrlInfo
+    | where Timestamp > ago(lookback)
+    | where Url has "unpkg.com"
+    | where Url matches regex @"(?i)unpkg\.com/(redirect-[a-z0-9]{6}|mad-[0-9]+(?:\.[0-9]+){5,})(@|/)"
+        or Url has_any ("/beamglea.js","beamglea");
+htmlAttachments
+| join kind=inner unpkgUrls on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, FileName, FileType, SHA256, Url, UrlDomain
+```
+
+### [LLM] Browser load of Beamglea redirect-* or mad-* package script from unpkg.com
+
+`UC_698_9` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where (Web.url="*unpkg.com/redirect-*" OR Web.url="*unpkg.com/mad-*") (Web.url="*beamglea.js*" OR Web.url="*script.js*" OR Web.url="*/redirect-*/*" OR Web.url="*/mad-*/*") by _time Web.src Web.user Web.url Web.http_user_agent Web.app
+| `drop_dm_object_name(Web)`
+| rex field=url "unpkg\.com/(?<pkg>(?:redirect-[a-z0-9]{6}|mad-[0-9]+(?:\.[0-9]+){5,}))"
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","vivaldi.exe")
+| where RemoteUrl has "unpkg.com"
+| where RemoteUrl matches regex @"(?i)unpkg\.com/(redirect-[a-z0-9]{6}|mad-[0-9]+(?:\.[0-9]+){5,})(@|/)"
+| extend BeamgleaPackage = extract(@"(?i)unpkg\.com/(redirect-[a-z0-9]{6}|mad-[0-9]+(?:\.[0-9]+){5,})", 1, RemoteUrl)
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, BeamgleaPackage, RemoteUrl, RemoteIP
+```
+
+### [LLM] Beamglea mad-* dead-drop fetch from raw.githubusercontent.com/Abassdos2992
+
+`UC_698_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.url="*raw.githubusercontent.com/Abassdos2992/truboebvitalya*" by _time Web.src Web.user Web.url Web.http_user_agent Web.dest
+| `drop_dm_object_name(Web)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "raw.githubusercontent.com"
+| where RemoteUrl has "Abassdos2992/truboebvitalya" or RemoteUrl has "mad4.txt"
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+```
+
+### [LLM] Connection to Beamglea phishing credential-harvesting domains
+
+`UC_698_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Resolution where DNS.query IN ("*jackpotmastersdanske.com","*musicboxcr.com","*villasmbuva.co.mz","*fejyhy.com","*fenamu.com","*notwinningbutpartici.com","*elkendinsc.com") by _time DNS.src DNS.query DNS.answer
+| `drop_dm_object_name(DNS)`
+```
+
+**Defender KQL:**
+```kql
+let beamgleaDomains = dynamic(["jackpotmastersdanske.com","musicboxcr.com","villasmbuva.co.mz","fejyhy.com","fenamu.com","notwinningbutpartici.com","elkendinsc.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (beamgleaDomains) or RemoteUrl has_any ("cfn.jackpotmastersdanske.com","cfn.fejyhy.com","cfn.fenamu.com","cfn.notwinningbutpartici.com")
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -267,7 +366,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Phishing Campaign Leveraging the NPM Ecosystem
 
-`UC_694_7` · phase: **exploit** · confidence: **High**
+`UC_698_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -319,9 +418,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `cfn.jackpotmastersdanske.com`
+  - IP / domain IOC(s): `cfn.jackpotmastersdanske.com`, `musicboxcr.com`, `villasmbuva.co.mz`, `cfn.fejyhy.com`, `cfn.fenamu.com`, `cfn.notwinningbutpartici.com`, `elkendinsc.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

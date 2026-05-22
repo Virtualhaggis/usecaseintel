@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1236 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1240 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,22 +8,35 @@ _1236 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-22
+- [cisa adds exploited langflow and trend micro apex one vulner](./2026-05-22/cisa-adds-exploited-langflow-and-trend-micro-apex-one-vulner.md)
+- [megalodon malware compromised 5 500 github repos within 6 ho](./2026-05-22/megalodon-malware-compromised-5-500-github-repos-within-6-ho.md)
+- [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
+
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
 - [authorities have taken down first vpn used in ransomware att](./2026-05-21/authorities-have-taken-down-first-vpn-used-in-ransomware-att.md)
-- [badiis malware turns hijacks iis servers and redirect users ](./2026-05-21/badiis-malware-turns-hijacks-iis-servers-and-redirect-users-.md)
 - [chinese hackers target telcos with new linux windows malware](./2026-05-21/chinese-hackers-target-telcos-with-new-linux-windows-malware.md)
-- [critical cisco secure workload vulnerability enables unautho](./2026-05-21/critical-cisco-secure-workload-vulnerability-enables-unautho.md)
+- [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
+- [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
+- [dev machine guard now scans extensions across every modern i](./2026-05-21/dev-machine-guard-now-scans-extensions-across-every-modern-i.md)
+- [fake invitation phishing campaign targets u s organizations ](./2026-05-21/fake-invitation-phishing-campaign-targets-u-s-organizations-.md)
+- [ghsa critical cve 2026 46614 fission router exposes fission ](./2026-05-21/ghsa-critical-cve-2026-46614-fission-router-exposes-fission-.md)
+- [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
+- [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
+- [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
+- [hackers use fake microsoft teams downloads to deploy valleyr](./2026-05-21/hackers-use-fake-microsoft-teams-downloads-to-deploy-valleyr.md)
+- [indian student data weaponized for phishing social engineeri](./2026-05-21/indian-student-data-weaponized-for-phishing-social-engineeri.md)
 - [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
 - [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
-- [new microsoft defender 0 days actively exploited in the wild](./2026-05-21/new-microsoft-defender-0-days-actively-exploited-in-the-wild.md)
-- [p2pinfect botnet compromises kubernetes clusters through exp](./2026-05-21/p2pinfect-botnet-compromises-kubernetes-clusters-through-exp.md)
 - [police seize first vpn service used in ransomware data theft](./2026-05-21/police-seize-first-vpn-service-used-in-ransomware-data-theft.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
+- [tamperedchef malware uses signed productivity apps to delive](./2026-05-21/tamperedchef-malware-uses-signed-productivity-apps-to-delive.md)
+- [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-05-21/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-21/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [what s new in microsoft security may 2026](./2026-05-21/what-s-new-in-microsoft-security-may-2026.md)
@@ -43,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
 - [hackers bypass sonicwall vpn mfa due to incomplete patching](./2026-05-20/hackers-bypass-sonicwall-vpn-mfa-due-to-incomplete-patching.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
-- [nx console vs code extension compromised](./2026-05-20/nx-console-vs-code-extension-compromised.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [ukraine identifies infostealer operator tied to 28 000 stole](./2026-05-20/ukraine-identifies-infostealer-operator-tied-to-28-000-stole.md)
@@ -111,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
 
 ## 2026-05-14
-- [18 year old nginx rewrite module flaw enables unauthenticate](./2026-05-14/18-year-old-nginx-rewrite-module-flaw-enables-unauthenticate.md)
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [defense in depth for autonomous ai agents](./2026-05-14/defense-in-depth-for-autonomous-ai-agents.md)
@@ -220,9 +231,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
-- [ghsa critical cve 2026 42555 valtimo has spel injection via ](./2026-05-06/ghsa-critical-cve-2026-42555-valtimo-has-spel-injection-via-.md)
-- [ghsa critical cve 2026 44351 fast jwt jwt auth bypass due to](./2026-05-06/ghsa-critical-cve-2026-44351-fast-jwt-jwt-auth-bypass-due-to.md)
-- [ghsa critical ghsa 289f fq7w 6q2w phpmyfaq has unauthenticat](./2026-05-06/ghsa-critical-ghsa-289f-fq7w-6q2w-phpmyfaq-has-unauthenticat.md)
 - [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 
@@ -282,7 +290,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
 - [hardcoding security into every commit the future of snyk sec](./2026-04-23/hardcoding-security-into-every-commit-the-future-of-snyk-sec.md)
-- [it pays to be a forever student](./2026-04-23/it-pays-to-be-a-forever-student.md)
 - [jpmorgan just published a cyber to do list and snyk covers 8](./2026-04-23/jpmorgan-just-published-a-cyber-to-do-list-and-snyk-covers-8.md)
 
 ## 2026-04-22
@@ -1806,7 +1813,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-04-24
 - [360 degrees of application security with snyk](./2024-04-24/360-degrees-of-application-security-with-snyk.md)
-- [cisa kev cve 2024 20359 cisco asa and ftd privilege escalati](./2024-04-24/cisa-kev-cve-2024-20359-cisco-asa-and-ftd-privilege-escalati.md)
 - [cisa kev cve 2024 4040 crushftp vfs sandbox escape vulnerabi](./2024-04-24/cisa-kev-cve-2024-4040-crushftp-vfs-sandbox-escape-vulnerabi.md)
 
 ## 2024-04-23

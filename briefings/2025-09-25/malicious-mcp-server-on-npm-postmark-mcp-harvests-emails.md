@@ -16,19 +16,96 @@ TL;DR If you have installed or used postmark-mcp since mid-Septe…
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `giftshop.club`
-- **Domain (defanged):** `www.npmjs.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
+- **T1567** — Exfiltration Over Web Service
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound email BCC'd to giftshop.club exfil domain (postmark-mcp backdoor)
+
+`UC_726_3` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.src_user) as sender values(All_Email.subject) as subject from datamodel=Email.All_Email where All_Email.recipient="*@giftshop.club" OR All_Email.message_info="*giftshop.club*" by All_Email.src All_Email.recipient All_Email.message_id | `drop_dm_object_name(All_Email)`
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(30d)
+| where RecipientEmailAddress endswith "@giftshop.club"
+   or AdditionalFields has "giftshop.club"
+| project Timestamp, NetworkMessageId, InternetMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, EmailDirection, DeliveryAction, DeliveryLocation, SenderIPv4
+| order by Timestamp desc
+```
+
+### [LLM] DNS or HTTP egress to giftshop.club exfil domain
+
+`UC_726_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as resolved_ip from datamodel=Network_Resolution.DNS where DNS.query="*giftshop.club" OR DNS.query="giftshop.club" by DNS.query DNS.src | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Web.Web where Web.url="*giftshop.club*" by Web.src Web.url Web.http_user_agent | `drop_dm_object_name(Web)`]
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has "giftshop.club"
+  | project Timestamp, DeviceName, DeviceId, ActionType, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+),
+( DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | where AdditionalFields has "giftshop.club" or RemoteUrl has "giftshop.club"
+  | project Timestamp, DeviceName, DeviceId, ActionType, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, AdditionalFields
+)
+| order by Timestamp desc
+```
+
+### [LLM] Installation or presence of malicious postmark-mcp npm package (v1.0.16+)
+
+`UC_726_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules*postmark-mcp*" OR Filesystem.file_name="postmark-mcp") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name IN ("npm","npm.cmd","npm.exe","yarn","yarn.cmd","pnpm","pnpm.exe") AND Processes.process="*postmark-mcp*" by Processes.dest Processes.user Processes.process | `drop_dm_object_name(Processes)`]
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where FolderPath has @"\node_modules\postmark-mcp\" or FolderPath has "/node_modules/postmark-mcp/"
+  | where FileName in~ ("index.js","package.json","package-lock.json")
+  | project Timestamp, DeviceName, DeviceId, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+),
+( DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where InitiatingProcessFileName in~ ("npm.exe","npm.cmd","node.exe","yarn.cmd","yarn.exe","pnpm.exe","npx.cmd","npx.exe")
+     or FileName in~ ("npm.exe","npm.cmd","yarn.cmd","pnpm.exe","npx.cmd","npx.exe")
+  | where ProcessCommandLine has "postmark-mcp" or InitiatingProcessCommandLine has "postmark-mcp"
+  | project Timestamp, DeviceName, DeviceId, AccountName, ProcessCommandLine, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+)
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -56,7 +133,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious MCP Server on npm postmark-mcp Harvests Emails
 
-`UC_722_2` · phase: **exploit** · confidence: **High**
+`UC_726_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,9 +185,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `giftshop.club`, `www.npmjs.com`
+  - IP / domain IOC(s): `giftshop.club`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint
 
-`UC_81_2` · phase: **c2** · confidence: **High**
+`UC_93_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ union isfuzzy=true
 
 ### [LLM] python3 reading /proc/<PID>/mem to scrape Runner.Worker secrets
 
-`UC_81_3` · phase: **actions** · confidence: **High**
+`UC_93_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] bun runtime executed on CI runner spawning python3 with sudo escalation
 
-`UC_81_4` · phase: **install** · confidence: **High**
+`UC_93_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag
 
-`UC_81_5` · phase: **delivery** · confidence: **High**
+`UC_93_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
 
-`UC_81_1` · phase: **exploit** · confidence: **High**
+`UC_93_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

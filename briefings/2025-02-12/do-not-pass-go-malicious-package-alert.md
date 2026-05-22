@@ -1,4 +1,4 @@
-# [HIGH] Do not pass GO - Malicious Package Alert
+# [CRIT] Do not pass GO - Malicious Package Alert
 
 **Source:** Snyk
 **Published:** 2025-02-12
@@ -13,12 +13,16 @@ February 12, 2025
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `GO-2025-3451`
+- **IPv4 (defanged):** `49.12.198.231`
+- **Domain (defanged):** `github.com/boltdb-go/bolt`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
@@ -33,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BoltDB Go backdoor C2 callback to 49.12.198.231:20022
 
-`UC_954_2` · phase: **c2** · confidence: **High**
+`UC_958_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,7 +55,7 @@ DeviceNetworkEvents
 
 ### [LLM] Go typosquat module reference: github.com/boltdb-go/bolt in process or build telemetry
 
-`UC_954_3` · phase: **delivery** · confidence: **High**
+`UC_958_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +130,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `49.12.198.231`, `github.com/boltdb-go/bolt`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `GO-2025-3451`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

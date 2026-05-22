@@ -13,12 +13,12 @@ An attacker with write privileges on the Action repo made a commit that caused e
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `c7e359462f6afc144d7b4da6eb277d0338c675c9`
-- **SHA1:** `6eb82f8276131aa04985f48b1d74e020133e22e5`
-- **MD5:** `30e525b776c409e03c2d6f328f254965`
+- **CVE:** `CVE-2025-30066`
+- **SHA1:** `0e58ed8671d6b60d0890c21b07f8835ace038e67`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Self-hosted GitHub Action runner downloads memdump.py from compromised gist (CVE-2025-30066)
 
-`UC_911_3` · phase: **delivery** · confidence: **High**
+`UC_915_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### [LLM] Runner.Worker process memory dumped via /proc/PID/mem read on Linux runner
 
-`UC_911_4` · phase: **actions** · confidence: **High**
+`UC_915_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ MemReads
 
 ### [LLM] Malicious tj-actions base64 payload prefix observed in process command line
 
-`UC_911_5` · phase: **exploit** · confidence: **High**
+`UC_915_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] Git checkout of compromised tj-actions/changed-files commit on runner host
 
-`UC_911_6` · phase: **weapon** · confidence: **Medium**
+`UC_915_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Reconstructing the TJ Actions Changed Files GitHub Actions Compromise
 
-`UC_911_2` · phase: **exploit** · confidence: **High**
+`UC_915_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,10 +206,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-30066`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `c7e359462f6afc144d7b4da6eb277d0338c675c9`, `6eb82f8276131aa04985f48b1d74e020133e22e5`, `30e525b776c409e03c2d6f328f254965`
+  - file hash IOC(s): `0e58ed8671d6b60d0890c21b07f8835ace038e67`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

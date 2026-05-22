@@ -14,7 +14,8 @@ This resulted in the attacker taking over his npm account and having access to p
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `npnjs.com`
+- **Domain (defanged):** `npmjs.help`
+- **Domain (defanged):** `websocket-api2.publicvm.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,12 +32,119 @@ This resulted in the attacker taking over his npm account and having access to p
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1056.003** — Input Capture: Web Portal Capture
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567** — Exfiltration Over Web Service
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Inbound phishing email from npmjs.help maintainer-takeover domain
+
+`UC_744_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Email.subject) as subject values(Email.recipient) as recipient values(Email.url) as url from datamodel=Email where (Email.sender_domain="npmjs.help" OR Email.url="*npmjs.help*" OR Email.message_body="*npmjs.help*") by Email.src_user Email.recipient_domain | `drop_dm_object_name(Email)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let lookback = 90d;
+let badDomain = "npmjs.help";
+let urls = EmailUrlInfo
+    | where Timestamp > ago(lookback)
+    | where UrlDomain endswith badDomain or Url has badDomain
+    | project Timestamp, NetworkMessageId, Url, UrlDomain;
+let senders = EmailEvents
+    | where Timestamp > ago(lookback)
+    | where SenderFromDomain endswith badDomain
+         or SenderMailFromDomain endswith badDomain
+         or SenderFromAddress has "@npmjs.help"
+    | project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation;
+senders
+| union (urls | join kind=inner (EmailEvents | where Timestamp > ago(lookback)) on NetworkMessageId
+         | project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain)
+| order by Timestamp desc
+```
+
+### [LLM] Browser/HTTPS traffic to npmjs.help credential-harvesting page
+
+`UC_744_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest from datamodel=Web where (Web.url="*npmjs.help*" OR Web.site="npmjs.help" OR Web.url="*static-mw-host.b-cdn.net*" OR Web.url="*img-data-backup.b-cdn.net*") by Web.src host | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badHosts = dynamic(["npmjs.help","static-mw-host.b-cdn.net","img-data-backup.b-cdn.net"]);
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (badHosts)
+      or tostring(parse_url(RemoteUrl).Host) in~ (badHosts)
+      or RemoteIP == "185.7.81.108"
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] Egress to websocket-api2.publicvm.com (Qix campaign credential exfil C2)
+
+`UC_744_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic where (All_Traffic.dest="websocket-api2.publicvm.com" OR All_Traffic.dest_host="websocket-api2.publicvm.com") by All_Traffic.src_ip All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution where DNS.query="websocket-api2.publicvm.com" OR DNS.query="*.publicvm.com" by DNS.src DNS.query | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(180d)
+| where RemoteUrl has "websocket-api2.publicvm.com"
+     or tostring(parse_url(RemoteUrl).Host) =~ "websocket-api2.publicvm.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Install / lockfile mention of the 28 compromised Qix-campaign package@versions
+
+`UC_744_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe") AND (Processes.process="*debug@4.4.2*" OR Processes.process="*chalk@5.6.1*" OR Processes.process="*ansi-styles@6.2.2*" OR Processes.process="*ansi-regex@6.2.1*" OR Processes.process="*strip-ansi@7.1.1*" OR Processes.process="*color-convert@3.1.1*" OR Processes.process="*color-name@2.0.1*" OR Processes.process="*color@5.0.1*" OR Processes.process="*color-string@2.1.1*" OR Processes.process="*is-arrayish@0.3.3*" OR Processes.process="*slice-ansi@7.1.1*" OR Processes.process="*simple-swizzle@0.2.3*" OR Processes.process="*supports-color@10.2.1*" OR Processes.process="*supports-hyperlinks@4.1.1*" OR Processes.process="*chalk-template@1.1.1*" OR Processes.process="*backslash@0.2.1*" OR Processes.process="*wrap-ansi@9.0.1*" OR Processes.process="*has-ansi@6.0.1*" OR Processes.process="*error-ex@1.3.3*" OR Processes.process="*duckdb@1.3.3*" OR Processes.process="*@duckdb/node-api@1.3.3*" OR Processes.process="*@duckdb/node-bindings@1.3.3*" OR Processes.process="*@duckdb/duckdb-wasm@1.29.2*" OR Processes.process="*prebid.js@10.9.2*" OR Processes.process="*proto-tinker-wc@0.1.87*")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let badPkgs = dynamic([
+    "debug@4.4.2","chalk@5.6.1","ansi-styles@6.2.2","ansi-regex@6.2.1","strip-ansi@7.1.1",
+    "color-convert@3.1.1","color-name@2.0.1","color@5.0.1","color-string@2.1.1",
+    "is-arrayish@0.3.3","slice-ansi@7.1.1","simple-swizzle@0.2.3",
+    "supports-color@10.2.1","supports-hyperlinks@4.1.1","chalk-template@1.1.1",
+    "backslash@0.2.1","wrap-ansi@9.0.1","has-ansi@6.0.1","error-ex@1.3.3",
+    "duckdb@1.3.3","@duckdb/node-api@1.3.3","@duckdb/node-bindings@1.3.3",
+    "@duckdb/duckdb-wasm@1.29.2","prebid.js@10.9.2","proto-tinker-wc@0.1.87"]);
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where FileName in~ ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe","npm","yarn","pnpm")
+     or InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe")
+| where ProcessCommandLine has_any (badPkgs)
+     or InitiatingProcessCommandLine has_any (badPkgs)
+| project Timestamp, DeviceName, AccountUpn, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -299,7 +407,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm Supply Chain Attack via Open Source maintainer compromise
 
-`UC_740_8` · phase: **exploit** · confidence: **High**
+`UC_744_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,9 +459,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `npnjs.com`
+  - IP / domain IOC(s): `npmjs.help`, `websocket-api2.publicvm.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

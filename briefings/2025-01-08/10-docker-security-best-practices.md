@@ -15,14 +15,13 @@ Th…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA256:** `c221d4dc80b8a0d3866602020b09722d942157c720273d325a0496a529b5fcab`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
-- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
@@ -84,7 +83,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 10 Docker Security Best Practices
 
-`UC_990_3` · phase: **exploit** · confidence: **High**
+`UC_994_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,14 +130,7 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `c221d4dc80b8a0d3866602020b09722d942157c720273d325a0496a529b5fcab`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

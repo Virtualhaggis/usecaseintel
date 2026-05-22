@@ -59,7 +59,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Session management security: Best practices for protecting user sessions
 
-`UC_1395_1` · phase: **exploit** · confidence: **High**
+`UC_1398_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

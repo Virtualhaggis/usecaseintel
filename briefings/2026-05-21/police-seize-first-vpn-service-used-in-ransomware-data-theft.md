@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Historical DNS queries to seized First VPN infrastructure (1vpns.com/.net/.org)
 
-`UC_9_4` · phase: **c2** · confidence: **High**
+`UC_24_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

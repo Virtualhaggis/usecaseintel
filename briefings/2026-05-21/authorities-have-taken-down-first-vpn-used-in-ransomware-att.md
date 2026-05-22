@@ -10,12 +10,8 @@ Home Cyber Security
 Authorities Have Taken Down “First VPN” Used in Ransomware Attacks 
 By Guru Baran 
 May 21, 2026 
-
-
-
-
 In a major international law enforcement success, authorities from seven countries dismantled First VPN, a criminal virtual private network linked to global cybercrime, during a coordinated operation on May 19 and 20, 2026.
-Dubbed Operation Saffron, the joint action was led by French and Dutch authorities and supported by Europol and Eurojust, resulting in the seizure of …
+Dubbed Operation Saffron, the joint action was led by French and Dutch authorities and supported by Europol and Eurojust, resulting in the seizure of 33 serve…
 
 ## Indicators of Compromise (high-fidelity only)
 

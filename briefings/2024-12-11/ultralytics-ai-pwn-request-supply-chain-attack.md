@@ -13,11 +13,31 @@ December 11, 2024
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA1:** `d8daa0b26ae0c221aa4a8c20834c4dbfef2a9a14`
+- **Domain (defanged):** `connect.consrensys.com`
+- **Domain (defanged):** `webhook.site/ecd706a0-f207-4df2-b639-d326ef3c2fe1`
+- **Domain (defanged):** `webhook.site/1e6c12e8-aaeb-4349-98ad-a7196e632c5a`
+- **SHA256:** `b6ea1681855ec2f73c643ea2acfcf7ae084a9648f888d4bd1e3e119ec15c3495`
+- **SHA256:** `15bcffd83cda47082acb081eaf7270a38c497b3a2bc6e917582bda8a5b0f7bab`
+- **SHA256:** `f08d47cb3e1e848b5607ac44baedf1754b201b6b90dfc527d6cefab1dd2d2c23`
+- **SHA256:** `e9d538203ac43e9df11b68803470c116b7bb02881cd06175b0edfc4438d4d1a2`
+- **SHA256:** `6a9d121f538cad60cabd9369a951ec4405a081c664311a90537f0a7a61b0f3e5`
+- **SHA256:** `c9c3401536fd9a0b6012aec9169d2c1fc1368b7073503384cfc0b38c47b1d7e1`
+- **SHA256:** `4347625838a5cb0e9d29f3ec76ed8365b31b281103b716952bf64d37cf309785`
+- **SHA256:** `ec12cd32729e8abea5258478731e70ccc5a7c6c4847dde78488b8dd0b91b8555`
+- **SHA256:** `b0e1ae6d73d656b203514f498b59cbcf29f067edf6fbd3803a3de7d21960848d`
+- **SHA1:** `ee304a92a9e68e7923d7a37a370c7556ac596250`
+- **SHA1:** `7c6136cf4e857582c2f086673359be94e7e4b702`
+- **SHA1:** `dd0577b10e73792f2b2315af63b872fe4123ec9c`
+- **SHA1:** `bea3060707e6f3fec47aa2af64ea2e774b56e9f5`
+- **SHA1:** `059beed5bcdfea16c05b4d45560c97abfd4af3de`
+- **SHA1:** `a1f1e3ede7c7e6ae650a294630214ce7fa596255`
+- **SHA1:** `62b6532384bdd9b96af5ac684d87f52efb48f7de`
+- **SHA1:** `96f496ac5c64f3c884676dd99d6edbe7fa596255`
 
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1059.006** — Command and Scripting Interpreter: Python
@@ -34,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Installation of poisoned Ultralytics PyPI package (v8.3.41 / 8.3.42 / 8.3.45 / 8.3.46)
 
-`UC_1009_3` · phase: **install** · confidence: **High**
+`UC_1013_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions branch-name template injection — bash brace-expansion shell signature
 
-`UC_1009_4` · phase: **exploit** · confidence: **High**
+`UC_1013_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound fetch of file.sh via attacker-controlled commit d8daa0b... on raw.githubusercontent.com
 
-`UC_1009_5` · phase: **c2** · confidence: **High**
+`UC_1013_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +144,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ultralytics AI Pwn Request Supply Chain Attack
 
-`UC_1009_2` · phase: **exploit** · confidence: **High**
+`UC_1013_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,10 +195,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `connect.consrensys.com`, `webhook.site/ecd706a0-f207-4df2-b639-d326ef3c2fe1`, `webhook.site/1e6c12e8-aaeb-4349-98ad-a7196e632c5a`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `d8daa0b26ae0c221aa4a8c20834c4dbfef2a9a14`
+  - file hash IOC(s): `b6ea1681855ec2f73c643ea2acfcf7ae084a9648f888d4bd1e3e119ec15c3495`, `15bcffd83cda47082acb081eaf7270a38c497b3a2bc6e917582bda8a5b0f7bab`, `f08d47cb3e1e848b5607ac44baedf1754b201b6b90dfc527d6cefab1dd2d2c23`, `e9d538203ac43e9df11b68803470c116b7bb02881cd06175b0edfc4438d4d1a2`, `6a9d121f538cad60cabd9369a951ec4405a081c664311a90537f0a7a61b0f3e5`, `c9c3401536fd9a0b6012aec9169d2c1fc1368b7073503384cfc0b38c47b1d7e1`, `4347625838a5cb0e9d29f3ec76ed8365b31b281103b716952bf64d37cf309785`, `ec12cd32729e8abea5258478731e70ccc5a7c6c4847dde78488b8dd0b91b8555` _(+9 more)_
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

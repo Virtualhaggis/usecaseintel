@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious @antv preinstall chain: node spawns sh spawns bun on Linux CI runner
 
-`UC_26_8` · phase: **install** · confidence: **High**
+`UC_39_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### [LLM] Trojanised @antv payload SHA256 / 499KB single-line index.js on disk
 
-`UC_26_9` · phase: **delivery** · confidence: **High**
+`UC_39_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### [LLM] Passwordless sudoers rule injected via bind mount at /mnt or /etc/sudoers.d
 
-`UC_26_10` · phase: **exploit** · confidence: **High**
+`UC_39_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions Runner.Worker process memory scraping via /proc
 
-`UC_26_11` · phase: **exploit** · confidence: **High**
+`UC_39_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud / Vault / Kubernetes credential file harvesting from npm or bun lineage
 
-`UC_26_12` · phase: **actions** · confidence: **High**
+`UC_39_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ DeviceFileEvents
 
 ### [LLM] AWS SecretsManager region-wide enumeration burst from CI identity
 
-`UC_26_13` · phase: **actions** · confidence: **High**
+`UC_39_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceFileEvents
 
 ### [LLM] DNS or HTTPS to Shai-Hulud C2 (t.m-kosche.com, check.git-service.com)
 
-`UC_26_14` · phase: **c2** · confidence: **High**
+`UC_39_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -231,7 +231,7 @@ union
 
 ### [LLM] GitHub repo creation with 'Shai-Hulud :We Here Go Again' reversed description
 
-`UC_26_15` · phase: **actions** · confidence: **High**
+`UC_39_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -381,7 +381,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Grafana breach caused by missed token rotation after TanStack attack
 
-`UC_26_7` · phase: **exploit** · confidence: **High**
+`UC_39_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

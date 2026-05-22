@@ -1,4 +1,4 @@
-# [HIGH] Maintainers of ESLint Prettier Plugin Attacked via npm Supply Chain Malware
+# [CRIT] Maintainers of ESLint Prettier Plugin Attacked via npm Supply Chain Malware
 
 **Source:** Snyk
 **Published:** 2025-07-22
@@ -16,10 +16,13 @@ Impacted packages: es…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **CVE:** `CVE-2025-54313`
+- **Domain (defanged):** `npnjs.com`
+- **SHA256:** `c68e42f416f482d43653f36cd14384270b54b68d6496a8e34ce887687de5b441`
 
 ## MITRE ATT&CK Techniques
 
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -29,6 +32,8 @@ Impacted packages: es…
 - **T1218** — System Binary Proxy Execution
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1218.011** — System Binary Proxy Execution: Rundll32
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
@@ -50,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] rundll32.exe loading node-gyp.dll dropped by Scavenger-infected npm postinstall (CVE-2025-54313)
 
-`UC_786_5` · phase: **install** · confidence: **High**
+`UC_790_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Scavenger Stealer C2 beacon to corroborated infrastructure (datahog.su / datalytica.su / smartscreen-api.com)
 
-`UC_786_6` · phase: **c2** · confidence: **High**
+`UC_790_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +105,7 @@ DeviceNetworkEvents
 
 ### [LLM] npm registry typosquat npnjs.com — DNS / URL click (eslint-config-prettier maintainer phishing kit)
 
-`UC_786_7` · phase: **delivery** · confidence: **High**
+`UC_790_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +132,7 @@ union isfuzzy=true
 
 ### [LLM] Scavenger Loader DLL (node-gyp.dll) written inside node_modules of CVE-2025-54313 packages
 
-`UC_786_8` · phase: **delivery** · confidence: **High**
+`UC_790_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +164,7 @@ DeviceFileEvents
 
 ### [LLM] Scavenger Stealer sandbox-evasion marker file %TEMP%\SCVNGR_VM created
 
-`UC_786_9` · phase: **install** · confidence: **High**
+`UC_790_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -379,7 +384,20 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2025-54313`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `npnjs.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `c68e42f416f482d43653f36cd14384270b54b68d6496a8e34ce887687de5b441`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
