@@ -10,12 +10,8 @@ Home Cyber Security
 Canadian Man Arrested for Operating KimWolf DDoS Botnet Hacking 2 Million Devices 
 By Guru Baran 
 May 22, 2026 
-
-
-
-
 Canadian and U.S. authorities have arrested and charged a 23‑year‑old Ottawa resident for allegedly operating “KimWolf,” a massive Internet‑of‑Things (IoT) DDoS‑for‑hire botnet that weaponized more than a million connected devices worldwide, including systems in Alaska and on the U.S. Department of Defense Information Network (DoDIN).
-According to an unseal…
+According to an unsealed crimi…
 
 ## Indicators of Compromise (high-fidelity only)
 

@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious litellm 1.82.7/1.82.8 wheel install drops litellm_init.pth in site-packages
 
-`UC_366_9` · phase: **delivery** · confidence: **High**
+`UC_367_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceFileEvents
 
 ### [LLM] Python .pth startup hook executes subprocess to curl C2 (litellm fork-bomb pattern)
 
-`UC_366_10` · phase: **install** · confidence: **High**
+`UC_367_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] DNS / HTTPS egress to TeamPCP exfil infra (models.litellm.cloud, checkmarx.zone)
 
-`UC_366_11` · phase: **c2** · confidence: **High**
+`UC_367_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ union
 
 ### [LLM] Exfil staging artefacts: session.key, payload.enc, session.key.enc, tpcp.tar.gz in temp
 
-`UC_366_12` · phase: **actions** · confidence: **High**
+`UC_367_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP Linux credential harvest: Python reading /etc/shadow + auth.log + cloud
 
-`UC_366_13` · phase: **actions** · confidence: **Medium**
+`UC_367_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM
 
-`UC_366_8` · phase: **exploit** · confidence: **High**
+`UC_367_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

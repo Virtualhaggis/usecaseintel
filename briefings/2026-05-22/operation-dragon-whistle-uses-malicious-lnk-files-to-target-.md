@@ -10,12 +10,8 @@ Home Cyber Security News
 Operation Dragon Whistle Uses Malicious LNK Files to Target Changzhou University 
 By Tushar Subhra Dutta 
 May 22, 2026 
-
-
-
-
 A newly uncovered cyber operation has raised concerns among security professionals after a coordinated wave of attacks targeted government institutions in Pakistan. 
-The campaign, now tracked as Operation Dragon Whistle, used highly convincing phishing emails to trick employees into opening malicious file attachments. Once those files were open…
+The campaign, now tracked as Operation Dragon Whistle, used highly convincing phishing emails to trick employees into opening malicious file attachments. Once those files were opened, they…
 
 ## Indicators of Compromise (high-fidelity only)
 

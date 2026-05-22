@@ -1,17 +1,26 @@
-# [CRIT] FBI Warns of Kali365 Attacking Microsoft 365 Users to Steal Logins and Bypass MFA
+# [HIGH] Microsoft Security success stories: How St. Luke’s and ManpowerGroup are securing AI foundations
 
-**Source:** Cyber Security News
+**Source:** Microsoft Security Blog
 **Published:** 2026-05-22
-**Article:** https://cybersecuritynews.com/kali365-phaas-microsoft-365/
+**Article:** https://www.microsoft.com/en-us/security/blog/2026/05/22/microsoft-security-success-stories-how-st-lukes-and-manpowergroup-are-securing-ai-foundations/
 
 ## Threat Profile
 
-Home Cyber Security News 
-FBI Warns of Kali365 Attacking Microsoft 365 Users to Steal Logins and Bypass MFA 
-By Abinaya 
-May 22, 2026 
-The FBI has issued a new cybersecurity warning about a rapidly emerging phishing-as-a-service (PhaaS) platform named Kali365, which is actively targeting Microsoft 365 users to steal access tokens and bypass multi-factor authentication (MFA).
-Kali365 is being distributed primarily through Telegram channels, where threat actors can subscribe to the service and lau…
+Tags 
+Microsoft 365 
+Content types 
+Best practices 
+Products and services 
+Microsoft Defender 
+Microsoft Purview 
+Microsoft Security Copilot 
+Microsoft Sentinel 
+Topics 
+AI and agents 
+Cloud security 
+Data protection 
+Zero Trust 
+AI is reshaping how work gets done—and how risks emerge across cloud, data, identity, and more. Many organizations want AI-powered productivity, but their security foundations aren’t yet built for it. As organizations move toward AI-powered operating models, security be…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -26,9 +35,6 @@ Kali365 is being distributed primarily through Telegram channels, where threat a
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1204.004** — User Execution: Malicious Copy and Paste
 
 ## Kill chain phases observed
 
@@ -184,62 +190,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

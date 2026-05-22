@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,17 +11,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-22
 - [android malware silently subscribes victims to premium servi](./2026-05-22/android-malware-silently-subscribes-victims-to-premium-servi.md)
 - [canadian man arrested for operating kimwolf ddos botnet hack](./2026-05-22/canadian-man-arrested-for-operating-kimwolf-ddos-botnet-hack.md)
+- [cisa adds langflow origin validation flaw to known exploited](./2026-05-22/cisa-adds-langflow-origin-validation-flaw-to-known-exploited.md)
+- [cisa warns of microsoft defender 0 day vulnerabilities explo](./2026-05-22/cisa-warns-of-microsoft-defender-0-day-vulnerabilities-explo.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
+- [deleted google api keys continue accessing gemini bigquery a](./2026-05-22/deleted-google-api-keys-continue-accessing-gemini-bigquery-a.md)
 - [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
-- [fbi warns of kali365 attacking microsoft 365 users to steal ](./2026-05-22/fbi-warns-of-kali365-attacking-microsoft-365-users-to-steal-.md)
-- [google publishes exploit code for unfixed chromium bug expos](./2026-05-22/google-publishes-exploit-code-for-unfixed-chromium-bug-expos.md)
-- [hackers can weaponize lenovo driver to terminate edr process](./2026-05-22/hackers-can-weaponize-lenovo-driver-to-terminate-edr-process.md)
+- [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
+- [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
+- [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [hackers hide malware payloads inside nested macos like folde](./2026-05-22/hackers-hide-malware-payloads-inside-nested-macos-like-folde.md)
-- [hackers use hugging face to host second stage malware for np](./2026-05-22/hackers-use-hugging-face-to-host-second-stage-malware-for-np.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
+- [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
 - [operation dragon whistle uses malicious lnk files to target ](./2026-05-22/operation-dragon-whistle-uses-malicious-lnk-files-to-target-.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
@@ -68,7 +71,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
-- [ukraine identifies infostealer operator tied to 28 000 stole](./2026-05-20/ukraine-identifies-infostealer-operator-tied-to-28-000-stole.md)
 - [webworm deploys echocreep and graphworm backdoors using disc](./2026-05-20/webworm-deploys-echocreep-and-graphworm-backdoors-using-disc.md)
 - [webworm new burrowing techniques](./2026-05-20/webworm-new-burrowing-techniques.md)
 
@@ -148,10 +150,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
-- [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
-- [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
 
 ## 2026-05-13
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
@@ -216,7 +216,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44005 vm2 mutable proxies for host in](./2026-05-07/ghsa-critical-cve-2026-44005-vm2-mutable-proxies-for-host-in.md)
 - [ghsa critical cve 2026 44006 vm2 has a sandbox escape vulner](./2026-05-07/ghsa-critical-cve-2026-44006-vm2-has-a-sandbox-escape-vulner.md)
 - [ghsa critical cve 2026 44007 vm2 nodevm nesting true bypasse](./2026-05-07/ghsa-critical-cve-2026-44007-vm2-nodevm-nesting-true-bypasse.md)
-- [ghsa critical cve 2026 44484 compromise of pytorch lightning](./2026-05-07/ghsa-critical-cve-2026-44484-compromise-of-pytorch-lightning.md)
 - [ghsa critical cve 2026 44497 zebra has consensus divergence ](./2026-05-07/ghsa-critical-cve-2026-44497-zebra-has-consensus-divergence-.md)
 - [ghsa critical cve 2026 44498 zebra s block validator underco](./2026-05-07/ghsa-critical-cve-2026-44498-zebra-s-block-validator-underco.md)
 - [ghsa critical cve 2026 44523 note mark has a jwt secret weak](./2026-05-07/ghsa-critical-cve-2026-44523-note-mark-has-a-jwt-secret-weak.md)
@@ -230,7 +229,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
-- [ghsa critical ghsa 9h64 2846 7x7f axonflow fixed bugs by imp](./2026-05-06/ghsa-critical-ghsa-9h64-2846-7x7f-axonflow-fixed-bugs-by-imp.md)
 - [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 
 ## 2026-05-05

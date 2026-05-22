@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious durabletask PyPI package install (versions 1.4.1-1.4.3)
 
-`UC_62_6` · phase: **delivery** · confidence: **High**
+`UC_67_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union ProcessHits, FileHits
 
 ### [LLM] Python interpreter fetches rope.pyz dropper from check.git-service.com
 
-`UC_62_7` · phase: **install** · confidence: **High**
+`UC_67_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union NetHits, RopeFile
 
 ### [LLM] Linux Python stealer harvesting cloud, vault, SSH and password-manager secrets
 
-`UC_62_8` · phase: **actions** · confidence: **High**
+`UC_67_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud worm propagation via AWS SSM SendCommand fan-out
 
-`UC_62_9` · phase: **actions** · confidence: **High**
+`UC_67_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] FIRESCALE backup-C2 lookup via GitHub commit-message search
 
-`UC_62_10` · phase: **c2** · confidence: **High**
+`UC_67_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ union PrimaryUrlHit, CmdHit
 
 ### [LLM] Locale-gated destructive payload: python parent spawns rm -rf / on Linux
 
-`UC_62_11` · phase: **actions** · confidence: **High**
+`UC_67_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

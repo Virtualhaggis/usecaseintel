@@ -56,7 +56,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — How to secure a REST API?
 
-`UC_1177_1` · phase: **exploit** · confidence: **High**
+`UC_1178_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

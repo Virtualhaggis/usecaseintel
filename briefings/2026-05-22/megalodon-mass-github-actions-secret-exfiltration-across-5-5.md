@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_1_4` · phase: **install** · confidence: **High**
+`UC_3_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Using insecure npm package manager defaults to steal your macOS keyboard shortcu
 
-`UC_1403_1` · phase: **exploit** · confidence: **High**
+`UC_1404_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
-`UC_1155_1` · phase: **exploit** · confidence: **High**
+`UC_1156_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

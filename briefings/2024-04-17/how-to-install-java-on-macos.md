@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to install Java on macOS
 
-`UC_1238_1` · phase: **install** · confidence: **High**
+`UC_1239_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

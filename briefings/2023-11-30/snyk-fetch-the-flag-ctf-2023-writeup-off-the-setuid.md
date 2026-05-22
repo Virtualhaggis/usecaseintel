@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Off the SETUID
 
-`UC_1297_0` · phase: **exploit** · confidence: **High**
+`UC_1298_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

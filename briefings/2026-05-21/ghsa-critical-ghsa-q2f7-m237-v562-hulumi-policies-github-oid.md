@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AWS IAM role trust policy created with set-qualified operator on GitHub OIDC sub claim
 
-`UC_26_0` · phase: **install** · confidence: **High**
+`UC_32_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AssumeRoleWithWebIdentity from GitHub OIDC with unexpected repo/branch sub claim
 
-`UC_26_1` · phase: **exploit** · confidence: **Medium**
+`UC_32_1` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
