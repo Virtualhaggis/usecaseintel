@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised Nx Console VS Code extension (nrwl.angular-console v18.94.0/18.95.0/18.100.0) install on endpoint
 
-`UC_50_4` · phase: **delivery** · confidence: **High**
+`UC_55_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### [LLM] Known Shai-Hulud / Nx Console implant hash match (SHA256/SHA1)
 
-`UC_50_5` · phase: **install** · confidence: **High**
+`UC_55_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### [LLM] Nx Console / Shai-Hulud C2 connection (t.m-kosche.com, check.git-service.com, filev2.getsession.org, api.masscan.cloud, 83.142.209.194)
 
-`UC_50_6` · phase: **c2** · confidence: **High**
+`UC_55_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### [LLM] macOS LaunchAgent/LaunchDaemon plist persistence pointing at Python interpreter
 
-`UC_50_7` · phase: **install** · confidence: **Medium**
+`UC_55_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### [LLM] Developer credential store read by Python or Node spawned from VS Code (Nx Console stealer pattern)
 
-`UC_50_8` · phase: **actions** · confidence: **Medium**
+`UC_55_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub audit log bulk private-repo clone burst (post Nx Console compromise pattern)
 
-`UC_50_9` · phase: **actions** · confidence: **High**
+`UC_55_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

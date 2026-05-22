@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The ultimate guide to creating a secure Python package
 
-`UC_1225_0` · phase: **exploit** · confidence: **High**
+`UC_1227_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 CISA Warns of Microsoft Defender 0-Day Vulnerabilities Exploited in Attacks 
 By Abinaya 
 May 22, 2026 
-
-
-
-
 The U.S. Cybersecurity and Infrastructure Security Agency (CISA) has added two critical Microsoft Defender vulnerabilities to its Known Exploited Vulnerabilities (KEV) catalog, warning organizations of active exploitation risks.
-The flaws, tracked as CVE-2026-45498 and CVE-2026-41091 , impact Microsoft Defender and could allow attackers to disrupt systems or es…
+The flaws, tracked as CVE-2026-45498 and CVE-2026-41091 , impact Microsoft Defender and could allow attackers to disrupt systems or escalate p…
 
 ## Indicators of Compromise (high-fidelity only)
 

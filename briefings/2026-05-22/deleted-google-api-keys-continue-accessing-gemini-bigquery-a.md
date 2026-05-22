@@ -10,12 +10,8 @@ Home Cyber Security News
 Deleted Google API Keys Continue Accessing Gemini, BigQuery, and Maps APIs 
 By Abinaya 
 May 22, 2026 
-
-
-
-
 A newly disclosed issue with Google Cloud API keys reveals that deleted credentials may remain usable for up to 23 minutes, exposing projects to potential abuse even after revocation.
-The finding raises concerns about delayed credential invalidation across Google’s infrastructure, particularly for sensitive services such as Gemini, BigQuery, and Google Maps APIs…
+The finding raises concerns about delayed credential invalidation across Google’s infrastructure, particularly for sensitive services such as Gemini, BigQuery, and Google Maps APIs. Accord…
 
 ## Indicators of Compromise (high-fidelity only)
 

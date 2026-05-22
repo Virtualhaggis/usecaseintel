@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Installation of credential-leaking ClawHub skills (moltyverse-email, buy-anything, prompt-log, youtube-data)
 
-`UC_497_0` · phase: **install** · confidence: **High**
+`UC_499_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### [LLM] AI agent skill leaks Stripe key or card PAN/CVC verbatim in curl command line
 
-`UC_497_1` · phase: **actions** · confidence: **High**
+`UC_499_1` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### [LLM] AI session-log harvest via prompt-log extract.sh writing markdown with embedded secrets
 
-`UC_497_2` · phase: **actions** · confidence: **Medium**
+`UC_499_2` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

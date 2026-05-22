@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DRILLAPP: Edge launched headless with media/security guardrails disabled
 
-`UC_394_4` · phase: **install** · confidence: **High**
+`UC_396_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] DRILLAPP variant 2: Edge launched with --remote-debugging-port=9222 for CDP-based file download
 
-`UC_394_5` · phase: **c2** · confidence: **High**
+`UC_396_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### [LLM] DRILLAPP variant 1 persistence: LNK file written to user Startup folder by non-Explorer process
 
-`UC_394_6` · phase: **install** · confidence: **High**
+`UC_396_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### [LLM] DRILLAPP C2 staging: msedge.exe contacting pastefy.app
 
-`UC_394_7` · phase: **c2** · confidence: **Medium**
+`UC_396_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### [LLM] DRILLAPP variant 2 delivery: CPL file executed from user-writable folder spawning Edge
 
-`UC_394_8` · phase: **delivery** · confidence: **High**
+`UC_396_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ CplLaunch
 
 ### [LLM] DRILLAPP C2: msedge.exe egress to known DRILLAPP IPs or WebSocket to localhost:8000
 
-`UC_394_9` · phase: **c2** · confidence: **High**
+`UC_396_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -233,7 +233,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DRILLAPP: new backdoor targeting Ukrainian entities with possible links to Laund
 
-`UC_394_3` · phase: **install** · confidence: **High**
+`UC_396_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

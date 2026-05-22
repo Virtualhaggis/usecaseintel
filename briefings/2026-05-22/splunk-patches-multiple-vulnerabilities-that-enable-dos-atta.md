@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Splunk Patches Multiple Vulnerabilities that Enable DOS Attacks and Expose Sensi
 
-`UC_23_3` · phase: **exploit** · confidence: **High**
+`UC_27_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

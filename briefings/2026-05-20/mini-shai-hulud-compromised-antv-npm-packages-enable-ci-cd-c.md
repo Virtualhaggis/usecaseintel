@@ -186,7 +186,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft
 
-`UC_55_8` · phase: **exploit** · confidence: **High**
+`UC_60_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
