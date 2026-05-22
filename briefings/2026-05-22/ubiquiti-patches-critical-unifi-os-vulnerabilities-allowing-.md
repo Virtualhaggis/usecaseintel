@@ -10,13 +10,9 @@ Home Cyber Security News
 Ubiquiti Patches Critical UniFi OS Vulnerabilities Allowing Remote Privilege Escalation 
 By Guru Baran 
 May 22, 2026 
-
-
-
-
 Ubiquiti Networks has released urgent security updates to address a series of highly critical vulnerabilities affecting its UniFi OS platform .
 These severe flaws could allow unauthenticated, remote attackers to execute arbitrary code, escalate privileges, and severely compromise enterprise network infrastructure.
-In total, the hardware vendor pa…
+In total, the hardware vendor patched fi…
 
 ## Indicators of Compromise (high-fidelity only)
 

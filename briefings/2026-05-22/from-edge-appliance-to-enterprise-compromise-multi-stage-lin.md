@@ -202,7 +202,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5
 
-`UC_6_8` · phase: **exploit** · confidence: **High**
+`UC_8_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
